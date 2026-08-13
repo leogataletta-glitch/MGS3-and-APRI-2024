@@ -15,6 +15,7 @@ import io
 import json
 import os
 import pickle
+import re
 import subprocess
 import sys
 
@@ -171,8 +172,22 @@ if base_n["Total"] == 0:
     st.stop()
 
 index = load_questions_index()
-categories = sorted(set(q["category"] for q in index))
-cat_choice = st.selectbox("Catégorie de questions", categories)
+
+# Les catégories portent en interne un code de tri hérité des classeurs Excel
+# ("AJ. EAU, ASSAINISSEMENT…"). On ne l'affiche pas, et surtout on garde l'ordre
+# d'apparition dans le questionnaire plutôt qu'un tri alphabétique sur ce code —
+# qui ferait remonter la pêche en tête.
+CAT_CODE = re.compile(r"^[A-Z]{1,3}\.\s*")
+cats_raw = []
+for q in index:
+    if q["category"] not in cats_raw:
+        cats_raw.append(q["category"])
+cat_display = [CAT_CODE.sub("", c) for c in cats_raw]
+cat_of_display = dict(zip(cat_display, cats_raw))
+
+chosen = st.selectbox("Catégorie de questions", cat_display,
+                      help="Les catégories suivent l'ordre du questionnaire.")
+cat_choice = cat_of_display[chosen]
 q_options = [q for q in index if q["category"] == cat_choice]
 q_labels = [q["question"] for q in q_options]
 q_choice_label = st.selectbox("Question", q_labels)
