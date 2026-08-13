@@ -140,6 +140,28 @@ st.set_page_config(page_title="Enquête ménage 2024", layout="wide")
 if not check_password():
     st.stop()
 
+# Titre en sans-serif condensé : la police par défaut de Streamlit est
+# remplacée par la même famille que celle des graphiques et de la carte, en
+# version étroite, pour que l'ensemble forme un seul système typographique.
+st.markdown("""
+<style>
+  h1 {
+    font-family: "Segoe UI Semibold", "Roboto Condensed", "Arial Narrow",
+                 system-ui, -apple-system, sans-serif !important;
+    font-stretch: condensed;
+    font-weight: 650 !important;
+    letter-spacing: -0.015em;
+    font-size: 2.35rem !important;
+    padding-bottom: 0.15rem !important;
+  }
+  .org-mention {
+    font-size: 12.5px; color: #52514e; letter-spacing: .05em;
+    text-transform: uppercase; margin: 0 0 2px 2px;
+  }
+</style>
+<p class="org-mention">Programme des Nations Unies pour l'environnement — PNUE / UNEP</p>
+""", unsafe_allow_html=True)
+
 st.title("Enquête ménage 2024 — Sud et Grand'Anse")
 st.caption(
     "Choisissez une ou plusieurs valeurs par filtre (les filtres se combinent : "
@@ -375,3 +397,5 @@ st.download_button(
 st.caption("Source : Données brutes V3, enquête ménage sept. 2024. "
            "Les pourcentages sont calculés sur la base du groupe filtré affiché ci-dessus, "
            "pas sur l'ensemble des 1211 répondants.")
+st.caption("Travail réalisé par le Programme des Nations Unies pour "
+           "l'environnement (PNUE / UNEP).")
