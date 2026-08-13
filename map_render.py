@@ -305,6 +305,90 @@ def _load_admin_polygons():
 
 
 # --------------------------------------------------------------------------
+def _point_in_rings(x, y, rings):
+    """Vrai si (x, y) est dans le polygone (règle pair-impair, trous compris)."""
+    inside = False
+    for ring in rings:
+        n = len(ring)
+        for i in range(n):
+            x1, y1 = ring[i]
+            x2, y2 = ring[(i + 1) % n]
+            if (y1 > y) != (y2 > y):
+                xin = (x2 - x1) * (y - y1) / ((y2 - y1) or 1e-12) + x1
+                if x < xin:
+                    inside = not inside
+    return inside
+
+
+def _dist_to_edges(x, y, rings):
+    """Distance du point au bord le plus proche."""
+    best = float('inf')
+    for ring in rings:
+        n = len(ring)
+        for i in range(n):
+            x1, y1 = ring[i]
+            x2, y2 = ring[(i + 1) % n]
+            dx, dy = x2 - x1, y2 - y1
+            L2 = dx * dx + dy * dy
+            t = 0.0 if L2 < 1e-12 else max(0.0, min(1.0, ((x - x1) * dx + (y - y1) * dy) / L2))
+            d = math.hypot(x - (x1 + t * dx), y - (y1 + t * dy))
+            if d < best:
+                best = d
+    return best
+
+
+def _box_fits_inside(cx, cy, w, h, rings):
+    """Le rectangle (w × h) centré en (cx, cy) tient-il dans le polygone ?
+    On teste le contour du rectangle, pas seulement ses coins : un polygone
+    concave peut mordre au milieu d'un côté."""
+    hw, hh = w / 2.0, h / 2.0
+    for t in (0.0, 0.25, 0.5, 0.75, 1.0):
+        for x, y in ((cx - hw + t * w, cy - hh), (cx - hw + t * w, cy + hh),
+                     (cx - hw, cy - hh + t * h), (cx + hw, cy - hh + t * h)):
+            if not _point_in_rings(x, y, rings):
+                return False
+    return True
+
+
+def _pole_of_inaccessibility(rings):
+    """Point intérieur le plus éloigné du bord, et sa distance au bord.
+
+    Recherche sur grille puis raffinements successifs : suffisant ici (10
+    polygones) et sans dépendance externe. C'est ce point qui permet de savoir
+    s'il y a la place d'écrire le pourcentage à l'intérieur de la section.
+    """
+    pts = [p for ring in rings for p in ring]
+    xs = [p[0] for p in pts]
+    ys = [p[1] for p in pts]
+    bx0, bx1, by0, by1 = min(xs), max(xs), min(ys), max(ys)
+    best = (0.5 * (bx0 + bx1), 0.5 * (by0 + by1), -1.0)
+    step = max((bx1 - bx0) / 24.0, (by1 - by0) / 24.0, 1e-6)
+    x, y = bx0, by0
+    while y <= by1:
+        x = bx0
+        while x <= bx1:
+            if _point_in_rings(x, y, rings):
+                d = _dist_to_edges(x, y, rings)
+                if d > best[2]:
+                    best = (x, y, d)
+            x += step
+        y += step
+    for _ in range(4):                       # raffinement local
+        cx, cy, cd = best
+        step /= 3.0
+        for i in (-2, -1, 0, 1, 2):
+            for j in (-2, -1, 0, 1, 2):
+                nx, ny = cx + i * step, cy + j * step
+                if _point_in_rings(nx, ny, rings):
+                    d = _dist_to_edges(nx, ny, rings)
+                    if d > best[2]:
+                        best = (nx, ny, d)
+    if best[2] < 0:                          # polygone dégénéré : repli
+        return (0.5 * (bx0 + bx1), 0.5 * (by0 + by1), 0.0)
+    return best
+
+
+# --------------------------------------------------------------------------
 def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                    polarity='neutre'):
     """values : {section: pourcentage}. Retourne (svg, thresholds, mode)."""
@@ -342,6 +426,8 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
 
     body = []
     label_anchor = {}
+    inner_room = {}          # rayon disponible à l'intérieur de chaque section
+    polys_px = {}            # contours projetés, pour tester si un texte y tient
 
     # ---- fond : mer puis terre émergée ----
     if land:
@@ -369,23 +455,14 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                    if v is not None else name)
             body.append(f'<path class="sec" d="{d}" fill="{fill}">'
                         f'<title>{tip}</title></path>')
-            # ancrage sur le centroïde de SURFACE (formule du lacet) : plus fiable
-            # que la moyenne des sommets, qui se décale là où ils sont serrés
-            big = max(rings, key=len)
-            pb = [proj(lon * kx, lat) for lon, lat in big]
-            a2 = cxa = cya = 0.0
-            for i in range(len(pb)):
-                ax, ay = pb[i]                      # noms distincts : x0/x1/y0/y1
-                bx_, by_ = pb[(i + 1) % len(pb)]    # servent à la projection
-                cr = ax * by_ - bx_ * ay
-                a2 += cr
-                cxa += (ax + bx_) * cr
-                cya += (ay + by_) * cr
-            if abs(a2) > 1e-9:
-                label_anchor[name] = (cxa / (3 * a2), cya / (3 * a2))
-            else:
-                label_anchor[name] = (sum(p[0] for p in allp) / len(allp),
-                                      sum(p[1] for p in allp) / len(allp))
+            # Point d'ancrage = pôle d'inaccessibilité (le point le plus « au
+            # large » à l'intérieur du polygone), et non le centroïde : sur une
+            # forme concave ou en croissant, le centroïde tombe souvent dehors.
+            rings_px = [[proj(lon * kx, lat) for lon, lat in ring] for ring in rings]
+            px_, py_, rad = _pole_of_inaccessibility(rings_px)
+            label_anchor[name] = (px_, py_)
+            inner_room[name] = rad
+            polys_px[name] = rings_px
     else:
         pos = {k: list(proj(*v)) for k, v in cent.items()}
         names = list(pos)
@@ -426,19 +503,50 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                     f'{fmt_val(v)}%</text>')
             label_anchor[name] = (cx, cy)
 
-    # ---- étiquettes : positions candidates, on garde la moins encombrée ----
-    # En mode contours, l'étiquette tient sur deux lignes (nom / valeur) : deux
-    # fois moins large, donc beaucoup moins de collisions.
+    # ---- 1) le pourcentage à l'intérieur de la section quand il y tient ----
+    val_inside = {}
+    val_boxes = []
+    if admin:
+        # on sert d'abord les sections les plus spacieuses : en cas de conflit
+        # entre deux valeurs voisines, c'est la plus à l'étroit qui sort
+        order = sorted((n for n in SECTIONS if n in label_anchor),
+                       key=lambda n: -inner_room.get(n, 0))
+        for name in order:
+            v = values.get(name)
+            if v is None:
+                continue
+            txt = f'{fmt_val(v)}%'
+            cx, cy = label_anchor[name]
+            w = len(txt) * 7.6
+            bx = (cx - w / 2 - 2, cy - 9, cx + w / 2 + 2, cy + 8)
+            if any(not (bx[2] < o[0] or o[2] < bx[0] or bx[3] < o[1] or o[3] < bx[1])
+                   for o in val_boxes):
+                continue                      # chevaucherait une valeur voisine
+            # La valeur est posée au cœur de la section (pôle d'inaccessibilité).
+            # Si la section est trop étroite pour contenir la boîte du texte, on
+            # garde quand même la valeur là : centrée sur SA section, elle reste
+            # correctement attribuée, et un liseré blanc la détache du fond.
+            # En dessous d'un seuil, la section est vraiment trop fine : la
+            # valeur part alors à l'extérieur, accolée au nom.
+            fits = _box_fits_inside(cx, cy, len(txt) * 7.2 + 2, 13,
+                                    polys_px.get(name, []))
+            if fits or inner_room.get(name, 0) >= 9:
+                body.append(f'<text class="pv" x="{cx:.1f}" y="{cy + 5:.1f}">'
+                            f'{txt}</text>')
+                val_inside[name] = True
+                val_boxes.append(bx)
+
+    # ---- 2) les noms : à l'extérieur, reliés par un trait ----
+    # Le nom seul est bien plus court que « nom + valeur » : beaucoup moins de
+    # collisions, et l'association nom ↔ section est portée par le trait.
     CH, LH = 8.4, 15.0
     if admin:
-        # balayage en anneaux : d'abord au centre du polygone, puis de plus en
-        # plus loin, dans 8 directions — le trait de rappel garde le lien clair
-        CANDS = [(0, -2, 'middle')]
-        for rad in (36, 62, 92, 126, 164):
-            for ang_deg in (90, 270, 0, 180, 45, 135, 315, 225):
+        CANDS = []
+        for rad in (46, 72, 100, 132, 168, 210):
+            for ang_deg in (0, 180, 90, 270, 35, 145, 325, 215, 60, 120, 300, 240):
                 a = math.radians(ang_deg)
                 dx, dy = rad * math.cos(a), rad * math.sin(a)
-                anchor = 'middle' if abs(dx) < rad * 0.4 else (
+                anchor = 'middle' if abs(dx) < rad * 0.35 else (
                     'start' if dx > 0 else 'end')
                 CANDS.append((round(dx), round(dy), anchor))
     else:
@@ -448,11 +556,17 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                  (off + 7, -off + 4, 'start'), (-off - 7, -off + 4, 'end'),
                  (off + 7, off + 8, 'start'), (-off - 7, off + 8, 'end')]
 
+    def label_text(name):
+        """En mode contours, la valeur rejoint le nom si elle n'a pas tenu dedans."""
+        if admin and not val_inside.get(name):
+            v = values.get(name)
+            return f'{name} — {fmt_val(v)}%' if v is not None else f'{name} — n.d.'
+        return name
+
     def box(cx, cy, dx, dy, anchor, text):
         w = len(text) * CH
-        h2 = LH if not admin else 2 * LH          # deux lignes en mode contours
         x = cx + dx - (w / 2 if anchor == 'middle' else (w if anchor == 'end' else 0))
-        return (x - 6, cy + dy - LH - 1, x + w + 6, cy + dy - LH - 1 + h2 + 7)
+        return (x - 6, cy + dy - LH - 1, x + w + 6, cy + dy + 6)
 
     def hit(a, b):
         return not (a[2] < b[0] or b[2] < a[0] or a[3] < b[1] or b[3] < a[1])
@@ -462,41 +576,45 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
         return sum(1 for m in label_anchor
                    if m != n and math.dist((cx, cy), label_anchor[m]) < 3.2 * max(R, 30))
 
-    placed = []
+    # les valeurs déjà écrites dans les sections sont des obstacles à éviter
+    placed = [(b[0] - 3, b[1] - 3, b[2] + 3, b[3] + 3) for b in val_boxes]
+
     for name in sorted(label_anchor, key=crowd):
         cx, cy = label_anchor[name]
+        txt = label_text(name)
         best, best_s = CANDS[0], None
         for rank, (dx, dy, anchor) in enumerate(CANDS):
-            bx = box(cx, cy, dx, dy, anchor, name)
+            bx = box(cx, cy, dx, dy, anchor, txt)
             sco = sum(10 for b in placed if hit(bx, b))
-            if not admin:
-                for m, (mx, my) in label_anchor.items():
-                    nx = max(bx[0], min(mx, bx[2]))
-                    ny = max(bx[1], min(my, bx[3]))
-                    if math.hypot(mx - nx, my - ny) < R + 1:
-                        sco += 10
+            for m, (mx, my) in label_anchor.items():
+                if m == name:
+                    continue
+                nx = max(bx[0], min(mx, bx[2]))
+                ny = max(bx[1], min(my, bx[3]))
+                # ne pas poser le nom d'une section sur le cœur d'une autre
+                if math.hypot(mx - nx, my - ny) < (R + 1 if not admin else
+                                                   inner_room.get(m, 0) * 0.9):
+                    sco += 8
             if bx[0] < 4 or bx[2] > width - 4 or bx[1] < 4 or bx[3] > height - 4:
                 sco += 40
-            sco += rank * 0.1
+            sco += rank * 0.12                     # préférer les positions proches
             if best_s is None or sco < best_s:
                 best, best_s = (dx, dy, anchor), sco
-        placed.append(box(cx, cy, *best, name))
+        placed.append(box(cx, cy, *best, txt))
         dx, dy, anchor = best
+
+        # trait de rappel : part du bord de la section, s'arrête au ras du texte
+        ang = math.atan2(dy, dx)
+        start = (inner_room.get(name, 0) * 0.85) if admin else (R + 1)
+        lx, ly = cx + math.cos(ang) * start, cy + math.sin(ang) * start
+        tx = cx + dx + (0 if anchor == 'middle' else (-5 if anchor == 'end' else 5))
+        ty = cy + dy - 4
         leader = ''
-        if best != CANDS[0]:
-            ang = math.atan2(dy, dx)
-            lx = cx + math.cos(ang) * (R + 1 if not admin else 2)
-            ly = cy + math.sin(ang) * (R + 1 if not admin else 2)
-            tx = cx + dx + (0 if anchor == 'middle' else (-4 if anchor == 'end' else 4))
+        if math.hypot(tx - lx, ty - ly) > 6:
             leader = (f'<line class="ld" x1="{lx:.1f}" y1="{ly:.1f}" '
-                      f'x2="{tx:.1f}" y2="{cy + dy - 4:.1f}"/>')
-        v = values.get(name)
+                      f'x2="{tx:.1f}" y2="{ty:.1f}"/>')
         body.append(f'{leader}<text class="pn" x="{cx + dx:.1f}" y="{cy + dy:.1f}" '
-                    f'style="text-anchor:{anchor}">{name}</text>')
-        if admin:                                  # valeur sur une 2e ligne
-            val_txt = f'{fmt_val(v)}%' if v is not None else 'n.d.'
-            body.append(f'<text class="pw" x="{cx + dx:.1f}" y="{cy + dy + 16:.1f}" '
-                        f'style="text-anchor:{anchor}">{val_txt}</text>')
+                    f'style="text-anchor:{anchor}">{txt}</text>')
 
     km_px = 111.32 / sc
     bar = 10 / km_px
@@ -517,8 +635,9 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
     .sea{{fill:#dde6ee}}
     .land{{fill:#f1efe9;stroke:#c9c6bc;stroke-width:0.8;stroke-linejoin:round}}
     .sec{{stroke:{SURFACE};stroke-width:2;stroke-linejoin:round}}
-    .pv{{font:650 15px system-ui,-apple-system,"Segoe UI",sans-serif;
-        text-anchor:middle;font-variant-numeric:tabular-nums}}
+    .pv{{font:650 13.5px system-ui,-apple-system,"Segoe UI",sans-serif;
+        text-anchor:middle;font-variant-numeric:tabular-nums;fill:{INK};
+        paint-order:stroke;stroke:{SURFACE};stroke-width:3.5px;stroke-linejoin:round}}
     .pn{{font:600 13.5px system-ui,-apple-system,"Segoe UI",sans-serif;fill:{INK};
         paint-order:stroke;stroke:{SURFACE};stroke-width:4px;stroke-linejoin:round}}
     .pw{{font:650 14px system-ui,-apple-system,"Segoe UI",sans-serif;fill:{INK};
