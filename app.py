@@ -161,9 +161,35 @@ st.markdown("""
     text-transform: uppercase; margin: 0 0 2px 2px;
   }
   /* Les deux entrées du tableau de bord sont le premier choix de la page :
-     elles doivent se voir, pas ressembler à un réglage secondaire. */
+     deux grands pavés, pas un réglage secondaire. */
+  div[data-testid="stButton"] > button {
+    height: 76px; border-radius: 10px; border-width: 2px;
+    font-size: 18px !important; font-weight: 650 !important;
+    line-height: 1.3; white-space: normal; padding: 10px 18px;
+  }
+  div[data-testid="stButton"] > button p {
+    font-size: 18px !important; font-weight: 650 !important;
+  }
+  /* Pavé actif : bleu PNUE assombri pour tenir 5,6:1 avec le texte blanc.
+     Pavé inactif : fond clair, bordure nette — il doit rester cliquable à l'œil. */
+  div[data-testid="stButton"] > button[kind="primary"] {
+    background: #1a6bb0 !important; border-color: #1a6bb0 !important;
+    color: #ffffff !important;
+  }
+  div[data-testid="stButton"] > button[kind="primary"]:hover {
+    background: #15619f !important; border-color: #15619f !important;
+  }
+  div[data-testid="stButton"] > button[kind="secondary"] {
+    background: #ffffff !important; border-color: #c9ccd1 !important;
+    color: #0b0b0b !important;
+  }
+  div[data-testid="stButton"] > button[kind="secondary"]:hover {
+    border-color: #1a6bb0 !important; color: #1a6bb0 !important;
+  }
+  /* Les radios internes (niveau de lecture, couche de la carte) restent
+     lisibles mais discrets. */
   .stRadio > div[role="radiogroup"] > label > div:last-child p {
-    font-size: 16.5px !important; font-weight: 600 !important;
+    font-size: 15px !important; font-weight: 600 !important;
   }
 </style>
 """, unsafe_allow_html=True)
@@ -193,15 +219,36 @@ st.markdown(
 
 # Les deux entrées sont mises au même niveau, en haut de page : ce sont deux
 # lectures différentes de la même enquête, pas un mode principal et une option.
-app_mode = st.radio(
-    "Que voulez-vous consulter ?",
-    [MODE_QUESTIONS, MODE_RESILIENCE],
-    horizontal=True, label_visibility="collapsed", key="app_mode",
-    help="À gauche, les résultats bruts de n'importe laquelle des 503 questions "
-         "posées aux 1211 ménages, avec les filtres âge / sexe / niveau "
-         "socio-économique / paysage. À droite, les indicateurs de résilience "
-         "consolidés et leur score IRLA / APRI.")
-st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
+# Deux grands pavés cliquables plutôt qu'un bouton radio : l'entrée dans le
+# tableau de bord doit se voir de loin.
+if "app_mode" not in st.session_state:
+    st.session_state["app_mode"] = MODE_QUESTIONS
+
+
+def _bascule(mode):
+    st.session_state["app_mode"] = mode
+
+
+_c1, _c2 = st.columns(2, gap="medium")
+for _col, _mode, _sous in (
+        (_c1, MODE_QUESTIONS,
+         "Les 503 questions posées, filtrables par sexe, âge, "
+         "niveau socio-économique et paysage"),
+        (_c2, MODE_RESILIENCE,
+         "Les indicateurs consolidés et leur score IRLA / APRI, "
+         "par section communale et sous-population")):
+    with _col:
+        st.button(_mode, key=f"btn_{_mode[:12]}", on_click=_bascule, args=(_mode,),
+                  type="primary" if st.session_state["app_mode"] == _mode
+                  else "secondary",
+                  use_container_width=True)
+        st.markdown(
+            f'<p style="font-size:12.5px;color:#898781;margin:-6px 0 0;'
+            f'text-align:center;line-height:1.35">{_sous}</p>',
+            unsafe_allow_html=True)
+
+app_mode = st.session_state["app_mode"]
+st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
 
 if app_mode == MODE_RESILIENCE:
     resilience_page.render()
