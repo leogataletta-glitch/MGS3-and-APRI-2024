@@ -217,6 +217,57 @@ def guess_polarity(question, modality):
 
 INK, INK2, MUTED, SURFACE = '#0b0b0b', '#52514e', '#898781', '#fcfcfb'
 
+# Gris ardoise des barres : 5,3:1 sur le fond clair, donc parfaitement lisible,
+# et volontairement neutre — la couleur ne porte du sens que sur la carte.
+BAR_COLOR = '#5b6b7a'
+
+
+def render_bars_svg(rows, base_total, width=880, color=BAR_COLOR):
+    """Diagramme en barres horizontales, une barre par modalité.
+
+    Pas d'axe ni de grille : la valeur est écrite au bout de chaque barre. Une
+    graduation dense n'apporte rien quand chaque barre porte déjà son chiffre —
+    elle ne fait qu'ajouter du bruit.
+    """
+    data = sorted(((lab, n) for lab, n in rows), key=lambda r: -r[1])
+    if not data or not base_total:
+        return '<svg width="0" height="0"></svg>'
+
+    BAR_H, GAP, LAB_W, VAL_W, TOP = 18, 10, 320, 62, 8
+    # largeur moyenne d'un caractère à 13 px, estimée large pour ne jamais
+    # laisser un libellé déborder du cadre (il serait rogné à gauche)
+    MAX_CHARS = max(int((LAB_W - 14) / 6.9), 12)
+    plot_w = max(width - LAB_W - VAL_W - 16, 60)
+    vmax = max(max(n / base_total * 100 for _, n in data), 1e-9)
+    height = TOP * 2 + len(data) * (BAR_H + GAP) - GAP
+
+    parts = []
+    y = TOP
+    for lab, n in data:
+        pct = n / base_total * 100
+        w = max(plot_w * pct / vmax, 2)
+        short = lab if len(lab) <= MAX_CHARS else lab[:MAX_CHARS - 1] + '…'
+        parts.append(
+            f'<g><title>{lab} — {fmt_val(pct)} % ({n} foyers)</title>'
+            f'<text class="bl" x="{LAB_W - 10}" y="{y + BAR_H - 4.5}">{short}</text>'
+            f'<rect class="br" x="{LAB_W}" y="{y}" width="{w:.1f}" height="{BAR_H}" '
+            f'rx="4" fill="{color}"/>'
+            f'<text class="bv" x="{LAB_W + w + 8:.1f}" y="{y + BAR_H - 4.5}">'
+            f'{fmt_val(pct)} %</text></g>')
+        y += BAR_H + GAP
+
+    return f"""<svg viewBox="0 0 {width} {height}" width="100%"
+     style="max-width:{width}px;display:block" role="img"
+     aria-label="Répartition des réponses, en pourcentage">
+  <style>
+    .bl{{font:13px system-ui,-apple-system,"Segoe UI",sans-serif;fill:{INK2};
+        text-anchor:end}}
+    .bv{{font:600 13px system-ui,-apple-system,"Segoe UI",sans-serif;fill:{INK};
+        font-variant-numeric:tabular-nums}}
+  </style>
+  {''.join(parts)}
+</svg>"""
+
 
 # --------------------------------------------------------------------------
 def nice_thresholds(vals):

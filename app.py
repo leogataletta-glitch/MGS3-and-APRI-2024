@@ -140,7 +140,7 @@ st.set_page_config(page_title="Enquête ménage 2024", layout="wide")
 if not check_password():
     st.stop()
 
-st.title("Enquête ménage 2024 — explorateur interactif")
+st.title("Enquête ménage 2024 — Sud et Grand'Anse")
 st.caption(
     "Choisissez une ou plusieurs valeurs par filtre (les filtres se combinent : "
     "ex. Femmes ET Catégorie A ET section Quentin en même temps). "
@@ -199,15 +199,16 @@ if theme.get("note"):
     st.caption(theme["note"])
 
 # ---- graphique : répartition sur la population filtrée (colonne Total) ----
-chart_rows = []
-for label, group_n in theme["rows"]:
-    n = group_n.get("Total", 0)
-    b = base_n.get("Total", 0)
-    pct = round(n / b * 100, 1) if b else 0.0
-    chart_rows.append({"Modalité": label, "%": pct})
-chart_df = pd.DataFrame(chart_rows).sort_values("%", ascending=True)
-
-st.bar_chart(chart_df.set_index("Modalité"), horizontal=True, color="#2f6690")
+# Rendu maison plutôt que st.bar_chart : celui-ci impose une graduation d'axe
+# très dense et une couleur peu maîtrisable. Ici la valeur est écrite au bout
+# de chaque barre, donc aucun axe n'est nécessaire.
+bar_rows = [(label, group_n.get("Total", 0)) for label, group_n in theme["rows"]]
+bar_svg = map_render.render_bars_svg(bar_rows, base_n.get("Total", 0))
+n_bars = len(bar_rows)
+components.html(
+    f'<div style="background:#fcfcfb;font-family:system-ui,-apple-system,'
+    f'\'Segoe UI\',sans-serif">{bar_svg}</div>',
+    height=n_bars * 28 + 26, scrolling=False)
 
 # ---- carte : une couleur par seuil, une section communale par forme ----
 st.markdown("### Carte par section communale")
