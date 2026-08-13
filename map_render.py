@@ -376,6 +376,30 @@ def _box_fits_inside(cx, cy, w, h, rings):
     return True
 
 
+def _pole_in_view(rings, width, height, margin=26):
+    """Meilleur point pour poser une étiquette de zone : à l'intérieur du
+    polygone ET confortablement dans le cadre. Indispensable pour un
+    département qui n'affleure qu'au bord de la carte (sinon son nom part
+    au large ou hors champ)."""
+    best, best_score = None, -1.0
+    nx, ny = 46, 34
+    for i in range(nx):
+        x = margin + (width - 2 * margin) * i / (nx - 1)
+        for j in range(ny):
+            y = margin + (height - 2 * margin) * j / (ny - 1)
+            if not _point_in_rings(x, y, rings):
+                continue
+            # on maximise à la fois l'éloignement du bord du polygone
+            # (donc de la côte) et l'éloignement du bord du cadre
+            d_poly = _dist_to_edges(x, y, rings)
+            d_view = min(x - margin, width - margin - x,
+                         y - margin, height - margin - y)
+            score = min(d_poly, d_view)
+            if score > best_score:
+                best, best_score = (x, y), score
+    return best, best_score
+
+
 def _pole_of_inaccessibility(rings):
     """Point intérieur le plus éloigné du bord, et sa distance au bord.
 
@@ -480,14 +504,13 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                 pp = [proj(lon * kx, lat) for lon, lat in ring]
                 d += 'M' + ' L'.join(f'{a:.1f},{b:.1f}' for a, b in pp) + ' Z'
             body.append(f'<path class="dep" d="{d}"/>')
-            # étiquette au centre de la partie visible du département
-            vis = [proj(lon * kx, lat) for ring in rings for lon, lat in ring
-                   if 0 < proj(lon * kx, lat)[0] < width
-                   and 0 < proj(lon * kx, lat)[1] < height]
-            if len(vis) > 8:
-                dep_labels.append((nom,
-                                   sum(p[0] for p in vis) / len(vis),
-                                   sum(p[1] for p in vis) / len(vis)))
+            # étiquette posée dans la partie du département réellement visible
+            # ET à terre — pas à la moyenne des sommets, qui tombe en mer quand
+            # le département n'affleure qu'au bord du cadre (cas des Nippes)
+            rings_px = [[proj(lon * kx, lat) for lon, lat in ring] for ring in rings]
+            pt, room = _pole_in_view(rings_px, width, height)
+            if pt and room > 16:
+                dep_labels.append((nom, pt[0], pt[1]))
 
     if admin:
         for name in SECTIONS:
@@ -653,8 +676,20 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
               cy + dy - 4)
         return p1, p2
 
-    # les valeurs déjà écrites dans les sections sont des obstacles à éviter
+    # obstacles : valeurs déjà posées, noms de départements, villes
     placed = [(b[0] - 3, b[1] - 3, b[2] + 3, b[3] + 3) for b in val_boxes]
+    for nom, lx_, ly_ in dep_labels:
+        w = len(nom) * 8.2
+        placed.append((lx_ - w / 2 - 4, ly_ - 14, lx_ + w / 2 + 4, ly_ + 6))
+    city_px = []
+    if villes:
+        for nom, (vlon, vlat) in villes:
+            vx, vy = proj(vlon * kx, vlat)
+            if 0 < vx < width and 0 < vy < height:
+                city_px.append((nom, vx, vy))
+                w = len(nom) * 7.0
+                # le point ET son nom (posé au-dessus) sont à éviter
+                placed.append((vx - w / 2 - 4, vy - 24, vx + w / 2 + 4, vy + 8))
     placed_leaders = []
 
     for name in sorted(label_anchor, key=crowd):
@@ -714,13 +749,9 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
     # ---- repères de situation : noms de départements puis villes ----
     for nom, lx_, ly_ in dep_labels:
         body.append(f'<text class="dept" x="{lx_:.0f}" y="{ly_:.0f}">{nom.upper()}</text>')
-    if villes:
-        for nom, (vlon, vlat) in villes:
-            vx, vy = proj(vlon * kx, vlat)
-            if not (0 < vx < width and 0 < vy < height):
-                continue
-            body.append(f'<circle class="city" cx="{vx:.1f}" cy="{vy:.1f}" r="4.5"/>'
-                        f'<text class="cityt" x="{vx:.1f}" y="{vy - 9:.1f}">{nom}</text>')
+    for nom, vx, vy in city_px:
+        body.append(f'<circle class="city" cx="{vx:.1f}" cy="{vy:.1f}" r="4"/>'
+                    f'<text class="cityt" x="{vx:.1f}" y="{vy - 9:.1f}">{nom}</text>')
 
     km_px = 111.32 / sc
     bar = 10 / km_px
@@ -744,10 +775,13 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
          stroke-linejoin:round}}
     .dept{{font:600 11px system-ui,sans-serif;fill:#9a968b;letter-spacing:.09em;
           text-anchor:middle;paint-order:stroke;stroke:{SURFACE};stroke-width:3px}}
-    .city{{fill:{INK};stroke:{SURFACE};stroke-width:1.6}}
-    .cityt{{font:600 12.5px system-ui,sans-serif;fill:{INK};text-anchor:middle;
-           paint-order:stroke;stroke:{SURFACE};stroke-width:3.5px;
-           stroke-linejoin:round}}
+    /* Villes : maigre, gris, légèrement espacé — les noms de sections sont
+       eux en gras noir. Deux registres typographiques distincts, pour qu'on ne
+       confonde jamais un repère de situation avec une unité d'analyse. */
+    .city{{fill:none;stroke:{INK2};stroke-width:2}}
+    .cityt{{font:400 11.5px system-ui,sans-serif;fill:{INK2};text-anchor:middle;
+           letter-spacing:.06em;paint-order:stroke;stroke:{SURFACE};
+           stroke-width:3.5px;stroke-linejoin:round}}
     .sec{{stroke:{SURFACE};stroke-width:2;stroke-linejoin:round}}
     .pv{{font:650 13.5px system-ui,-apple-system,"Segoe UI",sans-serif;
         text-anchor:middle;font-variant-numeric:tabular-nums;fill:{INK};
