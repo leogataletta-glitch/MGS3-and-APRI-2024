@@ -24,6 +24,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 import assets
+import croisement_page
 import map_render
 import resilience_page
 
@@ -259,6 +260,7 @@ st.markdown("""
 # ---- bandeau : logo PNUE + les deux entrées du tableau de bord ----------
 MODE_QUESTIONS = "Résultats de toutes les questions aux 1200 ménages"
 MODE_RESILIENCE = "Indicateurs de résilience associés"
+MODE_CROISEMENT = "Croiser des questions entre elles"
 
 _logo, _entete = st.columns([1, 8])
 with _logo:
@@ -291,14 +293,17 @@ def _bascule(mode):
     st.session_state["app_mode"] = mode
 
 
-_c1, _c2 = st.columns(2, gap="medium")
+_c1, _c2, _c3 = st.columns(3, gap="medium")
 for _col, _mode, _sous in (
         (_c1, MODE_QUESTIONS,
          "Les 503 questions posées, filtrables par sexe, âge, "
          "niveau socio-économique et paysage"),
         (_c2, MODE_RESILIENCE,
          "Les indicateurs consolidés et leur score IRLA / APRI, "
-         "par section communale et sous-population")):
+         "par section communale et sous-population"),
+        (_c3, MODE_CROISEMENT,
+         "Empiler des conditions : combien de foyers cumulent "
+         "plusieurs privations en même temps")):
     with _col:
         st.button(_mode, key=f"btn_{_mode[:12]}", on_click=_bascule, args=(_mode,),
                   type="primary" if st.session_state["app_mode"] == _mode
@@ -314,6 +319,10 @@ st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
 
 if app_mode == MODE_RESILIENCE:
     resilience_page.render()
+    st.stop()
+
+if app_mode == MODE_CROISEMENT:
+    croisement_page.render()
     st.stop()
 
 st.subheader("Résultats de toutes les questions aux 1200 ménages")

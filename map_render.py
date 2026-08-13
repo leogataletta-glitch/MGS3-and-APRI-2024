@@ -378,7 +378,13 @@ def cartouche_html(libelle, valeur, unite='%', sous_titre='',
     ligne commence par quatre espaces.
     """
     def _bloc(v, u, note, taille, gras_note=False):
-        txt = fmt_val(v) if isinstance(v, (int, float)) else str(v)
+        if isinstance(v, bool) or not isinstance(v, (int, float)):
+            txt = str(v)
+        elif isinstance(v, int):
+            # Un effectif s'écrit sans décimale : « 627 », pas « 627,0 ».
+            txt = f'{int(v):,}'.replace(',', '\u202f')
+        else:
+            txt = fmt_val(v)
         return (f'<div style="font-size:{taille}px;font-weight:700;color:{INK};'
                 f'line-height:1.12;font-variant-numeric:tabular-nums">{txt}'
                 f'<span style="font-size:{max(16, int(taille * 0.5))}px;'

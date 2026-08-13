@@ -95,14 +95,17 @@ def _bandeau_scores(entrees, libelle_mesure=None):
         coul = map_render.RAMP_APRI[
             map_render.bin_of(score, map_render.SEUILS_APRI)][0]
         note_score = (f"score de résilience — {_pct(score):.0f} % de l'échelle APRI")
+        # Le score garde deux décimales : entre 4,04 et 4,25 il n'y a qu'un
+        # centième d'écart de rang, l'arrondi au dixième les confondrait.
+        score_txt = f'{score:.2f}'.replace('.', ',')
         if mesure is None:
             html = map_render.cartouche_html(
-                libelle, round(score, 2), '/ 10', note_score, couleur=coul)
+                libelle, score_txt, '/ 10', note_score, couleur=coul)
         else:
             html = map_render.cartouche_html(
                 libelle, round(mesure, 1), '%',
                 libelle_mesure or 'des ménages (mesure brute)',
-                round(score, 2), '/ 10', note_score, couleur=coul)
+                score_txt, '/ 10', note_score, couleur=coul)
         with col:
             st.markdown(html, unsafe_allow_html=True)
 
