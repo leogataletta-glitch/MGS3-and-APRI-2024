@@ -24,6 +24,32 @@ GEOJSON_CANDIDATES = [os.path.join(APP_DIR, 'data', 'sections_communales.geojson
 
 LAND_CANDIDATES = [os.path.join(APP_DIR, 'data', 'hti_terre.geojson'),
                    os.path.join(APP_DIR, 'hti_terre.geojson')]
+CONTEXT_CANDIDATES = [os.path.join(APP_DIR, 'data', 'contexte_geo.geojson'),
+                      os.path.join(APP_DIR, 'contexte_geo.geojson')]
+
+
+def _context_layers():
+    """Repères de situation : limites départementales et villes principales.
+    Retourne (departements, villes) ou (None, None)."""
+    for p in CONTEXT_CANDIDATES:
+        if os.path.exists(p):
+            try:
+                gj = json.load(open(p, encoding='utf-8'))
+            except Exception:
+                return None, None
+            deps, villes = [], []
+            for feat in gj.get('features', []):
+                props = feat.get('properties', {}) or {}
+                g = feat.get('geometry') or {}
+                if props.get('type') == 'departement':
+                    rings = ([poly[0] for poly in g.get('coordinates', []) if poly]
+                             if g.get('type') == 'MultiPolygon'
+                             else [g['coordinates'][0]])
+                    deps.append((props.get('nom', ''), rings))
+                elif props.get('type') == 'ville':
+                    villes.append((props.get('nom', ''), g.get('coordinates')))
+            return (deps or None), (villes or None)
+    return None, None
 
 
 def _geojson_path():
@@ -412,9 +438,16 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
     # Quand on affiche le fond de carte terre/mer, on élargit un peu la vue pour
     # que le littoral apparaisse autour des sections.
     land = _land_rings()
+    deps, villes = _context_layers()
     if land:
         m = 0.07 * max(x1 - x0, y1 - y0)
         x0 -= m; x1 += m; y0 -= m; y1 += m
+    # Les villes repères doivent entrer dans le cadre : elles élargissent la vue
+    # (les limites départementales, elles, sont simplement rognées par le cadre).
+    if villes:
+        for _, (vlon, vlat) in villes:
+            x0 = min(x0, vlon * kx - 0.012); x1 = max(x1, vlon * kx + 0.012)
+            y0 = min(y0, vlat - 0.012); y1 = max(y1, vlat + 0.012)
 
     sc = min((width - 2 * PAD) / max(x1 - x0, 1e-9),
              (height - 2 * PAD) / max(y1 - y0, 1e-9))
@@ -437,6 +470,24 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
             pp = [proj(lon * kx, lat) for lon, lat in ring]
             d += 'M' + ' L'.join(f'{a:.1f},{b:.1f}' for a, b in pp) + ' Z'
         body.append(f'<path class="land" d="{d}"/>')
+
+    # ---- limites départementales (repère de situation) ----
+    dep_labels = []
+    if deps:
+        for nom, rings in deps:
+            d = ''
+            for ring in rings:
+                pp = [proj(lon * kx, lat) for lon, lat in ring]
+                d += 'M' + ' L'.join(f'{a:.1f},{b:.1f}' for a, b in pp) + ' Z'
+            body.append(f'<path class="dep" d="{d}"/>')
+            # étiquette au centre de la partie visible du département
+            vis = [proj(lon * kx, lat) for ring in rings for lon, lat in ring
+                   if 0 < proj(lon * kx, lat)[0] < width
+                   and 0 < proj(lon * kx, lat)[1] < height]
+            if len(vis) > 8:
+                dep_labels.append((nom,
+                                   sum(p[0] for p in vis) / len(vis),
+                                   sum(p[1] for p in vis) / len(vis)))
 
     if admin:
         for name in SECTIONS:
@@ -660,6 +711,17 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
         body.append(f'{leader}<text class="pn" x="{cx + dx:.1f}" y="{cy + dy:.1f}" '
                     f'style="text-anchor:{anchor}">{txt}</text>')
 
+    # ---- repères de situation : noms de départements puis villes ----
+    for nom, lx_, ly_ in dep_labels:
+        body.append(f'<text class="dept" x="{lx_:.0f}" y="{ly_:.0f}">{nom.upper()}</text>')
+    if villes:
+        for nom, (vlon, vlat) in villes:
+            vx, vy = proj(vlon * kx, vlat)
+            if not (0 < vx < width and 0 < vy < height):
+                continue
+            body.append(f'<circle class="city" cx="{vx:.1f}" cy="{vy:.1f}" r="4.5"/>'
+                        f'<text class="cityt" x="{vx:.1f}" y="{vy - 9:.1f}">{nom}</text>')
+
     km_px = 111.32 / sc
     bar = 10 / km_px
     chrome = (f'<line class="cl" x1="60" y1="112" x2="60" y2="58"/>'
@@ -678,6 +740,14 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
   <style>
     .sea{{fill:#dde6ee}}
     .land{{fill:#f1efe9;stroke:#c9c6bc;stroke-width:0.8;stroke-linejoin:round}}
+    .dep{{fill:none;stroke:#a8a49a;stroke-width:1.3;stroke-dasharray:7 4;
+         stroke-linejoin:round}}
+    .dept{{font:600 11px system-ui,sans-serif;fill:#9a968b;letter-spacing:.09em;
+          text-anchor:middle;paint-order:stroke;stroke:{SURFACE};stroke-width:3px}}
+    .city{{fill:{INK};stroke:{SURFACE};stroke-width:1.6}}
+    .cityt{{font:600 12.5px system-ui,sans-serif;fill:{INK};text-anchor:middle;
+           paint-order:stroke;stroke:{SURFACE};stroke-width:3.5px;
+           stroke-linejoin:round}}
     .sec{{stroke:{SURFACE};stroke-width:2;stroke-linejoin:round}}
     .pv{{font:650 13.5px system-ui,-apple-system,"Segoe UI",sans-serif;
         text-anchor:middle;font-variant-numeric:tabular-nums;fill:{INK};

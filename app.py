@@ -252,7 +252,7 @@ with st.expander("Régler les seuils de couleur"):
         ]
         thresholds = sorted(thresholds)
 
-map_height = 660
+map_height = 720
 svg, T, mode = map_render.render_map_svg(
     map_values, base_n, thresholds, height=map_height, polarity=polarity)
 
