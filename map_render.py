@@ -307,6 +307,49 @@ def render_bars_svg(rows, base_total, width=880, color=BAR_COLOR):
 </svg>"""
 
 
+def render_score_bars_svg(rows, vmax=10.0, width=880, unite='', colors=None):
+    """Barres horizontales pour des valeurs déjà calculées (score sur 10,
+    pourcentage…). `rows` = [(libellé, valeur)], triées telles quelles par
+    l'appelant. `colors` = {libellé: couleur} pour teinter chaque barre.
+    """
+    data = [(lab, v) for lab, v in rows if v is not None]
+    if not data:
+        return '<svg width="0" height="0"></svg>'
+
+    BAR_H, GAP, LAB_W, VAL_W, TOP = 18, 10, 200, 62, 8
+    MAX_CHARS = max(int((LAB_W - 14) / 6.9), 12)
+    plot_w = max(width - LAB_W - VAL_W - 16, 60)
+    vmax = max(vmax, max(v for _, v in data), 1e-9)
+    height = TOP * 2 + len(data) * (BAR_H + GAP) - GAP
+
+    parts = []
+    y = TOP
+    for lab, v in data:
+        w = max(plot_w * v / vmax, 2)
+        col = (colors or {}).get(lab, BAR_COLOR)
+        short = lab if len(lab) <= MAX_CHARS else lab[:MAX_CHARS - 1] + '…'
+        parts.append(
+            f'<g><title>{lab} — {fmt_val(v)}{unite}</title>'
+            f'<text class="bl" x="{LAB_W - 10}" y="{y + BAR_H - 4.5}">{short}</text>'
+            f'<rect class="br" x="{LAB_W}" y="{y}" width="{w:.1f}" height="{BAR_H}" '
+            f'rx="4" fill="{col}"/>'
+            f'<text class="bv" x="{LAB_W + w + 8:.1f}" y="{y + BAR_H - 4.5}">'
+            f'{fmt_val(v)}{unite}</text></g>')
+        y += BAR_H + GAP
+
+    return f"""<svg viewBox="0 0 {width} {height}" width="100%"
+     style="max-width:{width}px;display:block" role="img"
+     aria-label="Comparaison des valeurs">
+  <style>
+    .bl{{font:13px system-ui,-apple-system,"Segoe UI",sans-serif;fill:{INK2};
+        text-anchor:end}}
+    .bv{{font:600 13px system-ui,-apple-system,"Segoe UI",sans-serif;fill:{INK};
+        font-variant-numeric:tabular-nums}}
+  </style>
+  {''.join(parts)}
+</svg>"""
+
+
 # --------------------------------------------------------------------------
 def nice_thresholds(vals):
     """4 classes aux bornes rondes : le minimum tombe en classe 1, le maximum
@@ -350,12 +393,13 @@ def bin_of(v, T):
     return 3
 
 
-def legend_items(T, polarity='neutre'):
+def legend_items(T, polarity='neutre', unite='%'):
     R = ramp_for(polarity)
-    return [(R[0][0], f'moins de {fmt(T[0])} %'),
-            (R[1][0], f'{fmt(T[0])} – {fmt(T[1])} %'),
-            (R[2][0], f'{fmt(T[1])} – {fmt(T[2])} %'),
-            (R[3][0], f'{fmt(T[2])} % et plus')]
+    u = f' {unite}' if unite else ''
+    return [(R[0][0], f'moins de {fmt(T[0])}{u}'),
+            (R[1][0], f'{fmt(T[0])} – {fmt(T[1])}{u}'),
+            (R[2][0], f'{fmt(T[1])} – {fmt(T[2])}{u}'),
+            (R[3][0], f'{fmt(T[2])}{u} et plus')]
 
 
 def _norm(s):
@@ -529,8 +573,10 @@ def _pole_of_inaccessibility(rings):
 
 # --------------------------------------------------------------------------
 def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
-                   polarity='neutre'):
-    """values : {section: pourcentage}. Retourne (svg, thresholds, mode)."""
+                   polarity='neutre', unite='%'):
+    """values : {section: valeur}. `unite` est le suffixe écrit sur la carte
+    ('%' pour un pourcentage, '' pour un score sur 10).
+    Retourne (svg, thresholds, mode)."""
     T = thresholds or nice_thresholds(list(values.values()))
     RAMP = ramp_for(polarity)
     admin = _load_admin_polygons()
@@ -614,7 +660,8 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                 pp = [proj(lon * kx, lat) for lon, lat in ring]
                 allp += pp
                 d += 'M' + ' L'.join(f'{a:.1f},{b:.1f}' for a, b in pp) + ' Z'
-            tip = (f'{name} — {fmt_val(v)} % (base : {base_n.get(name, 0)})'
+            tip = (f'{name} — {fmt_val(v)}{" " + unite if unite else ""} '
+                   f'(base : {base_n.get(name, 0)})'
                    if v is not None else name)
             body.append(f'<path class="sec" d="{d}" fill="{fill}">'
                         f'<title>{tip}</title></path>')
@@ -661,9 +708,10 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                 fill, ink = RAMP[bin_of(v, T)]
                 body.append(
                     f'<circle class="sec" cx="{cx:.1f}" cy="{cy:.1f}" r="{R}" fill="{fill}">'
-                    f'<title>{name} — {fmt_val(v)} % (base : {base_n.get(name, 0)})</title></circle>'
+                    f'<title>{name} — {fmt_val(v)}{" " + unite if unite else ""} '
+                    f'(base : {base_n.get(name, 0)})</title></circle>'
                     f'<text class="pv" x="{cx:.1f}" y="{cy + 6:.1f}" fill="{ink}">'
-                    f'{fmt_val(v)}%</text>')
+                    f'{fmt_val(v)}{unite}</text>')
             label_anchor[name] = (cx, cy)
 
     # ---- 1) le pourcentage à l'intérieur de la section quand il y tient ----
@@ -678,7 +726,7 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
             v = values.get(name)
             if v is None:
                 continue
-            txt = f'{fmt_val(v)}%'
+            txt = f'{fmt_val(v)}{unite}'
             cx, cy = label_anchor[name]
             w = len(txt) * 7.6
             bx = (cx - w / 2 - 2, cy - 9, cx + w / 2 + 2, cy + 8)
@@ -723,7 +771,8 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
         """En mode contours, la valeur rejoint le nom si elle n'a pas tenu dedans."""
         if admin and not val_inside.get(name):
             v = values.get(name)
-            return f'{name} — {fmt_val(v)}%' if v is not None else f'{name} — n.d.'
+            return (f'{name} — {fmt_val(v)}{unite}' if v is not None
+                    else f'{name} — n.d.')
         return name
 
     def box(cx, cy, dx, dy, anchor, text):

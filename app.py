@@ -24,6 +24,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 import map_render
+import resilience_page
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_CSV = os.path.join(APP_DIR, "data", "donnees_anonymisees.csv")
@@ -161,6 +162,20 @@ st.markdown("""
 </style>
 <p class="org-mention">Programme des Nations Unies pour l'environnement — PNUE / UNEP</p>
 """, unsafe_allow_html=True)
+
+with st.sidebar:
+    st.header("Affichage")
+    app_mode = st.radio(
+        "Que voulez-vous consulter ?",
+        ["Explorer les questions", "Indicateurs de résilience"],
+        label_visibility="collapsed",
+        help="« Explorer les questions » donne les résultats bruts de n'importe "
+             "laquelle des 503 questions. « Indicateurs de résilience » donne les "
+             "scores 0-10 construits sur le cadre théorique.")
+
+if app_mode == "Indicateurs de résilience":
+    resilience_page.render()
+    st.stop()
 
 st.title("Enquête ménage 2024 — Sud et Grand'Anse")
 st.caption(
