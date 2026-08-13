@@ -16,7 +16,17 @@ import unicodedata
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 CENTROIDS_PATH = os.path.join(APP_DIR, 'data', 'map_centroids.json')
-GEOJSON_PATH = os.path.join(APP_DIR, 'data', 'sections_communales.geojson')
+# Le fichier de limites administratives est accepté dans data/ ou à la racine
+# du projet — le premier trouvé gagne.
+GEOJSON_CANDIDATES = [os.path.join(APP_DIR, 'data', 'sections_communales.geojson'),
+                      os.path.join(APP_DIR, 'sections_communales.geojson')]
+
+
+def _geojson_path():
+    for p in GEOJSON_CANDIDATES:
+        if os.path.exists(p):
+            return p
+    return None
 
 SECTIONS = ['Anse à Drick', 'Barbois', 'Dumont', 'Débouchette', 'Mouline',
             'Quentin', 'Beaulieu', 'Blactote', 'Dalmette', 'Trichet']
@@ -114,10 +124,11 @@ def _norm(s):
 # --------------------------------------------------------------------------
 def _load_admin_polygons():
     """Retourne {section: [ [ (lon,lat), ... ], ... ]} ou None si pas de fichier."""
-    if not os.path.exists(GEOJSON_PATH):
+    path = _geojson_path()
+    if not path:
         return None
     try:
-        gj = json.load(open(GEOJSON_PATH, encoding='utf-8'))
+        gj = json.load(open(path, encoding='utf-8'))
     except Exception:
         return None
 
@@ -208,9 +219,27 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660):
                 pp = [proj(lon * kx, lat) for lon, lat in ring]
                 allp += pp
                 d += 'M' + ' L'.join(f'{a:.1f},{b:.1f}' for a, b in pp) + ' Z'
-            body.append(f'<path class="sec" d="{d}" fill="{fill}"/>')
-            label_anchor[name] = (sum(p[0] for p in allp) / len(allp),
-                                  sum(p[1] for p in allp) / len(allp))
+            tip = (f'{name} — {fmt_val(v)} % (base : {base_n.get(name, 0)})'
+                   if v is not None else name)
+            body.append(f'<path class="sec" d="{d}" fill="{fill}">'
+                        f'<title>{tip}</title></path>')
+            # ancrage sur le centroïde de SURFACE (formule du lacet) : plus fiable
+            # que la moyenne des sommets, qui se décale là où ils sont serrés
+            big = max(rings, key=len)
+            pb = [proj(lon * kx, lat) for lon, lat in big]
+            a2 = cxa = cya = 0.0
+            for i in range(len(pb)):
+                ax, ay = pb[i]                      # noms distincts : x0/x1/y0/y1
+                bx_, by_ = pb[(i + 1) % len(pb)]    # servent à la projection
+                cr = ax * by_ - bx_ * ay
+                a2 += cr
+                cxa += (ax + bx_) * cr
+                cya += (ay + by_) * cr
+            if abs(a2) > 1e-9:
+                label_anchor[name] = (cxa / (3 * a2), cya / (3 * a2))
+            else:
+                label_anchor[name] = (sum(p[0] for p in allp) / len(allp),
+                                      sum(p[1] for p in allp) / len(allp))
     else:
         pos = {k: list(proj(*v)) for k, v in cent.items()}
         names = list(pos)
@@ -251,18 +280,33 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660):
                     f'{fmt_val(v)}%</text>')
             label_anchor[name] = (cx, cy)
 
-    # ---- étiquettes : 8 positions candidates, on garde la moins encombrée ----
+    # ---- étiquettes : positions candidates, on garde la moins encombrée ----
+    # En mode contours, l'étiquette tient sur deux lignes (nom / valeur) : deux
+    # fois moins large, donc beaucoup moins de collisions.
     CH, LH = 8.4, 15.0
-    off = R if not admin else 4
-    CANDS = [(0, off + 18, 'middle'), (0, -off - 9, 'middle'),
-             (off + 9, 5, 'start'), (-off - 9, 5, 'end'),
-             (off + 7, -off + 4, 'start'), (-off - 7, -off + 4, 'end'),
-             (off + 7, off + 8, 'start'), (-off - 7, off + 8, 'end')]
+    if admin:
+        # balayage en anneaux : d'abord au centre du polygone, puis de plus en
+        # plus loin, dans 8 directions — le trait de rappel garde le lien clair
+        CANDS = [(0, -2, 'middle')]
+        for rad in (36, 62, 92, 126, 164):
+            for ang_deg in (90, 270, 0, 180, 45, 135, 315, 225):
+                a = math.radians(ang_deg)
+                dx, dy = rad * math.cos(a), rad * math.sin(a)
+                anchor = 'middle' if abs(dx) < rad * 0.4 else (
+                    'start' if dx > 0 else 'end')
+                CANDS.append((round(dx), round(dy), anchor))
+    else:
+        off = R
+        CANDS = [(0, off + 18, 'middle'), (0, -off - 9, 'middle'),
+                 (off + 9, 5, 'start'), (-off - 9, 5, 'end'),
+                 (off + 7, -off + 4, 'start'), (-off - 7, -off + 4, 'end'),
+                 (off + 7, off + 8, 'start'), (-off - 7, off + 8, 'end')]
 
     def box(cx, cy, dx, dy, anchor, text):
         w = len(text) * CH
+        h2 = LH if not admin else 2 * LH          # deux lignes en mode contours
         x = cx + dx - (w / 2 if anchor == 'middle' else (w if anchor == 'end' else 0))
-        return (x - 6, cy + dy - LH - 1, x + w + 6, cy + dy + 6)
+        return (x - 6, cy + dy - LH - 1, x + w + 6, cy + dy - LH - 1 + h2 + 7)
 
     def hit(a, b):
         return not (a[2] < b[0] or b[2] < a[0] or a[3] < b[1] or b[3] < a[1])
@@ -301,9 +345,12 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660):
             leader = (f'<line class="ld" x1="{lx:.1f}" y1="{ly:.1f}" '
                       f'x2="{tx:.1f}" y2="{cy + dy - 4:.1f}"/>')
         v = values.get(name)
-        extra = f' — {fmt_val(v)}%' if (admin and v is not None) else ''
         body.append(f'{leader}<text class="pn" x="{cx + dx:.1f}" y="{cy + dy:.1f}" '
-                    f'style="text-anchor:{anchor}">{name}{extra}</text>')
+                    f'style="text-anchor:{anchor}">{name}</text>')
+        if admin:                                  # valeur sur une 2e ligne
+            val_txt = f'{fmt_val(v)}%' if v is not None else 'n.d.'
+            body.append(f'<text class="pw" x="{cx + dx:.1f}" y="{cy + dy + 16:.1f}" '
+                        f'style="text-anchor:{anchor}">{val_txt}</text>')
 
     km_px = 111.32 / sc
     bar = 10 / km_px
@@ -325,6 +372,9 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660):
     .pv{{font:650 15px system-ui,-apple-system,"Segoe UI",sans-serif;
         text-anchor:middle;font-variant-numeric:tabular-nums}}
     .pn{{font:600 13.5px system-ui,-apple-system,"Segoe UI",sans-serif;fill:{INK};
+        paint-order:stroke;stroke:{SURFACE};stroke-width:4px;stroke-linejoin:round}}
+    .pw{{font:650 14px system-ui,-apple-system,"Segoe UI",sans-serif;fill:{INK};
+        font-variant-numeric:tabular-nums;
         paint-order:stroke;stroke:{SURFACE};stroke-width:4px;stroke-linejoin:round}}
     .ld{{stroke:{MUTED};stroke-width:1;opacity:.55}}
     .cl{{stroke:{MUTED};stroke-width:1.5}} .ca{{fill:{MUTED}}}
