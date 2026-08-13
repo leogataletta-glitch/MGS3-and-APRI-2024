@@ -23,6 +23,7 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 
+import assets
 import map_render
 import resilience_page
 
@@ -159,26 +160,54 @@ st.markdown("""
     font-size: 12.5px; color: #52514e; letter-spacing: .05em;
     text-transform: uppercase; margin: 0 0 2px 2px;
   }
+  /* Les deux entrées du tableau de bord sont le premier choix de la page :
+     elles doivent se voir, pas ressembler à un réglage secondaire. */
+  .stRadio > div[role="radiogroup"] > label > div:last-child p {
+    font-size: 16.5px !important; font-weight: 600 !important;
+  }
 </style>
-<p class="org-mention">Programme des Nations Unies pour l'environnement — PNUE / UNEP</p>
 """, unsafe_allow_html=True)
 
-with st.sidebar:
-    st.header("Affichage")
-    app_mode = st.radio(
-        "Que voulez-vous consulter ?",
-        ["Résultats de toutes les questions aux 1200 ménages",
-         "Indicateurs de résilience associés"],
-        label_visibility="collapsed",
-        help="Le premier mode donne les résultats bruts de n'importe laquelle des "
-             "503 questions posées aux 1211 ménages enquêtés. Le second donne les "
-             "scores de résilience 0-10 construits sur le cadre théorique IRLA / APRI.")
+# ---- bandeau : logo PNUE + les deux entrées du tableau de bord ----------
+MODE_QUESTIONS = "Résultats de toutes les questions aux 1200 ménages"
+MODE_RESILIENCE = "Indicateurs de résilience associés"
 
-if app_mode == "Indicateurs de résilience associés":
+_logo, _entete = st.columns([1, 8])
+with _logo:
+    st.markdown(
+        f'<img src="data:image/png;base64,{assets.LOGO_UNEP}" '
+        f'style="width:96px;margin:2px 0 0 2px">', unsafe_allow_html=True)
+with _entete:
+    st.markdown(
+        '<p class="org-mention">Programme des Nations Unies pour '
+        "l'environnement — PNUE / UNEP</p>"
+        '<p style="font-size:26px;font-weight:650;letter-spacing:-.015em;'
+        'margin:2px 0 0 2px;color:#0b0b0b">Enquête ménage 2024 — '
+        "Sud et Grand'Anse</p>", unsafe_allow_html=True)
+
+# Bandeau : le dessin est rogné en hauteur pour rester un décor, pas une page.
+st.markdown(
+    f'<img src="data:image/jpeg;base64,{assets.PAYSAGE_CAMP_PERRIN}" '
+    f'style="width:100%;height:172px;object-fit:cover;object-position:50% 62%;'
+    f'border-radius:10px;margin:8px 0 12px">', unsafe_allow_html=True)
+
+# Les deux entrées sont mises au même niveau, en haut de page : ce sont deux
+# lectures différentes de la même enquête, pas un mode principal et une option.
+app_mode = st.radio(
+    "Que voulez-vous consulter ?",
+    [MODE_QUESTIONS, MODE_RESILIENCE],
+    horizontal=True, label_visibility="collapsed", key="app_mode",
+    help="À gauche, les résultats bruts de n'importe laquelle des 503 questions "
+         "posées aux 1211 ménages, avec les filtres âge / sexe / niveau "
+         "socio-économique / paysage. À droite, les indicateurs de résilience "
+         "consolidés et leur score IRLA / APRI.")
+st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
+
+if app_mode == MODE_RESILIENCE:
     resilience_page.render()
     st.stop()
 
-st.title("Enquête ménage 2024 — Sud et Grand'Anse")
+st.subheader("Résultats de toutes les questions aux 1200 ménages")
 st.caption(
     "Choisissez une ou plusieurs valeurs par filtre (les filtres se combinent : "
     "ex. Femmes ET Catégorie A ET section Quentin en même temps). "
