@@ -216,13 +216,29 @@ row_labels = [lab for lab, _ in theme["rows"]]
 rows_dict = dict(theme["rows"])
 
 
-# Bornes chiffrées des modalités : même fonction que celle qui ordonne les
-# barres (map_render.lower_bound), pour que le graphique et la carte ne
-# puissent jamais diverger sur ce qu'est une échelle chiffrée.
-nums = {lab: map_render.lower_bound(lab) for lab in row_labels}
+# Bornes chiffrées des modalités. La référence est map_render.lower_bound —
+# la même fonction qui ordonne les barres, pour que graphique et carte ne
+# puissent pas diverger. Les deux définitions de secours ci-dessous ne servent
+# qu'au cas où map_render.py serait resté sur une version plus ancienne : sans
+# elles, l'app planterait au lieu de simplement perdre le tri des barres.
+_ESPACE_MILLIERS = re.compile(r"(?<=\d)[\s  ](?=\d)")
+_ZERO_DEBUT = ("aucun", "aucune", "moins de", "inférieur", "inferieur", "pas de")
+
+
+def _lower_bound_local(label):
+    s = _ESPACE_MILLIERS.sub("", str(label).strip().lower())
+    if s.startswith(_ZERO_DEBUT):
+        return 0
+    m = re.search(r"\d+", s)
+    return int(m.group()) if m else None
+
+
+lower_bound = getattr(map_render, "lower_bound", _lower_bound_local)
+
+nums = {lab: lower_bound(lab) for lab in row_labels}
 chiffrees = [lab for lab in row_labels if nums[lab] is not None]
 bornes = [nums[lab] for lab in chiffrees]
-is_numeric = map_render.is_ordinal(row_labels)
+is_numeric = len(chiffrees) >= 3 and len(set(bornes)) == len(bornes)
 
 # Une question à choix unique répartit chaque foyer dans une seule modalité :
 # les cumuler est donc exact. Sur une question à choix multiples, un même foyer
