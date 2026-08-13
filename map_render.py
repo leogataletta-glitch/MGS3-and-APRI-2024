@@ -22,10 +22,38 @@ GEOJSON_CANDIDATES = [os.path.join(APP_DIR, 'data', 'sections_communales.geojson
                       os.path.join(APP_DIR, 'sections_communales.geojson')]
 
 
+LAND_CANDIDATES = [os.path.join(APP_DIR, 'data', 'hti_terre.geojson'),
+                   os.path.join(APP_DIR, 'hti_terre.geojson')]
+
+
 def _geojson_path():
     for p in GEOJSON_CANDIDATES:
         if os.path.exists(p):
             return p
+    return None
+
+
+def _land_rings():
+    """Contour de la terre émergée (Haïti), pour distinguer la mer.
+    Retourne une liste d'anneaux [(lon, lat), ...] ou None."""
+    for p in LAND_CANDIDATES:
+        if os.path.exists(p):
+            try:
+                gj = json.load(open(p, encoding='utf-8'))
+            except Exception:
+                return None
+            rings = []
+            for feat in gj.get('features', []):
+                g = feat.get('geometry') or {}
+                if g.get('type') == 'MultiPolygon':
+                    for poly in g.get('coordinates', []):
+                        if poly:
+                            rings.append(poly[0])
+                elif g.get('type') == 'Polygon':
+                    c = g.get('coordinates') or []
+                    if c:
+                        rings.append(c[0])
+            return rings or None
     return None
 
 SECTIONS = ['Anse à Drick', 'Barbois', 'Dumont', 'Débouchette', 'Mouline',
@@ -296,6 +324,14 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
     PAD, R, GAP = 86, 31, 16
     x0 = min(p[0] for p in pts); x1 = max(p[0] for p in pts)
     y0 = min(p[1] for p in pts); y1 = max(p[1] for p in pts)
+
+    # Quand on affiche le fond de carte terre/mer, on élargit un peu la vue pour
+    # que le littoral apparaisse autour des sections.
+    land = _land_rings()
+    if land:
+        m = 0.07 * max(x1 - x0, y1 - y0)
+        x0 -= m; x1 += m; y0 -= m; y1 += m
+
     sc = min((width - 2 * PAD) / max(x1 - x0, 1e-9),
              (height - 2 * PAD) / max(y1 - y0, 1e-9))
     ox = (width - (x1 - x0) * sc) / 2
@@ -306,6 +342,15 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
 
     body = []
     label_anchor = {}
+
+    # ---- fond : mer puis terre émergée ----
+    if land:
+        body.append(f'<rect class="sea" x="0" y="0" width="{width}" height="{height}"/>')
+        d = ''
+        for ring in land:
+            pp = [proj(lon * kx, lat) for lon, lat in ring]
+            d += 'M' + ' L'.join(f'{a:.1f},{b:.1f}' for a, b in pp) + ' Z'
+        body.append(f'<path class="land" d="{d}"/>')
 
     if admin:
         for name in SECTIONS:
@@ -469,6 +514,8 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
      style="max-width:{width}px;display:block;margin:0 auto" role="img"
      aria-label="Carte des sections communales colorées par seuil">
   <style>
+    .sea{{fill:#dde6ee}}
+    .land{{fill:#f1efe9;stroke:#c9c6bc;stroke-width:0.8;stroke-linejoin:round}}
     .sec{{stroke:{SURFACE};stroke-width:2;stroke-linejoin:round}}
     .pv{{font:650 15px system-ui,-apple-system,"Segoe UI",sans-serif;
         text-anchor:middle;font-variant-numeric:tabular-nums}}
@@ -479,9 +526,11 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
         paint-order:stroke;stroke:{SURFACE};stroke-width:4px;stroke-linejoin:round}}
     .ld{{stroke:{MUTED};stroke-width:1;opacity:.55}}
     .cl{{stroke:{MUTED};stroke-width:1.5}} .ca{{fill:{MUTED}}}
-    .ct{{font:600 13px system-ui,sans-serif;fill:{MUTED};text-anchor:middle}}
-    .ct2{{font:11.5px system-ui,sans-serif;fill:{MUTED};text-anchor:middle}}
+    .ct{{font:600 13px system-ui,sans-serif;fill:{MUTED};text-anchor:middle;
+        paint-order:stroke;stroke:{SURFACE};stroke-width:3px}}
+    .ct2{{font:11.5px system-ui,sans-serif;fill:{MUTED};text-anchor:middle;
+         paint-order:stroke;stroke:{SURFACE};stroke-width:3px}}
   </style>
-  {chrome}{''.join(body)}
+  {''.join(body)}{chrome}
 </svg>"""
     return svg, T, mode
