@@ -20,6 +20,9 @@ import sys
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
+
+import map_render
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_CSV = os.path.join(APP_DIR, "data", "donnees_anonymisees.csv")
@@ -190,6 +193,65 @@ for label, group_n in theme["rows"]:
 chart_df = pd.DataFrame(chart_rows).sort_values("%", ascending=True)
 
 st.bar_chart(chart_df.set_index("Modalité"), horizontal=True, color="#2f6690")
+
+# ---- carte : une couleur par seuil, une section communale par forme ----
+st.markdown("### Carte par section communale")
+row_labels = [lab for lab, _ in theme["rows"]]
+map_choice = st.selectbox(
+    "Modalité à cartographier", row_labels,
+    help="La carte affiche, pour chaque section, la part de foyers ayant cette réponse.")
+map_counts = dict(theme["rows"])[map_choice]
+map_values = {
+    s: (round(map_counts.get(s, 0) / base_n[s] * 100, 1) if base_n.get(s) else None)
+    for s in map_render.SECTIONS
+}
+
+with st.expander("Régler les seuils de couleur"):
+    auto = st.checkbox("Seuils automatiques", value=True)
+    auto_T = map_render.nice_thresholds([v for v in map_values.values() if v is not None])
+    if auto:
+        thresholds = auto_T
+    else:
+        c1, c2, c3 = st.columns(3)
+        thresholds = [
+            c1.number_input("Seuil 1", value=float(auto_T[0]), step=1.0),
+            c2.number_input("Seuil 2", value=float(auto_T[1]), step=1.0),
+            c3.number_input("Seuil 3", value=float(auto_T[2]), step=1.0),
+        ]
+        thresholds = sorted(thresholds)
+
+map_height = 660
+svg, T, mode = map_render.render_map_svg(
+    map_values, base_n, thresholds, height=map_height)
+
+legend_html = "".join(
+    f'<span style="display:inline-flex;align-items:center;gap:7px;margin-right:18px">'
+    f'<span style="width:22px;height:12px;border-radius:3px;background:{c};'
+    f'box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)"></span>'
+    f'<span style="font-size:13px;color:#52514e">{lab}</span></span>'
+    for c, lab in map_render.legend_items(T))
+
+# Streamlit assainit le SVG inséré via st.markdown (il vide les <circle>/<text>) :
+# on passe donc par un composant HTML isolé, qui rend le SVG tel quel.
+components.html(
+    f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+                    background:#fcfcfb">
+      <div style="margin:0 0 8px"><span style="font-size:11.5px;color:#898781;
+        letter-spacing:.05em;margin-right:14px">SEUILS</span>{legend_html}</div>
+      {svg}
+    </div>""",
+    height=map_height + 46, scrolling=False)
+
+if mode == "disques":
+    st.caption(
+        "Chaque disque représente une section communale, placée à sa position "
+        "géographique réelle (nord en haut, distances respectées) ; les disques qui se "
+        "superposaient ont été légèrement écartés. Ce ne sont pas les limites "
+        "administratives officielles — déposez un fichier "
+        "`data/sections_communales.geojson` dans le projet et la carte affichera "
+        "automatiquement les vrais contours.")
+else:
+    st.caption("Contours administratifs officiels des sections communales.")
 
 # ---- tableau détaillé avec tous les sous-groupes ----
 st.markdown("**Détail par sous-groupe**")
