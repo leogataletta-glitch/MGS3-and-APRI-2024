@@ -59,9 +59,107 @@ def _geo():
     except Exception:
         return KX, dict(CENTROIDS)
 
-# rampe séquentielle bleue (une seule teinte, validée) : fond + encre du texte
-RAMP = [('#86b6ef', '#0b0b0b'), ('#3987e5', '#0b0b0b'),
-        ('#256abf', '#ffffff'), ('#104281', '#ffffff')]
+# --------------------------------------------------------------------------
+# Trois rampes, choisies selon le sens de l'indicateur. Chaque entrée = (fond,
+# encre du texte posé dessus), l'encre étant celle qui donne le meilleur
+# contraste (toutes ≥ 4,5:1).
+#
+# 'neutre'  : rampe séquentielle bleue, une seule teinte — quand un pourcentage
+#             élevé n'est ni bon ni mauvais (mois de semis, zone de pêche...).
+# 'eleve_mauvais' / 'eleve_bon' : échelle de gravité vert → jaune → orange →
+#             rouge, retournée selon le sens. Séparation vérifiée avec le
+#             validateur de palette (pire paire adjacente : ΔE 17,2 en vision
+#             daltonienne, 21,7 en vision normale) — nettement au-dessus des
+#             seuils. La valeur reste écrite sur chaque section : la couleur
+#             ne porte jamais l'information toute seule.
+# --------------------------------------------------------------------------
+RAMP_NEUTRAL = [('#86b6ef', '#0b0b0b'), ('#3987e5', '#0b0b0b'),
+                ('#256abf', '#ffffff'), ('#104281', '#ffffff')]
+RAMP_SEVERITY = [('#3d9e4f', '#0b0b0b'), ('#f0c419', '#0b0b0b'),
+                 ('#dd6b0d', '#0b0b0b'), ('#98161c', '#ffffff')]
+
+POLARITIES = ('eleve_mauvais', 'eleve_bon', 'neutre')
+
+
+def ramp_for(polarity):
+    if polarity == 'eleve_mauvais':
+        return RAMP_SEVERITY                      # bas = vert, haut = rouge
+    if polarity == 'eleve_bon':
+        return RAMP_SEVERITY[::-1]                # bas = rouge, haut = vert
+    return RAMP_NEUTRAL
+
+
+def polarity_caption(polarity):
+    if polarity == 'eleve_mauvais':
+        return ("Lecture des couleurs : vert = situation la plus favorable, "
+                "rouge = la plus préoccupante (ici, un pourcentage élevé est défavorable).")
+    if polarity == 'eleve_bon':
+        return ("Lecture des couleurs : vert = situation la plus favorable, "
+                "rouge = la plus préoccupante (ici, un pourcentage élevé est favorable).")
+    return ("Lecture des couleurs : du plus clair au plus foncé selon le pourcentage. "
+            "Aucune couleur ne juge la situation — cet indicateur n'est ni bon ni mauvais en soi.")
+
+
+# --- Faut-il lire un pourcentage élevé comme une mauvaise nouvelle ? --------
+# Sur 503 questions, aucune règle automatique n'est fiable à 100 % : on ne
+# propose qu'une valeur par défaut, que l'utilisateur peut corriger d'un clic.
+# Dans le doute, on reste en neutre plutôt que de colorier à tort.
+# Non-réponses et fourre-tout : jamais coloriés en bien/mal — testés en premier.
+_MOD_NEUTRE = (
+    'ne sait pas', 'ne souhaite pas répondre', 'non précisé', 'sans objet',
+    'non applicable', 'autre', 'non classé', 'code ambigu', 'refus',
+)
+_MOD_MAUVAIS = (
+    'aucun', 'aucune', 'sans dalle', 'air libre', 'non protég', 'non traité',
+    'diminution', 'sécheresse', 'maladie', 'inondation', 'éboulement',
+    'glissement', 'détérioration', 'déforestation', 'érosion', 'perte',
+    'perdu', 'dégâts importants', 'jamais', 'pas de',
+    "n'a pas", 'non scolaris', 'analphab', 'défécation',
+)
+_MOD_BON = (
+    'protég', 'réseau', 'augmentation', 'amélior', 'avec dalle',
+    'chasse d\'eau', 'vaccin', 'scolaris', 'irrig',
+)
+_Q_OUI_MAUVAIS = (
+    'inquiet', "n'a pas pu", 'moins que', 'sans manger', 'peu variée',
+    'faim', 'endommag', 'perte', 'perdu', 'mortalit', 'maladie', 'pot-de-vin',
+    'pot de vin', 'violence', 'vol ', 'insécurit', 'a dû ', 'renoncé',
+    'sauter un repas', 'épuisé', 'manqué',
+)
+_Q_OUI_BON = (
+    'accès', 'a voté', 'participé', 'épargne', 'sécurité', 'assur',
+    'formation', 'reçu une alerte', 'alerte', 'associat', 'entraide',
+    'appartien', 'possède', 'sait lire',
+)
+
+
+def guess_polarity(question, modality):
+    """Proposition de lecture : 'eleve_mauvais', 'eleve_bon' ou 'neutre'."""
+    q, m = _norm(question), _norm(modality)
+    for kw in _MOD_NEUTRE:
+        if _norm(kw) in m:
+            return 'neutre'
+    for kw in _MOD_MAUVAIS:
+        if _norm(kw) in m:
+            return 'eleve_mauvais'
+    for kw in _MOD_BON:
+        if _norm(kw) in m:
+            return 'eleve_bon'
+    if m in ('oui', 'oui '):
+        for kw in _Q_OUI_MAUVAIS:
+            if _norm(kw) in q:
+                return 'eleve_mauvais'
+        for kw in _Q_OUI_BON:
+            if _norm(kw) in q:
+                return 'eleve_bon'
+    if m == 'non':
+        for kw in _Q_OUI_MAUVAIS:
+            if _norm(kw) in q:
+                return 'eleve_bon'
+        for kw in _Q_OUI_BON:
+            if _norm(kw) in q:
+                return 'eleve_mauvais'
+    return 'neutre'
 
 INK, INK2, MUTED, SURFACE = '#0b0b0b', '#52514e', '#898781', '#fcfcfb'
 
@@ -109,11 +207,12 @@ def bin_of(v, T):
     return 3
 
 
-def legend_items(T):
-    return [(RAMP[0][0], f'moins de {fmt(T[0])} %'),
-            (RAMP[1][0], f'{fmt(T[0])} – {fmt(T[1])} %'),
-            (RAMP[2][0], f'{fmt(T[1])} – {fmt(T[2])} %'),
-            (RAMP[3][0], f'{fmt(T[2])} % et plus')]
+def legend_items(T, polarity='neutre'):
+    R = ramp_for(polarity)
+    return [(R[0][0], f'moins de {fmt(T[0])} %'),
+            (R[1][0], f'{fmt(T[0])} – {fmt(T[1])} %'),
+            (R[2][0], f'{fmt(T[1])} – {fmt(T[2])} %'),
+            (R[3][0], f'{fmt(T[2])} % et plus')]
 
 
 def _norm(s):
@@ -178,9 +277,11 @@ def _load_admin_polygons():
 
 
 # --------------------------------------------------------------------------
-def render_map_svg(values, base_n, thresholds=None, width=920, height=660):
+def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
+                   polarity='neutre'):
     """values : {section: pourcentage}. Retourne (svg, thresholds, mode)."""
     T = thresholds or nice_thresholds(list(values.values()))
+    RAMP = ramp_for(polarity)
     admin = _load_admin_polygons()
     mode = 'admin' if admin else 'disques'
 

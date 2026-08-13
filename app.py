@@ -221,6 +221,23 @@ map_values = {
     for s in map_render.SECTIONS
 }
 
+POLARITY_LABELS = {
+    "eleve_mauvais": "Un pourcentage élevé est **défavorable** (vert → rouge)",
+    "eleve_bon": "Un pourcentage élevé est **favorable** (rouge → vert)",
+    "neutre": "Ni bon ni mauvais — dégradé de bleu",
+}
+suggestion = map_render.guess_polarity(theme["question"], map_choice)
+pol_key = f"pol_{theme_i}_{map_choice}"
+polarity = st.radio(
+    "Sens de lecture des couleurs",
+    list(POLARITY_LABELS.keys()),
+    index=list(POLARITY_LABELS.keys()).index(suggestion),
+    format_func=lambda k: POLARITY_LABELS[k],
+    horizontal=True, key=pol_key,
+    help="Proposé automatiquement d'après l'intitulé de la question. "
+         "Aucune règle n'étant fiable sur les 503 questions, vérifiez-le et "
+         "corrigez-le si besoin.")
+
 with st.expander("Régler les seuils de couleur"):
     auto = st.checkbox("Seuils automatiques", value=True)
     auto_T = map_render.nice_thresholds([v for v in map_values.values() if v is not None])
@@ -237,14 +254,14 @@ with st.expander("Régler les seuils de couleur"):
 
 map_height = 660
 svg, T, mode = map_render.render_map_svg(
-    map_values, base_n, thresholds, height=map_height)
+    map_values, base_n, thresholds, height=map_height, polarity=polarity)
 
 legend_html = "".join(
     f'<span style="display:inline-flex;align-items:center;gap:7px;margin-right:18px">'
     f'<span style="width:22px;height:12px;border-radius:3px;background:{c};'
     f'box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)"></span>'
     f'<span style="font-size:13px;color:#52514e">{lab}</span></span>'
-    for c, lab in map_render.legend_items(T))
+    for c, lab in map_render.legend_items(T, polarity))
 
 # Streamlit assainit le SVG inséré via st.markdown (il vide les <circle>/<text>) :
 # on passe donc par un composant HTML isolé, qui rend le SVG tel quel.
@@ -256,6 +273,8 @@ components.html(
       {svg}
     </div>""",
     height=map_height + 46, scrolling=False)
+
+st.caption(map_render.polarity_caption(polarity))
 
 if mode == "disques":
     st.caption(
