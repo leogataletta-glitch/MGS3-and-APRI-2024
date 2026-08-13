@@ -216,28 +216,13 @@ row_labels = [lab for lab, _ in theme["rows"]]
 rows_dict = dict(theme["rows"])
 
 
-# Les modalités chiffrées de l'enquête ne sont pas des entiers purs : on trouve
-# « 0 », « 1-5 », « 5 et plus », « Aucun », « Entre 25 et 50 », « Moins de 50 kg ».
-# Pour proposer un seuil « X et plus », seule la borne INFÉRIEURE compte.
-_ESPACE_MILLIERS = re.compile(r"(?<=\d)[\s\u00a0\u202f](?=\d)")
-_ZERO_DEBUT = ("aucun", "aucune", "moins de", "inférieur", "inferieur", "pas de")
-
-
-def lower_bound(label):
-    """Borne inférieure d'une modalité chiffrée, ou None si non chiffrée."""
-    s = _ESPACE_MILLIERS.sub("", str(label).strip().lower())
-    if s.startswith(_ZERO_DEBUT):
-        return 0
-    m = re.search(r"\d+", s)
-    return int(m.group()) if m else None
-
-
-nums = {lab: lower_bound(lab) for lab in row_labels}
+# Bornes chiffrées des modalités : même fonction que celle qui ordonne les
+# barres (map_render.lower_bound), pour que le graphique et la carte ne
+# puissent jamais diverger sur ce qu'est une échelle chiffrée.
+nums = {lab: map_render.lower_bound(lab) for lab in row_labels}
 chiffrees = [lab for lab in row_labels if nums[lab] is not None]
 bornes = [nums[lab] for lab in chiffrees]
-# mode « seuil » proposé seulement si l'échelle est vraiment exploitable :
-# au moins 3 modalités chiffrées, à bornes toutes distinctes
-is_numeric = len(chiffrees) >= 3 and len(set(bornes)) == len(bornes)
+is_numeric = map_render.is_ordinal(row_labels)
 
 # Une question à choix unique répartit chaque foyer dans une seule modalité :
 # les cumuler est donc exact. Sur une question à choix multiples, un même foyer

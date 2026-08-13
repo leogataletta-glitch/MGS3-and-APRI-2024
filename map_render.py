@@ -12,6 +12,7 @@ Deux modes, choisis automatiquement :
 import json
 import math
 import os
+import re
 import unicodedata
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -222,14 +223,51 @@ INK, INK2, MUTED, SURFACE = '#0b0b0b', '#52514e', '#898781', '#fcfcfb'
 BAR_COLOR = '#5b6b7a'
 
 
+_ESPACE_MILLIERS = re.compile(r"(?<=\d)[\s  ](?=\d)")
+_ZERO_DEBUT = ("aucun", "aucune", "moins de", "inférieur", "inferieur", "pas de")
+
+
+def lower_bound(label):
+    """Borne inférieure d'une modalité chiffrée, ou None si non chiffrée.
+
+    Les modalités de l'enquête sont rarement des entiers purs : « 1-5 »,
+    « 5 et plus », « Aucun », « Entre 25 et 50 », « Moins de 50 kg »,
+    « 750-1 000 kg ». Attention aux formes « moins de X » / « inférieur à X »,
+    dont la borne basse est 0 et non X.
+    """
+    s = _ESPACE_MILLIERS.sub("", str(label).strip().lower())
+    if s.startswith(_ZERO_DEBUT):
+        return 0
+    m = re.search(r"\d+", s)
+    return int(m.group()) if m else None
+
+
+def is_ordinal(labels):
+    """L'ensemble des modalités forme-t-il une échelle chiffrée exploitable ?"""
+    bounds = [lower_bound(l) for l in labels]
+    chiffrees = [b for b in bounds if b is not None]
+    return len(chiffrees) >= 3 and len(set(chiffrees)) == len(chiffrees)
+
+
 def render_bars_svg(rows, base_total, width=880, color=BAR_COLOR):
     """Diagramme en barres horizontales, une barre par modalité.
 
     Pas d'axe ni de grille : la valeur est écrite au bout de chaque barre. Une
     graduation dense n'apporte rien quand chaque barre porte déjà son chiffre —
     elle ne fait qu'ajouter du bruit.
+
+    Ordre des barres : sur une échelle chiffrée (0, 1, 2, 3… ou 1-5, 6-10…),
+    on suit l'ordre de l'échelle, du plus petit au plus grand — trier par
+    fréquence casserait la progression et rendrait la lecture fausse. Sur des
+    catégories sans ordre naturel (types de toilettes, sources de revenus),
+    on trie de la plus fréquente à la plus rare.
     """
-    data = sorted(((lab, n) for lab, n in rows), key=lambda r: -r[1])
+    labels = [lab for lab, _ in rows]
+    if is_ordinal(labels):
+        data = sorted(rows, key=lambda r: (lower_bound(r[0]) is None,
+                                           lower_bound(r[0]) or 0))
+    else:
+        data = sorted(rows, key=lambda r: -r[1])
     if not data or not base_total:
         return '<svg width="0" height="0"></svg>'
 
