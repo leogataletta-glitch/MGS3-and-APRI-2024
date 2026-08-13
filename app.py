@@ -213,21 +213,92 @@ components.html(
 # ---- carte : une couleur par seuil, une section communale par forme ----
 st.markdown("### Carte par section communale")
 row_labels = [lab for lab, _ in theme["rows"]]
-map_choice = st.selectbox(
-    "Modalité à cartographier", row_labels,
-    help="La carte affiche, pour chaque section, la part de foyers ayant cette réponse.")
-map_counts = dict(theme["rows"])[map_choice]
+rows_dict = dict(theme["rows"])
+
+
+# Les modalités chiffrées de l'enquête ne sont pas des entiers purs : on trouve
+# « 0 », « 1-5 », « 5 et plus », « Aucun », « Entre 25 et 50 », « Moins de 50 kg ».
+# Pour proposer un seuil « X et plus », seule la borne INFÉRIEURE compte.
+_ESPACE_MILLIERS = re.compile(r"(?<=\d)[\s\u00a0\u202f](?=\d)")
+_ZERO_DEBUT = ("aucun", "aucune", "moins de", "inférieur", "inferieur", "pas de")
+
+
+def lower_bound(label):
+    """Borne inférieure d'une modalité chiffrée, ou None si non chiffrée."""
+    s = _ESPACE_MILLIERS.sub("", str(label).strip().lower())
+    if s.startswith(_ZERO_DEBUT):
+        return 0
+    m = re.search(r"\d+", s)
+    return int(m.group()) if m else None
+
+
+nums = {lab: lower_bound(lab) for lab in row_labels}
+chiffrees = [lab for lab in row_labels if nums[lab] is not None]
+bornes = [nums[lab] for lab in chiffrees]
+# mode « seuil » proposé seulement si l'échelle est vraiment exploitable :
+# au moins 3 modalités chiffrées, à bornes toutes distinctes
+is_numeric = len(chiffrees) >= 3 and len(set(bornes)) == len(bornes)
+
+# Une question à choix unique répartit chaque foyer dans une seule modalité :
+# les cumuler est donc exact. Sur une question à choix multiples, un même foyer
+# peut apparaître dans plusieurs, et la somme dépasserait le compte réel.
+somme_pct = (sum(g.get("Total", 0) for _, g in theme["rows"]) / base_n["Total"] * 100
+             if base_n.get("Total") else 0)
+choix_multiple = somme_pct > 101
+
+mode = "liste"
+if is_numeric:
+    mode = st.radio(
+        "Que cartographier",
+        ["seuil", "liste"],
+        format_func=lambda k: {"seuil": "Un seuil : « X et plus »",
+                               "liste": "Une ou plusieurs valeurs précises"}[k],
+        horizontal=True, key=f"mode_{theme_i}")
+
+if mode == "seuil":
+    paliers = sorted(bornes)[1:]            # la borne la plus basse ne filtre rien
+    seuil = st.selectbox("Seuil", paliers, format_func=lambda v: f"{v} et plus",
+                         key=f"seuil_{theme_i}")
+    selection = [lab for lab in chiffrees if nums[lab] >= seuil]
+    map_choice = f"{seuil} et plus"
+    st.caption("Cumule : " + ", ".join(f"« {lab} »" for lab in selection))
+    hors = [lab for lab in row_labels if nums[lab] is None]
+    if hors:
+        st.caption("Non comptées (réponses non chiffrées) : "
+                   + ", ".join(f"« {lab} »" for lab in hors))
+else:
+    selection = st.multiselect(
+        "Réponse(s) à cartographier", row_labels, default=[row_labels[0]],
+        key=f"sel_{theme_i}",
+        help="Sélectionnez-en plusieurs pour les cumuler "
+             "(ex. « Latrines à fosse sans dalle » + « Aucun »).")
+    map_choice = " + ".join(selection)
+
+if not selection:
+    st.info("Choisissez au moins une réponse pour afficher la carte.")
+    st.stop()
+
+if len(selection) > 1 and choix_multiple:
+    st.warning(
+        "Cette question accepte plusieurs réponses par foyer : en cumuler "
+        "plusieurs compte deux fois les foyers qui en ont coché plus d'une. "
+        "Le total affiché est donc un maximum, pas un effectif exact.")
+
+map_counts = {g: sum(rows_dict[lab].get(g, 0) for lab in selection)
+              for g in map_render.SECTIONS}
 map_values = {
     s: (round(map_counts.get(s, 0) / base_n[s] * 100, 1) if base_n.get(s) else None)
     for s in map_render.SECTIONS
 }
+if mode != "seuil" and len(selection) > 1:
+    st.caption("Cumule : " + ", ".join(f"« {lab} »" for lab in selection))
 
 POLARITY_LABELS = {
     "eleve_mauvais": "Un pourcentage élevé est **défavorable** (vert → rouge)",
     "eleve_bon": "Un pourcentage élevé est **favorable** (rouge → vert)",
     "neutre": "Ni bon ni mauvais — dégradé de bleu",
 }
-suggestion = map_render.guess_polarity(theme["question"], map_choice)
+suggestion = map_render.guess_polarity(theme["question"], selection[0])
 pol_key = f"pol_{theme_i}_{map_choice}"
 polarity = st.radio(
     "Sens de lecture des couleurs",
