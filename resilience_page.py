@@ -81,27 +81,48 @@ def _pct(score):
     return None if score is None else round(score * 10, 1)
 
 
-def _bandeau_scores(entrees):
-    """Trois chiffres en gros : score sur 10, et sa position en % de l'échelle."""
+def _bandeau_scores(entrees, libelle_mesure=None):
+    """Un cartouche par entrée : la mesure brute en % de ménages quand elle
+    existe, puis le score APRI qu'elle produit, et ce score en % de l'échelle.
+
+    Les deux chiffres répondent à deux questions différentes et doivent rester
+    visibles ensemble : « 47,9 % des ménages ont un assainissement amélioré »
+    dit ce qui se passe sur le terrain ; « score 4 / 10 » dit où cela place la
+    section sur l'échelle de comparaison internationale.
+    """
     cols = st.columns(len(entrees))
-    for col, (libelle, score, teinte) in zip(cols, entrees):
-        coul = teinte or map_render.RAMP_APRI[
+    for col, (libelle, score, mesure) in zip(cols, entrees):
+        coul = map_render.RAMP_APRI[
             map_render.bin_of(score, map_render.SEUILS_APRI)][0]
+        if mesure is None:
+            bloc_mesure = ""
+        else:
+            bloc_mesure = (
+                f'<div style="font-size:34px;font-weight:700;color:#0b0b0b;'
+                f'line-height:1.15;font-variant-numeric:tabular-nums">'
+                f'{f"{mesure:.1f}".replace(".", ",")}'
+                f'<span style="font-size:19px;font-weight:600"> %</span></div>'
+                f'<div style="font-size:12px;color:#52514e;margin-bottom:8px">'
+                f'{libelle_mesure or "des ménages"}</div>'
+                f'<div style="height:1px;background:#e7e6e0;margin:0 0 8px"></div>')
+        # Une seule ligne, sans indentation : Streamlit passe en bloc de code
+        # dès qu'une ligne de HTML commence par quatre espaces.
+        html = (
+            f'<div style="border:1px solid #e7e6e0;border-left:6px solid {coul};'
+            f'border-radius:8px;padding:12px 16px;background:#fcfcfb">'
+            f'<div style="font-size:12px;color:#52514e;letter-spacing:.03em;'
+            f'text-transform:uppercase;margin-bottom:4px">{libelle}</div>'
+            f'{bloc_mesure}'
+            f'<div style="font-size:{34 if mesure is None else 30}px;font-weight:700;'
+            f'color:#0b0b0b;line-height:1.15;font-variant-numeric:tabular-nums">'
+            f'{f"{score:.2f}".replace(".", ",")}'
+            f'<span style="font-size:17px;font-weight:500;color:#898781"> / 10</span>'
+            f'</div>'
+            f'<div style="font-size:12px;color:#52514e">score de résilience — '
+            f'{f"{_pct(score):.0f}"} % de l\'échelle APRI</div>'
+            f'</div>')
         with col:
-            st.markdown(
-                f"""<div style="border:1px solid #e7e6e0;border-left:6px solid {coul};
-                        border-radius:8px;padding:12px 16px;background:#fcfcfb">
-                  <div style="font-size:12px;color:#52514e;letter-spacing:.03em;
-                       text-transform:uppercase">{libelle}</div>
-                  <div style="font-size:38px;font-weight:700;color:#0b0b0b;
-                       line-height:1.15;font-variant-numeric:tabular-nums">
-                    {f'{score:.2f}'.replace('.', ',')}
-                    <span style="font-size:17px;font-weight:500;color:#898781">/ 10</span>
-                  </div>
-                  <div style="font-size:19px;font-weight:600;color:#52514e;
-                       font-variant-numeric:tabular-nums">
-                    {f'{_pct(score):.1f}'.replace('.', ',')} % de l'échelle</div>
-                </div>""", unsafe_allow_html=True)
+            st.markdown(html, unsafe_allow_html=True)
 
 
 def _radar_html(svg, series, hauteur):
@@ -174,13 +195,41 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
         "au moins n'est pas mesuré." if niveau == "dimensions" else
         "Un axe par indicateur de la dimension, sur la même échelle 0 à 10.")
 
-    tab = pd.DataFrame(
-        [{"Axe": ax,
-          **{nom: (None if v is None else f"{v:.2f} — {_pct(v):.0f} %")
-             for nom, vals, _ in series
-             for v in [vals[i]]}}
-         for i, ax in enumerate(axes)])
-    st.dataframe(tab, use_container_width=True, hide_index=True)
+    # Au niveau des indicateurs, la mesure brute accompagne chaque score.
+    mesures = {}
+    if niveau == "indicateurs":
+        for ax in axes:
+            lg = groupes[ax][0]
+            for nom in choisies:
+                if nom == "Ensemble des 10 sections":
+                    pris = [vent["sections"][s][str(lg)]["valeurs"].get(pop)
+                            for s in sections]
+                    pris = [v for v in pris if v is not None]
+                    mesures[(ax, nom)] = (round(sum(pris) / len(pris), 1)
+                                          if pris else None)
+                else:
+                    mesures[(ax, nom)] = \
+                        vent["sections"][nom][str(lg)]["valeurs"].get(pop)
+
+    tab = []
+    for i, ax in enumerate(axes):
+        rec = {"Axe": ax}
+        for nom, vals, _ in series:
+            v = vals[i]
+            if v is None:
+                rec[nom] = None
+                continue
+            texte = f"{v:.2f} / 10".replace(".", ",") + f" — {_pct(v):.0f} %"
+            m = mesures.get((ax, nom))
+            if m is not None:
+                texte = f'{f"{m:.1f}".replace(".", ",")} % des ménages → {texte}' 
+            rec[nom] = texte
+        tab.append(rec)
+    st.dataframe(pd.DataFrame(tab), use_container_width=True, hide_index=True)
+    if niveau == "indicateurs":
+        st.caption("Lecture d'une cellule : la mesure brute sur le terrain, "
+                   "puis le score que le barème lui attribue et sa position sur "
+                   "l'échelle APRI.")
 
 
 def _scorables(res):
@@ -289,18 +338,39 @@ def render():
     dispo = [v for v in scores.values() if v is not None]
     if dispo:
         moyenne = sum(dispo) / len(dispo)
-        haut = max(sections, key=lambda s: (scores[s] is not None, scores[s] or -1))
+        haut = max((s for s in sections if scores[s] is not None),
+                   key=lambda s: scores[s])
         bas = min((s for s in sections if scores[s] is not None),
                   key=lambda s: scores[s])
+
+        def mesure(sec=None):
+            """Mesure brute en % de ménages — seulement sur un indicateur seul."""
+            if indic is None:
+                return None
+            if sec is not None:
+                return pourcents.get(sec)
+            pris = [v for v in pourcents.values() if v is not None]
+            return round(sum(pris) / len(pris), 1) if pris else None
+
         _bandeau_scores(
-            [("Moyenne des 10 sections", moyenne, None),
-             (f"La plus élevée — {haut}", scores[haut], None),
-             (f"La plus faible — {bas}", scores[bas], None)])
-        st.caption(
-            "Le pourcentage est la position du score sur l'échelle APRI "
-            "(un score de 5 sur 10 = 50 % de l'échelle). Ce n'est pas un "
-            "pourcentage de ménages : celui-là figure dans le tableau détaillé "
-            "et sur la carte « valeur brute ».")
+            [("Moyenne des 10 sections", moyenne, mesure()),
+             (f"Score le plus élevé — {haut}", scores[haut], mesure(haut)),
+             (f"Score le plus faible — {bas}", scores[bas], mesure(bas))],
+            libelle_mesure="des ménages (mesure brute)")
+        if indic is not None:
+            st.caption(
+                "Deux lectures à garder ensemble : le pourcentage du haut dit ce "
+                "qui est mesuré sur le terrain, le score du bas dit où cela place "
+                "la section sur l'échelle de comparaison internationale APRI. "
+                "C'est le barème qui fait le passage de l'un à l'autre — et il "
+                "n'est pas linéaire.")
+        else:
+            st.caption(
+                "Agrégat de plusieurs indicateurs : il n'y a pas de pourcentage "
+                "de ménages unique à afficher ici. Choisissez un indicateur précis "
+                "dans « Quoi cartographier » pour voir la mesure brute à côté du "
+                "score. Le pourcentage indiqué est la position du score sur "
+                "l'échelle APRI (5 sur 10 = 50 %).")
 
     petits = [s for s in sections if effectifs[s] < N_FRAGILE]
     if petits:
@@ -335,9 +405,22 @@ def render():
         vmax = max([v for v in valeurs.values() if v is not None] or [1])
 
     hauteur = 720
+    # L'infobulle porte toujours les deux chiffres, quelle que soit la couche
+    # affichée : la mesure brute et le score qu'elle produit.
+    bulles = {}
+    if indic is not None:
+        for s in sections:
+            morceaux = []
+            if pourcents.get(s) is not None:
+                morceaux.append(f'{pourcents[s]:.1f} % des ménages'.replace('.', ','))
+            if scores.get(s) is not None:
+                morceaux.append(f'score {scores[s]:.0f} / 10')
+            if morceaux:
+                bulles[s] = ' · '.join(morceaux)
+
     svg, T, rendu = map_render.render_map_svg(
         valeurs, effectifs, seuils, height=hauteur,
-        polarity=polarite, unite=unite, ramp=rampe)
+        polarity=polarite, unite=unite, ramp=rampe, infos=bulles)
 
     if rampe is map_render.RAMP_APRI:
         # Onze classes, une par point de score : la légende reprend l'échelle
@@ -380,8 +463,18 @@ def render():
                    key=lambda s: valeurs[s])
     RAMP = rampe or map_render.ramp_for(polarite)
     couleurs = {s: RAMP[map_render.bin_of(valeurs[s], T)][0] for s in ordre}
+    # Sur un indicateur précis, chaque barre porte les deux chiffres : le score
+    # et, en gris, la mesure brute qui l'a produit.
+    annot = {}
+    if indic is not None:
+        for s in ordre:
+            if afficher == "score" and pourcents.get(s) is not None:
+                annot[s] = f'({pourcents[s]:.1f} % des ménages)'.replace('.', ',')
+            elif afficher != "score" and scores.get(s) is not None:
+                annot[s] = f'(score {scores[s]:.0f} / 10)'
     bars = map_render.render_score_bars_svg(
-        [(s, valeurs[s]) for s in ordre], vmax=vmax, unite=unite, colors=couleurs)
+        [(s, valeurs[s]) for s in ordre], vmax=vmax, unite=unite, colors=couleurs,
+        annotations=annot)
     components.html(
         f'<div style="background:#fcfcfb;font-family:system-ui,-apple-system,'
         f"'Segoe UI',sans-serif\">{bars}</div>",
@@ -407,8 +500,15 @@ def render():
             n = vent["effectifs"][sec][p]
             if v is None:
                 rec[p] = None
+                continue
+            texte = f"{v:.2f} / 10".replace(".", ",")
+            if indic is not None:
+                brut = bloc[str(indic["ligne"])]["valeurs"].get(p)
+                if brut is not None:
+                    texte = f'{f"{brut:.1f}".replace(".", ",")} % → {texte}'
             else:
-                rec[p] = f"{v:.2f} — {_pct(v):.0f} %" + (" ·" if n < N_FRAGILE else "")
+                texte = f"{texte} — {_pct(v):.0f} %"
+            rec[p] = texte + (" ·" if n < N_FRAGILE else "")
         lignes_tab.append(rec)
     df = pd.DataFrame(lignes_tab)
     st.dataframe(df, use_container_width=True, hide_index=True)

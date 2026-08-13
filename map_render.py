@@ -319,7 +319,8 @@ def render_bars_svg(rows, base_total, width=880, color=BAR_COLOR):
 </svg>"""
 
 
-def render_score_bars_svg(rows, vmax=10.0, width=880, unite='', colors=None):
+def render_score_bars_svg(rows, vmax=10.0, width=880, unite='', colors=None,
+                          annotations=None):
     """Barres horizontales pour des valeurs déjà calculées (score sur 10,
     pourcentage…). `rows` = [(libellé, valeur)], triées telles quelles par
     l'appelant. `colors` = {libellé: couleur} pour teinter chaque barre.
@@ -340,13 +341,16 @@ def render_score_bars_svg(rows, vmax=10.0, width=880, unite='', colors=None):
         w = max(plot_w * v / vmax, 2)
         col = (colors or {}).get(lab, BAR_COLOR)
         short = lab if len(lab) <= MAX_CHARS else lab[:MAX_CHARS - 1] + '…'
+        note = (annotations or {}).get(lab, '')
+        txt = f'{fmt_val(v)}{unite}'
+        suite = (f'<tspan class="bn" dx="7">{note}</tspan>' if note else '')
         parts.append(
-            f'<g><title>{lab} — {fmt_val(v)}{unite}</title>'
+            f'<g><title>{lab} — {txt}{" · " + note if note else ""}</title>'
             f'<text class="bl" x="{LAB_W - 10}" y="{y + BAR_H - 4.5}">{short}</text>'
             f'<rect class="br" x="{LAB_W}" y="{y}" width="{w:.1f}" height="{BAR_H}" '
             f'rx="4" fill="{col}"/>'
             f'<text class="bv" x="{LAB_W + w + 8:.1f}" y="{y + BAR_H - 4.5}">'
-            f'{fmt_val(v)}{unite}</text></g>')
+            f'{txt}{suite}</text></g>')
         y += BAR_H + GAP
 
     return f"""<svg viewBox="0 0 {width} {height}" width="100%"
@@ -357,6 +361,7 @@ def render_score_bars_svg(rows, vmax=10.0, width=880, unite='', colors=None):
         text-anchor:end}}
     .bv{{font:600 13px system-ui,-apple-system,"Segoe UI",sans-serif;fill:{INK};
         font-variant-numeric:tabular-nums}}
+    .bn{{font:400 12.5px system-ui,-apple-system,"Segoe UI",sans-serif;fill:{INK2}}}
   </style>
   {''.join(parts)}
 </svg>"""
@@ -586,12 +591,13 @@ def _pole_of_inaccessibility(rings):
 
 # --------------------------------------------------------------------------
 def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
-                   polarity='neutre', unite='%', ramp=None):
+                   polarity='neutre', unite='%', ramp=None, infos=None):
     """values : {section: valeur}. `unite` est le suffixe écrit sur la carte
     ('%' pour un pourcentage, '' pour un score sur 10).
     Retourne (svg, thresholds, mode)."""
     T = thresholds or nice_thresholds(list(values.values()))
     RAMP = ramp or ramp_for(polarity)
+    INFOS = infos or {}          # {section: texte ajouté à l'infobulle}
     admin = _load_admin_polygons()
     mode = 'admin' if admin else 'disques'
 
@@ -673,8 +679,9 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                 pp = [proj(lon * kx, lat) for lon, lat in ring]
                 allp += pp
                 d += 'M' + ' L'.join(f'{a:.1f},{b:.1f}' for a, b in pp) + ' Z'
-            tip = (f'{name} — {fmt_val(v)}{" " + unite if unite else ""} '
-                   f'(base : {base_n.get(name, 0)})'
+            tip = (f'{name} — {fmt_val(v)}{" " + unite if unite else ""}'
+                   + (f' · {INFOS[name]}' if name in INFOS else '')
+                   + f' (base : {base_n.get(name, 0)})'
                    if v is not None else name)
             body.append(f'<path class="sec" d="{d}" fill="{fill}">'
                         f'<title>{tip}</title></path>')
@@ -721,8 +728,9 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                 fill, ink = RAMP[bin_of(v, T)]
                 body.append(
                     f'<circle class="sec" cx="{cx:.1f}" cy="{cy:.1f}" r="{R}" fill="{fill}">'
-                    f'<title>{name} — {fmt_val(v)}{" " + unite if unite else ""} '
-                    f'(base : {base_n.get(name, 0)})</title></circle>'
+                    f'<title>{name} — {fmt_val(v)}{" " + unite if unite else ""}'
+                    + (f' · {INFOS[name]}' if name in INFOS else '')
+                    + f' (base : {base_n.get(name, 0)})</title></circle>'
                     f'<text class="pv" x="{cx:.1f}" y="{cy + 6:.1f}" fill="{ink}">'
                     f'{fmt_val(v)}{unite}</text>')
             label_anchor[name] = (cx, cy)
