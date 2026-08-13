@@ -86,41 +86,23 @@ def _bandeau_scores(entrees, libelle_mesure=None):
     existe, puis le score APRI qu'elle produit, et ce score en % de l'échelle.
 
     Les deux chiffres répondent à deux questions différentes et doivent rester
-    visibles ensemble : « 47,9 % des ménages ont un assainissement amélioré »
-    dit ce qui se passe sur le terrain ; « score 4 / 10 » dit où cela place la
-    section sur l'échelle de comparaison internationale.
+    visibles ensemble : « 31,8 % des ménages ont un assainissement amélioré »
+    dit ce qui se passe sur le terrain ; « score 2,3 / 10 » dit où cela place
+    la section sur l'échelle de comparaison internationale.
     """
     cols = st.columns(len(entrees))
     for col, (libelle, score, mesure) in zip(cols, entrees):
         coul = map_render.RAMP_APRI[
             map_render.bin_of(score, map_render.SEUILS_APRI)][0]
+        note_score = (f"score de résilience — {_pct(score):.0f} % de l'échelle APRI")
         if mesure is None:
-            bloc_mesure = ""
+            html = map_render.cartouche_html(
+                libelle, round(score, 2), '/ 10', note_score, couleur=coul)
         else:
-            bloc_mesure = (
-                f'<div style="font-size:34px;font-weight:700;color:#0b0b0b;'
-                f'line-height:1.15;font-variant-numeric:tabular-nums">'
-                f'{f"{mesure:.1f}".replace(".", ",")}'
-                f'<span style="font-size:19px;font-weight:600"> %</span></div>'
-                f'<div style="font-size:12px;color:#52514e;margin-bottom:8px">'
-                f'{libelle_mesure or "des ménages"}</div>'
-                f'<div style="height:1px;background:#e7e6e0;margin:0 0 8px"></div>')
-        # Une seule ligne, sans indentation : Streamlit passe en bloc de code
-        # dès qu'une ligne de HTML commence par quatre espaces.
-        html = (
-            f'<div style="border:1px solid #e7e6e0;border-left:6px solid {coul};'
-            f'border-radius:8px;padding:12px 16px;background:#fcfcfb">'
-            f'<div style="font-size:12px;color:#52514e;letter-spacing:.03em;'
-            f'text-transform:uppercase;margin-bottom:4px">{libelle}</div>'
-            f'{bloc_mesure}'
-            f'<div style="font-size:{34 if mesure is None else 30}px;font-weight:700;'
-            f'color:#0b0b0b;line-height:1.15;font-variant-numeric:tabular-nums">'
-            f'{f"{score:.2f}".replace(".", ",")}'
-            f'<span style="font-size:17px;font-weight:500;color:#898781"> / 10</span>'
-            f'</div>'
-            f'<div style="font-size:12px;color:#52514e">score de résilience — '
-            f'{f"{_pct(score):.0f}"} % de l\'échelle APRI</div>'
-            f'</div>')
+            html = map_render.cartouche_html(
+                libelle, round(mesure, 1), '%',
+                libelle_mesure or 'des ménages (mesure brute)',
+                round(score, 2), '/ 10', note_score, couleur=coul)
         with col:
             st.markdown(html, unsafe_allow_html=True)
 

@@ -265,6 +265,31 @@ st.subheader(theme["question"])
 if theme.get("note"):
     st.caption(theme["note"])
 
+# ---- les chiffres saillants, en gros, avant tout graphique ----------------
+# Même traitement que sur l'onglet Résilience : on lit d'abord un chiffre, pas
+# un graphique. Ici, les trois réponses les plus fréquentes sur la population
+# filtrée, avec l'effectif qui les porte.
+_base_total = base_n.get("Total", 0)
+_top = sorted(theme["rows"], key=lambda r: -r[1].get("Total", 0))[:3]
+_top = [(lab, g.get("Total", 0)) for lab, g in _top if g.get("Total", 0) > 0]
+if _top and _base_total:
+    _teintes = ["#2a78d6", "#5b6b7a", "#898781"]
+    _cols = st.columns(len(_top))
+    for _c, (_lab, _n), _teinte in zip(_cols, _top, _teintes):
+        _pourcent = round(_n / _base_total * 100, 1)
+        with _c:
+            st.markdown(
+                map_render.cartouche_html(
+                    _lab, _pourcent, "%",
+                    f"soit {_n} répondants sur {_base_total}",
+                    couleur=_teinte),
+                unsafe_allow_html=True)
+    st.caption(
+        "Les trois réponses les plus fréquentes sur la population filtrée. "
+        "Sur une question à choix multiples, un même foyer peut être compté "
+        "dans plusieurs réponses : les pourcentages ne totalisent alors pas 100 %. "
+        "Le détail complet est plus bas.")
+
 # ---- graphique : répartition sur la population filtrée (colonne Total) ----
 # Rendu maison plutôt que st.bar_chart : celui-ci impose une graduation d'axe
 # très dense et une couleur peu maîtrisable. Ici la valeur est écrite au bout

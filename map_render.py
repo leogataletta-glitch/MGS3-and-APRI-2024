@@ -368,6 +368,38 @@ def render_score_bars_svg(rows, vmax=10.0, width=880, unite='', colors=None,
 
 
 # --------------------------------------------------------------------------
+def cartouche_html(libelle, valeur, unite='%', sous_titre='',
+                   valeur2=None, unite2='', sous_titre2='', couleur='#5b6b7a'):
+    """Un cartouche à gros chiffre, éventuellement à deux étages.
+
+    Sert aux deux onglets : sur les questions, le pourcentage de foyers ;
+    sur la résilience, la mesure brute puis le score qu'elle produit. Le HTML
+    tient sur une seule ligne — Streamlit bascule en bloc de code dès qu'une
+    ligne commence par quatre espaces.
+    """
+    def _bloc(v, u, note, taille, gras_note=False):
+        txt = fmt_val(v) if isinstance(v, (int, float)) else str(v)
+        return (f'<div style="font-size:{taille}px;font-weight:700;color:{INK};'
+                f'line-height:1.12;font-variant-numeric:tabular-nums">{txt}'
+                f'<span style="font-size:{max(16, int(taille * 0.5))}px;'
+                f'font-weight:600;color:{INK2}"> {u}</span></div>'
+                f'<div style="font-size:12.5px;color:{INK2};'
+                f'{"font-weight:600;" if gras_note else ""}">{note}</div>')
+
+    haut = _bloc(valeur, unite, sous_titre, 40 if valeur2 is None else 34)
+    bas = ''
+    if valeur2 is not None:
+        bas = ('<div style="height:1px;background:#e7e6e0;margin:9px 0 8px"></div>'
+               + _bloc(valeur2, unite2, sous_titre2, 30))
+    return (f'<div style="border:1px solid #e7e6e0;border-left:6px solid {couleur};'
+            f'border-radius:8px;padding:13px 17px;background:{SURFACE};'
+            f'height:100%">'
+            f'<div style="font-size:12px;color:{INK2};letter-spacing:.03em;'
+            f'text-transform:uppercase;margin-bottom:6px;min-height:30px">'
+            f'{libelle}</div>{haut}{bas}</div>')
+
+
+# --------------------------------------------------------------------------
 def nice_thresholds(vals):
     """4 classes aux bornes rondes : le minimum tombe en classe 1, le maximum
     en classe 4."""
