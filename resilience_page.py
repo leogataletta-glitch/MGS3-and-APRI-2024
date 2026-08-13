@@ -48,11 +48,27 @@ SEUILS_SCORE = [2.5, 5.0, 7.5]
 N_FRAGILE = 30
 
 
+def _trouver(nom):
+    """Cherche un fichier de données dans data/ puis à la racine du projet.
+
+    Sur GitHub, un glisser-déposer de dossier ne conserve pas toujours
+    l'arborescence : plutôt que de planter, on accepte les deux emplacements.
+    """
+    for chemin in (os.path.join(DATA, nom), os.path.join(APP_DIR, nom)):
+        if os.path.exists(chemin):
+            return chemin
+    return None
+
+
 @st.cache_data(show_spinner=False)
 def _charger():
-    with open(os.path.join(DATA, "resultats.json"), encoding="utf-8") as f:
+    chemins = {nom: _trouver(nom) for nom in ("resultats.json", "ventilation.json")}
+    manquants = [nom for nom, c in chemins.items() if c is None]
+    if manquants:
+        return None, manquants
+    with open(chemins["resultats.json"], encoding="utf-8") as f:
         res = json.load(f)
-    with open(os.path.join(DATA, "ventilation.json"), encoding="utf-8") as f:
+    with open(chemins["ventilation.json"], encoding="utf-8") as f:
         vent = json.load(f)
     return res, vent
 
@@ -76,6 +92,18 @@ def _score_pondere(lignes, bloc, sec, pop, poids):
 
 def render():
     res, vent = _charger()
+    if res is None:
+        st.title("Indicateurs de résilience")
+        st.error(
+            "Fichier(s) de données absent(s) du projet : **"
+            + "**, **".join(vent) + "**.\n\n"
+            "Déposez-les sur GitHub dans le sous-dossier `data/` (à côté de "
+            "`donnees_anonymisees.csv`), ou à la racine du dépôt — les deux "
+            "emplacements fonctionnent. L'application redémarre toute seule "
+            "ensuite.")
+        st.info("Le mode « Explorer les questions » reste utilisable : "
+                "rebasculez dessus dans la barre latérale.")
+        st.stop()
     scorables = _scorables(res)
     poids = {r["ligne"]: (r["ponderation"] or 0.0) for r in res}
     par_ligne = {r["ligne"]: r for r in res}
