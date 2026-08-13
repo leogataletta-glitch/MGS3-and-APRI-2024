@@ -167,13 +167,14 @@ with st.sidebar:
     st.header("Affichage")
     app_mode = st.radio(
         "Que voulez-vous consulter ?",
-        ["Explorer les questions", "Indicateurs de résilience"],
+        ["Résultats de toutes les questions aux 1200 ménages",
+         "Indicateurs de résilience associés"],
         label_visibility="collapsed",
-        help="« Explorer les questions » donne les résultats bruts de n'importe "
-             "laquelle des 503 questions. « Indicateurs de résilience » donne les "
-             "scores 0-10 construits sur le cadre théorique.")
+        help="Le premier mode donne les résultats bruts de n'importe laquelle des "
+             "503 questions posées aux 1211 ménages enquêtés. Le second donne les "
+             "scores de résilience 0-10 construits sur le cadre théorique IRLA / APRI.")
 
-if app_mode == "Indicateurs de résilience":
+if app_mode == "Indicateurs de résilience associés":
     resilience_page.render()
     st.stop()
 

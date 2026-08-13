@@ -133,6 +133,18 @@ RAMP_NEUTRAL = [('#86b6ef', '#0b0b0b'), ('#3987e5', '#0b0b0b'),
 RAMP_SEVERITY = [('#3d9e4f', '#0b0b0b'), ('#f0c419', '#0b0b0b'),
                  ('#dd6b0d', '#0b0b0b'), ('#98161c', '#ffffff')]
 
+# Échelle APRI des scores de résilience : onze classes, une par point de score,
+# reprises telles quelles du référentiel « International comparative empirical
+# scenarios » (0 = rouge, 10 = vert foncé). Les couleurs sont celles du document
+# de référence ; l'encre noire garde un contraste d'au moins 4,5:1 sur chacune.
+RAMP_APRI = [('#e9665d', '#0b0b0b'), ('#f39d76', '#0b0b0b'),
+             ('#f9c082', '#0b0b0b'), ('#fcd486', '#0b0b0b'),
+             ('#fded9a', '#0b0b0b'), ('#d3e3b7', '#0b0b0b'),
+             ('#b1d094', '#0b0b0b'), ('#94c37f', '#0b0b0b'),
+             ('#6bb672', '#0b0b0b'), ('#5b9c5a', '#0b0b0b'),
+             ('#4c864f', '#0b0b0b')]
+SEUILS_APRI = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5]
+
 POLARITIES = ('eleve_mauvais', 'eleve_bon', 'neutre')
 
 
@@ -384,13 +396,14 @@ def fmt_val(x):
 
 
 def bin_of(v, T):
-    if v < T[0]:
-        return 0
-    if v < T[1]:
-        return 1
-    if v < T[2]:
-        return 2
-    return 3
+    """Indice de classe : 0 si v < T[0], puis une classe par seuil franchi.
+    Fonctionne avec 3 seuils (4 classes) comme avec 10 (échelle APRI 0-10)."""
+    i = 0
+    for t in T:
+        if v < t:
+            return i
+        i += 1
+    return i
 
 
 def legend_items(T, polarity='neutre', unite='%'):
@@ -573,12 +586,12 @@ def _pole_of_inaccessibility(rings):
 
 # --------------------------------------------------------------------------
 def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
-                   polarity='neutre', unite='%'):
+                   polarity='neutre', unite='%', ramp=None):
     """values : {section: valeur}. `unite` est le suffixe écrit sur la carte
     ('%' pour un pourcentage, '' pour un score sur 10).
     Retourne (svg, thresholds, mode)."""
     T = thresholds or nice_thresholds(list(values.values()))
-    RAMP = ramp_for(polarity)
+    RAMP = ramp or ramp_for(polarity)
     admin = _load_admin_polygons()
     mode = 'admin' if admin else 'disques'
 
