@@ -533,7 +533,7 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
             if fits or inner_room.get(name, 0) >= 9:
                 body.append(f'<text class="pv" x="{cx:.1f}" y="{cy + 5:.1f}">'
                             f'{txt}</text>')
-                val_inside[name] = True
+                val_inside[name] = (w / 2 + 3, 11)   # demi-largeur / demi-hauteur
                 val_boxes.append(bx)
 
     # ---- 2) les noms : à l'extérieur, reliés par un trait ----
@@ -576,8 +576,35 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
         return sum(1 for m in label_anchor
                    if m != n and math.dist((cx, cy), label_anchor[m]) < 3.2 * max(R, 30))
 
+    def _seg_cross(p1, p2, p3, p4):
+        """Les segments [p1p2] et [p3p4] se croisent-ils ?"""
+        def side(a, b, c):
+            return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+        d1, d2 = side(p3, p4, p1), side(p3, p4, p2)
+        d3, d4 = side(p1, p2, p3), side(p1, p2, p4)
+        return ((d1 > 0) != (d2 > 0)) and ((d3 > 0) != (d4 > 0))
+
+    def _leader_ends(name, dx, dy, anchor):
+        cx, cy = label_anchor[name]
+        ang = math.atan2(dy, dx)
+        ca, sa = math.cos(ang), math.sin(ang)
+        if admin and val_inside.get(name):
+            # le trait part du bord de la valeur écrite, pas du centre :
+            # sinon il barre le chiffre
+            hw, hh = val_inside[name]
+            start = min(hw / max(abs(ca), 1e-6), hh / max(abs(sa), 1e-6)) + 2
+        elif admin:
+            start = max(inner_room.get(name, 0) * 0.85, 4)
+        else:
+            start = R + 1
+        p1 = (cx + ca * start, cy + sa * start)
+        p2 = (cx + dx + (0 if anchor == 'middle' else (-5 if anchor == 'end' else 5)),
+              cy + dy - 4)
+        return p1, p2
+
     # les valeurs déjà écrites dans les sections sont des obstacles à éviter
     placed = [(b[0] - 3, b[1] - 3, b[2] + 3, b[3] + 3) for b in val_boxes]
+    placed_leaders = []
 
     for name in sorted(label_anchor, key=crowd):
         cx, cy = label_anchor[name]
@@ -595,6 +622,22 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                 if math.hypot(mx - nx, my - ny) < (R + 1 if not admin else
                                                    inner_room.get(m, 0) * 0.9):
                     sco += 8
+            # deux traits qui se croisent rendent l'association illisible
+            p1, p2 = _leader_ends(name, dx, dy, anchor)
+            for q1, q2 in placed_leaders:
+                if _seg_cross(p1, p2, q1, q2):
+                    sco += 14
+            # un trait qui traverse une AUTRE section brouille aussi la lecture
+            if admin:
+                for m, rings_m in polys_px.items():
+                    if m == name:
+                        continue
+                    for t in (0.35, 0.55, 0.75, 0.95):
+                        sx_ = p1[0] + (p2[0] - p1[0]) * t
+                        sy_ = p1[1] + (p2[1] - p1[1]) * t
+                        if _point_in_rings(sx_, sy_, rings_m):
+                            sco += 6
+                            break
             if bx[0] < 4 or bx[2] > width - 4 or bx[1] < 4 or bx[3] > height - 4:
                 sco += 40
             sco += rank * 0.12                     # préférer les positions proches
@@ -604,14 +647,15 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
         dx, dy, anchor = best
 
         # trait de rappel : part du bord de la section, s'arrête au ras du texte
-        ang = math.atan2(dy, dx)
-        start = (inner_room.get(name, 0) * 0.85) if admin else (R + 1)
-        lx, ly = cx + math.cos(ang) * start, cy + math.sin(ang) * start
-        tx = cx + dx + (0 if anchor == 'middle' else (-5 if anchor == 'end' else 5))
-        ty = cy + dy - 4
+        (lx, ly), (tx, ty) = _leader_ends(name, dx, dy, anchor)
         leader = ''
         if math.hypot(tx - lx, ty - ly) > 6:
-            leader = (f'<line class="ld" x1="{lx:.1f}" y1="{ly:.1f}" '
+            placed_leaders.append(((lx, ly), (tx, ty)))
+            # doublé d'un liseré clair, pour rester visible sur la terre
+            # comme sur la mer
+            leader = (f'<line class="ld-halo" x1="{lx:.1f}" y1="{ly:.1f}" '
+                      f'x2="{tx:.1f}" y2="{ty:.1f}"/>'
+                      f'<line class="ld" x1="{lx:.1f}" y1="{ly:.1f}" '
                       f'x2="{tx:.1f}" y2="{ty:.1f}"/>')
         body.append(f'{leader}<text class="pn" x="{cx + dx:.1f}" y="{cy + dy:.1f}" '
                     f'style="text-anchor:{anchor}">{txt}</text>')
@@ -643,7 +687,8 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
     .pw{{font:650 14px system-ui,-apple-system,"Segoe UI",sans-serif;fill:{INK};
         font-variant-numeric:tabular-nums;
         paint-order:stroke;stroke:{SURFACE};stroke-width:4px;stroke-linejoin:round}}
-    .ld{{stroke:{MUTED};stroke-width:1;opacity:.55}}
+    .ld{{stroke:#57554f;stroke-width:1.7;stroke-linecap:round}}
+    .ld-halo{{stroke:{SURFACE};stroke-width:4;stroke-linecap:round;opacity:.9}}
     .cl{{stroke:{MUTED};stroke-width:1.5}} .ca{{fill:{MUTED}}}
     .ct{{font:600 13px system-ui,sans-serif;fill:{MUTED};text-anchor:middle;
         paint-order:stroke;stroke:{SURFACE};stroke-width:3px}}
