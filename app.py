@@ -142,33 +142,89 @@ st.set_page_config(page_title="Enquête ménage 2024", layout="wide")
 if not check_password():
     st.stop()
 
-# Titre en sans-serif condensé : la police par défaut de Streamlit est
-# remplacée par la même famille que celle des graphiques et de la carte, en
-# version étroite, pour que l'ensemble forme un seul système typographique.
+# Typographie de toute l'application. Deux principes : une seule famille
+# (Roboto, la police institutionnelle du PNUE, avec repli système si la
+# connexion aux polices Google échoue), et une largeur de ligne bornée —
+# une phrase qui court sur 1400 px est illisible, c'est ce qui rendait les
+# blocs de texte pénibles à lire.
 st.markdown("""
 <style>
-  h1 {
-    font-family: "Segoe UI Semibold", "Roboto Condensed", "Arial Narrow",
-                 system-ui, -apple-system, sans-serif !important;
-    font-stretch: condensed;
-    font-weight: 650 !important;
-    letter-spacing: -0.015em;
-    font-size: 2.35rem !important;
-    padding-bottom: 0.15rem !important;
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@600;700&display=swap');
+
+  html, body, [class*="css"], .stApp {
+    font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
+
+  /* Une colonne de lecture, pas toute la largeur de l'écran. */
+  .block-container {
+    max-width: 1180px; padding-top: 2.2rem; padding-bottom: 4rem;
+  }
+
+  /* --- titres : condensé, serré, hiérarchie nette --- */
+  h1, h2, h3 {
+    font-family: "Roboto Condensed", "Segoe UI Semibold", "Arial Narrow",
+                 system-ui, sans-serif !important;
+    letter-spacing: -0.012em; color: #16161a;
+  }
+  h1 { font-weight: 700 !important; font-size: 2.4rem !important;
+       padding-bottom: .1rem !important; }
+  h2 { font-weight: 700 !important; font-size: 1.72rem !important;
+       margin-top: 2.1rem !important; padding-bottom: .1rem !important; }
+  h3 { font-weight: 700 !important; font-size: 1.34rem !important;
+       margin-top: 1.7rem !important; }
+
+  /* --- texte courant : plus grand, plus aéré, ligne bornée --- */
+  [data-testid="stMarkdownContainer"] p {
+    font-size: 16.5px; line-height: 1.62; color: #2b2b30;
+  }
+  [data-testid="stMarkdownContainer"] li {
+    font-size: 16.5px; line-height: 1.6; color: #2b2b30; margin-bottom: .3rem;
+  }
+
+  /* --- légendes : le commentaire de lecture, pas le texte principal --- */
+  [data-testid="stCaptionContainer"] p {
+    font-size: 14.5px !important; line-height: 1.58 !important;
+    color: #5c5c63 !important; max-width: 92ch;
+  }
+
+  /* --- libellés des menus : lisibles, pas minuscules --- */
+  label[data-testid="stWidgetLabel"] p {
+    font-size: 15px !important; font-weight: 600 !important; color: #2b2b30;
+  }
+  div[data-baseweb="select"] > div { font-size: 15.5px; }
+
+  /* --- l'encadré « population filtrée » : un bandeau, pas une alerte --- */
+  div[data-testid="stAlert"] {
+    border-radius: 8px; border-left: 5px solid #1a6bb0;
+    background: #f2f7fc; padding: 4px 6px;
+  }
+  div[data-testid="stAlert"] > div {
+    background: transparent !important; border: none !important;
+    padding: 10px 12px !important;
+  }
+  div[data-testid="stAlert"] p {
+    font-size: 16px !important; color: #22303d !important; margin: 0;
+  }
+
+  /* --- volets dépliants --- */
+  details summary p { font-size: 15.5px !important; font-weight: 600 !important; }
+
   .org-mention {
-    font-size: 12.5px; color: #52514e; letter-spacing: .05em;
-    text-transform: uppercase; margin: 0 0 2px 2px;
+    font-size: 12.5px; color: #52514e; letter-spacing: .07em;
+    text-transform: uppercase; margin: 0 0 2px 2px; font-weight: 500;
   }
+
   /* Les deux entrées du tableau de bord sont le premier choix de la page :
      deux grands pavés, pas un réglage secondaire. */
   div[data-testid="stButton"] > button {
-    height: 76px; border-radius: 10px; border-width: 2px;
-    font-size: 18px !important; font-weight: 650 !important;
+    height: 78px; border-radius: 10px; border-width: 2px;
+    font-size: 18.5px !important; font-weight: 700 !important;
     line-height: 1.3; white-space: normal; padding: 10px 18px;
+    font-family: "Roboto Condensed", system-ui, sans-serif !important;
+    letter-spacing: .005em;
   }
   div[data-testid="stButton"] > button p {
-    font-size: 18px !important; font-weight: 650 !important;
+    font-size: 18.5px !important; font-weight: 700 !important;
   }
   /* Pavé actif : bleu PNUE assombri pour tenir 5,6:1 avec le texte blanc.
      Pavé inactif : fond clair, bordure nette — il doit rester cliquable à l'œil. */
@@ -190,6 +246,12 @@ st.markdown("""
      lisibles mais discrets. */
   .stRadio > div[role="radiogroup"] > label > div:last-child p {
     font-size: 15px !important; font-weight: 600 !important;
+  }
+
+  /* --- barre latérale --- */
+  section[data-testid="stSidebar"] { background: #f6f6f4; }
+  section[data-testid="stSidebar"] h2 {
+    font-size: 1.25rem !important; margin-top: .4rem !important;
   }
 </style>
 """, unsafe_allow_html=True)
