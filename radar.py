@@ -4,7 +4,7 @@ Rendu en SVG pur, sans dépendance : le tableau de bord tourne déjà sans
 bibliothèque graphique, et l'échelle 0-10 doit rester identique d'un radar à
 l'autre pour que deux profils soient comparables à l'œil.
 
-Palette catégorielle validée (validate_palette.js, mode clair, surface #fcfcfb) :
+Palette catégorielle validée (validate_palette.js, mode clair, surface #ffffff) :
 bleu #2a78d6, orange #eb6834, aqua #1baf7a — séparation CVD la plus faible
 ΔE 9,2 (deutan), plancher vision normale ΔE 27,6. L'aqua passe sous 3:1 face à
 la surface : la légende et le tableau qui accompagnent le radar tiennent lieu de
@@ -13,7 +13,7 @@ relief, conformément à la règle.
 
 import math
 
-SURFACE = '#fcfcfb'
+SURFACE = '#ffffff'
 INK = '#0b0b0b'
 INK2 = '#52514e'
 INK3 = '#898781'

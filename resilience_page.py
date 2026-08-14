@@ -122,7 +122,7 @@ def _bandeau_scores(entrees, libelle_mesure=None):
 
 
 def _radar_html(svg, series, hauteur):
-    return (f'<div style="background:#fcfcfb;font-family:system-ui,-apple-system,'
+    return (f'<div style="background:#ffffff;font-family:system-ui,-apple-system,'
             f"'Segoe UI',sans-serif\">"
             f'<div style="margin:0 0 6px 8px">{radar.legende_html(series)}</div>'
             f'{svg}</div>')
@@ -435,7 +435,7 @@ def render():
 
         components.html(
             f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
-                            background:#fcfcfb">
+                            background:#ffffff">
               <div style="margin:0 0 8px"><span style="font-size:11.5px;color:#898781;
                 letter-spacing:.05em;margin-right:14px">{"SCORE APRI" if rampe else "SEUILS"}</span>{legende}</div>
               {svg}
@@ -469,7 +469,7 @@ def render():
             [(s, valeurs[s]) for s in ordre], vmax=vmax, unite=unite, colors=couleurs,
             annotations=annot)
         components.html(
-            f'<div style="background:#fcfcfb;font-family:system-ui,-apple-system,'
+            f'<div style="background:#ffffff;font-family:system-ui,-apple-system,'
             f"'Segoe UI',sans-serif\">{bars}</div>",
             height=len(ordre) * 28 + 26, scrolling=False)
 

@@ -164,23 +164,22 @@ st.markdown("""
     --encre:      #101728;
     --encre-2:    #3c4761;
     --encre-3:    #6b7590;
-    --fond:       #eaf0f7;
-    --fond-2:     #dfe9f4;
+    --fond:       #ffffff;
+    --fond-2:     #f4f8fc;
     --carte:      #ffffff;
-    --bord:       #e3eaf3;
+    --bord:       #e6ecf4;
     --accent:     #1a6bb0;
     --accent-2:   #0f9d8f;
     --accent-3:   #f0a02a;
-    --ombre:      0 1px 2px rgba(16,23,40,.05), 0 10px 28px rgba(16,23,40,.07);
-    --ombre-haut: 0 2px 4px rgba(16,23,40,.06), 0 18px 40px rgba(16,23,40,.11);
+    --ombre:      0 1px 2px rgba(16,23,40,.04), 0 6px 18px rgba(16,23,40,.05);
+    --ombre-haut: 0 3px 6px rgba(16,23,40,.07), 0 20px 44px rgba(16,23,40,.14);
   }
 
-  .stApp {
-    background:
-      radial-gradient(1200px 520px at 12% -8%, #f7fbff 0%, rgba(247,251,255,0) 60%),
-      radial-gradient(900px 460px at 92% 4%, #e8f5f2 0%, rgba(232,245,242,0) 62%),
-      var(--fond);
-  }
+  /* Fond de travail blanc : les graphiques sont dessinés sur blanc, et aucune
+     teinte de page ne peut jurer avec eux. La compartimentation ne passe donc
+     plus par la couleur mais par le relief — filet fin, ombre douce, et une
+     élévation franche au survol. */
+  .stApp { background: var(--papier); }
   html, body, [class*="css"], .stApp {
     font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
     color: var(--encre-2);
@@ -214,24 +213,32 @@ st.markdown("""
      LES CARTES. Tout bloc encadré (st.container(border=True)) devient
      une carte blanche en relief qui se soulève au survol.
      ------------------------------------------------------------------ */
+  /* Une carte = un bloc encadré qui contient une pilule de titre. On le cible
+     par son contenu (:has), parce que Streamlit ne donne pas de marqueur propre
+     aux conteneurs bordés — et que le nom technique de ces conteneurs change
+     d'une version à l'autre. */
+  div[data-testid="stVerticalBlock"]:has(
+      > div[data-testid="stElementContainer"] .titre-bloc),
   div[data-testid="stVerticalBlockBorderWrapper"] {
     background: var(--carte) !important;
     border: 1px solid var(--bord) !important;
     border-radius: 18px !important;
     box-shadow: var(--ombre);
-    padding: 6px 6px !important;
-    transition: box-shadow .22s ease, transform .22s ease;
+    padding: 16px 20px 18px !important;
+    transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
     animation: apparition .5s cubic-bezier(.2,.7,.3,1) both;
   }
+  div[data-testid="stVerticalBlock"]:has(
+      > div[data-testid="stElementContainer"] .titre-bloc):hover,
   div[data-testid="stVerticalBlockBorderWrapper"]:hover {
-    box-shadow: var(--ombre-haut); transform: translateY(-2px);
+    box-shadow: var(--ombre-haut); transform: translateY(-3px) !important;
+    border-color: #cddcf0 !important;
   }
-  div[data-testid="stVerticalBlockBorderWrapper"]
-    div[data-testid="stVerticalBlockBorderWrapper"] {
-    box-shadow: none; border-radius: 12px !important; animation: none;
+  /* Les blocs des conditions du croisement, imbriqués, restent discrets. */
+  div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"]
+      .titre-bloc) div[data-testid="stVerticalBlock"][style*="border"] {
+    box-shadow: none; animation: none;
   }
-  div[data-testid="stVerticalBlockBorderWrapper"]
-    div[data-testid="stVerticalBlockBorderWrapper"]:hover { transform: none; }
 
   @keyframes apparition {
     from { opacity: 0; transform: translateY(10px); }
@@ -339,8 +346,7 @@ st.markdown("""
 
   /* --- barre latérale --- */
   section[data-testid="stSidebar"] {
-    background: rgba(255,255,255,.72); backdrop-filter: blur(6px);
-    border-right: 1px solid var(--bord);
+    background: #fafcfe; border-right: 1px solid var(--bord);
   }
   section[data-testid="stSidebar"] h2 {
     font-size: 1.15rem !important; margin-top: .3rem !important;
@@ -363,7 +369,15 @@ st.markdown("""
   }
 
   /* --- iframes des graphiques : coins arrondis, fond blanc --- */
-  iframe { border-radius: 12px; }
+  iframe { border-radius: 12px; background: #ffffff; }
+
+  /* --- les cartouches de chiffres se soulèvent aussi --- */
+  .cartouche { transition: box-shadow .2s ease, transform .2s ease,
+                           border-color .2s ease; }
+  .cartouche:hover {
+    transform: translateY(-3px) !important; border-color: #cddcf0 !important;
+    box-shadow: 0 3px 6px rgba(16,23,40,.07), 0 18px 38px rgba(16,23,40,.13) !important;
+  }
 </style>
 """, unsafe_allow_html=True)
 
@@ -557,7 +571,7 @@ with st.container(border=True):
     bar_svg = map_render.render_bars_svg(bar_rows, base_n.get("Total", 0))
     n_bars = len(bar_rows)
     components.html(
-        f'<div style="background:#fcfcfb;font-family:system-ui,-apple-system,'
+        f'<div style="background:#ffffff;font-family:system-ui,-apple-system,'
         f'\'Segoe UI\',sans-serif">{bar_svg}</div>',
         height=n_bars * 28 + 26, scrolling=False)
 
@@ -687,7 +701,7 @@ with st.container(border=True):
     # on passe donc par un composant HTML isolé, qui rend le SVG tel quel.
     components.html(
         f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
-                        background:#fcfcfb">
+                        background:#ffffff">
           <div style="margin:0 0 8px"><span style="font-size:11.5px;color:#898781;
             letter-spacing:.05em;margin-right:14px">{T("legende_seuils")}</span>{legend_html}</div>
           {svg}

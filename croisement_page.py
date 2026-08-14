@@ -243,7 +243,7 @@ def render():
             for c, lab in map_render.legend_items(seuils_ret, polarite))
         components.html(
             f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
-                            background:#fcfcfb">
+                            background:#ffffff">
               <div style="margin:0 0 8px"><span style="font-size:11.5px;color:#898781;
                 letter-spacing:.05em;margin-right:14px">{T("legende_seuils")}</span>{legende}</div>
               {svg}
@@ -262,7 +262,7 @@ def render():
                                 n=int((total & groupes[s]).sum()),
                                 base=bases[s]) + ")" for s in ordre})
     components.html(
-        f'<div style="background:#fcfcfb;font-family:system-ui,-apple-system,'
+        f'<div style="background:#ffffff;font-family:system-ui,-apple-system,'
         f"'Segoe UI',sans-serif\">{bars}</div>",
         height=len(ordre) * 28 + 26, scrolling=False)
 

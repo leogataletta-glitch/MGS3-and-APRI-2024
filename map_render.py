@@ -234,7 +234,7 @@ def guess_polarity(question, modality):
                 return 'eleve_mauvais'
     return 'neutre'
 
-INK, INK2, MUTED, SURFACE = '#0b0b0b', '#52514e', '#898781', '#fcfcfb'
+INK, INK2, MUTED, SURFACE = '#0b0b0b', '#52514e', '#898781', '#ffffff'
 
 # Gris ardoise des barres : 5,3:1 sur le fond clair, donc parfaitement lisible,
 # et volontairement neutre — la couleur ne porte du sens que sur la carte.
