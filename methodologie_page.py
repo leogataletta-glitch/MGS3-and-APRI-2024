@@ -37,6 +37,34 @@ NOTIONS_SECTION = {
 }
 
 
+def _bulle_notion(cle):
+    """Bulle de définition, sans dépendre de la version de map_render déployée.
+
+    Sur GitHub, les fichiers ne sont pas toujours poussés dans le même commit :
+    une page qui appelle une fonction absente de l'ancienne version de
+    map_render fait tomber toute l'application. On dégrade donc proprement —
+    bulle complète si la fonction existe, sinon le terme seul.
+    """
+    fn = getattr(map_render, "bulle_notion", None)
+    if fn is not None:
+        return fn(cle)
+    terme, defi = i18n.notion(cle)
+    if not defi:
+        return ""
+    bulle = getattr(map_render, "bulle", None)
+    if bulle is not None:
+        try:
+            return bulle(cle, definition=defi, texte=terme)
+        except TypeError:
+            pass
+    return f'<strong>{terme}</strong>'
+
+
+def _styles_bulle():
+    fn = getattr(map_render, "styles_bulle", None)
+    return fn() if fn is not None else ""
+
+
 def _trouver(nom):
     for chemin in (os.path.join(DATA, nom), os.path.join(APP_DIR, nom)):
         if os.path.exists(chemin):
@@ -63,7 +91,7 @@ def _corps(sec):
 
 def render():
     doc = _charger()
-    st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
+    st.markdown(_styles_bulle(), unsafe_allow_html=True)
 
     col_logo, col_titre = st.columns([1, 6])
     with col_logo:
@@ -115,7 +143,7 @@ def render():
             st.markdown(_corps(sec))
 
             cles = NOTIONS_SECTION.get(sec.get("cle"), [])
-            bulles = [map_render.bulle_notion(c) for c in cles]
+            bulles = [_bulle_notion(c) for c in cles]
             bulles = [b for b in bulles if b]
             if bulles:
                 st.markdown(
