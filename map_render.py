@@ -370,14 +370,16 @@ def render_score_bars_svg(rows, vmax=10.0, width=880, unite='', colors=None,
 # --------------------------------------------------------------------------
 def cartouche_html(libelle, valeur, unite='%', sous_titre='',
                    valeur2=None, unite2='', sous_titre2='', couleur='#5b6b7a'):
-    """Un cartouche à gros chiffre, éventuellement à deux étages.
+    """Un chiffre mis en page comme dans une publication, pas comme un widget.
 
-    Sert aux deux onglets : sur les questions, le pourcentage de foyers ;
-    sur la résilience, la mesure brute puis le score qu'elle produit. Le HTML
-    tient sur une seule ligne — Streamlit bascule en bloc de code dès qu'une
-    ligne commence par quatre espaces.
+    Pas de boîte colorée : un filet en haut, une pastille de couleur qui porte
+    l'information de classe (score APRI, sens de lecture), et le chiffre en
+    grande serif. Sert aux trois onglets — pourcentage de foyers, score de
+    résilience, effectif d'un croisement. Le HTML tient sur une seule ligne :
+    Streamlit bascule en bloc de code dès qu'une ligne commence par quatre
+    espaces.
     """
-    def _bloc(v, u, note, taille, gras_note=False):
+    def _bloc(v, u, note, taille):
         if isinstance(v, bool) or not isinstance(v, (int, float)):
             txt = str(v)
         elif isinstance(v, int):
@@ -385,24 +387,26 @@ def cartouche_html(libelle, valeur, unite='%', sous_titre='',
             txt = f'{int(v):,}'.replace(',', '\u202f')
         else:
             txt = fmt_val(v)
-        return (f'<div style="font-size:{taille}px;font-weight:700;color:{INK};'
-                f'line-height:1.12;font-variant-numeric:tabular-nums">{txt}'
-                f'<span style="font-size:{max(16, int(taille * 0.5))}px;'
-                f'font-weight:600;color:{INK2}"> {u}</span></div>'
-                f'<div style="font-size:12.5px;color:{INK2};'
-                f'{"font-weight:600;" if gras_note else ""}">{note}</div>')
+        return (f'<div style="font-family:\'Source Serif 4\',Georgia,serif;'
+                f'font-size:{taille}px;font-weight:600;color:{INK};'
+                f'line-height:1.05;font-variant-numeric:tabular-nums;'
+                f'letter-spacing:-0.02em">{txt}'
+                f'<span style="font-size:{max(15, int(taille * 0.42))}px;'
+                f'font-weight:400;color:{MUTED};letter-spacing:0"> {u}</span></div>'
+                f'<div style="font-size:12.5px;color:{INK2};margin-top:3px;'
+                f'line-height:1.4">{note}</div>')
 
-    haut = _bloc(valeur, unite, sous_titre, 40 if valeur2 is None else 34)
+    haut = _bloc(valeur, unite, sous_titre, 46 if valeur2 is None else 38)
     bas = ''
     if valeur2 is not None:
-        bas = ('<div style="height:1px;background:#e7e6e0;margin:9px 0 8px"></div>'
-               + _bloc(valeur2, unite2, sous_titre2, 30))
-    return (f'<div style="border:1px solid #e7e6e0;border-left:6px solid {couleur};'
-            f'border-radius:8px;padding:13px 17px;background:{SURFACE};'
+        bas = ('<div style="height:1px;background:#e4e3de;margin:13px 0 11px"></div>'
+               + _bloc(valeur2, unite2, sous_titre2, 33))
+    return (f'<div style="border-top:2px solid {couleur};padding:13px 2px 4px;'
             f'height:100%">'
-            f'<div style="font-size:12px;color:{INK2};letter-spacing:.03em;'
-            f'text-transform:uppercase;margin-bottom:6px;min-height:30px">'
-            f'{libelle}</div>{haut}{bas}</div>')
+            f'<div style="font-size:11px;color:{MUTED};letter-spacing:.11em;'
+            f'text-transform:uppercase;font-weight:700;margin-bottom:11px;'
+            f'min-height:28px;line-height:1.35">{libelle}</div>'
+            f'{haut}{bas}</div>')
 
 
 # --------------------------------------------------------------------------

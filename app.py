@@ -150,109 +150,167 @@ if not check_password():
 # blocs de texte pénibles à lire.
 st.markdown("""
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Roboto:wght@400;500;700&display=swap');
 
+  /* ------------------------------------------------------------------
+     Parti pris : épuré, éditorial. Beaucoup de blanc, une seule couleur
+     d'accent (le bleu PNUE assombri), des filets d'un pixel au lieu de
+     boîtes, et une serif de titrage qui donne le ton « publication »
+     plutôt que « logiciel ».
+     ------------------------------------------------------------------ */
+  :root {
+    --encre:      #16161a;
+    --encre-2:    #45454d;
+    --encre-3:    #85858e;
+    --filet:      #e4e3de;
+    --filet-fort: #c9c8c1;
+    --accent:     #1a6bb0;
+    --papier:     #ffffff;
+  }
+
+  .stApp { background: var(--papier); }
   html, body, [class*="css"], .stApp {
     font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--encre-2);
   }
 
-  /* Une colonne de lecture, pas toute la largeur de l'écran. */
   .block-container {
-    max-width: 1180px; padding-top: 2.2rem; padding-bottom: 4rem;
+    max-width: 1120px; padding-top: 2.6rem; padding-bottom: 6rem;
   }
 
-  /* --- titres : condensé, serré, hiérarchie nette --- */
+  /* --- titrage : serif éditoriale, grande, peu de graisse --- */
   h1, h2, h3 {
-    font-family: "Roboto Condensed", "Segoe UI Semibold", "Arial Narrow",
-                 system-ui, sans-serif !important;
-    letter-spacing: -0.012em; color: #16161a;
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif !important;
+    color: var(--encre); letter-spacing: -0.011em;
   }
-  h1 { font-weight: 700 !important; font-size: 2.4rem !important;
-       padding-bottom: .1rem !important; }
-  h2 { font-weight: 700 !important; font-size: 1.72rem !important;
-       margin-top: 2.1rem !important; padding-bottom: .1rem !important; }
-  h3 { font-weight: 700 !important; font-size: 1.34rem !important;
-       margin-top: 1.7rem !important; }
+  h1 { font-weight: 600 !important; font-size: 3rem !important;
+       line-height: 1.1 !important; padding-bottom: .2rem !important; }
+  h2 { font-weight: 600 !important; font-size: 1.95rem !important;
+       margin-top: 3rem !important; padding-bottom: .55rem !important;
+       border-bottom: 1px solid var(--filet); }
+  h3 { font-weight: 600 !important; font-size: 1.4rem !important;
+       margin-top: 2.2rem !important; }
 
-  /* --- texte courant : plus grand, plus aéré, ligne bornée --- */
-  [data-testid="stMarkdownContainer"] p {
-    font-size: 16.5px; line-height: 1.62; color: #2b2b30;
-  }
+  /* --- texte courant --- */
+  [data-testid="stMarkdownContainer"] p,
   [data-testid="stMarkdownContainer"] li {
-    font-size: 16.5px; line-height: 1.6; color: #2b2b30; margin-bottom: .3rem;
+    font-size: 16.5px; line-height: 1.68; color: var(--encre-2);
   }
+  [data-testid="stMarkdownContainer"] li { margin-bottom: .35rem; }
+  [data-testid="stMarkdownContainer"] strong { color: var(--encre); }
 
-  /* --- légendes : le commentaire de lecture, pas le texte principal --- */
+  /* --- légendes : le pas de côté du rédacteur --- */
   [data-testid="stCaptionContainer"] p {
-    font-size: 14.5px !important; line-height: 1.58 !important;
-    color: #5c5c63 !important; max-width: 92ch;
+    font-size: 14.5px !important; line-height: 1.6 !important;
+    color: var(--encre-3) !important; max-width: 88ch;
   }
 
-  /* --- libellés des menus : lisibles, pas minuscules --- */
+  /* --- libellés de menus : capitales espacées, discrètes --- */
   label[data-testid="stWidgetLabel"] p {
-    font-size: 15px !important; font-weight: 600 !important; color: #2b2b30;
+    font-size: 11.5px !important; font-weight: 700 !important;
+    letter-spacing: .09em; text-transform: uppercase;
+    color: var(--encre-3) !important;
   }
-  div[data-baseweb="select"] > div { font-size: 15.5px; }
+  div[data-baseweb="select"] > div {
+    font-size: 15.5px; border-radius: 0; border: none;
+    border-bottom: 1px solid var(--filet-fort); background: transparent;
+  }
+  div[data-baseweb="select"] > div:hover { border-bottom-color: var(--accent); }
 
-  /* --- l'encadré « population filtrée » : un bandeau, pas une alerte --- */
+  /* --- l'encadré de contexte : deux filets, pas une boîte de couleur --- */
   div[data-testid="stAlert"] {
-    border-radius: 8px; border-left: 5px solid #1a6bb0;
-    background: #f2f7fc; padding: 4px 6px;
+    border: none; border-top: 1px solid var(--filet);
+    border-bottom: 1px solid var(--filet);
+    border-radius: 0; background: transparent; padding: 2px 0;
   }
   div[data-testid="stAlert"] > div {
     background: transparent !important; border: none !important;
-    padding: 10px 12px !important;
+    padding: 12px 2px !important;
   }
   div[data-testid="stAlert"] p {
-    font-size: 16px !important; color: #22303d !important; margin: 0;
+    font-size: 15.5px !important; color: var(--encre-2) !important; margin: 0;
   }
+  div[data-testid="stAlert"] svg { display: none; }
 
-  /* --- volets dépliants --- */
-  details summary p { font-size: 15.5px !important; font-weight: 600 !important; }
+  details summary p {
+    font-size: 14px !important; font-weight: 700 !important;
+    letter-spacing: .05em; text-transform: uppercase; color: var(--encre-2);
+  }
+  details { border: none !important; border-top: 1px solid var(--filet) !important;
+            border-radius: 0 !important; }
 
   .org-mention {
-    font-size: 12.5px; color: #52514e; letter-spacing: .07em;
-    text-transform: uppercase; margin: 0 0 2px 2px; font-weight: 500;
+    font-size: 11px; color: var(--encre-3); letter-spacing: .14em;
+    text-transform: uppercase; margin: 0 0 4px 1px; font-weight: 700;
   }
 
-  /* Les deux entrées du tableau de bord sont le premier choix de la page :
-     deux grands pavés, pas un réglage secondaire. */
+  /* --- les trois entrées : rectangles à filet, l'active en encre pleine --- */
   div[data-testid="stButton"] > button {
-    height: 78px; border-radius: 10px; border-width: 2px;
-    font-size: 18.5px !important; font-weight: 700 !important;
-    line-height: 1.3; white-space: normal; padding: 10px 18px;
-    font-family: "Roboto Condensed", system-ui, sans-serif !important;
-    letter-spacing: .005em;
+    height: 82px; border-radius: 2px; border-width: 1px;
+    font-family: "Source Serif 4", Georgia, serif !important;
+    font-size: 19px !important; font-weight: 600 !important;
+    line-height: 1.28; white-space: normal; padding: 10px 20px;
+    transition: all .16s ease;
   }
   div[data-testid="stButton"] > button p {
-    font-size: 18.5px !important; font-weight: 700 !important;
+    font-size: 19px !important; font-weight: 600 !important;
   }
-  /* Pavé actif : bleu PNUE assombri pour tenir 5,6:1 avec le texte blanc.
-     Pavé inactif : fond clair, bordure nette — il doit rester cliquable à l'œil. */
+  div[data-testid="stButton"] > button[kind="primary"],
+  div[data-testid="stButton"] > button[kind="primary"] p,
+  div[data-testid="stButton"] > button[kind="primary"] div {
+    background-color: transparent; color: #ffffff !important;
+  }
   div[data-testid="stButton"] > button[kind="primary"] {
-    background: #1a6bb0 !important; border-color: #1a6bb0 !important;
-    color: #ffffff !important;
+    background: var(--encre) !important; border-color: var(--encre) !important;
   }
   div[data-testid="stButton"] > button[kind="primary"]:hover {
-    background: #15619f !important; border-color: #15619f !important;
+    background: #000 !important; border-color: #000 !important;
+  }
+  div[data-testid="stButton"] > button[kind="secondary"],
+  div[data-testid="stButton"] > button[kind="secondary"] p {
+    color: var(--encre) !important;
   }
   div[data-testid="stButton"] > button[kind="secondary"] {
-    background: #ffffff !important; border-color: #c9ccd1 !important;
-    color: #0b0b0b !important;
+    background: transparent !important; border-color: var(--filet-fort) !important;
+  }
+  div[data-testid="stButton"] > button[kind="secondary"]:hover p {
+    color: var(--accent) !important;
   }
   div[data-testid="stButton"] > button[kind="secondary"]:hover {
-    border-color: #1a6bb0 !important; color: #1a6bb0 !important;
-  }
-  /* Les radios internes (niveau de lecture, couche de la carte) restent
-     lisibles mais discrets. */
-  .stRadio > div[role="radiogroup"] > label > div:last-child p {
-    font-size: 15px !important; font-weight: 600 !important;
+    border-color: var(--accent) !important; color: var(--accent) !important;
+    transform: translateY(-1px);
   }
 
-  /* --- barre latérale --- */
-  section[data-testid="stSidebar"] { background: #f6f6f4; }
+  /* --- radios internes : discrets --- */
+  .stRadio > div[role="radiogroup"] > label > div:last-child p {
+    font-size: 14.5px !important; font-weight: 500 !important;
+    color: var(--encre-2);
+  }
+
+  /* --- barre latérale : blanche, séparée par un simple filet --- */
+  section[data-testid="stSidebar"] {
+    background: var(--papier); border-right: 1px solid var(--filet);
+  }
   section[data-testid="stSidebar"] h2 {
-    font-size: 1.25rem !important; margin-top: .4rem !important;
+    font-size: 1.15rem !important; margin-top: .2rem !important;
+    border-bottom: none; padding-bottom: 0 !important;
+  }
+
+  /* --- tableaux : filets fins, pas de damier --- */
+  div[data-testid="stDataFrame"] { border: 1px solid var(--filet); }
+
+  /* --- conteneurs bordés (conditions du croisement) --- */
+  div[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 2px !important; border-color: var(--filet) !important;
+  }
+
+  /* --- boutons de téléchargement : liens, pas boutons --- */
+  div[data-testid="stDownloadButton"] > button {
+    height: auto; border: none; background: transparent !important;
+    color: var(--accent) !important; padding: 4px 0 !important;
+    font-family: "Roboto", sans-serif !important;
+    font-size: 14.5px !important; font-weight: 600 !important;
+    border-bottom: 1px solid var(--accent) !important; border-radius: 0;
   }
 </style>
 """, unsafe_allow_html=True)
