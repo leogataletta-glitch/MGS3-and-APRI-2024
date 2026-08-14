@@ -16,35 +16,46 @@ import streamlit.components.v1 as components
 import assets
 import map_render
 import radar
+import i18n
+from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(APP_DIR, "data")
 
 SOUS_POP = ["Total", "Homme", "Femme", "Cat A", "Cat B", "Cat C",
             "<25", "25-39", "40-59", "60+"]
-SOUS_POP_LABEL = {
-    "Total": "Tous les répondants",
-    "Homme": "Hommes", "Femme": "Femmes",
-    "Cat A": "Cat A — pauvreté extrême",
-    "Cat B": "Cat B — pauvreté",
-    "Cat C": "Cat C — non pauvre",
-    "<25": "Moins de 25 ans", "25-39": "25 à 39 ans",
-    "40-59": "40 à 59 ans", "60+": "60 ans et plus",
+SOUS_POP_CLE = {
+    "Total": "tous_repondants", "Homme": "hommes", "Femme": "femmes",
+    "Cat A": "cat_a", "Cat B": "cat_b", "Cat C": "cat_c",
+    "<25": "age_25", "25-39": "age_25_39", "40-59": "age_40_59", "60+": "age_60",
 }
 
-DIM_COURT = {
-    "I. PHYSICAL AND INFRASTRUCTURAL DIMENSION": "I. Physique et infrastructures",
-    "II. INSTITUTIONAL, TECHNOLOGICAL, AND GOVERNANCE  DIMENSION":
-        "II. Institutions et gouvernance",
-    "III.  ENVIRONMENTAL AND ECOLOGICAL DIMENSION": "III. Environnement et écologie",
-    "IV. ECONOMIC, LIVELIHOODS, AND FOOD SECURITY DIMENSION":
-        "IV. Économie et sécurité alimentaire",
-    "V. SOCIAL AND COMMUNITY DIMENSION": "V. Social et communautaire",
-    "VI. HUMAN DIMENSION": "VI. Humain",
-    "VII. CULTURAL, IDENTITY-BASED, AND PSYCHOLOGICAL DIMENSION":
-        "VII. Culturel et psychologique",
+
+def libelle_pop(code):
+    return T(SOUS_POP_CLE.get(code, code))
+
+DIM_CLE = {
+    "I. PHYSICAL AND INFRASTRUCTURAL DIMENSION": "dim1",
+    "II. INSTITUTIONAL, TECHNOLOGICAL, AND GOVERNANCE  DIMENSION": "dim2",
+    "III.  ENVIRONMENTAL AND ECOLOGICAL DIMENSION": "dim3",
+    "IV. ECONOMIC, LIVELIHOODS, AND FOOD SECURITY DIMENSION": "dim4",
+    "V. SOCIAL AND COMMUNITY DIMENSION": "dim5",
+    "VI. HUMAN DIMENSION": "dim6",
+    "VII. CULTURAL, IDENTITY-BASED, AND PSYCHOLOGICAL DIMENSION": "dim7",
 }
-DIM_ORDRE = list(DIM_COURT)
+DIM_ORDRE = list(DIM_CLE)
+
+
+class _Dim(dict):
+    """Nom court de la dimension, dans la langue courante."""
+    def __missing__(self, k):
+        return T(DIM_CLE.get(k, k))
+
+    def get(self, k, d=None):
+        return self[k]
+
+
+DIM_COURT = _Dim()
 
 N_FRAGILE = 30
 
@@ -94,7 +105,7 @@ def _bandeau_scores(entrees, libelle_mesure=None):
     for col, (libelle, score, mesure) in zip(cols, entrees):
         coul = map_render.RAMP_APRI[
             map_render.bin_of(score, map_render.SEUILS_APRI)][0]
-        note_score = (f"score de résilience — {_pct(score):.0f} % de l'échelle APRI")
+        note_score = T("r_note_score", p=f"{_pct(score):.0f}")
         # Le score garde deux décimales : entre 4,04 et 4,25 il n'y a qu'un
         # centième d'écart de rang, l'arrondi au dixième les confondrait.
         score_txt = f'{score:.2f}'.replace('.', ',')
@@ -104,7 +115,7 @@ def _bandeau_scores(entrees, libelle_mesure=None):
         else:
             html = map_render.cartouche_html(
                 libelle, round(mesure, 1), '%',
-                libelle_mesure or 'des ménages (mesure brute)',
+                libelle_mesure or T("r_des_menages"),
                 score_txt, '/ 10', note_score, couleur=coul)
         with col:
             st.markdown(html, unsafe_allow_html=True)
@@ -122,12 +133,11 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
     indicateurs à l'intérieur d'une dimension — la même logique de zoom que
     dans le cadre théorique APRI."""
     niveau = st.radio(
-        "Niveau de lecture",
+        T("r_niveau"),
         ["dimensions", "indicateurs"],
-        format_func=lambda k: {
-            "dimensions": "Niveau 1 — les dimensions",
-            "indicateurs": "Niveau 2 — les indicateurs d'une dimension"}[k],
-        horizontal=True, key="radar_niveau")
+        format_func=lambda k: {"dimensions": T("r_niveau1"),
+                               "indicateurs": T("r_niveau2")}[k],
+        horizontal=True, key=f"radar_niveau_{i18n.get_lang()}")
 
     if niveau == "dimensions":
         axes_dim = dims_scorees
@@ -136,30 +146,31 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
                                   if r["dimension"] == d] for d in axes_dim}
     else:
         dim = st.selectbox(
-            "Dimension à détailler", dims_scorees,
-            format_func=lambda d: DIM_COURT[d], key="radar_dim")
+            T("r_dim_detail"), dims_scorees,
+            format_func=lambda d: DIM_COURT[d], key=f"radar_dim_{i18n.get_lang()}")
         dedans = [r for r in scorables if r["dimension"] == dim]
         if len(dedans) < 3:
-            st.info("Cette dimension ne compte que "
-                    f"{len(dedans)} indicateur(s) scorable(s) : un radar demande "
-                    "au moins trois axes. Choisissez-en une autre.")
+            st.info(T("r_trop_peu", n=len(dedans)))
             return
         axes = [r["indicateur"] for r in dedans]
         groupes = {r["indicateur"]: [r["ligne"]] for r in dedans}
 
-    a_comparer = ["Ensemble des 10 sections"] + list(sections)
+    # Codes stables : « __toutes__ » plutôt que le libellé traduit, sinon un
+    # changement de langue laisserait une sélection orpheline.
+    a_comparer = ["__toutes__"] + list(sections)
     choisies = st.multiselect(
-        "Comparer (3 au maximum)", a_comparer,
-        default=[a_comparer[0]], max_selections=3, key=f"radar_cmp_{niveau}")
+        T("r_comparer"), a_comparer,
+        format_func=lambda c: T("r_ensemble") if c == "__toutes__" else c,
+        default=["__toutes__"], max_selections=3, key=f"radar_cmp_{niveau}_{i18n.get_lang()}")
     if not choisies:
-        st.info("Choisissez au moins une section à afficher.")
+        st.info(T("r_choisir_section"))
         return
 
     def valeurs_pour(nom):
         vals = []
         for ax in axes:
             lgs = groupes[ax]
-            if nom == "Ensemble des 10 sections":
+            if nom == "__toutes__":
                 pris = [_score_pondere(lgs, vent["sections"][s], s, pop, poids)
                         for s in sections]
                 pris = [v for v in pris if v is not None]
@@ -169,15 +180,14 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
                                            nom, pop, poids))
         return vals
 
-    series = [(nom, valeurs_pour(nom), None) for nom in choisies]
+    def _nom(c):
+        return T("r_ensemble") if c == "__toutes__" else c
+
+    series = [(_nom(nom), valeurs_pour(nom), None) for nom in choisies]
     svg = radar.render_radar_svg(axes, series, taille=620)
     components.html(_radar_html(svg, series, 640), height=690, scrolling=False)
 
-    st.caption(
-        "Échelle fixe de 0 à 10 sur chaque axe : deux radars se superposent "
-        "directement. Un contour en pointillés signale un profil dont un axe "
-        "au moins n'est pas mesuré." if niveau == "dimensions" else
-        "Un axe par indicateur de la dimension, sur la même échelle 0 à 10.")
+    st.caption(T("r_radar_dim") if niveau == "dimensions" else T("r_radar_ind"))
 
     # Au niveau des indicateurs, la mesure brute accompagne chaque score.
     mesures = {}
@@ -185,19 +195,19 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
         for ax in axes:
             lg = groupes[ax][0]
             for nom in choisies:
-                if nom == "Ensemble des 10 sections":
+                if nom == "__toutes__":
                     pris = [vent["sections"][s][str(lg)]["valeurs"].get(pop)
                             for s in sections]
                     pris = [v for v in pris if v is not None]
-                    mesures[(ax, nom)] = (round(sum(pris) / len(pris), 1)
-                                          if pris else None)
+                    mesures[(ax, _nom(nom))] = (round(sum(pris) / len(pris), 1)
+                                                if pris else None)
                 else:
-                    mesures[(ax, nom)] = \
+                    mesures[(ax, _nom(nom))] = \
                         vent["sections"][nom][str(lg)]["valeurs"].get(pop)
 
     tab = []
     for i, ax in enumerate(axes):
-        rec = {"Axe": ax}
+        rec = {T("r_axe"): ax}
         for nom, vals, _ in series:
             v = vals[i]
             if v is None:
@@ -206,14 +216,13 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
             texte = f"{v:.2f} / 10".replace(".", ",") + f" — {_pct(v):.0f} %"
             m = mesures.get((ax, nom))
             if m is not None:
-                texte = f'{f"{m:.1f}".replace(".", ",")} % des ménages → {texte}' 
+                texte = (f'{f"{m:.1f}".replace(".", ",")} % '
+                         + T("r_des_menages_court") + f' → {texte}') 
             rec[nom] = texte
         tab.append(rec)
     st.dataframe(pd.DataFrame(tab), use_container_width=True, hide_index=True)
     if niveau == "indicateurs":
-        st.caption("Lecture d'une cellule : la mesure brute sur le terrain, "
-                   "puis le score que le barème lui attribue et sa position sur "
-                   "l'échelle APRI.")
+        st.caption(T("r_lecture_cellule"))
 
 
 def _scorables(res):
@@ -236,16 +245,9 @@ def _score_pondere(lignes, bloc, sec, pop, poids):
 def render():
     res, vent = _charger()
     if res is None:
-        st.title("Indicateurs de résilience")
-        st.error(
-            "Fichier(s) de données absent(s) du projet : **"
-            + "**, **".join(vent) + "**.\n\n"
-            "Déposez-les sur GitHub dans le sous-dossier `data/` (à côté de "
-            "`donnees_anonymisees.csv`), ou à la racine du dépôt — les deux "
-            "emplacements fonctionnent. L'application redémarre toute seule "
-            "ensuite.")
-        st.info("Le mode « Résultats de toutes les questions aux 1200 ménages » "
-                "reste utilisable : rebasculez dessus dans la barre latérale.")
+        st.title(T("r_titre"))
+        st.error(T("r_fichiers_absents", f="**, **".join(vent)))
+        st.info(T("r_autre_onglet"))
         st.stop()
     scorables = _scorables(res)
     poids = {r["ligne"]: (r["ponderation"] or 0.0) for r in res}
@@ -258,44 +260,37 @@ def render():
             f'<img src="data:image/png;base64,{assets.LOGO_APRI}" '
             f'style="width:118px;margin-top:6px">', unsafe_allow_html=True)
     with col_titre:
-        st.title("Indicateurs de résilience — APRI")
+        st.title(T("r_titre"))
         st.markdown(
-            '<p style="font-size:12.5px;color:#52514e;letter-spacing:.05em;'
-            'text-transform:uppercase;margin:-8px 0 0 2px">'
-            "IRLA / APRI — Indice de résilience des paysages ruraux</p>",
-            unsafe_allow_html=True)
+            '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+            'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
+            + T("r_sous_titre") + "</p>", unsafe_allow_html=True)
     st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
-    st.caption(
-        "Scores de 0 à 10 obtenus en appliquant les barèmes du cadre théorique aux "
-        "valeurs recalculées depuis l'enquête. Un score élevé = situation plus "
-        f"favorable. {len(scorables)} indicateurs sur 118 sont scorables depuis un "
-        "questionnaire ménage — voir la note en bas de page."
-    )
+    st.caption(T("r_intro", n=len(scorables)))
 
     # ---------------------------------------------------------- sélecteurs
     with st.sidebar:
         st.header("Résilience")
         pop = st.selectbox(
-            "Sous-population", SOUS_POP,
-            format_func=lambda k: SOUS_POP_LABEL[k],
-            help="Le score est recalculé sur cette sous-population à l'intérieur "
-                 "de chaque section communale.")
+            T("r_sous_pop"), SOUS_POP,
+            format_func=lambda k: libelle_pop(k),
+            help=T("r_sous_pop_aide"))
 
-    OPT_FINAL = "Score final — toutes dimensions"
+    OPT_FINAL = T("r_score_final")
     dims_scorees = [d for d in DIM_ORDRE
                     if any(r["dimension"] == d for r in scorables)]
-    opt_dims = [f"Dimension — {DIM_COURT[d]}" for d in dims_scorees]
+    opt_dims = [T("r_dimension_prefix") + DIM_COURT[d] for d in dims_scorees]
     opt_ind = [f"{DIM_COURT[r['dimension']]} · {r['indicateur']}"
                for r in scorables]
-    choix = st.selectbox("Quoi cartographier", [OPT_FINAL] + opt_dims + opt_ind)
+    choix = st.selectbox(T("r_quoi_carto"), [OPT_FINAL] + opt_dims + opt_ind)
 
     if choix == OPT_FINAL:
         lignes = [r["ligne"] for r in scorables]
-        titre = "Score final de résilience"
+        titre = T("r_score_final")
         indic = None
-    elif choix.startswith("Dimension — "):
+    elif choix.startswith(T("r_dimension_prefix")):
         dim = next(d for d in dims_scorees
-                   if DIM_COURT[d] == choix[len("Dimension — "):])
+                   if DIM_COURT[d] == choix[len(T("r_dimension_prefix")):])
         lignes = [r["ligne"] for r in scorables if r["dimension"] == dim]
         titre = DIM_COURT[dim]
         indic = None
@@ -314,27 +309,26 @@ def render():
             pourcents[sec] = bloc[str(indic["ligne"])]["valeurs"].get(pop)
 
     with st.container(border=True):
-        st.markdown('<div class="titre-bloc">1 · Le score en bref</div>',
+        st.markdown(f'<div class="titre-bloc">{T("r_bloc1")}</div>',
                     unsafe_allow_html=True)
-        st.subheader(f"{titre} — {SOUS_POP_LABEL[pop]}")
+        st.subheader(f"{titre} — {libelle_pop(pop)}")
         if indic is not None:
             _def = []
             if indic.get("metrique"):
-                _def.append("<strong>Définition du cadre théorique :</strong> "
-                            + indic["metrique"])
+                _def.append(T("r_definition") + indic["metrique"])
             if indic.get("echelle"):
-                _def.append("<strong>Barème :</strong> " + indic["echelle"])
+                _def.append(T("r_bareme") + indic["echelle"])
             if indic.get("note"):
-                _def.append("<strong>Réserve :</strong> " + indic["note"])
+                _def.append(T("r_reserve") + indic["note"])
             st.markdown(
                 '<p style="font-size:15px;color:#3c4761;margin:0 0 4px">'
-                "Ce que mesure cet indicateur"
+                + T("r_ce_que_mesure")
                 + map_render.bulle("_indic", definition="<br><br>".join(_def),
                                    texte="")
-                + f' &nbsp;·&nbsp; Question de l\'enquête : {indic["question"]}'
+                + " &nbsp;·&nbsp; " + T("r_question_enquete", q=indic["question"])
                 + '</p>', unsafe_allow_html=True)
             if indic["modalites"]:
-                st.caption(f"Réponses comptées : {indic['modalites']}")
+                st.caption(T("r_reponses_comptees", m=indic["modalites"]))
 
         # ---- le chiffre en tête : score sur 10 ET en pourcentage de l'échelle --
         dispo = [v for v in scores.values() if v is not None]
@@ -355,46 +349,34 @@ def render():
                 return round(sum(pris) / len(pris), 1) if pris else None
 
             _bandeau_scores(
-                [("Moyenne des 10 sections", moyenne, mesure()),
-                 (f"Score le plus élevé — {haut}", scores[haut], mesure(haut)),
-                 (f"Score le plus faible — {bas}", scores[bas], mesure(bas))],
-                libelle_mesure="des ménages (mesure brute)")
+                [(T("r_moyenne"), moyenne, mesure()),
+                 (T("r_plus_haut", s=haut), scores[haut], mesure(haut)),
+                 (T("r_plus_bas", s=bas), scores[bas], mesure(bas))],
+                libelle_mesure=T("r_des_menages"))
             if indic is not None:
                 st.markdown(
                     '<p style="font-size:15px;color:#3c4761;margin:8px 0 0">'
-                    + map_render.bulle("mesure brute", texte="La mesure brute")
-                    + " et le "
-                    + map_render.bulle("score APRI", texte="score APRI")
-                    + " répondent à deux questions différentes : la première dit ce "
-                      "qui est mesuré sur le terrain, le second dit où cela place la "
-                      "section sur l'échelle de comparaison internationale. C'est le "
-                      "barème qui fait le passage de l'un à l'autre — et il n'est pas "
-                      "linéaire.</p>", unsafe_allow_html=True)
+                    + map_render.bulle("mesure brute")
+                    + T("r_deux_lectures")
+                    + map_render.bulle("score APRI")
+                    + T("r_deux_lectures_suite") + "</p>", unsafe_allow_html=True)
             else:
-                st.caption(
-                    "Agrégat de plusieurs indicateurs : il n'y a pas de pourcentage "
-                    "de ménages unique à afficher ici. Choisissez un indicateur précis "
-                    "dans « Quoi cartographier » pour voir la mesure brute à côté du "
-                    "score. Le pourcentage indiqué est la position du score sur "
-                    "l'échelle APRI (5 sur 10 = 50 %).")
+                st.caption(T("r_agregat"))
 
         petits = [s for s in sections if effectifs[s] < N_FRAGILE]
         if petits:
-            st.warning(
-                f"Moins de {N_FRAGILE} répondants dans : {', '.join(petits)}. "
-                "Sur ces sections, l'ordre de grandeur est utilisable, le chiffre "
-                "exact ne l'est pas.")
+            st.warning(T("r_petits", n=N_FRAGILE, liste=", ".join(petits)))
 
     with st.container(border=True):
-        st.markdown('<div class="titre-bloc ambre">2 · Où, sur le territoire</div>',
+        st.markdown(f'<div class="titre-bloc ambre">{T("r_bloc2")}</div>',
                     unsafe_allow_html=True)
         # ---------------------------------------------------------- carte
         afficher = st.radio(
-            "Colorier la carte selon",
+            T("r_colorier"),
             ["score", "pourcentage"] if indic is not None else ["score"],
-            format_func=lambda k: {"score": "Le score de résilience (0-10)",
-                                   "pourcentage": "La valeur brute (%)"}[k],
-            horizontal=True, key=f"aff_{choix}_{pop}")
+            format_func=lambda k: {"score": T("r_par_score"),
+                                   "pourcentage": T("r_par_brut")}[k],
+            horizontal=True, key=f"aff_{choix}_{pop}_{i18n.get_lang()}")
 
         if afficher == "score":
             valeurs = scores
@@ -421,13 +403,14 @@ def render():
             for s in sections:
                 morceaux = []
                 if pourcents.get(s) is not None:
-                    morceaux.append(f'{pourcents[s]:.1f} % des ménages'.replace('.', ','))
+                    morceaux.append(f'{pourcents[s]:.1f}'.replace('.', ',')
+                                + ' % ' + T("r_des_menages_court"))
                 if scores.get(s) is not None:
                     morceaux.append(f'score {scores[s]:.0f} / 10')
                 if morceaux:
                     bulles[s] = ' · '.join(morceaux)
 
-        svg, T, rendu = map_render.render_map_svg(
+        svg, seuils_ret, rendu = map_render.render_map_svg(
             valeurs, effectifs, seuils, height=hauteur,
             polarity=polarite, unite=unite, ramp=rampe, infos=bulles)
 
@@ -448,7 +431,7 @@ def render():
                 f'<span style="width:22px;height:12px;border-radius:3px;background:{c};'
                 f'box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)"></span>'
                 f'<span style="font-size:13px;color:#52514e">{lab}</span></span>'
-                for c, lab in map_render.legend_items(T, polarite, unite))
+                for c, lab in map_render.legend_items(seuils_ret, polarite, unite))
 
         components.html(
             f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -460,27 +443,26 @@ def render():
             height=hauteur + 46, scrolling=False)
 
         if afficher == "score":
-            st.caption("Échelle de couleurs APRI : une couleur par point de score, du rouge "
-                       "(0, résilience la plus faible) au vert foncé (10). L'échelle est fixe, "
-                       "ce qui rend toutes les cartes comparables entre elles.")
+            st.caption(T("r_legende_apri"))
         else:
             st.caption(map_render.polarity_caption(polarite))
 
     with st.container(border=True):
-        st.markdown('<div class="titre-bloc vert">3 · Le classement des sections</div>',
+        st.markdown(f'<div class="titre-bloc vert">{T("r_bloc3")}</div>',
                     unsafe_allow_html=True)
         # ---------------------------------------------------------- classement
         ordre = sorted((s for s in sections if valeurs.get(s) is not None),
                        key=lambda s: valeurs[s])
         RAMP = rampe or map_render.ramp_for(polarite)
-        couleurs = {s: RAMP[map_render.bin_of(valeurs[s], T)][0] for s in ordre}
+        couleurs = {s: RAMP[map_render.bin_of(valeurs[s], seuils_ret)][0] for s in ordre}
         # Sur un indicateur précis, chaque barre porte les deux chiffres : le score
         # et, en gris, la mesure brute qui l'a produit.
         annot = {}
         if indic is not None:
             for s in ordre:
                 if afficher == "score" and pourcents.get(s) is not None:
-                    annot[s] = f'({pourcents[s]:.1f} % des ménages)'.replace('.', ',')
+                    annot[s] = ('(' + f'{pourcents[s]:.1f}'.replace('.', ',')
+                            + ' % ' + T("r_des_menages_court") + ')')
                 elif afficher != "score" and scores.get(s) is not None:
                     annot[s] = f'(score {scores[s]:.0f} / 10)'
         bars = map_render.render_score_bars_svg(
@@ -492,25 +474,25 @@ def render():
             height=len(ordre) * 28 + 26, scrolling=False)
 
         if afficher == "score":
-            st.caption("Rappel : 4,0 sur 10 = 40 % de l'échelle APRI. "
-                       "Le tableau ci-dessous donne les deux lectures.")
+            st.caption(T("r_rappel_echelle"))
 
     # ---------------------------------------------------------- radars
     with st.container(border=True):
-        st.markdown('<div class="titre-bloc">4 · Le profil en radar</div>',
+        st.markdown(f'<div class="titre-bloc">{T("r_bloc4")}</div>',
                     unsafe_allow_html=True)
         _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees)
 
     with st.container(border=True):
-        st.markdown('<div class="titre-bloc">5 · Comparer les sous-populations</div>',
+        st.markdown(f'<div class="titre-bloc">{T("r_bloc5")}</div>',
                     unsafe_allow_html=True)
         # ---------------------------------------------------------- comparaison
-        st.caption("Même sélection, recalculée pour chaque sous-population. "
-                   "Les cellules sur moins de 30 répondants sont signalées par « · ».")
+        st.caption(T("r_comparaison"))
         lignes_tab = []
         for sec in sections:
             bloc = vent["sections"][sec]
-            rec = {"Section communale": sec, "Paysage": vent["paysage"][sec]}
+            rec = {T("section_communale"): sec,
+                   T("paysage"): T("littoral") if vent["paysage"][sec] == "Littoral"
+                   else T("montagne")}
             for p in SOUS_POP:
                 v = _score_pondere(lignes, bloc, sec, p, poids)
                 n = vent["effectifs"][sec][p]
@@ -530,39 +512,17 @@ def render():
         st.dataframe(df, use_container_width=True, hide_index=True)
 
         st.download_button(
-            "Télécharger ce tableau (CSV)",
+            T("r_telecharger_csv"),
             data=df.to_csv(index=False).encode("utf-8-sig"),
             file_name=f"resilience_{titre[:30].replace(' ', '_')}.csv",
             mime="text/csv")
 
     # ---------------------------------------------------------- réserves
-    with st.expander("Ce que ces scores couvrent — et ce qu'ils ne couvrent pas"):
+    with st.expander(T("r_reserves_titre")):
         non_calc = [r for r in res if r["calculable"] == "non"]
-        st.markdown(
-            f"""
-- **{len(scorables)} indicateurs** sur les 118 du cadre théorique reçoivent un score ici.
-- **{len(non_calc)} ne sont pas calculables** depuis un questionnaire ménage : 37 des 38
-  indicateurs environnementaux (NDVI, mangroves, connectivité des habitats) relèvent de
-  l'imagerie satellitaire, les densités de personnel de santé et les couvertures
-  vaccinales des registres sanitaires.
-- **9 indicateurs de la dimension culturelle** ont une valeur mais pas de score : leur
-  barème porte sur un indice composite de 0 à 8 points, pas sur un pourcentage.
-- Conséquence : le score final ne pèse **pas les sept dimensions à parts égales**.
-  Il est solide sur les infrastructures, la gouvernance, l'économie, le social et
-  l'humain ; muet sur l'environnement et le culturel.
-- **Trois barèmes sont inversés dans le cadre théorique** (FIES, population victime de
-  violences, pratiques de pêche destructrices) : ils attribuent le score 10 à la pire
-  valeur. Ils ont été retournés ici pour rester cohérents avec les seize autres
-  indicateurs négatifs.
-- Sur le **FIES**, le score vaut 0 partout : l'insécurité alimentaire sévère va de 54 %
-  à 73 % selon les sections, alors que la classe la plus dégradée du barème s'arrête à
-  29,2 %. L'échelle a été calibrée sur une réalité moins sévère que celle de la zone.
-""")
+        st.markdown(T("r_reserves_texte", n_score=len(scorables), n_non=len(non_calc)))
         if indic is not None:
-            st.markdown(f"**Réserve propre à cet indicateur :** {indic['note']}")
+            st.markdown(T("r_reserve_indic") + indic["note"])
 
-    st.caption("Source : enquête ménage sept. 2024 (1211 répondants), barèmes du cadre "
-               "théorique IRLA / APRI. Échelle de couleurs : « International "
-               "comparative empirical scenarios », référentiel APRI.")
-    st.caption("Travail réalisé par le Programme des Nations Unies pour "
-               "l'environnement (PNUE / UNEP).")
+    st.caption(T("r_source"))
+    st.caption(T("credit"))

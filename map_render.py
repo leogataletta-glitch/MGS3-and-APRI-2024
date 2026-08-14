@@ -15,6 +15,15 @@ import os
 import re
 import unicodedata
 
+try:
+    import i18n
+except Exception:      # rendu hors application (export PNG)
+    i18n = None
+
+
+def _t(cle, **kw):
+    return i18n.T(cle, **kw) if i18n else cle
+
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 CENTROIDS_PATH = os.path.join(APP_DIR, 'data', 'map_centroids.json')
 # Le fichier de limites administratives est accepté dans data/ ou à la racine
@@ -158,13 +167,10 @@ def ramp_for(polarity):
 
 def polarity_caption(polarity):
     if polarity == 'eleve_mauvais':
-        return ("Lecture des couleurs : vert = situation la plus favorable, "
-                "rouge = la plus préoccupante (ici, un pourcentage élevé est défavorable).")
+        return _t('cap_mauvais')
     if polarity == 'eleve_bon':
-        return ("Lecture des couleurs : vert = situation la plus favorable, "
-                "rouge = la plus préoccupante (ici, un pourcentage élevé est favorable).")
-    return ("Lecture des couleurs : du plus clair au plus foncé selon le pourcentage. "
-            "Aucune couleur ne juge la situation — cet indicateur n'est ni bon ni mauvais en soi.")
+        return _t('cap_bon')
+    return _t('cap_neutre')
 
 
 # --- Faut-il lire un pourcentage élevé comme une mauvaise nouvelle ? --------
@@ -311,6 +317,7 @@ def render_bars_svg(rows, base_total, width=880, color=BAR_COLOR):
     height = TOP * 2 + len(data) * (BAR_H + GAP) - GAP
 
     teintes = couleurs_barres({lab: n / base_total * 100 for lab, n in data})
+    _ARIA_BARRES = _t('aria_barres')
 
     parts = []
     y = TOP
@@ -320,7 +327,7 @@ def render_bars_svg(rows, base_total, width=880, color=BAR_COLOR):
         col = teintes.get(lab, color)
         short = lab if len(lab) <= MAX_CHARS else lab[:MAX_CHARS - 1] + '…'
         parts.append(
-            f'<g><title>{lab} — {fmt_val(pct)} % ({n} foyers)</title>'
+            f'<g><title>{lab} — {fmt_val(pct)} % ({n} ' + _t('foyers') + ')</title>'
             f'<text class="bl" x="{LAB_W - 10}" y="{y + BAR_H - 4.5}">{short}</text>'
             f'<rect class="br" x="{LAB_W}" y="{y}" width="{w:.1f}" height="{BAR_H}" '
             f'rx="5" fill="{col}"/>'
@@ -330,7 +337,7 @@ def render_bars_svg(rows, base_total, width=880, color=BAR_COLOR):
 
     return f"""<svg viewBox="0 0 {width} {height}" width="100%"
      style="max-width:{width}px;display:block" role="img"
-     aria-label="Répartition des réponses, en pourcentage">
+     aria-label="{_ARIA_BARRES}">
   <style>
     .bl{{font:13px system-ui,-apple-system,"Segoe UI",sans-serif;fill:{INK2};
         text-anchor:end}}
@@ -357,6 +364,7 @@ def render_score_bars_svg(rows, vmax=10.0, width=880, unite='', colors=None,
     vmax = max(vmax, max(v for _, v in data), 1e-9)
     height = TOP * 2 + len(data) * (BAR_H + GAP) - GAP
 
+    _ARIA_CMP = _t('aria_comparaison')
     parts = []
     y = TOP
     for lab, v in data:
@@ -377,7 +385,7 @@ def render_score_bars_svg(rows, vmax=10.0, width=880, unite='', colors=None,
 
     return f"""<svg viewBox="0 0 {width} {height}" width="100%"
      style="max-width:{width}px;display:block" role="img"
-     aria-label="Comparaison des valeurs">
+     aria-label="{_ARIA_CMP}">
   <style>
     .bl{{font:13px system-ui,-apple-system,"Segoe UI",sans-serif;fill:{INK2};
         text-anchor:end}}
@@ -459,9 +467,10 @@ def bulle(terme, definition=None, texte=None):
     pur (pas de JavaScript) : la bulle est un simple frère en position
     absolue, affiché au survol du conteneur.
     """
-    d = definition or GLOSSAIRE.get(terme, '')
+    d = definition or (i18n.definition(terme) if i18n else GLOSSAIRE.get(terme, ''))
     # texte='' est un choix délibéré : la pastille seule, sans mot répété.
-    libelle = terme if texte is None else texte
+    libelle = ((i18n.terme(terme) if i18n else terme)
+               if texte is None else texte)
     if not d:
         return libelle
     d = d.replace('"', '&quot;')
@@ -592,10 +601,10 @@ def bin_of(v, T):
 def legend_items(T, polarity='neutre', unite='%'):
     R = ramp_for(polarity)
     u = f' {unite}' if unite else ''
-    return [(R[0][0], f'moins de {fmt(T[0])}{u}'),
-            (R[1][0], f'{fmt(T[0])} – {fmt(T[1])}{u}'),
-            (R[2][0], f'{fmt(T[1])} – {fmt(T[2])}{u}'),
-            (R[3][0], f'{fmt(T[2])}{u} et plus')]
+    return [(R[0][0], _t('moins_de', v=fmt(T[0]), u=u)),
+            (R[1][0], _t('intervalle', a=fmt(T[0]), b=fmt(T[1]), u=u)),
+            (R[2][0], _t('intervalle', a=fmt(T[1]), b=fmt(T[2]), u=u)),
+            (R[3][0], _t('et_plus', v=fmt(T[2]), u=u))]
 
 
 def _norm(s):
@@ -859,7 +868,7 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                 d += 'M' + ' L'.join(f'{a:.1f},{b:.1f}' for a, b in pp) + ' Z'
             tip = (f'{name} — {fmt_val(v)}{" " + unite if unite else ""}'
                    + (f' · {INFOS[name]}' if name in INFOS else '')
-                   + f' (base : {base_n.get(name, 0)})'
+                   + ' (' + _t('base_carte', n=base_n.get(name, 0)) + ')' 
                    if v is not None else name)
             body.append(f'<path class="sec" d="{d}" fill="{fill}">'
                         f'<title>{tip}</title></path>')
@@ -908,7 +917,8 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                     f'<circle class="sec" cx="{cx:.1f}" cy="{cy:.1f}" r="{R}" fill="{fill}">'
                     f'<title>{name} — {fmt_val(v)}{" " + unite if unite else ""}'
                     + (f' · {INFOS[name]}' if name in INFOS else '')
-                    + f' (base : {base_n.get(name, 0)})</title></circle>'
+                    + ' (' + _t('base_carte', n=base_n.get(name, 0))
+                    + ')</title></circle>' 
                     f'<text class="pv" x="{cx:.1f}" y="{cy + 6:.1f}" fill="{ink}">'
                     f'{fmt_val(v)}{unite}</text>')
             label_anchor[name] = (cx, cy)
@@ -1100,7 +1110,8 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
               f'<line class="cl" x1="46" y1="{height - 47}" x2="46" y2="{height - 37}"/>'
               f'<line class="cl" x1="{46 + bar:.0f}" y1="{height - 47}" '
               f'x2="{46 + bar:.0f}" y2="{height - 37}"/>'
-              f'<text class="ct2" x="{46 + bar / 2:.0f}" y="{height - 22}">≈ 10 km</text>')
+              f'<text class="ct2" x="{46 + bar / 2:.0f}" y="{height - 22}">'
+              + _t('km') + '</text>')
 
     svg = f"""<svg viewBox="0 0 {width} {height}" width="100%"
      style="max-width:{width}px;display:block;margin:0 auto" role="img"

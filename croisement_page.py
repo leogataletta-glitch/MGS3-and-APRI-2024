@@ -19,6 +19,8 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 import map_render
+import i18n
+from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(APP_DIR, "data")
@@ -27,14 +29,16 @@ SECTIONS = ["Anse à Drick", "Barbois", "Beaulieu", "Blactote", "Dalmette",
             "Débouchette", "Dumont", "Mouline", "Quentin", "Trichet"]
 SOUS_POP = ["Homme", "Femme", "Cat A", "Cat B", "Cat C",
             "<25", "25-39", "40-59", "60+", "Littoral", "Montagne"]
-SOUS_POP_LABEL = {
-    "Homme": "Hommes", "Femme": "Femmes",
-    "Cat A": "Cat A — pauvreté extrême", "Cat B": "Cat B — pauvreté",
-    "Cat C": "Cat C — non pauvre",
-    "<25": "Moins de 25 ans", "25-39": "25 à 39 ans",
-    "40-59": "40 à 59 ans", "60+": "60 ans et plus",
-    "Littoral": "Littoral", "Montagne": "Montagne",
+SOUS_POP_CLE = {
+    "Homme": "hommes", "Femme": "femmes", "Cat A": "cat_a", "Cat B": "cat_b",
+    "Cat C": "cat_c", "<25": "age_25", "25-39": "age_25_39",
+    "40-59": "age_40_59", "60+": "age_60",
+    "Littoral": "littoral", "Montagne": "montagne",
 }
+
+
+def libelle_pop(code):
+    return T(SOUS_POP_CLE.get(code, code))
 N_FRAGILE = 30
 MAX_CONDITIONS = 5
 
@@ -76,35 +80,26 @@ def _vecteur(index, bits, qi, labels):
 def render():
     index, manquants, bits, groupes = _charger()
     if index is None:
-        st.title("Croiser des questions")
-        st.error(
-            "Fichier(s) absent(s) du projet : **" + "**, **".join(manquants)
-            + "**.\n\nDéposez-les sur GitHub dans `data/` ou à la racine du "
-              "dépôt — les deux emplacements fonctionnent.")
+        st.title(T("c_titre"))
+        st.error(T("c_fichiers_absents", f="**, **".join(manquants)))
         st.stop()
 
     n_total = bits.shape[1]
     questions = index["questions"]
 
-    st.title("Croiser des questions")
+    st.title(T("c_titre"))
     st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
-    st.caption(
-        "Empilez des conditions pour compter les foyers qui les remplissent "
-        "toutes en même temps — par exemple sans toilettes améliorées, sans eau "
-        "améliorée et sans électricité. "
-        f"{len(questions)} des 503 questions de l'enquête sont croisables.")
+    st.caption(T("c_intro", n=len(questions)))
 
     # ------------------------------------------------------------ conditions
     if "nb_conditions" not in st.session_state:
         st.session_state["nb_conditions"] = 2
 
     liaison = st.radio(
-        "Comment combiner les conditions",
+        T("c_combiner"),
         ["ET", "OU"],
-        format_func=lambda k: {
-            "ET": "ET — le foyer remplit TOUTES les conditions (cumul)",
-            "OU": "OU — le foyer remplit AU MOINS UNE condition"}[k],
-        horizontal=True, key="croix_liaison")
+        format_func=lambda k: {"ET": T("c_et"), "OU": T("c_ou")}[k],
+        horizontal=True, key=f"croix_liaison_{i18n.get_lang()}")
 
     libelles = [f"{q['category'].split('. ', 1)[-1]} · {q['question']}"
                 for q in questions]
@@ -114,7 +109,7 @@ def render():
         with st.container(border=True):
             c1, c2 = st.columns([3, 2])
             with c1:
-                choix = st.selectbox(f"Condition {k + 1} — question", libelles,
+                choix = st.selectbox(T("c_condition_q", k=k + 1), libelles,
                                      index=min(k, len(libelles) - 1),
                                      key=f"cq_{k}")
             q = questions[libelles.index(choix)]
@@ -127,45 +122,44 @@ def render():
                 st.session_state[f"cm_{k}"] = q["modalites"][:1]
             with c2:
                 sens = st.selectbox(
-                    "Le foyer…", ["a", "n_a_pas"],
-                    format_func=lambda s: {"a": "a répondu…",
-                                           "n_a_pas": "n'a PAS répondu…"}[s],
-                    key=f"cs_{k}")
+                    T("c_le_foyer"), ["a", "n_a_pas"],
+                    format_func=lambda s: {"a": T("c_a_repondu"),
+                                           "n_a_pas": T("c_na_pas_repondu")}[s],
+                    key=f"cs_{k}_{i18n.get_lang()}")
             reponses = st.multiselect(
-                "Réponse(s) concernée(s)", q["modalites"], key=f"cm_{k}",
-                help="Plusieurs réponses se cumulent : le foyer compte s'il en "
-                     "a coché au moins une.")
+                T("c_reponses"), q["modalites"], key=f"cm_{k}",
+                help=T("c_reponses_aide"))
             if not reponses:
-                st.caption("Condition ignorée : aucune réponse choisie.")
+                st.caption(T("c_ignoree"))
                 continue
             m = _vecteur(index, bits, q["i"], reponses)
             if sens == "n_a_pas":
                 m = ~m
             masques.append(m)
-            mot = "a" if sens == "a" else "n'a pas"
-            resumes.append(f"{mot} « {' ou '.join(reponses)} » "
+            mot = T("c_a") if sens == "a" else T("c_na_pas")
+            resumes.append(f"{mot} « {T('c_ou_mot').join(reponses)} » "
                            f"({q['question']})")
-            st.caption(f"Cette condition seule : **{int(m.sum())} foyers** "
-                       f"({m.mean() * 100:.1f} %)")
+            st.caption(T("c_seule", n=int(m.sum()),
+                         p=f"{m.mean() * 100:.1f}"))
 
     c_moins, c_plus, _ = st.columns([1, 1, 4])
     with c_plus:
-        if st.button("Ajouter une condition", use_container_width=True,
+        if st.button(T("c_ajouter"), use_container_width=True,
                      disabled=st.session_state["nb_conditions"] >= MAX_CONDITIONS):
             st.session_state["nb_conditions"] += 1
             st.rerun()
     with c_moins:
-        if st.button("Retirer la dernière", use_container_width=True,
+        if st.button(T("c_retirer"), use_container_width=True,
                      disabled=st.session_state["nb_conditions"] <= 1):
             st.session_state["nb_conditions"] -= 1
             st.rerun()
 
     if not masques:
-        st.info("Choisissez au moins une réponse pour lancer le calcul.")
+        st.info(T("c_choisir"))
         return
 
     with st.container(border=True):
-        st.markdown('<div class="titre-bloc vert">2 · Le résultat</div>',
+        st.markdown(f'<div class="titre-bloc vert">{T("c_bloc2")}</div>',
                     unsafe_allow_html=True)
         # ------------------------------------------------------------ résultat
         total = masques[0].copy()
@@ -176,8 +170,8 @@ def render():
         pct = n_ret / n_total * 100
 
         st.markdown(
-            "Foyers qui, **en même temps** :" if liaison == "ET"
-            else "Foyers qui remplissent **au moins une** de ces conditions :")
+            T("c_qui_en_meme_temps") if liaison == "ET"
+            else T("c_qui_au_moins"))
         for r in resumes:
             st.markdown(f"- {r}")
 
@@ -188,40 +182,34 @@ def render():
         c1, c2, c3 = st.columns(3)
         with c1:
             st.markdown(map_render.cartouche_html(
-                "Foyers concernés", int(n_ret), f"sur {n_total}",
-                "effectif brut dans l'échantillon", couleur="#1a6bb0"),
+                T("c_foyers_concernes"), int(n_ret), T("c_sur", n=n_total),
+                T("c_effectif_brut"), couleur="#1a6bb0"),
                 unsafe_allow_html=True)
         with c2:
             st.markdown(map_render.cartouche_html(
-                "Part de l'échantillon", round(pct, 1), "%",
-                "des 1211 ménages enquêtés", couleur="#1a6bb0"),
+                T("c_part"), round(pct, 1), "%",
+                T("c_des_menages"), couleur="#1a6bb0"),
                 unsafe_allow_html=True)
         with c3:
             if attendu is not None and len(masques) > 1:
                 ecart = pct - attendu
                 coul = "#98161c" if ecart > 0 else "#3d9e4f"
                 st.markdown(map_render.cartouche_html(
-                    "Si les conditions étaient indépendantes ?",
-                    round(attendu, 1), "%",
-                    ("observé plus élevé : les situations se cumulent sur les mêmes "
-                     "foyers" if ecart > 0 else
-                     "observé plus faible : les situations se recoupent peu"),
+                    T("c_si_independantes"), round(attendu, 1), "%",
+                    (T("c_plus_eleve") if ecart > 0 else T("c_plus_faible")),
                     couleur=coul), unsafe_allow_html=True)
             else:
                 st.markdown(map_render.cartouche_html(
-                    "Conditions empilées", int(len(masques)), "",
-                    "combinées par « " + liaison + " »", couleur="#5b6b7a"),
+                    T("c_conditions_empilees"), int(len(masques)), "",
+                    T("c_combinees", op=liaison), couleur="#5b6b7a"),
                     unsafe_allow_html=True)
 
         if n_ret < N_FRAGILE:
             st.warning(
-                f"Seulement {n_ret} foyers correspondent à cette combinaison. "
-                "Le chiffre national reste lisible, mais la répartition par section "
-                "communale et par sous-population n'est plus fiable — quelques "
-                "foyers par case.")
+                T("c_trop_peu", n=n_ret))
 
     with st.container(border=True):
-        st.markdown('<div class="titre-bloc ambre">3 · Où sont ces foyers</div>',
+        st.markdown(f'<div class="titre-bloc ambre">{T("c_bloc3")}</div>',
                     unsafe_allow_html=True)
         # ------------------------------------------------------------ carte
         valeurs, bases = {}, {}
@@ -235,30 +223,29 @@ def render():
         seuils = map_render.nice_thresholds([v for v in valeurs.values()
                                              if v is not None])
         polarite = st.radio(
-            "Sens de lecture des couleurs",
+            T("sens_couleurs"),
             ["eleve_mauvais", "eleve_bon", "neutre"],
-            format_func=lambda k: {
-                "eleve_mauvais": "Un pourcentage élevé est défavorable (vert → rouge)",
-                "eleve_bon": "Un pourcentage élevé est favorable (rouge → vert)",
-                "neutre": "Ni bon ni mauvais — dégradé de bleu"}[k],
-            horizontal=True, key="croix_pol")
+            format_func=lambda k: {"eleve_mauvais": T("pol_mauvais"),
+                                   "eleve_bon": T("pol_bon"),
+                                   "neutre": T("pol_neutre")}[k],
+            horizontal=True, key=f"croix_pol_{i18n.get_lang()}")
 
-        infos = {s: f"{int((total & groupes[s]).sum())} foyers sur {bases[s]}"
-                 for s in SECTIONS if s in groupes}
+        infos = {s: T("c_foyers_sur", n=int((total & groupes[s]).sum()),
+                      base=bases[s]) for s in SECTIONS if s in groupes}
         hauteur = 720
-        svg, T, _ = map_render.render_map_svg(
+        svg, seuils_ret, _ = map_render.render_map_svg(
             valeurs, bases, seuils, height=hauteur, polarity=polarite, infos=infos)
         legende = "".join(
             f'<span style="display:inline-flex;align-items:center;gap:7px;margin-right:18px">'
             f'<span style="width:22px;height:12px;border-radius:3px;background:{c};'
             f'box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)"></span>'
             f'<span style="font-size:13px;color:#52514e">{lab}</span></span>'
-            for c, lab in map_render.legend_items(T, polarite))
+            for c, lab in map_render.legend_items(seuils_ret, polarite))
         components.html(
             f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
                             background:#fcfcfb">
               <div style="margin:0 0 8px"><span style="font-size:11.5px;color:#898781;
-                letter-spacing:.05em;margin-right:14px">SEUILS</span>{legende}</div>
+                letter-spacing:.05em;margin-right:14px">{T("legende_seuils")}</span>{legende}</div>
               {svg}
             </div>""",
             height=hauteur + 46, scrolling=False)
@@ -269,17 +256,18 @@ def render():
     RAMP = map_render.ramp_for(polarite)
     bars = map_render.render_score_bars_svg(
         [(s, valeurs[s]) for s in ordre], vmax=max(valeurs.values() or [1]),
-        unite=" %", colors={s: RAMP[map_render.bin_of(valeurs[s], T)][0]
+        unite=" %", colors={s: RAMP[map_render.bin_of(valeurs[s], seuils_ret)][0]
                             for s in ordre},
-        annotations={s: f"({int((total & groupes[s]).sum())} foyers sur {bases[s]})"
-                     for s in ordre})
+        annotations={s: "(" + T("c_foyers_sur",
+                                n=int((total & groupes[s]).sum()),
+                                base=bases[s]) + ")" for s in ordre})
     components.html(
         f'<div style="background:#fcfcfb;font-family:system-ui,-apple-system,'
         f"'Segoe UI',sans-serif\">{bars}</div>",
         height=len(ordre) * 28 + 26, scrolling=False)
 
     with st.container(border=True):
-        st.markdown('<div class="titre-bloc">4 · Qui sont ces foyers</div>',
+        st.markdown(f'<div class="titre-bloc">{T("c_bloc4")}</div>',
                     unsafe_allow_html=True)
         # ------------------------------------------------------------ ventilation
         lignes = []
@@ -289,25 +277,24 @@ def render():
                 continue
             touche = int((total & m).sum())
             lignes.append({
-                "Sous-population": SOUS_POP_LABEL.get(g, g),
-                "Foyers concernés": touche,
-                "Base": int(m.sum()),
-                "Part du groupe (%)": round(touche / m.sum() * 100, 1),
+                T("c_sous_population"): libelle_pop(g),
+                T("c_foyers_col"): touche,
+                T("c_base_col"): int(m.sum()),
+                T("c_part_col"): round(touche / m.sum() * 100, 1),
             })
-        df = pd.DataFrame(lignes).sort_values("Part du groupe (%)", ascending=False)
+        df = pd.DataFrame(lignes).sort_values(T("c_part_col"), ascending=False)
         st.dataframe(df, use_container_width=True, hide_index=True)
-        st.caption(
-            "« Part du groupe » = proportion de ce groupe qui remplit la combinaison. "
-            "C'est cette colonne qui se compare d'une ligne à l'autre, pas l'effectif : "
-            "les groupes n'ont pas la même taille.")
+        st.caption(T("c_part_note"))
+        st.markdown(
+            '<p style="font-size:15px;color:#3c4761;margin:8px 0 0">'
+            + map_render.bulle("indépendance",
+                               texte=T("c_pourquoi_independance"))
+            + '</p>', unsafe_allow_html=True)
 
     st.download_button(
-        "Télécharger ce tableau (CSV)",
+        T("r_telecharger_csv"),
         data=df.to_csv(index=False).encode("utf-8-sig"),
         file_name="croisement_questions.csv", mime="text/csv")
 
-    st.caption("Source : enquête ménage sept. 2024 (1211 répondants). "
-               "Les combinaisons sont calculées répondant par répondant, pas à "
-               "partir des pourcentages agrégés.")
-    st.caption("Travail réalisé par le Programme des Nations Unies pour "
-               "l'environnement (PNUE / UNEP).")
+    st.caption(T("c_source"))
+    st.caption(T("credit"))

@@ -25,8 +25,10 @@ import streamlit.components.v1 as components
 
 import assets
 import croisement_page
+import i18n
 import map_render
 import resilience_page
+from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_CSV = os.path.join(APP_DIR, "data", "donnees_anonymisees.csv")
@@ -118,7 +120,7 @@ def compute_filtered(sexe, cat, age, paysage, sections):
 def rows_to_dataframe(theme, base_n):
     recs = []
     for label, group_n in theme["rows"]:
-        row = {"Modalité": label}
+        row = {T("q_modalite"): label}
         for g in SUBCOLS:
             n = group_n.get(g, 0)
             b = base_n.get(g, 0)
@@ -132,7 +134,7 @@ def export_excel(theme, base_n):
     buf = io.BytesIO()
     df = rows_to_dataframe(theme, base_n)
     with pd.ExcelWriter(buf, engine="openpyxl") as writer:
-        df.to_excel(writer, sheet_name="Résultat", index=False)
+        df.to_excel(writer, sheet_name=T("q_resultat")[:31], index=False)
     buf.seek(0)
     return buf
 
@@ -367,10 +369,27 @@ st.markdown("""
 
 st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
 
+# ---- choix de la langue, avant tout le reste ---------------------------
+# Le menu est l'unique source de vérité : on recopie simplement son état dans
+# `lang`, que toutes les pages lisent. Pas de rerun forcé — Streamlit relance
+# déjà le script quand le menu change, et le reste de la page est construit
+# après cette ligne.
+_l1, _l2 = st.columns([6, 1])
+with _l2:
+    _code = st.selectbox(
+        T("langue"), list(i18n.LANGUES.keys()),
+        format_func=lambda c: i18n.LANGUES[c], key="choix_langue",
+        label_visibility="collapsed")
+i18n.set_lang(_code)
+
 # ---- bandeau : logo PNUE + les deux entrées du tableau de bord ----------
-MODE_QUESTIONS = "Résultats de toutes les questions aux 1200 ménages"
-MODE_RESILIENCE = "Indicateurs de résilience associés"
-MODE_CROISEMENT = "Croiser des questions entre elles"
+# Le mode est stocké sous un code stable, pas sous son libellé : sinon un
+# changement de langue laisserait dans la session une valeur qui ne correspond
+# plus à aucun mode.
+MODE_QUESTIONS, MODE_RESILIENCE, MODE_CROISEMENT = "questions", "resilience", "croisement"
+LIBELLE_MODE = {MODE_QUESTIONS: T("mode_questions"),
+                MODE_RESILIENCE: T("mode_resilience"),
+                MODE_CROISEMENT: T("mode_croisement")}
 
 _logo, _entete = st.columns([1, 8])
 with _logo:
@@ -379,11 +398,10 @@ with _logo:
         f'style="width:96px;margin:2px 0 0 2px">', unsafe_allow_html=True)
 with _entete:
     st.markdown(
-        '<p class="org-mention">Programme des Nations Unies pour '
-        "l'environnement — PNUE / UNEP</p>"
-        '<p style="font-size:26px;font-weight:650;letter-spacing:-.015em;'
-        'margin:2px 0 0 2px;color:#0b0b0b">Enquête ménage 2024 — '
-        "Sud et Grand'Anse</p>", unsafe_allow_html=True)
+        f'<p class="org-mention">{T("org")}</p>'
+        f'<p style="font-size:26px;font-weight:700;letter-spacing:-.02em;'
+        f'margin:2px 0 0 2px;color:#101728">{T("titre_site")}</p>',
+        unsafe_allow_html=True)
 
 # Bandeau : le dessin est rogné en hauteur pour rester un décor, pas une page.
 st.markdown(
@@ -405,17 +423,12 @@ def _bascule(mode):
 
 _c1, _c2, _c3 = st.columns(3, gap="medium")
 for _col, _mode, _sous in (
-        (_c1, MODE_QUESTIONS,
-         "Les 503 questions posées, filtrables par sexe, âge, "
-         "niveau socio-économique et paysage"),
-        (_c2, MODE_RESILIENCE,
-         "Les indicateurs consolidés et leur score IRLA / APRI, "
-         "par section communale et sous-population"),
-        (_c3, MODE_CROISEMENT,
-         "Empiler des conditions : combien de foyers cumulent "
-         "plusieurs privations en même temps")):
+        (_c1, MODE_QUESTIONS, T("mode_questions_sous")),
+        (_c2, MODE_RESILIENCE, T("mode_resilience_sous")),
+        (_c3, MODE_CROISEMENT, T("mode_croisement_sous"))):
     with _col:
-        st.button(_mode, key=f"btn_{_mode[:12]}", on_click=_bascule, args=(_mode,),
+        st.button(LIBELLE_MODE[_mode], key=f"btn_{_mode}",
+                  on_click=_bascule, args=(_mode,),
                   type="primary" if st.session_state["app_mode"] == _mode
                   else "secondary",
                   use_container_width=True)
@@ -435,23 +448,26 @@ if app_mode == MODE_CROISEMENT:
     croisement_page.render()
     st.stop()
 
-st.subheader("Résultats de toutes les questions aux 1200 ménages")
-st.caption(
-    "Choisissez une ou plusieurs valeurs par filtre (les filtres se combinent : "
-    "ex. Femmes ET Catégorie A ET section Quentin en même temps). "
-    "Laissez un filtre vide pour ne pas restreindre sur ce critère."
-)
+st.subheader(LIBELLE_MODE[MODE_QUESTIONS])
+st.caption(T("q_consigne"))
 
 with st.sidebar:
-    st.header("Filtres")
-    f_sexe = st.multiselect("Sexe", ["Homme", "Femme"])
-    f_cat = st.multiselect("Catégorie économique", ["A", "B", "C"],
-                            format_func=lambda x: {"A": "Cat A — pauvreté extrême",
-                                                    "B": "Cat B — pauvreté",
-                                                    "C": "Cat C — non pauvre"}[x])
-    f_age = st.multiselect("Groupe d'âge", ["<25", "25-39", "40-59", "60+"])
-    f_paysage = st.multiselect("Paysage", ["Littoral", "Montagne"])
-    f_sections = st.multiselect("Section communale", list(SECTION_RAW.keys()))
+    st.header(T("filtres"))
+    f_sexe = st.multiselect(T("sexe"), ["Homme", "Femme"],
+                            format_func=lambda x: T("homme") if x == "Homme"
+                            else T("femme"))
+    f_cat = st.multiselect(T("categorie_eco"), ["A", "B", "C"],
+                           format_func=lambda x: {"A": T("cat_a"), "B": T("cat_b"),
+                                                  "C": T("cat_c")}[x])
+    f_age = st.multiselect(T("groupe_age"), ["<25", "25-39", "40-59", "60+"],
+                           format_func=lambda x: {"<25": T("age_25"),
+                                                  "25-39": T("age_25_39"),
+                                                  "40-59": T("age_40_59"),
+                                                  "60+": T("age_60")}[x])
+    f_paysage = st.multiselect(T("paysage"), ["Littoral", "Montagne"],
+                               format_func=lambda x: T("littoral")
+                               if x == "Littoral" else T("montagne"))
+    f_sections = st.multiselect(T("section_communale"), list(SECTION_RAW.keys()))
 
 data = compute_filtered(
     tuple(f_sexe), tuple(f_cat), tuple(f_age), tuple(f_paysage), tuple(f_sections)
@@ -463,18 +479,16 @@ st.markdown(
     '<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px solid '
     '#1a6bb0;border-radius:14px;padding:13px 17px;font-size:16px;color:#3c4761;'
     'box-shadow:0 1px 2px rgba(16,23,40,.05),0 8px 20px rgba(16,23,40,.06)">'
-    f'Population filtrée : <strong style="color:#101728">{base_n["Total"]} '
-    f'répondants</strong> (sur 1211 au total) — Hommes {base_n["Homme"]} · '
-    f'Femmes {base_n["Femme"]}&nbsp;'
-    + map_render.bulle("base", texte="") + '</div>',
+    + T("q_population", n=base_n["Total"], h=base_n["Homme"], f=base_n["Femme"])
+    + "&nbsp;" + map_render.bulle("base", texte="") + '</div>',
     unsafe_allow_html=True)
 
 if base_n["Total"] == 0:
-    st.warning("Aucun répondant ne correspond à cette combinaison de filtres.")
+    st.warning(T("q_vide"))
     st.stop()
 
 with st.container(border=True):
-    st.markdown('<div class="titre-bloc">1 · Choisir la question</div>',
+    st.markdown(f'<div class="titre-bloc">{T("q_bloc1")}</div>',
                 unsafe_allow_html=True)
     index = load_questions_index()
 
@@ -490,17 +504,17 @@ with st.container(border=True):
     cat_display = [CAT_CODE.sub("", c) for c in cats_raw]
     cat_of_display = dict(zip(cat_display, cats_raw))
 
-    chosen = st.selectbox("Catégorie de questions", cat_display,
-                          help="Les catégories suivent l'ordre du questionnaire.")
+    chosen = st.selectbox(T("q_categorie"), cat_display,
+                          help=T("q_categorie_aide"))
     cat_choice = cat_of_display[chosen]
     q_options = [q for q in index if q["category"] == cat_choice]
     q_labels = [q["question"] for q in q_options]
-    q_choice_label = st.selectbox("Question", q_labels)
+    q_choice_label = st.selectbox(T("q_question"), q_labels)
     theme_i = next(q["i"] for q in q_options if q["question"] == q_choice_label)
     theme = themes[theme_i]
 
 with st.container(border=True):
-    st.markdown('<div class="titre-bloc vert">2 · Les réponses</div>',
+    st.markdown(f'<div class="titre-bloc vert">{T("q_bloc2")}</div>',
                 unsafe_allow_html=True)
     st.subheader(theme["question"])
     if theme.get("note"):
@@ -530,14 +544,10 @@ with st.container(border=True):
                 st.markdown(
                     map_render.cartouche_html(
                         _lab, _pourcent, "%",
-                        f"soit {_n} répondants sur {_base_total}",
+                        T("q_soit", n=_n, base=_base_total),
                         couleur=_teinte),
                     unsafe_allow_html=True)
-        st.caption(
-            "Les trois réponses les plus fréquentes sur la population filtrée. "
-            "Sur une question à choix multiples, un même foyer peut être compté "
-            "dans plusieurs réponses : les pourcentages ne totalisent alors pas 100 %. "
-            "Le détail complet est plus bas.")
+        st.caption(T("q_top3"))
 
     # ---- graphique : répartition sur la population filtrée (colonne Total) ----
     # Rendu maison plutôt que st.bar_chart : celui-ci impose une graduation d'axe
@@ -552,10 +562,10 @@ with st.container(border=True):
         height=n_bars * 28 + 26, scrolling=False)
 
 with st.container(border=True):
-    st.markdown('<div class="titre-bloc ambre">3 · Où, sur le territoire</div>',
+    st.markdown(f'<div class="titre-bloc ambre">{T("q_bloc3")}</div>',
                 unsafe_allow_html=True)
     # ---- carte : une couleur par seuil, une section communale par forme ----
-    st.markdown("### Carte par section communale")
+    st.markdown("### " + T("q_carte"))
     row_labels = [lab for lab, _ in theme["rows"]]
     rows_dict = dict(theme["rows"])
 
@@ -594,40 +604,35 @@ with st.container(border=True):
     mode = "liste"
     if is_numeric:
         mode = st.radio(
-            "Que cartographier",
+            T("q_quoi_carto"),
             ["seuil", "liste"],
-            format_func=lambda k: {"seuil": "Un seuil : « X et plus »",
-                                   "liste": "Une ou plusieurs valeurs précises"}[k],
-            horizontal=True, key=f"mode_{theme_i}")
+            format_func=lambda k: {"seuil": T("q_mode_seuil"),
+                                   "liste": T("q_mode_liste")}[k],
+            horizontal=True, key=f"mode_{theme_i}_{i18n.get_lang()}")
 
     if mode == "seuil":
         paliers = sorted(bornes)[1:]            # la borne la plus basse ne filtre rien
-        seuil = st.selectbox("Seuil", paliers, format_func=lambda v: f"{v} et plus",
+        seuil = st.selectbox(T("q_seuil"), paliers,
+                             format_func=lambda v: T("q_seuil_fmt", v=v),
                              key=f"seuil_{theme_i}")
         selection = [lab for lab in chiffrees if nums[lab] >= seuil]
-        map_choice = f"{seuil} et plus"
-        st.caption("Cumule : " + ", ".join(f"« {lab} »" for lab in selection))
+        map_choice = T("q_seuil_fmt", v=seuil)
+        st.caption(T("q_cumule") + ", ".join(f"« {lab} »" for lab in selection))
         hors = [lab for lab in row_labels if nums[lab] is None]
         if hors:
-            st.caption("Non comptées (réponses non chiffrées) : "
-                       + ", ".join(f"« {lab} »" for lab in hors))
+            st.caption(T("q_hors") + ", ".join(f"« {lab} »" for lab in hors))
     else:
         selection = st.multiselect(
-            "Réponse(s) à cartographier", row_labels, default=[row_labels[0]],
-            key=f"sel_{theme_i}",
-            help="Sélectionnez-en plusieurs pour les cumuler "
-                 "(ex. « Latrines à fosse sans dalle » + « Aucun »).")
+            T("q_reponses_carto"), row_labels, default=[row_labels[0]],
+            key=f"sel_{theme_i}", help=T("q_reponses_aide"))
         map_choice = " + ".join(selection)
 
     if not selection:
-        st.info("Choisissez au moins une réponse pour afficher la carte.")
+        st.info(T("q_choisir_reponse"))
         st.stop()
 
     if len(selection) > 1 and choix_multiple:
-        st.warning(
-            "Cette question accepte plusieurs réponses par foyer : en cumuler "
-            "plusieurs compte deux fois les foyers qui en ont coché plus d'une. "
-            "Le total affiché est donc un maximum, pas un effectif exact.")
+        st.warning(T("q_avert_multi"))
 
     map_counts = {g: sum(rows_dict[lab].get(g, 0) for lab in selection)
                   for g in map_render.SECTIONS}
@@ -636,41 +641,39 @@ with st.container(border=True):
         for s in map_render.SECTIONS
     }
     if mode != "seuil" and len(selection) > 1:
-        st.caption("Cumule : " + ", ".join(f"« {lab} »" for lab in selection))
+        st.caption(T("q_cumule") + ", ".join(f"« {lab} »" for lab in selection))
 
     POLARITY_LABELS = {
-        "eleve_mauvais": "Un pourcentage élevé est **défavorable** (vert → rouge)",
-        "eleve_bon": "Un pourcentage élevé est **favorable** (rouge → vert)",
-        "neutre": "Ni bon ni mauvais — dégradé de bleu",
+        "eleve_mauvais": T("pol_mauvais"),
+        "eleve_bon": T("pol_bon"),
+        "neutre": T("pol_neutre"),
     }
     suggestion = map_render.guess_polarity(theme["question"], selection[0])
-    pol_key = f"pol_{theme_i}_{map_choice}"
+    pol_key = f"pol_{theme_i}_{map_choice}_{i18n.get_lang()}"
     polarity = st.radio(
-        "Sens de lecture des couleurs",
+        T("sens_couleurs"),
         list(POLARITY_LABELS.keys()),
         index=list(POLARITY_LABELS.keys()).index(suggestion),
         format_func=lambda k: POLARITY_LABELS[k],
         horizontal=True, key=pol_key,
-        help="Proposé automatiquement d'après l'intitulé de la question. "
-             "Aucune règle n'étant fiable sur les 503 questions, vérifiez-le et "
-             "corrigez-le si besoin.")
+        help=T("pol_aide"))
 
-    with st.expander("Régler les seuils de couleur"):
-        auto = st.checkbox("Seuils automatiques", value=True)
+    with st.expander(T("regler_seuils")):
+        auto = st.checkbox(T("seuils_auto"), value=True)
         auto_T = map_render.nice_thresholds([v for v in map_values.values() if v is not None])
         if auto:
             thresholds = auto_T
         else:
             c1, c2, c3 = st.columns(3)
             thresholds = [
-                c1.number_input("Seuil 1", value=float(auto_T[0]), step=1.0),
-                c2.number_input("Seuil 2", value=float(auto_T[1]), step=1.0),
-                c3.number_input("Seuil 3", value=float(auto_T[2]), step=1.0),
+                c1.number_input(T("seuil_n", i=1), value=float(auto_T[0]), step=1.0),
+                c2.number_input(T("seuil_n", i=2), value=float(auto_T[1]), step=1.0),
+                c3.number_input(T("seuil_n", i=3), value=float(auto_T[2]), step=1.0),
             ]
             thresholds = sorted(thresholds)
 
     map_height = 720
-    svg, T, mode = map_render.render_map_svg(
+    svg, seuils_ret, mode = map_render.render_map_svg(
         map_values, base_n, thresholds, height=map_height, polarity=polarity)
 
     legend_html = "".join(
@@ -678,7 +681,7 @@ with st.container(border=True):
         f'<span style="width:22px;height:12px;border-radius:3px;background:{c};'
         f'box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)"></span>'
         f'<span style="font-size:13px;color:#52514e">{lab}</span></span>'
-        for c, lab in map_render.legend_items(T, polarity))
+        for c, lab in map_render.legend_items(seuils_ret, polarity))
 
     # Streamlit assainit le SVG inséré via st.markdown (il vide les <circle>/<text>) :
     # on passe donc par un composant HTML isolé, qui rend le SVG tel quel.
@@ -686,7 +689,7 @@ with st.container(border=True):
         f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
                         background:#fcfcfb">
           <div style="margin:0 0 8px"><span style="font-size:11.5px;color:#898781;
-            letter-spacing:.05em;margin-right:14px">SEUILS</span>{legend_html}</div>
+            letter-spacing:.05em;margin-right:14px">{T("legende_seuils")}</span>{legend_html}</div>
           {svg}
         </div>""",
         height=map_height + 46, scrolling=False)
@@ -695,32 +698,24 @@ with st.container(border=True):
 
     if mode == "disques":
         st.caption(
-            "Chaque disque représente une section communale, placée à sa position "
-            "géographique réelle (nord en haut, distances respectées) ; les disques qui se "
-            "superposaient ont été légèrement écartés. Ce ne sont pas les limites "
-            "administratives officielles — déposez un fichier "
-            "`data/sections_communales.geojson` dans le projet et la carte affichera "
-            "automatiquement les vrais contours.")
+            T("contours_disques"))
     else:
-        st.caption("Contours administratifs officiels des sections communales.")
+        st.caption(T("contours_officiels"))
 
 with st.container(border=True):
-    st.markdown('<div class="titre-bloc">4 · Le détail, sous-groupe par sous-groupe</div>',
+    st.markdown(f'<div class="titre-bloc">{T("q_bloc4")}</div>',
                 unsafe_allow_html=True)
     # ---- tableau détaillé avec tous les sous-groupes ----
-    st.markdown("**Détail par sous-groupe**")
+    st.markdown("**" + T("q_detail") + "**")
     detail_df = rows_to_dataframe(theme, base_n)
     st.dataframe(detail_df, use_container_width=True, hide_index=True)
 
     st.download_button(
-        "Télécharger ce tableau (Excel)",
+        T("q_telecharger_xlsx"),
         data=export_excel(theme, base_n),
         file_name="resultat_filtre.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
 
-st.caption("Source : Données brutes V3, enquête ménage sept. 2024. "
-           "Les pourcentages sont calculés sur la base du groupe filtré affiché ci-dessus, "
-           "pas sur l'ensemble des 1211 répondants.")
-st.caption("Travail réalisé par le Programme des Nations Unies pour "
-           "l'environnement (PNUE / UNEP).")
+st.caption(T("q_source"))
+st.caption(T("credit"))
