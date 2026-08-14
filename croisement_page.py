@@ -163,100 +163,104 @@ def render():
         st.info("Choisissez au moins une réponse pour lancer le calcul.")
         return
 
-    # ------------------------------------------------------------ résultat
-    total = masques[0].copy()
-    for m in masques[1:]:
-        total = (total & m) if liaison == "ET" else (total | m)
+    with st.container(border=True):
+        st.markdown('<div class="titre-bloc vert">2 · Le résultat</div>',
+                    unsafe_allow_html=True)
+        # ------------------------------------------------------------ résultat
+        total = masques[0].copy()
+        for m in masques[1:]:
+            total = (total & m) if liaison == "ET" else (total | m)
 
-    n_ret = int(total.sum())
-    pct = n_ret / n_total * 100
+        n_ret = int(total.sum())
+        pct = n_ret / n_total * 100
 
-    st.markdown("### Résultat")
-    st.markdown(
-        "Foyers qui, **en même temps** :" if liaison == "ET"
-        else "Foyers qui remplissent **au moins une** de ces conditions :")
-    for r in resumes:
-        st.markdown(f"- {r}")
+        st.markdown(
+            "Foyers qui, **en même temps** :" if liaison == "ET"
+            else "Foyers qui remplissent **au moins une** de ces conditions :")
+        for r in resumes:
+            st.markdown(f"- {r}")
 
-    # Un cumul de conditions n'est jamais le produit des taux : si les
-    # privations frappent les mêmes foyers, le cumul observé dépasse ce que
-    # l'indépendance prédirait. L'écart est l'information intéressante.
-    attendu = np.prod([m.mean() for m in masques]) * 100 if liaison == "ET" else None
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.markdown(map_render.cartouche_html(
-            "Foyers concernés", int(n_ret), f"sur {n_total}",
-            "effectif brut dans l'échantillon", couleur="#1a6bb0"),
-            unsafe_allow_html=True)
-    with c2:
-        st.markdown(map_render.cartouche_html(
-            "Part de l'échantillon", round(pct, 1), "%",
-            "des 1211 ménages enquêtés", couleur="#1a6bb0"),
-            unsafe_allow_html=True)
-    with c3:
-        if attendu is not None and len(masques) > 1:
-            ecart = pct - attendu
-            coul = "#98161c" if ecart > 0 else "#3d9e4f"
+        # Un cumul de conditions n'est jamais le produit des taux : si les
+        # privations frappent les mêmes foyers, le cumul observé dépasse ce que
+        # l'indépendance prédirait. L'écart est l'information intéressante.
+        attendu = np.prod([m.mean() for m in masques]) * 100 if liaison == "ET" else None
+        c1, c2, c3 = st.columns(3)
+        with c1:
             st.markdown(map_render.cartouche_html(
-                "Si les conditions étaient indépendantes",
-                round(attendu, 1), "%",
-                ("observé plus élevé : les situations se cumulent sur les mêmes "
-                 "foyers" if ecart > 0 else
-                 "observé plus faible : les situations se recoupent peu"),
-                couleur=coul), unsafe_allow_html=True)
-        else:
-            st.markdown(map_render.cartouche_html(
-                "Conditions empilées", int(len(masques)), "",
-                "combinées par « " + liaison + " »", couleur="#5b6b7a"),
+                "Foyers concernés", int(n_ret), f"sur {n_total}",
+                "effectif brut dans l'échantillon", couleur="#1a6bb0"),
                 unsafe_allow_html=True)
+        with c2:
+            st.markdown(map_render.cartouche_html(
+                "Part de l'échantillon", round(pct, 1), "%",
+                "des 1211 ménages enquêtés", couleur="#1a6bb0"),
+                unsafe_allow_html=True)
+        with c3:
+            if attendu is not None and len(masques) > 1:
+                ecart = pct - attendu
+                coul = "#98161c" if ecart > 0 else "#3d9e4f"
+                st.markdown(map_render.cartouche_html(
+                    "Si les conditions étaient indépendantes",
+                    round(attendu, 1), "%",
+                    ("observé plus élevé : les situations se cumulent sur les mêmes "
+                     "foyers" if ecart > 0 else
+                     "observé plus faible : les situations se recoupent peu"),
+                    couleur=coul), unsafe_allow_html=True)
+            else:
+                st.markdown(map_render.cartouche_html(
+                    "Conditions empilées", int(len(masques)), "",
+                    "combinées par « " + liaison + " »", couleur="#5b6b7a"),
+                    unsafe_allow_html=True)
 
-    if n_ret < N_FRAGILE:
-        st.warning(
-            f"Seulement {n_ret} foyers correspondent à cette combinaison. "
-            "Le chiffre national reste lisible, mais la répartition par section "
-            "communale et par sous-population n'est plus fiable — quelques "
-            "foyers par case.")
+        if n_ret < N_FRAGILE:
+            st.warning(
+                f"Seulement {n_ret} foyers correspondent à cette combinaison. "
+                "Le chiffre national reste lisible, mais la répartition par section "
+                "communale et par sous-population n'est plus fiable — quelques "
+                "foyers par case.")
 
-    # ------------------------------------------------------------ carte
-    st.markdown("### Où sont ces foyers")
-    valeurs, bases = {}, {}
-    for s in SECTIONS:
-        g = groupes.get(s)
-        if g is None:
-            continue
-        bases[s] = int(g.sum())
-        valeurs[s] = round(float((total & g).sum()) / g.sum() * 100, 1) if g.sum() else None
+    with st.container(border=True):
+        st.markdown('<div class="titre-bloc ambre">3 · Où sont ces foyers</div>',
+                    unsafe_allow_html=True)
+        # ------------------------------------------------------------ carte
+        valeurs, bases = {}, {}
+        for s in SECTIONS:
+            g = groupes.get(s)
+            if g is None:
+                continue
+            bases[s] = int(g.sum())
+            valeurs[s] = round(float((total & g).sum()) / g.sum() * 100, 1) if g.sum() else None
 
-    seuils = map_render.nice_thresholds([v for v in valeurs.values()
-                                         if v is not None])
-    polarite = st.radio(
-        "Sens de lecture des couleurs",
-        ["eleve_mauvais", "eleve_bon", "neutre"],
-        format_func=lambda k: {
-            "eleve_mauvais": "Un pourcentage élevé est défavorable (vert → rouge)",
-            "eleve_bon": "Un pourcentage élevé est favorable (rouge → vert)",
-            "neutre": "Ni bon ni mauvais — dégradé de bleu"}[k],
-        horizontal=True, key="croix_pol")
+        seuils = map_render.nice_thresholds([v for v in valeurs.values()
+                                             if v is not None])
+        polarite = st.radio(
+            "Sens de lecture des couleurs",
+            ["eleve_mauvais", "eleve_bon", "neutre"],
+            format_func=lambda k: {
+                "eleve_mauvais": "Un pourcentage élevé est défavorable (vert → rouge)",
+                "eleve_bon": "Un pourcentage élevé est favorable (rouge → vert)",
+                "neutre": "Ni bon ni mauvais — dégradé de bleu"}[k],
+            horizontal=True, key="croix_pol")
 
-    infos = {s: f"{int((total & groupes[s]).sum())} foyers sur {bases[s]}"
-             for s in SECTIONS if s in groupes}
-    hauteur = 720
-    svg, T, _ = map_render.render_map_svg(
-        valeurs, bases, seuils, height=hauteur, polarity=polarite, infos=infos)
-    legende = "".join(
-        f'<span style="display:inline-flex;align-items:center;gap:7px;margin-right:18px">'
-        f'<span style="width:22px;height:12px;border-radius:3px;background:{c};'
-        f'box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)"></span>'
-        f'<span style="font-size:13px;color:#52514e">{lab}</span></span>'
-        for c, lab in map_render.legend_items(T, polarite))
-    components.html(
-        f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
-                        background:#fcfcfb">
-          <div style="margin:0 0 8px"><span style="font-size:11.5px;color:#898781;
-            letter-spacing:.05em;margin-right:14px">SEUILS</span>{legende}</div>
-          {svg}
-        </div>""",
-        height=hauteur + 46, scrolling=False)
+        infos = {s: f"{int((total & groupes[s]).sum())} foyers sur {bases[s]}"
+                 for s in SECTIONS if s in groupes}
+        hauteur = 720
+        svg, T, _ = map_render.render_map_svg(
+            valeurs, bases, seuils, height=hauteur, polarity=polarite, infos=infos)
+        legende = "".join(
+            f'<span style="display:inline-flex;align-items:center;gap:7px;margin-right:18px">'
+            f'<span style="width:22px;height:12px;border-radius:3px;background:{c};'
+            f'box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)"></span>'
+            f'<span style="font-size:13px;color:#52514e">{lab}</span></span>'
+            for c, lab in map_render.legend_items(T, polarite))
+        components.html(
+            f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+                            background:#fcfcfb">
+              <div style="margin:0 0 8px"><span style="font-size:11.5px;color:#898781;
+                letter-spacing:.05em;margin-right:14px">SEUILS</span>{legende}</div>
+              {svg}
+            </div>""",
+            height=hauteur + 46, scrolling=False)
 
     # ------------------------------------------------------------ classement
     ordre = sorted((s for s in valeurs if valeurs[s] is not None),
@@ -273,26 +277,28 @@ def render():
         f"'Segoe UI',sans-serif\">{bars}</div>",
         height=len(ordre) * 28 + 26, scrolling=False)
 
-    # ------------------------------------------------------------ ventilation
-    st.markdown("### Qui sont ces foyers")
-    lignes = []
-    for g in SOUS_POP:
-        m = groupes.get(g)
-        if m is None or not m.sum():
-            continue
-        touche = int((total & m).sum())
-        lignes.append({
-            "Sous-population": SOUS_POP_LABEL.get(g, g),
-            "Foyers concernés": touche,
-            "Base": int(m.sum()),
-            "Part du groupe (%)": round(touche / m.sum() * 100, 1),
-        })
-    df = pd.DataFrame(lignes).sort_values("Part du groupe (%)", ascending=False)
-    st.dataframe(df, use_container_width=True, hide_index=True)
-    st.caption(
-        "« Part du groupe » = proportion de ce groupe qui remplit la combinaison. "
-        "C'est cette colonne qui se compare d'une ligne à l'autre, pas l'effectif : "
-        "les groupes n'ont pas la même taille.")
+    with st.container(border=True):
+        st.markdown('<div class="titre-bloc">4 · Qui sont ces foyers</div>',
+                    unsafe_allow_html=True)
+        # ------------------------------------------------------------ ventilation
+        lignes = []
+        for g in SOUS_POP:
+            m = groupes.get(g)
+            if m is None or not m.sum():
+                continue
+            touche = int((total & m).sum())
+            lignes.append({
+                "Sous-population": SOUS_POP_LABEL.get(g, g),
+                "Foyers concernés": touche,
+                "Base": int(m.sum()),
+                "Part du groupe (%)": round(touche / m.sum() * 100, 1),
+            })
+        df = pd.DataFrame(lignes).sort_values("Part du groupe (%)", ascending=False)
+        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.caption(
+            "« Part du groupe » = proportion de ce groupe qui remplit la combinaison. "
+            "C'est cette colonne qui se compare d'une ligne à l'autre, pas l'effectif : "
+            "les groupes n'ont pas la même taille.")
 
     st.download_button(
         "Télécharger ce tableau (CSV)",

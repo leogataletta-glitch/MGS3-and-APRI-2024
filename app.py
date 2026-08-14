@@ -150,168 +150,218 @@ if not check_password():
 # blocs de texte pénibles à lire.
 st.markdown("""
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Roboto:wght@400;500;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
   /* ------------------------------------------------------------------
-     Parti pris : épuré, éditorial. Beaucoup de blanc, une seule couleur
-     d'accent (le bleu PNUE assombri), des filets d'un pixel au lieu de
-     boîtes, et une serif de titrage qui donne le ton « publication »
-     plutôt que « logiciel ».
+     Parti pris : une page web, pas un document. Fond teinté, contenu
+     posé dessus en cartes blanches avec du relief, coins arrondis,
+     survol qui répond. Aucun texte gris minuscule : les commentaires
+     de lecture sont lisibles ou ils n'ont pas lieu d'être.
      ------------------------------------------------------------------ */
   :root {
-    --encre:      #16161a;
-    --encre-2:    #45454d;
-    --encre-3:    #85858e;
-    --filet:      #e4e3de;
-    --filet-fort: #c9c8c1;
+    --encre:      #101728;
+    --encre-2:    #3c4761;
+    --encre-3:    #6b7590;
+    --fond:       #eaf0f7;
+    --fond-2:     #dfe9f4;
+    --carte:      #ffffff;
+    --bord:       #e3eaf3;
     --accent:     #1a6bb0;
-    --papier:     #ffffff;
+    --accent-2:   #0f9d8f;
+    --accent-3:   #f0a02a;
+    --ombre:      0 1px 2px rgba(16,23,40,.05), 0 10px 28px rgba(16,23,40,.07);
+    --ombre-haut: 0 2px 4px rgba(16,23,40,.06), 0 18px 40px rgba(16,23,40,.11);
   }
 
-  .stApp { background: var(--papier); }
+  .stApp {
+    background:
+      radial-gradient(1200px 520px at 12% -8%, #f7fbff 0%, rgba(247,251,255,0) 60%),
+      radial-gradient(900px 460px at 92% 4%, #e8f5f2 0%, rgba(232,245,242,0) 62%),
+      var(--fond);
+  }
   html, body, [class*="css"], .stApp {
-    font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
     color: var(--encre-2);
   }
+  .block-container { max-width: 1240px; padding-top: 1.6rem; padding-bottom: 5rem; }
 
-  .block-container {
-    max-width: 1120px; padding-top: 2.6rem; padding-bottom: 6rem;
-  }
-
-  /* --- titrage : serif éditoriale, grande, peu de graisse --- */
+  /* --- titres --- */
   h1, h2, h3 {
-    font-family: "Source Serif 4", Georgia, "Times New Roman", serif !important;
-    color: var(--encre); letter-spacing: -0.011em;
+    font-family: "Outfit", "Inter", system-ui, sans-serif !important;
+    color: var(--encre); letter-spacing: -0.02em;
   }
-  h1 { font-weight: 600 !important; font-size: 3rem !important;
-       line-height: 1.1 !important; padding-bottom: .2rem !important; }
-  h2 { font-weight: 600 !important; font-size: 1.95rem !important;
-       margin-top: 3rem !important; padding-bottom: .55rem !important;
-       border-bottom: 1px solid var(--filet); }
-  h3 { font-weight: 600 !important; font-size: 1.4rem !important;
-       margin-top: 2.2rem !important; }
+  h1 { font-weight: 700 !important; font-size: 2.6rem !important;
+       line-height: 1.12 !important; }
+  h2 { font-weight: 700 !important; font-size: 1.7rem !important;
+       margin-top: .2rem !important; padding-bottom: .2rem !important; }
+  h3 { font-weight: 600 !important; font-size: 1.28rem !important;
+       margin-top: .2rem !important; }
 
-  /* --- texte courant --- */
+  /* --- texte : jamais minuscule, jamais délavé --- */
   [data-testid="stMarkdownContainer"] p,
   [data-testid="stMarkdownContainer"] li {
-    font-size: 16.5px; line-height: 1.68; color: var(--encre-2);
+    font-size: 16px; line-height: 1.66; color: var(--encre-2);
   }
-  [data-testid="stMarkdownContainer"] li { margin-bottom: .35rem; }
   [data-testid="stMarkdownContainer"] strong { color: var(--encre); }
-
-  /* --- légendes : le pas de côté du rédacteur --- */
   [data-testid="stCaptionContainer"] p {
-    font-size: 14.5px !important; line-height: 1.6 !important;
-    color: var(--encre-3) !important; max-width: 88ch;
+    font-size: 15px !important; line-height: 1.62 !important;
+    color: var(--encre-2) !important; max-width: 92ch;
   }
 
-  /* --- libellés de menus : capitales espacées, discrètes --- */
+  /* ------------------------------------------------------------------
+     LES CARTES. Tout bloc encadré (st.container(border=True)) devient
+     une carte blanche en relief qui se soulève au survol.
+     ------------------------------------------------------------------ */
+  div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: var(--carte) !important;
+    border: 1px solid var(--bord) !important;
+    border-radius: 18px !important;
+    box-shadow: var(--ombre);
+    padding: 6px 6px !important;
+    transition: box-shadow .22s ease, transform .22s ease;
+    animation: apparition .5s cubic-bezier(.2,.7,.3,1) both;
+  }
+  div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+    box-shadow: var(--ombre-haut); transform: translateY(-2px);
+  }
+  div[data-testid="stVerticalBlockBorderWrapper"]
+    div[data-testid="stVerticalBlockBorderWrapper"] {
+    box-shadow: none; border-radius: 12px !important; animation: none;
+  }
+  div[data-testid="stVerticalBlockBorderWrapper"]
+    div[data-testid="stVerticalBlockBorderWrapper"]:hover { transform: none; }
+
+  @keyframes apparition {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* --- l'entête de section, en pilule colorée --- */
+  .titre-bloc {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: "Outfit", sans-serif; font-weight: 700; font-size: 13px;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--accent); background: #eaf3fb;
+    padding: 6px 13px; border-radius: 999px; margin: 0 0 4px;
+  }
+  .titre-bloc.vert  { color: #0b7f74; background: #e5f6f3; }
+  .titre-bloc.ambre { color: #a8690a; background: #fdf3e3; }
+
+  /* --- menus : champs pleins, arrondis, réactifs --- */
   label[data-testid="stWidgetLabel"] p {
-    font-size: 11.5px !important; font-weight: 700 !important;
-    letter-spacing: .09em; text-transform: uppercase;
-    color: var(--encre-3) !important;
+    font-size: 13px !important; font-weight: 700 !important;
+    letter-spacing: .04em; color: var(--encre-3) !important;
+    text-transform: uppercase;
   }
   div[data-baseweb="select"] > div {
-    font-size: 15.5px; border-radius: 0; border: none;
-    border-bottom: 1px solid var(--filet-fort); background: transparent;
+    font-size: 15.5px; border-radius: 11px; border: 1.5px solid var(--bord);
+    background: #f7fafd; transition: border-color .15s ease, box-shadow .15s ease;
   }
-  div[data-baseweb="select"] > div:hover { border-bottom-color: var(--accent); }
+  div[data-baseweb="select"] > div:hover { border-color: #b9d3ea; }
+  div[data-baseweb="select"] > div:focus-within {
+    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,107,176,.14);
+  }
 
-  /* --- l'encadré de contexte : deux filets, pas une boîte de couleur --- */
+  /* --- bandeau d'info --- */
   div[data-testid="stAlert"] {
-    border: none; border-top: 1px solid var(--filet);
-    border-bottom: 1px solid var(--filet);
-    border-radius: 0; background: transparent; padding: 2px 0;
+    border: 1px solid var(--bord); border-left: 5px solid var(--accent);
+    border-radius: 14px; background: var(--carte); box-shadow: var(--ombre);
+    padding: 3px 6px;
   }
   div[data-testid="stAlert"] > div {
     background: transparent !important; border: none !important;
-    padding: 12px 2px !important;
+    padding: 12px 14px !important;
   }
   div[data-testid="stAlert"] p {
-    font-size: 15.5px !important; color: var(--encre-2) !important; margin: 0;
+    font-size: 16px !important; color: var(--encre-2) !important; margin: 0;
   }
-  div[data-testid="stAlert"] svg { display: none; }
 
-  details summary p {
-    font-size: 14px !important; font-weight: 700 !important;
-    letter-spacing: .05em; text-transform: uppercase; color: var(--encre-2);
+  details {
+    background: var(--carte); border: 1px solid var(--bord) !important;
+    border-radius: 14px !important; box-shadow: var(--ombre);
   }
-  details { border: none !important; border-top: 1px solid var(--filet) !important;
-            border-radius: 0 !important; }
+  details summary p {
+    font-size: 15px !important; font-weight: 600 !important;
+    color: var(--encre-2);
+  }
 
   .org-mention {
-    font-size: 11px; color: var(--encre-3); letter-spacing: .14em;
-    text-transform: uppercase; margin: 0 0 4px 1px; font-weight: 700;
+    font-size: 11.5px; color: var(--encre-3); letter-spacing: .12em;
+    text-transform: uppercase; margin: 0 0 3px 1px; font-weight: 700;
   }
 
-  /* --- les trois entrées : rectangles à filet, l'active en encre pleine --- */
+  /* --- les trois entrées : grandes tuiles en relief --- */
   div[data-testid="stButton"] > button {
-    height: 82px; border-radius: 2px; border-width: 1px;
-    font-family: "Source Serif 4", Georgia, serif !important;
-    font-size: 19px !important; font-weight: 600 !important;
-    line-height: 1.28; white-space: normal; padding: 10px 20px;
-    transition: all .16s ease;
+    height: 92px; border-radius: 16px; border: 1.5px solid var(--bord);
+    font-family: "Outfit", sans-serif !important;
+    font-size: 18px !important; font-weight: 600 !important;
+    line-height: 1.3; white-space: normal; padding: 12px 20px;
+    background: var(--carte); box-shadow: var(--ombre);
+    transition: transform .18s cubic-bezier(.2,.7,.3,1), box-shadow .18s ease,
+                background .18s ease, border-color .18s ease;
   }
   div[data-testid="stButton"] > button p {
-    font-size: 19px !important; font-weight: 600 !important;
+    font-size: 18px !important; font-weight: 600 !important;
+  }
+  div[data-testid="stButton"] > button:hover {
+    transform: translateY(-3px); box-shadow: var(--ombre-haut);
+    border-color: #b9d3ea;
   }
   div[data-testid="stButton"] > button[kind="primary"],
   div[data-testid="stButton"] > button[kind="primary"] p,
-  div[data-testid="stButton"] > button[kind="primary"] div {
-    background-color: transparent; color: #ffffff !important;
-  }
+  div[data-testid="stButton"] > button[kind="primary"] div { color: #fff !important; }
   div[data-testid="stButton"] > button[kind="primary"] {
-    background: var(--encre) !important; border-color: var(--encre) !important;
-  }
-  div[data-testid="stButton"] > button[kind="primary"]:hover {
-    background: #000 !important; border-color: #000 !important;
+    background: linear-gradient(135deg, #1f7ac4 0%, #15588f 100%) !important;
+    border-color: transparent !important;
+    box-shadow: 0 2px 6px rgba(21,88,143,.28), 0 14px 30px rgba(21,88,143,.24);
   }
   div[data-testid="stButton"] > button[kind="secondary"],
   div[data-testid="stButton"] > button[kind="secondary"] p {
     color: var(--encre) !important;
   }
-  div[data-testid="stButton"] > button[kind="secondary"] {
-    background: transparent !important; border-color: var(--filet-fort) !important;
-  }
-  div[data-testid="stButton"] > button[kind="secondary"]:hover p {
-    color: var(--accent) !important;
-  }
-  div[data-testid="stButton"] > button[kind="secondary"]:hover {
-    border-color: var(--accent) !important; color: var(--accent) !important;
-    transform: translateY(-1px);
-  }
 
-  /* --- radios internes : discrets --- */
+  /* --- radios : pastilles cliquables --- */
+  .stRadio > div[role="radiogroup"] { gap: 8px; flex-wrap: wrap; }
+  .stRadio > div[role="radiogroup"] > label {
+    background: #f4f8fc; border: 1.5px solid var(--bord);
+    border-radius: 999px; padding: 7px 15px 7px 11px;
+    transition: all .15s ease;
+  }
+  .stRadio > div[role="radiogroup"] > label:hover {
+    border-color: #b9d3ea; background: #eaf3fb;
+  }
   .stRadio > div[role="radiogroup"] > label > div:last-child p {
-    font-size: 14.5px !important; font-weight: 500 !important;
+    font-size: 14.5px !important; font-weight: 600 !important;
     color: var(--encre-2);
   }
 
-  /* --- barre latérale : blanche, séparée par un simple filet --- */
+  /* --- barre latérale --- */
   section[data-testid="stSidebar"] {
-    background: var(--papier); border-right: 1px solid var(--filet);
+    background: rgba(255,255,255,.72); backdrop-filter: blur(6px);
+    border-right: 1px solid var(--bord);
   }
   section[data-testid="stSidebar"] h2 {
-    font-size: 1.15rem !important; margin-top: .2rem !important;
-    border-bottom: none; padding-bottom: 0 !important;
+    font-size: 1.15rem !important; margin-top: .3rem !important;
   }
 
-  /* --- tableaux : filets fins, pas de damier --- */
-  div[data-testid="stDataFrame"] { border: 1px solid var(--filet); }
-
-  /* --- conteneurs bordés (conditions du croisement) --- */
-  div[data-testid="stVerticalBlockBorderWrapper"] {
-    border-radius: 2px !important; border-color: var(--filet) !important;
+  /* --- tableaux --- */
+  div[data-testid="stDataFrame"] {
+    border: 1px solid var(--bord); border-radius: 12px; overflow: hidden;
   }
 
-  /* --- boutons de téléchargement : liens, pas boutons --- */
+  /* --- téléchargements : bouton doux --- */
   div[data-testid="stDownloadButton"] > button {
-    height: auto; border: none; background: transparent !important;
-    color: var(--accent) !important; padding: 4px 0 !important;
-    font-family: "Roboto", sans-serif !important;
-    font-size: 14.5px !important; font-weight: 600 !important;
-    border-bottom: 1px solid var(--accent) !important; border-radius: 0;
+    height: auto; padding: 9px 18px !important; border-radius: 999px;
+    background: #eaf3fb !important; border: 1.5px solid #cfe2f3 !important;
+    color: var(--accent) !important; font-weight: 600 !important;
+    font-size: 14.5px !important; box-shadow: none;
   }
+  div[data-testid="stDownloadButton"] > button:hover {
+    background: #dcebf8 !important; transform: translateY(-1px);
+  }
+
+  /* --- iframes des graphiques : coins arrondis, fond blanc --- */
+  iframe { border-radius: 12px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -414,231 +464,243 @@ if base_n["Total"] == 0:
     st.warning("Aucun répondant ne correspond à cette combinaison de filtres.")
     st.stop()
 
-index = load_questions_index()
-
-# Les catégories portent en interne un code de tri hérité des classeurs Excel
-# ("AJ. EAU, ASSAINISSEMENT…"). On ne l'affiche pas, et surtout on garde l'ordre
-# d'apparition dans le questionnaire plutôt qu'un tri alphabétique sur ce code —
-# qui ferait remonter la pêche en tête.
-CAT_CODE = re.compile(r"^[A-Z]{1,3}\.\s*")
-cats_raw = []
-for q in index:
-    if q["category"] not in cats_raw:
-        cats_raw.append(q["category"])
-cat_display = [CAT_CODE.sub("", c) for c in cats_raw]
-cat_of_display = dict(zip(cat_display, cats_raw))
-
-chosen = st.selectbox("Catégorie de questions", cat_display,
-                      help="Les catégories suivent l'ordre du questionnaire.")
-cat_choice = cat_of_display[chosen]
-q_options = [q for q in index if q["category"] == cat_choice]
-q_labels = [q["question"] for q in q_options]
-q_choice_label = st.selectbox("Question", q_labels)
-theme_i = next(q["i"] for q in q_options if q["question"] == q_choice_label)
-theme = themes[theme_i]
-
-st.subheader(theme["question"])
-if theme.get("note"):
-    st.caption(theme["note"])
-
-# ---- les chiffres saillants, en gros, avant tout graphique ----------------
-# Même traitement que sur l'onglet Résilience : on lit d'abord un chiffre, pas
-# un graphique. Ici, les trois réponses les plus fréquentes sur la population
-# filtrée, avec l'effectif qui les porte.
-_base_total = base_n.get("Total", 0)
-_top = sorted(theme["rows"], key=lambda r: -r[1].get("Total", 0))[:3]
-_top = [(lab, g.get("Total", 0)) for lab, g in _top if g.get("Total", 0) > 0]
-if _top and _base_total:
-    _teintes = ["#2a78d6", "#5b6b7a", "#898781"]
-    _cols = st.columns(len(_top))
-    for _c, (_lab, _n), _teinte in zip(_cols, _top, _teintes):
-        _pourcent = round(_n / _base_total * 100, 1)
-        with _c:
-            st.markdown(
-                map_render.cartouche_html(
-                    _lab, _pourcent, "%",
-                    f"soit {_n} répondants sur {_base_total}",
-                    couleur=_teinte),
+with st.container(border=True):
+    st.markdown('<div class="titre-bloc">1 · Choisir la question</div>',
                 unsafe_allow_html=True)
-    st.caption(
-        "Les trois réponses les plus fréquentes sur la population filtrée. "
-        "Sur une question à choix multiples, un même foyer peut être compté "
-        "dans plusieurs réponses : les pourcentages ne totalisent alors pas 100 %. "
-        "Le détail complet est plus bas.")
+    index = load_questions_index()
 
-# ---- graphique : répartition sur la population filtrée (colonne Total) ----
-# Rendu maison plutôt que st.bar_chart : celui-ci impose une graduation d'axe
-# très dense et une couleur peu maîtrisable. Ici la valeur est écrite au bout
-# de chaque barre, donc aucun axe n'est nécessaire.
-bar_rows = [(label, group_n.get("Total", 0)) for label, group_n in theme["rows"]]
-bar_svg = map_render.render_bars_svg(bar_rows, base_n.get("Total", 0))
-n_bars = len(bar_rows)
-components.html(
-    f'<div style="background:#fcfcfb;font-family:system-ui,-apple-system,'
-    f'\'Segoe UI\',sans-serif">{bar_svg}</div>',
-    height=n_bars * 28 + 26, scrolling=False)
+    # Les catégories portent en interne un code de tri hérité des classeurs Excel
+    # ("AJ. EAU, ASSAINISSEMENT…"). On ne l'affiche pas, et surtout on garde l'ordre
+    # d'apparition dans le questionnaire plutôt qu'un tri alphabétique sur ce code —
+    # qui ferait remonter la pêche en tête.
+    CAT_CODE = re.compile(r"^[A-Z]{1,3}\.\s*")
+    cats_raw = []
+    for q in index:
+        if q["category"] not in cats_raw:
+            cats_raw.append(q["category"])
+    cat_display = [CAT_CODE.sub("", c) for c in cats_raw]
+    cat_of_display = dict(zip(cat_display, cats_raw))
 
-# ---- carte : une couleur par seuil, une section communale par forme ----
-st.markdown("### Carte par section communale")
-row_labels = [lab for lab, _ in theme["rows"]]
-rows_dict = dict(theme["rows"])
+    chosen = st.selectbox("Catégorie de questions", cat_display,
+                          help="Les catégories suivent l'ordre du questionnaire.")
+    cat_choice = cat_of_display[chosen]
+    q_options = [q for q in index if q["category"] == cat_choice]
+    q_labels = [q["question"] for q in q_options]
+    q_choice_label = st.selectbox("Question", q_labels)
+    theme_i = next(q["i"] for q in q_options if q["question"] == q_choice_label)
+    theme = themes[theme_i]
+
+with st.container(border=True):
+    st.markdown('<div class="titre-bloc vert">2 · Les réponses</div>',
+                unsafe_allow_html=True)
+    st.subheader(theme["question"])
+    if theme.get("note"):
+        st.caption(theme["note"])
+
+    # ---- les chiffres saillants, en gros, avant tout graphique ----------------
+    # Même traitement que sur l'onglet Résilience : on lit d'abord un chiffre, pas
+    # un graphique. Ici, les trois réponses les plus fréquentes sur la population
+    # filtrée, avec l'effectif qui les porte.
+    _base_total = base_n.get("Total", 0)
+    _top = sorted(theme["rows"], key=lambda r: -r[1].get("Total", 0))[:3]
+    _top = [(lab, g.get("Total", 0)) for lab, g in _top if g.get("Total", 0) > 0]
+    if _top and _base_total:
+        _teintes = ["#2a78d6", "#5b6b7a", "#898781"]
+        _cols = st.columns(len(_top))
+        for _c, (_lab, _n), _teinte in zip(_cols, _top, _teintes):
+            _pourcent = round(_n / _base_total * 100, 1)
+            with _c:
+                st.markdown(
+                    map_render.cartouche_html(
+                        _lab, _pourcent, "%",
+                        f"soit {_n} répondants sur {_base_total}",
+                        couleur=_teinte),
+                    unsafe_allow_html=True)
+        st.caption(
+            "Les trois réponses les plus fréquentes sur la population filtrée. "
+            "Sur une question à choix multiples, un même foyer peut être compté "
+            "dans plusieurs réponses : les pourcentages ne totalisent alors pas 100 %. "
+            "Le détail complet est plus bas.")
+
+    # ---- graphique : répartition sur la population filtrée (colonne Total) ----
+    # Rendu maison plutôt que st.bar_chart : celui-ci impose une graduation d'axe
+    # très dense et une couleur peu maîtrisable. Ici la valeur est écrite au bout
+    # de chaque barre, donc aucun axe n'est nécessaire.
+    bar_rows = [(label, group_n.get("Total", 0)) for label, group_n in theme["rows"]]
+    bar_svg = map_render.render_bars_svg(bar_rows, base_n.get("Total", 0))
+    n_bars = len(bar_rows)
+    components.html(
+        f'<div style="background:#fcfcfb;font-family:system-ui,-apple-system,'
+        f'\'Segoe UI\',sans-serif">{bar_svg}</div>',
+        height=n_bars * 28 + 26, scrolling=False)
+
+with st.container(border=True):
+    st.markdown('<div class="titre-bloc ambre">3 · Où, sur le territoire</div>',
+                unsafe_allow_html=True)
+    # ---- carte : une couleur par seuil, une section communale par forme ----
+    st.markdown("### Carte par section communale")
+    row_labels = [lab for lab, _ in theme["rows"]]
+    rows_dict = dict(theme["rows"])
 
 
-# Bornes chiffrées des modalités. La référence est map_render.lower_bound —
-# la même fonction qui ordonne les barres, pour que graphique et carte ne
-# puissent pas diverger. Les deux définitions de secours ci-dessous ne servent
-# qu'au cas où map_render.py serait resté sur une version plus ancienne : sans
-# elles, l'app planterait au lieu de simplement perdre le tri des barres.
-_ESPACE_MILLIERS = re.compile(r"(?<=\d)[\s  ](?=\d)")
-_ZERO_DEBUT = ("aucun", "aucune", "moins de", "inférieur", "inferieur", "pas de")
+    # Bornes chiffrées des modalités. La référence est map_render.lower_bound —
+    # la même fonction qui ordonne les barres, pour que graphique et carte ne
+    # puissent pas diverger. Les deux définitions de secours ci-dessous ne servent
+    # qu'au cas où map_render.py serait resté sur une version plus ancienne : sans
+    # elles, l'app planterait au lieu de simplement perdre le tri des barres.
+    _ESPACE_MILLIERS = re.compile(r"(?<=\d)[\s  ](?=\d)")
+    _ZERO_DEBUT = ("aucun", "aucune", "moins de", "inférieur", "inferieur", "pas de")
 
 
-def _lower_bound_local(label):
-    s = _ESPACE_MILLIERS.sub("", str(label).strip().lower())
-    if s.startswith(_ZERO_DEBUT):
-        return 0
-    m = re.search(r"\d+", s)
-    return int(m.group()) if m else None
+    def _lower_bound_local(label):
+        s = _ESPACE_MILLIERS.sub("", str(label).strip().lower())
+        if s.startswith(_ZERO_DEBUT):
+            return 0
+        m = re.search(r"\d+", s)
+        return int(m.group()) if m else None
 
 
-lower_bound = getattr(map_render, "lower_bound", _lower_bound_local)
+    lower_bound = getattr(map_render, "lower_bound", _lower_bound_local)
 
-nums = {lab: lower_bound(lab) for lab in row_labels}
-chiffrees = [lab for lab in row_labels if nums[lab] is not None]
-bornes = [nums[lab] for lab in chiffrees]
-is_numeric = len(chiffrees) >= 3 and len(set(bornes)) == len(bornes)
+    nums = {lab: lower_bound(lab) for lab in row_labels}
+    chiffrees = [lab for lab in row_labels if nums[lab] is not None]
+    bornes = [nums[lab] for lab in chiffrees]
+    is_numeric = len(chiffrees) >= 3 and len(set(bornes)) == len(bornes)
 
-# Une question à choix unique répartit chaque foyer dans une seule modalité :
-# les cumuler est donc exact. Sur une question à choix multiples, un même foyer
-# peut apparaître dans plusieurs, et la somme dépasserait le compte réel.
-somme_pct = (sum(g.get("Total", 0) for _, g in theme["rows"]) / base_n["Total"] * 100
-             if base_n.get("Total") else 0)
-choix_multiple = somme_pct > 101
+    # Une question à choix unique répartit chaque foyer dans une seule modalité :
+    # les cumuler est donc exact. Sur une question à choix multiples, un même foyer
+    # peut apparaître dans plusieurs, et la somme dépasserait le compte réel.
+    somme_pct = (sum(g.get("Total", 0) for _, g in theme["rows"]) / base_n["Total"] * 100
+                 if base_n.get("Total") else 0)
+    choix_multiple = somme_pct > 101
 
-mode = "liste"
-if is_numeric:
-    mode = st.radio(
-        "Que cartographier",
-        ["seuil", "liste"],
-        format_func=lambda k: {"seuil": "Un seuil : « X et plus »",
-                               "liste": "Une ou plusieurs valeurs précises"}[k],
-        horizontal=True, key=f"mode_{theme_i}")
+    mode = "liste"
+    if is_numeric:
+        mode = st.radio(
+            "Que cartographier",
+            ["seuil", "liste"],
+            format_func=lambda k: {"seuil": "Un seuil : « X et plus »",
+                                   "liste": "Une ou plusieurs valeurs précises"}[k],
+            horizontal=True, key=f"mode_{theme_i}")
 
-if mode == "seuil":
-    paliers = sorted(bornes)[1:]            # la borne la plus basse ne filtre rien
-    seuil = st.selectbox("Seuil", paliers, format_func=lambda v: f"{v} et plus",
-                         key=f"seuil_{theme_i}")
-    selection = [lab for lab in chiffrees if nums[lab] >= seuil]
-    map_choice = f"{seuil} et plus"
-    st.caption("Cumule : " + ", ".join(f"« {lab} »" for lab in selection))
-    hors = [lab for lab in row_labels if nums[lab] is None]
-    if hors:
-        st.caption("Non comptées (réponses non chiffrées) : "
-                   + ", ".join(f"« {lab} »" for lab in hors))
-else:
-    selection = st.multiselect(
-        "Réponse(s) à cartographier", row_labels, default=[row_labels[0]],
-        key=f"sel_{theme_i}",
-        help="Sélectionnez-en plusieurs pour les cumuler "
-             "(ex. « Latrines à fosse sans dalle » + « Aucun »).")
-    map_choice = " + ".join(selection)
-
-if not selection:
-    st.info("Choisissez au moins une réponse pour afficher la carte.")
-    st.stop()
-
-if len(selection) > 1 and choix_multiple:
-    st.warning(
-        "Cette question accepte plusieurs réponses par foyer : en cumuler "
-        "plusieurs compte deux fois les foyers qui en ont coché plus d'une. "
-        "Le total affiché est donc un maximum, pas un effectif exact.")
-
-map_counts = {g: sum(rows_dict[lab].get(g, 0) for lab in selection)
-              for g in map_render.SECTIONS}
-map_values = {
-    s: (round(map_counts.get(s, 0) / base_n[s] * 100, 1) if base_n.get(s) else None)
-    for s in map_render.SECTIONS
-}
-if mode != "seuil" and len(selection) > 1:
-    st.caption("Cumule : " + ", ".join(f"« {lab} »" for lab in selection))
-
-POLARITY_LABELS = {
-    "eleve_mauvais": "Un pourcentage élevé est **défavorable** (vert → rouge)",
-    "eleve_bon": "Un pourcentage élevé est **favorable** (rouge → vert)",
-    "neutre": "Ni bon ni mauvais — dégradé de bleu",
-}
-suggestion = map_render.guess_polarity(theme["question"], selection[0])
-pol_key = f"pol_{theme_i}_{map_choice}"
-polarity = st.radio(
-    "Sens de lecture des couleurs",
-    list(POLARITY_LABELS.keys()),
-    index=list(POLARITY_LABELS.keys()).index(suggestion),
-    format_func=lambda k: POLARITY_LABELS[k],
-    horizontal=True, key=pol_key,
-    help="Proposé automatiquement d'après l'intitulé de la question. "
-         "Aucune règle n'étant fiable sur les 503 questions, vérifiez-le et "
-         "corrigez-le si besoin.")
-
-with st.expander("Régler les seuils de couleur"):
-    auto = st.checkbox("Seuils automatiques", value=True)
-    auto_T = map_render.nice_thresholds([v for v in map_values.values() if v is not None])
-    if auto:
-        thresholds = auto_T
+    if mode == "seuil":
+        paliers = sorted(bornes)[1:]            # la borne la plus basse ne filtre rien
+        seuil = st.selectbox("Seuil", paliers, format_func=lambda v: f"{v} et plus",
+                             key=f"seuil_{theme_i}")
+        selection = [lab for lab in chiffrees if nums[lab] >= seuil]
+        map_choice = f"{seuil} et plus"
+        st.caption("Cumule : " + ", ".join(f"« {lab} »" for lab in selection))
+        hors = [lab for lab in row_labels if nums[lab] is None]
+        if hors:
+            st.caption("Non comptées (réponses non chiffrées) : "
+                       + ", ".join(f"« {lab} »" for lab in hors))
     else:
-        c1, c2, c3 = st.columns(3)
-        thresholds = [
-            c1.number_input("Seuil 1", value=float(auto_T[0]), step=1.0),
-            c2.number_input("Seuil 2", value=float(auto_T[1]), step=1.0),
-            c3.number_input("Seuil 3", value=float(auto_T[2]), step=1.0),
-        ]
-        thresholds = sorted(thresholds)
+        selection = st.multiselect(
+            "Réponse(s) à cartographier", row_labels, default=[row_labels[0]],
+            key=f"sel_{theme_i}",
+            help="Sélectionnez-en plusieurs pour les cumuler "
+                 "(ex. « Latrines à fosse sans dalle » + « Aucun »).")
+        map_choice = " + ".join(selection)
 
-map_height = 720
-svg, T, mode = map_render.render_map_svg(
-    map_values, base_n, thresholds, height=map_height, polarity=polarity)
+    if not selection:
+        st.info("Choisissez au moins une réponse pour afficher la carte.")
+        st.stop()
 
-legend_html = "".join(
-    f'<span style="display:inline-flex;align-items:center;gap:7px;margin-right:18px">'
-    f'<span style="width:22px;height:12px;border-radius:3px;background:{c};'
-    f'box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)"></span>'
-    f'<span style="font-size:13px;color:#52514e">{lab}</span></span>'
-    for c, lab in map_render.legend_items(T, polarity))
+    if len(selection) > 1 and choix_multiple:
+        st.warning(
+            "Cette question accepte plusieurs réponses par foyer : en cumuler "
+            "plusieurs compte deux fois les foyers qui en ont coché plus d'une. "
+            "Le total affiché est donc un maximum, pas un effectif exact.")
 
-# Streamlit assainit le SVG inséré via st.markdown (il vide les <circle>/<text>) :
-# on passe donc par un composant HTML isolé, qui rend le SVG tel quel.
-components.html(
-    f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
-                    background:#fcfcfb">
-      <div style="margin:0 0 8px"><span style="font-size:11.5px;color:#898781;
-        letter-spacing:.05em;margin-right:14px">SEUILS</span>{legend_html}</div>
-      {svg}
-    </div>""",
-    height=map_height + 46, scrolling=False)
+    map_counts = {g: sum(rows_dict[lab].get(g, 0) for lab in selection)
+                  for g in map_render.SECTIONS}
+    map_values = {
+        s: (round(map_counts.get(s, 0) / base_n[s] * 100, 1) if base_n.get(s) else None)
+        for s in map_render.SECTIONS
+    }
+    if mode != "seuil" and len(selection) > 1:
+        st.caption("Cumule : " + ", ".join(f"« {lab} »" for lab in selection))
 
-st.caption(map_render.polarity_caption(polarity))
+    POLARITY_LABELS = {
+        "eleve_mauvais": "Un pourcentage élevé est **défavorable** (vert → rouge)",
+        "eleve_bon": "Un pourcentage élevé est **favorable** (rouge → vert)",
+        "neutre": "Ni bon ni mauvais — dégradé de bleu",
+    }
+    suggestion = map_render.guess_polarity(theme["question"], selection[0])
+    pol_key = f"pol_{theme_i}_{map_choice}"
+    polarity = st.radio(
+        "Sens de lecture des couleurs",
+        list(POLARITY_LABELS.keys()),
+        index=list(POLARITY_LABELS.keys()).index(suggestion),
+        format_func=lambda k: POLARITY_LABELS[k],
+        horizontal=True, key=pol_key,
+        help="Proposé automatiquement d'après l'intitulé de la question. "
+             "Aucune règle n'étant fiable sur les 503 questions, vérifiez-le et "
+             "corrigez-le si besoin.")
 
-if mode == "disques":
-    st.caption(
-        "Chaque disque représente une section communale, placée à sa position "
-        "géographique réelle (nord en haut, distances respectées) ; les disques qui se "
-        "superposaient ont été légèrement écartés. Ce ne sont pas les limites "
-        "administratives officielles — déposez un fichier "
-        "`data/sections_communales.geojson` dans le projet et la carte affichera "
-        "automatiquement les vrais contours.")
-else:
-    st.caption("Contours administratifs officiels des sections communales.")
+    with st.expander("Régler les seuils de couleur"):
+        auto = st.checkbox("Seuils automatiques", value=True)
+        auto_T = map_render.nice_thresholds([v for v in map_values.values() if v is not None])
+        if auto:
+            thresholds = auto_T
+        else:
+            c1, c2, c3 = st.columns(3)
+            thresholds = [
+                c1.number_input("Seuil 1", value=float(auto_T[0]), step=1.0),
+                c2.number_input("Seuil 2", value=float(auto_T[1]), step=1.0),
+                c3.number_input("Seuil 3", value=float(auto_T[2]), step=1.0),
+            ]
+            thresholds = sorted(thresholds)
 
-# ---- tableau détaillé avec tous les sous-groupes ----
-st.markdown("**Détail par sous-groupe**")
-detail_df = rows_to_dataframe(theme, base_n)
-st.dataframe(detail_df, use_container_width=True, hide_index=True)
+    map_height = 720
+    svg, T, mode = map_render.render_map_svg(
+        map_values, base_n, thresholds, height=map_height, polarity=polarity)
 
-st.download_button(
-    "Télécharger ce tableau (Excel)",
-    data=export_excel(theme, base_n),
-    file_name="resultat_filtre.xlsx",
-    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-)
+    legend_html = "".join(
+        f'<span style="display:inline-flex;align-items:center;gap:7px;margin-right:18px">'
+        f'<span style="width:22px;height:12px;border-radius:3px;background:{c};'
+        f'box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)"></span>'
+        f'<span style="font-size:13px;color:#52514e">{lab}</span></span>'
+        for c, lab in map_render.legend_items(T, polarity))
+
+    # Streamlit assainit le SVG inséré via st.markdown (il vide les <circle>/<text>) :
+    # on passe donc par un composant HTML isolé, qui rend le SVG tel quel.
+    components.html(
+        f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+                        background:#fcfcfb">
+          <div style="margin:0 0 8px"><span style="font-size:11.5px;color:#898781;
+            letter-spacing:.05em;margin-right:14px">SEUILS</span>{legend_html}</div>
+          {svg}
+        </div>""",
+        height=map_height + 46, scrolling=False)
+
+    st.caption(map_render.polarity_caption(polarity))
+
+    if mode == "disques":
+        st.caption(
+            "Chaque disque représente une section communale, placée à sa position "
+            "géographique réelle (nord en haut, distances respectées) ; les disques qui se "
+            "superposaient ont été légèrement écartés. Ce ne sont pas les limites "
+            "administratives officielles — déposez un fichier "
+            "`data/sections_communales.geojson` dans le projet et la carte affichera "
+            "automatiquement les vrais contours.")
+    else:
+        st.caption("Contours administratifs officiels des sections communales.")
+
+with st.container(border=True):
+    st.markdown('<div class="titre-bloc">4 · Le détail, sous-groupe par sous-groupe</div>',
+                unsafe_allow_html=True)
+    # ---- tableau détaillé avec tous les sous-groupes ----
+    st.markdown("**Détail par sous-groupe**")
+    detail_df = rows_to_dataframe(theme, base_n)
+    st.dataframe(detail_df, use_container_width=True, hide_index=True)
+
+    st.download_button(
+        "Télécharger ce tableau (Excel)",
+        data=export_excel(theme, base_n),
+        file_name="resultat_filtre.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
 
 st.caption("Source : Données brutes V3, enquête ménage sept. 2024. "
            "Les pourcentages sont calculés sur la base du groupe filtré affiché ci-dessus, "
