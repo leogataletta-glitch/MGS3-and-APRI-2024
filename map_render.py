@@ -460,6 +460,16 @@ GLOSSAIRE = {
 }
 
 
+def bulle_notion(cle, texte=None):
+    """Bulle alimentée par les notions de l'article IRLA."""
+    if i18n is None:
+        return texte or cle
+    terme, defi = i18n.notion(cle)
+    if not defi:
+        return texte or cle
+    return bulle(cle, definition=defi, texte=texte if texte is not None else terme)
+
+
 def bulle(terme, definition=None, texte=None):
     """Un terme suivi d'un « ? » qui révèle sa définition au survol.
 

@@ -87,6 +87,18 @@ def _charger():
     return res, vent
 
 
+def nom_indic(r):
+    """Nom de l'indicateur dans la langue courante."""
+    if i18n.get_lang() == "fr" and r.get("indicateur_fr"):
+        return r["indicateur_fr"]
+    return r["indicateur"]
+
+
+def expl_indic(r):
+    """Explication en langage clair, dans la langue courante."""
+    return (r.get("expl_fr") if i18n.get_lang() == "fr" else r.get("expl_en")) or ""
+
+
 def _pct(score):
     """Position du score sur l'échelle APRI, en pourcentage (5/10 → 50 %)."""
     return None if score is None else round(score * 10, 1)
@@ -98,7 +110,7 @@ def _bandeau_scores(entrees, libelle_mesure=None):
 
     Les deux chiffres répondent à deux questions différentes et doivent rester
     visibles ensemble : « 31,8 % des ménages ont un assainissement amélioré »
-    dit ce qui se passe sur le terrain ; « score 2,3 / 10 » dit où cela place
+    dit ce qui se passe sur le terrain ; « score 2,3 » dit où cela place
     la section sur l'échelle de comparaison internationale.
     """
     cols = st.columns(len(entrees))
@@ -111,12 +123,12 @@ def _bandeau_scores(entrees, libelle_mesure=None):
         score_txt = f'{score:.2f}'.replace('.', ',')
         if mesure is None:
             html = map_render.cartouche_html(
-                libelle, score_txt, '/ 10', note_score, couleur=coul)
+                libelle, score_txt, '', note_score, couleur=coul)
         else:
             html = map_render.cartouche_html(
                 libelle, round(mesure, 1), '%',
                 libelle_mesure or T("r_des_menages"),
-                score_txt, '/ 10', note_score, couleur=coul)
+                score_txt, '', note_score, couleur=coul)
         with col:
             st.markdown(html, unsafe_allow_html=True)
 
@@ -139,6 +151,11 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
                                "indicateurs": T("r_niveau2")}[k],
         horizontal=True, key=f"radar_niveau_{i18n.get_lang()}")
 
+    NOTION_DIM = {"dim1": "dim_physique", "dim2": "dim_institutionnelle",
+                  "dim3": "dim_environnementale", "dim4": "dim_economique",
+                  "dim5": "dim_sociale", "dim6": "dim_humaine",
+                  "dim7": "dim_culturelle"}
+
     if niveau == "dimensions":
         axes_dim = dims_scorees
         axes = [DIM_COURT[d] for d in axes_dim]
@@ -152,8 +169,13 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
         if len(dedans) < 3:
             st.info(T("r_trop_peu", n=len(dedans)))
             return
-        axes = [r["indicateur"] for r in dedans]
-        groupes = {r["indicateur"]: [r["ligne"]] for r in dedans}
+        axes = [nom_indic(r) for r in dedans]
+        groupes = {nom_indic(r): [r["ligne"]] for r in dedans}
+        _n = NOTION_DIM.get(DIM_CLE.get(dim))
+        if _n:
+            st.markdown(
+                '<p style="font-size:15px;color:#3c4761;margin:0 0 6px">'
+                + map_render.bulle_notion(_n) + '</p>', unsafe_allow_html=True)
 
     # Codes stables : « __toutes__ » plutôt que le libellé traduit, sinon un
     # changement de langue laisserait une sélection orpheline.
@@ -213,7 +235,7 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
             if v is None:
                 rec[nom] = None
                 continue
-            texte = f"{v:.2f} / 10".replace(".", ",") + f" — {_pct(v):.0f} %"
+            texte = f"{v:.2f}".replace(".", ",") + f" — {_pct(v):.0f} %"
             m = mesures.get((ax, nom))
             if m is not None:
                 texte = (f'{f"{m:.1f}".replace(".", ",")} % '
@@ -267,10 +289,18 @@ def render():
             + T("r_sous_titre") + "</p>", unsafe_allow_html=True)
     st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
     st.caption(T("r_intro", n=len(scorables)))
+    st.markdown(
+        '<p style="font-size:15px;color:#3c4761;margin:2px 0 0">'
+        + map_render.bulle_notion("resilience") + " &nbsp;·&nbsp; "
+        + map_render.bulle_notion("apri") + " &nbsp;·&nbsp; "
+        + map_render.bulle_notion("attributs_aaa") + " &nbsp;·&nbsp; "
+        + map_render.bulle_notion("ponderation") + " &nbsp;·&nbsp; "
+        + map_render.bulle_notion("pas_de_seuil") + "</p>",
+        unsafe_allow_html=True)
 
     # ---------------------------------------------------------- sélecteurs
     with st.sidebar:
-        st.header("Résilience")
+        st.header(T("r_titre_court"))
         pop = st.selectbox(
             T("r_sous_pop"), SOUS_POP,
             format_func=lambda k: libelle_pop(k),
@@ -280,8 +310,7 @@ def render():
     dims_scorees = [d for d in DIM_ORDRE
                     if any(r["dimension"] == d for r in scorables)]
     opt_dims = [T("r_dimension_prefix") + DIM_COURT[d] for d in dims_scorees]
-    opt_ind = [f"{DIM_COURT[r['dimension']]} · {r['indicateur']}"
-               for r in scorables]
+    opt_ind = [f"{DIM_COURT[r['dimension']]} · {nom_indic(r)}" for r in scorables]
     choix = st.selectbox(T("r_quoi_carto"), [OPT_FINAL] + opt_dims + opt_ind)
 
     if choix == OPT_FINAL:
@@ -297,7 +326,7 @@ def render():
     else:
         indic = scorables[opt_ind.index(choix)]
         lignes = [indic["ligne"]]
-        titre = indic["indicateur"]
+        titre = nom_indic(indic)
 
     # ---------------------------------------------------------- valeurs
     scores, pourcents, effectifs = {}, {}, {}
@@ -320,6 +349,16 @@ def render():
                 _def.append(T("r_bareme") + indic["echelle"])
             if indic.get("note"):
                 _def.append(T("r_reserve") + indic["note"])
+            _clair = expl_indic(indic)
+            if _clair:
+                st.markdown(
+                    '<div style="background:#f4f8fc;border-left:4px solid #1a6bb0;'
+                    'border-radius:0 10px 10px 0;padding:12px 16px;margin:2px 0 10px">'
+                    '<div style="font-size:11.5px;letter-spacing:.09em;'
+                    'text-transform:uppercase;font-weight:700;color:#1a6bb0;'
+                    'margin-bottom:5px">' + T("r_expl_indic") + '</div>'
+                    '<div style="font-size:15.5px;line-height:1.6;color:#2b3446">'
+                    + _clair + '</div></div>', unsafe_allow_html=True)
             st.markdown(
                 '<p style="font-size:15px;color:#3c4761;margin:0 0 4px">'
                 + T("r_ce_que_mesure")
@@ -406,7 +445,7 @@ def render():
                     morceaux.append(f'{pourcents[s]:.1f}'.replace('.', ',')
                                 + ' % ' + T("r_des_menages_court"))
                 if scores.get(s) is not None:
-                    morceaux.append(f'score {scores[s]:.0f} / 10')
+                    morceaux.append(T("r_score_mot") + f" {scores[s]:.0f}")
                 if morceaux:
                     bulles[s] = ' · '.join(morceaux)
 
@@ -415,6 +454,14 @@ def render():
             polarity=polarite, unite=unite, ramp=rampe, infos=bulles)
 
         if rampe is map_render.RAMP_APRI:
+            st.markdown(
+                '<p style="font-size:15px;color:#3c4761;margin:2px 0 6px">'
+                + map_render.bulle_notion("echelle_0_10", texte=T("r_echelle_titre"))
+                + " &nbsp;·&nbsp; "
+                + map_render.bulle_notion("bareme_comparatif")
+                + " &nbsp;·&nbsp; "
+                + map_render.bulle_notion("score_capacite_pas_resilience")
+                + "</p>", unsafe_allow_html=True)
             # Onze classes, une par point de score : la légende reprend l'échelle
             # APRI telle quelle, du rouge (0) au vert foncé (10).
             legende = "".join(
@@ -464,7 +511,7 @@ def render():
                     annot[s] = ('(' + f'{pourcents[s]:.1f}'.replace('.', ',')
                             + ' % ' + T("r_des_menages_court") + ')')
                 elif afficher != "score" and scores.get(s) is not None:
-                    annot[s] = f'(score {scores[s]:.0f} / 10)'
+                    annot[s] = "(" + T("r_score_mot") + f" {scores[s]:.0f})"
         bars = map_render.render_score_bars_svg(
             [(s, valeurs[s]) for s in ordre], vmax=vmax, unite=unite, colors=couleurs,
             annotations=annot)
@@ -499,7 +546,7 @@ def render():
                 if v is None:
                     rec[p] = None
                     continue
-                texte = f"{v:.2f} / 10".replace(".", ",")
+                texte = f"{v:.2f}".replace(".", ",")
                 if indic is not None:
                     brut = bloc[str(indic["ligne"])]["valeurs"].get(p)
                     if brut is not None:
