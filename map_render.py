@@ -261,6 +261,25 @@ def is_ordinal(labels):
     return len(chiffrees) >= 3 and len(set(chiffrees)) == len(chiffrees)
 
 
+# Dégradé séquentiel d'une seule teinte (bleu), du clair au foncé : la
+# valeur la plus forte porte la teinte la plus dense. Une seule teinte parce
+# que les modalités d'une même question ne sont pas des catégories
+# indépendantes — les colorier chacune d'une couleur différente inventerait
+# une distinction qui n'existe pas.
+RAMPE_BARRES = ['#a8cbe6', '#8bb8dd', '#6da3d0', '#5088bd', '#3a70a6',
+                '#2a5b8c', '#1e4c7c']
+
+
+def couleurs_barres(valeurs):
+    """Une teinte par barre, d'autant plus dense que la valeur est forte."""
+    if not valeurs:
+        return {}
+    vmax = max(valeurs.values()) or 1
+    n = len(RAMPE_BARRES)
+    return {k: RAMPE_BARRES[min(n - 1, int(v / vmax * (n - 1) + 1e-9))]
+            for k, v in valeurs.items()}
+
+
 def render_bars_svg(rows, base_total, width=880, color=BAR_COLOR):
     """Diagramme en barres horizontales, une barre par modalité.
 
@@ -291,17 +310,20 @@ def render_bars_svg(rows, base_total, width=880, color=BAR_COLOR):
     vmax = max(max(n / base_total * 100 for _, n in data), 1e-9)
     height = TOP * 2 + len(data) * (BAR_H + GAP) - GAP
 
+    teintes = couleurs_barres({lab: n / base_total * 100 for lab, n in data})
+
     parts = []
     y = TOP
     for lab, n in data:
         pct = n / base_total * 100
         w = max(plot_w * pct / vmax, 2)
+        col = teintes.get(lab, color)
         short = lab if len(lab) <= MAX_CHARS else lab[:MAX_CHARS - 1] + '…'
         parts.append(
             f'<g><title>{lab} — {fmt_val(pct)} % ({n} foyers)</title>'
             f'<text class="bl" x="{LAB_W - 10}" y="{y + BAR_H - 4.5}">{short}</text>'
             f'<rect class="br" x="{LAB_W}" y="{y}" width="{w:.1f}" height="{BAR_H}" '
-            f'rx="4" fill="{color}"/>'
+            f'rx="5" fill="{col}"/>'
             f'<text class="bv" x="{LAB_W + w + 8:.1f}" y="{y + BAR_H - 4.5}">'
             f'{fmt_val(pct)} %</text></g>')
         y += BAR_H + GAP
@@ -367,6 +389,118 @@ def render_score_bars_svg(rows, vmax=10.0, width=880, unite='', colors=None,
 </svg>"""
 
 
+
+# --------------------------------------------------------------------------
+# Glossaire : les termes que le tableau de bord emploie et qui ne se devinent
+# pas. Affichés dans une bulle au survol plutôt qu'en note de bas de page —
+# la définition doit être là où le mot est lu.
+# --------------------------------------------------------------------------
+GLOSSAIRE = {
+    'score APRI': (
+        "Note de 0 à 10 attribuée à une section communale sur un indicateur, "
+        "en appliquant le barème du cadre théorique IRLA / APRI. 0 = la "
+        "situation la plus dégradée observée à l'échelle internationale, "
+        "10 = la meilleure. Le passage de la mesure au score n'est pas "
+        "linéaire : les classes basses du barème sont plus resserrées."),
+    'pondération': (
+        "Poids donné à un indicateur dans le score d'ensemble, repris tel quel "
+        "du cadre théorique. Un indicateur pondéré 3,61 pèse trois fois plus "
+        "qu'un indicateur pondéré 1,20 dans la moyenne."),
+    'FIES': (
+        "Food Insecurity Experience Scale — échelle d'expérience de "
+        "l'insécurité alimentaire. Mesure ici la part de foyers déclarant "
+        "avoir manqué de nourriture au cours des douze derniers mois."),
+    'assainissement amélioré': (
+        "Toilettes qui séparent les excreta du contact humain : chasse d'eau "
+        "raccordée à un égout ou une fosse septique, latrine ventilée "
+        "améliorée, latrine à fosse avec dalle, toilettes à compostage. Sont "
+        "exclues les latrines sans dalle, les seaux et la défécation à l'air "
+        "libre."),
+    'eau améliorée': (
+        "Source d'eau de boisson protégée de la contamination extérieure : "
+        "réseau, forage, puits creusé protégé, source protégée, eau de pluie, "
+        "kiosque, eau en bouteille ou en sachet. Sont exclues les eaux de "
+        "surface et les puits ou sources non protégés."),
+    'Cat A': "Catégorie économique A — foyers en situation de pauvreté extrême.",
+    'Cat B': "Catégorie économique B — foyers en situation de pauvreté.",
+    'Cat C': "Catégorie économique C — foyers non considérés comme pauvres.",
+    'paysage': (
+        "Milieu dans lequel se trouve la section communale : littoral (ou "
+        "plaine côtière) ou montagne. Chaque section relève d'un seul des "
+        "deux."),
+    'section communale': (
+        "Plus petite division administrative haïtienne, sous la commune. "
+        "L'enquête en couvre dix, dans les départements du Sud et de la "
+        "Grand'Anse."),
+    'mesure brute': (
+        "Le pourcentage de foyers réellement mesuré sur le terrain, avant "
+        "toute conversion en score. C'est ce chiffre qui décrit la situation ; "
+        "le score dit seulement où il se situe sur l'échelle de comparaison."),
+    'indépendance': (
+        "Ce que vaudrait le cumul de plusieurs conditions si elles frappaient "
+        "des foyers sans rapport entre eux — le simple produit des taux. Un "
+        "cumul observé supérieur signifie que les situations se concentrent "
+        "sur les mêmes foyers."),
+    'base': (
+        "Nombre de répondants sur lequel un pourcentage est calculé. Sous "
+        "trente répondants, l'ordre de grandeur reste utilisable mais le "
+        "chiffre exact ne l'est pas."),
+    'réponses multiples': (
+        "Question où un même foyer peut cocher plusieurs réponses. Les "
+        "pourcentages ne totalisent alors pas 100 %, et cumuler deux réponses "
+        "compte deux fois les foyers qui ont coché les deux."),
+}
+
+
+def bulle(terme, definition=None, texte=None):
+    """Un terme suivi d'un « ? » qui révèle sa définition au survol.
+
+    La définition vient du glossaire si elle n'est pas fournie. Rendu en HTML
+    pur (pas de JavaScript) : la bulle est un simple frère en position
+    absolue, affiché au survol du conteneur.
+    """
+    d = definition or GLOSSAIRE.get(terme, '')
+    # texte='' est un choix délibéré : la pastille seule, sans mot répété.
+    libelle = terme if texte is None else texte
+    if not d:
+        return libelle
+    d = d.replace('"', '&quot;')
+    return (
+        f'<span style="position:relative;display:inline-block" '
+        f'class="bulle-hote">{libelle}'
+        f'<span class="bulle-marque">?</span>'
+        f'<span class="bulle-texte">{d}</span></span>')
+
+
+def styles_bulle():
+    """Feuille de style des bulles — à injecter une fois par page."""
+    return """<style>
+      .bulle-marque {
+        display:inline-flex;align-items:center;justify-content:center;
+        width:15px;height:15px;margin-left:5px;border-radius:50%;
+        background:#e3eefa;color:#1a6bb0;font-size:10.5px;font-weight:700;
+        vertical-align:middle;cursor:help;transition:background .15s ease;
+      }
+      .bulle-hote:hover .bulle-marque { background:#1a6bb0;color:#fff; }
+      .bulle-texte {
+        visibility:hidden;opacity:0;position:absolute;z-index:999;
+        bottom:calc(100% + 9px);left:50%;transform:translateX(-50%) translateY(4px);
+        width:330px;max-width:80vw;background:#101728;color:#f2f5fa;
+        font-size:13.5px;font-weight:400;line-height:1.5;letter-spacing:0;
+        text-transform:none;padding:11px 14px;border-radius:10px;
+        box-shadow:0 10px 30px rgba(16,23,40,.28);
+        transition:opacity .16s ease, transform .16s ease, visibility .16s;
+      }
+      .bulle-texte::after {
+        content:"";position:absolute;top:100%;left:50%;margin-left:-6px;
+        border:6px solid transparent;border-top-color:#101728;
+      }
+      .bulle-hote:hover .bulle-texte {
+        visibility:visible;opacity:1;transform:translateX(-50%) translateY(0);
+      }
+    </style>"""
+
+
 # --------------------------------------------------------------------------
 def cartouche_html(libelle, valeur, unite='%', sous_titre='',
                    valeur2=None, unite2='', sous_titre2='', couleur='#5b6b7a'):
@@ -401,8 +535,10 @@ def cartouche_html(libelle, valeur, unite='%', sous_titre='',
     if valeur2 is not None:
         bas = ('<div style="height:1px;background:#e4e3de;margin:13px 0 11px"></div>'
                + _bloc(valeur2, unite2, sous_titre2, 33))
-    return (f'<div style="border-top:2px solid {couleur};padding:13px 2px 4px;'
-            f'height:100%">'
+    return (f'<div style="background:#ffffff;border:1px solid #e3eaf3;'
+            f'border-top:4px solid {couleur};border-radius:14px;'
+            f'box-shadow:0 1px 2px rgba(16,23,40,.05),0 8px 20px rgba(16,23,40,.06);'
+            f'padding:15px 18px 16px;height:100%">'
             f'<div style="font-size:11px;color:{MUTED};letter-spacing:.11em;'
             f'text-transform:uppercase;font-weight:700;margin-bottom:11px;'
             f'min-height:28px;line-height:1.35">{libelle}</div>'

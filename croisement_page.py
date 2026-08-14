@@ -87,6 +87,7 @@ def render():
     questions = index["questions"]
 
     st.title("Croiser des questions")
+    st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
     st.caption(
         "Empilez des conditions pour compter les foyers qui les remplissent "
         "toutes en même temps — par exemple sans toilettes améliorées, sans eau "
@@ -200,7 +201,7 @@ def render():
                 ecart = pct - attendu
                 coul = "#98161c" if ecart > 0 else "#3d9e4f"
                 st.markdown(map_render.cartouche_html(
-                    "Si les conditions étaient indépendantes",
+                    "Si les conditions étaient indépendantes ?",
                     round(attendu, 1), "%",
                     ("observé plus élevé : les situations se cumulent sur les mêmes "
                      "foyers" if ecart > 0 else

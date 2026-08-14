@@ -264,6 +264,7 @@ def render():
             'text-transform:uppercase;margin:-8px 0 0 2px">'
             "IRLA / APRI — Indice de résilience des paysages ruraux</p>",
             unsafe_allow_html=True)
+    st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
     st.caption(
         "Scores de 0 à 10 obtenus en appliquant les barèmes du cadre théorique aux "
         "valeurs recalculées depuis l'enquête. Un score élevé = situation plus "
@@ -317,7 +318,21 @@ def render():
                     unsafe_allow_html=True)
         st.subheader(f"{titre} — {SOUS_POP_LABEL[pop]}")
         if indic is not None:
-            st.caption(f"Question de l'enquête : {indic['question']}")
+            _def = []
+            if indic.get("metrique"):
+                _def.append("<strong>Définition du cadre théorique :</strong> "
+                            + indic["metrique"])
+            if indic.get("echelle"):
+                _def.append("<strong>Barème :</strong> " + indic["echelle"])
+            if indic.get("note"):
+                _def.append("<strong>Réserve :</strong> " + indic["note"])
+            st.markdown(
+                '<p style="font-size:15px;color:#3c4761;margin:0 0 4px">'
+                "Ce que mesure cet indicateur"
+                + map_render.bulle("_indic", definition="<br><br>".join(_def),
+                                   texte="")
+                + f' &nbsp;·&nbsp; Question de l\'enquête : {indic["question"]}'
+                + '</p>', unsafe_allow_html=True)
             if indic["modalites"]:
                 st.caption(f"Réponses comptées : {indic['modalites']}")
 
@@ -345,12 +360,16 @@ def render():
                  (f"Score le plus faible — {bas}", scores[bas], mesure(bas))],
                 libelle_mesure="des ménages (mesure brute)")
             if indic is not None:
-                st.caption(
-                    "Deux lectures à garder ensemble : le pourcentage du haut dit ce "
-                    "qui est mesuré sur le terrain, le score du bas dit où cela place "
-                    "la section sur l'échelle de comparaison internationale APRI. "
-                    "C'est le barème qui fait le passage de l'un à l'autre — et il "
-                    "n'est pas linéaire.")
+                st.markdown(
+                    '<p style="font-size:15px;color:#3c4761;margin:8px 0 0">'
+                    + map_render.bulle("mesure brute", texte="La mesure brute")
+                    + " et le "
+                    + map_render.bulle("score APRI", texte="score APRI")
+                    + " répondent à deux questions différentes : la première dit ce "
+                      "qui est mesuré sur le terrain, le second dit où cela place la "
+                      "section sur l'échelle de comparaison internationale. C'est le "
+                      "barème qui fait le passage de l'un à l'autre — et il n'est pas "
+                      "linéaire.</p>", unsafe_allow_html=True)
             else:
                 st.caption(
                     "Agrégat de plusieurs indicateurs : il n'y a pas de pourcentage "

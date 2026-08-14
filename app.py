@@ -365,6 +365,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
+
 # ---- bandeau : logo PNUE + les deux entrées du tableau de bord ----------
 MODE_QUESTIONS = "Résultats de toutes les questions aux 1200 ménages"
 MODE_RESILIENCE = "Indicateurs de résilience associés"
@@ -457,8 +459,15 @@ data = compute_filtered(
 base_n = data["base_n"]
 themes = data["themes"]
 
-st.info(f"Population filtrée : **{base_n['Total']} répondants** "
-        f"(sur 1211 au total) — Hommes {base_n['Homme']} · Femmes {base_n['Femme']}")
+st.markdown(
+    '<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px solid '
+    '#1a6bb0;border-radius:14px;padding:13px 17px;font-size:16px;color:#3c4761;'
+    'box-shadow:0 1px 2px rgba(16,23,40,.05),0 8px 20px rgba(16,23,40,.06)">'
+    f'Population filtrée : <strong style="color:#101728">{base_n["Total"]} '
+    f'répondants</strong> (sur 1211 au total) — Hommes {base_n["Homme"]} · '
+    f'Femmes {base_n["Femme"]}&nbsp;'
+    + map_render.bulle("base", texte="") + '</div>',
+    unsafe_allow_html=True)
 
 if base_n["Total"] == 0:
     st.warning("Aucun répondant ne correspond à cette combinaison de filtres.")
@@ -495,7 +504,15 @@ with st.container(border=True):
                 unsafe_allow_html=True)
     st.subheader(theme["question"])
     if theme.get("note"):
-        st.caption(theme["note"])
+        _note = theme["note"]
+        if "multiple" in _note.lower():
+            st.markdown(
+                '<p style="font-size:15px;color:#3c4761;margin:0 0 6px">'
+                + _note + '&nbsp;'
+                + map_render.bulle("réponses multiples", texte="") + '</p>',
+                unsafe_allow_html=True)
+        else:
+            st.caption(_note)
 
     # ---- les chiffres saillants, en gros, avant tout graphique ----------------
     # Même traitement que sur l'onglet Résilience : on lit d'abord un chiffre, pas
