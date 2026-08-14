@@ -35,29 +35,43 @@ DICO = {
     "langue": {"en": "Language", "fr": "Langue"},
     "org": {"en": "United Nations Environment Programme — UNEP",
             "fr": "Programme des Nations Unies pour l'environnement — PNUE"},
-    "titre_site": {"en": "Household survey 2024 — Sud and Grand'Anse",
-                   "fr": "Enquête ménage 2024 — Sud et Grand'Anse"},
-    "mode_questions": {"en": "Results of all questions asked to the 1200 households",
-                       "fr": "Résultats de toutes les questions aux 1200 ménages"},
-    "mode_resilience": {"en": "Associated resilience indicators",
-                        "fr": "Indicateurs de résilience associés"},
-    "mode_croisement": {"en": "Cross questions with one another",
-                        "fr": "Croiser des questions entre elles"},
+    "titre_site": {
+        "en": "Household resilience survey 2024 — Sud and Grand'Anse, Haiti",
+        "fr": "Enquête ménage résilience 2024 — Sud et Grand'Anse, Haïti"},
+    "mode_questions": {"en": "Descriptive results",
+                       "fr": "Résultats descriptifs"},
+    "mode_resilience": {"en": "Resilience index (IRLA / APRI)",
+                        "fr": "Indice de résilience (IRLA / APRI)"},
+    "mode_croisement": {"en": "Cross-tabulation",
+                        "fr": "Analyse croisée"},
+    "mode_methodo": {"en": "Survey methodology",
+                     "fr": "Méthodologie d'enquête"},
+    "mode_donnees": {"en": "Data downloads",
+                     "fr": "Téléchargement des données"},
     "mode_questions_sous": {
-        "en": "All 503 questions asked, filtered by sex, age, economic status "
-              "and landscape",
-        "fr": "Les 503 questions posées, filtrables par sexe, âge, niveau "
-              "socio-économique et paysage"},
+        "en": "Univariate distributions for the 503 survey items, disaggregated "
+              "by sex, age, economic status and landscape",
+        "fr": "Distributions univariées des 503 items du questionnaire, "
+              "désagrégées par sexe, âge, catégorie économique et paysage"},
     "mode_resilience_sous": {
-        "en": "Consolidated indicators and their IRLA / APRI score, by communal "
-              "section and sub-population",
-        "fr": "Les indicateurs consolidés et leur score IRLA / APRI, par section "
-              "communale et sous-population"},
+        "en": "Composite index and its 118 indicators, by communal section, "
+              "dimension and sub-population",
+        "fr": "Indice composite et ses 118 indicateurs, par section communale, "
+              "dimension et sous-population"},
     "mode_croisement_sous": {
-        "en": "Stack conditions: how many households face several deprivations "
-              "at the same time",
-        "fr": "Empiler des conditions : combien de foyers cumulent plusieurs "
-              "privations en même temps"},
+        "en": "Multi-criteria conditional analysis: co-occurrence of "
+              "deprivations at household level",
+        "fr": "Analyse conditionnelle multicritère : cumul de privations à "
+              "l'échelle du ménage"},
+    "mode_methodo_sous": {
+        "en": "Sampling design, questionnaire, indicator construction and "
+              "known limitations",
+        "fr": "Plan de sondage, questionnaire, construction des indicateurs "
+              "et limites reconnues"},
+    "mode_donnees_sous": {
+        "en": "Anonymised datasets and result tables, in Excel and CSV",
+        "fr": "Jeux de données anonymisés et tables de résultats, en Excel "
+              "et CSV"},
     "aide_modes": {
         "en": "On the left, the raw results of any of the 503 questions asked to "
               "1211 households, with the age / sex / economic status / landscape "
@@ -70,6 +84,239 @@ DICO = {
     "credit": {"en": "Produced by the United Nations Environment Programme (UNEP).",
                "fr": "Travail réalisé par le Programme des Nations Unies pour "
                      "l'environnement (PNUE)."},
+
+    # ------------------------------------------------------------ méthodologie
+    "m_titre": {"en": "Survey methodology",
+                "fr": "Méthodologie d'enquête"},
+    "m_sous_titre": {
+        "en": "IRLA / APRI — Landscape Resilience Index · Greater South, Haiti",
+        "fr": "IRLA / APRI — Indice de résilience des paysages · Grand Sud, Haïti"},
+    "m_intro": {
+        "en": "This section documents how the data behind the dashboard were "
+              "produced: where the survey took place, how households were drawn, "
+              "what the questionnaire covers, how answers become indicators and "
+              "scores, and what the approach cannot claim. It is drawn from the "
+              "IRLA methodological framework note.",
+        "fr": "Cette section documente la production des données du tableau de "
+              "bord : où l'enquête s'est déroulée, comment les ménages ont été "
+              "tirés, ce que couvre le questionnaire, comment les réponses "
+              "deviennent des indicateurs et des scores, et ce que la démarche "
+              "ne prétend pas établir. Elle est tirée de la note de cadrage "
+              "méthodologique IRLA."},
+    "m_sommaire": {"en": "Contents", "fr": "Sommaire"},
+    "m_notions": {"en": "Key concepts used in this section",
+                  "fr": "Notions clés employées dans cette section"},
+    "m_source": {
+        "en": "Source: IRLA / APRI methodological framework note (UNEP), "
+              "reproduced and condensed.",
+        "fr": "Source : note de cadrage méthodologique IRLA / APRI (PNUE), "
+              "reprise et condensée."},
+
+    # ------------------------------------------------------------ téléchargements
+    "d_titre": {"en": "Data downloads", "fr": "Téléchargement des données"},
+    "d_sous_titre": {
+        "en": "Anonymised datasets and result tables",
+        "fr": "Jeux de données anonymisés et tables de résultats"},
+    "d_intro": {
+        "en": "Every file below is generated from the same computation engine "
+              "as the dashboard, so figures always match what is displayed on "
+              "screen. Excel files open directly; the raw dataset is provided "
+              "as CSV in UTF-8.",
+        "fr": "Chaque fichier ci-dessous est produit par le même moteur de "
+              "calcul que le tableau de bord : les chiffres correspondent donc "
+              "toujours à ce qui est affiché à l'écran. Les fichiers Excel "
+              "s'ouvrent directement ; le jeu de données brut est fourni en CSV "
+              "encodé en UTF-8."},
+    "d_avert": {
+        "en": "Personal data — respondent name, telephone number, enumerator "
+              "name, precise GPS coordinates and locality name — have been "
+              "removed from every file distributed here. The files remain "
+              "internal working documents: please do not redistribute them "
+              "outside the project.",
+        "fr": "Les données personnelles — nom du répondant, numéro de téléphone, "
+              "nom de l'enquêteur, coordonnées GPS précises et nom de la "
+              "localité — ont été retirées de tous les fichiers diffusés ici. "
+              "Ces fichiers restent des documents de travail internes : merci "
+              "de ne pas les rediffuser hors du projet."},
+    "d_preparer": {"en": "Preparing the file…", "fr": "Préparation du fichier…"},
+    "d_bouton": {"en": "Download", "fr": "Télécharger"},
+    "d_contenu": {"en": "Contents", "fr": "Contenu"},
+    "d_format": {"en": "Format", "fr": "Format"},
+
+    "d1_titre": {
+        "en": "1 · Descriptive results — all 503 questions by sub-population",
+        "fr": "1 · Résultats descriptifs — les 503 questions par sous-population"},
+    "d1_desc": {
+        "en": "One row per answer option for every question in the "
+              "questionnaire, with counts (n) and percentages for the 12 "
+              "reference sub-populations: total, sex, economic group A/B/C, "
+              "four age brackets, coastal and mountain landscape.",
+        "fr": "Une ligne par modalité de réponse pour chaque question du "
+              "questionnaire, avec les effectifs (n) et les pourcentages pour "
+              "les 12 sous-populations de référence : total, sexe, catégorie "
+              "économique A/B/C, quatre tranches d'âge, paysage littoral et "
+              "montagne."},
+    "d2_titre": {
+        "en": "2 · Resilience indicators — raw value and APRI score by "
+              "communal section",
+        "fr": "2 · Indicateurs de résilience — valeur brute et score APRI par "
+              "section communale"},
+    "d2_desc": {
+        "en": "The 118 indicators of the index, with their dimension, weight, "
+              "theoretical scale, measured value (in % of households) and "
+              "resulting 0–10 score, for each of the 10 communal sections and "
+              "each sub-population.",
+        "fr": "Les 118 indicateurs de l'indice, avec leur dimension, leur "
+              "pondération, leur échelle théorique, la valeur mesurée (en % de "
+              "ménages) et le score 0–10 qui en découle, pour chacune des 10 "
+              "sections communales et chaque sous-population."},
+    "d3_titre": {
+        "en": "3 · Cross-classification — indicator scores by communal section "
+              "and sub-population",
+        "fr": "3 · Ventilation croisée — scores des indicateurs par section "
+              "communale et sous-population"},
+    "d3_desc": {
+        "en": "The full section × sub-population crossing: for each communal "
+              "section, each indicator is broken down by sex, economic group "
+              "and age bracket, with the base count for each cell.",
+        "fr": "Le croisement complet section × sous-population : pour chaque "
+              "section communale, chaque indicateur est ventilé par sexe, "
+              "catégorie économique et tranche d'âge, avec l'effectif de base "
+              "de chaque case."},
+    "d4_titre": {
+        "en": "4 · Weighted composite scores — synthesis by section and "
+              "dimension",
+        "fr": "4 · Scores composites pondérés — synthèse par section et "
+              "dimension"},
+    "d4_desc": {
+        "en": "The summary table: final weighted score and score for each of "
+              "the seven IRLA dimensions, for every communal section and every "
+              "sub-population. This is the table behind the maps and radar "
+              "charts.",
+        "fr": "Le tableau de synthèse : score final pondéré et score de chacune "
+              "des sept dimensions IRLA, pour chaque section communale et "
+              "chaque sous-population. C'est la table qui alimente les cartes "
+              "et les diagrammes radar."},
+    "d5_titre": {
+        "en": "5 · Anonymised individual dataset — 1211 households",
+        "fr": "5 · Base individuelle anonymisée — 1211 ménages"},
+    "d5_desc": {
+        "en": "The household-level raw responses, one row per respondent, with "
+              "all direct identifiers removed. Intended for analysts who wish "
+              "to run their own computations rather than read published "
+              "tables.",
+        "fr": "Les réponses brutes au niveau du ménage, une ligne par "
+              "répondant, débarrassées de tout identifiant direct. Destinée aux "
+              "analystes souhaitant conduire leurs propres calculs plutôt que "
+              "lire des tables publiées."},
+    "d6_titre": {
+        "en": "6 · Questionnaire dictionary — the 503 items",
+        "fr": "6 · Dictionnaire du questionnaire — les 503 items"},
+    # -- intitulés employés à l'intérieur des classeurs Excel --------------
+    "x_lisezmoi": {"en": "Read me", "fr": "Lisez-moi"},
+    "x_confid": {
+        "en": "Confidentiality — this file contains no direct identifier "
+              "(name, telephone, enumerator, precise GPS coordinates, "
+              "locality). It remains an internal project working document.",
+        "fr": "Confidentialité — ce fichier ne contient aucun identifiant "
+              "direct (nom, téléphone, enquêteur, coordonnées GPS précises, "
+              "localité). Il reste un document de travail interne au projet."},
+    "x_resultats": {"en": "Results", "fr": "Résultats"},
+    "x_effectifs": {"en": "Base counts", "fr": "Effectifs de base"},
+    "x_indicateurs": {"en": "Indicators", "fr": "Indicateurs"},
+    "x_ventilation": {"en": "Section x sub-population",
+                      "fr": "Section x sous-population"},
+    "x_par_section": {"en": "By communal section", "fr": "Par section communale"},
+    "x_national": {"en": "National and sub-groups",
+                   "fr": "National et sous-groupes"},
+    "x_dictionnaire": {"en": "Questionnaire", "fr": "Questionnaire"},
+    "x_section_thematique": {"en": "Thematic section", "fr": "Section thématique"},
+    "x_question": {"en": "Question wording", "fr": "Libellé de la question"},
+    "x_type_reponse": {"en": "Answer type", "fr": "Type de réponse"},
+    "x_modalite": {"en": "Answer option", "fr": "Modalité de réponse"},
+    "x_groupe": {"en": "Group", "fr": "Groupe"},
+    "x_base_n": {"en": "Respondents (n)", "fr": "Répondants (n)"},
+    "x_ligne": {"en": "Line", "fr": "Ligne"},
+    "x_dimension": {"en": "IRLA dimension", "fr": "Dimension IRLA"},
+    "x_indicateur": {"en": "Indicator", "fr": "Indicateur"},
+    "x_ponderation": {"en": "Weight", "fr": "Pondération"},
+    "x_sens": {"en": "Direction", "fr": "Sens"},
+    "x_metrique": {"en": "Metric definition", "fr": "Définition de la mesure"},
+    "x_echelle": {"en": "Theoretical scale", "fr": "Échelle théorique"},
+    "x_section": {"en": "Communal section", "fr": "Section communale"},
+    "x_sous_pop": {"en": "Sub-population", "fr": "Sous-population"},
+    "x_score_final": {"en": "Final weighted score", "fr": "Score final pondéré"},
+    "x_ordre": {"en": "Order", "fr": "Ordre"},
+    "x_nb_modalites": {"en": "Answer options", "fr": "Nb de modalités"},
+    "x_d1_note": {
+        "en": "Each row is one answer option. Percentages are computed on the "
+              "base count of the group concerned, shown on the 'Base counts' "
+              "sheet. On multiple-answer questions the percentages of a same "
+              "question add up to more than 100, since one household can be "
+              "counted in several options.",
+        "fr": "Chaque ligne est une modalité de réponse. Les pourcentages sont "
+              "calculés sur l'effectif de base du groupe concerné, donné dans "
+              "la feuille « Effectifs de base ». Sur les questions à réponses "
+              "multiples, les pourcentages d'une même question dépassent 100, "
+              "un même ménage pouvant être compté dans plusieurs modalités."},
+    "x_d2_note": {
+        "en": "The '%' column is the measured value on the ground; the 'score' "
+              "column is its position on the 0-10 IRLA scale, obtained by "
+              "applying the theoretical scale shown in the last column. An "
+              "empty cell means the indicator could not be computed for that "
+              "group. Three scales as published (destructive fishing, "
+              "experience of violence, severe food insecurity) award the top "
+              "score to the most degraded situation; they have been reversed "
+              "so that 10 always denotes the most favourable situation, and "
+              "the score obtained from the published scale is kept in the "
+              "source file for audit.",
+        "fr": "La colonne « % » est la valeur mesurée sur le terrain ; la "
+              "colonne « score » est sa position sur l'échelle IRLA de 0 à 10, "
+              "obtenue en appliquant l'échelle théorique donnée en dernière "
+              "colonne. Une case vide signifie que l'indicateur n'a pas pu "
+              "être calculé pour ce groupe. Trois échelles telles que publiées "
+              "(pêche destructrice, violences subies, insécurité alimentaire "
+              "sévère) attribuent le score le plus haut à la situation la plus "
+              "dégradée : elles ont été inversées pour que 10 désigne toujours "
+              "la situation la plus favorable, le score issu de l'échelle "
+              "publiée restant conservé dans le fichier source pour audit."},
+    "x_d3_note": {
+        "en": "One row per communal section and per indicator. The 'n' column "
+              "gives the number of households the cell rests on: below about "
+              "30 respondents, a percentage should be read as an order of "
+              "magnitude only.",
+        "fr": "Une ligne par section communale et par indicateur. La colonne "
+              "« n » donne le nombre de ménages sur lequel repose la case : "
+              "en dessous d'une trentaine de répondants, un pourcentage ne se "
+              "lit que comme un ordre de grandeur."},
+    "x_d4_note": {
+        "en": "Scores are weighted averages of the indicator scores, using the "
+              "weights defined by the IRLA framework. Indicators that could "
+              "not be computed are excluded from both numerator and "
+              "denominator, so a score always reflects only what was actually "
+              "measured.",
+        "fr": "Les scores sont des moyennes des scores d'indicateurs pondérées "
+              "par les pondérations définies par le cadre IRLA. Les "
+              "indicateurs non calculables sont exclus du numérateur comme du "
+              "dénominateur : un score ne reflète donc jamais que ce qui a "
+              "réellement été mesuré."},
+    "x_d6_note": {
+        "en": "The order column matches the order in which the questions were "
+              "administered, and is the key linking this dictionary to the "
+              "other files.",
+        "fr": "La colonne d'ordre correspond à l'ordre de passation des "
+              "questions ; c'est la clé qui relie ce dictionnaire aux autres "
+              "fichiers."},
+
+    "d6_desc": {
+        "en": "The list of survey items in their order of administration, with "
+              "their thematic section, question wording and answer type "
+              "(single or multiple choice). Use it as the key to the other "
+              "files.",
+        "fr": "La liste des items de l'enquête dans leur ordre de passation, "
+              "avec leur section thématique, le libellé de la question et le "
+              "type de réponse (choix unique ou multiple). Sert de clé de "
+              "lecture aux autres fichiers."},
 
     # ------------------------------------------------------------ filtres
     "filtres": {"en": "Filters", "fr": "Filtres"},

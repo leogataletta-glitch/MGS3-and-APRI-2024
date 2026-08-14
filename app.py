@@ -27,7 +27,9 @@ import assets
 import croisement_page
 import i18n
 import map_render
+import methodologie_page
 import resilience_page
+import telechargements_page
 from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -65,7 +67,7 @@ def check_password():
         return True  # pas de mot de passe configuré -> accès libre (usage local)
     if st.session_state.get("authed"):
         return True
-    st.title("Enquête ménage 2024")
+    st.title("Household resilience survey 2024 — Haiti")
     pw = st.text_input("Mot de passe", type="password")
     if st.button("Entrer") or pw:
         if pw == expected:
@@ -140,7 +142,7 @@ def export_excel(theme, base_n):
 
 
 # ----------------------------------------------------------------------
-st.set_page_config(page_title="Enquête ménage 2024", layout="wide")
+st.set_page_config(page_title="Household resilience survey — Sud & Grand'Anse, Haiti", layout="wide")
 
 if not check_password():
     st.stop()
@@ -401,21 +403,24 @@ i18n.set_lang(_code)
 # changement de langue laisserait dans la session une valeur qui ne correspond
 # plus à aucun mode.
 MODE_QUESTIONS, MODE_RESILIENCE, MODE_CROISEMENT = "questions", "resilience", "croisement"
+MODE_METHODO, MODE_DONNEES = "methodologie", "donnees"
 LIBELLE_MODE = {MODE_QUESTIONS: T("mode_questions"),
                 MODE_RESILIENCE: T("mode_resilience"),
-                MODE_CROISEMENT: T("mode_croisement")}
+                MODE_CROISEMENT: T("mode_croisement"),
+                MODE_METHODO: T("mode_methodo"),
+                MODE_DONNEES: T("mode_donnees")}
 
-_logo, _entete = st.columns([1, 8])
+_logo, _entete = st.columns([1, 6])
 with _logo:
     st.markdown(
         f'<img src="data:image/png;base64,{assets.LOGO_UNEP}" '
-        f'style="width:96px;margin:2px 0 0 2px">', unsafe_allow_html=True)
+        f'style="width:168px;margin:2px 0 0 2px">', unsafe_allow_html=True)
 with _entete:
     st.markdown(
         f'<p class="org-mention">{T("org")}</p>'
-        f'<p style="font-size:26px;font-weight:700;letter-spacing:-.02em;'
-        f'margin:2px 0 0 2px;color:#101728">{T("titre_site")}</p>',
-        unsafe_allow_html=True)
+        f'<p style="font-size:27px;font-weight:700;letter-spacing:-.02em;'
+        f'margin:2px 0 0 2px;color:#101728;line-height:1.2">'
+        f'{T("titre_site")}</p>', unsafe_allow_html=True)
 
 # Bandeau : le dessin est rogné en hauteur pour rester un décor, pas une page.
 st.markdown(
@@ -435,21 +440,39 @@ def _bascule(mode):
     st.session_state["app_mode"] = mode
 
 
-_c1, _c2, _c3 = st.columns(3, gap="medium")
-for _col, _mode, _sous in (
-        (_c1, MODE_QUESTIONS, T("mode_questions_sous")),
-        (_c2, MODE_RESILIENCE, T("mode_resilience_sous")),
-        (_c3, MODE_CROISEMENT, T("mode_croisement_sous"))):
-    with _col:
-        st.button(LIBELLE_MODE[_mode], key=f"btn_{_mode}",
-                  on_click=_bascule, args=(_mode,),
-                  type="primary" if st.session_state["app_mode"] == _mode
+# Trois entrées d'analyse sur la première rangée, les deux entrées documentaires
+# sur la seconde : cinq pavés d'affilée deviendraient trop étroits pour que
+# leur intitulé reste lisible.
+_ENTREES = (
+    (MODE_QUESTIONS, T("mode_questions_sous")),
+    (MODE_RESILIENCE, T("mode_resilience_sous")),
+    (MODE_CROISEMENT, T("mode_croisement_sous")),
+    (MODE_METHODO, T("mode_methodo_sous")),
+    (MODE_DONNEES, T("mode_donnees_sous")),
+)
+
+
+def _pave(col, mode, sous):
+    with col:
+        st.button(LIBELLE_MODE[mode], key=f"btn_{mode}",
+                  on_click=_bascule, args=(mode,),
+                  type="primary" if st.session_state["app_mode"] == mode
                   else "secondary",
                   use_container_width=True)
         st.markdown(
             f'<p style="font-size:12.5px;color:#898781;margin:-6px 0 0;'
-            f'text-align:center;line-height:1.35">{_sous}</p>',
+            f'text-align:center;line-height:1.35">{sous}</p>',
             unsafe_allow_html=True)
+
+
+_r1 = st.columns(3, gap="medium")
+for _col, (_mode, _sous) in zip(_r1, _ENTREES[:3]):
+    _pave(_col, _mode, _sous)
+
+st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+_r2 = st.columns(3, gap="medium")
+for _col, (_mode, _sous) in zip(_r2, _ENTREES[3:]):
+    _pave(_col, _mode, _sous)
 
 app_mode = st.session_state["app_mode"]
 st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
@@ -460,6 +483,14 @@ if app_mode == MODE_RESILIENCE:
 
 if app_mode == MODE_CROISEMENT:
     croisement_page.render()
+    st.stop()
+
+if app_mode == MODE_METHODO:
+    methodologie_page.render()
+    st.stop()
+
+if app_mode == MODE_DONNEES:
+    telechargements_page.render()
     st.stop()
 
 st.subheader(LIBELLE_MODE[MODE_QUESTIONS])
