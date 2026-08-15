@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-15-ocb-fiches2"
+VERSION = "2026-08-15-ocb-fiches3"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -174,6 +174,24 @@ DICO = {
     "o_fiche_vide": {
         "en": "No organisation matches this filter.",
         "fr": "Aucune organisation ne correspond à ce filtre."},
+    "o_f_organisation": {"en": "Community-based organisation",
+                         "fr": "Organisation communautaire de base"},
+    "o_f_p1": {"en": "What it does", "fr": "Ce qu'elle fait"},
+    "o_f_p1_note": {
+        "en": "The survey does not ask organisations to state a mission. What "
+              "comes closest is shown here: the areas its partnerships cover, "
+              "and the wording it supplied itself.",
+        "fr": "L'enquête ne demande pas aux organisations d'énoncer leur "
+              "mission. Ce qui s'en approche le plus est présenté ici : les "
+              "domaines couverts par ses partenariats, et les précisions "
+              "qu'elle a rédigées elle-même."},
+    "o_f_p2": {"en": "Where it is based", "fr": "Où elle est implantée"},
+    "o_f_p3": {"en": "How it is organised", "fr": "Comment elle est organisée"},
+    "o_f_p4": {"en": "Who it works with", "fr": "Avec qui elle travaille"},
+    "o_f_localite": {"en": "Locality", "fr": "Localité"},
+    "o_f_femmes_brut": {
+        "en": "Women among members — answer as recorded",
+        "fr": "Femmes parmi les membres — réponse telle que saisie"},
     "o_f_femmes": {"en": "Share of women among members",
                    "fr": "Part de femmes parmi les membres"},
     "o_f_prive": {"en": "Contribution to private / civil-society initiatives",
@@ -256,11 +274,10 @@ DICO = {
     "o_col_femme": {"en": "Woman in leadership", "fr": "Femme à la direction"},
     "o_col_jeune": {"en": "Young person in leadership",
                     "fr": "Jeune à la direction"},
-    "o_table_note": {"en": "{n} organisations displayed. The locality name is "
-                           "deliberately omitted: it is an identifying detail.",
-                     "fr": "{n} organisations affichées. Le nom de la localité "
-                           "est volontairement omis : c'est une donnée "
-                           "identifiante."},
+    "o_table_note": {"en": "{n} organisations displayed. Open the profile below "
+                           "for the full detail of any one of them.",
+                     "fr": "{n} organisations affichées. La fiche ci-dessous "
+                           "donne le détail complet de chacune."},
     "o_source": {
         "en": "Source: community-based organisation identity survey, UNEP, "
               "2024. 34 records, 8 of the 10 communal sections.",
@@ -406,13 +423,11 @@ DICO = {
         "en": "One row per organisation: communal section, partnership and its "
               "duration, external support received, ties with communal "
               "authorities and NGOs, presence of women and of people aged 18 to "
-              "30 in leadership. The locality name is omitted, being an "
-              "identifying detail.",
+              "30 in leadership.",
         "fr": "Une ligne par organisation : section communale, partenariat et "
               "son ancienneté, appui extérieur reçu, liens avec les autorités "
               "communales et les ONG, présence de femmes et de personnes de 18 "
-              "à 30 ans à la direction. Le nom de la localité est omis, en tant "
-              "que donnée identifiante."},
+              "à 30 ans à la direction."},
     "x_ocb_fiches": {"en": "Organisations", "fr": "Organisations"},
     "x_ocb_indic": {"en": "Indicators by section", "fr": "Indicateurs par section"},
     "x_d7_note": {

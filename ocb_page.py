@@ -239,7 +239,7 @@ def render():
         else:
             index = st.selectbox(
                 T("o_choisir_organisation"), list(range(len(fiches))),
-                format_func=lambda i: f"{fiches[i]['section']} · {fiches[i]['nom']}",
+                format_func=lambda i: f"{fiches[i]['nom']}  ·  {fiches[i]['section']}",
                 key=f"ocb_fiche_{i18n.get_lang()}_{len(fiches)}")
             st.markdown(_fiche_html(fiches[index]), unsafe_allow_html=True)
 
@@ -306,6 +306,25 @@ def _pastille(texte, actif):
             f'color:{encre}"><strong>{marque}</strong>{_e(_rep(texte))}</span>')
 
 
+def _titre_partie(texte):
+    return (f'<div style="display:flex;align-items:center;gap:10px;'
+            f'margin:22px 0 12px"><span style="font-family:Outfit,Inter,'
+            f'system-ui,sans-serif;font-size:12px;font-weight:700;'
+            f'letter-spacing:.08em;text-transform:uppercase;color:#1a6bb0;'
+            f'background:#eaf3fb;padding:5px 12px;border-radius:999px">'
+            f'{_e(texte)}</span><span style="flex:1;height:1px;'
+            f'background:#e6ecf4"></span></div>')
+
+
+def _colonnes(*blocs):
+    utiles = [b for b in blocs if b]
+    if not utiles:
+        return ""
+    cellules = "".join(f'<div style="flex:1;min-width:250px">{b}</div>'
+                       for b in utiles)
+    return f'<div style="display:flex;gap:34px;flex-wrap:wrap">{cellules}</div>'
+
+
 def _fiche_html(f):
     OUI, NON = T("oui"), T("non")
 
@@ -315,47 +334,68 @@ def _fiche_html(f):
     note = f.get("note_partenariat")
     note_txt = (f'{note:.0f} / 10'.replace('.', ',') if note is not None
                 else None)
+    # Plusieurs organisations ont répondu à la question sur la part de femmes par
+    # un effectif de membres. On n'affiche « % » que lorsque la réponse se lit
+    # vraiment comme une proportion ; sinon on montre ce qui a été saisi, tel quel.
     femmes = f.get("femmes_pct")
-    femmes_txt = f'{femmes:.0f} %' if femmes is not None else None
+    if femmes is not None:
+        femmes_lib, femmes_txt = T("o_f_femmes"), f'{femmes:.0f} %'
+    elif f.get("femmes_brut"):
+        femmes_lib, femmes_txt = T("o_f_femmes_brut"), f["femmes_brut"]
+    else:
+        femmes_lib, femmes_txt = T("o_f_femmes"), None
 
     entete = (
-        f'<div style="border-bottom:1px solid #e6ecf4;padding:0 0 14px;'
-        f'margin:0 0 16px">'
+        f'<div style="border-bottom:1px solid #e6ecf4;padding:0 0 14px">'
         f'<div style="font-size:11.5px;letter-spacing:.07em;'
         f'text-transform:uppercase;color:#1a6bb0;font-weight:700">'
-        f'{_e(f["section"])}</div>'
+        f'{_e(T("o_f_organisation"))}</div>'
         f'<div style="font-family:Outfit,Inter,system-ui,sans-serif;'
         f'font-size:23px;font-weight:700;color:#101728;line-height:1.25;'
         f'margin-top:3px">{_e(f["nom"])}</div></div>')
 
-    # --- identité et partenariats ---
-    gauche = "".join([
-        _ligne(T("o_f_femmes"), femmes_txt),
-        _ligne(T("o_f_prive"), f.get("prive_detail")),
-        _ligne(T("o_f_partenariat"), trois(f.get("partenariat"))),
-        _ligne(T("o_f_type_partenariat"), _puces(f.get("prive_type"))),
-        _ligne(T("o_f_duree"), f.get("duree")),
-        _ligne(T("o_f_note"), note_txt),
-    ])
-    droite = "".join([
+    # ---------------------------------------------------- 1. ce qu'elle fait
+    # L'enquête ne demande pas sa mission en toutes lettres. Ce qui s'en
+    # approche le plus, ce sont les domaines couverts par ses partenariats et
+    # les précisions qu'elle a écrites elle-même — c'est présenté comme tel,
+    # sans reconstituer une mission qui n'a pas été déclarée.
+    mission = _colonnes(
         _ligne(T("o_f_projets"), f.get("projets")),
-        _ligne(T("o_f_projets_autre"), f.get("projets_autre")),
-        _ligne(T("o_f_facteurs"), f.get("facteurs")),
-        _ligne(T("o_f_soutien"), _puces(f.get("soutien_detail"))),
-    ])
+        "".join([_ligne(T("o_f_projets_autre"), f.get("projets_autre")),
+                 _ligne(T("o_f_prive"), f.get("prive_detail"))]))
+    bloc_mission = (_titre_partie(T("o_f_p1")) + mission
+                    + f'<p style="font-size:12.5px;color:#8b93a3;margin:-4px 0 0">'
+                      f'{_e(T("o_f_p1_note"))}</p>') if mission else ""
 
-    # --- gouvernance et inclusion ---
-    inclusion = "".join([
-        _ligne(T("o_f_femme_dir"),
-               f.get("femme_detail") or trois(f.get("femme_direction"))),
-        _ligne(T("o_f_jeune_dir"),
-               f.get("jeune_detail") or trois(f.get("jeune_direction"))),
-        _ligne(T("o_f_cartographie"), trois(f.get("cartographie"))),
-        _ligne(T("o_f_recoit"), f.get("recoit_qui")
-               or trois(f.get("recoit_rapports"))),
-        _ligne(T("o_f_soumet"), f.get("soumet_qui")
-               or trois(f.get("soumet_rapports"))),
-    ])
+    # -------------------------------------------------------- 2. où elle est
+    localisation = _colonnes("".join([
+        _ligne(T("o_f_localite"), f.get("localite")),
+        _ligne(T("section_communale"), f.get("section")),
+    ]))
+    bloc_lieu = _titre_partie(T("o_f_p2")) + localisation if localisation else ""
+
+    # ------------------------------------------- 3. comment elle est organisée
+    structure = _colonnes(
+        "".join([_ligne(femmes_lib, femmes_txt),
+                 _ligne(T("o_f_femme_dir"),
+                        f.get("femme_detail") or trois(f.get("femme_direction")))]),
+        "".join([_ligne(T("o_f_jeune_dir"),
+                        f.get("jeune_detail") or trois(f.get("jeune_direction"))),
+                 _ligne(T("o_f_cartographie"), trois(f.get("cartographie")))]),
+        "".join([_ligne(T("o_f_recoit"), f.get("recoit_qui")
+                        or trois(f.get("recoit_rapports"))),
+                 _ligne(T("o_f_soumet"), f.get("soumet_qui")
+                        or trois(f.get("soumet_rapports")))]))
+    bloc_structure = _titre_partie(T("o_f_p3")) + structure if structure else ""
+
+    # ------------------------------------------------ 4. avec qui elle travaille
+    partenariats = _colonnes(
+        "".join([_ligne(T("o_f_partenariat"), trois(f.get("partenariat"))),
+                 _ligne(T("o_f_type_partenariat"), _puces(f.get("prive_type")))]),
+        "".join([_ligne(T("o_f_duree"), f.get("duree")),
+                 _ligne(T("o_f_note"), note_txt)]),
+        "".join([_ligne(T("o_f_soutien"), _puces(f.get("soutien_detail"))),
+                 _ligne(T("o_f_facteurs"), f.get("facteurs"))]))
 
     ACTEURS = ["Autorités communales", "Autorités départementales", "Délégation",
                "Institutions techniques", "Sénateurs/députés", "ONG locales",
@@ -364,22 +404,20 @@ def _fiche_html(f):
     plateforme = "".join(_pastille(a, a in presents) for a in ACTEURS)
     consulte = f.get("consulte_par") or []
 
-    return (
-        '<div style="background:#fff;border:1px solid #e6ecf4;border-radius:16px;'
-        'padding:20px 24px 8px;box-shadow:0 1px 2px rgba(16,23,40,.05),'
-        '0 8px 22px rgba(16,23,40,.06)">'
-        + entete
-        + '<div style="display:flex;gap:34px;flex-wrap:wrap">'
-        + f'<div style="flex:1;min-width:250px">{gauche}</div>'
-        + f'<div style="flex:1;min-width:250px">{droite}</div>'
-        + f'<div style="flex:1;min-width:250px">{inclusion}</div></div>'
-        + f'<div style="border-top:1px solid #e6ecf4;padding-top:14px;'
-          f'margin-top:4px">'
-        + f'<div style="font-size:11.5px;letter-spacing:.06em;'
-          f'text-transform:uppercase;color:#6b7590;font-weight:700;'
-          f'margin-bottom:7px">{_e(T("o_f_plateforme"))}</div>{plateforme}</div>'
-        + (f'<div style="margin-top:10px">'
+    bloc_reseau = (
+        _titre_partie(T("o_f_p4")) + partenariats
+        + f'<div style="margin-top:6px"><div style="font-size:11.5px;'
+          f'letter-spacing:.06em;text-transform:uppercase;color:#6b7590;'
+          f'font-weight:700;margin-bottom:7px">{_e(T("o_f_plateforme"))}</div>'
+          f'{plateforme}</div>'
+        + (f'<div style="margin-top:12px">'
            f'{_ligne(T("o_f_consulte"), consulte, pleine=True)}'
-           f'<p style="font-size:12.5px;color:#8b93a3;margin:-6px 0 8px">'
-           f'{_e(T("o_f_consulte_note"))}</p></div>' if consulte else '')
-        + '</div>')
+           f'<p style="font-size:12.5px;color:#8b93a3;margin:-6px 0 0">'
+           f'{_e(T("o_f_consulte_note"))}</p></div>' if consulte else ''))
+
+    return ('<div style="background:#fff;border:1px solid #e6ecf4;'
+            'border-radius:16px;padding:20px 24px 22px;'
+            'box-shadow:0 1px 2px rgba(16,23,40,.05),'
+            '0 8px 22px rgba(16,23,40,.06)">'
+            + entete + bloc_mission + bloc_lieu + bloc_structure + bloc_reseau
+            + '</div>')

@@ -366,17 +366,20 @@ def _fichier_ocb(lang):
         return "" if v is None else (OUI if v else NON)
 
     ws = wb.create_sheet(T("x_ocb_fiches")[:31])
-    _entete(ws, 1, [T("o_col_nom"), T("x_section"), T("o_col_partenariat"),
-                    T("o_col_duree"), T("o_col_note"), T("o_col_soutien"),
-                    T("o_col_autorites"), T("o_col_ong_int"), T("o_col_femme"),
-                    T("o_col_jeune")],
-            [56, 18, 14, 14, 12, 16, 20, 20, 20, 22])
+    _entete(ws, 1, [T("o_col_nom"), T("o_f_localite"), T("x_section"),
+                    T("o_col_partenariat"), T("o_col_duree"), T("o_col_note"),
+                    T("o_col_soutien"), T("o_col_autorites"), T("o_col_ong_int"),
+                    T("o_col_femme"), T("o_col_jeune"), T("o_f_projets"),
+                    T("o_f_facteurs")],
+            [56, 18, 18, 14, 14, 12, 16, 20, 20, 20, 22, 34, 34])
     for r, f in enumerate(ocb["fiches"], 2):
         for j, v in enumerate([
-                f["nom"], f["section"], trois(f["partenariat"]), f["duree"] or "",
+                f["nom"], f.get("localite") or "", f["section"],
+                trois(f["partenariat"]), f["duree"] or "",
                 f["note_partenariat"], trois(f["soutien"]), trois(f["autorites"]),
                 trois(f["ong_int"]), trois(f["femme_direction"]),
-                trois(f["jeune_direction"])], 1):
+                trois(f["jeune_direction"]), f.get("projets") or "",
+                f.get("facteurs") or ""], 1):
             ws.cell(row=r, column=j, value=v).font = NORMAL
 
     ws2 = wb.create_sheet(T("x_ocb_indic")[:31])
