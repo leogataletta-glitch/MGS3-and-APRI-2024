@@ -18,7 +18,21 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation locale Oui, un seul partenariat avec une organisation externe",
+   "facteurs": "Ressources financières",
+   "projets": "Autre",
+   "projets_autre": "Stockage, transformation produit Agricole. Bureau de l' organisation",
+   "plateforme_acteurs": [],
+   "consulte_par": [
+    "Délégation",
+    "Institutions techniques"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": "Oui, plusieurs actuellement",
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "Organisation Populaire pour le Development de la commune de Beaumont (OPDB)",
@@ -37,7 +51,20 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": null,
+   "facteurs": null,
+   "projets": null,
+   "projets_autre": null,
+   "plateforme_acteurs": [],
+   "consulte_par": [
+    "Autorités communales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": "Oui, plusieurs actuellement",
+   "femme_detail": "Oui, une personne actuellement"
   },
   {
    "nom": "Fanm An Aksyon",
@@ -56,7 +83,21 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation locale",
+   "facteurs": "Ressources humaines Ressources financières",
+   "projets": "Autre",
+   "projets_autre": "Formation",
+   "plateforme_acteurs": [],
+   "consulte_par": [
+    "Autorités communales",
+    "Institutions techniques"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": "Oui, plusieurs actuellement",
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "Organisation des citoyens Actifs pour le Devloppement de Mouline. (OCADEM).",
@@ -75,7 +116,20 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": null,
+   "facteurs": null,
+   "projets": null,
+   "projets_autre": null,
+   "plateforme_acteurs": [],
+   "consulte_par": [
+    "Autorités départementales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": "Oui, plusieurs actuellement",
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "Organisation des Planteurs Makaya pour le Développement (OPMR)",
@@ -94,7 +148,26 @@
    "soumet_rapports": true,
    "cartographie": true,
    "jeune_direction": true,
-   "femme_direction": false
+   "femme_direction": false,
+   "prive_type": "Oui, plusieurs partenariats avec organisations locales Oui, un seul partenariat avec une organisation externe",
+   "facteurs": "Ressources financières Communication Autre",
+   "projets": "Autre Infrastructures Education",
+   "projets_autre": "Formation",
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "ONG locales",
+    "ONG internationales"
+   ],
+   "consulte_par": [
+    "Autorités communales",
+    "ONG internationales",
+    "ONG locales"
+   ],
+   "recoit_rapports": true,
+   "recoit_qui": "Ayiti swivi, FAES, USAID, AVSI,",
+   "soumet_qui": "AVSI, Ayiti swivi, FAES, USAID",
+   "jeune_detail": "Oui, une personne dans le passé",
+   "femme_detail": null
   },
   {
    "nom": "ASPVESF",
@@ -113,7 +186,26 @@
    "soumet_rapports": true,
    "cartographie": false,
    "jeune_direction": false,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation locale",
+   "facteurs": "Ressources humaines Ressources financières Autre",
+   "projets": "Autre",
+   "projets_autre": "Agriculture",
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "ONG locales",
+    "ONG internationales"
+   ],
+   "consulte_par": [
+    "Autorités communales",
+    "ONG internationales",
+    "ONG locales"
+   ],
+   "recoit_rapports": true,
+   "recoit_qui": "SUCO",
+   "soumet_qui": "SUCO",
+   "jeune_detail": null,
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "(OJEDACOR)Organisation des Jeunes pour le developpement de Roche-à-Bateau.",
@@ -132,7 +224,22 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": false,
-   "femme_direction": false
+   "femme_direction": false,
+   "prive_type": null,
+   "facteurs": "Ressources financières",
+   "projets": "Infrastructures Gestion de déchets",
+   "projets_autre": null,
+   "plateforme_acteurs": [
+    "Autorités communales"
+   ],
+   "consulte_par": [
+    "Autorités communales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": null,
+   "femme_detail": null
   },
   {
    "nom": "Coopérative des producteurs de vétiver Intégrées de l'Arrondissement de Port-Salut.(COPVIAPS)",
@@ -151,7 +258,24 @@
    "soumet_rapports": true,
    "cartographie": null,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, plusieurs partenariats avec organisations locales",
+   "facteurs": "Ressources financières",
+   "projets": "Infrastructures Education",
+   "projets_autre": null,
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "ONG locales",
+    "ONG internationales"
+   ],
+   "consulte_par": [
+    "Autorités communales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": "AVSF,HEIFER",
+   "jeune_detail": "Oui, une personne dans le passé",
+   "femme_detail": "Oui, une personne dans le passé"
   },
   {
    "nom": "Organisation des citoyens dévoués pour la communauté Port salvienne. ( OCDACOP)",
@@ -170,7 +294,25 @@
    "soumet_rapports": true,
    "cartographie": true,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation locale",
+   "facteurs": "Autre Ressources humaines Adhésion de la communauté",
+   "projets": "Autre",
+   "projets_autre": "Travaux d'assainissement",
+   "plateforme_acteurs": [
+    "ONG locales"
+   ],
+   "consulte_par": [
+    "Institutions techniques",
+    "ONG internationales",
+    "ONG locales",
+    "Sénateurs/députés"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": "Caritas, Water for Life.",
+   "jeune_detail": "Oui, une personne actuellement Oui, une personne dans le passé Oui, plusieurs actuellement",
+   "femme_detail": "Oui, une personne actuellement"
   },
   {
    "nom": "AJESNOV",
@@ -189,7 +331,23 @@
    "soumet_rapports": false,
    "cartographie": null,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation externe",
+   "facteurs": "Ressources financières Autre",
+   "projets": "Education",
+   "projets_autre": null,
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "ONG internationales"
+   ],
+   "consulte_par": [
+    "Autorités communales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": "Oui, plusieurs dans le passé Oui, une personne actuellement",
+   "femme_detail": "Oui, plusieurs dans le passé Oui, une personne actuellement"
   },
   {
    "nom": "Groupe de réflexion pour le développement local( GREDEL)",
@@ -208,7 +366,31 @@
    "soumet_rapports": true,
    "cartographie": true,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, plusieurs partenariats avec organisations locales",
+   "facteurs": "Ressources humaines Adhésion de la communauté Communication",
+   "projets": "Infrastructures Autre",
+   "projets_autre": "Transformation de produits agricoles",
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "Autorités départementales",
+    "Institutions techniques",
+    "Sénateurs/députés",
+    "ONG locales",
+    "ONG internationales"
+   ],
+   "consulte_par": [
+    "Autorités communales",
+    "Autorités départementales",
+    "Institutions techniques",
+    "ONG locales",
+    "Sénateurs/députés"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": "HDI ( INSTITUT HAITIEN DE DÉVELOPPEMENT\nAllianza",
+   "jeune_detail": "Oui, plusieurs dans le passé Oui, plusieurs actuellement",
+   "femme_detail": "Oui, une personne actuellement"
   },
   {
    "nom": "AJAAC (Association des jeunes actifs pour l'avancement de Carpentier.",
@@ -227,7 +409,27 @@
    "soumet_rapports": true,
    "cartographie": true,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation locale",
+   "facteurs": "Communication",
+   "projets": "Autre",
+   "projets_autre": "Conservation sol, assainissement.",
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "Institutions techniques",
+    "ONG locales",
+    "ONG internationales"
+   ],
+   "consulte_par": [
+    "Autorités communales",
+    "Institutions techniques",
+    "ONG locales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": "La mairie, Allianza",
+   "jeune_detail": "Oui, une personne actuellement",
+   "femme_detail": "Oui, une personne actuellement"
   },
   {
    "nom": "Kolektif fanm devwe pou devloppan kominote dimon (KOFADDKOD)",
@@ -246,7 +448,24 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation locale",
+   "facteurs": "Ressources humaines Ressources financières Autre",
+   "projets": "Autre",
+   "projets_autre": "Jardin lakou, formation",
+   "plateforme_acteurs": [
+    "Institutions techniques",
+    "ONG locales"
+   ],
+   "consulte_par": [
+    "Institutions techniques",
+    "ONG locales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": "Oui, une personne actuellement",
+   "femme_detail": "Oui, une personne actuellement"
   },
   {
    "nom": "Organisation de marins pour le développement de la peche port Salut (OMADEPS)",
@@ -265,7 +484,29 @@
    "soumet_rapports": true,
    "cartographie": false,
    "jeune_direction": false,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation locale",
+   "facteurs": "Ressources financières Ressources humaines Autre",
+   "projets": "Autre",
+   "projets_autre": "Don de matériels pour la pêche",
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "Institutions techniques",
+    "Sénateurs/députés",
+    "ONG internationales"
+   ],
+   "consulte_par": [
+    "Autorités communales",
+    "Institutions techniques",
+    "ONG internationales",
+    "ONG locales",
+    "Sénateurs/députés"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": "Food ffor the poor",
+   "jeune_detail": null,
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "Organisation juvénile pour le développement de la commune port salut Arniquet ( OJDAP)",
@@ -284,7 +525,30 @@
    "soumet_rapports": true,
    "cartographie": true,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, plusieurs partenariats avec organisations locales",
+   "facteurs": "Ressources humaines Ressources financières Autre",
+   "projets": "Autre",
+   "projets_autre": "Transformation du manioc, l'arbre véritable, environnement",
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "Autorités départementales",
+    "Institutions techniques",
+    "Sénateurs/députés",
+    "ONG locales"
+   ],
+   "consulte_par": [
+    "Autorités communales",
+    "Autorités départementales",
+    "Institutions techniques",
+    "ONG internationales",
+    "Sénateurs/députés"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": "RECEPAG.",
+   "jeune_detail": "Oui, une personne actuellement Oui, plusieurs actuellement",
+   "femme_detail": "Oui, une personne actuellement Oui, plusieurs actuellement"
   },
   {
    "nom": "AJIDIS",
@@ -303,7 +567,20 @@
    "soumet_rapports": true,
    "cartographie": null,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": null,
+   "facteurs": "Ressources financières",
+   "projets": "Infrastructures Autre",
+   "projets_autre": "Réparation des tronçons routiers",
+   "plateforme_acteurs": [
+    "ONG internationales"
+   ],
+   "consulte_par": [],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": "Pour AJIDIS",
+   "jeune_detail": "Oui, plusieurs actuellement",
+   "femme_detail": "Oui, une personne actuellement"
   },
   {
    "nom": "Asosyasyon fanm vanyan posali( ASVP)",
@@ -322,7 +599,23 @@
    "soumet_rapports": true,
    "cartographie": null,
    "jeune_direction": false,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation locale",
+   "facteurs": "Ressources financières",
+   "projets": "Infrastructures Autre",
+   "projets_autre": "Agriculture et social",
+   "plateforme_acteurs": [
+    "Institutions techniques",
+    "ONG locales"
+   ],
+   "consulte_par": [
+    "Institutions techniques"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": "CARITAS",
+   "jeune_detail": null,
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "Mouvman payizan Barbois ( MPB)",
@@ -341,7 +634,27 @@
    "soumet_rapports": true,
    "cartographie": true,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation locale",
+   "facteurs": "Ressources financières Ressources humaines",
+   "projets": "Infrastructures Autre",
+   "projets_autre": "Assainissement",
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "Institutions techniques",
+    "ONG locales"
+   ],
+   "consulte_par": [
+    "Autorités communales",
+    "Institutions techniques",
+    "ONG locales",
+    "Sénateurs/députés"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": "Centre kalevek",
+   "jeune_detail": "Oui, une personne actuellement",
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "Asosyasyon fanm vanyan pou avansmn babwa ( ASFAVAB)",
@@ -360,7 +673,26 @@
    "soumet_rapports": true,
    "cartographie": null,
    "jeune_direction": false,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation locale",
+   "facteurs": "Ressources humaines Ressources financières Communication",
+   "projets": "Autre",
+   "projets_autre": "Transformation des produits agricoles et fabrication des produits comme liquide, mistoline...",
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "Institutions techniques",
+    "ONG locales"
+   ],
+   "consulte_par": [
+    "Autorités communales",
+    "Institutions techniques",
+    "ONG locales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": "Femme en Democratie (F E D)",
+   "jeune_detail": null,
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "Centre d'activité développement intégré de saintable et des ses environs ( CADISE)",
@@ -379,7 +711,18 @@
    "soumet_rapports": false,
    "cartographie": null,
    "jeune_direction": false,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": null,
+   "facteurs": null,
+   "projets": "Autre",
+   "projets_autre": "Assainissement, mutuel solidarité",
+   "plateforme_acteurs": [],
+   "consulte_par": [],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": null,
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "Oganizasyon pou devlopman vilpi( ODVK)",
@@ -398,7 +741,26 @@
    "soumet_rapports": true,
    "cartographie": false,
    "jeune_direction": false,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, plusieurs partenariats avec une organisation externe Oui, avec des organisations locales et organisations externes",
+   "facteurs": "Autre",
+   "projets": "Autre",
+   "projets_autre": "Elevage, agriculture",
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "Institutions techniques",
+    "ONG internationales"
+   ],
+   "consulte_par": [
+    "Autorités communales",
+    "Délégation",
+    "ONG internationales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": "CAD, CRS, PAM",
+   "jeune_detail": null,
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "ORPSJS: Organisation des planteurs de St Jean du sud",
@@ -417,7 +779,24 @@
    "soumet_rapports": true,
    "cartographie": false,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, plusieurs partenariats avec organisations locales",
+   "facteurs": "Ressources financières",
+   "projets": "Infrastructures",
+   "projets_autre": null,
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "ONG locales",
+    "ONG internationales"
+   ],
+   "consulte_par": [
+    "Autorités communales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": "IRENE/ GRESFED",
+   "jeune_detail": "Oui, plusieurs actuellement",
+   "femme_detail": "Oui, une personne actuellement"
   },
   {
    "nom": "Association des jeunes planteur pour le développement de St Jean du sud( AJPDSJS)",
@@ -436,7 +815,22 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": null,
+   "facteurs": "Ressources financières",
+   "projets": null,
+   "projets_autre": null,
+   "plateforme_acteurs": [
+    "Autorités communales"
+   ],
+   "consulte_par": [
+    "Autorités communales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": "Oui, plusieurs actuellement",
+   "femme_detail": "Oui, une personne actuellement"
   },
   {
    "nom": "Group fanm vanyan Trichet (GwofAVAT)",
@@ -455,7 +849,24 @@
    "soumet_rapports": true,
    "cartographie": true,
    "jeune_direction": false,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, avec des organisations locales et organisations externes",
+   "facteurs": "Ressources financières Adhésion de la communauté",
+   "projets": "Autre Sante Education",
+   "projets_autre": "Égalité fanm, mutuel solidarite",
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "ONG locales",
+    "ONG internationales"
+   ],
+   "consulte_par": [
+    "Autorités communales"
+   ],
+   "recoit_rapports": true,
+   "recoit_qui": "ONIFAM",
+   "soumet_qui": "Onifam",
+   "jeune_detail": null,
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "AJPDS: Association planteur pour le développement de St Jean du sud",
@@ -474,7 +885,22 @@
    "soumet_rapports": true,
    "cartographie": false,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation locale",
+   "facteurs": "Ressources financières Ressources humaines",
+   "projets": "Infrastructures",
+   "projets_autre": null,
+   "plateforme_acteurs": [
+    "Autorités communales"
+   ],
+   "consulte_par": [
+    "Autorités communales"
+   ],
+   "recoit_rapports": true,
+   "recoit_qui": "PADI",
+   "soumet_qui": "PADI",
+   "jeune_detail": "Oui, plusieurs actuellement",
+   "femme_detail": "Oui, une personne actuellement"
   },
   {
    "nom": "ORPDEJ: Organisation des paysans pour le développement de jaboins",
@@ -493,7 +919,22 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, plusieurs partenariats avec organisations locales",
+   "facteurs": "Ressources financières",
+   "projets": null,
+   "projets_autre": null,
+   "plateforme_acteurs": [
+    "Autorités communales"
+   ],
+   "consulte_par": [
+    "Autorités communales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": "Oui, plusieurs actuellement",
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "Group fanm devwe vilpi( GFDV)",
@@ -512,7 +953,20 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation externe",
+   "facteurs": "Ressources financières",
+   "projets": "Infrastructures",
+   "projets_autre": null,
+   "plateforme_acteurs": [],
+   "consulte_par": [
+    "Autorités communales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": "Oui, une personne actuellement",
+   "femme_detail": "Oui, une personne actuellement"
   },
   {
    "nom": "ORFAB: Organisation réflexion des femme pour l ' avancement de bois boyer",
@@ -531,7 +985,22 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": false,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": null,
+   "facteurs": "Communication Ressources financières",
+   "projets": null,
+   "projets_autre": null,
+   "plateforme_acteurs": [
+    "Autorités communales"
+   ],
+   "consulte_par": [
+    "Autorités communales"
+   ],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": null,
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "AFDEM: association fanm pou dévelopman  lan moind",
@@ -550,7 +1019,24 @@
    "soumet_rapports": true,
    "cartographie": null,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, plusieurs partenariats avec une organisation externe Oui, plusieurs partenariats avec organisations locales",
+   "facteurs": "Ressources financières Adhésion de la communauté Ressources humaines",
+   "projets": "Infrastructures",
+   "projets_autre": null,
+   "plateforme_acteurs": [
+    "Autorités communales",
+    "ONG locales",
+    "ONG internationales"
+   ],
+   "consulte_par": [
+    "Autorités communales"
+   ],
+   "recoit_rapports": true,
+   "recoit_qui": "ONU Environnement",
+   "soumet_qui": "ONU environnement",
+   "jeune_detail": "Oui, une personne actuellement",
+   "femme_detail": "Oui, plusieurs actuellement"
   },
   {
    "nom": "AFAR",
@@ -569,7 +1055,20 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation locale",
+   "facteurs": "Ressources financières",
+   "projets": "Autre",
+   "projets_autre": "Aucun",
+   "plateforme_acteurs": [
+    "ONG locales"
+   ],
+   "consulte_par": [],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": "Oui, une personne actuellement",
+   "femme_detail": "Oui, une personne actuellement"
   },
   {
    "nom": "OPD",
@@ -588,7 +1087,21 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": false,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation externe",
+   "facteurs": "Ressources financières",
+   "projets": "Infrastructures",
+   "projets_autre": null,
+   "plateforme_acteurs": [
+    "ONG locales",
+    "ONG internationales"
+   ],
+   "consulte_par": [],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": null,
+   "femme_detail": "Oui, une personne actuellement"
   },
   {
    "nom": "OPSAIS ( Organisation des paysans sud pour l'avancement intégral de Saint-Jean)",
@@ -607,7 +1120,18 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": false,
-   "femme_direction": false
+   "femme_direction": false,
+   "prive_type": null,
+   "facteurs": "Ressources financières",
+   "projets": "Infrastructures",
+   "projets_autre": null,
+   "plateforme_acteurs": [],
+   "consulte_par": [],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": null,
+   "femme_detail": null
   },
   {
    "nom": "FCD (Fanm Confiance droit)",
@@ -626,7 +1150,20 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": false,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": null,
+   "facteurs": "Ressources financières",
+   "projets": null,
+   "projets_autre": null,
+   "plateforme_acteurs": [
+    "ONG locales"
+   ],
+   "consulte_par": [],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": null,
+   "femme_detail": "Oui, une personne dans le passé"
   },
   {
    "nom": "GSD ( Groupement santé dette)",
@@ -645,7 +1182,20 @@
    "soumet_rapports": false,
    "cartographie": false,
    "jeune_direction": true,
-   "femme_direction": true
+   "femme_direction": true,
+   "prive_type": "Oui, un seul partenariat avec une organisation locale",
+   "facteurs": "Ressources financières",
+   "projets": "Sante",
+   "projets_autre": null,
+   "plateforme_acteurs": [
+    "ONG locales"
+   ],
+   "consulte_par": [],
+   "recoit_rapports": false,
+   "recoit_qui": null,
+   "soumet_qui": null,
+   "jeune_detail": "Oui, une personne actuellement",
+   "femme_detail": "Oui, une personne dans le passé"
   }
  ],
  "indicateurs": [
@@ -753,10 +1303,10 @@
    "ligne": 203,
    "cle": "autorites",
    "dimension": "II. INSTITUTIONAL, TECHNOLOGICAL, AND GOVERNANCE  DIMENSION",
-   "indicateur": "Organisations in contact with communal authorities",
-   "indicateur_fr": "Organisations en relation avec les autorités communales",
-   "metrique": "Community-based organisations (%) reporting a working relationship with the communal authorities.",
-   "metrique_fr": "Organisations communautaires de base (%) déclarant une relation de travail avec les autorités communales.",
+   "indicateur": "Organisations in a coordination platform with communal authorities",
+   "indicateur_fr": "Organisations dans une plateforme de coordination avec les autorités communales",
+   "metrique": "Community-based organisations (%) taking part in a coordination platform that brings together the communal authorities.",
+   "metrique_fr": "Organisations communautaires de base (%) participant à une plateforme de coordination réunissant les autorités communales.",
    "echelle": "Échelle linéaire : 0 (0–10 %), 1 (10–20 %), 2 (20–30 %), 3 (30–40 %), 4 (40–50 %), 5 (50–60 %), 6 (60–70 %), 7 (70–80 %), 8 (80–90 %), 9 (90–100 %), 10 (100 %)",
    "unite": "%",
    "valeurs": {
@@ -953,10 +1503,10 @@
    "ligne": 207,
    "cle": "ong_int",
    "dimension": "II. INSTITUTIONAL, TECHNOLOGICAL, AND GOVERNANCE  DIMENSION",
-   "indicateur": "Organisations connected to international NGOs",
-   "indicateur_fr": "Organisations reliées à des ONG internationales",
-   "metrique": "Community-based organisations (%) reporting a relationship with international NGOs — a measure of linking social capital.",
-   "metrique_fr": "Organisations communautaires de base (%) déclarant une relation avec des ONG internationales — mesure du capital social d'ouverture.",
+   "indicateur": "Organisations in a coordination platform with international NGOs",
+   "indicateur_fr": "Organisations dans une plateforme de coordination avec des ONG internationales",
+   "metrique": "Community-based organisations (%) taking part in a coordination platform that brings together international NGOs — a measure of linking social capital.",
+   "metrique_fr": "Organisations communautaires de base (%) participant à une plateforme de coordination réunissant des ONG internationales — mesure du capital social d'ouverture.",
    "echelle": "Échelle linéaire : 0 (0–10 %), 1 (10–20 %), 2 (20–30 %), 3 (30–40 %), 4 (40–50 %), 5 (50–60 %), 6 (60–70 %), 7 (70–80 %), 8 (80–90 %), 9 (90–100 %), 10 (100 %)",
    "unite": "%",
    "valeurs": {
