@@ -9,6 +9,11 @@ d'une langue à l'autre.
 
 import streamlit as st
 
+# Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
+# sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
+# affiche simplement le nom des clés manquantes au milieu de la page.
+VERSION = "2026-08-15-ocb"
+
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
 

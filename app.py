@@ -384,6 +384,24 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# ----------------------------------------------------------------------
+# Garde-fou : les fichiers sont poussés à la main sur GitHub, un par un. Si le
+# dictionnaire de traduction est resté sur une version antérieure, l'application
+# ne plante pas — elle affiche le nom des clés manquantes au milieu du texte, ce
+# qui est beaucoup plus déroutant qu'une erreur franche. On préfère le dire.
+# ----------------------------------------------------------------------
+I18N_ATTENDU = "2026-08-15-ocb"
+if getattr(i18n, "VERSION", None) != I18N_ATTENDU:
+    st.error(
+        f"**i18n.py est dans une version qui ne correspond pas au reste de "
+        f"l'application** — attendue : `{I18N_ATTENDU}`, trouvée : "
+        f"`{getattr(i18n, 'VERSION', 'aucune')}`.\n\n"
+        f"Les textes vont s'afficher sous forme de noms de clés "
+        f"(`mode_ocb`, `o_intro`…). Renvoyer sur GitHub le `i18n.py` livré "
+        f"avec cette mise à jour, à la racine du dépôt, corrige l'affichage.\n\n"
+        f"*i18n.py is out of date — re-upload the version delivered with this "
+        f"update to the repository root.*")
+
 st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
 
 # ---- choix de la langue, avant tout le reste ---------------------------
