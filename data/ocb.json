@@ -4,7 +4,9 @@
   {
    "nom": "Femme cooperative pour la commercialisation Agricole coordonnée de Belance.(FCoCaCb)",
    "section": "Mouline",
+   "localite": "Belance",
    "femmes_pct": null,
+   "femmes_brut": "260",
    "prive": true,
    "prive_detail": "Oui, formellement (accord écrit)",
    "partenariat": true,
@@ -37,7 +39,9 @@
   {
    "nom": "Organisation Populaire pour le Development de la commune de Beaumont (OPDB)",
    "section": "Mouline",
+   "localite": "Nan Kan",
    "femmes_pct": 59.0,
+   "femmes_brut": "59%",
    "prive": false,
    "prive_detail": "Non",
    "partenariat": false,
@@ -69,7 +73,9 @@
   {
    "nom": "Fanm An Aksyon",
    "section": "Mouline",
+   "localite": "Sen Maten",
    "femmes_pct": 88.0,
+   "femmes_brut": "88%",
    "prive": true,
    "prive_detail": "Oui, informellement",
    "partenariat": true,
@@ -102,7 +108,9 @@
   {
    "nom": "Organisation des citoyens Actifs pour le Devloppement de Mouline. (OCADEM).",
    "section": "Mouline",
+   "localite": "Perrier",
    "femmes_pct": 48.0,
+   "femmes_brut": "48%",
    "prive": true,
    "prive_detail": "Oui, informellement",
    "partenariat": false,
@@ -134,7 +142,9 @@
   {
    "nom": "Organisation des Planteurs Makaya pour le Développement (OPMR)",
    "section": "Quentin",
+   "localite": "Tivèny",
    "femmes_pct": 40.0,
+   "femmes_brut": "40%",
    "prive": true,
    "prive_detail": "Oui, formellement (accord écrit)",
    "partenariat": true,
@@ -172,7 +182,9 @@
   {
    "nom": "ASPVESF",
    "section": "Quentin",
+   "localite": "Centre Quentin",
    "femmes_pct": 33.0,
+   "femmes_brut": "33%",
    "prive": true,
    "prive_detail": "Oui, formellement (accord écrit)",
    "partenariat": true,
@@ -210,7 +222,9 @@
   {
    "nom": "(OJEDACOR)Organisation des Jeunes pour le developpement de Roche-à-Bateau.",
    "section": "Beaulieu",
+   "localite": "Rosier",
    "femmes_pct": 15.0,
+   "femmes_brut": "15",
    "prive": true,
    "prive_detail": "Oui, informellement",
    "partenariat": false,
@@ -244,7 +258,9 @@
   {
    "nom": "Coopérative des producteurs de vétiver Intégrées de l'Arrondissement de Port-Salut.(COPVIAPS)",
    "section": "Dumont",
+   "localite": "Marcabee(Fabre, Dumont)",
    "femmes_pct": 55.0,
+   "femmes_brut": "55 filles / 90 garçon",
    "prive": true,
    "prive_detail": "Oui, formellement (accord écrit)",
    "partenariat": true,
@@ -280,7 +296,9 @@
   {
    "nom": "Organisation des citoyens dévoués pour la communauté Port salvienne. ( OCDACOP)",
    "section": "Anse à Drick",
+   "localite": "Campêche",
    "femmes_pct": 30.0,
+   "femmes_brut": "30 filles et 20 garçons",
    "prive": true,
    "prive_detail": "Oui, informellement",
    "partenariat": true,
@@ -317,7 +335,9 @@
   {
    "nom": "AJESNOV",
    "section": "Dumont",
+   "localite": "Scipion",
    "femmes_pct": 35.0,
+   "femmes_brut": "35",
    "prive": true,
    "prive_detail": "Oui, formellement (accord écrit)",
    "partenariat": true,
@@ -352,7 +372,9 @@
   {
    "nom": "Groupe de réflexion pour le développement local( GREDEL)",
    "section": "Dumont",
+   "localite": "Dumont",
    "femmes_pct": null,
+   "femmes_brut": "207 filles/ 230 garçons",
    "prive": true,
    "prive_detail": "Oui, formellement (accord écrit)",
    "partenariat": true,
@@ -395,7 +417,9 @@
   {
    "nom": "AJAAC (Association des jeunes actifs pour l'avancement de Carpentier.",
    "section": "Anse à Drick",
+   "localite": "Carpentier",
    "femmes_pct": 10.0,
+   "femmes_brut": "10 filles / 20 garçons",
    "prive": true,
    "prive_detail": "Oui, informellement",
    "partenariat": true,
@@ -434,7 +458,9 @@
   {
    "nom": "Kolektif fanm devwe pou devloppan kominote dimon (KOFADDKOD)",
    "section": "Dumont",
+   "localite": "Kafou Bwison",
    "femmes_pct": 28.0,
+   "femmes_brut": "28 fille/ 0 gason",
    "prive": true,
    "prive_detail": "Oui, informellement",
    "partenariat": true,
@@ -470,7 +496,9 @@
   {
    "nom": "Organisation de marins pour le développement de la peche port Salut (OMADEPS)",
    "section": "Barbois",
+   "localite": "Rue du Quaie",
    "femmes_pct": 23.0,
+   "femmes_brut": "23 filles/ 19 garçons",
    "prive": true,
    "prive_detail": "Oui, informellement",
    "partenariat": true,
@@ -511,7 +539,9 @@
   {
    "nom": "Organisation juvénile pour le développement de la commune port salut Arniquet ( OJDAP)",
    "section": "Barbois",
+   "localite": "La vigie",
    "femmes_pct": 80.0,
+   "femmes_brut": "80 fille/ 120 garçon",
    "prive": true,
    "prive_detail": "Oui, formellement (accord écrit)",
    "partenariat": true,
@@ -553,7 +583,9 @@
   {
    "nom": "AJIDIS",
    "section": "Anse à Drick",
+   "localite": "Saint table",
    "femmes_pct": 7.0,
+   "femmes_brut": "7 filles/ 13 garçons",
    "prive": true,
    "prive_detail": "Oui, informellement",
    "partenariat": false,
@@ -585,7 +617,9 @@
   {
    "nom": "Asosyasyon fanm vanyan posali( ASVP)",
    "section": "Anse à Drick",
+   "localite": "Bergerac",
    "femmes_pct": 43.0,
+   "femmes_brut": "43 filles",
    "prive": true,
    "prive_detail": "Oui, informellement",
    "partenariat": true,
@@ -620,7 +654,9 @@
   {
    "nom": "Mouvman payizan Barbois ( MPB)",
    "section": "Barbois",
+   "localite": "Centre Barbois",
    "femmes_pct": null,
+   "femmes_brut": "150 filles/ 350 garçons",
    "prive": true,
    "prive_detail": "Oui, formellement (accord écrit)",
    "partenariat": true,
@@ -659,7 +695,9 @@
   {
    "nom": "Asosyasyon fanm vanyan pou avansmn babwa ( ASFAVAB)",
    "section": "Barbois",
+   "localite": "Chouket",
    "femmes_pct": 51.0,
+   "femmes_brut": "51 filles",
    "prive": true,
    "prive_detail": "Oui, formellement (accord écrit)",
    "partenariat": true,
@@ -697,7 +735,9 @@
   {
    "nom": "Centre d'activité développement intégré de saintable et des ses environs ( CADISE)",
    "section": "Anse à Drick",
+   "localite": "saintable",
    "femmes_pct": 18.0,
+   "femmes_brut": "18 filles/ 17 garcons",
    "prive": false,
    "prive_detail": "Non",
    "partenariat": false,
@@ -727,7 +767,9 @@
   {
    "nom": "Oganizasyon pou devlopman vilpi( ODVK)",
    "section": "Barbois",
+   "localite": "Vilpi",
    "femmes_pct": 60.0,
+   "femmes_brut": "60 filles/ 80 garçons",
    "prive": true,
    "prive_detail": "Oui, formellement (accord écrit)",
    "partenariat": true,
@@ -765,7 +807,9 @@
   {
    "nom": "ORPSJS: Organisation des planteurs de St Jean du sud",
    "section": "Trichet",
+   "localite": "Centre ville",
    "femmes_pct": 40.0,
+   "femmes_brut": "40% femmme",
    "prive": false,
    "prive_detail": "Non",
    "partenariat": true,
@@ -801,7 +845,9 @@
   {
    "nom": "Association des jeunes planteur pour le développement de St Jean du sud( AJPDSJS)",
    "section": "Trichet",
+   "localite": "Madame pierre",
    "femmes_pct": 30.0,
+   "femmes_brut": "30% pourcent fille",
    "prive": false,
    "prive_detail": "Non",
    "partenariat": false,
@@ -835,7 +881,9 @@
   {
    "nom": "Group fanm vanyan Trichet (GwofAVAT)",
    "section": "Trichet",
+   "localite": "Trichet",
    "femmes_pct": 100.0,
+   "femmes_brut": "100% fanm",
    "prive": true,
    "prive_detail": "Oui, formellement (accord écrit)",
    "partenariat": true,
@@ -871,7 +919,9 @@
   {
    "nom": "AJPDS: Association planteur pour le développement de St Jean du sud",
    "section": "Trichet",
+   "localite": "Abacou",
    "femmes_pct": 40.0,
+   "femmes_brut": "40% femme",
    "prive": false,
    "prive_detail": "Non",
    "partenariat": true,
@@ -905,7 +955,9 @@
   {
    "nom": "ORPDEJ: Organisation des paysans pour le développement de jaboins",
    "section": "Trichet",
+   "localite": "Jaboins",
    "femmes_pct": 50.0,
+   "femmes_brut": "50% femmes",
    "prive": true,
    "prive_detail": "Oui, informellement",
    "partenariat": true,
@@ -939,7 +991,9 @@
   {
    "nom": "Group fanm devwe vilpi( GFDV)",
    "section": "Trichet",
+   "localite": "Vilpi",
    "femmes_pct": 97.0,
+   "femmes_brut": "97% fanm",
    "prive": false,
    "prive_detail": "Non",
    "partenariat": true,
@@ -971,7 +1025,9 @@
   {
    "nom": "ORFAB: Organisation réflexion des femme pour l ' avancement de bois boyer",
    "section": "Trichet",
+   "localite": "Bois boyer",
    "femmes_pct": 75.0,
+   "femmes_brut": "75% femme",
    "prive": false,
    "prive_detail": "Non",
    "partenariat": false,
@@ -1005,7 +1061,9 @@
   {
    "nom": "AFDEM: association fanm pou dévelopman  lan moind",
    "section": "Trichet",
+   "localite": "Moindre",
    "femmes_pct": 90.0,
+   "femmes_brut": "90% fanm",
    "prive": true,
    "prive_detail": "Oui, formellement (accord écrit)",
    "partenariat": true,
@@ -1041,7 +1099,9 @@
   {
    "nom": "AFAR",
    "section": "Débouchette",
+   "localite": "Richard",
    "femmes_pct": 40.0,
+   "femmes_brut": "40%",
    "prive": true,
    "prive_detail": "Oui, informellement",
    "partenariat": true,
@@ -1073,7 +1133,9 @@
   {
    "nom": "OPD",
    "section": "Débouchette",
+   "localite": "Débouchette",
    "femmes_pct": 20.0,
+   "femmes_brut": "20%",
    "prive": true,
    "prive_detail": "Oui, formellement (accord écrit)",
    "partenariat": true,
@@ -1106,7 +1168,9 @@
   {
    "nom": "OPSAIS ( Organisation des paysans sud pour l'avancement intégral de Saint-Jean)",
    "section": "Débouchette",
+   "localite": "Bizlin",
    "femmes_pct": 40.0,
+   "femmes_brut": "40%",
    "prive": false,
    "prive_detail": "Non",
    "partenariat": false,
@@ -1136,7 +1200,9 @@
   {
    "nom": "FCD (Fanm Confiance droit)",
    "section": "Débouchette",
+   "localite": "Droit",
    "femmes_pct": 100.0,
+   "femmes_brut": "100%",
    "prive": true,
    "prive_detail": "Oui, informellement",
    "partenariat": false,
@@ -1168,7 +1234,9 @@
   {
    "nom": "GSD ( Groupement santé dette)",
    "section": "Débouchette",
+   "localite": "Débouchette",
    "femmes_pct": 35.0,
+   "femmes_brut": "35%",
    "prive": false,
    "prive_detail": "Non",
    "partenariat": true,
