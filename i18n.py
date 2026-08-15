@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-15-ocb"
+VERSION = "2026-08-15-ocb-fiches2"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -162,6 +162,59 @@ DICO = {
     "o_bloc4": {"en": "4 · The organisations one by one",
                 "fr": "4 · Les organisations une à une"},
 
+    "o_bloc5": {"en": "5 · Organisation profile",
+                "fr": "5 · La fiche d'une organisation"},
+    "o_bloc5_note": {
+        "en": "Everything the survey records about a single organisation, on "
+              "one page. Use the filter above to narrow the list first.",
+        "fr": "Tout ce que l'enquête recense sur une organisation, sur une seule "
+              "page. Le filtre ci-dessus restreint d'abord la liste."},
+    "o_choisir_organisation": {"en": "Choose an organisation",
+                               "fr": "Choisir une organisation"},
+    "o_fiche_vide": {
+        "en": "No organisation matches this filter.",
+        "fr": "Aucune organisation ne correspond à ce filtre."},
+    "o_f_femmes": {"en": "Share of women among members",
+                   "fr": "Part de femmes parmi les membres"},
+    "o_f_prive": {"en": "Contribution to private / civil-society initiatives",
+                  "fr": "Contribution aux initiatives privées / société civile"},
+    "o_f_partenariat": {"en": "Development partnership",
+                        "fr": "Partenariat de développement"},
+    "o_f_type_partenariat": {"en": "Type of partnership",
+                             "fr": "Type de partenariat"},
+    "o_f_duree": {"en": "Partnership age", "fr": "Ancienneté du partenariat"},
+    "o_f_note": {"en": "Results rated by the organisation itself",
+                 "fr": "Résultats notés par l'organisation elle-même"},
+    "o_f_projets": {"en": "Areas covered by the partnerships",
+                    "fr": "Domaines couverts par les partenariats"},
+    "o_f_projets_autre": {"en": "Other areas, specified",
+                          "fr": "Autres domaines, précisés"},
+    "o_f_facteurs": {"en": "What holds back better results",
+                     "fr": "Ce qui empêche de meilleurs résultats"},
+    "o_f_soutien": {"en": "External support received",
+                    "fr": "Appui extérieur reçu"},
+    "o_f_femme_dir": {"en": "Women in leadership",
+                      "fr": "Femmes à la direction"},
+    "o_f_jeune_dir": {"en": "People aged 18-30 in leadership",
+                      "fr": "Personnes de 18 à 30 ans à la direction"},
+    "o_f_cartographie": {"en": "Holds an up-to-date map of local actors",
+                         "fr": "Dispose d'une cartographie des acteurs à jour"},
+    "o_f_recoit": {"en": "Receives reports from",
+                   "fr": "Reçoit des rapports de"},
+    "o_f_soumet": {"en": "Submits reports to",
+                   "fr": "Soumet des rapports à"},
+    "o_f_plateforme": {
+        "en": "Takes part in a coordination platform bringing together",
+        "fr": "Participe à une plateforme de coordination réunissant"},
+    "o_f_consulte": {"en": "Consulted for decisions by",
+                     "fr": "Consultée pour les décisions par"},
+    "o_f_consulte_note": {
+        "en": "This question came out of the collection tool inconsistently: "
+              "only the list of actors mentioned can be relied on, not which "
+              "answer belonged to which.",
+        "fr": "Cette question est sortie de l'outil de collecte de façon "
+              "incohérente : seule la liste des acteurs cités est fiable, pas "
+              "l'appariement de chaque réponse à son acteur."},
     "o_c_organisations": {"en": "Organisations recorded",
                           "fr": "Organisations recensées"},
     "o_c_organisations_sous": {"en": "across {s} communal sections",
@@ -1287,3 +1340,66 @@ def notion(cle):
     lg = get_lang()
     return (e.get(f"terme_{lg}") or e.get("terme_en"),
             e.get(lg) or e.get("en"))
+
+
+# ----------------------------------------------------------------------
+# Les réponses de l'enquête OCB ont été saisies en français. Les options
+# fermées se traduisent, ce qui évite une fiche à moitié anglaise ; le texte
+# libre saisi sur le terrain reste tel quel, on ne réécrit pas ce que les gens
+# ont écrit. Le remplacement se fait du libellé le plus long au plus court :
+# « Ressources humaines » ne doit pas être coupé par « Ressources ».
+# ----------------------------------------------------------------------
+REPONSES_EN = {
+    "Oui, formellement (accord écrit)": "Yes, formally (written agreement)",
+    "Oui, informellement": "Yes, informally",
+    "Oui, un seul partenariat avec une organisation locale":
+        "Yes, one partnership with a local organisation",
+    "Oui, plusieurs partenariats avec organisations locales":
+        "Yes, several partnerships with local organisations",
+    "Oui, un seul partenariat avec une organisation externe":
+        "Yes, one partnership with an external organisation",
+    "Oui, plusieurs partenariats avec une organisation externe":
+        "Yes, several partnerships with external organisations",
+    "Oui, avec des organisations locales et organisations externes":
+        "Yes, with both local and external organisations",
+    "Oui, renforcement de capacités humaines": "Yes, capacity building",
+    "Oui, soutien financier": "Yes, financial support",
+    "Oui, matériels": "Yes, equipment",
+    "Oui, une personne dans le passé": "Yes, one person in the past",
+    "Oui, plusieurs dans le passé": "Yes, several in the past",
+    "Oui, une personne actuellement": "Yes, one person currently",
+    "Oui, plusieurs actuellement": "Yes, several currently",
+    "5 ans et plus": "5 years and over",
+    "1-5 ans": "1 to 5 years",
+    "0-1 an": "under 1 year",
+    "Adhésion de la communauté": "Community buy-in",
+    "Ressources financières": "Financial resources",
+    "Ressources humaines": "Human resources",
+    "Gestion de déchets": "Waste management",
+    "Infrastructures": "Infrastructure",
+    "Communication": "Communication",
+    "Education": "Education",
+    "Sante": "Health",
+    "Autorités communales": "Communal authorities",
+    "Autorités départementales": "Departmental authorities",
+    "Institutions techniques": "Technical institutions",
+    "Sénateurs/députés": "Senators / deputies",
+    "ONG internationales": "International NGOs",
+    "ONG locales": "Local NGOs",
+    "Délégation": "Delegation",
+    "Autre": "Other",
+    "Oui": "Yes",
+    "Non": "No",
+}
+_REPONSES_ORDRE = sorted(REPONSES_EN, key=len, reverse=True)
+
+
+def reponse(texte):
+    """Traduit les options fermées d'une réponse d'enquête, en anglais seulement."""
+    if texte is None or get_lang() != "en":
+        return texte
+    out = str(texte)
+    for fr in _REPONSES_ORDRE:
+        if fr in out:
+            out = out.replace(fr, REPONSES_EN[fr])
+    return out

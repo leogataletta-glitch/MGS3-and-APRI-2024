@@ -217,7 +217,7 @@ def render():
             T("o_col_nom"): f["nom"],
             T("section_communale"): f["section"],
             T("o_col_partenariat"): trois(f["partenariat"]),
-            T("o_col_duree"): f["duree"] or RIEN,
+            T("o_col_duree"): _rep(f["duree"]) or RIEN,
             T("o_col_note"): f["note_partenariat"] if f["note_partenariat"]
             is not None else None,
             T("o_col_soutien"): trois(f["soutien"]),
@@ -229,5 +229,157 @@ def render():
         st.dataframe(df, use_container_width=True, hide_index=True)
         st.caption(T("o_table_note", n=len(fiches)))
 
+    # ------------------------------------------------------------ la fiche
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc vert">{T("o_bloc5")}</div>',
+                    unsafe_allow_html=True)
+        st.caption(T("o_bloc5_note"))
+        if not fiches:
+            st.info(T("o_fiche_vide"))
+        else:
+            index = st.selectbox(
+                T("o_choisir_organisation"), list(range(len(fiches))),
+                format_func=lambda i: f"{fiches[i]['section']} · {fiches[i]['nom']}",
+                key=f"ocb_fiche_{i18n.get_lang()}_{len(fiches)}")
+            st.markdown(_fiche_html(fiches[index]), unsafe_allow_html=True)
+
     st.caption(T("o_source"))
     st.caption(T("credit"))
+
+
+# ----------------------------------------------------------------------
+# La fiche d'une organisation
+# ----------------------------------------------------------------------
+def _e(t):
+    """Échappe le texte saisi sur le terrain avant de l'injecter dans le HTML."""
+    return (str(t).replace("&", "&amp;").replace("<", "&lt;")
+            .replace(">", "&gt;"))
+
+
+def _rep(t):
+    """Traduit les options fermées de l'enquête, saisies en français."""
+    fn = getattr(i18n, "reponse", None)
+    return fn(t) if fn else t
+
+
+def _puces(valeur):
+    """Les questions à choix multiples sortent de KoBo en libellés recollés.
+
+    « Oui, matériels Oui, renforcement de capacités humaines » est une seule
+    chaîne : on la recoupe sur les débuts d'option connus plutôt que de
+    l'afficher telle quelle, illisible.
+    """
+    if not valeur:
+        return []
+    texte = str(valeur).strip()
+    for sep in ("Oui, ", "Non, "):
+        if texte.count(sep) > 1:
+            morceaux = [m.strip() for m in texte.split(sep) if m.strip()]
+            return [sep + m for m in morceaux]
+    return [texte]
+
+
+def _ligne(libelle, valeur, pleine=False):
+    """Une ligne de fiche : intitulé discret au-dessus, réponse lisible dessous."""
+    if valeur in (None, "", [], "—"):
+        return ""
+    if isinstance(valeur, list):
+        valeur = " · ".join(_e(_rep(v)) for v in valeur)
+    else:
+        valeur = _e(_rep(valeur))
+    largeur = "100%" if pleine else "auto"
+    return (f'<div style="margin:0 0 12px;width:{largeur}">'
+            f'<div style="font-size:11.5px;letter-spacing:.06em;'
+            f'text-transform:uppercase;color:#6b7590;font-weight:700;'
+            f'margin-bottom:2px">{_e(libelle)}</div>'
+            f'<div style="font-size:15.5px;color:#101728;line-height:1.5">'
+            f'{valeur}</div></div>')
+
+
+def _pastille(texte, actif):
+    fond, bord, encre = (("#e8f4ec", "#bcdcc7", "#1f6b3d") if actif
+                         else ("#f4f6f9", "#e2e7ee", "#8b93a3"))
+    marque = "✓" if actif else "·"
+    return (f'<span style="display:inline-flex;align-items:center;gap:6px;'
+            f'background:{fond};border:1px solid {bord};border-radius:999px;'
+            f'padding:5px 12px;margin:0 7px 7px 0;font-size:13.5px;'
+            f'color:{encre}"><strong>{marque}</strong>{_e(_rep(texte))}</span>')
+
+
+def _fiche_html(f):
+    OUI, NON = T("oui"), T("non")
+
+    def trois(v):
+        return None if v is None else (OUI if v else NON)
+
+    note = f.get("note_partenariat")
+    note_txt = (f'{note:.0f} / 10'.replace('.', ',') if note is not None
+                else None)
+    femmes = f.get("femmes_pct")
+    femmes_txt = f'{femmes:.0f} %' if femmes is not None else None
+
+    entete = (
+        f'<div style="border-bottom:1px solid #e6ecf4;padding:0 0 14px;'
+        f'margin:0 0 16px">'
+        f'<div style="font-size:11.5px;letter-spacing:.07em;'
+        f'text-transform:uppercase;color:#1a6bb0;font-weight:700">'
+        f'{_e(f["section"])}</div>'
+        f'<div style="font-family:Outfit,Inter,system-ui,sans-serif;'
+        f'font-size:23px;font-weight:700;color:#101728;line-height:1.25;'
+        f'margin-top:3px">{_e(f["nom"])}</div></div>')
+
+    # --- identité et partenariats ---
+    gauche = "".join([
+        _ligne(T("o_f_femmes"), femmes_txt),
+        _ligne(T("o_f_prive"), f.get("prive_detail")),
+        _ligne(T("o_f_partenariat"), trois(f.get("partenariat"))),
+        _ligne(T("o_f_type_partenariat"), _puces(f.get("prive_type"))),
+        _ligne(T("o_f_duree"), f.get("duree")),
+        _ligne(T("o_f_note"), note_txt),
+    ])
+    droite = "".join([
+        _ligne(T("o_f_projets"), f.get("projets")),
+        _ligne(T("o_f_projets_autre"), f.get("projets_autre")),
+        _ligne(T("o_f_facteurs"), f.get("facteurs")),
+        _ligne(T("o_f_soutien"), _puces(f.get("soutien_detail"))),
+    ])
+
+    # --- gouvernance et inclusion ---
+    inclusion = "".join([
+        _ligne(T("o_f_femme_dir"),
+               f.get("femme_detail") or trois(f.get("femme_direction"))),
+        _ligne(T("o_f_jeune_dir"),
+               f.get("jeune_detail") or trois(f.get("jeune_direction"))),
+        _ligne(T("o_f_cartographie"), trois(f.get("cartographie"))),
+        _ligne(T("o_f_recoit"), f.get("recoit_qui")
+               or trois(f.get("recoit_rapports"))),
+        _ligne(T("o_f_soumet"), f.get("soumet_qui")
+               or trois(f.get("soumet_rapports"))),
+    ])
+
+    ACTEURS = ["Autorités communales", "Autorités départementales", "Délégation",
+               "Institutions techniques", "Sénateurs/députés", "ONG locales",
+               "ONG internationales"]
+    presents = set(f.get("plateforme_acteurs") or [])
+    plateforme = "".join(_pastille(a, a in presents) for a in ACTEURS)
+    consulte = f.get("consulte_par") or []
+
+    return (
+        '<div style="background:#fff;border:1px solid #e6ecf4;border-radius:16px;'
+        'padding:20px 24px 8px;box-shadow:0 1px 2px rgba(16,23,40,.05),'
+        '0 8px 22px rgba(16,23,40,.06)">'
+        + entete
+        + '<div style="display:flex;gap:34px;flex-wrap:wrap">'
+        + f'<div style="flex:1;min-width:250px">{gauche}</div>'
+        + f'<div style="flex:1;min-width:250px">{droite}</div>'
+        + f'<div style="flex:1;min-width:250px">{inclusion}</div></div>'
+        + f'<div style="border-top:1px solid #e6ecf4;padding-top:14px;'
+          f'margin-top:4px">'
+        + f'<div style="font-size:11.5px;letter-spacing:.06em;'
+          f'text-transform:uppercase;color:#6b7590;font-weight:700;'
+          f'margin-bottom:7px">{_e(T("o_f_plateforme"))}</div>{plateforme}</div>'
+        + (f'<div style="margin-top:10px">'
+           f'{_ligne(T("o_f_consulte"), consulte, pleine=True)}'
+           f'<p style="font-size:12.5px;color:#8b93a3;margin:-6px 0 8px">'
+           f'{_e(T("o_f_consulte_note"))}</p></div>' if consulte else '')
+        + '</div>')
