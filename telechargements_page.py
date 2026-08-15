@@ -351,6 +351,60 @@ def _fichier_dictionnaire(lang):
 
 
 # ----------------------------------------------------------------------
+# 7 · organisations communautaires de base
+# ----------------------------------------------------------------------
+@st.cache_data(show_spinner=False)
+def _fichier_ocb(lang):
+    ocb = _lire_json("ocb.json")
+    wb = _nouveau()
+    _lisezmoi(wb, T("d7_titre"), [T("d7_desc"), "", T("x_d7_note")])
+
+    fr = i18n.get_lang() == "fr"
+    OUI, NON = T("oui"), T("non")
+
+    def trois(v):
+        return "" if v is None else (OUI if v else NON)
+
+    ws = wb.create_sheet(T("x_ocb_fiches")[:31])
+    _entete(ws, 1, [T("o_col_nom"), T("x_section"), T("o_col_partenariat"),
+                    T("o_col_duree"), T("o_col_note"), T("o_col_soutien"),
+                    T("o_col_autorites"), T("o_col_ong_int"), T("o_col_femme"),
+                    T("o_col_jeune")],
+            [56, 18, 14, 14, 12, 16, 20, 20, 20, 22])
+    for r, f in enumerate(ocb["fiches"], 2):
+        for j, v in enumerate([
+                f["nom"], f["section"], trois(f["partenariat"]), f["duree"] or "",
+                f["note_partenariat"], trois(f["soutien"]), trois(f["autorites"]),
+                trois(f["ong_int"]), trois(f["femme_direction"]),
+                trois(f["jeune_direction"])], 1):
+            ws.cell(row=r, column=j, value=v).font = NORMAL
+
+    ws2 = wb.create_sheet(T("x_ocb_indic")[:31])
+    cols = [T("x_ligne"), T("x_dimension"), T("x_indicateur"), T("x_metrique")]
+    for s in SECTIONS:
+        cols += [f"{s} — {T('d_contenu')}", f"{s} — score", f"{s} — n"]
+    cols += ["Total", "Total — score", "Total — n"]
+    _entete(ws2, 1, cols, [8, 34, 46, 60] + [11] * (3 * len(SECTIONS) + 3))
+    for r, ind in enumerate(ocb["indicateurs"], 2):
+        ws2.cell(row=r, column=1, value=ind["ligne"]).font = NORMAL
+        ws2.cell(row=r, column=2, value=ind["dimension"]).font = NORMAL
+        ws2.cell(row=r, column=3,
+                 value=(ind.get("indicateur_fr") if fr else ind["indicateur"])
+                 ).font = NORMAL
+        ws2.cell(row=r, column=4,
+                 value=(ind.get("metrique_fr") if fr else ind.get("metrique"))
+                 ).font = NORMAL
+        j = 5
+        for s in SECTIONS + ["Total"]:
+            c = ws2.cell(row=r, column=j, value=ind["valeurs"].get(s))
+            c.font = NORMAL; c.number_format = "0.0"
+            ws2.cell(row=r, column=j + 1, value=ind["scores"].get(s)).font = NORMAL
+            ws2.cell(row=r, column=j + 2, value=ind["n"].get(s)).font = NORMAL
+            j += 3
+    return _octets(wb)
+
+
+# ----------------------------------------------------------------------
 XLSX = ("application/vnd.openxmlformats-officedocument."
         "spreadsheetml.sheet")
 
@@ -363,9 +417,21 @@ def _bloc(cle_titre, cle_desc, teinte, nom_fichier, mime, format_txt,
         st.markdown(
             f'<p style="font-size:15.5px;line-height:1.6;color:#3c4761;'
             f'margin:4px 0 10px">{T(cle_desc)}</p>', unsafe_allow_html=True)
+        # Un fichier source absent du dépôt ne doit pas emporter tout l'onglet :
+        # on signale le jeu manquant et les cinq autres restent téléchargeables.
+        try:
+            data = fabrique()
+        except Exception as err:
+            st.markdown(
+                f'<p style="font-size:14px;color:#a8690a;background:#fdf3e3;'
+                f'border:1px solid #f0dcb8;border-radius:10px;padding:9px 13px;'
+                f'margin:0">{T("d_indispo", f=nom_fichier)}<br>'
+                f'<span style="font-size:12.5px;color:#8a6a3a">'
+                f'{type(err).__name__}</span></p>', unsafe_allow_html=True)
+            return
+
         col_a, col_b = st.columns([1, 2])
         with col_a:
-            data = fabrique()
             st.download_button(
                 f"{T('d_bouton')} · {format_txt}", data=data,
                 file_name=nom_fichier, mime=mime,
@@ -417,5 +483,7 @@ def render():
           "text/csv", "CSV", _fichier_brut)
     _bloc("d6_titre", "d6_desc", "ambre", "06_dictionnaire_questionnaire.xlsx",
           XLSX, "Excel", lambda: _fichier_dictionnaire(lang))
+    _bloc("d7_titre", "d7_desc", "", "07_organisations_communautaires.xlsx",
+          XLSX, "Excel", lambda: _fichier_ocb(lang))
 
     st.caption(T("credit"))

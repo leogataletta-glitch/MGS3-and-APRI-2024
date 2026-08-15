@@ -54,9 +54,9 @@ DICO = {
         "fr": "Distributions univariées des 503 items du questionnaire, "
               "désagrégées par sexe, âge, catégorie économique et paysage"},
     "mode_resilience_sous": {
-        "en": "Composite index and its 118 indicators, by communal section, "
+        "en": "Composite index and its indicators, by communal section, "
               "dimension and sub-population",
-        "fr": "Indice composite et ses 118 indicateurs, par section communale, "
+        "fr": "Indice composite et ses indicateurs, par section communale, "
               "dimension et sous-population"},
     "mode_croisement_sous": {
         "en": "Multi-criteria conditional analysis: co-occurrence of "
@@ -84,6 +84,130 @@ DICO = {
     "credit": {"en": "Produced by the United Nations Environment Programme (UNEP).",
                "fr": "Travail réalisé par le Programme des Nations Unies pour "
                      "l'environnement (PNUE)."},
+
+    "oui": {"en": "Yes", "fr": "Oui"},
+    "non": {"en": "No", "fr": "Non"},
+
+    # ------------------------------------------------------------ tissu associatif
+    "mode_ocb": {"en": "Community organisations",
+                 "fr": "Tissu associatif"},
+    "mode_ocb_sous": {
+        "en": "Density, partnerships, governance and inclusion of "
+              "community-based organisations",
+        "fr": "Densité, partenariats, gouvernance et inclusion des "
+              "organisations communautaires de base"},
+    "o_titre": {"en": "Community-based organisations",
+                "fr": "Le tissu associatif"},
+    "o_sous_titre": {
+        "en": "OCB identity survey · Sud and Grand'Anse, Haiti",
+        "fr": "Enquête d'identité des OCB · Sud et Grand'Anse, Haïti"},
+    "o_intro": {
+        "en": "This section draws on a survey distinct from the household "
+              "survey: {n} identity records for community-based organisations, "
+              "collected across {s} communal sections. The unit of analysis is "
+              "the organisation, never the household — a percentage here is a "
+              "share of organisations. These figures feed the institutional and "
+              "social dimensions of the resilience index.",
+        "fr": "Cette section s'appuie sur une enquête distincte de l'enquête "
+              "ménage : {n} fiches d'identité d'organisations communautaires de "
+              "base, recueillies dans {s} sections communales. L'unité "
+              "d'analyse est l'organisation, jamais le foyer — un pourcentage "
+              "porte ici sur des organisations. Ces chiffres alimentent les "
+              "dimensions institutionnelle et sociale de l'indice de "
+              "résilience."},
+    "o_avert_absentes": {
+        "en": "No organisation was recorded in {s}. For those sections the "
+              "density indicator reads zero — a real measurement — while the "
+              "nine percentage indicators stay empty, since there is no "
+              "organisation to report on. Their final resilience score is "
+              "therefore computed on fewer indicators than the other sections: "
+              "read the comparison with that in mind.",
+        "fr": "Aucune organisation n'a été recensée à {s}. Pour ces sections, "
+              "l'indicateur de densité vaut zéro — c'est une mesure réelle — "
+              "tandis que les neuf indicateurs en pourcentage restent vides, "
+              "faute d'organisation à interroger. Leur score final de résilience "
+              "est donc calculé sur moins d'indicateurs que celui des autres "
+              "sections : la comparaison est à lire en gardant cela à l'esprit."},
+
+    "et": {"en": "and", "fr": "et"},
+    "o_court_partenariat": {"en": "Has a partnership",
+                            "fr": "A un partenariat"},
+    "o_court_prive": {"en": "Private-sector work",
+                      "fr": "Travail avec le privé"},
+    "o_court_autorites": {"en": "Communal authority link",
+                          "fr": "Lien avec les autorités"},
+    "o_court_soumet_rapports": {"en": "Submits activity reports",
+                                "fr": "Soumet des rapports"},
+    "o_court_cartographie": {"en": "Holds an actor map",
+                             "fr": "Cartographie des acteurs"},
+    "o_court_soutien": {"en": "External support received",
+                        "fr": "A reçu un appui extérieur"},
+    "o_court_ong_int": {"en": "International NGO link",
+                        "fr": "Lien ONG internationales"},
+    "o_court_femme_direction": {"en": "Woman in leadership",
+                                "fr": "Femme à la direction"},
+    "o_court_jeune_direction": {"en": "Young person in leadership",
+                                "fr": "Jeune à la direction"},
+    "o_bloc1": {"en": "1 · The associative fabric in figures",
+                "fr": "1 · Le tissu associatif en chiffres"},
+    "o_bloc2": {"en": "2 · Where, across the territory",
+                "fr": "2 · Où, sur le territoire"},
+    "o_bloc3": {"en": "3 · All indicators, all organisations combined",
+                "fr": "3 · Tous les indicateurs, toutes organisations confondues"},
+    "o_bloc4": {"en": "4 · The organisations one by one",
+                "fr": "4 · Les organisations une à une"},
+
+    "o_c_organisations": {"en": "Organisations recorded",
+                          "fr": "Organisations recensées"},
+    "o_c_organisations_sous": {"en": "across {s} communal sections",
+                               "fr": "dans {s} sections communales"},
+    "o_c_femmes": {"en": "A woman in leadership",
+                   "fr": "Une femme à la direction"},
+    "o_c_femmes_sous": {"en": "of organisations", "fr": "des organisations"},
+    "o_c_partenariat": {"en": "At least one partnership",
+                        "fr": "Au moins un partenariat"},
+    "o_c_partenariat_sous": {"en": "of organisations", "fr": "des organisations"},
+    "o_c_note": {"en": "Partnership rated", "fr": "Partenariat noté"},
+    "o_c_note_sous": {"en": "self-assessment, {n} organisations",
+                      "fr": "auto-évaluation, {n} organisations"},
+
+    "o_quoi_carto": {"en": "What to map", "fr": "Quoi cartographier"},
+    "o_info_carte": {"en": "{n} organisations surveyed",
+                     "fr": "{n} organisations interrogées"},
+    "o_carte_note": {
+        "en": "Sections in grey have no organisation recorded, so no percentage "
+              "can be computed there.",
+        "fr": "Les sections en gris n'ont aucune organisation recensée : aucun "
+              "pourcentage ne peut y être calculé."},
+    "o_bloc3_note": {
+        "en": "Share of the 34 organisations answering yes, all sections "
+              "combined. The APRI score in brackets places that share on the "
+              "0-10 scale.",
+        "fr": "Part des 34 organisations répondant oui, toutes sections "
+              "confondues. Le score APRI entre parenthèses situe cette part sur "
+              "l'échelle de 0 à 10."},
+    "o_score_annot": {"en": "score {s} / 10", "fr": "score {s} / 10"},
+
+    "o_col_nom": {"en": "Organisation", "fr": "Organisation"},
+    "o_col_partenariat": {"en": "Partnership", "fr": "Partenariat"},
+    "o_col_duree": {"en": "Duration", "fr": "Ancienneté"},
+    "o_col_note": {"en": "Rating / 10", "fr": "Note / 10"},
+    "o_col_soutien": {"en": "External support", "fr": "Appui extérieur"},
+    "o_col_autorites": {"en": "Communal authorities", "fr": "Autorités communales"},
+    "o_col_ong_int": {"en": "International NGOs", "fr": "ONG internationales"},
+    "o_col_femme": {"en": "Woman in leadership", "fr": "Femme à la direction"},
+    "o_col_jeune": {"en": "Young person in leadership",
+                    "fr": "Jeune à la direction"},
+    "o_table_note": {"en": "{n} organisations displayed. The locality name is "
+                           "deliberately omitted: it is an identifying detail.",
+                     "fr": "{n} organisations affichées. Le nom de la localité "
+                           "est volontairement omis : c'est une donnée "
+                           "identifiante."},
+    "o_source": {
+        "en": "Source: community-based organisation identity survey, UNEP, "
+              "2024. 34 records, 8 of the 10 communal sections.",
+        "fr": "Source : enquête d'identité des Organisations Communautaires de "
+              "Base, PNUE, 2024. 34 fiches, 8 des 10 sections communales."},
 
     # ------------------------------------------------------------ méthodologie
     "m_titre": {"en": "Survey methodology",
@@ -140,6 +264,11 @@ DICO = {
               "de ne pas les rediffuser hors du projet."},
     "d_preparer": {"en": "Preparing the file…", "fr": "Préparation du fichier…"},
     "d_bouton": {"en": "Download", "fr": "Télécharger"},
+    "d_indispo": {
+        "en": "This dataset is temporarily unavailable: a source file is "
+              "missing from the deployment ({f}).",
+        "fr": "Ce jeu de données est momentanément indisponible : un "
+              "fichier source manque au déploiement ({f})."},
     "d_contenu": {"en": "Contents", "fr": "Contenu"},
     "d_format": {"en": "Format", "fr": "Format"},
 
@@ -162,11 +291,11 @@ DICO = {
         "fr": "2 · Indicateurs de résilience — valeur brute et score APRI par "
               "section communale"},
     "d2_desc": {
-        "en": "The 118 indicators of the index, with their dimension, weight, "
+        "en": "The 128 indicators of the index, with their dimension, weight, "
               "theoretical scale, measured value (in % of households) and "
               "resulting 0–10 score, for each of the 10 communal sections and "
               "each sub-population.",
-        "fr": "Les 118 indicateurs de l'indice, avec leur dimension, leur "
+        "fr": "Les 128 indicateurs de l'indice, avec leur dimension, leur "
               "pondération, leur échelle théorique, la valeur mesurée (en % de "
               "ménages) et le score 0–10 qui en découle, pour chacune des 10 "
               "sections communales et chaque sous-population."},
@@ -212,6 +341,29 @@ DICO = {
     "d6_titre": {
         "en": "6 · Questionnaire dictionary — the 503 items",
         "fr": "6 · Dictionnaire du questionnaire — les 503 items"},
+    "d7_titre": {
+        "en": "7 · Community-based organisations — the 34 identity records",
+        "fr": "7 · Organisations communautaires de base — les 34 fiches"},
+    "d7_desc": {
+        "en": "One row per organisation: communal section, partnership and its "
+              "duration, external support received, ties with communal "
+              "authorities and NGOs, presence of women and of people aged 18 to "
+              "30 in leadership. The locality name is omitted, being an "
+              "identifying detail.",
+        "fr": "Une ligne par organisation : section communale, partenariat et "
+              "son ancienneté, appui extérieur reçu, liens avec les autorités "
+              "communales et les ONG, présence de femmes et de personnes de 18 "
+              "à 30 ans à la direction. Le nom de la localité est omis, en tant "
+              "que donnée identifiante."},
+    "x_ocb_fiches": {"en": "Organisations", "fr": "Organisations"},
+    "x_ocb_indic": {"en": "Indicators by section", "fr": "Indicateurs par section"},
+    "x_d7_note": {
+        "en": "The unit is the organisation, not the household: a percentage "
+              "computed from this file is a share of organisations. Two "
+              "communal sections, Blactote and Dalmette, have no record.",
+        "fr": "L'unité est l'organisation, non le ménage : un pourcentage "
+              "calculé depuis ce fichier est une part d'organisations. Deux "
+              "sections communales, Blactote et Dalmette, n'ont aucune fiche."},
     # -- intitulés employés à l'intérieur des classeurs Excel --------------
     "x_lisezmoi": {"en": "Read me", "fr": "Lisez-moi"},
     "x_confid": {

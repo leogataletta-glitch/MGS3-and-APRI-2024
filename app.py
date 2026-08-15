@@ -28,6 +28,7 @@ import croisement_page
 import i18n
 import map_render
 import methodologie_page
+import ocb_page
 import resilience_page
 import telechargements_page
 from i18n import T
@@ -404,11 +405,13 @@ i18n.set_lang(_code)
 # plus à aucun mode.
 MODE_QUESTIONS, MODE_RESILIENCE, MODE_CROISEMENT = "questions", "resilience", "croisement"
 MODE_METHODO, MODE_DONNEES = "methodologie", "donnees"
+MODE_OCB = "ocb"
 LIBELLE_MODE = {MODE_QUESTIONS: T("mode_questions"),
                 MODE_RESILIENCE: T("mode_resilience"),
                 MODE_CROISEMENT: T("mode_croisement"),
                 MODE_METHODO: T("mode_methodo"),
-                MODE_DONNEES: T("mode_donnees")}
+                MODE_DONNEES: T("mode_donnees"),
+                MODE_OCB: T("mode_ocb")}
 
 _logo, _entete = st.columns([1, 6])
 with _logo:
@@ -448,6 +451,7 @@ _ENTREES = (
     (MODE_RESILIENCE, T("mode_resilience_sous")),
     (MODE_CROISEMENT, T("mode_croisement_sous")),
     (MODE_METHODO, T("mode_methodo_sous")),
+    (MODE_OCB, T("mode_ocb_sous")),
     (MODE_DONNEES, T("mode_donnees_sous")),
 )
 
@@ -487,6 +491,10 @@ if app_mode == MODE_CROISEMENT:
 
 if app_mode == MODE_METHODO:
     methodologie_page.render()
+    st.stop()
+
+if app_mode == MODE_OCB:
+    ocb_page.render()
     st.stop()
 
 if app_mode == MODE_DONNEES:
