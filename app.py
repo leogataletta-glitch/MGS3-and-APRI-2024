@@ -377,6 +377,41 @@ st.markdown("""
   /* --- iframes des graphiques : coins arrondis, fond blanc --- */
   iframe { border-radius: 12px; background: #ffffff; }
 
+  /* --- sous-onglets : mêmes codes que les tuiles d'entrée, en compact ---
+     Les onglets natifs de Streamlit sont un soulignement discret ; à dix
+     entrées, on ne voit plus lesquelles sont cliquables. On leur donne la
+     forme des tuiles principales — bordure, relief, sélection pleine — pour
+     qu'un sous-onglet se lise comme une navigation et non comme un titre. */
+  .stTabs [data-baseweb="tab-list"] {
+    gap: 8px; flex-wrap: wrap; border-bottom: none; margin-bottom: 6px;
+  }
+  .stTabs [data-baseweb="tab-list"] button[data-baseweb="tab"] {
+    background: var(--carte); border: 1.5px solid var(--bord);
+    border-radius: 12px; padding: 9px 16px; height: auto;
+    box-shadow: 0 1px 2px rgba(16,23,40,.04);
+    transition: transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .16s ease,
+                background .16s ease, border-color .16s ease;
+  }
+  .stTabs [data-baseweb="tab-list"] button[data-baseweb="tab"] p {
+    font-family: "Outfit", sans-serif !important;
+    font-size: 15px !important; font-weight: 600 !important;
+    color: var(--encre-2) !important; margin: 0;
+  }
+  .stTabs [data-baseweb="tab-list"] button[data-baseweb="tab"]:hover {
+    transform: translateY(-2px); border-color: #b9d3ea; background: #f4f8fc;
+    box-shadow: 0 2px 5px rgba(16,23,40,.07), 0 10px 22px rgba(16,23,40,.09);
+  }
+  .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] {
+    background: linear-gradient(135deg, #1f7ac4 0%, #15588f 100%);
+    border-color: transparent;
+    box-shadow: 0 2px 6px rgba(21,88,143,.26), 0 10px 22px rgba(21,88,143,.20);
+  }
+  .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] p {
+    color: #ffffff !important;
+  }
+  .stTabs [data-baseweb="tab-highlight"],
+  .stTabs [data-baseweb="tab-border"] { display: none; }
+
   /* --- les cartouches de chiffres se soulèvent aussi --- */
   .cartouche { transition: box-shadow .2s ease, transform .2s ease,
                            border-color .2s ease; }
@@ -393,7 +428,7 @@ st.markdown("""
 # ne plante pas — elle affiche le nom des clés manquantes au milieu du texte, ce
 # qui est beaucoup plus déroutant qu'une erreur franche. On préfère le dire.
 # ----------------------------------------------------------------------
-I18N_ATTENDU = "2026-08-16-onglets"
+I18N_ATTENDU = "2026-08-16-indices"
 if getattr(i18n, "VERSION", None) != I18N_ATTENDU:
     st.error(
         f"**i18n.py est dans une version qui ne correspond pas au reste de "

@@ -63,8 +63,9 @@ def _trouver(nom):
 def _charger():
     chemins = {n: _trouver(n)
                for n in ("foret.json", "resultats.json", "pluie.json",
-                         "grille_deforestation.json", "pluie_saison.json")}
-    foret = res = pluie = grille = saison = None
+                         "grille_deforestation.json", "pluie_saison.json",
+                         "indices_vegetation.json")}
+    foret = res = pluie = grille = saison = indices = None
     if chemins["foret.json"]:
         with open(chemins["foret.json"], encoding="utf-8") as f:
             foret = json.load(f)
@@ -80,7 +81,10 @@ def _charger():
     if chemins["pluie_saison.json"]:
         with open(chemins["pluie_saison.json"], encoding="utf-8") as f:
             saison = json.load(f)
-    return foret, res, pluie, grille, saison
+    if chemins["indices_vegetation.json"]:
+        with open(chemins["indices_vegetation.json"], encoding="utf-8") as f:
+            indices = json.load(f)
+    return foret, res, pluie, grille, saison, indices
 
 
 def _bulle(cle):
@@ -1003,6 +1007,229 @@ def _tableau_recap(foret, pluie, saison):
     return ''.join(out)
 
 
+# --------------------------------------------- les quatre indices Sentinel
+# Un onglet par indicateur, dans l'ordre où ils se lisent : la vigueur du
+# couvert d'abord, l'eau qu'il contient ensuite, puis l'eau libre, puis ce
+# qu'elle charrie. C'est la chaîne amont-aval de l'érosion.
+INDICES = [
+    ("ndvi", 33, "ndvi", "", "#2c6b34"),
+    ("ndmi", 34, "ndmi", "", "#1d6f8e"),
+    ("ndwi", 35, "ndwi", "", "#2a78d6"),
+    ("ndti", 63, "ndti_eau", "", "#a86c2e"),
+]
+
+
+def _encart(cle_titre, corps, teinte="#cfe2f3"):
+    return (f'<div style="border-left:3px solid {teinte};padding:2px 0 2px 14px;'
+            f'margin:0 0 14px;max-width:92ch">'
+            f'<div style="font-size:12px;letter-spacing:.06em;'
+            f'text-transform:uppercase;color:#1a6bb0;font-weight:700">'
+            f'{_e(T(cle_titre))}</div>'
+            f'<div style="font-size:15.5px;color:#3c4761;line-height:1.6;'
+            f'margin-top:3px">{corps}</div></div>')
+
+
+def _onglet_indice(cle, ligne, champ, coul, res, indices, focus):
+    """Un indicateur Sentinel-2 : ce qu'il mesure, comment le lire, ses pièges.
+
+    L'interprétation est écrite avant les chiffres et non après. Un NDMI de
+    0,18 ne dit rien à personne ; savoir qu'il chute avant le NDVI, et donc
+    qu'il avertit, change ce qu'on regarde ensuite.
+    """
+    entree = next((r for r in (res or []) if r["ligne"] == ligne), None)
+    with st.container(border=True):
+        st.markdown(
+            f'<div class="titre-bloc vert">{T("e_i_" + cle + "_titre")}</div>',
+            unsafe_allow_html=True)
+        st.markdown(
+            f'<p style="font-size:12px;letter-spacing:.06em;'
+            f'text-transform:uppercase;color:#8a93a5;font-weight:700;'
+            f'margin:2px 0 12px">{T("e_i_ligne", n=ligne)}</p>',
+            unsafe_allow_html=True)
+
+        st.markdown(_encart("e_i_quoi", T("e_i_" + cle + "_quoi")),
+                    unsafe_allow_html=True)
+        st.markdown(_encart("e_i_lire", T("e_i_" + cle + "_lire"), coul),
+                    unsafe_allow_html=True)
+        st.markdown(_encart("e_i_gaffe", T("e_i_" + cle + "_gaffe"), "#f0d9a8"),
+                    unsafe_allow_html=True)
+
+        donnees = (indices or {}).get("sections") if indices else None
+        if not donnees:
+            st.markdown(
+                f'<div style="background:#fdf8ee;border:1px solid #f0e2c4;'
+                f'border-radius:12px;padding:14px 17px;margin:4px 0 0;'
+                f'max-width:92ch">'
+                f'<div style="font-size:12px;letter-spacing:.06em;'
+                f'text-transform:uppercase;color:#a8690a;font-weight:700">'
+                f'{_e(T("e_i_attente_titre"))}</div>'
+                f'<p style="font-size:15.5px;color:#3c4761;line-height:1.6;'
+                f'margin:4px 0 8px">{T("e_i_attente")}</p>'
+                f'<p style="font-size:14px;color:#6b7590;line-height:1.7;'
+                f'margin:0">{T("e_i_attente_etapes")}</p></div>',
+                unsafe_allow_html=True)
+            if entree and entree.get("echelle"):
+                st.caption(f'{T("e_i_echelle")} — {entree["echelle"]}')
+            st.caption(T("e_i_fenetre"))
+            return
+
+        _rendu_indice(cle, champ, coul, entree, indices, focus)
+
+
+def _rendu_indice(cle, champ, coul, entree, indices, focus):
+    """Chiffres, série et tableau, une fois l'export disponible."""
+    secs = indices["sections"]
+    annees = sorted(indices["periode_annees"], key=int)
+    if focus == ENSEMBLE or focus not in secs:
+        serie = _moyenne_series(secs, "serie_" + champ)
+        st.caption(T("e_vue_ensemble_note"))
+    else:
+        serie = secs[focus]["serie_" + champ]
+
+    ref = indices["reference"]
+    dispo = [a for a in annees if str(a) in serie]
+    if not dispo:
+        st.info(T("e_absent"))
+        return
+    val_ref = [serie[str(a)] for a in dispo if a <= ref]
+    val_rec = [serie[str(a)] for a in dispo if a > ref]
+    m_ref = sum(val_ref) / len(val_ref) if val_ref else None
+    m_rec = sum(val_rec) / len(val_rec) if val_rec else None
+    variation = (100.0 * (m_rec - m_ref) / abs(m_ref)
+                 if m_ref not in (None, 0) and m_rec is not None else None)
+
+    c1, c2, c3 = st.columns(3)
+    for col, lib, val, sous in [
+            (c1, T("e_i_ref"), _fmt(m_ref, 3) if m_ref is not None else "—",
+             T("e_i_ref_sous", a=dispo[0], b=ref)),
+            (c2, T("e_i_recent"), _fmt(m_rec, 3) if m_rec is not None else "—",
+             T("e_i_recent_sous", a=ref + 1, b=dispo[-1])),
+            (c3, T("e_i_variation"),
+             (f"{'+' if variation and variation > 0 else ''}"
+              f"{_fmt(variation, 1)} %") if variation is not None else "—",
+             T("e_i_variation_sous"))]:
+        with col:
+            st.markdown(map_render.cartouche_html(lib, val, "", sous,
+                                                  couleur=coul),
+                        unsafe_allow_html=True)
+
+    svg = _serie_indice_svg(serie, m_ref, coul)
+    components.html(
+        '<div style="background:#ffffff;font-family:system-ui,-apple-system,'
+        "'Segoe UI',sans-serif\">" + svg + "</div>",
+        height=235, scrolling=False)
+    st.caption(T("e_i_serie_note"))
+    st.markdown(_tableau_indice(indices, champ, ref), unsafe_allow_html=True)
+    if entree and entree.get("echelle"):
+        st.caption(f'{T("e_i_echelle")} — {entree["echelle"]}')
+
+
+def _serie_indice_svg(serie, reference, couleur, largeur=1040):
+    """Série annuelle d'un indice, avec la moyenne de référence en pointillés.
+
+    Une seule teinte : il n'y a qu'une grandeur, et elle n'a pas de « bon » ni
+    de « mauvais » côté absolu — c'est l'écart à la référence qui compte, et il
+    est tracé, pas colorié.
+    """
+    annees = sorted(serie, key=int)
+    vals = [serie[a] for a in annees]
+    vmin, vmax = min(vals + [reference]), max(vals + [reference])
+    marge = (vmax - vmin) * 0.18 or 0.05
+    vmin, vmax = vmin - marge, vmax + marge
+    H, TOP, BAS, GAUCHE = 220, 22, 32, 62
+    plot_h = H - TOP - BAS
+    pas = (largeur - GAUCHE - 16) / max(len(annees), 1)
+    barre = pas * 0.5
+
+    def y_de(v):
+        return TOP + plot_h * (1 - (v - vmin) / (vmax - vmin))
+
+    parts = []
+    for frac in (0, 0.25, 0.5, 0.75, 1.0):
+        y = TOP + plot_h * (1 - frac)
+        parts.append(f'<line x1="{GAUCHE}" y1="{y:.1f}" x2="{largeur - 16}" '
+                     f'y2="{y:.1f}" stroke="#eef2f7" stroke-width="1"/>')
+        parts.append(f'<text class="ig" x="{GAUCHE - 8}" y="{y + 4:.1f}" '
+                     f'text-anchor="end">'
+                     f'{vmin + (vmax - vmin) * frac:.2f}</text>')
+
+    for i, (a, v) in enumerate(zip(annees, vals)):
+        x = GAUCHE + i * pas + (pas - barre) / 2
+        y = y_de(v)
+        parts.append(
+            f'<g><title>{a} — {v:.3f}</title><rect x="{x:.1f}" y="{y:.1f}" '
+            f'width="{barre:.1f}" height="{max(y_de(vmin) - y, 1):.1f}" '
+            f'rx="2" fill="{couleur}"/></g>')
+        parts.append(f'<text class="ia" x="{x + barre / 2:.1f}" y="{H - 12}" '
+                     f'text-anchor="middle">{a}</text>')
+
+    if reference is not None:
+        yr = y_de(reference)
+        parts.append(f'<line x1="{GAUCHE}" y1="{yr:.1f}" x2="{largeur - 16}" '
+                     f'y2="{yr:.1f}" stroke="#101728" stroke-width="1.5" '
+                     f'stroke-dasharray="5 4"/>')
+        parts.append(f'<text class="in" x="{largeur - 18}" y="{yr - 7:.1f}" '
+                     f'text-anchor="end">'
+                     f'{_e(T("e_i_ref_ligne", n=reference))}</text>')
+
+    return f"""<svg viewBox="0 0 {largeur} {H}" width="100%"
+     style="max-width:{largeur}px;display:block" role="img">
+  <style>
+    .ig{{font:11px system-ui,-apple-system,sans-serif;fill:#898781;
+        font-variant-numeric:tabular-nums}}
+    .ia{{font:11.5px system-ui,-apple-system,sans-serif;fill:#6b7590;
+        font-variant-numeric:tabular-nums}}
+    .in{{font:700 12px system-ui,-apple-system,sans-serif;fill:#101728;
+        font-variant-numeric:tabular-nums}}
+  </style>
+  {''.join(parts)}
+</svg>"""
+
+
+def _tableau_indice(indices, champ, ref):
+    """Les dix sections sur un indice : référence, récent, variation."""
+    entetes = [T("e_sc_section"), T("e_i_ref"), T("e_i_recent"),
+               T("e_i_variation"), T("e_i_eau")]
+    out = ['<div style="overflow-x:auto"><table style="width:100%;'
+           'border-collapse:collapse;font-size:14.5px">']
+    out.append('<tr>' + ''.join(
+        f'<th style="text-align:{"left" if i == 0 else "right"};'
+        f'padding:9px 10px;border-bottom:2px solid #e6ecf4;font-size:11.5px;'
+        f'letter-spacing:.05em;text-transform:uppercase;color:#6b7590;'
+        f'font-weight:700">{_e(h)}</th>' for i, h in enumerate(entetes))
+        + '</tr>')
+    C = 'padding:9px 10px;border-bottom:1px solid #f0f4f9;text-align:right;' \
+        'font-variant-numeric:tabular-nums'
+    calcul = []
+    for sec, d in indices["sections"].items():
+        serie = d.get("serie_" + champ, {})
+        av = [v for a, v in serie.items() if int(a) <= ref and v is not None]
+        ap = [v for a, v in serie.items() if int(a) > ref and v is not None]
+        if not av or not ap:
+            calcul.append((sec, None, None, None, d.get("frac_eau_moy")))
+            continue
+        m_a, m_b = sum(av) / len(av), sum(ap) / len(ap)
+        var = 100.0 * (m_b - m_a) / abs(m_a) if m_a else None
+        calcul.append((sec, m_a, m_b, var, d.get("frac_eau_moy")))
+    calcul.sort(key=lambda t: (t[3] is None, t[3]))
+    for sec, m_a, m_b, var, eau in calcul:
+        coul = ("#b4451f" if var is not None and var <= -15
+                else "#c98a2e" if var is not None and var < -5 else "#2a6b3f")
+        out.append(
+            f'<tr><td style="padding:9px 10px;border-bottom:1px solid #f0f4f9">'
+            f'{_e(sec)}</td>'
+            f'<td style="{C};color:#6b7590">'
+            f'{_fmt(m_a, 3) if m_a is not None else "—"}</td>'
+            f'<td style="{C}">{_fmt(m_b, 3) if m_b is not None else "—"}</td>'
+            f'<td style="{C};color:{coul};font-weight:700">'
+            f'{(("+" if var > 0 else "") + _fmt(var, 1) + " %") if var is not None else "—"}</td>'
+            f'<td style="{C};color:#8a93a5">'
+            f'{_fmt(100 * eau, 2) + " %" if eau is not None else "—"}</td>'
+            f'</tr>')
+    out.append('</table></div>')
+    return ''.join(out)
+
+
 def _onglet_lacunes(res):
     manquants = {r["ligne"]: r for r in res
                  if r["calculable"] == "non"
@@ -1035,7 +1262,7 @@ def _onglet_lacunes(res):
 
 
 def render():
-    foret, res, pluie, grille, saison = _charger()
+    foret, res, pluie, grille, saison, indices = _charger()
     st.markdown(_styles(), unsafe_allow_html=True)
 
     col_logo, col_titre = st.columns([1, 6])
@@ -1078,8 +1305,14 @@ def render():
             f'margin:30px 0 0">{T("e_focus_aide")}</p>',
             unsafe_allow_html=True)
 
-    onglets = st.tabs([T("e_o_foret"), T("e_o_defor"), T("e_o_pluie"),
-                       T("e_o_secheresse"), T("e_o_fiche"), T("e_o_lacunes")])
+    # Un sous-onglet par indicateur, dans l'ordre de la chaîne physique :
+    # le couvert, où il a disparu, ce qui reste vert, l'eau qu'il contient,
+    # l'eau libre, ce qu'elle charrie, la pluie qui alimente tout cela.
+    onglets = st.tabs(
+        [T("e_o_foret"), T("e_o_defor")]
+        + [T("e_o_" + cle) for cle, *_ in INDICES]
+        + [T("e_o_pluie"), T("e_o_secheresse"), T("e_o_fiche"),
+           T("e_o_lacunes")])
 
     with onglets[0]:
         _onglet_foret(foret, focus)
@@ -1090,22 +1323,27 @@ def render():
         else:
             st.info(T("e_absent"))
 
-    with onglets[2]:
+    for i, (cle, ligne, champ, _u, coul) in enumerate(INDICES):
+        with onglets[2 + i]:
+            _onglet_indice(cle, ligne, champ, coul, res, indices, focus)
+
+    n = 2 + len(INDICES)
+    with onglets[n]:
         if pluie:
             _bloc_pluie(pluie, focus)
         else:
             st.info(T("e_absent"))
 
-    with onglets[3]:
+    with onglets[n + 1]:
         if saison:
             _bloc_saison(saison, focus)
         else:
             st.info(T("e_absent"))
 
-    with onglets[4]:
+    with onglets[n + 2]:
         _fiche_section(foret, pluie, saison, grille, res, focus)
 
-    with onglets[5]:
+    with onglets[n + 3]:
         if res:
             _onglet_lacunes(res)
 

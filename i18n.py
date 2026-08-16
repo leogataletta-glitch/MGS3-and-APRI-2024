@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-16-onglets"
+VERSION = "2026-08-16-indices"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -789,6 +789,198 @@ DICO = {
     "e_fr_pluie": {"en": "Normal rainfall", "fr": "Pluie normale"},
     "e_fr_campagne": {"en": "Campaign", "fr": "Campagne"},
     "e_fr_j50": {"en": "Days ≥ 50 mm", "fr": "Jours ≥ 50 mm"},
+
+    # --- les quatre indices Sentinel-2 : nom, lecture, précaution --------
+    "e_o_ndvi": {"en": "NDVI", "fr": "NDVI"},
+    "e_o_ndmi": {"en": "NDMI", "fr": "NDMI"},
+    "e_o_ndwi": {"en": "NDWI", "fr": "NDWI"},
+    "e_o_ndti": {"en": "NDTI", "fr": "NDTI"},
+
+    "e_i_ndvi_titre": {"en": "Dry-season vegetation stability — NDVI",
+                       "fr": "Stabilité de la végétation en saison sèche — NDVI"},
+    "e_i_ndvi_quoi": {
+        "en": "Normalised difference between near-infrared and red. Living "
+              "vegetation reflects near-infrared strongly and absorbs red; the "
+              "gap between the two measures how much active green there is. "
+              "Bare soil sits around 0.15, sparse grass 0.2 to 0.4, closed "
+              "forest 0.7 and above.",
+        "fr": "Différence normalisée entre le proche infrarouge et le rouge. "
+              "La végétation vivante réfléchit fortement le proche infrarouge "
+              "et absorbe le rouge ; l'écart entre les deux mesure la quantité "
+              "de vert actif. Un sol nu tourne autour de 0,15, une herbe rase "
+              "de 0,2 à 0,4, une forêt fermée 0,7 et au-delà."},
+    "e_i_ndvi_lire": {
+        "en": "In January-March, annual crops have been harvested. What stays "
+              "green is what holds without rain: trees, hedges, irrigated "
+              "plots. A dry-season NDVI is therefore not a measure of "
+              "agricultural wealth but of the territory's permanent green "
+              "infrastructure — the part that shades the soil, holds the slope "
+              "and survives a failed campaign.",
+        "fr": "En janvier-mars, les cultures annuelles sont récoltées. Ce qui "
+              "reste vert est ce qui tient sans pluie : arbres, haies, "
+              "parcelles irriguées. Un NDVI de saison sèche ne mesure donc pas "
+              "la richesse agricole mais l'infrastructure verte permanente du "
+              "territoire — celle qui ombrage le sol, tient la pente et "
+              "survit à une campagne ratée."},
+    "e_i_ndvi_gaffe": {
+        "en": "The indicator scores the CHANGE, not the level: a section that "
+              "has always been dry is not penalised, one that has lost vigour "
+              "is. Careful with saturation — above about 0.8 the NDVI stops "
+              "distinguishing between a dense canopy and a very dense one.",
+        "fr": "L'indicateur score la VARIATION, pas le niveau : une section "
+              "sèche depuis toujours n'est pas pénalisée, une section qui a "
+              "perdu sa vigueur l'est. Attention à la saturation — au-delà de "
+              "0,8 environ, le NDVI ne distingue plus un couvert dense d'un "
+              "couvert très dense."},
+
+    "e_i_ndmi_titre": {"en": "Dry-season vegetation and soil moisture — NDMI",
+                       "fr": "Humidité de la végétation et des sols — NDMI"},
+    "e_i_ndmi_quoi": {
+        "en": "Normalised difference between near-infrared and short-wave "
+              "infrared. Water inside leaves absorbs short-wave infrared "
+              "strongly, so the gap tracks water content rather than greenness.",
+        "fr": "Différence normalisée entre le proche infrarouge et le moyen "
+              "infrarouge. L'eau contenue dans les feuilles absorbe fortement "
+              "le moyen infrarouge : l'écart suit donc la teneur en eau et non "
+              "la verdeur."},
+    "e_i_ndmi_lire": {
+        "en": "This is the most useful of the four, because it moves FIRST. A "
+              "plant closes its stomata and loses water content well before it "
+              "loses its leaves. An NDMI falling while the NDVI holds steady "
+              "means the stress has begun and the canopy has not yet paid for "
+              "it — a warning, not yet a loss. It is the satellite equivalent "
+              "of a field that still looks green and is already thirsty.",
+        "fr": "C'est le plus utile des quatre, parce qu'il bouge EN PREMIER. "
+              "Une plante ferme ses stomates et perd sa teneur en eau bien "
+              "avant de perdre ses feuilles. Un NDMI qui baisse pendant qu'un "
+              "NDVI tient signifie que le stress a commencé et que le couvert "
+              "ne l'a pas encore payé — un avertissement, pas encore une "
+              "perte. C'est l'équivalent satellitaire d'un champ qui paraît "
+              "encore vert et qui a déjà soif."},
+    "e_i_ndmi_gaffe": {
+        "en": "Read it against the rainfall series: an NDMI falling in a dry "
+              "year says the season, an NDMI falling across several normal "
+              "years says the soil. Only the second is a resilience problem.",
+        "fr": "À lire contre la série pluviométrique : un NDMI qui baisse une "
+              "année sèche dit la saison, un NDMI qui baisse sur plusieurs "
+              "années normales dit le sol. Seul le second est un problème de "
+              "résilience."},
+
+    "e_i_ndwi_titre": {"en": "Dry-season surface water stability — NDWI",
+                       "fr": "Stabilité des eaux de surface en saison sèche — NDWI"},
+    "e_i_ndwi_quoi": {
+        "en": "Normalised difference between green and near-infrared. Open "
+              "water absorbs near-infrared almost completely, so the index "
+              "turns positive over water and negative over land.",
+        "fr": "Différence normalisée entre le vert et le proche infrarouge. "
+              "L'eau libre absorbe presque tout le proche infrarouge : "
+              "l'indice devient donc positif sur l'eau et négatif sur la "
+              "terre."},
+    "e_i_ndwi_lire": {
+        "en": "In dry season it shows what water persists — springs, ponds, "
+              "permanent watercourses. That matters directly here: 52 % of "
+              "households have no irrigation source, so what they draw on in "
+              "March is exactly what this index sees.",
+        "fr": "En saison sèche, il montre l'eau qui persiste — sources, mares, "
+              "cours d'eau permanents. Cela compte directement ici : 52 % des "
+              "ménages n'ont aucune source d'irrigation, et ce qu'ils puisent "
+              "en mars est exactement ce que cet indice voit."},
+    "e_i_ndwi_gaffe": {
+        "en": "At 20 m resolution a stream narrower than 20 m is not detected. "
+              "An absence of water pixels does not mean an absence of water — "
+              "it means an absence of water wide enough to be seen. This is "
+              "why the water fraction is shown alongside: without it, one "
+              "cannot tell a dry section from an unresolvable one.",
+        "fr": "À 20 m de résolution, un cours d'eau plus étroit que 20 m n'est "
+              "pas détecté. Une absence de pixels d'eau ne signifie pas une "
+              "absence d'eau — elle signifie une absence d'eau assez large "
+              "pour être vue. C'est pourquoi la fraction d'eau est affichée à "
+              "côté : sans elle, on ne distingue pas une section sèche d'une "
+              "section trop fine pour être résolue."},
+
+    "e_i_ndti_titre": {"en": "Water turbidity — NDTI",
+                       "fr": "Turbidité de l'eau — NDTI"},
+    "e_i_ndti_quoi": {
+        "en": "Normalised difference between red and green, computed over "
+              "water pixels only. Suspended sediment scatters red light, so "
+              "the redder the water column, the more soil it carries.",
+        "fr": "Différence normalisée entre le rouge et le vert, calculée "
+              "uniquement sur les pixels d'eau. Les sédiments en suspension "
+              "diffusent le rouge : plus la colonne d'eau tire vers le rouge, "
+              "plus elle charrie de terre."},
+    "e_i_ndti_lire": {
+        "en": "This is the downstream trace of what happens upstream. "
+              "Deforestation strips the slope, 50 mm rains carry it off, and "
+              "the soil ends up in the water. Rising turbidity is erosion "
+              "arriving where it can be measured. It is the only indicator "
+              "here that closes the chain between forest loss, extreme rain "
+              "and a tangible cost.",
+        "fr": "C'est la trace en aval de ce qui se passe en amont. La "
+              "déforestation dénude la pente, les pluies à 50 mm l'emportent, "
+              "et la terre finit dans l'eau. Une turbidité qui monte, c'est "
+              "l'érosion qui arrive là où on peut la mesurer. C'est le seul "
+              "indicateur d'ici qui ferme la chaîne entre perte de forêt, "
+              "pluie extrême et coût tangible."},
+    "e_i_ndti_gaffe": {
+        "en": "Only meaningful where there is enough water. Over bare soil "
+              "« red above green » says laterite, not turbidity — which is why "
+              "the index is masked outside water pixels. A section with almost "
+              "no water surface gets a figure computed on a handful of pixels: "
+              "check the water fraction before reading it.",
+        "fr": "Il n'a de sens que là où il y a assez d'eau. Sur un sol nu, "
+              "« rouge au-dessus du vert » dit la latérite, pas la turbidité — "
+              "d'où le masquage hors des pixels d'eau. Une section presque "
+              "sans surface en eau reçoit un chiffre calculé sur une poignée "
+              "de pixels : regarde la fraction d'eau avant de le lire."},
+
+    "e_i_quoi": {"en": "What it measures", "fr": "Ce que ça mesure"},
+    "e_i_lire": {"en": "How to read it here", "fr": "Comment le lire ici"},
+    "e_i_gaffe": {"en": "What to watch out for", "fr": "Ce dont il faut se méfier"},
+    "e_i_ligne": {"en": "Index line {n}", "fr": "Ligne {n} de l'indice"},
+    "e_i_echelle": {"en": "Scoring scale", "fr": "Barème de notation"},
+    "e_i_attente_titre": {"en": "Not yet computed",
+                          "fr": "Pas encore calculé"},
+    "e_i_attente": {
+        "en": "This indicator needs one Earth Engine export that has not been "
+              "run yet. Everything else is ready: the script covers the four "
+              "indices at once, so a single run fills all four tabs.",
+        "fr": "Cet indicateur attend un export Earth Engine qui n'a pas encore "
+              "été lancé. Tout le reste est prêt : le script couvre les quatre "
+              "indices d'un coup, un seul lancement remplit donc les quatre "
+              "onglets."},
+    "e_i_attente_etapes": {
+        "en": "Open <code>satellite/gee_indices_vegetation.js</code> · paste it "
+              "into code.earthengine.google.com · Run · Tasks tab · Run on "
+              "<code>IRLA_indices_vegetation</code> · send back "
+              "<code>indices_vegetation_sections.csv</code>.",
+        "fr": "Ouvrir <code>satellite/gee_indices_vegetation.js</code> · le "
+              "coller dans code.earthengine.google.com · Run · onglet Tasks · "
+              "Run sur <code>IRLA_indices_vegetation</code> · renvoyer "
+              "<code>indices_vegetation_sections.csv</code>."},
+    "e_i_fenetre": {
+        "en": "Window: January to March, the driest quarter of the year — "
+              "computed from the 45 CHIRPS years, not assumed. 120 mm in "
+              "total, against 500 mm for August-October.",
+        "fr": "Fenêtre : janvier à mars, le trimestre le plus sec de l'année — "
+              "calculé sur les 45 ans de CHIRPS, non supposé. 120 mm au total, "
+              "contre 500 mm pour août-octobre."},
+
+    "e_i_ref": {"en": "Reference", "fr": "Référence"},
+    "e_i_ref_sous": {"en": "{a}-{b} mean", "fr": "moyenne {a}-{b}"},
+    "e_i_recent": {"en": "Recent", "fr": "Récent"},
+    "e_i_recent_sous": {"en": "{a}-{b} mean", "fr": "moyenne {a}-{b}"},
+    "e_i_variation": {"en": "Change", "fr": "Variation"},
+    "e_i_variation_sous": {"en": "what the scale reads",
+                           "fr": "ce que lit le barème"},
+    "e_i_ref_ligne": {"en": "reference {n:.3f}", "fr": "référence {n:.3f}"},
+    "e_i_eau": {"en": "Water surface", "fr": "Surface en eau"},
+    "e_i_serie_note": {
+        "en": "One dry season per bar, January to March. The dashed line is "
+              "the reference mean — the indicator scores the gap to it, not "
+              "the level.",
+        "fr": "Une saison sèche par barre, de janvier à mars. Le trait "
+              "pointillé est la moyenne de référence — l'indicateur score "
+              "l'écart à cette ligne, pas le niveau."},
 
     "e_bloc5": {"en": "What the environmental dimension still lacks",
                 "fr": "Ce qui manque encore à la dimension environnementale"},
