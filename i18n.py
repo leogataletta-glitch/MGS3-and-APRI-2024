@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-16-grille"
+VERSION = "2026-08-16-saison"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -543,20 +543,17 @@ DICO = {
     "e_bloc_pluie": {"en": "6 · Rainfall, 1981 to 2025",
                      "fr": "6 · Les précipitations, de 1981 à 2025"},
     "e_bloc_pluie_texte": {
-        "en": "Four indicators of the index rest on this series: the "
-              "precipitation condition index, anomalous aridity, the ratio to "
-              "normal and the standardized precipitation index. All four are "
-              "computed on the mean of the last {f} years up to {a}, compared "
-              "with the 1991-2020 normal — a single year would swing four "
-              "scores at once for reasons that say nothing about the "
-              "territory's capacity.",
-        "fr": "Quatre indicateurs de l'indice reposent sur cette série : "
-              "l'indice de condition pluviométrique, l'aridité anormale, le "
-              "rapport à la normale et l'indice de précipitation standardisé. "
-              "Les quatre sont calculés sur la moyenne des {f} dernières "
-              "années jusqu'à {a}, comparée à la normale 1991-2020 — une année "
-              "seule ferait bouger quatre scores à la fois pour des raisons "
-              "qui ne disent rien de la capacité du territoire."},
+        "en": "The calendar-year total, shown here for context. Over the last "
+              "{f} years up to {a} it sits at 96 % of the 1991-2020 normal: on "
+              "this series the Grand Sud is a normally watered territory. The "
+              "next block shows why that reading is misleading, and why the "
+              "four rainfall indicators of the index are not computed on it.",
+        "fr": "Le cumul de l'année civile, montré ici pour le contexte. Sur "
+              "les {f} dernières années jusqu'à {a}, il est à 96 % de la "
+              "normale 1991-2020 : sur cette série, le Grand Sud est un "
+              "territoire normalement arrosé. Le bloc suivant montre pourquoi "
+              "cette lecture trompe, et pourquoi les quatre indicateurs "
+              "pluviométriques de l'indice ne sont pas calculés dessus."},
     "e_bloc_pluie_note": {
         "en": "Annual rainfall totals in millimetres. Ochre marks years below "
               "the normal, blue years above. CHIRPS has a 5.5 km resolution: "
@@ -595,8 +592,102 @@ DICO = {
     "e_col_choc": {"en": "Of which 2016-18", "fr": "Dont 2016-18"},
     "e_col_chronique": {"en": "Chronic rate", "fr": "Taux chronique"},
 
-    "e_bloc5": {"en": "7 · What the environmental dimension still lacks",
-                "fr": "7 · Ce qui manque encore à la dimension environnementale"},
+    # --- bloc 7 : la campagne agricole ---------------------------------
+    "e_bloc_saison": {"en": "7 · The growing season",
+                      "fr": "7 · La campagne agricole"},
+    "e_bloc_saison_texte": {
+        "en": "The same satellite, the same normal, the same period — and the "
+              "opposite diagnosis. On the calendar year the Grand Sud receives "
+              "96 % of its normal rainfall. On the spring campaign, March to "
+              "May, it receives 83 %. The gap comes from the hurricane season: "
+              "an October storm restores the annual total after the harvest, "
+              "without restoring anything in the fields. This is why the four "
+              "rainfall indicators of the index are computed on the campaign "
+              "and not on the year. It also settles a discrepancy: 48.7 % of "
+              "households name drought as the first cause of falling yields, a "
+              "perception the annual figure appeared to contradict.",
+        "fr": "Le même satellite, la même normale, la même période — et le "
+              "diagnostic inverse. Sur l'année civile, le Grand Sud reçoit "
+              "96 % de sa pluie normale. Sur la campagne de printemps, de mars "
+              "à mai, il en reçoit 83 %. L'écart vient de la saison "
+              "cyclonique : une tempête d'octobre reconstitue le cumul annuel "
+              "après la récolte, sans rien reconstituer dans les champs. C'est "
+              "pourquoi les quatre indicateurs pluviométriques de l'indice "
+              "sont calculés sur la campagne et non sur l'année. Cela tranche "
+              "aussi un désaccord : 48,7 % des ménages citent la sécheresse "
+              "comme première cause de baisse des rendements, une perception "
+              "que le chiffre annuel semblait démentir."},
+    "e_s_normale": {"en": "Normal campaign", "fr": "Campagne normale"},
+    "e_s_normale_sous": {"en": "March-May, {a}-{b}",
+                         "fr": "mars-mai, {a}-{b}"},
+    "e_s_recent": {"en": "Last {f} campaigns", "fr": "{f} dernières campagnes"},
+    "e_s_recent_sous": {"en": "{p} % of normal", "fr": "{p} % de la normale"},
+    "e_s_install": {"en": "Season sets in", "fr": "Installation de la saison"},
+    "e_s_install_sous_tard": {"en": "{n} days later than 1981-2000",
+                              "fr": "{n} jours plus tard qu'en 1981-2000"},
+    "e_s_install_sous_tot": {"en": "{n} days earlier than 1981-2000",
+                             "fr": "{n} jours plus tôt qu'en 1981-2000"},
+    "e_s_install_sous_stable": {"en": "unchanged since 1981-2000",
+                                "fr": "inchangé depuis 1981-2000"},
+    "e_s_extreme": {"en": "Days at 50 mm or more",
+                    "fr": "Jours à 50 mm et plus"},
+    "e_s_extreme_sous": {"en": "per year, against {n} in 1981-2000",
+                         "fr": "par an, contre {n} en 1981-2000"},
+    "e_normale_mam_ligne": {"en": "normal campaign {n:.0f} mm",
+                            "fr": "campagne normale {n:.0f} mm"},
+    "e_bloc_saison_note": {
+        "en": "March-to-May rainfall in millimetres, campaign by campaign. "
+              "Ochre marks campaigns below the normal, blue those above. The "
+              "index reads this series, not the annual one.",
+        "fr": "Pluie de mars à mai en millimètres, campagne par campagne. "
+              "L'ocre marque les campagnes sous la normale, le bleu celles "
+              "au-dessus. C'est cette série que lit l'indice, pas l'annuelle."},
+    "e_sc_section": {"en": "Communal section", "fr": "Section communale"},
+    "e_sc_normale": {"en": "Normal", "fr": "Normale"},
+    "e_sc_recent": {"en": "Recent", "fr": "Récent"},
+    "e_sc_part": {"en": "Share", "fr": "Part"},
+    "e_sc_secs": {"en": "Dry spell, days", "fr": "Séquence sèche, j"},
+    "e_sc_j50": {"en": "Days ≥ 50 mm", "fr": "Jours ≥ 50 mm"},
+    "e_sc_install": {"en": "Sets in", "fr": "Installation"},
+    "e_sc_ratees": {"en": "No clear start", "fr": "Sans départ net"},
+    "e_s_tableau_note": {
+        "en": "Dry spell and extreme-rain columns compare 1981-2000 with "
+              "2006-2025. The last column counts the campaigns in which the "
+              "season never clearly set in — no ten-day period from 1 March "
+              "reaching 25 mm and followed by one reaching 20. That is not "
+              "missing data: it is a campaign sown into uncertainty.",
+        "fr": "Les colonnes des séquences sèches et des pluies extrêmes "
+              "comparent 1981-2000 à 2006-2025. La dernière compte les "
+              "campagnes où la saison ne s'est jamais franchement installée — "
+              "aucune décade à partir du 1er mars n'atteignant 25 mm puis "
+              "suivie d'une décade à 20 mm. Ce n'est pas une donnée "
+              "manquante : c'est une campagne semée dans l'incertitude."},
+    "e_s_methode": {
+        "en": "Three quantities here — dry spells, extreme-rain days and the "
+              "onset date — carry no score and do not enter the index: they "
+              "are absent from the IRLA table, and adding home-made indicators "
+              "would make the index incomparable with other applications of "
+              "the framework. They are descriptive, and that is their value: "
+              "they say what the average hides. The SPI, by contrast, is "
+              "scored — on the worst of the last five campaigns rather than "
+              "their mean, because its published scale only grades drought, "
+              "from −2.0 to −1.0, a range a five-year mean practically never "
+              "reaches. Resilience is measured by the bad year.",
+        "fr": "Trois grandeurs affichées ici — séquences sèches, jours de "
+              "pluie extrême et date d'installation — ne portent aucun score "
+              "et n'entrent pas dans l'indice : elles sont absentes de la "
+              "table IRLA, et y ajouter des indicateurs maison rendrait "
+              "l'indice incomparable avec les autres applications du cadre. "
+              "Elles sont descriptives, et c'est là leur valeur : elles disent "
+              "ce que la moyenne cache. Le SPI, lui, est scoré — sur la pire "
+              "des cinq dernières campagnes plutôt que sur leur moyenne, parce "
+              "que son barème publié ne gradue que la sécheresse, de −2,0 à "
+              "−1,0, domaine qu'une moyenne de cinq ans n'atteint "
+              "pratiquement jamais. La résilience se mesure à la mauvaise "
+              "année."},
+
+    "e_bloc5": {"en": "8 · What the environmental dimension still lacks",
+                "fr": "8 · Ce qui manque encore à la dimension environnementale"},
     "e_bloc5_texte": {
         "en": "{n} environmental indicators remain uncomputed. None is out of "
               "reach: each depends on a dataset that exists and is public. "

@@ -63,8 +63,8 @@ def _trouver(nom):
 def _charger():
     chemins = {n: _trouver(n)
                for n in ("foret.json", "resultats.json", "pluie.json",
-                         "grille_deforestation.json")}
-    foret = res = pluie = grille = None
+                         "grille_deforestation.json", "pluie_saison.json")}
+    foret = res = pluie = grille = saison = None
     if chemins["foret.json"]:
         with open(chemins["foret.json"], encoding="utf-8") as f:
             foret = json.load(f)
@@ -77,7 +77,10 @@ def _charger():
     if chemins["grille_deforestation.json"]:
         with open(chemins["grille_deforestation.json"], encoding="utf-8") as f:
             grille = json.load(f)
-    return foret, res, pluie, grille
+    if chemins["pluie_saison.json"]:
+        with open(chemins["pluie_saison.json"], encoding="utf-8") as f:
+            saison = json.load(f)
+    return foret, res, pluie, grille, saison
 
 
 def _bulle(cle):
@@ -246,7 +249,8 @@ def _bloc_grille(grille, foret):
         st.caption(T("e_bloc_grille_note"))
 
 
-def _serie_pluie_svg(serie, normale, largeur=1040):
+def _serie_pluie_svg(serie, normale, largeur=1040,
+                     cle_normale="e_normale_ligne"):
     """Cumul annuel de pluie, avec la normale tracée en référence.
 
     L'encodage est DIVERGENT autour de la normale — ocre en dessous, bleu
@@ -292,7 +296,7 @@ def _serie_pluie_svg(serie, normale, largeur=1040):
                  f'y2="{yn:.1f}" stroke="#101728" stroke-width="1.5" '
                  f'stroke-dasharray="5 4"/>')
     parts.append(f'<text class="en" x="{largeur - 18}" y="{yn - 7:.1f}" '
-                 f'text-anchor="end">{_e(T("e_normale_ligne", n=normale))}</text>')
+                 f'text-anchor="end">{_e(T(cle_normale, n=normale))}</text>')
 
     return f"""<svg viewBox="0 0 {largeur} {H}" width="100%"
      style="max-width:{largeur}px;display:block" role="img">
@@ -348,6 +352,127 @@ def _bloc_pluie(pluie):
         st.caption(T("e_bloc_pluie_note"))
 
 
+def _tableau_saison(saison):
+    """Les dix sections sur une ligne chacune, comparaisons dans les cellules.
+
+    Séquences sèches et pluies extrêmes sont données en « ancien → récent »
+    plutôt qu'en écart : l'écart seul (« +1,2 jour ») ne dit pas s'il faut le
+    lire comme beaucoup ou comme peu. Deux nombres côte à côte le disent.
+    """
+    ordre = sorted(saison["sections"].items(),
+                   key=lambda kv: kv[1]["ratio_normale"])
+    entetes = [T("e_sc_section"), T("e_sc_normale"), T("e_sc_recent"),
+               T("e_sc_part"), T("e_sc_secs"), T("e_sc_j50"),
+               T("e_sc_install"), T("e_sc_ratees")]
+    out = ['<div style="overflow-x:auto"><table style="width:100%;'
+           'border-collapse:collapse;font-size:14.5px">']
+    out.append('<tr>' + ''.join(
+        f'<th style="text-align:{"left" if i == 0 else "right"};'
+        f'padding:9px 10px;border-bottom:2px solid #e6ecf4;font-size:11.5px;'
+        f'letter-spacing:.05em;text-transform:uppercase;color:#6b7590;'
+        f'font-weight:700">{_e(h)}</th>' for i, h in enumerate(entetes))
+        + '</tr>')
+
+    for sec, d in ordre:
+        part = d["ratio_normale"]
+        # Un seul repère coloré dans la ligne, sur la part à la normale : c'est
+        # elle qui porte le diagnostic. Colorer aussi les séquences sèches et
+        # les pluies fortes ferait trois signaux concurrents par ligne.
+        coul = "#b4451f" if part < 78 else ("#c98a2e" if part < 90 else "#2a6b3f")
+        cells = [
+            f'<td style="padding:9px 10px;border-bottom:1px solid #f0f4f9">'
+            f'{_e(sec)}</td>',
+            f'<td style="padding:9px 10px;border-bottom:1px solid #f0f4f9;'
+            f'text-align:right;font-variant-numeric:tabular-nums;color:#6b7590">'
+            f'{_fmt(d["mam_normale_mm"], 0)} mm</td>',
+            f'<td style="padding:9px 10px;border-bottom:1px solid #f0f4f9;'
+            f'text-align:right;font-variant-numeric:tabular-nums">'
+            f'{_fmt(d["mam_courant_mm"], 0)} mm</td>',
+            f'<td style="padding:9px 10px;border-bottom:1px solid #f0f4f9;'
+            f'text-align:right;font-variant-numeric:tabular-nums;color:{coul};'
+            f'font-weight:700">{_fmt(part, 0)} %</td>',
+            f'<td style="padding:9px 10px;border-bottom:1px solid #f0f4f9;'
+            f'text-align:right;font-variant-numeric:tabular-nums;color:#6b7590">'
+            f'{_fmt(d["secs_mam_ancien"], 1)} <span style="color:#c3c9d4">'
+            f'&rarr;</span> <span style="color:#101728">'
+            f'{_fmt(d["secs_mam_recent"], 1)}</span></td>',
+            f'<td style="padding:9px 10px;border-bottom:1px solid #f0f4f9;'
+            f'text-align:right;font-variant-numeric:tabular-nums;color:#6b7590">'
+            f'{_fmt(d["j50_ancien"], 1)} <span style="color:#c3c9d4">&rarr;</span> '
+            f'<span style="color:#101728">{_fmt(d["j50_recent"], 1)}</span></td>',
+            f'<td style="padding:9px 10px;border-bottom:1px solid #f0f4f9;'
+            f'text-align:right">{_e(d["install_date_recent"] or "—")}</td>',
+            f'<td style="padding:9px 10px;border-bottom:1px solid #f0f4f9;'
+            f'text-align:right;font-variant-numeric:tabular-nums">'
+            f'{d["install_ratees"]} / 45</td>',
+        ]
+        out.append('<tr>' + ''.join(cells) + '</tr>')
+    out.append('</table></div>')
+    return ''.join(out)
+
+
+def _bloc_saison(saison):
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc vert">{T("e_bloc_saison")}</div>',
+                    unsafe_allow_html=True)
+        st.markdown(
+            f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
+            f'margin:4px 0 10px;max-width:92ch">{T("e_bloc_saison_texte")}</p>',
+            unsafe_allow_html=True)
+
+        dispo = [s for s in SECTIONS if s in saison["sections"]]
+        sec = st.selectbox(T("section_communale"), dispo,
+                           key=f"env_saison_{i18n.get_lang()}")
+        d = saison["sections"][sec]
+        norm = saison["normale_periode"]
+
+        dec = d["install_decalage_j"]
+        if dec is None:
+            sous_inst = ""
+        elif abs(dec) < 3:
+            sous_inst = T("e_s_install_sous_stable")
+        elif dec > 0:
+            sous_inst = T("e_s_install_sous_tard", n=_fmt(dec, 0))
+        else:
+            sous_inst = T("e_s_install_sous_tot", n=_fmt(-dec, 0))
+
+        c1, c2, c3, c4 = st.columns(4)
+        for col, lib, val, unite, sous, coul in [
+                (c1, T("e_s_normale"), _fmt(d["mam_normale_mm"], 0), "mm",
+                 T("e_s_normale_sous", a=norm[0], b=norm[1]), "#2a78d6"),
+                (c2, T("e_s_recent", f=saison["fenetre_ans"]),
+                 _fmt(d["mam_courant_mm"], 0), "mm",
+                 T("e_s_recent_sous", p=_fmt(d["ratio_normale"], 0)),
+                 "#b4451f" if d["ratio_normale"] < 90 else "#2a78d6"),
+                (c3, T("e_s_install"), d["install_date_recent"] or "—", "",
+                 sous_inst, "#2a6b3f"),
+                (c4, T("e_s_extreme"), _fmt(d["j50_recent"], 1), "",
+                 T("e_s_extreme_sous", n=_fmt(d["j50_ancien"], 1)),
+                 "#c98a2e")]:
+            with col:
+                st.markdown(
+                    map_render.cartouche_html(lib, val, unite, sous,
+                                              couleur=coul),
+                    unsafe_allow_html=True)
+
+        svg = _serie_pluie_svg(d["serie_mam"], d["mam_normale_mm"],
+                               cle_normale="e_normale_mam_ligne")
+        components.html(
+            '<div style="background:#ffffff;font-family:system-ui,-apple-system,'
+            "'Segoe UI',sans-serif\">" + svg + "</div>",
+            height=245, scrolling=False)
+        st.caption(T("e_bloc_saison_note"))
+
+        st.markdown('<div style="height:14px"></div>', unsafe_allow_html=True)
+        st.markdown(_tableau_saison(saison), unsafe_allow_html=True)
+        st.caption(T("e_s_tableau_note"))
+        st.markdown(
+            f'<div style="border-left:3px solid #cfe2f3;padding:2px 0 2px 14px;'
+            f'margin:14px 0 0;font-size:14px;line-height:1.6;color:#6b7590;'
+            f'max-width:92ch">{T("e_s_methode")}</div>',
+            unsafe_allow_html=True)
+
+
 def _tableau_sections(foret):
     lignes = sorted(foret["sections"].items(),
                     key=lambda kv: kv[1]["taux_annuel_net"])
@@ -392,7 +517,7 @@ def _tableau_sections(foret):
 
 
 def render():
-    foret, res, pluie, grille = _charger()
+    foret, res, pluie, grille, saison = _charger()
     st.markdown(_styles(), unsafe_allow_html=True)
 
     col_logo, col_titre = st.columns([1, 6])
@@ -509,6 +634,9 @@ def render():
 
     if pluie:
         _bloc_pluie(pluie)
+
+    if saison:
+        _bloc_saison(saison)
 
     # -------------------------------------------------- ce qui manque encore
     if res:
