@@ -99,12 +99,32 @@ def expl_indic(r):
     return (r.get("expl_fr") if i18n.get_lang() == "fr" else r.get("expl_en")) or ""
 
 
+def unite_mesure(indic):
+    """Unité et libellé de la mesure brute, selon la source de l'indicateur.
+
+    « 31,9 % des ménages » a du sens pour l'enquête ménage, aucun pour un taux
+    de déboisement annuel ou pour un décompte d'organisations. Se tromper ici
+    ne produit pas une erreur visible, juste une phrase fausse — d'où ce
+    branchement explicite.
+    """
+    if indic is None:
+        return '%', T("r_des_menages")
+    source = indic.get("source")
+    if source == "OCB":
+        if indic.get("unite") == "organisations":
+            return '', T("r_des_organisations_n")
+        return '%', T("r_des_organisations")
+    if source == "satellite":
+        return indic.get("unite") or '%', T("r_unite_satellite")
+    return '%', T("r_des_menages")
+
+
 def _pct(score):
     """Position du score sur l'échelle APRI, en pourcentage (5/10 → 50 %)."""
     return None if score is None else round(score * 10, 1)
 
 
-def _bandeau_scores(entrees, libelle_mesure=None):
+def _bandeau_scores(entrees, libelle_mesure=None, unite='%'):
     """Un cartouche par entrée : la mesure brute en % de ménages quand elle
     existe, puis le score APRI qu'elle produit, et ce score en % de l'échelle.
 
@@ -126,7 +146,7 @@ def _bandeau_scores(entrees, libelle_mesure=None):
                 libelle, score_txt, '', note_score, couleur=coul)
         else:
             html = map_render.cartouche_html(
-                libelle, round(mesure, 1), '%',
+                libelle, round(mesure, 1), unite,
                 libelle_mesure or T("r_des_menages"),
                 score_txt, '', note_score, couleur=coul)
         with col:
@@ -288,7 +308,7 @@ def render():
             'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
             + T("r_sous_titre") + "</p>", unsafe_allow_html=True)
     st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
-    st.caption(T("r_intro", n=len(scorables)))
+    st.caption(T("r_intro", n=len(scorables), t=len(res)))
     st.markdown(
         '<p style="font-size:15px;color:#3c4761;margin:2px 0 0">'
         + map_render.bulle_notion("resilience") + " &nbsp;·&nbsp; "
@@ -387,11 +407,12 @@ def render():
                 pris = [v for v in pourcents.values() if v is not None]
                 return round(sum(pris) / len(pris), 1) if pris else None
 
+            _unite, _libelle_mesure = unite_mesure(indic)
             _bandeau_scores(
                 [(T("r_moyenne"), moyenne, mesure()),
                  (T("r_plus_haut", s=haut), scores[haut], mesure(haut)),
                  (T("r_plus_bas", s=bas), scores[bas], mesure(bas))],
-                libelle_mesure=T("r_des_menages"))
+                libelle_mesure=_libelle_mesure, unite=_unite)
             if indic is not None:
                 st.markdown(
                     '<p style="font-size:15px;color:#3c4761;margin:8px 0 0">'

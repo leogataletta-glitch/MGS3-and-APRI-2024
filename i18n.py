@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-16-saillants-pistes"
+VERSION = "2026-08-16-foret2"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -331,23 +331,25 @@ DICO = {
     "s_choisir_profil": {"en": "Group or communal section",
                          "fr": "Groupe ou section communale"},
     "s_profil_base": {
-        "en": "<strong>{g}</strong> — {n} respondents out of {t}. Green means "
-              "better than the overall average, red means worse; the arrow "
-              "shows the direction of the gap in percentage points, not whether "
-              "it is good news.",
-        "fr": "<strong>{g}</strong> — {n} répondants sur {t}. Le vert indique "
-              "un écart favorable, le rouge un écart défavorable ; la flèche "
-              "donne le sens de l'écart en points de pourcentage, pas s'il "
-              "s'agit d'une bonne nouvelle."},
+        "en": "<strong>{g}</strong> — {n} respondents out of {t}. The chip "
+              "gives the gap to the overall average in percentage points: ▲ "
+              "above, ▼ below, = within two points. Whether a gap is good news "
+              "depends on the wording, so no colour claims to say.",
+        "fr": "<strong>{g}</strong> — {n} répondants sur {t}. La pastille donne "
+              "l'écart à la moyenne d'ensemble en points de pourcentage : ▲ "
+              "au-dessus, ▼ en dessous, = à moins de deux points. Qu'un écart "
+              "soit une bonne nouvelle dépend de l'intitulé : aucune couleur ne "
+              "prétend le dire."},
     "s_profil_lecture": {
-        "en": "The arrow shows the direction of the gap only. On a figure such "
-              "as \"went a whole day without eating\", a higher share is worse; "
-              "on \"holds a financial account\", it is better. Read the wording "
-              "before reading the colour.",
-        "fr": "La flèche ne donne que le sens de l'écart. Sur un chiffre comme "
-              "« ont passé une journée entière sans manger », une part plus "
-              "élevée est plus grave ; sur « dispose d'un compte financier », "
-              "elle est meilleure. Lire l'intitulé avant la couleur."},
+        "en": "On a figure such as \"went a whole day without eating\", a higher "
+              "share is worse; on \"holds a financial account\", it is better. "
+              "The direction of the gap is factual, its meaning is not — that "
+              "reading belongs to you.",
+        "fr": "Sur un chiffre comme « ont passé une journée entière sans "
+              "manger », une part plus élevée est plus grave ; sur « dispose "
+              "d'un compte financier », elle est meilleure. Le sens de l'écart "
+              "est un fait, son interprétation non — cette lecture vous "
+              "revient."},
     "s_profil_vide": {"en": "No figure available for this group.",
                       "fr": "Aucun chiffre disponible pour ce groupe."},
     "s_bloc_auto": {"en": "Automatic list — lowest scores first",
@@ -406,6 +408,12 @@ DICO = {
         "fr": "Chiffres : enquête ménage 2024. Cadrage : note méthodologique "
               "IRLA / APRI. Les pistes elles-mêmes sont des hypothèses "
               "rédigées pour la discussion, validées par personne."},
+
+    "r_des_organisations": {"en": "of organisations", "fr": "des organisations"},
+    "r_des_organisations_n": {"en": "organisations recorded",
+                              "fr": "organisations recensées"},
+    "r_unite_satellite": {"en": "satellite measurement",
+                          "fr": "mesure satellitaire"},
 
     # ------------------------------------------------------------ méthodologie
     "m_titre": {"en": "Survey methodology",
@@ -802,14 +810,16 @@ DICO = {
                      "fr": "IRLA / APRI — Indice de résilience des paysages"},
     "r_intro": {
         "en": "Scores from 0 to 10, obtained by applying the theoretical "
-              "framework's scales to values recomputed from the survey. A high "
-              "score means a more favourable situation. {n} indicators out of 118 "
-              "can be scored from a household questionnaire — see the note at the "
-              "bottom of the page.",
+              "framework's scales to measured values. A high score means a more "
+              "favourable situation. {n} indicators out of {t} are currently "
+              "scored, from the household survey, the community-organisation "
+              "survey and satellite imagery — see the note at the bottom of the "
+              "page.",
         "fr": "Scores de 0 à 10 obtenus en appliquant les barèmes du cadre "
-              "théorique aux valeurs recalculées depuis l'enquête. Un score élevé "
-              "= situation plus favorable. {n} indicateurs sur 118 sont scorables "
-              "depuis un questionnaire ménage — voir la note en bas de page."},
+              "théorique aux valeurs mesurées. Un score élevé = situation plus "
+              "favorable. {n} indicateurs sur {t} sont aujourd'hui scorés, "
+              "depuis l'enquête ménage, l'enquête organisations et l'imagerie "
+              "satellitaire — voir la note en bas de page."},
     "r_sous_pop": {"en": "Sub-population", "fr": "Sous-population"},
     "r_sous_pop_aide": {
         "en": "The score is recomputed on this sub-population within each communal "

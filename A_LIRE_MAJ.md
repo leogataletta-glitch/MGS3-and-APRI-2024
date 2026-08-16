@@ -1,105 +1,93 @@
-# Mise à jour — deux nouveaux onglets : constats saillants et pistes d'action
+# Mise à jour — la couverture forestière entre dans l'indice
 
-## Les 7 fichiers à mettre sur GitHub **dans le même commit**
+## Les 6 fichiers à mettre sur GitHub **dans le même commit**
 
 | Fichier | Où | État |
 |---|---|---|
 | `app.py` | racine | remplacé |
 | `i18n.py` | racine | remplacé |
-| `saillants_page.py` | racine | **nouveau** |
-| `pistes_page.py` | racine | **nouveau** |
-| `ocb_page.py` | racine | remplacé |
-| `data/saillants.json` | `data/` | **nouveau** |
-| `data/pistes.json` | `data/` | **nouveau** |
+| `saillants_page.py` | racine | remplacé |
+| `data/resultats.json` | `data/` | remplacé |
+| `data/ventilation.json` | `data/` | remplacé |
+| `data/saillants.json` | `data/` | remplacé |
 
-> `i18n.py` passe en version `2026-08-16-saillants-pistes`. `app.py` la vérifie
-> au démarrage : si l'un des deux manque, un bandeau rouge le dit.
+> `i18n.py` passe en version `2026-08-16-foret2`.
 
-Le tableau de bord compte désormais **huit onglets**, disposés en deux rangées
-de quatre. La disposition s'adapte toute seule au nombre d'onglets.
-
----
-
-## 1 · Onglet « Constats saillants »
-
-Trois niveaux de lecture, du plus synthétique au plus brut.
-
-**Les quatre chiffres les plus durs**, en tête : participation à la préparation
-aux catastrophes **4,6 %**, accès à l'électricité **17,3 %**, insécurité
-alimentaire sévère **60,4 %**, achèvement du primaire chez les adultes
-**16,5 %**. Ce sont les quatre plus bas scores de l'indice, pas une sélection.
-
-**Huit constats thématiques**, chacun avec un texte qui relie les chiffres entre
-eux : alimentation, énergie, préparation aux catastrophes, eau et assainissement,
-éducation, capital social, économie, agriculture.
-
-Le plus net : **le Grand Sud est frappé par les cyclones et ne s'y prépare pas**.
-95 % n'ont jamais fait d'exercice de simulation, 90 % n'ont reçu aucune
-formation, 83 % ignorent où se mettre à l'abri. Mais l'alerte, elle, fonctionne —
-la moitié a reçu un message radio au dernier cyclone et trois quarts d'entre eux
-l'ont compris et pris en compte. La partie coûteuse marche déjà ; c'est l'aval
-qui manque.
-
-**Une fiche par profil ou par section communale.** Tu choisis « Femmes »,
-« Moins de 25 ans », « Catégorie A » ou une section, et tu obtiens les mêmes
-chiffres avec **l'écart à la moyenne d'ensemble** — parce qu'un chiffre seul ne
-dit rien. Quelques écarts qui ressortent :
-
-- **Catégorie A** : 76,6 % ont sauté un repas, contre 51,4 % en catégorie C.
-- **Montagne** : 72,2 % ont sauté un repas, contre 60,2 % sur le littoral.
-- **Femmes** : 69,4 % ont sauté un repas contre 64,4 % des hommes ; 4,0 % ont
-  participé à une action de préparation contre 5,2 % des hommes.
-
-**La liste automatique**, en bas : tous les indicateurs scorés du plus bas au
-plus haut, plus les réponses qui concernent au moins 60 % des ménages. Aucun tri
-éditorial — si les données changent, la liste suit.
-
-Tous les chiffres sont **recalculés** par `pipeline/compute_saillants.py` depuis
-le cache d'enquête. Aucun n'est écrit en dur, et chaque figure nomme la question
-et les modalités dont elle est tirée.
+Si `resilience_page.py` n'est pas encore poussé depuis la livraison précédente,
+ajoute-le : il porte la correction d'unité (« des ménages » n'a pas de sens sous
+un taux de déboisement).
 
 ---
 
-## 2 · Onglet « Pistes d'action »
+## Le résultat
 
-Cadré comme tu l'as choisi : **hypothèses de travail pour l'atelier, pas
-recommandations**. L'article est explicite et je m'y tiens — les points de levier
-se construisent en atelier participatif à partir de diagrammes causaux, et
-chacun devient une fiche d'action. Un bandeau orange le dit en tête de page.
+L'indicateur **54, « Taux de changement du couvert forestier »**, était vide.
+Il est maintenant calculé, cartographié, et compte dans le score final.
 
-Sept pistes, chacune avec le format de la fiche d'action de l'article : le
-raisonnement, **les chiffres d'enquête qui la motivent** (repris automatiquement
-de l'onglet Constats), **les acteurs** que cela mobiliserait, et **ce qui
-pourrait mal tourner**.
+| Section | Forêt 2000 | Perte | Taux/an | Score | Dont 2016-18 |
+|---|---|---|---|---|---|
+| Barbois | 1 008 ha | 224 ha | −0,99 % | 4 | 92 % |
+| Trichet | 783 ha | 131 ha | −0,72 % | 5 | **99 %** |
+| Dalmette | 609 ha | 98 ha | −0,68 % | 5 | **2 %** |
+| Mouline | 4 776 ha | 663 ha | −0,59 % | 5 | 74 % |
+| Débouchette | 240 ha | 31 ha | −0,52 % | 5 | 60 % |
+| Dumont | 339 ha | 43 ha | −0,51 % | 5 | 40 % |
+| Beaulieu | 521 ha | 54 ha | −0,43 % | 6 | 68 % |
+| Anse à Drick | 749 ha | 68 ha | −0,37 % | 6 | 79 % |
+| Quentin | 648 ha | 25 ha | −0,15 % | 7 | 62 % |
+| Blactote | 1 039 ha | 38 ha | −0,14 % | 7 | **4 %** |
+| **Ensemble** | **10 713 ha** | **1 373 ha** | **−0,54 %** | **5** | **71 %** |
 
-Ce dernier point n'est pas décoratif : l'article avertit qu'une intervention
-isolée déplace la vulnérabilité au lieu de la réduire. Restreindre le charbon
-sans remplacer le revenu retire un moyen de subsistance aux plus pauvres. Des
-exercices de simulation sans abris en état apprennent aux gens à se rendre
-quelque part qui ne peut pas les recevoir.
+## Ce que la donnée dit, et qui n'était pas prévu
 
-La septième piste porte sur l'évaluation elle-même : sur 128 indicateurs, 51
-sont scorés, et les autres manquent pour des raisons réparables — imagerie
-satellitaire jamais calculée, formulaires institutionnels sans identifiant de
-section, dénominateurs de population absents.
+**71 % de la perte forestière de vingt-cinq ans tombe en 2016-2018** — l'ouragan
+Matthew et ses suites. Sur la seule année 2016 : 686 hectares, la moitié du
+total. Hors ce choc, le taux passe de **−0,54 à −0,15 % par an**.
 
----
+Et le contraste entre sections est le vrai résultat :
 
-## 3 · Fiche OCB — le bloc « mission » retiré
+- **Trichet perd 99 % de sa forêt à la tempête** et quasiment rien au
+  défrichement. Son taux chronique est de −0,00 % par an.
+- **Dalmette et Blactote, à peine touchées par Matthew** (2 % et 4 %), perdent du
+  couvert régulièrement, année après année. Dalmette est à −0,66 % par an de
+  déboisement chronique — le plus élevé du lot.
 
-Tu as raison, l'enquête ne demande nulle part sa mission à une organisation. Le
-bloc est supprimé. Les domaines couverts par les partenariats ont rejoint la
-partie « avec qui elle travaille », où ils sont à leur place.
+Ces deux situations ont des scores voisins et n'appellent pas la même réponse.
+L'une relève de la reconstruction post-cyclone, l'autre d'une pression continue
+sur la ressource — celle que le charbon de bois alimente, et que l'enquête
+ménage documente par ailleurs.
 
-**Sur ta question « tu n'as rien d'autre ? »** : j'ai vérifié colonne par
-colonne. Le questionnaire OCB compte 37 colonnes de fond, et la fiche les
-utilise **toutes**. Il n'y a ni date de création, ni nombre de membres, ni
-budget, ni liste d'activités — le formulaire ne les demande pas. Pour des fiches
-plus riches, il faut ajouter ces questions au questionnaire.
+Le taux retenu pour le score est **celui qui inclut le cyclone** : la forêt a
+réellement été perdue. Mais le taux hors choc figure dans `foret.json`, dans la
+note de l'indicateur, et dans le nouveau constat.
 
----
+## Un neuvième constat dans l'onglet Constats saillants
 
-## Rappel
+Il porte ce résultat, avec le contraste Trichet / Dalmette.
 
-Dépôt **privé**, mot de passe dans `APP_PASSWORD`, aucun identifiant direct dans
-les fichiers téléchargeables.
+## Une correction dans la fiche par profil
+
+Le vert et le rouge des pastilles d'écart suggéraient « bonne » et « mauvaise »
+nouvelle. Résultat : un meilleur accès à l'électricité s'affichait en rouge. La
+pastille est désormais **neutre** — elle donne la direction et l'ampleur de
+l'écart, pas son interprétation, que l'application n'est pas en mesure de
+connaître pour toutes les figures.
+
+## Les réserves, à porter dans toute publication
+
+**Hansen mesure une perte de couvert arboré, pas une déforestation au sens
+juridique.** Ce constat le montre de façon spectaculaire : la moitié de la
+« déforestation » du territoire est un ouragan.
+
+**Le gain n'est renseigné que jusqu'en 2012.** Le taux net est donc prudent : la
+repousse post-Matthew, considérable sur un territoire tropical, n'est pas vue.
+C'est la limite la plus gênante ici, et elle joue dans le sens du pessimisme.
+
+**Seuil de couvert retenu : 30 %.** À aligner sur la définition du projet si elle
+existe. Changer ce seuil change tous les chiffres du tableau ci-dessus.
+
+## Prochaine étape possible
+
+**CHIRPS** pour les indices de précipitation (lignes 43, 45, 46) : série
+pluviométrique longue, calcul direct, et aucun arbitrage comparable au seuil de
+couvert. Le même script Earth Engine, adapté.

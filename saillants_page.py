@@ -82,9 +82,35 @@ def _profil_nom(code):
 
 
 def _barres(figures, hauteur_min=0):
-    """Les figures d'un constat, en barres, avec le score APRI en annotation."""
+    """Les figures d'un constat, en barres, avec le score APRI en annotation.
+
+    Un taux annuel négatif — le recul forestier — ne se dessine pas sur une
+    échelle de 0 à 100 %. Ces figures sont affichées en cartouche plutôt qu'en
+    barre : une barre de longueur négative ne veut rien dire.
+    """
+    taux = [f for f in figures if f.get("unite") not in (None, "%")
+            or (f["pct"] is not None and f["pct"] < 0)]
+    barres = [f for f in figures if f not in taux]
+
+    if taux:
+        cols = st.columns(len(taux))
+        for col, f in zip(cols, taux):
+            coul = map_render.RAMP_APRI[
+                map_render.bin_of(f.get("score") or 0,
+                                  map_render.SEUILS_APRI)][0]
+            with col:
+                st.markdown(
+                    map_render.cartouche_html(
+                        _lib(f), round(f["pct"], 2), f.get("unite") or "",
+                        T("s_score_annot", s=f["score"])
+                        if f.get("score") is not None else "",
+                        couleur=coul),
+                    unsafe_allow_html=True)
+    if not barres:
+        return
+
     rows, annot = [], {}
-    for f in figures:
+    for f in barres:
         lab = _lib(f)
         rows.append((lab, f["pct"]))
         if f.get("score") is not None:
@@ -221,10 +247,13 @@ def render():
 
 
 def _tableau_ecarts(lignes):
-    """Chaque chiffre du profil, avec son écart au national en couleur.
+    """Chaque chiffre du profil, avec son écart au national.
 
-    L'écart compte plus que la valeur : 76 % de ménages ayant sauté un repas ne
-    dit rien tant qu'on ignore que la moyenne est à 67 %.
+    La pastille est volontairement NEUTRE. Une première version colorait en vert
+    l'écart négatif et en rouge l'écart positif — ce qui affichait en rouge un
+    meilleur accès à l'électricité. Le sens de lecture dépend de l'intitulé, et
+    l'application ne le connaît pas pour toutes les figures : plutôt qu'un
+    signal faux, la pastille ne donne que la direction et l'ampleur.
     """
     if not lignes:
         return f'<p style="color:#6b7590">{T("s_profil_vide")}</p>'
@@ -232,11 +261,11 @@ def _tableau_ecarts(lignes):
            'gap:0 18px;align-items:center">']
     for lab, v, ecart in lignes:
         if abs(ecart) < 2:
-            coul, fond, fleche = "#6b7590", "#f4f6f9", "="
+            fleche, fond, coul = "=", "#f4f6f9", "#8b93a3"
         elif ecart > 0:
-            coul, fond, fleche = "#a8320f", "#fdeee9", "▲"
+            fleche, fond, coul = "▲", "#eef5fb", "#1a6bb0"
         else:
-            coul, fond, fleche = "#1f6b3d", "#e8f4ec", "▼"
+            fleche, fond, coul = "▼", "#eef5fb", "#1a6bb0"
         out.append(
             f'<div style="font-size:15px;color:#3c4761;padding:8px 0;'
             f'border-bottom:1px solid #eef2f7">{lab}</div>'
