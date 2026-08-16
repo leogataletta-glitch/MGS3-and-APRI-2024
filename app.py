@@ -29,7 +29,9 @@ import i18n
 import map_render
 import methodologie_page
 import ocb_page
+import pistes_page
 import resilience_page
+import saillants_page
 import telechargements_page
 from i18n import T
 
@@ -390,7 +392,7 @@ st.markdown("""
 # ne plante pas — elle affiche le nom des clés manquantes au milieu du texte, ce
 # qui est beaucoup plus déroutant qu'une erreur franche. On préfère le dire.
 # ----------------------------------------------------------------------
-I18N_ATTENDU = "2026-08-15-ocb-fiches3"
+I18N_ATTENDU = "2026-08-16-saillants-pistes"
 if getattr(i18n, "VERSION", None) != I18N_ATTENDU:
     st.error(
         f"**i18n.py est dans une version qui ne correspond pas au reste de "
@@ -424,12 +426,16 @@ i18n.set_lang(_code)
 MODE_QUESTIONS, MODE_RESILIENCE, MODE_CROISEMENT = "questions", "resilience", "croisement"
 MODE_METHODO, MODE_DONNEES = "methodologie", "donnees"
 MODE_OCB = "ocb"
+MODE_SAILLANTS = "saillants"
+MODE_PISTES = "pistes"
 LIBELLE_MODE = {MODE_QUESTIONS: T("mode_questions"),
                 MODE_RESILIENCE: T("mode_resilience"),
                 MODE_CROISEMENT: T("mode_croisement"),
                 MODE_METHODO: T("mode_methodo"),
                 MODE_DONNEES: T("mode_donnees"),
-                MODE_OCB: T("mode_ocb")}
+                MODE_OCB: T("mode_ocb"),
+                MODE_SAILLANTS: T("mode_saillants"),
+                MODE_PISTES: T("mode_pistes")}
 
 _logo, _entete = st.columns([1, 6])
 with _logo:
@@ -465,10 +471,12 @@ def _bascule(mode):
 # sur la seconde : cinq pavés d'affilée deviendraient trop étroits pour que
 # leur intitulé reste lisible.
 _ENTREES = (
+    (MODE_SAILLANTS, T("mode_saillants_sous")),
     (MODE_QUESTIONS, T("mode_questions_sous")),
     (MODE_RESILIENCE, T("mode_resilience_sous")),
     (MODE_CROISEMENT, T("mode_croisement_sous")),
     (MODE_METHODO, T("mode_methodo_sous")),
+    (MODE_PISTES, T("mode_pistes_sous")),
     (MODE_OCB, T("mode_ocb_sous")),
     (MODE_DONNEES, T("mode_donnees_sous")),
 )
@@ -487,14 +495,18 @@ def _pave(col, mode, sous):
             unsafe_allow_html=True)
 
 
-_r1 = st.columns(3, gap="medium")
-for _col, (_mode, _sous) in zip(_r1, _ENTREES[:3]):
-    _pave(_col, _mode, _sous)
-
-st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
-_r2 = st.columns(3, gap="medium")
-for _col, (_mode, _sous) in zip(_r2, _ENTREES[3:]):
-    _pave(_col, _mode, _sous)
+# Les pavés se répartissent par rangées de quatre. Une rangée fixe de trois
+# devenait fausse dès qu'un onglet s'ajoutait ; ici la disposition suit le
+# nombre d'entrées, et la dernière rangée reste alignée sur les précédentes
+# grâce aux colonnes vides.
+_PAR_RANGEE = 4
+for _debut in range(0, len(_ENTREES), _PAR_RANGEE):
+    _rangee = _ENTREES[_debut:_debut + _PAR_RANGEE]
+    _cols = st.columns(_PAR_RANGEE, gap="medium")
+    for _col, (_mode, _sous) in zip(_cols, _rangee):
+        _pave(_col, _mode, _sous)
+    if _debut + _PAR_RANGEE < len(_ENTREES):
+        st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
 app_mode = st.session_state["app_mode"]
 st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
@@ -509,6 +521,14 @@ if app_mode == MODE_CROISEMENT:
 
 if app_mode == MODE_METHODO:
     methodologie_page.render()
+    st.stop()
+
+if app_mode == MODE_SAILLANTS:
+    saillants_page.render()
+    st.stop()
+
+if app_mode == MODE_PISTES:
+    pistes_page.render()
     st.stop()
 
 if app_mode == MODE_OCB:

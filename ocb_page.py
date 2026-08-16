@@ -354,19 +354,6 @@ def _fiche_html(f):
         f'font-size:23px;font-weight:700;color:#101728;line-height:1.25;'
         f'margin-top:3px">{_e(f["nom"])}</div></div>')
 
-    # ---------------------------------------------------- 1. ce qu'elle fait
-    # L'enquête ne demande pas sa mission en toutes lettres. Ce qui s'en
-    # approche le plus, ce sont les domaines couverts par ses partenariats et
-    # les précisions qu'elle a écrites elle-même — c'est présenté comme tel,
-    # sans reconstituer une mission qui n'a pas été déclarée.
-    mission = _colonnes(
-        _ligne(T("o_f_projets"), f.get("projets")),
-        "".join([_ligne(T("o_f_projets_autre"), f.get("projets_autre")),
-                 _ligne(T("o_f_prive"), f.get("prive_detail"))]))
-    bloc_mission = (_titre_partie(T("o_f_p1")) + mission
-                    + f'<p style="font-size:12.5px;color:#8b93a3;margin:-4px 0 0">'
-                      f'{_e(T("o_f_p1_note"))}</p>') if mission else ""
-
     # -------------------------------------------------------- 2. où elle est
     localisation = _colonnes("".join([
         _ligne(T("o_f_localite"), f.get("localite")),
@@ -395,7 +382,10 @@ def _fiche_html(f):
         "".join([_ligne(T("o_f_duree"), f.get("duree")),
                  _ligne(T("o_f_note"), note_txt)]),
         "".join([_ligne(T("o_f_soutien"), _puces(f.get("soutien_detail"))),
-                 _ligne(T("o_f_facteurs"), f.get("facteurs"))]))
+                 _ligne(T("o_f_facteurs"), f.get("facteurs"))]),
+        "".join([_ligne(T("o_f_projets"), f.get("projets")),
+                 _ligne(T("o_f_projets_autre"), f.get("projets_autre")),
+                 _ligne(T("o_f_prive"), f.get("prive_detail"))]))
 
     ACTEURS = ["Autorités communales", "Autorités départementales", "Délégation",
                "Institutions techniques", "Sénateurs/députés", "ONG locales",
@@ -419,5 +409,5 @@ def _fiche_html(f):
             'border-radius:16px;padding:20px 24px 22px;'
             'box-shadow:0 1px 2px rgba(16,23,40,.05),'
             '0 8px 22px rgba(16,23,40,.06)">'
-            + entete + bloc_mission + bloc_lieu + bloc_structure + bloc_reseau
+            + entete + bloc_lieu + bloc_structure + bloc_reseau
             + '</div>')

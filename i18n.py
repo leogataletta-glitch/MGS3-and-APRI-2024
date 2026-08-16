@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-15-ocb-fiches3"
+VERSION = "2026-08-16-saillants-pistes"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -283,6 +283,129 @@ DICO = {
               "2024. 34 records, 8 of the 10 communal sections.",
         "fr": "Source : enquête d'identité des Organisations Communautaires de "
               "Base, PNUE, 2024. 34 fiches, 8 des 10 sections communales."},
+
+    # ------------------------------------------------------------ constats saillants
+    "mode_saillants": {"en": "Key findings", "fr": "Constats saillants"},
+    "mode_saillants_sous": {
+        "en": "What the 1211 household interviews show, by theme, by profile "
+              "and by communal section",
+        "fr": "Ce que montrent les 1211 entretiens ménages, par thème, par "
+              "profil et par section communale"},
+    "s_titre": {"en": "Key findings", "fr": "Les constats saillants"},
+    "s_sous_titre": {
+        "en": "Household survey 2024 · Sud and Grand'Anse, Haiti",
+        "fr": "Enquête ménage 2024 · Sud et Grand'Anse, Haïti"},
+    "s_intro": {
+        "en": "What follows is drawn from {n} household interviews covering {q} "
+              "survey items. The eight findings below are a grouping choice; "
+              "the figures are not — each one names the question and the answer "
+              "options it comes from, and can be recomputed from the "
+              "downloadable data. The automatic list at the bottom applies no "
+              "editorial judgement at all.",
+        "fr": "Ce qui suit est tiré de {n} entretiens ménages portant sur {q} "
+              "items du questionnaire. Les huit constats ci-dessous sont un "
+              "choix de regroupement ; les chiffres n'en sont pas un — chacun "
+              "nomme la question et les modalités dont il est tiré, et peut "
+              "être recalculé depuis les données téléchargeables. La liste "
+              "automatique en bas de page n'applique aucun jugement éditorial."},
+    "s_bloc0": {"en": "The four hardest figures",
+                "fr": "Les quatre chiffres les plus durs"},
+    "s_bloc0_note": {
+        "en": "These four indicators sit at the very bottom of the IRLA scale. "
+              "The colour is the APRI score, not a judgement added afterwards.",
+        "fr": "Ces quatre indicateurs se situent tout en bas de l'échelle IRLA. "
+              "La couleur est le score APRI, pas un jugement ajouté après coup."},
+    "s_des_menages": {"en": "of households", "fr": "des ménages"},
+    "s_score_annot": {"en": "score {s} / 10", "fr": "score {s} / 10"},
+    "s_bloc_profil": {"en": "Profile of a group or a communal section",
+                      "fr": "Fiche d'un groupe ou d'une section communale"},
+    "s_bloc_profil_note": {
+        "en": "The same figures, for one sub-population or one communal "
+              "section, with the gap to the overall average. The gap is what "
+              "matters: a figure alone says nothing until you know what the "
+              "average is.",
+        "fr": "Les mêmes chiffres, pour une sous-population ou une section "
+              "communale, avec l'écart à la moyenne d'ensemble. C'est l'écart "
+              "qui compte : un chiffre seul ne dit rien tant qu'on ignore où "
+              "se situe la moyenne."},
+    "s_choisir_profil": {"en": "Group or communal section",
+                         "fr": "Groupe ou section communale"},
+    "s_profil_base": {
+        "en": "<strong>{g}</strong> — {n} respondents out of {t}. Green means "
+              "better than the overall average, red means worse; the arrow "
+              "shows the direction of the gap in percentage points, not whether "
+              "it is good news.",
+        "fr": "<strong>{g}</strong> — {n} répondants sur {t}. Le vert indique "
+              "un écart favorable, le rouge un écart défavorable ; la flèche "
+              "donne le sens de l'écart en points de pourcentage, pas s'il "
+              "s'agit d'une bonne nouvelle."},
+    "s_profil_lecture": {
+        "en": "The arrow shows the direction of the gap only. On a figure such "
+              "as \"went a whole day without eating\", a higher share is worse; "
+              "on \"holds a financial account\", it is better. Read the wording "
+              "before reading the colour.",
+        "fr": "La flèche ne donne que le sens de l'écart. Sur un chiffre comme "
+              "« ont passé une journée entière sans manger », une part plus "
+              "élevée est plus grave ; sur « dispose d'un compte financier », "
+              "elle est meilleure. Lire l'intitulé avant la couleur."},
+    "s_profil_vide": {"en": "No figure available for this group.",
+                      "fr": "Aucun chiffre disponible pour ce groupe."},
+    "s_bloc_auto": {"en": "Automatic list — lowest scores first",
+                    "fr": "Liste automatique — les scores les plus bas d'abord"},
+    "s_bloc_auto_note": {
+        "en": "Every scored indicator, sorted from the lowest APRI score up. No "
+              "selection, no grouping: if the data change, this list follows.",
+        "fr": "Tous les indicateurs scorés, du score APRI le plus bas au plus "
+              "haut. Aucune sélection, aucun regroupement : si les données "
+              "changent, cette liste suit."},
+    "s_combien": {"en": "How many to show", "fr": "Combien en afficher"},
+    "s_reponses_massives": {
+        "en": "The answers concerning the largest share of households",
+        "fr": "Les réponses qui concernent la plus grande part des ménages"},
+    "s_reponses_massives_note": {
+        "en": "Answers given by at least 60 % of households, all questions "
+              "combined. A high share is not automatically bad — 98 % never "
+              "paid a bribe — so read the wording.",
+        "fr": "Réponses données par au moins 60 % des ménages, toutes questions "
+              "confondues. Une part élevée n'est pas mauvaise en soi — 98 % "
+              "n'ont jamais versé de pot-de-vin — donc lire l'intitulé."},
+    "s_source": {
+        "en": "Source: household survey 2024, {n} respondents, {q} survey "
+              "items. Every figure is recomputed from the survey cache, none is "
+              "hard-coded.",
+        "fr": "Source : enquête ménage 2024, {n} répondants, {q} items. Chaque "
+              "chiffre est recalculé depuis le cache d'enquête, aucun n'est "
+              "écrit en dur."},
+
+    # ------------------------------------------------------------ pistes d'action
+    "mode_pistes": {"en": "Action pathways", "fr": "Pistes d'action"},
+    "mode_pistes_sous": {
+        "en": "Working hypotheses for the participatory workshop, each anchored "
+              "in a survey figure",
+        "fr": "Hypothèses de travail pour l'atelier participatif, chacune "
+              "ancrée dans un chiffre d'enquête"},
+    "p_titre": {"en": "Action pathways", "fr": "Pistes d'action"},
+    "p_sous_titre": {
+        "en": "Working material for the participatory workshop · not validated "
+              "recommendations",
+        "fr": "Matière de travail pour l'atelier participatif · non des "
+              "recommandations validées"},
+    "p_bloc_cadre": {"en": "How IRLA moves from a finding to a lever",
+                     "fr": "Comment l'IRLA passe du constat au levier"},
+    "p_piste_n": {"en": "Pathway {n}", "fr": "Piste {n}"},
+    "p_chiffres": {"en": "The survey figures behind this pathway",
+                   "fr": "Les chiffres d'enquête qui motivent cette piste"},
+    "p_acteurs": {"en": "Actors this would involve",
+                  "fr": "Acteurs que cela mobiliserait"},
+    "p_risque": {"en": "What could go wrong",
+                 "fr": "Ce qui pourrait mal tourner"},
+    "p_source": {
+        "en": "Figures: household survey 2024. Framing: IRLA / APRI "
+              "methodological framework note. The pathways themselves are "
+              "hypotheses drafted for discussion, validated by no one.",
+        "fr": "Chiffres : enquête ménage 2024. Cadrage : note méthodologique "
+              "IRLA / APRI. Les pistes elles-mêmes sont des hypothèses "
+              "rédigées pour la discussion, validées par personne."},
 
     # ------------------------------------------------------------ méthodologie
     "m_titre": {"en": "Survey methodology",
