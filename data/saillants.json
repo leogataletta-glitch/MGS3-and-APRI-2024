@@ -1416,6 +1416,67 @@
    ]
   },
   {
+   "cle": "foret",
+   "titre_en": "Half the forest loss of a quarter-century happened in one storm",
+   "titre_fr": "La moitié du recul forestier de vingt-cinq ans tient à une seule tempête",
+   "texte_en": "Satellite imagery gives a figure the survey cannot: the ten communal sections held 10,713 hectares of forest in 2000 and have lost 1,373 since — but 71 percent of that loss falls in 2016-2018, which is Hurricane Matthew and its aftermath. Excluding that shock, the chronic rate drops from −0.54 to −0.15 percent a year. The distinction matters for action: Trichet lost 99 percent of its forest to the storm and almost nothing to clearing, while Dalmette and Blactote were barely touched by Matthew and lose tree cover steadily, year after year. These two situations do not call for the same response.",
+   "texte_fr": "L'imagerie satellitaire donne un chiffre que l'enquête ne peut pas produire : les dix sections communales comptaient 10 713 hectares boisés en 2000 et en ont perdu 1 373 depuis — mais 71 % de cette perte tombe en 2016-2018, c'est-à-dire l'ouragan Matthew et ses suites. Hors ce choc, le taux chronique passe de −0,54 à −0,15 % par an. La distinction commande l'action : Trichet a perdu 99 % de sa forêt à cause de la tempête et presque rien au défrichement, tandis que Dalmette et Blactote, à peine touchées par Matthew, perdent du couvert régulièrement, année après année. Ces deux situations n'appellent pas la même réponse.",
+   "figures": [
+    {
+     "type": "indicateur",
+     "ligne": 54,
+     "libelle_en": "Forest Cover Change Rate",
+     "libelle_fr": "Taux de changement du couvert forestier",
+     "metrique_en": "Annual rate of change of forest area (canopy cover ≥ 30 %) between 2000 and 2025, in percent per year.",
+     "expl_en": "How fast forest area is shrinking or growing each year. A negative rate means the territory is losing tree cover; the scale treats anything below −3 % a year as the worst case and any growth above +0.5 % as the best.",
+     "expl_fr": "À quelle vitesse la surface boisée recule ou progresse chaque année. Un taux négatif signifie que le territoire perd du couvert arboré ; l'échelle traite tout ce qui est en dessous de −3 % par an comme le cas le plus grave, et toute progression au-dessus de +0,5 % comme le meilleur.",
+     "pct": -0.539,
+     "n": null,
+     "base": 1211,
+     "valeurs": {
+      "Anse à Drick": -0.369,
+      "Barbois": -0.987,
+      "Dumont": -0.51,
+      "Débouchette": -0.519,
+      "Mouline": -0.593,
+      "Quentin": -0.149,
+      "Beaulieu": -0.427,
+      "Blactote": -0.136,
+      "Dalmette": -0.68,
+      "Trichet": -0.724
+     },
+     "profils": {
+      "Homme": -0.539,
+      "Femme": -0.539,
+      "Cat A": -0.539,
+      "Cat B": -0.539,
+      "Cat C": -0.539,
+      "<25": -0.539,
+      "25-39": -0.539,
+      "40-59": -0.539,
+      "60+": -0.539,
+      "Littoral": -0.539,
+      "Montagne": -0.539
+     },
+     "profils_score": {
+      "Homme": 5,
+      "Femme": 5,
+      "Cat A": 5,
+      "Cat B": 5,
+      "Cat C": 5,
+      "<25": 5,
+      "25-39": 5,
+      "40-59": 5,
+      "60+": 5,
+      "Littoral": 5,
+      "Montagne": 5
+     },
+     "score": 5,
+     "unite": "%/an"
+    }
+   ]
+  },
+  {
    "cle": "agriculture",
    "titre_en": "Farming without water, against drought",
    "titre_fr": "Cultiver sans eau, contre la sécheresse",
@@ -2215,6 +2276,29 @@
     "Blactote": 76.27,
     "Dalmette": 69.35,
     "Trichet": 65.52
+   }
+  },
+  {
+   "ligne": 54,
+   "dimension": "III.  ENVIRONMENTAL AND ECOLOGICAL DIMENSION",
+   "libelle_en": "Forest Cover Change Rate",
+   "libelle_fr": "Taux de changement du couvert forestier",
+   "expl_en": "How fast forest area is shrinking or growing each year. A negative rate means the territory is losing tree cover; the scale treats anything below −3 % a year as the worst case and any growth above +0.5 % as the best.",
+   "expl_fr": "À quelle vitesse la surface boisée recule ou progresse chaque année. Un taux négatif signifie que le territoire perd du couvert arboré ; l'échelle traite tout ce qui est en dessous de −3 % par an comme le cas le plus grave, et toute progression au-dessus de +0,5 % comme le meilleur.",
+   "pct": -0.539,
+   "score": 5,
+   "source": "satellite",
+   "valeurs": {
+    "Anse à Drick": -0.369,
+    "Barbois": -0.987,
+    "Dumont": -0.51,
+    "Débouchette": -0.519,
+    "Mouline": -0.593,
+    "Quentin": -0.149,
+    "Beaulieu": -0.427,
+    "Blactote": -0.136,
+    "Dalmette": -0.68,
+    "Trichet": -0.724
    }
   },
   {
