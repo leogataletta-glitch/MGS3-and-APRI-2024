@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-16-foret2"
+VERSION = "2026-08-16-environnement2"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -414,6 +414,150 @@ DICO = {
                               "fr": "organisations recensées"},
     "r_unite_satellite": {"en": "satellite measurement",
                           "fr": "mesure satellitaire"},
+
+    # ------------------------------------------------------------ environnement
+    "mode_environnement": {"en": "Environmental data",
+                           "fr": "Données environnementales"},
+    "mode_environnement_sous": {
+        "en": "Forest cover from satellite imagery, and what the environmental "
+              "dimension still lacks",
+        "fr": "Le couvert forestier par imagerie satellitaire, et ce qui manque "
+              "encore à la dimension environnementale"},
+    "e_titre": {"en": "Environmental data", "fr": "Données environnementales"},
+    "e_sous_titre": {
+        "en": "Satellite imagery · Sud and Grand'Anse, Haiti",
+        "fr": "Imagerie satellitaire · Sud et Grand'Anse, Haïti"},
+    "e_absent": {
+        "en": "No satellite data available yet. Run the Earth Engine script and "
+              "the ingestion pipeline to populate this tab.",
+        "fr": "Aucune donnée satellitaire disponible pour le moment. Lancer le "
+              "script Earth Engine puis la chaîne d'intégration remplit cet "
+              "onglet."},
+    "e_intro": {
+        "en": "The household survey cannot describe the state of the landscape "
+              "itself. Satellite imagery can. This tab holds what has been "
+              "computed so far — forest cover from Hansen / Global Forest "
+              "Change, 2000 to 2025, at 30 metres — and states plainly what is "
+              "still missing, and from which source.",
+        "fr": "L'enquête ménage ne peut pas décrire l'état du paysage lui-même. "
+              "L'imagerie satellitaire, si. Cet onglet rassemble ce qui a été "
+              "calculé à ce jour — le couvert forestier d'après Hansen / Global "
+              "Forest Change, de 2000 à 2025, à 30 mètres de résolution — et "
+              "dit sans détour ce qui manque encore, et de quelle source."},
+
+    "e_bloc1": {"en": "1 · Forest cover across the ten sections",
+                "fr": "1 · Le couvert forestier sur les dix sections"},
+    "e_c_foret2000": {"en": "Forest in 2000", "fr": "Forêt en 2000"},
+    "e_c_foret2000_sous": {"en": "{p} % of the total area",
+                           "fr": "{p} % de la surface totale"},
+    "e_c_perte": {"en": "Lost since 2000", "fr": "Perdu depuis 2000"},
+    "e_c_perte_sous": {"en": "{p} % of the 2000 cover",
+                       "fr": "{p} % du couvert de 2000"},
+    "e_c_taux": {"en": "Annual rate", "fr": "Taux annuel"},
+    "e_c_taux_sous": {"en": "per year, all causes", "fr": "par an, toutes causes"},
+    "e_c_chronique": {"en": "Excluding the 2016-2018 shock",
+                      "fr": "Hors choc 2016-2018"},
+    "e_c_chronique_sous": {"en": "per year, chronic clearing",
+                           "fr": "par an, déboisement chronique"},
+
+    "e_bloc2": {"en": "2 · Year by year, 2001 to 2025",
+                "fr": "2 · Année par année, de 2001 à 2025"},
+    "e_bloc2_texte": {
+        "en": "The shape of this series is the finding. {p} % of twenty-five "
+              "years of forest loss falls in 2016-2018 — Hurricane Matthew, "
+              "which struck on 4 October 2016, and its aftermath. Everything "
+              "before and after is an order of magnitude smaller. A "
+              "deforestation figure read without this chart would describe "
+              "chronic clearing that, for most sections, did not happen.",
+        "fr": "La silhouette de cette série est le résultat. {p} % de la perte "
+              "forestière de vingt-cinq ans tombe en 2016-2018 — l'ouragan "
+              "Matthew, qui a frappé le 4 octobre 2016, et ses suites. Tout ce "
+              "qui précède et tout ce qui suit est d'un ordre de grandeur "
+              "inférieur. Un chiffre de déforestation lu sans ce graphique "
+              "décrirait un défrichement continu qui, pour la plupart des "
+              "sections, n'a pas eu lieu."},
+    "e_bloc2_note": {
+        "en": "Hectares of forest lost per year, ten communal sections "
+              "combined. Hansen does not distinguish a felled tree from one "
+              "blown down: cyclone damage counts as loss.",
+        "fr": "Hectares de forêt perdus chaque année, dix sections communales "
+              "confondues. Hansen ne distingue pas un arbre coupé d'un arbre "
+              "couché par le vent : les dégâts cycloniques comptent comme "
+              "perte."},
+
+    "e_bloc3": {"en": "3 · Where, across the territory",
+                "fr": "3 · Où, sur le territoire"},
+    "e_quoi_carto": {"en": "What to map", "fr": "Quoi cartographier"},
+    "e_carte_foret2000_pct": {"en": "Forest cover in 2000 (% of area)",
+                              "fr": "Couvert forestier en 2000 (% de la surface)"},
+    "e_carte_foret2025_pct": {"en": "Forest cover in 2025 (% of area)",
+                              "fr": "Couvert forestier en 2025 (% de la surface)"},
+    "e_carte_perte_relative_pct": {
+        "en": "Share of the 2000 cover lost since",
+        "fr": "Part du couvert de 2000 perdue depuis"},
+    "e_carte_taux_annuel_net": {"en": "Annual rate of change (% per year)",
+                                "fr": "Taux annuel de variation (% par an)"},
+    "e_carte_taux_annuel_hors_choc": {
+        "en": "Annual rate excluding the 2016-2018 shock",
+        "fr": "Taux annuel hors choc 2016-2018"},
+    "e_carte_part_choc_pct": {
+        "en": "Share of the loss attributable to 2016-2018",
+        "fr": "Part de la perte imputable à 2016-2018"},
+    "e_info_carte": {"en": "{f} ha of forest in 2000",
+                     "fr": "{f} ha boisés en 2000"},
+
+    "e_bloc4": {"en": "4 · Section by section",
+                "fr": "4 · Section par section"},
+    "e_bloc4_note": {
+        "en": "Sorted from the steepest decline. The shock column is what "
+              "separates two situations that the rate alone confuses: a high "
+              "share means the storm, a low share means continuous clearing — "
+              "and they do not call for the same response.",
+        "fr": "Triées de la baisse la plus forte. La colonne du choc sépare "
+              "deux situations que le taux seul confond : une part élevée "
+              "signale la tempête, une part basse un défrichement continu — et "
+              "les deux n'appellent pas la même réponse."},
+    "e_col_section": {"en": "Communal section", "fr": "Section communale"},
+    "e_col_foret2000": {"en": "Forest 2000", "fr": "Forêt 2000"},
+    "e_col_perte": {"en": "Lost", "fr": "Perdu"},
+    "e_col_taux": {"en": "Rate / year", "fr": "Taux / an"},
+    "e_col_choc": {"en": "Of which 2016-18", "fr": "Dont 2016-18"},
+    "e_col_chronique": {"en": "Chronic rate", "fr": "Taux chronique"},
+
+    "e_bloc5": {"en": "5 · What the environmental dimension still lacks",
+                "fr": "5 · Ce qui manque encore à la dimension environnementale"},
+    "e_bloc5_texte": {
+        "en": "{n} environmental indicators remain uncomputed. None is out of "
+              "reach: each depends on a dataset that exists and is public. "
+              "Grouped here by source, so the list reads as a work plan rather "
+              "than an inventory of gaps.",
+        "fr": "{n} indicateurs environnementaux restent non calculés. Aucun "
+              "n'est hors de portée : chacun dépend d'un jeu de données qui "
+              "existe et qui est public. Ils sont regroupés ici par source, "
+              "pour que la liste se lise comme un plan de travail et non comme "
+              "un inventaire de manques."},
+    "e_src_sentinel": {"en": "Sentinel-2 / Landsat — vegetation and water indices",
+                       "fr": "Sentinel-2 / Landsat — indices de végétation et d'eau"},
+    "e_src_modis": {"en": "MODIS — surface temperature and vegetation health",
+                    "fr": "MODIS — température de surface et santé de la végétation"},
+    "e_src_chirps": {"en": "CHIRPS — long rainfall series",
+                     "fr": "CHIRPS — série pluviométrique longue"},
+    "e_src_occupation": {"en": "Land-cover map — fragmentation and connectivity",
+                         "fr": "Carte d'occupation du sol — fragmentation et connectivité"},
+    "e_src_terrain": {"en": "Field inventories — species diversity",
+                      "fr": "Inventaires de terrain — diversité des espèces"},
+    "e_src_registres": {"en": "Registers and thematic atlases — protected areas, mangrove, water",
+                        "fr": "Registres et atlas thématiques — aires protégées, mangrove, eau"},
+    "e_src_enquete": {
+        "en": "Household survey — no new data needed, computable today",
+        "fr": "Enquête ménage — aucune donnée nouvelle, calculable dès maintenant"},
+    "e_source": {
+        "en": "Source: Hansen / UMD Global Forest Change v1.13 (2000-2025), "
+              "canopy threshold 30 %, resolution 30.92 m. Computed per communal "
+              "section on Google Earth Engine.",
+        "fr": "Source : Hansen / UMD Global Forest Change v1.13 (2000-2025), "
+              "seuil de couvert 30 %, résolution 30,92 m. Calcul par section "
+              "communale sur Google Earth Engine."},
 
     # ------------------------------------------------------------ méthodologie
     "m_titre": {"en": "Survey methodology",

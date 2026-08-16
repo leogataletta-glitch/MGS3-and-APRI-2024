@@ -1,93 +1,84 @@
-# Mise à jour — la couverture forestière entre dans l'indice
+# Mise à jour — nouvel onglet « Données environnementales »
 
-## Les 6 fichiers à mettre sur GitHub **dans le même commit**
+## Les 5 fichiers à mettre sur GitHub **dans le même commit**
 
 | Fichier | Où | État |
 |---|---|---|
 | `app.py` | racine | remplacé |
-| `i18n.py` | racine | remplacé |
-| `saillants_page.py` | racine | remplacé |
-| `data/resultats.json` | `data/` | remplacé |
-| `data/ventilation.json` | `data/` | remplacé |
+| `i18n.py` | racine | **remplacé — c'est celui qui manquait** |
+| `environnement_page.py` | racine | **nouveau** |
+| `data/foret.json` | `data/` | **nouveau** |
 | `data/saillants.json` | `data/` | remplacé |
 
-> `i18n.py` passe en version `2026-08-16-foret2`.
+`i18n.py` passe en version **`2026-08-16-environnement2`**.
 
-Si `resilience_page.py` n'est pas encore poussé depuis la livraison précédente,
-ajoute-le : il porte la correction d'unité (« des ménages » n'a pas de sens sous
-un taux de déboisement).
+Si ces fichiers de la livraison précédente ne sont pas encore poussés, ajoute-les
+au même commit : `saillants_page.py`, `resilience_page.py`,
+`data/resultats.json`, `data/ventilation.json`.
+
+Toujours **pas** de `satellite\` ni de `pipeline\` sur GitHub.
 
 ---
 
-## Le résultat
+## Pourquoi le bandeau rouge s'affichait
 
-L'indicateur **54, « Taux de changement du couvert forestier »**, était vide.
-Il est maintenant calculé, cartographié, et compte dans le score final.
+`app.py` était à jour, `i18n.py` non — il était resté sur
+`2026-08-16-saillants-pistes`. Le garde-fou a fait exactement son travail.
 
-| Section | Forêt 2000 | Perte | Taux/an | Score | Dont 2016-18 |
-|---|---|---|---|---|---|
-| Barbois | 1 008 ha | 224 ha | −0,99 % | 4 | 92 % |
-| Trichet | 783 ha | 131 ha | −0,72 % | 5 | **99 %** |
-| Dalmette | 609 ha | 98 ha | −0,68 % | 5 | **2 %** |
-| Mouline | 4 776 ha | 663 ha | −0,59 % | 5 | 74 % |
-| Débouchette | 240 ha | 31 ha | −0,52 % | 5 | 60 % |
-| Dumont | 339 ha | 43 ha | −0,51 % | 5 | 40 % |
-| Beaulieu | 521 ha | 54 ha | −0,43 % | 6 | 68 % |
-| Anse à Drick | 749 ha | 68 ha | −0,37 % | 6 | 79 % |
-| Quentin | 648 ha | 25 ha | −0,15 % | 7 | 62 % |
-| Blactote | 1 039 ha | 38 ha | −0,14 % | 7 | **4 %** |
-| **Ensemble** | **10 713 ha** | **1 373 ha** | **−0,54 %** | **5** | **71 %** |
+---
 
-## Ce que la donnée dit, et qui n'était pas prévu
+## Le nouvel onglet, en cinq blocs
 
-**71 % de la perte forestière de vingt-cinq ans tombe en 2016-2018** — l'ouragan
-Matthew et ses suites. Sur la seule année 2016 : 686 hectares, la moitié du
-total. Hors ce choc, le taux passe de **−0,54 à −0,15 % par an**.
+**1 · Les chiffres clés** — 10 713 ha boisés en 2000, 1 373 perdus, −0,54 %/an,
+et le taux hors choc à −0,15 %/an posé juste à côté.
 
-Et le contraste entre sections est le vrai résultat :
+**2 · Année par année, 2001-2025.** C'est le bloc qui compte. Le graphique montre
+une silhouette plate sur vingt-cinq ans, sauf une barre rouge en 2016 qui écrase
+tout le reste : 686 hectares, l'ouragan Matthew. Un chiffre de déforestation lu
+sans ce graphique décrirait un défrichement continu qui, pour la plupart des
+sections, n'a pas eu lieu.
 
-- **Trichet perd 99 % de sa forêt à la tempête** et quasiment rien au
-  défrichement. Son taux chronique est de −0,00 % par an.
-- **Dalmette et Blactote, à peine touchées par Matthew** (2 % et 4 %), perdent du
-  couvert régulièrement, année après année. Dalmette est à −0,66 % par an de
-  déboisement chronique — le plus élevé du lot.
+**3 · La carte**, avec six lectures au choix : couvert 2000, couvert 2025, part
+du couvert perdue, taux annuel, taux hors choc, et part de la perte imputable à
+2016-2018 — celle-ci sépare les sections frappées par la tempête de celles qui
+se déboisent en continu.
 
-Ces deux situations ont des scores voisins et n'appellent pas la même réponse.
-L'une relève de la reconstruction post-cyclone, l'autre d'une pression continue
-sur la ressource — celle que le charbon de bois alimente, et que l'enquête
-ménage documente par ailleurs.
+**4 · Le tableau par section**, trié de la baisse la plus forte. La colonne du
+choc est teintée : rouge pâle au-dessus de 60 %, bleu pâle en dessous de 20 %.
+Barbois, Trichet, Anse à Drick, Mouline et Beaulieu sont en rouge — c'est la
+tempête. Blactote est en bleu — c'est du défrichement continu. Ces sections ont
+des taux voisins et n'appellent pas la même réponse.
 
-Le taux retenu pour le score est **celui qui inclut le cyclone** : la forêt a
-réellement été perdue. Mais le taux hors choc figure dans `foret.json`, dans la
-note de l'indicateur, et dans le nouveau constat.
+**5 · Ce qui manque encore.** Les 36 indicateurs environnementaux non calculés,
+regroupés par source, pour que la liste se lise comme un plan de travail :
 
-## Un neuvième constat dans l'onglet Constats saillants
+- **Sentinel-2 / Landsat** — 4 indicateurs (NDVI, NDMI, NDWI, turbidité)
+- **MODIS** — 3 (santé de la végétation, température de surface, TCI)
+- **CHIRPS** — 4 (indices pluviométriques, SPI, aridité)
+- **Carte d'occupation du sol** — 13 (fragmentation, connectivité, érosion)
+- **Inventaires de terrain** — 6 (diversité des espèces)
+- **Registres et atlas** — 5 (aires protégées, mangrove, herbiers)
+- **Enquête ménage** — 1 (indice de diversité culturale : aucune donnée
+  nouvelle nécessaire, calculable dès maintenant)
 
-Il porte ce résultat, avec le contraste Trichet / Dalmette.
+Un tableau de bord qui n'affiche que ce qu'il possède laisse croire que le reste
+n'existe pas. Celui-ci dit ce qui manque et d'où ça viendrait.
 
-## Une correction dans la fiche par profil
+---
 
-Le vert et le rouge des pastilles d'écart suggéraient « bonne » et « mauvaise »
-nouvelle. Résultat : un meilleur accès à l'électricité s'affichait en rouge. La
-pastille est désormais **neutre** — elle donne la direction et l'ampleur de
-l'écart, pas son interprétation, que l'application n'est pas en mesure de
-connaître pour toutes les figures.
+## Détails de mise en forme
 
-## Les réserves, à porter dans toute publication
+Le graphique annuel est un rendu dédié : une série temporelle se lit
+horizontalement, les barres horizontales du reste de l'application conviennent à
+un classement, pas à une chronologie.
 
-**Hansen mesure une perte de couvert arboré, pas une déforestation au sens
-juridique.** Ce constat le montre de façon spectaculaire : la moitié de la
-« déforestation » du territoire est un ouragan.
+Les surfaces sont affichées en entiers avec espace de millier, les taux à deux
+décimales — à un dixième près, −0,5 et −0,54 se confondent alors qu'ils ne sont
+pas dans la même classe de score.
 
-**Le gain n'est renseigné que jusqu'en 2012.** Le taux net est donc prudent : la
-repousse post-Matthew, considérable sur un territoire tropical, n'est pas vue.
-C'est la limite la plus gênante ici, et elle joue dans le sens du pessimisme.
+## Prochaine étape
 
-**Seuil de couvert retenu : 30 %.** À aligner sur la définition du projet si elle
-existe. Changer ce seuil change tous les chiffres du tableau ci-dessus.
-
-## Prochaine étape possible
-
-**CHIRPS** pour les indices de précipitation (lignes 43, 45, 46) : série
-pluviométrique longue, calcul direct, et aucun arbitrage comparable au seuil de
-couvert. Le même script Earth Engine, adapté.
+**CHIRPS**, pour les quatre indicateurs pluviométriques. Même mécanique
+qu'aujourd'hui : un script Earth Engine avec tes polygones dedans, un export
+CSV, une chaîne d'intégration. Et aucun arbitrage comparable au seuil de couvert
+forestier.

@@ -25,6 +25,7 @@ import streamlit.components.v1 as components
 
 import assets
 import croisement_page
+import environnement_page
 import i18n
 import map_render
 import methodologie_page
@@ -392,7 +393,7 @@ st.markdown("""
 # ne plante pas — elle affiche le nom des clés manquantes au milieu du texte, ce
 # qui est beaucoup plus déroutant qu'une erreur franche. On préfère le dire.
 # ----------------------------------------------------------------------
-I18N_ATTENDU = "2026-08-16-foret2"
+I18N_ATTENDU = "2026-08-16-environnement2"
 if getattr(i18n, "VERSION", None) != I18N_ATTENDU:
     st.error(
         f"**i18n.py est dans une version qui ne correspond pas au reste de "
@@ -428,6 +429,7 @@ MODE_METHODO, MODE_DONNEES = "methodologie", "donnees"
 MODE_OCB = "ocb"
 MODE_SAILLANTS = "saillants"
 MODE_PISTES = "pistes"
+MODE_ENV = "environnement"
 LIBELLE_MODE = {MODE_QUESTIONS: T("mode_questions"),
                 MODE_RESILIENCE: T("mode_resilience"),
                 MODE_CROISEMENT: T("mode_croisement"),
@@ -435,7 +437,8 @@ LIBELLE_MODE = {MODE_QUESTIONS: T("mode_questions"),
                 MODE_DONNEES: T("mode_donnees"),
                 MODE_OCB: T("mode_ocb"),
                 MODE_SAILLANTS: T("mode_saillants"),
-                MODE_PISTES: T("mode_pistes")}
+                MODE_PISTES: T("mode_pistes"),
+                MODE_ENV: T("mode_environnement")}
 
 _logo, _entete = st.columns([1, 6])
 with _logo:
@@ -477,6 +480,7 @@ _ENTREES = (
     (MODE_CROISEMENT, T("mode_croisement_sous")),
     (MODE_METHODO, T("mode_methodo_sous")),
     (MODE_PISTES, T("mode_pistes_sous")),
+    (MODE_ENV, T("mode_environnement_sous")),
     (MODE_OCB, T("mode_ocb_sous")),
     (MODE_DONNEES, T("mode_donnees_sous")),
 )
@@ -525,6 +529,10 @@ if app_mode == MODE_METHODO:
 
 if app_mode == MODE_SAILLANTS:
     saillants_page.render()
+    st.stop()
+
+if app_mode == MODE_ENV:
+    environnement_page.render()
     st.stop()
 
 if app_mode == MODE_PISTES:
