@@ -1014,7 +1014,10 @@ def _tableau_recap(foret, pluie, saison):
 INDICES = [
     ("ndvi", 33, "ndvi", "", "#2c6b34"),
     ("ndmi", 34, "ndmi", "", "#1d6f8e"),
-    ("ndwi", 35, "ndwi", "", "#2a78d6"),
+    # Le NDWI est affiché par la SURFACE EN EAU et non par sa moyenne :
+    # l'eau couvre moins de 1 % de chaque section, elle ne pèse rien
+    # dans un NDWI moyen, qui est ici un signal de terre.
+    ("ndwi", 35, "frac_eau", "%", "#2a78d6"),
     ("ndti", 63, "ndti_eau", "", "#a86c2e"),
 ]
 

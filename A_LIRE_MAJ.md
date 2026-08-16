@@ -1,131 +1,146 @@
-# Mise à jour — l'onglet environnemental passe en sous-onglets
+# Mise à jour — les quatre indices Sentinel-2 sont calculés
 
-## Les 3 fichiers à mettre sur GitHub **dans le même commit**
+## Les 6 fichiers à mettre sur GitHub **dans le même commit**
 
 | Fichier | Où | État |
 |---|---|---|
 | `app.py` | racine | remplacé |
 | `i18n.py` | racine | remplacé |
 | `environnement_page.py` | racine | remplacé |
+| `data/resultats.json` | `data/` | remplacé |
+| `data/ventilation.json` | `data/` | remplacé |
+| `data/indices_vegetation.json` | `data/` | **nouveau** |
 
-`i18n.py` passe en version **`2026-08-16-onglets`**.
-
-Aucun fichier de données ne change cette fois — seulement la présentation.
-
----
-
-## 1 · Un sélecteur en tête, six sous-onglets
-
-En haut de l'onglet, un seul menu : **Territoire affiché**. On choisit
-« Ensemble des 10 sections » ou une section, et **tous les sous-onglets
-suivent**. Plus besoin de rechoisir la section dans chaque bloc.
-
-Les six sous-onglets :
-
-| Sous-onglet | Ce qu'il contient |
-|---|---|
-| **Couverture forestière** | chiffres clés, chronologie 2001-2025, carte, tableau des dix |
-| **Déforestation** | la grille de 300 m, curseur d'année |
-| **Précipitations** | cumul annuel, normale, tableau des dix |
-| **Sécheresse** | campagne de printemps, SPI, séquences sèches, installation |
-| **Fiche par section** | tout ce que le satellite dit d'une section, sur une page |
-| **Lacunes** | les indicateurs non calculés, groupés par source |
-
-### Deux points de conception
-
-**Les cartes gardent toujours les dix polygones**, même quand une section est
-choisie. Une tache de déforestation se lit par rapport à ce qui l'entoure ;
-isolée, elle ne dit plus rien. Ce sont les *points* de la grille qui se
-restreignent à la section, pas le fond de carte.
-
-**Quand une section est choisie, un rang s'affiche** sous chaque chiffre clé du
-couvert forestier. Un taux de −0,51 %/an ne dit pas tout seul si la section est
-parmi les plus atteintes ou parmi les plus épargnées ; « 5e sur 10 » le dit.
-
-En vue d'ensemble, précipitations et sécheresse affichent la **moyenne non
-pondérée des dix sections** — pondérer par la surface dirait le territoire
-plutôt que l'échantillon, et mélangerait deux lectures.
+`i18n.py` passe en version **`2026-08-16-ndvi`**.
 
 ---
 
-## 2 · La fiche par section
+## Le résultat, sans détour
 
-Le sous-onglet réunit sur une page, pour la section choisie :
+L'export a bien marché : sept saisons sèches, 40 à 47 images par saison, dix
+sections. **Mais seuls deux des quatre indicateurs méritent d'entrer dans
+l'indice.** Je ne les ai pas tous scorés, et je dois t'expliquer pourquoi —
+c'est une décision que tu peux renverser, mais pas sans la connaître.
 
-- **Couvert forestier** — forêt 2000, forêt 2025, perte, taux annuel, part due
-  à Matthew, avec le rang parmi les dix
-- **Où la perte est tombée** — nombre de cellules touchées, pire année, cellule
-  la plus atteinte
-- **Pluie, année civile** — normale, années récentes, extrêmes
-- **Campagne de printemps** — normale, récent, date d'installation, campagnes
-  sans départ net, séquence sèche, jours à 50 mm
-- **Les indicateurs environnementaux scorés** pour cette section, avec leur
-  valeur et leur note sur 10
+| Ligne | Indicateur | Statut | Score d'ensemble |
+|---|---|---|---|
+| 33 | Végétation en saison sèche (NDVI) | **scoré** | 10 |
+| 34 | Humidité végétation et sols (NDMI) | **scoré** | 10 |
+| 35 | Eaux de surface (NDWI) | calculé, **non scoré** | — |
+| 63 | Turbidité (NDTI) | calculé, **non scoré** | — |
 
-En vue d'ensemble, la fiche affiche à la place un **tableau récapitulatif des
-dix sections**, tous thèmes confondus — forêt, pluie, campagne, pluies
-extrêmes.
-
----
-
-## 3 · NDVI, NDMI, NDWI, NDTI — le script est prêt, il reste à le lancer
-
-Tu m'as demandé de faire apparaître les quatre indices de végétation et d'eau.
-Ils correspondent à quatre lignes de l'indice restées vides :
-
-| Ligne | Indicateur | Ce que ça mesure |
-|---|---|---|
-| 33 | Stabilité de la végétation en saison sèche (**NDVI**) | vigueur du couvert : ce qui reste vert quand il ne pleut plus |
-| 34 | Humidité de la végétation et des sols (**NDMI**) | eau contenue dans la plante et le sol — chute **avant** le NDVI, c'est un signal précoce |
-| 35 | Stabilité des eaux de surface (**NDWI**) | eau libre : sources, mares, cours d'eau qui tiennent en saison sèche |
-| 63 | Turbidité de l'eau (**NDTI**) | charge en sédiments — ce que l'érosion emporte des versants vers l'eau |
-
-**Ce sont eux qui ferment la boucle.** Le tableau de bord montre aujourd'hui une
-forêt qui recule, une campagne de printemps à 83 % de sa normale et des averses
-qui s'intensifient. Le NDMI dira si le sol s'assèche vraiment entre deux
-saisons ; le NDTI dira si l'érosion attendue arrive bien dans l'eau. Perception
-déclarée, pluie mesurée, et maintenant état du sol : trois sources
-indépendantes sur la même question.
-
-### La saison sèche est calculée, pas supposée
-
-J'ai pris les 45 ans de CHIRPS déjà exportés pour trouver le trimestre le plus
-sec. C'est **janvier-février-mars**, 120 mm au total, loin devant les autres :
-
-```
-jan  40   fév  42   mar  38   avr  89   mai 141   jun  89
-jul  84   aoû 134   sep 164   oct 202   nov 105   déc  43
-```
-
-C'est aussi le moment le plus utile à observer : la végétation y est à son plus
-stressé, juste avant les semis de printemps. Ce qui reste vert en mars est ce
-qui tient sans pluie.
-
-### Ce que tu dois faire
-
-1. Ouvre `satellite\gee_indices_vegetation.js` sur ton bureau, copie tout.
-2. Sur https://code.earthengine.google.com, efface l'éditeur, colle, **Run**.
-3. Regarde la console : elle affiche le **nombre d'images retenues** par saison
-   sèche. Quelques dizaines par an, c'est bon. Moins de cinq une année donnée,
-   dis-le-moi — cette saison-là sera trop nuageuse pour être fiable.
-4. Onglet **Tasks** → **Run** sur `IRLA_indices_vegetation`.
-5. Envoie-moi `indices_vegetation_sections.csv`.
-
-Une carte NDVI s'affiche aussi dans l'aperçu, tu verras tout de suite où le
-couvert tient et où il a lâché.
-
-### Une réserve que je dois signaler d'avance
-
-Sentinel-2 niveau 2A commence en 2017, et les premières années sont maigres en
-images exploitables sous les tropiques. La période de référence sera donc
-courte — trois saisons sèches — là où une climatologie en demanderait trente.
-**Ces quatre indicateurs diront un changement récent, pas une tendance
-longue.** C'est une limite de la source, pas du calcul ; elle sera écrite dans
-la note de chaque indicateur, comme pour la résolution de CHIRPS.
+**57 indicateurs scorés sur 128.** Le score d'ensemble monte de **4,38 à 4,57**,
+gain réparti de +0,12 (Quentin) à +0,24 (Blactote).
 
 ---
 
-## Ce qui reste après ça
+## 1 · Ce que le NDVI et le NDMI disent
 
-**28 indicateurs environnementaux** non calculés au lieu de 32. Ensuite, le
-plus accessible : MODIS pour la température de surface (lignes 36, 41, 42).
+**Le couvert de saison sèche ne s'est pas dégradé entre 2019 et 2025.** Il a
+même légèrement progressé partout sauf à Quentin (−1,1 % de NDVI). C'est un
+résultat, pas une absence de résultat : sur un territoire qui perd sa forêt,
+l'infrastructure verte permanente — celle qui reste verte en mars, arbres et
+haies — tient.
+
+| Section | NDVI | NDMI | | Section | NDVI | NDMI |
+|---|---:|---:|---|---|---:|---:|
+| Blactote | +6,0 % | +41,9 % | | Dalmette | +4,9 % | +15,0 % |
+| Beaulieu | +5,4 % | +66,3 % | | Débouchette | +4,1 % | +6,0 % |
+| Barbois | +5,1 % | +22,2 % | | Trichet | +2,6 % | +1,2 % |
+| Anse à Drick | +4,3 % | +20,9 % | | Dumont | +1,9 % | +3,8 % |
+| Mouline | +1,1 % | −2,0 % | | **Quentin** | **−1,1 %** | **−16,1 %** |
+
+**Quentin est la seule section qui recule sur les deux.** C'est aussi celle dont
+la séquence sèche de printemps s'est le plus allongée (22 → 27 jours). Deux
+sources indépendantes, même section, même direction : c'est le signal le plus
+solide de cette livraison.
+
+**2021 est le creux du NDVI dans 7 sections sur 10** — la même année que la
+pire campagne de printemps identifiée par CHIRPS. Le satellite optique et le
+satellite pluviométrique désignent la même année sans se parler.
+
+### Trois réserves, écrites dans la note de chaque ligne
+
+**La référence est courte.** Sentinel-2 niveau 2A commence en 2017 et les
+premières années sont pauvres en images sous les tropiques. Trois saisons de
+référence là où une climatologie en demanderait trente : ces indicateurs disent
+un changement récent, pas une tendance longue.
+
+**2021 est dans la fenêtre de référence.** C'est l'année de sécheresse. La
+référence est donc tirée vers le bas et les variations calculées sont un peu
+plus favorables qu'elles ne devraient. Sur sept ans, aucune découpe ne fait
+mieux.
+
+**Le NDMI amplifie.** Ses valeurs tournent autour de 0,08 : un écart absolu
+minuscule devient une variation relative énorme — le +66 % de Beaulieu
+correspond à un passage de 0,03 à 0,05. Le *sens* est juste, l'*ampleur* est un
+effet de dénominateur. J'ai calculé à côté la variation sur l'indice remis à
+l'échelle [0, 1], qui ramène ce +66 % à +2,4 % ; elle est dans le fichier de
+données sous `var_ndmi_stab`.
+
+---
+
+## 2 · Pourquoi je n'ai pas scoré le NDWI ni le NDTI
+
+**L'eau couvre moins de 1 % de chaque section.** Une moyenne de NDWI sur le
+polygone est donc un signal de *terre*, pas d'eau. J'ai remplacé la métrique
+par la bonne — la **surface effectivement classée en eau** et sa variation, car
+« stabilité des eaux de surface » se mesure en étendue.
+
+Mais même ainsi, seules **5 sections sur 10** atteignent deux hectares d'eau,
+en dessous desquels une moyenne ne porte que sur quelques pixels de bord de
+rivière. Quentin en a 4 pixels. Mouline, 19.
+
+Et parmi les cinq mesurables, **Dalmette voit sa surface en eau varier d'un
+facteur 20 entre 2019 et 2020** — 0,15 % puis 2,87 %. Aucun phénomène
+hydrologique n'explique cela ; la classification seule suffit à le produire.
+
+| Section | eau (ha) | pixels | rapport max/min |
+|---|---:|---:|---:|
+| Dalmette | 25,6 | 640 | **×19,5** |
+| Blactote | 9,7 | 241 | ×1,1 |
+| Barbois | 8,4 | 211 | ×1,3 |
+| Trichet | 6,7 | 168 | ×1,4 |
+| Débouchette | 2,2 | 54 | ×1,6 |
+
+Les quatre autres sont **stables à ±20 % près** — c'est un résultat en soi, les
+eaux de surface ne se rétractent pas. Mais un indicateur calculable sur quatre
+sections, qui les place toutes au même score, ajouterait du poids à l'indice
+sans distinguer aucun territoire. C'est exactement le reproche que tu m'avais
+fait pour l'aridité annuelle. Je ne le refais pas.
+
+**Le NDTI cumule trois problèmes.** Même contrainte de pixels ; les cinq
+sections mesurables donnent toutes une valeur entre −0,14 et −0,04, donc le même
+score ; et **le barème publié est inversé** — il attribue 10 à une turbidité
+supérieure à 0,7 et 0 à une eau limpide, alors qu'une eau chargée de sédiments
+signale une érosion en amont. Corriger un barème pour obtenir un score plat sur
+la moitié du territoire ne se justifie pas.
+
+**Ce que le NDTI dit quand même** : les cinq valeurs sont **négatives**, le vert
+domine le rouge, l'eau détectée est claire. Cohérent avec le moment de l'année —
+l'érosion arrive avec les averses, pas en mars. Pour la voir, il faudrait
+mesurer la turbidité en septembre-octobre, pas en saison sèche. C'est faisable,
+dis-le-moi si tu le veux.
+
+Les deux lignes restent donc listées dans l'onglet **Lacunes**, avec le motif
+écrit en toutes lettres. Leur valeur est affichée dans leur onglet.
+
+---
+
+## 3 · Dans l'application
+
+Les quatre onglets NDVI, NDMI, NDWI et NDTI sont maintenant remplis : trois
+chiffres clés (référence, récent, variation), la série des sept saisons sèches
+avec la référence en pointillés, et le tableau des dix sections trié de la plus
+dégradée. L'onglet NDWI affiche la **surface en eau** et non le NDWI moyen, pour
+la raison ci-dessus.
+
+L'interprétation de chaque indice — ce qu'il mesure, comment le lire ici, ce
+dont il faut se méfier — reste affichée au-dessus des chiffres.
+
+---
+
+## Ce qui reste
+
+**30 indicateurs environnementaux** non calculés au lieu de 32. Le plus
+accessible ensuite : MODIS pour la température de surface (lignes 36, 41, 42).

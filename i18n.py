@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-16-indices"
+VERSION = "2026-08-16-ndvi"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
