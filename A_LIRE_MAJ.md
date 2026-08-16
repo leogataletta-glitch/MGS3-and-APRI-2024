@@ -1,151 +1,131 @@
-# Mise à jour — la pluie passe à la campagne agricole
+# Mise à jour — l'onglet environnemental passe en sous-onglets
 
-## Les 6 fichiers à mettre sur GitHub **dans le même commit**
+## Les 3 fichiers à mettre sur GitHub **dans le même commit**
 
 | Fichier | Où | État |
 |---|---|---|
 | `app.py` | racine | remplacé |
 | `i18n.py` | racine | remplacé |
 | `environnement_page.py` | racine | remplacé |
-| `data/resultats.json` | `data/` | remplacé |
-| `data/ventilation.json` | `data/` | remplacé |
-| `data/pluie_saison.json` | `data/` | **nouveau** |
 
-`i18n.py` passe en version **`2026-08-16-saison`**.
+`i18n.py` passe en version **`2026-08-16-onglets`**.
 
----
-
-## Le résultat, en une phrase
-
-Sur l'année civile, le Grand Sud reçoit **96 % de sa pluie normale**. Sur la
-campagne de printemps, il en reçoit **83 %**. Même satellite, même normale,
-même période — diagnostic inverse.
-
-L'écart vient de la saison cyclonique. Une tempête d'octobre reconstitue le
-cumul annuel après la récolte, sans rien reconstituer dans les champs.
-Additionner mars-mai avec septembre-novembre fabrique une année moyenne que
-personne n'a vécue.
-
-Cela tranche un désaccord qui traînait depuis le début : **48,7 % des ménages
-citent la sécheresse** comme première cause de baisse des rendements. Sur la
-donnée annuelle, cette perception paraissait démentie par le satellite. Sur la
-donnée saisonnière, elle est confirmée. Les ménages avaient raison ; c'est la
-fenêtre de calcul qui avait tort.
+Aucun fichier de données ne change cette fois — seulement la présentation.
 
 ---
 
-## 1 · Les quatre indicateurs passent sur mars-avril-mai
+## 1 · Un sélecteur en tête, six sous-onglets
 
-Aucun barème IRLA ne fixe de période d'accumulation — le choix nous revenait.
+En haut de l'onglet, un seul menu : **Territoire affiché**. On choisit
+« Ensemble des 10 sections » ou une section, et **tous les sous-onglets
+suivent**. Plus besoin de rechoisir la section dans chaque bloc.
 
-| Section | Campagne normale | 5 dernières | Part | 43 | 44 | 45 | 46 |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| Trichet | 274 mm | 272 | 99 % | 3 | 5 | 10 | 10 |
-| Barbois | 294 | 270 | 92 % | 3 | 5 | 9 | 10 |
-| Anse à Drick | 290 | 257 | 88 % | 2 | 5 | 8 | 10 |
-| Mouline | 590 | 498 | 85 % | 2 | 5 | 8 | 9 |
-| Débouchette | 218 | 182 | 84 % | 2 | 5 | 8 | 10 |
-| Quentin | 250 | 203 | 81 % | 2 | 5 | 8 | 6 |
-| Dalmette | 256 | 205 | 80 % | 2 | 4 | 8 | 6 |
-| Blactote | 254 | 194 | 76 % | 2 | 4 | 7 | 5 |
-| Beaulieu | 206 | 151 | 73 % | 2 | 4 | 7 | 7 |
-| Dumont | 193 | 140 | 73 % | 1 | 4 | 7 | 9 |
+Les six sous-onglets :
 
-**La réserve que je t'avais signalée est levée.** Sur l'annuel, l'aridité
-anormale valait 5 partout et le SPI 10 partout : deux indicateurs pesant 4,8 %
-de l'indice sans distinguer aucun territoire. Sur la campagne, les quatre
-discriminent. La contribution pluviométrique va maintenant de 43 à 67 points
-pondérés selon les sections, contre un quasi-plat auparavant.
+| Sous-onglet | Ce qu'il contient |
+|---|---|
+| **Couverture forestière** | chiffres clés, chronologie 2001-2025, carte, tableau des dix |
+| **Déforestation** | la grille de 300 m, curseur d'année |
+| **Précipitations** | cumul annuel, normale, tableau des dix |
+| **Sécheresse** | campagne de printemps, SPI, séquences sèches, installation |
+| **Fiche par section** | tout ce que le satellite dit d'une section, sur une page |
+| **Lacunes** | les indicateurs non calculés, groupés par source |
 
-Tu n'as donc plus la décision à prendre sur le retrait des lignes 44 et 46.
+### Deux points de conception
 
-### Le score final baisse de 0,08 point
+**Les cartes gardent toujours les dix polygones**, même quand une section est
+choisie. Une tache de déforestation se lit par rapport à ce qui l'entoure ;
+isolée, elle ne dit plus rien. Ce sont les *points* de la grille qui se
+restreignent à la section, pas le fond de carte.
 
-| | avant | après |
-|---|---:|---:|
-| Ensemble | 4,46 | **4,38** |
-| Plus forte baisse — Blactote | 4,32 | 4,15 |
-| Seule hausse — Trichet | 5,08 | 5,10 |
+**Quand une section est choisie, un rang s'affiche** sous chaque chiffre clé du
+couvert forestier. Un taux de −0,51 %/an ne dit pas tout seul si la section est
+parmi les plus atteintes ou parmi les plus épargnées ; « 5e sur 10 » le dit.
 
-56 indicateurs scorés sur 128, inchangé. La baisse est faible parce que quatre
-indicateurs sur cinquante-six pèsent peu ; elle est réelle parce qu'elle
-corrige une surestimation.
-
-### Une décision de méthode à connaître
-
-**Le SPI est évalué sur la pire des cinq dernières campagnes, pas sur leur
-moyenne.** Ce n'est pas un choix d'opportunité : le barème publié du SPI ne
-gradue que la sécheresse, de −2,0 à −1,0, et une moyenne de cinq ans n'atteint
-pratiquement jamais ce domaine — elle lisse par construction ce que le barème
-est fait de mesurer. Sur la moyenne, les dix sections obtenaient 10. Sur la
-pire campagne, elles obtiennent de 5 à 10, et l'écart correspond à un fait
-réel : la sécheresse de 2021 a frappé la Grand'Anse bien plus durement que le
-Sud.
-
-La résilience se mesure d'ailleurs à la mauvaise année. Un territoire dont les
-campagnes sont bonnes en moyenne mais qui perd tout une année sur cinq n'est
-pas résilient, il est chanceux quatre ans sur cinq.
-
-Les lignes 43, 44 et 45 restent sur la moyenne des cinq campagnes : elles
-répondent à « comment va le territoire en ce moment », et une moyenne est le
-bon outil pour cela.
-
-Si tu préfères revenir à la moyenne pour le SPI aussi :
-`python compute_pluie_saisonniere.py <csv1> <csv2> --moyenne-spi`
+En vue d'ensemble, précipitations et sécheresse affichent la **moyenne non
+pondérée des dix sections** — pondérer par la surface dirait le territoire
+plutôt que l'échantillon, et mélangerait deux lectures.
 
 ---
 
-## 2 · Un bloc « La campagne agricole » dans l'onglet environnemental
+## 2 · La fiche par section
 
-C'est le bloc 7 ; l'ancien bloc 7 (ce qui manque encore) devient le 8.
+Le sous-onglet réunit sur une page, pour la section choisie :
 
-Quatre chiffres clés par section — campagne normale, cinq dernières campagnes,
-date d'installation de la saison, jours à 50 mm et plus — puis la série
-mars-mai de 1981 à 2025 en barres divergentes autour de la normale, puis un
-tableau des dix sections.
+- **Couvert forestier** — forêt 2000, forêt 2025, perte, taux annuel, part due
+  à Matthew, avec le rang parmi les dix
+- **Où la perte est tombée** — nombre de cellules touchées, pire année, cellule
+  la plus atteinte
+- **Pluie, année civile** — normale, années récentes, extrêmes
+- **Campagne de printemps** — normale, récent, date d'installation, campagnes
+  sans départ net, séquence sèche, jours à 50 mm
+- **Les indicateurs environnementaux scorés** pour cette section, avec leur
+  valeur et leur note sur 10
 
-### Trois grandeurs nouvelles, non scorées
-
-Séquences sèches, pluies extrêmes et date d'installation **ne portent aucun
-score et n'entrent pas dans l'indice**. Elles sont absentes de la table IRLA,
-et y ajouter des indicateurs maison rendrait l'indice incomparable avec les
-autres applications du cadre. Elles sont descriptives — et c'est là leur
-valeur, elles disent ce que la moyenne cache.
-
-**Ce qu'elles disent, justement :**
-
-**Les pluies extrêmes augmentent partout.** Sans une seule exception sur dix
-sections. Blactote passe de 1,5 à 2,7 jours à 50 mm et plus par an entre
-1981-2000 et 2006-2025, Quentin de 1,8 à 2,9, Beaulieu de 1,7 à 2,6. Sur un
-territoire qui a perdu **12,8 % de son couvert forestier** depuis 2000 et où
-**76,2 % des ménages** ne sont pas sûrs de conserver leur parcelle l'an
-prochain — donc n'aménagent pas la pente — c'est le signal le plus inquiétant
-du lot. Pas la sécheresse seule, mais la sécheresse **et** l'averse.
-
-**Les séquences sèches de printemps s'allongent dans huit sections sur dix.**
-Quentin passe de 22,3 à 26,9 jours consécutifs sans pluie pendant la campagne.
-Vingt-sept jours sans pluie au milieu de mars-mai, sur un territoire où 52 %
-des ménages n'ont aucune source d'irrigation, décide d'une récolte.
-
-**La date d'installation ne se déplace pas nettement** — quelques jours dans un
-sens ou dans l'autre selon les sections, rien de systématique. Mais le compte
-des campagnes **sans départ net** est éloquent : 16 sur 45 à Dumont, 14 à
-Débouchette, 12 à Beaulieu. Une campagne sur trois y est semée sans que la
-saison se soit franchement installée. Ce n'est pas une donnée manquante, c'est
-une agriculture qui parie.
-
-Définition retenue pour l'installation, celle du CILSS/AGRHYMET : première
-décade à partir du 1er mars recevant 25 mm, suivie d'une décade à 20 mm. La
-seconde condition écarte les averses isolées qui font germer puis laissent
-périr — le faux départ, qui coûte au ménage une semence entière.
+En vue d'ensemble, la fiche affiche à la place un **tableau récapitulatif des
+dix sections**, tous thèmes confondus — forêt, pluie, campagne, pluies
+extrêmes.
 
 ---
 
-## Ce qui reste
+## 3 · NDVI, NDMI, NDWI, NDTI — le script est prêt, il reste à le lancer
 
-**32 indicateurs environnementaux** non calculés. Le plus accessible ensuite :
-MODIS pour la température de surface (lignes 36, 41, 42), ou Sentinel-2 pour
-les indices de végétation (33, 34, 35, 63).
+Tu m'as demandé de faire apparaître les quatre indices de végétation et d'eau.
+Ils correspondent à quatre lignes de l'indice restées vides :
 
-Je peux aussi ajouter les données satellitaires au bloc **Téléchargements** —
-forêt, pluie annuelle, pluie saisonnière — si tu le veux. Dis-le-moi.
+| Ligne | Indicateur | Ce que ça mesure |
+|---|---|---|
+| 33 | Stabilité de la végétation en saison sèche (**NDVI**) | vigueur du couvert : ce qui reste vert quand il ne pleut plus |
+| 34 | Humidité de la végétation et des sols (**NDMI**) | eau contenue dans la plante et le sol — chute **avant** le NDVI, c'est un signal précoce |
+| 35 | Stabilité des eaux de surface (**NDWI**) | eau libre : sources, mares, cours d'eau qui tiennent en saison sèche |
+| 63 | Turbidité de l'eau (**NDTI**) | charge en sédiments — ce que l'érosion emporte des versants vers l'eau |
+
+**Ce sont eux qui ferment la boucle.** Le tableau de bord montre aujourd'hui une
+forêt qui recule, une campagne de printemps à 83 % de sa normale et des averses
+qui s'intensifient. Le NDMI dira si le sol s'assèche vraiment entre deux
+saisons ; le NDTI dira si l'érosion attendue arrive bien dans l'eau. Perception
+déclarée, pluie mesurée, et maintenant état du sol : trois sources
+indépendantes sur la même question.
+
+### La saison sèche est calculée, pas supposée
+
+J'ai pris les 45 ans de CHIRPS déjà exportés pour trouver le trimestre le plus
+sec. C'est **janvier-février-mars**, 120 mm au total, loin devant les autres :
+
+```
+jan  40   fév  42   mar  38   avr  89   mai 141   jun  89
+jul  84   aoû 134   sep 164   oct 202   nov 105   déc  43
+```
+
+C'est aussi le moment le plus utile à observer : la végétation y est à son plus
+stressé, juste avant les semis de printemps. Ce qui reste vert en mars est ce
+qui tient sans pluie.
+
+### Ce que tu dois faire
+
+1. Ouvre `satellite\gee_indices_vegetation.js` sur ton bureau, copie tout.
+2. Sur https://code.earthengine.google.com, efface l'éditeur, colle, **Run**.
+3. Regarde la console : elle affiche le **nombre d'images retenues** par saison
+   sèche. Quelques dizaines par an, c'est bon. Moins de cinq une année donnée,
+   dis-le-moi — cette saison-là sera trop nuageuse pour être fiable.
+4. Onglet **Tasks** → **Run** sur `IRLA_indices_vegetation`.
+5. Envoie-moi `indices_vegetation_sections.csv`.
+
+Une carte NDVI s'affiche aussi dans l'aperçu, tu verras tout de suite où le
+couvert tient et où il a lâché.
+
+### Une réserve que je dois signaler d'avance
+
+Sentinel-2 niveau 2A commence en 2017, et les premières années sont maigres en
+images exploitables sous les tropiques. La période de référence sera donc
+courte — trois saisons sèches — là où une climatologie en demanderait trente.
+**Ces quatre indicateurs diront un changement récent, pas une tendance
+longue.** C'est une limite de la source, pas du calcul ; elle sera écrite dans
+la note de chaque indicateur, comme pour la résolution de CHIRPS.
+
+---
+
+## Ce qui reste après ça
+
+**28 indicateurs environnementaux** non calculés au lieu de 32. Ensuite, le
+plus accessible : MODIS pour la température de surface (lignes 36, 41, 42).

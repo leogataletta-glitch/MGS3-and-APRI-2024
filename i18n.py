@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-16-saison"
+VERSION = "2026-08-16-onglets"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -445,8 +445,8 @@ DICO = {
               "Forest Change, de 2000 à 2025, à 30 mètres de résolution — et "
               "dit sans détour ce qui manque encore, et de quelle source."},
 
-    "e_bloc1": {"en": "1 · Forest cover across the ten sections",
-                "fr": "1 · Le couvert forestier sur les dix sections"},
+    "e_bloc1": {"en": "Forest cover across the ten sections",
+                "fr": "Le couvert forestier sur les dix sections"},
     "e_c_foret2000": {"en": "Forest in 2000", "fr": "Forêt en 2000"},
     "e_c_foret2000_sous": {"en": "{p} % of the total area",
                            "fr": "{p} % de la surface totale"},
@@ -460,8 +460,8 @@ DICO = {
     "e_c_chronique_sous": {"en": "per year, chronic clearing",
                            "fr": "par an, déboisement chronique"},
 
-    "e_bloc2": {"en": "2 · Year by year, 2001 to 2025",
-                "fr": "2 · Année par année, de 2001 à 2025"},
+    "e_bloc2": {"en": "Year by year, 2001 to 2025",
+                "fr": "Année par année, de 2001 à 2025"},
     "e_bloc2_texte": {
         "en": "The shape of this series is the finding. {p} % of twenty-five "
               "years of forest loss falls in 2016-2018 — Hurricane Matthew, "
@@ -485,8 +485,8 @@ DICO = {
               "couché par le vent : les dégâts cycloniques comptent comme "
               "perte."},
 
-    "e_bloc3": {"en": "3 · Where, across the territory",
-                "fr": "3 · Où, sur le territoire"},
+    "e_bloc3": {"en": "Where, across the territory",
+                "fr": "Où, sur le territoire"},
     "e_quoi_carto": {"en": "What to map", "fr": "Quoi cartographier"},
     "e_carte_foret2000_pct": {"en": "Forest cover in 2000 (% of area)",
                               "fr": "Couvert forestier en 2000 (% de la surface)"},
@@ -506,8 +506,8 @@ DICO = {
     "e_info_carte": {"en": "{f} ha of forest in 2000",
                      "fr": "{f} ha boisés en 2000"},
 
-    "e_bloc_grille": {"en": "5 · Where exactly the forest was lost",
-                      "fr": "5 · Où exactement la forêt a disparu"},
+    "e_bloc_grille": {"en": "Where exactly the forest was lost",
+                      "fr": "Où exactement la forêt a disparu"},
     "e_bloc_grille_texte": {
         "en": "Hansen works at 30 metres. Aggregated into 300-metre cells, the "
               "loss becomes {n} points that a browser can draw — each one "
@@ -540,8 +540,8 @@ DICO = {
               "2016-2018 isole l'ouragan Matthew ; l'exclure laisse voir le "
               "défrichement chronique seul."},
 
-    "e_bloc_pluie": {"en": "6 · Rainfall, 1981 to 2025",
-                     "fr": "6 · Les précipitations, de 1981 à 2025"},
+    "e_bloc_pluie": {"en": "Rainfall, 1981 to 2025",
+                     "fr": "Les précipitations, de 1981 à 2025"},
     "e_bloc_pluie_texte": {
         "en": "The calendar-year total, shown here for context. Over the last "
               "{f} years up to {a} it sits at 96 % of the 1991-2020 normal: on "
@@ -574,8 +574,8 @@ DICO = {
     "e_p_humide": {"en": "Wettest year", "fr": "Année la plus humide"},
     "e_p_humide_sous": {"en": "in {a}", "fr": "en {a}"},
 
-    "e_bloc4": {"en": "4 · Section by section",
-                "fr": "4 · Section par section"},
+    "e_bloc4": {"en": "Section by section",
+                "fr": "Section par section"},
     "e_bloc4_note": {
         "en": "Sorted from the steepest decline. The shock column is what "
               "separates two situations that the rate alone confuses: a high "
@@ -593,8 +593,8 @@ DICO = {
     "e_col_chronique": {"en": "Chronic rate", "fr": "Taux chronique"},
 
     # --- bloc 7 : la campagne agricole ---------------------------------
-    "e_bloc_saison": {"en": "7 · The growing season",
-                      "fr": "7 · La campagne agricole"},
+    "e_bloc_saison": {"en": "The growing season",
+                      "fr": "La campagne agricole"},
     "e_bloc_saison_texte": {
         "en": "The same satellite, the same normal, the same period — and the "
               "opposite diagnosis. On the calendar year the Grand Sud receives "
@@ -686,8 +686,112 @@ DICO = {
               "pratiquement jamais. La résilience se mesure à la mauvaise "
               "année."},
 
-    "e_bloc5": {"en": "8 · What the environmental dimension still lacks",
-                "fr": "8 · Ce qui manque encore à la dimension environnementale"},
+    # --- sous-onglets et sélecteur de tête ------------------------------
+    "e_focus": {"en": "Territory shown", "fr": "Territoire affiché"},
+    "e_focus_ensemble": {"en": "All ten sections", "fr": "Ensemble des 10 sections"},
+    "e_focus_aide": {
+        "en": "Choose once, and every tab below follows. Keep « all ten "
+              "sections » to compare them; pick one to read it on its own. Maps "
+              "always keep the ten polygons — a patch of loss reads against "
+              "what surrounds it.",
+        "fr": "Choisis une fois, tous les onglets ci-dessous suivent. Garde "
+              "« ensemble des 10 sections » pour les comparer ; choisis-en une "
+              "pour la lire seule. Les cartes gardent toujours les dix "
+              "polygones — une tache de perte se lit par rapport à ce qui "
+              "l'entoure."},
+    "e_o_foret": {"en": "Forest cover", "fr": "Couverture forestière"},
+    "e_o_defor": {"en": "Deforestation", "fr": "Déforestation"},
+    "e_o_pluie": {"en": "Rainfall", "fr": "Précipitations"},
+    "e_o_secheresse": {"en": "Drought", "fr": "Sécheresse"},
+    "e_o_fiche": {"en": "Section profile", "fr": "Fiche par section"},
+    "e_o_lacunes": {"en": "Gaps", "fr": "Lacunes"},
+    "e_vue_ensemble_note": {
+        "en": "Unweighted mean of the ten sections. The table below gives each "
+              "of them.",
+        "fr": "Moyenne non pondérée des dix sections. Le tableau ci-dessous "
+              "donne chacune d'elles."},
+    "e_vue_section_note": {"en": "Figures for {s} alone.",
+                           "fr": "Chiffres de {s} seule."},
+    "e_rang": {"en": "{r} of {n}", "fr": "{r}e sur {n}"},
+    "e_carte_toujours_note": {
+        "en": "The map always shows the ten sections, whichever one is "
+              "selected: a value only means something next to the others.",
+        "fr": "La carte montre toujours les dix sections, quelle que soit "
+              "celle qui est choisie : une valeur ne signifie quelque chose "
+              "qu'à côté des autres."},
+
+    # --- tableau des précipitations -------------------------------------
+    "e_pc_normale": {"en": "Normal", "fr": "Normale"},
+    "e_pc_recent": {"en": "Recent", "fr": "Récent"},
+    "e_pc_sec": {"en": "Driest", "fr": "La plus sèche"},
+    "e_pc_humide": {"en": "Wettest", "fr": "La plus humide"},
+    "e_pc_note": {
+        "en": "Sorted from the driest normal. The spread between Dumont and "
+              "Mouline — more than double — is the orographic gradient: the "
+              "same storm gives very different amounts on either side of the "
+              "ridge.",
+        "fr": "Triées de la normale la plus sèche. L'écart entre Dumont et "
+              "Mouline — plus du double — est le gradient orographique : la "
+              "même perturbation donne des cumuls très différents de part et "
+              "d'autre de la crête."},
+
+    # --- fiche par section ----------------------------------------------
+    "e_fiche_invite": {
+        "en": "Pick a section in the selector at the top of this tab to see "
+              "everything the satellite says about it, gathered on one page. "
+              "Below, the ten sections side by side.",
+        "fr": "Choisis une section dans le sélecteur en haut de cet onglet "
+              "pour voir tout ce que le satellite en dit, réuni sur une page. "
+              "Ci-dessous, les dix sections côte à côte."},
+    "e_fiche_recap_note": {
+        "en": "Sorted from the steepest forest decline. « Campaign » is "
+              "spring rainfall as a share of its normal — the figure the index "
+              "reads.",
+        "fr": "Triées de la baisse forestière la plus forte. « Campagne » est "
+              "la pluie de printemps en part de sa normale — le chiffre que "
+              "lit l'indice."},
+    "e_fg_foret": {"en": "Forest cover", "fr": "Couvert forestier"},
+    "e_fg_grille": {"en": "Where the loss fell", "fr": "Où la perte est tombée"},
+    "e_fg_pluie": {"en": "Rainfall, calendar year",
+                   "fr": "Pluie, année civile"},
+    "e_fg_saison": {"en": "Spring campaign", "fr": "Campagne de printemps"},
+    "e_fg_scores": {"en": "Environmental indicators scored here",
+                    "fr": "Indicateurs environnementaux scorés ici"},
+    "e_fp_foret2025": {"en": "Forest 2025", "fr": "Forêt 2025"},
+    "e_fp_choc": {"en": "Share from Matthew", "fr": "Part due à Matthew"},
+    "e_fp_choc_sous": {"en": "chronic rate {c} %/yr",
+                       "fr": "taux chronique {c} %/an"},
+    "e_fp_cellules": {"en": "Cells affected", "fr": "Cellules touchées"},
+    "e_fp_cellules_sous": {"en": "300 m each", "fr": "de 300 m chacune"},
+    "e_fp_annee_pire": {"en": "Worst year", "fr": "Pire année"},
+    "e_fp_cellule_pire": {"en": "Worst single cell",
+                          "fr": "Cellule la plus touchée"},
+    "e_fp_cellule_pire_sous": {"en": "in {a}", "fr": "en {a}"},
+    "e_fp_ratees": {"en": "Campaigns with no clear start",
+                    "fr": "Campagnes sans départ net"},
+    "e_fp_ratees_sous": {"en": "since 1981", "fr": "depuis 1981"},
+    "e_fp_contre": {"en": "against {n} in 1981-2000",
+                    "fr": "contre {n} en 1981-2000"},
+    "e_fiche_scores_note": {
+        "en": "Only indicators the satellite can currently compute. The "
+              "« Gaps » tab lists the rest and names the source that would "
+              "unlock each one.",
+        "fr": "Seuls les indicateurs que le satellite sait calculer "
+              "aujourd'hui. L'onglet « Lacunes » liste les autres et nomme la "
+              "source qui débloquerait chacun."},
+    "e_fs_ligne": {"en": "Line", "fr": "Ligne"},
+    "e_fs_indicateur": {"en": "Indicator", "fr": "Indicateur"},
+    "e_fs_valeur": {"en": "Value", "fr": "Valeur"},
+    "e_fs_score": {"en": "Score", "fr": "Score"},
+    "e_fr_foret": {"en": "Forest 2000", "fr": "Forêt 2000"},
+    "e_fr_perte": {"en": "Lost", "fr": "Perdu"},
+    "e_fr_taux": {"en": "Rate / year", "fr": "Taux / an"},
+    "e_fr_pluie": {"en": "Normal rainfall", "fr": "Pluie normale"},
+    "e_fr_campagne": {"en": "Campaign", "fr": "Campagne"},
+    "e_fr_j50": {"en": "Days ≥ 50 mm", "fr": "Jours ≥ 50 mm"},
+
+    "e_bloc5": {"en": "What the environmental dimension still lacks",
+                "fr": "Ce qui manque encore à la dimension environnementale"},
     "e_bloc5_texte": {
         "en": "{n} environmental indicators remain uncomputed. None is out of "
               "reach: each depends on a dataset that exists and is public. "

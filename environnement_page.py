@@ -102,6 +102,50 @@ def _fmt(v, dec=1):
     return f"{v:,.{dec}f}".replace(",", " ").replace(".", ",")
 
 
+# Le sélecteur de tête vaut soit une section, soit ce jeton, qui demande la
+# vue territoriale — cartes, classements, séries des dix. Un jeton plutôt que
+# None : il traverse les widgets Streamlit sans ambiguïté.
+ENSEMBLE = "__ensemble__"
+
+
+def _libelle_focus(v):
+    return T("e_focus_ensemble") if v == ENSEMBLE else v
+
+
+def _rang(foret_sections, sec, cle, meilleur_haut=True):
+    """Rang de la section parmi les dix sur une grandeur, 1 = la mieux placée.
+
+    Rendu tel quel plutôt que sous forme de score : un rang ne se moyenne pas
+    et ne se pondère pas, il situe. C'est exactement ce qu'on demande à une
+    fiche — « où en est cette section par rapport aux autres », pas « combien
+    vaut-elle ».
+    """
+    vals = [(s, d.get(cle)) for s, d in foret_sections.items()
+            if d.get(cle) is not None]
+    if not vals or sec not in dict(vals):
+        return None, len(vals)
+    vals.sort(key=lambda kv: kv[1], reverse=meilleur_haut)
+    for i, (s, _v) in enumerate(vals, 1):
+        if s == sec:
+            return i, len(vals)
+    return None, len(vals)
+
+
+def _moyenne_series(sections, cle):
+    """Moyenne des dix sections, année par année, pour la vue d'ensemble.
+
+    Moyenne non pondérée par la surface : les dix sections sont les unités
+    d'enquête, et c'est à cette échelle que tout le reste du tableau de bord
+    raisonne. Une pondération par l'aire dirait autre chose — le territoire
+    plutôt que l'échantillon — et mélangerait deux lectures.
+    """
+    series = [d[cle] for d in sections.values() if cle in d]
+    if not series:
+        return {}
+    annees = sorted(series[0], key=int)
+    return {a: sum(s.get(a, 0) for s in series) / len(series) for a in annees}
+
+
 # ----------------------------------------------------------------------
 def _serie_annuelle_svg(pertes, annee_pic=None, largeur=1040):
     """Perte annuelle en barres verticales.
@@ -186,7 +230,7 @@ def _couleur_annee(a):
     return RAMPE_ANNEES[-1][1]
 
 
-def _bloc_grille(grille, foret):
+def _bloc_grille(grille, foret, focus=ENSEMBLE):
     """Où la perte s'est concentrée, cellule de 300 m par cellule de 300 m."""
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc ambre">{T("e_bloc_grille")}</div>',
@@ -203,6 +247,11 @@ def _bloc_grille(grille, foret):
                            key=f"env_grille_{i18n.get_lang()}")
         retenues = [c for c in grille["cellules"]
                     if bornes[0] <= c["a"] <= bornes[1]]
+        # La carte garde ses dix polygones même quand une section est choisie :
+        # une tache de déforestation se lit par rapport à ce qui l'entoure. Ce
+        # sont les points qui se restreignent, pas le fond.
+        if focus != ENSEMBLE:
+            retenues = [c for c in retenues if c["s"] == focus]
         perdu = sum(c["ha"] for c in retenues)
 
         st.markdown(
@@ -312,7 +361,62 @@ def _serie_pluie_svg(serie, normale, largeur=1040,
 </svg>"""
 
 
-def _bloc_pluie(pluie):
+def _tableau_pluie(pluie):
+    """Les dix sections sur la pluie annuelle, triées de la plus sèche."""
+    ordre = sorted(pluie["sections"].items(), key=lambda kv: kv[1]["normale_mm"])
+    entetes = [T("e_sc_section"), T("e_pc_normale"), T("e_pc_recent"),
+               T("e_sc_part"), T("e_pc_sec"), T("e_pc_humide")]
+    out = ['<div style="overflow-x:auto"><table style="width:100%;'
+           'border-collapse:collapse;font-size:14.5px">']
+    out.append('<tr>' + ''.join(
+        f'<th style="text-align:{"left" if i == 0 else "right"};'
+        f'padding:9px 10px;border-bottom:2px solid #e6ecf4;font-size:11.5px;'
+        f'letter-spacing:.05em;text-transform:uppercase;color:#6b7590;'
+        f'font-weight:700">{_e(h)}</th>' for i, h in enumerate(entetes))
+        + '</tr>')
+    C = 'padding:9px 10px;border-bottom:1px solid #f0f4f9;text-align:right;' \
+        'font-variant-numeric:tabular-nums'
+    for sec, d in ordre:
+        part = d["ratio_normale"]
+        coul = "#b4451f" if part < 90 else ("#c98a2e" if part < 96 else "#2a6b3f")
+        out.append(
+            f'<tr><td style="padding:9px 10px;border-bottom:1px solid #f0f4f9">'
+            f'{_e(sec)}</td>'
+            f'<td style="{C};color:#6b7590">{_fmt(d["normale_mm"], 0)} mm</td>'
+            f'<td style="{C}">{_fmt(d["pluie_courante_mm"], 0)} mm</td>'
+            f'<td style="{C};color:{coul};font-weight:700">'
+            f'{_fmt(part, 0)} %</td>'
+            f'<td style="{C};color:#6b7590">{_fmt(d["minimum_mm"], 0)} mm '
+            f'<span style="color:#a9b0be">({d["annee_min"]})</span></td>'
+            f'<td style="{C};color:#6b7590">{_fmt(d["maximum_mm"], 0)} mm '
+            f'<span style="color:#a9b0be">({d["annee_max"]})</span></td></tr>')
+    out.append('</table></div>')
+    return ''.join(out)
+
+
+def _pluie_ensemble(pluie):
+    """Un bloc « moyenne des dix » de même forme qu'une section, pour la vue
+    territoriale. Les extrêmes sont pris sur la moyenne territoriale et non
+    section par section : c'est l'année sèche du Grand Sud qu'on cherche, pas
+    la juxtaposition de dix années sèches différentes."""
+    secs = pluie["sections"]
+    serie = _moyenne_series(secs, "serie_mm")
+    ref = secs[next(iter(secs))]
+    normale = sum(d["normale_mm"] for d in secs.values()) / len(secs)
+    courant = sum(d["pluie_courante_mm"] for d in secs.values()) / len(secs)
+    an_min = min(serie, key=lambda a: serie[a])
+    an_max = max(serie, key=lambda a: serie[a])
+    return {
+        "normale_mm": normale, "pluie_courante_mm": courant,
+        "ratio_normale": 100.0 * courant / normale,
+        "minimum_mm": serie[an_min], "annee_min": an_min,
+        "maximum_mm": serie[an_max], "annee_max": an_max,
+        "normale_periode": ref["normale_periode"],
+        "fenetre_ans": ref["fenetre_ans"], "serie_mm": serie,
+    }
+
+
+def _bloc_pluie(pluie, focus=ENSEMBLE):
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc">{T("e_bloc_pluie")}</div>',
                     unsafe_allow_html=True)
@@ -322,10 +426,11 @@ def _bloc_pluie(pluie):
             f'{T("e_bloc_pluie_texte", a=pluie["annee_evaluee"], f=pluie["sections"][SECTIONS[0]]["fenetre_ans"])}'
             f'</p>', unsafe_allow_html=True)
 
-        sec = st.selectbox(T("section_communale"),
-                           [s for s in SECTIONS if s in pluie["sections"]],
-                           key=f"env_pluie_{i18n.get_lang()}")
-        d = pluie["sections"][sec]
+        if focus == ENSEMBLE or focus not in pluie["sections"]:
+            d = _pluie_ensemble(pluie)
+            st.caption(T("e_vue_ensemble_note"))
+        else:
+            d = pluie["sections"][focus]
 
         c1, c2, c3, c4 = st.columns(4)
         for col, lib, val, unite, sous in [
@@ -350,6 +455,10 @@ def _bloc_pluie(pluie):
             "'Segoe UI',sans-serif\">" + svg + "</div>",
             height=245, scrolling=False)
         st.caption(T("e_bloc_pluie_note"))
+
+        st.markdown('<div style="height:14px"></div>', unsafe_allow_html=True)
+        st.markdown(_tableau_pluie(pluie), unsafe_allow_html=True)
+        st.caption(T("e_pc_note"))
 
 
 def _tableau_saison(saison):
@@ -411,7 +520,52 @@ def _tableau_saison(saison):
     return ''.join(out)
 
 
-def _bloc_saison(saison):
+def _saison_ensemble(saison):
+    """Moyenne des dix sections sur la campagne, même forme qu'une section."""
+    secs = saison["sections"]
+    n = len(secs)
+    moy = lambda k: sum(d[k] for d in secs.values()) / n          # noqa: E731
+    somme = lambda k: sum(d[k] for d in secs.values())            # noqa: E731
+    serie = _moyenne_series(secs, "serie_mam")
+    normale = moy("mam_normale_mm")
+    courant = moy("mam_courant_mm")
+    # La date d'installation est moyennée en JOUR DE L'ANNÉE puis reconvertie :
+    # moyenner des libellés n'a pas de sens, et moyenner des dates de sections
+    # dont certaines n'ont pas de départ net fausserait le résultat.
+    jours = [d["install_jour_recent"] for d in secs.values()
+             if d.get("install_jour_recent")]
+    return {
+        "mam_normale_mm": normale, "mam_courant_mm": courant,
+        "ratio_normale": 100.0 * courant / normale,
+        "j50_recent": moy("j50_recent"), "j50_ancien": moy("j50_ancien"),
+        "secs_mam_recent": moy("secs_mam_recent"),
+        "secs_mam_ancien": moy("secs_mam_ancien"),
+        "install_date_recent": (_jour_vers_libelle(sum(jours) / len(jours))
+                                if jours else None),
+        "install_decalage_j": moy("install_decalage_j"),
+        "install_ratees": round(somme("install_ratees") / n, 1),
+        "serie_mam": serie,
+    }
+
+
+_MOIS_FR = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet",
+            "août", "septembre", "octobre", "novembre", "décembre"]
+_MOIS_EN = ["January", "February", "March", "April", "May", "June", "July",
+            "August", "September", "October", "November", "December"]
+_CUMUL = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365]
+
+
+def _jour_vers_libelle(j):
+    j = int(round(j))
+    mois = _MOIS_FR if i18n.get_lang() == "fr" else _MOIS_EN
+    for m in range(12):
+        if j <= _CUMUL[m + 1]:
+            return (f"{j - _CUMUL[m]} {mois[m]}" if i18n.get_lang() == "fr"
+                    else f"{mois[m]} {j - _CUMUL[m]}")
+    return f"{j - 334} {mois[11]}"
+
+
+def _bloc_saison(saison, focus=ENSEMBLE):
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc vert">{T("e_bloc_saison")}</div>',
                     unsafe_allow_html=True)
@@ -420,10 +574,11 @@ def _bloc_saison(saison):
             f'margin:4px 0 10px;max-width:92ch">{T("e_bloc_saison_texte")}</p>',
             unsafe_allow_html=True)
 
-        dispo = [s for s in SECTIONS if s in saison["sections"]]
-        sec = st.selectbox(T("section_communale"), dispo,
-                           key=f"env_saison_{i18n.get_lang()}")
-        d = saison["sections"][sec]
+        if focus == ENSEMBLE or focus not in saison["sections"]:
+            d = _saison_ensemble(saison)
+            st.caption(T("e_vue_ensemble_note"))
+        else:
+            d = saison["sections"][focus]
         norm = saison["normale_periode"]
 
         dec = d["install_decalage_j"]
@@ -515,6 +670,369 @@ def _tableau_sections(foret):
     out.append('</table></div>')
     return ''.join(out)
 
+def _onglet_foret(foret, focus):
+    """Couvert forestier : les chiffres, la chronologie, la carte, le détail.
+
+    En vue territoriale, les quatre cartouches portent l'agrégat des dix
+    sections. Quand une section est choisie, ils portent ses chiffres à elle,
+    et un rang s'affiche sous chacun — sans rang, un taux de −0,51 % ne dit
+    pas si la section est parmi les plus atteintes ou parmi les plus épargnées.
+    """
+    ens = foret["ensemble"]
+    d = ens if focus == ENSEMBLE else foret["sections"].get(focus, ens)
+    secs = foret["sections"]
+
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc vert">{T("e_bloc1")}</div>',
+                    unsafe_allow_html=True)
+        if focus != ENSEMBLE:
+            st.caption(T("e_vue_section_note", s=focus))
+
+        def sous(cle, meilleur_haut, base):
+            if focus == ENSEMBLE:
+                return base
+            r, n = _rang(secs, focus, cle, meilleur_haut)
+            return base if r is None else f"{base} · {T('e_rang', r=r, n=n)}"
+
+        c1, c2, c3, c4 = st.columns(4)
+        # Les valeurs sont mises en forme ici plutôt que laissées au cartouche :
+        # une surface se lit en entiers avec une espace de millier, un taux
+        # annuel demande deux décimales — à un dixième près, −0,5 et −0,54 se
+        # confondent alors qu'ils ne sont pas dans la même classe de score.
+        cartes = [
+            (c1, T("e_c_foret2000"), _fmt(d["foret2000_ha"], 0), "ha",
+             sous("foret2000_pct", True,
+                  T("e_c_foret2000_sous", p=_fmt(d["foret2000_pct"]))),
+             "#5b9c5a"),
+            (c2, T("e_c_perte"), _fmt(d["perte_totale_ha"], 0), "ha",
+             sous("perte_relative_pct", False,
+                  T("e_c_perte_sous", p=_fmt(d["perte_relative_pct"]))),
+             "#b5451f"),
+            (c3, T("e_c_taux"), _fmt(d["taux_annuel_net"], 2), "%",
+             sous("taux_annuel_net", True, T("e_c_taux_sous")), "#eb9d3a"),
+            (c4, T("e_c_chronique"), _fmt(d["taux_annuel_hors_choc"], 2), "%",
+             sous("taux_annuel_hors_choc", True, T("e_c_chronique_sous")),
+             "#7ba05b"),
+        ]
+        for col, lib, val, unite, s_txt, coul in cartes:
+            with col:
+                st.markdown(
+                    map_render.cartouche_html(lib, val, unite, s_txt,
+                                              couleur=coul),
+                    unsafe_allow_html=True)
+        st.markdown(
+            '<p style="font-size:15px;color:#3c4761;margin:10px 0 0">'
+            + _bulle("boucle_retroaction") + " &nbsp;·&nbsp; "
+            + _bulle("point_de_levier") + "</p>", unsafe_allow_html=True)
+
+    # --------------------------------------------------- la série annuelle
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc ambre">{T("e_bloc2")}</div>',
+                    unsafe_allow_html=True)
+        st.markdown(
+            f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
+            f'margin:4px 0 10px;max-width:92ch">'
+            f'{T("e_bloc2_texte", p=_fmt(d["part_choc_pct"], 0))}</p>',
+            unsafe_allow_html=True)
+        svg = _serie_annuelle_svg(d["pertes_annuelles_ha"], annee_pic=2016)
+        components.html(
+            '<div style="background:#ffffff;font-family:system-ui,-apple-system,'
+            "'Segoe UI',sans-serif\">" + svg + "</div>",
+            height=225, scrolling=False)
+        st.caption(T("e_bloc2_note"))
+
+    # ------------------------------------------------------------- la carte
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc">{T("e_bloc3")}</div>',
+                    unsafe_allow_html=True)
+        cle, unite, polarite = CARTES[
+            st.selectbox(T("e_quoi_carto"), range(len(CARTES)),
+                         format_func=lambda i: T("e_carte_" + CARTES[i][0]),
+                         key=f"env_carte_{i18n.get_lang()}")]
+        valeurs = {s: secs.get(s, {}).get(cle) for s in SECTIONS}
+        seuils = map_render.nice_thresholds(
+            [v for v in valeurs.values() if v is not None])
+        infos = {s: T("e_info_carte", f=_fmt(secs[s]["foret2000_ha"], 0))
+                 for s in SECTIONS if s in secs}
+        hauteur = 660
+        svg, seuils_ret, _mode = map_render.render_map_svg(
+            valeurs, {s: 1 for s in SECTIONS}, seuils, height=hauteur,
+            polarity=polarite, unite=unite, infos=infos)
+        legende = "".join(
+            f'<span style="display:inline-flex;align-items:center;gap:7px;'
+            f'margin-right:18px"><span style="width:22px;height:12px;'
+            f'border-radius:3px;background:{c};box-shadow:inset 0 0 0 1px '
+            f'rgba(0,0,0,.12)"></span><span style="font-size:13px;'
+            f'color:#52514e">{lab}</span></span>'
+            for c, lab in map_render.legend_items(seuils_ret, polarite, unite))
+        components.html(
+            '<div style="font-family:system-ui,-apple-system,\'Segoe UI\','
+            'sans-serif;background:#ffffff"><div style="margin:0 0 8px">'
+            f'<span style="font-size:11.5px;color:#898781;letter-spacing:.05em;'
+            f'margin-right:14px">{T("legende_seuils")}</span>{legende}</div>'
+            f'{svg}</div>', height=hauteur + 46, scrolling=False)
+        st.caption(T("e_carte_toujours_note"))
+
+    # ------------------------------------------------------------ le détail
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc vert">{T("e_bloc4")}</div>',
+                    unsafe_allow_html=True)
+        st.caption(T("e_bloc4_note"))
+        st.markdown(_tableau_sections(foret), unsafe_allow_html=True)
+
+
+# ----------------------------------------------------------- fiche section
+def _puce(lib, val, sous=""):
+    return (f'<div style="flex:1 1 190px;min-width:170px;padding:11px 14px;'
+            f'background:#fbfcfe;border:1px solid #eef2f7;border-radius:11px">'
+            f'<div style="font-size:11px;letter-spacing:.05em;'
+            f'text-transform:uppercase;color:#8a93a5;font-weight:700">'
+            f'{_e(lib)}</div>'
+            f'<div style="font-size:22px;font-weight:700;color:#101728;'
+            f'font-variant-numeric:tabular-nums;margin-top:2px">{_e(val)}</div>'
+            + (f'<div style="font-size:12.5px;color:#6b7590;margin-top:1px">'
+               f'{_e(sous)}</div>' if sous else '') + '</div>')
+
+
+def _groupe(titre, puces):
+    return (f'<div style="margin:0 0 16px">'
+            f'<div style="font-size:12px;letter-spacing:.06em;'
+            f'text-transform:uppercase;color:#1a6bb0;font-weight:700;'
+            f'margin:0 0 7px">{_e(titre)}</div>'
+            f'<div style="display:flex;flex-wrap:wrap;gap:9px">'
+            + ''.join(puces) + '</div></div>')
+
+
+def _fiche_section(foret, pluie, saison, grille, res, focus):
+    """Tout ce que le satellite dit d'une section, réuni sur une page.
+
+    Les onglets thématiques servent à comparer les sections entre elles ; la
+    fiche sert à comprendre une section. Ce sont deux lectures différentes, et
+    c'est pourquoi les mêmes chiffres y reviennent sous une autre forme —
+    groupés par sujet plutôt que par source, et accompagnés du rang.
+    """
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc">{T("e_o_fiche")}</div>',
+                    unsafe_allow_html=True)
+
+        if focus == ENSEMBLE:
+            st.markdown(
+                f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
+                f'margin:4px 0 12px;max-width:92ch">{T("e_fiche_invite")}</p>',
+                unsafe_allow_html=True)
+            st.markdown(_tableau_recap(foret, pluie, saison),
+                        unsafe_allow_html=True)
+            st.caption(T("e_fiche_recap_note"))
+            return
+
+        st.markdown(
+            f'<h3 style="margin:6px 0 2px;font-size:25px;color:#101728">'
+            f'{_e(focus)}</h3>', unsafe_allow_html=True)
+
+        blocs = []
+        f = foret["sections"].get(focus)
+        if f:
+            r_perte, n = _rang(foret["sections"], focus,
+                               "perte_relative_pct", False)
+            r_taux, _ = _rang(foret["sections"], focus, "taux_annuel_net", True)
+            blocs.append(_groupe(T("e_fg_foret"), [
+                _puce(T("e_c_foret2000"), f'{_fmt(f["foret2000_ha"], 0)} ha',
+                      T("e_c_foret2000_sous", p=_fmt(f["foret2000_pct"]))),
+                _puce(T("e_fp_foret2025"), f'{_fmt(f["foret2025_net_ha"], 0)} ha',
+                      T("e_c_foret2000_sous", p=_fmt(f["foret2025_pct"]))),
+                _puce(T("e_c_perte"), f'{_fmt(f["perte_totale_ha"], 0)} ha',
+                      f'{_fmt(f["perte_relative_pct"])} % · '
+                      + T("e_rang", r=r_perte, n=n)),
+                _puce(T("e_c_taux"), f'{_fmt(f["taux_annuel_net"], 2)} %',
+                      T("e_rang", r=r_taux, n=n)),
+                _puce(T("e_fp_choc"), f'{_fmt(f["part_choc_pct"], 0)} %',
+                      T("e_fp_choc_sous",
+                        c=_fmt(f["taux_annuel_hors_choc"], 2))),
+            ]))
+
+        if grille:
+            cel = [c for c in grille["cellules"] if c["s"] == focus]
+            if cel:
+                pire = max(cel, key=lambda c: c["ha"])
+                par_an = {}
+                for c in cel:
+                    par_an[c["a"]] = par_an.get(c["a"], 0) + c["ha"]
+                an_pire = max(par_an, key=par_an.get)
+                blocs.append(_groupe(T("e_fg_grille"), [
+                    _puce(T("e_fp_cellules"), f'{len(cel)}',
+                          T("e_fp_cellules_sous")),
+                    _puce(T("e_fp_annee_pire"), f'{an_pire}',
+                          f'{_fmt(par_an[an_pire], 1)} ha'),
+                    _puce(T("e_fp_cellule_pire"), f'{_fmt(pire["ha"], 2)} ha',
+                          T("e_fp_cellule_pire_sous", a=pire["a"])),
+                ]))
+
+        p = (pluie or {}).get("sections", {}).get(focus)
+        if p:
+            blocs.append(_groupe(T("e_fg_pluie"), [
+                _puce(T("e_p_normale"), f'{_fmt(p["normale_mm"], 0)} mm',
+                      T("e_p_normale_sous", a=p["normale_periode"][0],
+                        b=p["normale_periode"][1])),
+                _puce(T("e_p_recent"), f'{_fmt(p["pluie_courante_mm"], 0)} mm',
+                      T("e_p_recent_sous", p=_fmt(p["ratio_normale"], 0))),
+                _puce(T("e_p_sec"), f'{_fmt(p["minimum_mm"], 0)} mm',
+                      T("e_p_sec_sous", a=p["annee_min"])),
+                _puce(T("e_p_humide"), f'{_fmt(p["maximum_mm"], 0)} mm',
+                      T("e_p_humide_sous", a=p["annee_max"])),
+            ]))
+
+        s = (saison or {}).get("sections", {}).get(focus)
+        if s:
+            dec = s.get("install_decalage_j")
+            if dec is None:
+                sous_i = ""
+            elif abs(dec) < 3:
+                sous_i = T("e_s_install_sous_stable")
+            elif dec > 0:
+                sous_i = T("e_s_install_sous_tard", n=_fmt(dec, 0))
+            else:
+                sous_i = T("e_s_install_sous_tot", n=_fmt(-dec, 0))
+            blocs.append(_groupe(T("e_fg_saison"), [
+                _puce(T("e_s_normale"), f'{_fmt(s["mam_normale_mm"], 0)} mm',
+                      T("e_s_normale_sous", a=saison["normale_periode"][0],
+                        b=saison["normale_periode"][1])),
+                _puce(T("e_s_recent", f=saison["fenetre_ans"]),
+                      f'{_fmt(s["mam_courant_mm"], 0)} mm',
+                      T("e_s_recent_sous", p=_fmt(s["ratio_normale"], 0))),
+                _puce(T("e_s_install"), s["install_date_recent"] or "—", sous_i),
+                _puce(T("e_fp_ratees"), f'{s["install_ratees"]} / 45',
+                      T("e_fp_ratees_sous")),
+                _puce(T("e_sc_secs"), f'{_fmt(s["secs_mam_recent"])} j',
+                      T("e_fp_contre", n=_fmt(s["secs_mam_ancien"]))),
+                _puce(T("e_s_extreme"), f'{_fmt(s["j50_recent"])}',
+                      T("e_s_extreme_sous", n=_fmt(s["j50_ancien"]))),
+            ]))
+
+        st.markdown(''.join(blocs), unsafe_allow_html=True)
+
+        if res:
+            st.markdown(_tableau_scores(res, focus), unsafe_allow_html=True)
+            st.caption(T("e_fiche_scores_note"))
+
+
+def _tableau_scores(res, focus):
+    """Les indicateurs environnementaux calculés, pour cette section."""
+    lignes = [r for r in res
+              if r["dimension"].startswith("III")
+              and r.get("scores_corriges", {}).get(focus) is not None]
+    if not lignes:
+        return ""
+    out = [f'<div style="font-size:12px;letter-spacing:.06em;'
+           f'text-transform:uppercase;color:#1a6bb0;font-weight:700;'
+           f'margin:16px 0 7px">{_e(T("e_fg_scores"))}</div>',
+           '<div style="overflow-x:auto"><table style="width:100%;'
+           'border-collapse:collapse;font-size:14.5px">']
+    entetes = [T("e_fs_ligne"), T("e_fs_indicateur"), T("e_fs_valeur"),
+               T("e_fs_score")]
+    out.append('<tr>' + ''.join(
+        f'<th style="text-align:{"left" if i < 2 else "right"};'
+        f'padding:9px 10px;border-bottom:2px solid #e6ecf4;font-size:11.5px;'
+        f'letter-spacing:.05em;text-transform:uppercase;color:#6b7590;'
+        f'font-weight:700">{_e(h)}</th>' for i, h in enumerate(entetes))
+        + '</tr>')
+    for r in sorted(lignes, key=lambda x: x["ligne"]):
+        sc = r["scores_corriges"][focus]
+        val = r["valeurs"].get(focus)
+        nom = (r.get("indicateur_fr") if i18n.get_lang() == "fr"
+               and r.get("indicateur_fr") else r["indicateur"])
+        # Un seul dégradé, du rouge au vert, sur la seule colonne de score :
+        # la valeur brute ne se colore pas, faute d'échelle commune entre un
+        # pourcentage de couvert et un indice standardisé.
+        coul = ("#b4451f" if sc <= 3 else "#c98a2e" if sc <= 6 else "#2a6b3f")
+        aff = (f'{_fmt(val, 2)} {r.get("unite", "")}'.strip()
+               if isinstance(val, (int, float)) else "—")
+        out.append(
+            f'<tr><td style="padding:9px 10px;border-bottom:1px solid #f0f4f9;'
+            f'color:#8a93a5;font-variant-numeric:tabular-nums">'
+            f'{r["ligne"]}</td>'
+            f'<td style="padding:9px 10px;border-bottom:1px solid #f0f4f9">'
+            f'{_e(nom)}</td>'
+            f'<td style="padding:9px 10px;border-bottom:1px solid #f0f4f9;'
+            f'text-align:right;font-variant-numeric:tabular-nums;'
+            f'color:#6b7590">{aff}</td>'
+            f'<td style="padding:9px 10px;border-bottom:1px solid #f0f4f9;'
+            f'text-align:right;font-variant-numeric:tabular-nums;'
+            f'font-weight:700;color:{coul}">{sc} / 10</td></tr>')
+    out.append('</table></div>')
+    return ''.join(out)
+
+
+def _tableau_recap(foret, pluie, saison):
+    """Les dix sections, une ligne chacune, tous thèmes confondus."""
+    entetes = [T("e_sc_section"), T("e_fr_foret"), T("e_fr_perte"),
+               T("e_fr_taux"), T("e_fr_pluie"), T("e_fr_campagne"),
+               T("e_fr_j50")]
+    out = ['<div style="overflow-x:auto"><table style="width:100%;'
+           'border-collapse:collapse;font-size:14.5px">']
+    out.append('<tr>' + ''.join(
+        f'<th style="text-align:{"left" if i == 0 else "right"};'
+        f'padding:9px 10px;border-bottom:2px solid #e6ecf4;font-size:11.5px;'
+        f'letter-spacing:.05em;text-transform:uppercase;color:#6b7590;'
+        f'font-weight:700">{_e(h)}</th>' for i, h in enumerate(entetes))
+        + '</tr>')
+    C = 'padding:9px 10px;border-bottom:1px solid #f0f4f9;text-align:right;' \
+        'font-variant-numeric:tabular-nums'
+    ordre = sorted(foret["sections"].items(),
+                   key=lambda kv: kv[1]["taux_annuel_net"])
+    for sec, f in ordre:
+        p = (pluie or {}).get("sections", {}).get(sec, {})
+        s = (saison or {}).get("sections", {}).get(sec, {})
+        part = s.get("ratio_normale")
+        coul = ("#b4451f" if part is not None and part < 78
+                else "#c98a2e" if part is not None and part < 90
+                else "#2a6b3f")
+        out.append(
+            f'<tr><td style="padding:9px 10px;border-bottom:1px solid #f0f4f9">'
+            f'{_e(sec)}</td>'
+            f'<td style="{C};color:#6b7590">{_fmt(f["foret2000_pct"])} %</td>'
+            f'<td style="{C}">{_fmt(f["perte_relative_pct"])} %</td>'
+            f'<td style="{C};font-weight:700">'
+            f'{_fmt(f["taux_annuel_net"], 2)} %</td>'
+            f'<td style="{C};color:#6b7590">'
+            f'{_fmt(p["normale_mm"], 0) + " mm" if p else "—"}</td>'
+            f'<td style="{C};color:{coul};font-weight:700">'
+            f'{_fmt(part, 0) + " %" if part is not None else "—"}</td>'
+            f'<td style="{C};color:#6b7590">'
+            f'{_fmt(s["j50_recent"]) if s else "—"}</td></tr>')
+    out.append('</table></div>')
+    return ''.join(out)
+
+
+def _onglet_lacunes(res):
+    manquants = {r["ligne"]: r for r in res
+                 if r["calculable"] == "non"
+                 and r["dimension"].startswith("III")}
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc ambre">{T("e_bloc5")}</div>',
+                    unsafe_allow_html=True)
+        st.markdown(
+            f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
+            f'margin:4px 0 12px;max-width:92ch">'
+            f'{T("e_bloc5_texte", n=len(manquants))}</p>',
+            unsafe_allow_html=True)
+        for source, lignes in A_VENIR:
+            presents = [manquants[lg] for lg in lignes if lg in manquants]
+            if not presents:
+                continue
+            noms = " · ".join(
+                _e(r.get("indicateur_fr") if i18n.get_lang() == "fr"
+                   and r.get("indicateur_fr") else r["indicateur"])
+                for r in presents)
+            st.markdown(
+                f'<div style="border-left:3px solid #cfe2f3;padding:2px 0 '
+                f'2px 14px;margin:0 0 14px">'
+                f'<div style="font-size:12px;letter-spacing:.06em;'
+                f'text-transform:uppercase;color:#1a6bb0;font-weight:700">'
+                f'{_e(T("e_src_" + source))} — {len(presents)}</div>'
+                f'<div style="font-size:14.5px;color:#3c4761;'
+                f'line-height:1.55;margin-top:3px">{noms}</div></div>',
+                unsafe_allow_html=True)
+
 
 def render():
     foret, res, pluie, grille, saison = _charger()
@@ -536,7 +1054,6 @@ def render():
         st.info(T("e_absent"))
         st.stop()
 
-    ens = foret["ensemble"]
     st.markdown(
         '<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
         'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:16px;'
@@ -544,130 +1061,53 @@ def render():
         '0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px">'
         + T("e_intro") + "</div>", unsafe_allow_html=True)
 
-    # ------------------------------------------------------------ chiffres
-    with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc vert">{T("e_bloc1")}</div>',
-                    unsafe_allow_html=True)
-        c1, c2, c3, c4 = st.columns(4)
-        # Les valeurs sont mises en forme ici plutôt que laissées au cartouche :
-        # une surface se lit en entiers avec une espace de millier, un taux
-        # annuel demande deux décimales — à un dixième près, −0,5 et −0,54 se
-        # confondent alors qu'ils ne sont pas dans la même classe de score.
-        cartes = [
-            (c1, T("e_c_foret2000"), _fmt(ens["foret2000_ha"], 0), "ha",
-             T("e_c_foret2000_sous", p=_fmt(ens["foret2000_pct"])), "#5b9c5a"),
-            (c2, T("e_c_perte"), _fmt(ens["perte_totale_ha"], 0), "ha",
-             T("e_c_perte_sous", p=_fmt(ens["perte_relative_pct"])), "#b5451f"),
-            (c3, T("e_c_taux"), _fmt(ens["taux_annuel_net"], 2), "%",
-             T("e_c_taux_sous"), "#eb9d3a"),
-            (c4, T("e_c_chronique"), _fmt(ens["taux_annuel_hors_choc"], 2), "%",
-             T("e_c_chronique_sous"), "#7ba05b"),
-        ]
-        for col, lib, val, unite, sous, coul in cartes:
-            with col:
-                st.markdown(
-                    map_render.cartouche_html(lib, val, unite, sous,
-                                              couleur=coul),
-                    unsafe_allow_html=True)
+    # ------------------------------------------------- le sélecteur de tête
+    # Un seul sélecteur pour tout l'onglet plutôt qu'un par bloc : on choisit
+    # un territoire, puis on parcourt les thèmes sans avoir à le rechoisir à
+    # chaque fois. « Ensemble » reste l'entrée par défaut — c'est la vue qui
+    # permet de comparer, et les cartes n'ont de sens que là.
+    dispo = [s for s in SECTIONS if s in foret["sections"]]
+    col_sel, col_txt = st.columns([2, 3])
+    with col_sel:
+        focus = st.selectbox(T("e_focus"), [ENSEMBLE] + dispo,
+                             format_func=_libelle_focus,
+                             key=f"env_focus_{i18n.get_lang()}")
+    with col_txt:
         st.markdown(
-            '<p style="font-size:15px;color:#3c4761;margin:10px 0 0">'
-            + _bulle("boucle_retroaction") + " &nbsp;·&nbsp; "
-            + _bulle("point_de_levier") + "</p>", unsafe_allow_html=True)
-
-    # --------------------------------------------------- la série annuelle
-    with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc ambre">{T("e_bloc2")}</div>',
-                    unsafe_allow_html=True)
-        st.markdown(
-            f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
-            f'margin:4px 0 10px;max-width:92ch">'
-            f'{T("e_bloc2_texte", p=_fmt(ens["part_choc_pct"], 0))}</p>',
+            f'<p style="font-size:13.5px;color:#6b7590;line-height:1.5;'
+            f'margin:30px 0 0">{T("e_focus_aide")}</p>',
             unsafe_allow_html=True)
-        svg = _serie_annuelle_svg(ens["pertes_annuelles_ha"], annee_pic=2016)
-        components.html(
-            '<div style="background:#ffffff;font-family:system-ui,-apple-system,'
-            "'Segoe UI',sans-serif\">" + svg + "</div>",
-            height=225, scrolling=False)
-        st.caption(T("e_bloc2_note"))
 
-    # ------------------------------------------------------------- la carte
-    with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc">{T("e_bloc3")}</div>',
-                    unsafe_allow_html=True)
-        cle, unite, polarite = CARTES[
-            st.selectbox(T("e_quoi_carto"), range(len(CARTES)),
-                         format_func=lambda i: T("e_carte_" + CARTES[i][0]),
-                         key=f"env_carte_{i18n.get_lang()}")]
-        valeurs = {s: foret["sections"].get(s, {}).get(cle) for s in SECTIONS}
-        seuils = map_render.nice_thresholds(
-            [v for v in valeurs.values() if v is not None])
-        infos = {s: T("e_info_carte",
-                      f=_fmt(foret["sections"][s]["foret2000_ha"], 0))
-                 for s in SECTIONS if s in foret["sections"]}
-        hauteur = 660
-        svg, seuils_ret, _mode = map_render.render_map_svg(
-            valeurs, {s: 1 for s in SECTIONS}, seuils, height=hauteur,
-            polarity=polarite, unite=unite, infos=infos)
-        legende = "".join(
-            f'<span style="display:inline-flex;align-items:center;gap:7px;'
-            f'margin-right:18px"><span style="width:22px;height:12px;'
-            f'border-radius:3px;background:{c};box-shadow:inset 0 0 0 1px '
-            f'rgba(0,0,0,.12)"></span><span style="font-size:13px;'
-            f'color:#52514e">{lab}</span></span>'
-            for c, lab in map_render.legend_items(seuils_ret, polarite, unite))
-        components.html(
-            '<div style="font-family:system-ui,-apple-system,\'Segoe UI\','
-            'sans-serif;background:#ffffff"><div style="margin:0 0 8px">'
-            f'<span style="font-size:11.5px;color:#898781;letter-spacing:.05em;'
-            f'margin-right:14px">{T("legende_seuils")}</span>{legende}</div>'
-            f'{svg}</div>', height=hauteur + 46, scrolling=False)
+    onglets = st.tabs([T("e_o_foret"), T("e_o_defor"), T("e_o_pluie"),
+                       T("e_o_secheresse"), T("e_o_fiche"), T("e_o_lacunes")])
 
-    # ------------------------------------------------------------ le détail
-    with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc vert">{T("e_bloc4")}</div>',
-                    unsafe_allow_html=True)
-        st.caption(T("e_bloc4_note"))
-        st.markdown(_tableau_sections(foret), unsafe_allow_html=True)
+    with onglets[0]:
+        _onglet_foret(foret, focus)
 
-    if grille and foret:
-        _bloc_grille(grille, foret)
+    with onglets[1]:
+        if grille:
+            _bloc_grille(grille, foret, focus)
+        else:
+            st.info(T("e_absent"))
 
-    if pluie:
-        _bloc_pluie(pluie)
+    with onglets[2]:
+        if pluie:
+            _bloc_pluie(pluie, focus)
+        else:
+            st.info(T("e_absent"))
 
-    if saison:
-        _bloc_saison(saison)
+    with onglets[3]:
+        if saison:
+            _bloc_saison(saison, focus)
+        else:
+            st.info(T("e_absent"))
 
-    # -------------------------------------------------- ce qui manque encore
-    if res:
-        manquants = {r["ligne"]: r for r in res
-                     if r["calculable"] == "non"
-                     and r["dimension"].startswith("III")}
-        with st.container(border=True):
-            st.markdown(f'<div class="titre-bloc ambre">{T("e_bloc5")}</div>',
-                        unsafe_allow_html=True)
-            st.markdown(
-                f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
-                f'margin:4px 0 12px;max-width:92ch">'
-                f'{T("e_bloc5_texte", n=len(manquants))}</p>',
-                unsafe_allow_html=True)
-            for source, lignes in A_VENIR:
-                presents = [manquants[lg] for lg in lignes if lg in manquants]
-                if not presents:
-                    continue
-                noms = " · ".join(
-                    _e(r.get("indicateur_fr") if i18n.get_lang() == "fr"
-                       and r.get("indicateur_fr") else r["indicateur"])
-                    for r in presents)
-                st.markdown(
-                    f'<div style="border-left:3px solid #cfe2f3;padding:2px 0 '
-                    f'2px 14px;margin:0 0 14px">'
-                    f'<div style="font-size:12px;letter-spacing:.06em;'
-                    f'text-transform:uppercase;color:#1a6bb0;font-weight:700">'
-                    f'{_e(T("e_src_" + source))} — {len(presents)}</div>'
-                    f'<div style="font-size:14.5px;color:#3c4761;'
-                    f'line-height:1.55;margin-top:3px">{noms}</div></div>',
-                    unsafe_allow_html=True)
+    with onglets[4]:
+        _fiche_section(foret, pluie, saison, grille, res, focus)
+
+    with onglets[5]:
+        if res:
+            _onglet_lacunes(res)
 
     st.caption(T("e_source"))
     st.caption(T("credit"))
