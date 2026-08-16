@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-16-environnement2"
+VERSION = "2026-08-16-grille"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -506,6 +506,77 @@ DICO = {
     "e_info_carte": {"en": "{f} ha of forest in 2000",
                      "fr": "{f} ha boisés en 2000"},
 
+    "e_bloc_grille": {"en": "5 · Where exactly the forest was lost",
+                      "fr": "5 · Où exactement la forêt a disparu"},
+    "e_bloc_grille_texte": {
+        "en": "Hansen works at 30 metres. Aggregated into 300-metre cells, the "
+              "loss becomes {n} points that a browser can draw — each one "
+              "carrying the hectares lost and the year the loss concentrated "
+              "there. The colour runs from pale yellow for 2001 to deep brown "
+              "for 2025; the disc area, not its radius, is proportional to the "
+              "surface lost.",
+        "fr": "Hansen travaille à 30 mètres. Agrégée en cellules de 300 mètres, "
+              "la perte devient {n} points qu'un navigateur sait dessiner — "
+              "chacun portant les hectares perdus et l'année où la perte s'y "
+              "concentre. La couleur va du jaune pâle pour 2001 au brun profond "
+              "pour 2025 ; c'est l'aire du disque, et non son rayon, qui est "
+              "proportionnelle à la surface perdue."},
+    "e_grille_periode": {"en": "Period shown", "fr": "Période affichée"},
+    "e_grille_selection": {
+        "en": "<strong>{n} cells</strong> between {a} and {b}, totalling "
+              "<strong>{h} hectares</strong> lost.",
+        "fr": "<strong>{n} cellules</strong> entre {a} et {b}, soit "
+              "<strong>{h} hectares</strong> perdus."},
+    "e_grille_legende": {"en": "Year of loss", "fr": "Année de la perte"},
+    "e_grille_info": {"en": "{n} cells, {h} ha lost over the period",
+                      "fr": "{n} cellules, {h} ha perdus sur la période"},
+    "e_bloc_grille_note": {
+        "en": "The background shading is the 2000 forest cover: the loss is "
+              "read against what there was to lose. Restrict the period to "
+              "2016-2018 to isolate Hurricane Matthew, or exclude it to see "
+              "chronic clearing alone.",
+        "fr": "L'aplat de fond est le couvert forestier de 2000 : la perte se "
+              "lit sur ce qu'il y avait à perdre. Restreindre la période à "
+              "2016-2018 isole l'ouragan Matthew ; l'exclure laisse voir le "
+              "défrichement chronique seul."},
+
+    "e_bloc_pluie": {"en": "6 · Rainfall, 1981 to 2025",
+                     "fr": "6 · Les précipitations, de 1981 à 2025"},
+    "e_bloc_pluie_texte": {
+        "en": "Four indicators of the index rest on this series: the "
+              "precipitation condition index, anomalous aridity, the ratio to "
+              "normal and the standardized precipitation index. All four are "
+              "computed on the mean of the last {f} years up to {a}, compared "
+              "with the 1991-2020 normal — a single year would swing four "
+              "scores at once for reasons that say nothing about the "
+              "territory's capacity.",
+        "fr": "Quatre indicateurs de l'indice reposent sur cette série : "
+              "l'indice de condition pluviométrique, l'aridité anormale, le "
+              "rapport à la normale et l'indice de précipitation standardisé. "
+              "Les quatre sont calculés sur la moyenne des {f} dernières "
+              "années jusqu'à {a}, comparée à la normale 1991-2020 — une année "
+              "seule ferait bouger quatre scores à la fois pour des raisons "
+              "qui ne disent rien de la capacité du territoire."},
+    "e_bloc_pluie_note": {
+        "en": "Annual rainfall totals in millimetres. Ochre marks years below "
+              "the normal, blue years above. CHIRPS has a 5.5 km resolution: "
+              "the series is reliable for comparing years within a section, "
+              "much less so for comparing two neighbouring sections.",
+        "fr": "Cumul annuel de pluie en millimètres. L'ocre marque les années "
+              "sous la normale, le bleu celles au-dessus. CHIRPS a une "
+              "résolution de 5,5 km : la série est fiable pour comparer des "
+              "années au sein d'une section, beaucoup moins pour comparer deux "
+              "sections voisines."},
+    "e_normale_ligne": {"en": "normal {n:.0f} mm", "fr": "normale {n:.0f} mm"},
+    "e_p_normale": {"en": "Normal", "fr": "Normale"},
+    "e_p_normale_sous": {"en": "{a}-{b} mean", "fr": "moyenne {a}-{b}"},
+    "e_p_recent": {"en": "Recent years", "fr": "Années récentes"},
+    "e_p_recent_sous": {"en": "{p} % of normal", "fr": "{p} % de la normale"},
+    "e_p_sec": {"en": "Driest year", "fr": "Année la plus sèche"},
+    "e_p_sec_sous": {"en": "in {a}", "fr": "en {a}"},
+    "e_p_humide": {"en": "Wettest year", "fr": "Année la plus humide"},
+    "e_p_humide_sous": {"en": "in {a}", "fr": "en {a}"},
+
     "e_bloc4": {"en": "4 · Section by section",
                 "fr": "4 · Section par section"},
     "e_bloc4_note": {
@@ -524,8 +595,8 @@ DICO = {
     "e_col_choc": {"en": "Of which 2016-18", "fr": "Dont 2016-18"},
     "e_col_chronique": {"en": "Chronic rate", "fr": "Taux chronique"},
 
-    "e_bloc5": {"en": "5 · What the environmental dimension still lacks",
-                "fr": "5 · Ce qui manque encore à la dimension environnementale"},
+    "e_bloc5": {"en": "7 · What the environmental dimension still lacks",
+                "fr": "7 · Ce qui manque encore à la dimension environnementale"},
     "e_bloc5_texte": {
         "en": "{n} environmental indicators remain uncomputed. None is out of "
               "reach: each depends on a dataset that exists and is public. "

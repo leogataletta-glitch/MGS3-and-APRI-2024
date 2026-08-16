@@ -1,84 +1,110 @@
-# Mise à jour — nouvel onglet « Données environnementales »
+# Mise à jour — les précipitations entrent dans l'indice
 
-## Les 5 fichiers à mettre sur GitHub **dans le même commit**
+## Les 6 fichiers à mettre sur GitHub **dans le même commit**
 
 | Fichier | Où | État |
 |---|---|---|
 | `app.py` | racine | remplacé |
-| `i18n.py` | racine | **remplacé — c'est celui qui manquait** |
-| `environnement_page.py` | racine | **nouveau** |
-| `data/foret.json` | `data/` | **nouveau** |
-| `data/saillants.json` | `data/` | remplacé |
+| `i18n.py` | racine | remplacé |
+| `environnement_page.py` | racine | remplacé |
+| `data/resultats.json` | `data/` | remplacé |
+| `data/ventilation.json` | `data/` | remplacé |
+| `data/pluie.json` | `data/` | **nouveau** |
 
-`i18n.py` passe en version **`2026-08-16-environnement2`**.
-
-Si ces fichiers de la livraison précédente ne sont pas encore poussés, ajoute-les
-au même commit : `saillants_page.py`, `resilience_page.py`,
-`data/resultats.json`, `data/ventilation.json`.
-
-Toujours **pas** de `satellite\` ni de `pipeline\` sur GitHub.
+`i18n.py` passe en version **`2026-08-16-pluie`**.
 
 ---
 
-## Pourquoi le bandeau rouge s'affichait
+## 1 · Les précipitations — quatre indicateurs de plus
 
-`app.py` était à jour, `i18n.py` non — il était resté sur
-`2026-08-16-saillants-pistes`. Le garde-fou a fait exactement son travail.
+CHIRPS, 1981-2025, moyenne sur chaque section. **56 indicateurs scorés sur
+128** désormais.
+
+| Ligne | Indicateur | Ensemble | Score |
+|---|---|---|---|
+| 43 | Indice de condition pluviométrique (PCI) | 27,5 | 2 |
+| 44 | Indice d'aridité anormale | −0,04 | 5 |
+| 45 | Rapport à la normale | 96,0 % | 10 |
+| 46 | Indice de précipitation standardisé (SPI) | +0,04 | 10 |
+
+Le score final monte de **+0,12 à +0,24 point** selon les sections.
+
+### Trois décisions de méthode
+
+**La normale est la moyenne 1991-2020**, période de référence recommandée par
+l'Organisation météorologique mondiale.
+
+**L'évaluation porte sur la moyenne des cinq dernières années**, pas sur 2025
+seule. Les métriques parlent de conditions « courantes », mais scorer quatre
+indicateurs sur une seule année les ferait bondir ou chuter ensemble pour des
+raisons qui ne disent rien de la capacité du territoire. J'ai calculé les deux :
+sur cette série, l'écart est d'un point sur le seul PCI. Le choix est donc peu
+coûteux aujourd'hui et plus robuste demain. Un seul indicateur à changer dans le
+script pour revenir à l'année seule.
+
+**Le SPI est ajusté sur une loi gamma**, comme le veut la définition de McKee :
+les cumuls annuels ne suivent pas une loi normale, et un simple écart type
+surestimerait la rareté des années sèches.
+
+### Une réserve que je dois signaler
+
+**Deux des quatre indicateurs donnent le même score aux dix sections.** L'aridité
+anormale vaut 5 partout, le SPI vaut 10 partout. Ils ajoutent du poids à l'indice
+— 7,3 % au total pour les quatre — sans distinguer les territoires entre eux.
+
+C'est logique : à 5,5 km de résolution, dix sections voisines reçoivent
+sensiblement la même pluie. Ces indicateurs disent quelque chose du **Grand Sud
+face à son propre passé**, pas de Trichet face à Dumont. Ils gardent tout leur
+sens pour suivre l'évolution dans le temps ; ils n'en ont aucun pour classer les
+sections. À toi de voir si tu les conserves dans le score final ou si tu les
+sors, comme on l'avait envisagé pour les OCB.
+
+### Ce que la série révèle
+
+**2005 est une année hors norme** : 2 251 mm à Anse à Drick contre 1 229 de
+normale. La saison cyclonique 2005 est celle de Dennis, Emily et Wilma. Elle
+étire tellement l'étendue historique que toutes les années ordinaires se
+retrouvent dans le tiers bas du PCI — c'est pourquoi cet indicateur affiche 2 ou
+3 partout alors que la pluie est normale.
+
+**2015 est l'année la plus sèche** de la série, 810 mm. À rapprocher de
+l'enquête : **48,7 % des ménages citent la sécheresse** comme première cause de
+baisse des rendements. La série CHIRPS permet maintenant de confronter cette
+perception à ce que la pluie a réellement fait.
 
 ---
 
-## Le nouvel onglet, en cinq blocs
+## 2 · Un bloc « Précipitations » dans l'onglet environnemental
 
-**1 · Les chiffres clés** — 10 713 ha boisés en 2000, 1 373 perdus, −0,54 %/an,
-et le taux hors choc à −0,15 %/an posé juste à côté.
+Cumul annuel de 1981 à 2025 pour la section choisie, avec la normale tracée en
+pointillés. Les barres sont **ocre sous la normale, bleues au-dessus** : ce qui
+compte n'est pas la pluie mais l'écart à l'ordinaire — 2 000 mm est peu à
+Mouline et considérable à Dumont.
 
-**2 · Année par année, 2001-2025.** C'est le bloc qui compte. Le graphique montre
-une silhouette plate sur vingt-cinq ans, sauf une barre rouge en 2016 qui écrase
-tout le reste : 686 hectares, l'ouragan Matthew. Un chiffre de déforestation lu
-sans ce graphique décrirait un défrichement continu qui, pour la plupart des
-sections, n'a pas eu lieu.
-
-**3 · La carte**, avec six lectures au choix : couvert 2000, couvert 2025, part
-du couvert perdue, taux annuel, taux hors choc, et part de la perte imputable à
-2016-2018 — celle-ci sépare les sections frappées par la tempête de celles qui
-se déboisent en continu.
-
-**4 · Le tableau par section**, trié de la baisse la plus forte. La colonne du
-choc est teintée : rouge pâle au-dessus de 60 %, bleu pâle en dessous de 20 %.
-Barbois, Trichet, Anse à Drick, Mouline et Beaulieu sont en rouge — c'est la
-tempête. Blactote est en bleu — c'est du défrichement continu. Ces sections ont
-des taux voisins et n'appellent pas la même réponse.
-
-**5 · Ce qui manque encore.** Les 36 indicateurs environnementaux non calculés,
-regroupés par source, pour que la liste se lise comme un plan de travail :
-
-- **Sentinel-2 / Landsat** — 4 indicateurs (NDVI, NDMI, NDWI, turbidité)
-- **MODIS** — 3 (santé de la végétation, température de surface, TCI)
-- **CHIRPS** — 4 (indices pluviométriques, SPI, aridité)
-- **Carte d'occupation du sol** — 13 (fragmentation, connectivité, érosion)
-- **Inventaires de terrain** — 6 (diversité des espèces)
-- **Registres et atlas** — 5 (aires protégées, mangrove, herbiers)
-- **Enquête ménage** — 1 (indice de diversité culturale : aucune donnée
-  nouvelle nécessaire, calculable dès maintenant)
-
-Un tableau de bord qui n'affiche que ce qu'il possède laisse croire que le reste
-n'existe pas. Celui-ci dit ce qui manque et d'où ça viendrait.
+Quatre chiffres clés au-dessus : normale, moyenne récente, année la plus sèche,
+année la plus humide.
 
 ---
 
-## Détails de mise en forme
+## 3 · La grille de déforestation — script corrigé
 
-Le graphique annuel est un rendu dédié : une série temporelle se lit
-horizontalement, les barres horizontales du reste de l'application conviennent à
-un classement, pas à une chronologie.
+L'export n'a produit que **20 cellules et 1,2 hectare** au lieu de 1 373, toutes
+concentrées sur quatre kilomètres carrés. En cause : `reproject()`, qui force le
+calcul à une échelle fixe et limitait l'échantillonnage à une seule tuile.
 
-Les surfaces sont affichées en entiers avec espace de millier, les taux à deux
-décimales — à un dixième près, −0,5 et −0,54 se confondent alors qu'ils ne sont
-pas dans la même classe de score.
+Le script construit désormais une **vraie grille de polygones** et agrège dedans.
+Plus lent, mais le résultat couvre le territoire entier et se vérifie contre le
+total connu.
 
-## Prochaine étape
+**À relancer** : `satellite\gee_grille_deforestation.js`, version corrigée sur
+ton bureau. Avant de lancer l'export, regarde la console : elle affiche le
+nombre de cellules retenues. **Quelques milliers, c'est le signe que ça marche.**
+Quelques dizaines, non — préviens-moi.
 
-**CHIRPS**, pour les quatre indicateurs pluviométriques. Même mécanique
-qu'aujourd'hui : un script Earth Engine avec tes polygones dedans, un export
-CSV, une chaîne d'intégration. Et aucun arbitrage comparable au seuil de couvert
-forestier.
+---
+
+## Ce qui reste
+
+**32 indicateurs environnementaux** non calculés, contre 36 avant. Le bloc 6 de
+l'onglet les liste par source. Le plus accessible ensuite : MODIS pour la
+température de surface, ou Sentinel-2 pour les indices de végétation.

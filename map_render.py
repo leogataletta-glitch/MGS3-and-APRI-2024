@@ -788,9 +788,15 @@ def _pole_of_inaccessibility(rings):
 
 # --------------------------------------------------------------------------
 def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
-                   polarity='neutre', unite='%', ramp=None, infos=None):
+                   polarity='neutre', unite='%', ramp=None, infos=None,
+                   points=None):
     """values : {section: valeur}. `unite` est le suffixe écrit sur la carte
     ('%' pour un pourcentage, '' pour un score sur 10).
+
+    `points` permet de semer des marqueurs par-dessus les sections :
+    [(lon, lat, rayon_px, couleur, titre), ...]. La projection vit ici, donc
+    l'appelant fournit des degrés et n'a rien à savoir du cadrage.
+
     Retourne (svg, thresholds, mode)."""
     T = thresholds or nice_thresholds(list(values.values()))
     RAMP = ramp or ramp_for(polarity)
@@ -932,6 +938,20 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                     f'<text class="pv" x="{cx:.1f}" y="{cy + 6:.1f}" fill="{ink}">'
                     f'{fmt_val(v)}{unite}</text>')
             label_anchor[name] = (cx, cy)
+
+    # ---- marqueurs semés sur la carte ----
+    # Dessinés APRÈS les sections et AVANT les étiquettes : ils doivent couvrir
+    # l'aplat de couleur, mais jamais le nom d'une section ni son chiffre.
+    if points:
+        for lon, lat, r, coul, titre in points:
+            px, py = proj(lon * kx, lat)
+            if not (0 <= px <= width and 0 <= py <= height):
+                continue
+            body.append(
+                f'<circle cx="{px:.1f}" cy="{py:.1f}" r="{r:.2f}" '
+                f'fill="{coul}" fill-opacity="0.82" stroke="#ffffff" '
+                f'stroke-width="0.4" stroke-opacity="0.5">'
+                f'<title>{titre}</title></circle>')
 
     # ---- 1) le pourcentage à l'intérieur de la section quand il y tient ----
     val_inside = {}
