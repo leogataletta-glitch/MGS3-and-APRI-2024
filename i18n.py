@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-16-ndvi"
+VERSION = "2026-08-16-modis"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -981,6 +981,315 @@ DICO = {
         "fr": "Une saison sèche par barre, de janvier à mars. Le trait "
               "pointillé est la moyenne de référence — l'indicateur score "
               "l'écart à cette ligne, pas le niveau."},
+
+    # --- groupes de sous-onglets ----------------------------------------
+    "e_o_vegetation": {"en": "Vegetation", "fr": "Végétation"},
+    "e_o_eau": {"en": "Water", "fr": "Eau"},
+    "e_o_temperature": {"en": "Temperature", "fr": "Température"},
+    "e_o_aires": {"en": "Protected areas", "fr": "Aires protégées"},
+    "e_i_choix": {"en": "Indicator", "fr": "Indicateur"},
+    "e_i_niveau": {"en": "Current level", "fr": "Niveau actuel"},
+    "e_i_niveau_sous": {"en": "{a}-{b} mean", "fr": "moyenne {a}-{b}"},
+    "e_i_score": {"en": "Score", "fr": "Score"},
+    "e_i_score_sous": {"en": "on the published scale",
+                       "fr": "sur le barème publié"},
+    "e_i_non_score": {"en": "Not scored", "fr": "Non scoré"},
+    "e_i_serie_niveau_note": {
+        "en": "One dry season per bar. The dashed line is the series mean. "
+              "This indicator is scored on its LEVEL, not on its change — its "
+              "scale is one of absolute values, which is what lets it "
+              "distinguish sections from one another.",
+        "fr": "Une saison sèche par barre. Le trait pointillé est la moyenne "
+              "de la série. Cet indicateur se score sur son NIVEAU et non sur "
+              "sa variation — son barème est une échelle de valeurs absolues, "
+              "et c'est ce qui lui permet de distinguer les sections entre "
+              "elles."},
+
+    # --- EVI, SAVI, VARI, FVC -------------------------------------------
+    "e_o_evi": {"en": "EVI", "fr": "EVI"},
+    "e_i_evi_titre": {"en": "Enhanced Vegetation Index — EVI",
+                      "fr": "Indice de végétation amélioré — EVI"},
+    "e_i_evi_quoi": {
+        "en": "A NDVI corrected for two things it cannot handle: atmospheric "
+              "scattering, using the blue band, and the brightness of the soil "
+              "showing through the canopy.",
+        "fr": "Un NDVI corrigé de deux effets qu'il ne sait pas traiter : la "
+              "diffusion atmosphérique, au moyen de la bande bleue, et la "
+              "clarté du sol qui transparaît sous le couvert."},
+    "e_i_evi_lire": {
+        "en": "Its decisive advantage here is that it DOES NOT SATURATE. Above "
+              "0.8 the NDVI stops separating a dense canopy from a very dense "
+              "one — and Mouline and Trichet are close to that ceiling. The "
+              "EVI keeps separating them.",
+        "fr": "Son avantage décisif ici est qu'il NE SATURE PAS. Au-delà de "
+              "0,8, le NDVI cesse de séparer un couvert dense d'un couvert "
+              "très dense — et Mouline et Trichet approchent ce plafond. "
+              "L'EVI continue de les distinguer."},
+    "e_i_evi_gaffe": {
+        "en": "Its denominator can approach zero on a deep shadow and produce "
+              "absurd values; the index is bounded to its physical range in "
+              "the export. And unlike the NDVI, it is scored on its LEVEL, so "
+              "a section that has always been sparse scores low even if "
+              "nothing has degraded.",
+        "fr": "Son dénominateur peut frôler zéro sur une ombre profonde et "
+              "produire des valeurs absurdes ; l'indice est borné à son "
+              "domaine physique dans l'export. Et contrairement au NDVI, il se "
+              "score sur son NIVEAU : une section clairsemée depuis toujours "
+              "obtient un score bas même si rien ne s'y est dégradé."},
+
+    "e_o_savi": {"en": "SAVI", "fr": "SAVI"},
+    "e_i_savi_titre": {"en": "Soil-Adjusted Vegetation Index — SAVI",
+                       "fr": "Indice de végétation ajusté au sol — SAVI"},
+    "e_i_savi_quoi": {
+        "en": "The NDVI with a correction term that cancels the contribution "
+              "of bare soil visible between plants.",
+        "fr": "Le NDVI assorti d'un terme correctif qui annule la "
+              "contribution du sol nu visible entre les plants."},
+    "e_i_savi_lire": {
+        "en": "It matters precisely where the canopy is open — which is the "
+              "case across this territory in dry season, once annual crops "
+              "have been harvested. Where the NDVI reads soil as weak "
+              "vegetation, the SAVI reads soil as soil.",
+        "fr": "Il compte précisément là où le couvert est ouvert — ce qui est "
+              "le cas de tout ce territoire en saison sèche, une fois les "
+              "cultures annuelles récoltées. Là où le NDVI lit un sol comme "
+              "une végétation faible, le SAVI lit un sol comme un sol."},
+    "e_i_savi_gaffe": {
+        "en": "Its correction factor is fixed at 0.5, the value for a medium "
+              "canopy. On very bare or very dense ground another value would "
+              "be better — the index remains an approximation, consistent "
+              "across sections, which is what a comparison needs.",
+        "fr": "Son facteur de correction est fixé à 0,5, valeur d'un couvert "
+              "moyen. Sur un sol très nu ou très dense, une autre valeur "
+              "conviendrait mieux — l'indice reste une approximation, "
+              "identique d'une section à l'autre, ce qui est l'essentiel pour "
+              "comparer."},
+
+    "e_o_vari": {"en": "VARI", "fr": "VARI"},
+    "e_i_vari_titre": {"en": "Visible Atmospherically Resistant Index — VARI",
+                       "fr": "Indice de végétation résistant à l'atmosphère — VARI"},
+    "e_i_vari_quoi": {
+        "en": "Built from the three visible bands alone — green, red, blue. "
+              "It uses no infrared at all.",
+        "fr": "Construit sur les seules bandes visibles — vert, rouge, bleu. "
+              "Il n'utilise aucun infrarouge."},
+    "e_i_vari_lire": {
+        "en": "That is its point: it remains readable when the near-infrared "
+              "is degraded, and it is the most discriminating of the four "
+              "here — its values run from 0.02 at Quentin to 0.19 at Trichet, "
+              "which the published scale spreads across nine of its ten bands. "
+              "No other index separates these territories so sharply.",
+        "fr": "C'est tout son intérêt : il reste lisible quand le proche "
+              "infrarouge est dégradé, et c'est le plus discriminant des "
+              "quatre ici — ses valeurs vont de 0,02 à Quentin à 0,19 à "
+              "Trichet, que le barème publié étale sur neuf de ses dix "
+              "tranches. Aucun autre indice ne sépare aussi nettement ces "
+              "territoires."},
+    "e_i_vari_gaffe": {
+        "en": "Being built on the visible alone, it is the most sensitive of "
+              "the four to haze and to sun angle. Its sharp discrimination "
+              "should be read as a strong ordering, not as a precise "
+              "measurement of each value.",
+        "fr": "Bâti sur le seul visible, il est le plus sensible des quatre à "
+              "la brume et à l'angle solaire. Sa forte discrimination se lit "
+              "comme un classement solide, pas comme une mesure précise de "
+              "chaque valeur."},
+
+    "e_o_fvc": {"en": "FVC", "fr": "FVC"},
+    "e_i_fvc_titre": {"en": "Fractional Vegetation Cover — FVC",
+                      "fr": "Fraction de couverture végétale — FVC"},
+    "e_i_fvc_quoi": {
+        "en": "The share of ground actually covered by vegetation, in percent. "
+              "Derived from the NDVI by placing it between a bare-soil "
+              "reference and a full-canopy one.",
+        "fr": "La part de sol effectivement couverte par de la végétation, en "
+              "pourcentage. Dérivée du NDVI en le situant entre une référence "
+              "de sol nu et une de couvert plein."},
+    "e_i_fvc_lire": {
+        "en": "It is the only one of the six that is not an abstract index but "
+              "a physical quantity: 45 % means that not quite half the ground "
+              "is shaded. On a slope, under a 50 mm downpour, that share is "
+              "what stands between the soil and the sea.",
+        "fr": "C'est le seul des six qui ne soit pas un indice abstrait mais "
+              "une grandeur physique : 45 % signifie qu'un peu moins de la "
+              "moitié du sol est ombragée. Sur une pente, sous une averse de "
+              "50 mm, cette part est ce qui sépare le sol de la mer."},
+    "e_i_fvc_gaffe": {
+        "en": "Its two reference points are FIXED, not taken from the images. "
+              "Taken from the observed extremes, each section would become its "
+              "own yardstick and comparison would be impossible. The absolute "
+              "level therefore depends on those two conventional values; the "
+              "ordering between sections does not.",
+        "fr": "Ses deux bornes sont FIXES et non tirées des images. Prises sur "
+              "les extrêmes observés, chaque section deviendrait son propre "
+              "étalon et la comparaison serait impossible. Le niveau absolu "
+              "dépend donc de ces deux valeurs conventionnelles ; le classement "
+              "entre sections, non."},
+
+    # --- VHI, LST, TCI ---------------------------------------------------
+    "e_o_vhi": {"en": "VHI", "fr": "VHI"},
+    "e_i_vhi_titre": {"en": "Vegetation Health Index — VHI",
+                      "fr": "Indice de santé de la végétation — VHI"},
+    "e_i_vhi_quoi": {
+        "en": "Half vegetation, half temperature: the mean of the vegetation "
+              "condition index and the thermal condition index, as Kogan "
+              "defined it. Both place a year between the best and the worst "
+              "the section has known in twenty-five years.",
+        "fr": "Moitié végétation, moitié température : la moyenne de l'indice "
+              "de condition de la végétation et de l'indice de condition "
+              "thermique, comme Kogan l'a défini. Les deux situent une année "
+              "entre le meilleur et le pire que la section a connus en "
+              "vingt-cinq ans."},
+    "e_i_vhi_lire": {
+        "en": "It is the most robust vegetation indicator in this dashboard, "
+              "because it rests on TWENTY-FIVE years where the Sentinel-2 "
+              "indices rest on seven. A drought shows here as the conjunction "
+              "the field actually experiences — vegetation down and surface "
+              "hot at the same time — not as either signal alone.",
+        "fr": "C'est l'indicateur de végétation le plus solide de ce tableau "
+              "de bord, parce qu'il repose sur VINGT-CINQ ans là où les "
+              "indices Sentinel-2 en ont sept. Une sécheresse s'y lit comme la "
+              "conjonction que le champ subit réellement — végétation basse et "
+              "surface chaude en même temps — et non comme l'un des deux "
+              "signaux pris seul."},
+    "e_i_vhi_gaffe": {
+        "en": "Being a position index, it says nothing in absolute terms: a "
+              "section can score high while remaining poor, if it is simply "
+              "doing better than its own worst years. It compares a territory "
+              "with its own past, not with its neighbour.",
+        "fr": "Indice de position, il ne dit rien dans l'absolu : une section "
+              "peut obtenir un score élevé tout en restant pauvre, si elle fait "
+              "simplement mieux que ses propres pires années. Il compare un "
+              "territoire à son passé, pas à son voisin."},
+
+    "e_o_lst": {"en": "LST", "fr": "LST"},
+    "e_i_lst_titre": {"en": "Seasonal land surface temperature anomaly — LST",
+                      "fr": "Anomalie saisonnière de température de surface — LST"},
+    "e_i_lst_quoi": {
+        "en": "The temperature of the ground itself — not of the air — "
+              "measured by MODIS in the thermal infrared, averaged over the "
+              "January-March dry season, and compared with the 2001-2020 "
+              "normal.",
+        "fr": "La température du sol lui-même — et non de l'air — mesurée par "
+              "MODIS dans l'infrarouge thermique, moyennée sur la saison sèche "
+              "de janvier à mars, et comparée à la normale 2001-2020."},
+    "e_i_lst_lire": {
+        "en": "The result is counter-intuitive and worth stating plainly: the "
+              "dry-season surface has COOLED in nine sections out of ten. The "
+              "likely explanation is not climatic but biological — a greener "
+              "surface evaporates more and heats less, and the vegetation "
+              "indices do show greening over the same period. Surface "
+              "temperature follows the cover; it is not a thermometer of the "
+              "climate.",
+        "fr": "Le résultat est contre-intuitif et mérite d'être dit sans "
+              "détour : la surface s'est REFROIDIE en saison sèche dans neuf "
+              "sections sur dix. L'explication probable n'est pas climatique "
+              "mais biologique — une surface plus verte évapore davantage et "
+              "chauffe moins, et les indices de végétation montrent bien un "
+              "reverdissement sur la même période. La température de surface "
+              "suit le couvert ; ce n'est pas un thermomètre du climat."},
+    "e_i_lst_gaffe": {
+        "en": "The published scale grades this anomaly IN PERCENT, which only "
+              "means something once the unit is fixed: +15 % is +4.3 °C in "
+              "Celsius and +45 K in Kelvin. The computation uses Celsius, the "
+              "only reading that makes the bands plausible. Do not read this "
+              "indicator as a measure of global warming — for that, air "
+              "temperature is needed, not skin temperature.",
+        "fr": "Le barème publié gradue cette anomalie EN POURCENTAGE, ce qui "
+              "n'a de sens qu'une fois l'unité fixée : +15 % valent +4,3 °C en "
+              "Celsius et +45 K en Kelvin. Le calcul est fait en Celsius, "
+              "seule lecture qui rende les tranches plausibles. Ne lis pas cet "
+              "indicateur comme une mesure du réchauffement — il y faudrait la "
+              "température de l'air, pas celle de la peau du sol."},
+
+    "e_o_tci": {"en": "TCI", "fr": "TCI"},
+    "e_i_tci_titre": {"en": "Temperature Condition Index — TCI",
+                      "fr": "Indice de condition thermique — TCI"},
+    "e_i_tci_quoi": {
+        "en": "Where a year sits between the hottest and the coolest the "
+              "section has known since 2001. Inverted by construction: a cool "
+              "year gives a high index, because a cool year is a good year for "
+              "the crop.",
+        "fr": "Où se situe une année entre la plus chaude et la plus fraîche "
+              "que la section ait connues depuis 2001. Inversé par "
+              "construction : une année fraîche donne un indice haut, parce "
+              "qu'une année fraîche est une bonne année pour la culture."},
+    "e_i_tci_lire": {
+        "en": "It is the thermal half of the VHI, shown on its own so the two "
+              "halves can be separated. When the TCI is high and the "
+              "vegetation index low, heat is not the constraint — water is. "
+              "That distinction decides whether a response is shade or "
+              "irrigation.",
+        "fr": "C'est la moitié thermique du VHI, montrée à part pour qu'on "
+              "puisse séparer les deux moitiés. Quand le TCI est haut et "
+              "l'indice de végétation bas, la contrainte n'est pas la chaleur "
+              "mais l'eau. Cette distinction décide si la réponse est "
+              "l'ombrage ou l'irrigation."},
+    "e_i_tci_gaffe": {
+        "en": "Like the VHI, it is relative to the section's own history. A TCI "
+              "of 70 at Mouline and a TCI of 70 at Dalmette do not describe "
+              "the same temperature — Dalmette runs about five degrees hotter "
+              "in absolute terms.",
+        "fr": "Comme le VHI, il est relatif à l'histoire propre de la section. "
+              "Un TCI de 70 à Mouline et un TCI de 70 à Dalmette ne décrivent "
+              "pas la même température — Dalmette est environ cinq degrés plus "
+              "chaude dans l'absolu."},
+
+    # --- aires protégées -------------------------------------------------
+    "e_ap_titre": {"en": "Protected areas and mangroves",
+                   "fr": "Aires protégées et mangroves"},
+    "e_ap_texte": {
+        "en": "The result is a zero, and a zero is a measurement. No protected "
+              "area in the WDPA — the UNEP-WCMC database, the official "
+              "reference for SDG 14.5 and 15.1 — touches any of the ten "
+              "communal sections. Coverage is nil everywhere, so lines 55 and "
+              "56 score 0 across the board. A flat score usually argues for "
+              "dropping an indicator, as was done for surface water where the "
+              "flatness came from measurement noise. Here it is the opposite: "
+              "the zero is not an uncertainty, it is a fact — ten territories "
+              "with no formal protection at all, on an eroding coast.",
+        "fr": "Le résultat est un zéro, et un zéro est une mesure. Aucune aire "
+              "protégée de la base WDPA — celle du PNUE-WCMC, référence "
+              "officielle des ODD 14.5 et 15.1 — ne touche aucune des dix "
+              "sections communales. La couverture est nulle partout, les "
+              "lignes 55 et 56 reçoivent donc 0 pour les dix. Un score plat "
+              "invite d'ordinaire à renoncer à l'indicateur, comme on l'a fait "
+              "pour les eaux de surface où la platitude venait du bruit de "
+              "mesure. Ici c'est l'inverse : le zéro n'est pas une incertitude, "
+              "c'est un fait — dix territoires sans aucune protection "
+              "formelle, sur une côte en érosion."},
+    "e_ap_mangrove": {"en": "Mangrove, and what it explains",
+                      "fr": "La mangrove, et ce qu'elle explique"},
+    "e_ap_mangrove_texte": {
+        "en": "Three sections carry mangrove, and Dalmette carries most of it. "
+              "That same section is the only one whose detected water area "
+              "swings twentyfold from one year to the next — the anomaly that "
+              "led to not scoring surface water stability. The two facts fit "
+              "together: a mangrove is an intertidal environment, its NDWI "
+              "signature follows the tide and the season. The anomaly was not "
+              "a sensor defect, it was a tidal flat.",
+        "fr": "Trois sections portent de la mangrove, et Dalmette en porte "
+              "l'essentiel. C'est aussi la seule section dont la surface en "
+              "eau détectée varie d'un facteur vingt d'une année sur l'autre — "
+              "l'anomalie qui avait fait renoncer à scorer la stabilité des "
+              "eaux de surface. Les deux faits se tiennent : une mangrove est "
+              "un milieu intertidal, sa signature dans le NDWI suit la marée "
+              "et la saison. L'anomalie n'était pas un défaut du capteur, "
+              "c'était un estran."},
+    "e_ap_non_score": {
+        "en": "The mangrove line is not scored: its scale asks for a "
+              "percentage, hence a ratio to a reference surface, hence two "
+              "dates. The layer available in the official catalogue gives only "
+              "the year 2000 — we know the area, not the retention rate. A "
+              "second date would allow scoring it.",
+        "fr": "La ligne mangrove n'est pas scorée : son barème demande un "
+              "pourcentage, donc un rapport à une surface de référence, donc "
+              "deux dates. La couche disponible dans le catalogue officiel ne "
+              "donne que l'année 2000 — on connaît la surface, pas le taux de "
+              "conservation. Une seconde date permettrait de la scorer."},
+    "e_ap_col_ap": {"en": "Protected", "fr": "Protégé"},
+    "e_ap_col_mang": {"en": "Mangrove 2000", "fr": "Mangrove 2000"},
+    "e_ap_col_part": {"en": "Of the section", "fr": "De la section"},
 
     "e_bloc5": {"en": "What the environmental dimension still lacks",
                 "fr": "Ce qui manque encore à la dimension environnementale"},
