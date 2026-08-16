@@ -1,0 +1,95 @@
+{
+ "source": "WCMC/WDPA + LANDSAT/MANGROVE_FORESTS",
+ "sections": {
+  "Anse à Drick": {
+   "aire_ha": 3321.5,
+   "ap_marine_ha": 0.0,
+   "ap_terrestre_ha": 0.0,
+   "ap_marine_pct": 0.0,
+   "ap_terrestre_pct": 0.0,
+   "mangrove_ha": 0.0,
+   "mangrove_pct_section": 0.0
+  },
+  "Barbois": {
+   "aire_ha": 4436.6,
+   "ap_marine_ha": 0.0,
+   "ap_terrestre_ha": 0.0,
+   "ap_marine_pct": 0.0,
+   "ap_terrestre_pct": 0.0,
+   "mangrove_ha": 0.0,
+   "mangrove_pct_section": 0.0
+  },
+  "Dumont": {
+   "aire_ha": 1411.2,
+   "ap_marine_ha": 0.0,
+   "ap_terrestre_ha": 0.0,
+   "ap_marine_pct": 0.0,
+   "ap_terrestre_pct": 0.0,
+   "mangrove_ha": 0.0,
+   "mangrove_pct_section": 0.0
+  },
+  "Débouchette": {
+   "aire_ha": 2144.3,
+   "ap_marine_ha": 0.0,
+   "ap_terrestre_ha": 0.0,
+   "ap_marine_pct": 0.0,
+   "ap_terrestre_pct": 0.0,
+   "mangrove_ha": 0.0,
+   "mangrove_pct_section": 0.0
+  },
+  "Mouline": {
+   "aire_ha": 5984.3,
+   "ap_marine_ha": 0.0,
+   "ap_terrestre_ha": 0.0,
+   "ap_marine_pct": 0.0,
+   "ap_terrestre_pct": 0.0,
+   "mangrove_ha": 0.0,
+   "mangrove_pct_section": 0.0
+  },
+  "Quentin": {
+   "aire_ha": 1809.3,
+   "ap_marine_ha": 0.0,
+   "ap_terrestre_ha": 0.0,
+   "ap_marine_pct": 0.0,
+   "ap_terrestre_pct": 0.0,
+   "mangrove_ha": 0.0,
+   "mangrove_pct_section": 0.0
+  },
+  "Beaulieu": {
+   "aire_ha": 2748.6,
+   "ap_marine_ha": 0.0,
+   "ap_terrestre_ha": 0.0,
+   "ap_marine_pct": 0.0,
+   "ap_terrestre_pct": 0.0,
+   "mangrove_ha": 0.0,
+   "mangrove_pct_section": 0.0
+  },
+  "Blactote": {
+   "aire_ha": 3024.6,
+   "ap_marine_ha": 0.0,
+   "ap_terrestre_ha": 0.0,
+   "ap_marine_pct": 0.0,
+   "ap_terrestre_pct": 0.0,
+   "mangrove_ha": 1.87,
+   "mangrove_pct_section": 0.062
+  },
+  "Dalmette": {
+   "aire_ha": 3000.1,
+   "ap_marine_ha": 0.0,
+   "ap_terrestre_ha": 0.0,
+   "ap_marine_pct": 0.0,
+   "ap_terrestre_pct": 0.0,
+   "mangrove_ha": 126.21,
+   "mangrove_pct_section": 4.207
+  },
+  "Trichet": {
+   "aire_ha": 2302.0,
+   "ap_marine_ha": 0.0,
+   "ap_terrestre_ha": 0.0,
+   "ap_marine_pct": 0.0,
+   "ap_terrestre_pct": 0.0,
+   "mangrove_ha": 55.19,
+   "mangrove_pct_section": 2.397
+  }
+ }
+}
