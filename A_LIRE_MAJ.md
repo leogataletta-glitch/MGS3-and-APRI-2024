@@ -1,63 +1,82 @@
-# Correction — `networkx` manquait au déploiement
+# Fiches d'intervention — désormais construites sur les leviers des boucles
 
 ## Envoyez ces deux fichiers
 
 | Fichier | |
 |---|---|
-| **`boucles_moteur.py`** | **la correction** — la dépendance est supprimée |
-| `requirements.txt` | `numpy` y est maintenant écrit noir sur blanc |
+| `interventions_page.py` | **nouveau** — les fiches et leurs textes |
+| `app.py` | l'onglet pointe vers les nouvelles fiches |
 
-Les fichiers de la livraison précédente restent nécessaires s'ils ne sont pas
-encore en ligne : `boucles_page.py`, `graphe_causal.json` (dans le dossier
-`data`), `app.py`, `cadre_page.py`.
+## Ce qui change
 
-## Mon erreur
+Les fiches ne sont plus écrites à côté de l'analyse : **elles en descendent**.
+Chaque fiche agit sur un levier du graphe causal, et tout le reste est calculé
+par le moteur des boucles :
 
-J'ai vérifié que `networkx` était disponible **dans mon environnement de
-travail**, et j'en ai conclu qu'il le serait au déploiement. Il n'était pas dans
-`requirements.txt` : Streamlit Cloud ne l'a donc jamais installé, et le site est
-tombé au premier import.
+- **l'effet simulé sur l'indice** — on pousse le levier de deux points et on
+  laisse la propagation traverser le graphe ;
+- **les indicateurs de suivi** — les lignes du référentiel que la simulation
+  déplace le plus. Ils ne sont pas inventés pour la fiche : ce sont des
+  indicateurs **déjà mesurés**, donc le suivi est outillé le jour où l'action
+  démarre ;
+- **les boucles traversées**, et combien sont renforçantes, combien
+  équilibrantes ;
+- **le classement des fiches**, par effet décroissant.
 
-## Ce que j'ai fait, et pourquoi pas l'inverse
+Changez une relation dans le modèle, et les fiches se réordonnent d'elles-mêmes.
 
-Ajouter `networkx` aux dépendances aurait marché. J'ai préféré **supprimer la
-dépendance** : elle ne servait qu'à une chose — énumérer les cycles du graphe —
-et cela tient en vingt lignes. Installer un paquet entier pour une seule
-fonction, et surtout ajouter un fichier de plus à ne pas oublier d'envoyer,
-coûtait plus cher que de l'écrire.
+Huit fiches : cuisson propre, agroforesterie et fertilité, eau, inclusion
+financière, alerte et comités, foncier, contrôle forestier, état civil. Chacune
+porte son objectif, ses activités, ses acteurs, sa faisabilité, son **niveau
+d'intervention d'après Meadows**, et **la boucle qu'il s'agit de retourner**.
 
-L'énumération part de chaque nœud et n'explore que les nœuds d'indice supérieur
-au départ : chaque boucle n'est ainsi trouvée qu'une fois, à partir de son plus
-petit indice.
+## Le résultat qui mérite votre attention
 
-## Une deuxième erreur, trouvée en vérifiant
+Le calcul fait apparaître une tension que je n'avais pas anticipée, et qui est
+maintenant écrite en tête de page :
 
-J'avais posé une borne de longueur à dix nœuds par boucle. **Elle coupait six
-boucles** de onze à treize nœuds : l'algorithme était juste, la borne était trop
-basse, et la liste sortait incomplète sans le dire — les compteurs de leviers
-s'en trouvaient faussés.
+**Les fiches à effet immédiat ne sont pas les leviers de basculement.**
 
-Je ne l'ai vu qu'en **comparant ma sortie à celle de la bibliothèque de
-référence**, ensemble d'arêtes contre ensemble d'arêtes. La borne est passée à
-seize : les **38 boucles** sont retrouvées, exactement les mêmes, sans doublon
-ni cycle en trop, en une milliseconde.
+L'eau, le foncier et l'alerte déplacent le plus l'indice — mais appartiennent à
+peu de boucles, ou à aucune. Leur effet est direct et **borné**.
 
-Le drapeau de troncature reste en place : le jour où quelqu'un densifiera le
-modèle au point de heurter ces bornes, la liste le dira au lieu de mentir par
-omission.
+Les pratiques agricoles conservatrices et le contrôle forestier le déplacent
+dix fois moins — et ce sont les **deux seules fiches présentes dans des boucles
+des deux sens**, donc les deux seules capables de retourner une dynamique
+dégradante en dynamique régulatrice.
+
+Un programme a besoin des deux : les premières pour montrer des résultats dans
+la saison, les secondes pour changer ce que le système se fait à lui-même.
+C'est exactement la distinction que fait votre document entre ajuster un flux
+et casser une boucle — sauf qu'ici elle sort du calcul, pas d'une intuition.
+
+## Deux choix que je dois signaler
+
+**Seuls des leviers actionnables portent une fiche.** L'aridité et l'état de la
+végétation arrivent en tête du classement des effets, mais on ne monte pas un
+projet « sur l'aridité » : ce sont des états résultants. Les fiches agissent sur
+ce qui se décide — un équipement, une pratique, une règle, un flux
+d'information.
+
+**Le classement n'est pas une priorisation.** Il suit l'effet simulé, pas la
+faisabilité ni la priorité politique. La faisabilité est affichée à côté de
+chaque fiche ; c'est l'atelier qui tranche. Le modèle propose.
+
+Les anciennes pistes sont gardées, repliées en bas de page.
 
 ## Vérifié
 
-- `networkx` n'apparaît plus nulle part dans le code ;
-- **énumération identique à la référence**, ensemble par ensemble : 38 boucles,
-  27 renforçantes, 11 équilibrantes ;
 - **42 rendus complets** — 7 pages × 3 combinaisons de filtres × 2 langues —
   zéro exception, zéro message d'erreur ;
-- page ouverte dans le navigateur : aucune exception à l'écran, les boucles
-  s'affichent avec leur sous-type R+ / B−.
+- aucune clé de traduction brute affichée, dans les deux langues ;
+- page ouverte dans le navigateur : le récapitulatif, les huit fiches, les
+  indicateurs de suivi et les pastilles de basculement ;
+- les textes de la page voyagent dans `interventions_page.py`, selon la règle
+  des trois pannes précédentes.
 
-## Ce qui reste à surveiller
+## La suite possible
 
-`numpy` est utilisé par le moteur. Il arrive de toute façon avec `pandas`, donc
-le site tournait déjà — mais il est désormais déclaré explicitement, ce qui
-évite de dépendre d'un effet de bord.
+Chaque fiche pourrait porter un **effet par section communale** plutôt qu'un
+effet national : le moteur sait déjà le faire, il suffit de brancher le filtre
+de la colonne de gauche. Une fiche « cuisson propre » n'a pas la même portée à
+Quentin qu'à Dalmette. Dites-moi si cela vous intéresse.
