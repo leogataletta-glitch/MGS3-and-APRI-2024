@@ -195,7 +195,19 @@ st.markdown("""
     font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
     color: var(--encre-2);
   }
-  .block-container { max-width: 1240px; padding-top: 1.6rem; padding-bottom: 5rem; }
+  /* padding-top nul : le ruban vert est le premier élément de chaque page
+     et doit toucher le haut de la fenêtre. Le reste du contenu retrouve son
+     air sous le bandeau, via la marge de .bh-contexte. */
+  .block-container { max-width: 1240px; padding-top: 0; padding-bottom: 5rem; }
+
+  /* L'en-tête de Streamlit est rendu transparent et sans hauteur propre : le
+     ruban vert doit toucher le haut de la fenêtre, comme dans la charte. Ses
+     boutons (menu, plein écran) restent cliquables au-dessus du ruban — on les
+     efface visuellement, pas fonctionnellement. */
+  header[data-testid="stHeader"] {
+    background: transparent !important; height: 0 !important;
+  }
+  header[data-testid="stHeader"] * { color: rgba(255,255,255,.65) !important; }
 
   /* --- titres --- */
   h1, h2, h3 {
@@ -404,20 +416,28 @@ st.markdown("""
     border-bottom: 1px solid rgba(255,255,255,.12);
   }
   .apri-marque img {
-    width: 52px; height: 52px; flex: 0 0 52px; display: block;
+    width: 58px; height: 58px; flex: 0 0 58px; display: block;
   }
   .apri-bloc-nom { min-width: 0; }
   .apri-nom {
-    font-family: "Outfit", sans-serif; font-size: 31px; font-weight: 700;
+    font-family: "Outfit", sans-serif; font-size: 34px; font-weight: 700;
     color: #ffffff; letter-spacing: .01em; line-height: 1;
   }
   .apri-filet {
-    width: 46px; height: 3px; border-radius: 2px; background: #7cb342;
-    margin: 6px 0 0;
+    width: 52px; height: 3px; border-radius: 2px; background: #7cb342;
+    margin: 5px 0 0;
   }
+  /* Deux niveaux dans l'accroche, comme sur la charte : ce qu'est
+     l'observatoire, en vert clair, puis où il porte, en blanc. Une seule
+     ligne grise disait les deux d'un même souffle et on ne lisait ni l'un ni
+     l'autre. */
   .apri-baseline {
-    font-size: 11.5px; color: rgba(255,255,255,.62); line-height: 1.35;
-    margin-top: 6px;
+    font-size: 12px; color: #8cc63f; line-height: 1.3;
+    margin-top: 6px; font-weight: 500;
+  }
+  .apri-lieu {
+    font-size: 12.5px; color: rgba(255,255,255,.92); line-height: 1.3;
+    margin-top: 3px; font-weight: 600;
   }
   /* Pied de colonne : le logo du PNUE y descend, puisque les logos ne
      doivent plus apparaître dans le contenu des pages. */
@@ -569,25 +589,103 @@ st.markdown("""
     margin-top: 10px; padding: 0 3px;
   }
 
-  /* --- la barre du haut de page --------------------------------------- */
-  .barre-haut {
-    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
-    padding: 10px 16px; margin: 0 0 10px;
-    background: #ffffff; border: 1px solid #e7ecf3; border-radius: 13px;
-    box-shadow: 0 1px 2px rgba(16,23,40,.04);
+  /* ================= le ruban du haut ===================================
+     Une barre vert profond qui court d'un bord à l'autre du contenu, dans le
+     même vert que la colonne de gauche : les deux ne font plus qu'un cadre,
+     et le contenu blanc s'y pose comme une feuille.
+
+     PLEINE LARGEUR. Le contenu du site est borné à 1240 px — une ligne qui
+     court sur 1900 px ne se lit pas. Le ruban, lui, doit toucher les deux
+     bords. D'où le débord : 100vw de large, ramené à gauche de la moitié de
+     la fenêtre, plus la moitié de la colonne de gauche (155 px sur 310) pour
+     compenser le décalage qu'elle impose à la zone principale.
+
+     PAS DE MARQUEUR PROPRE DANS STREAMLIT. On ne peut pas encadrer une rangée
+     de boutons dans son propre HTML : chaque appel à st.markdown vit dans son
+     conteneur. On glisse donc une ancre invisible dans la rangée, et on
+     habille la rangée qui la contient — c'est ce que fait :has(). */
+  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre) {
+    /* Largeur = la fenêtre MOINS la colonne de gauche, qui est fixe à
+       310 px. Avec 100vw tout court, le ruban dépassait de 310 px à droite
+       et le logo du PNUE, dernière colonne, sortait de l'écran. */
+    width: calc(100vw - 310px) !important;
+    max-width: calc(100vw - 310px) !important;
+    margin-left: calc(-50vw + 50% + 155px);
+    /* Les feuilles de style injectées par st.markdown occupent chacune un
+       bloc vide en tête de page, et la gouttière verticale de Streamlit
+       s'ajoute par-dessus : 32 px de blanc avant le ruban. On les remonte. */
+    margin-top: -32px; margin-bottom: 0;
+    background: linear-gradient(180deg, #14402f 0%, #0f3327 100%);
+    padding: 10px 24px 10px 26px;
+    align-items: center; gap: 3px !important;
+    flex-wrap: nowrap !important;
   }
-  .bh-gauche { flex: 0 1 auto; }
+  .ruban-ancre { display: none; }
+
+  /* Les onglets du ruban : des boutons Streamlit déguisés en pastilles.
+     Au repos ils sont transparents — c'est le ruban qui porte la couleur ;
+     au survol un voile clair ; l'onglet courant prend la pastille verte. */
+  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
+  div[data-testid="stButton"] > button {
+    background: transparent !important; border: none !important;
+    box-shadow: none !important;
+    color: rgba(255,255,255,.88) !important;
+    font-size: 12.5px !important; font-weight: 500 !important;
+    line-height: 1.25 !important; letter-spacing: .005em !important;
+    padding: 9px 7px !important; min-height: 44px !important;
+    height: auto !important; border-radius: 999px !important;
+    white-space: normal !important; text-align: center !important;
+    justify-content: center !important;
+    transition: background .13s ease, color .13s ease;
+  }
+  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
+  div[data-testid="stButton"] > button:hover {
+    background: rgba(255,255,255,.11) !important;
+    color: #ffffff !important; transform: none !important;
+  }
+  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
+  div[data-testid="stButton"] > button[kind="primary"] {
+    background: #5f9e3f !important; color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,.20) !important;
+  }
+  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
+  div[data-testid="stButton"] > button[kind="primary"]:hover {
+    background: #6cb047 !important;
+  }
+  .ruban-unep {
+    display: flex; justify-content: flex-end; align-items: center;
+    /* 44 px de dégagement à droite : Streamlit y pose son propre bouton de
+       menu, qui viendrait sinon se superposer au logo du PNUE. */
+    padding-right: 44px;
+  }
+  .ruban-unep img { height: 46px; display: block; }
+
+  /* Le bandeau de paysage suit le ruban et déborde comme lui : les deux
+     forment un seul en-tête, sans liseré blanc entre eux. */
+  .bandeau-haut {
+    width: calc(100vw - 310px) !important;
+    max-width: calc(100vw - 310px) !important;
+    margin-left: calc(-50vw + 50% + 155px);
+    margin-top: 0; margin-bottom: 0;
+  }
+
+  /* La ligne de contexte, sous le ruban : la page courante à gauche, ce sur
+     quoi porte l'affichage à droite. Un chiffre lu sans savoir qu'un filtre
+     est posé est un chiffre mal lu. */
+  .bh-contexte {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap; margin: 12px 0 10px;
+  }
   .bh-page {
     font-size: 16.5px; font-weight: 700; color: #101728;
-    letter-spacing: -.01em; margin-top: -2px;
+    letter-spacing: -.01em;
   }
   .bh-filtre {
-    flex: 1 1 220px; text-align: center;
     font-size: 13px; color: #1f7a5a; font-weight: 600;
     background: #eaf6f0; border: 1px solid #cfe9dd; border-radius: 999px;
     padding: 5px 14px;
   }
-  .bh-logo { height: 34px; flex: 0 0 auto; }
 
   /* --- le panneau des dernières livraisons ---------------------------- */
   .n-item {
@@ -665,7 +763,7 @@ st.markdown("""
 # ne plante pas — elle affiche le nom des clés manquantes au milieu du texte, ce
 # qui est beaucoup plus déroutant qu'une erreur franche. On préfère le dire.
 # ----------------------------------------------------------------------
-I18N_ATTENDU = "2026-08-18-histoire"
+I18N_ATTENDU = "2026-08-18-ruban"
 if getattr(i18n, "VERSION", None) != I18N_ATTENDU:
     st.error(
         f"**i18n.py est dans une version qui ne correspond pas au reste de "
@@ -756,16 +854,7 @@ def _bascule(mode):
 # APRI en tête, le PNUE en pied — et le contenu des pages n'en porte aucun : un
 # logo répété à chaque en-tête mange la place du titre sans rien apprendre à
 # personne, puisqu'il est déjà à l'écran en permanence.
-st.markdown(
-    f'<div class="barre-haut">'
-    f'<div class="bh-gauche"><span class="org-mention">{T("org")}</span>'
-    f'<div class="bh-page">{LIBELLE_MODE.get(st.session_state["app_mode"], "")}'
-    f'</div></div>'
-    f'<div class="bh-filtre">{filtres.resume()}</div>'
-    f'</div>'
-    f'<img src="data:image/jpeg;base64,{assets.PAYSAGE_CAMP_PERRIN}" '
-    f'style="width:100%;height:92px;object-fit:cover;object-position:50% 62%;'
-    f'border-radius:10px;margin:2px 0 14px">', unsafe_allow_html=True)
+_ruban = st.container()
 
 # Les deux entrées sont mises au même niveau, en haut de page : ce sont deux
 # lectures différentes de la même enquête, pas un mode principal et une option.
@@ -805,13 +894,69 @@ def _entree_nav(mode, icone):
               use_container_width=True)
 
 
+# ---------------------------------------------------------------- le ruban
+# La m\u00eame navigation qu'\u00e0 gauche, en onglets horizontaux dans le ruban vert.
+# DEUX CHEMINS VERS LES M\u00caMES PAGES, ET C'EST VOULU : la colonne se lit ligne
+# \u00e0 ligne quand on cherche, le ruban se parcourt du regard quand on sait d\u00e9j\u00e0
+# o\u00f9 l'on va. Ce qu'il ne faut surtout pas, c'est que les deux listes
+# divergent \u2014 d'o\u00f9 la source unique `_NAV`, dont les deux se servent.
+def _rendre_ruban():
+    with _ruban:
+        # Une colonne par onglet, plus une derni\u00e8re pour le logo du PNUE. Les
+        # largeurs suivent la longueur des intitul\u00e9s, sinon \u00ab Vue d'ensemble \u00bb
+        # et \u00ab T\u00e9l\u00e9chargement des donn\u00e9es \u00bb recevraient la m\u00eame place et le
+        # second passerait sur trois lignes.
+        #
+        # Deux contraintes, pas une : la longueur TOTALE d\u00e9cide de la place
+        # qu'il faut, mais le MOT LE PLUS LONG d\u00e9cide de la largeur minimale \u2014
+        # sous elle, le navigateur coupe le mot en deux plut\u00f4t que de d\u00e9border,
+        # et \u00ab Overview \u00bb devenait \u00ab Overvie / w \u00bb.
+        def _poids(lib):
+            mots = lib.split()
+            return max(len(lib) / 11.5, (max(map(len, mots)) if mots else 1) / 8)
+
+        poids = [_poids(LIBELLE_MODE[m]) for m, _ in _NAV]
+        cols = st.columns(poids + [1.7], vertical_alignment="center")
+        for col, (mode, _icone) in zip(cols, _NAV):
+            with col:
+                if mode == _NAV[0][0]:
+                    st.markdown('<div class="ruban-ancre"></div>',
+                                unsafe_allow_html=True)
+                st.button(LIBELLE_MODE[mode], key=f"ruban_{mode}",
+                          on_click=_bascule, args=(mode,),
+                          type=("primary"
+                                if st.session_state["app_mode"] == mode
+                                else "secondary"),
+                          use_container_width=True)
+        with cols[-1]:
+            st.markdown(
+                f'<div class="ruban-unep"><img alt="UNEP" '
+                f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}"></div>',
+                unsafe_allow_html=True)
+
+        # Sous le ruban : le bandeau de paysage pleine largeur, puis la ligne
+        # de contexte \u2014 page courante et filtre actif.
+        st.markdown(
+            f'<img src="data:image/jpeg;base64,{assets.PAYSAGE_CAMP_PERRIN}" '
+            f'class="bandeau-haut" '
+            f'style="width:100%;height:300px;object-fit:cover;'
+            f'object-position:50% 62%;display:block">'
+            # Pas de nom de page ici : le ruban le montre déjà en pastille
+            # verte, et chaque page le répète en titre. Trois fois le même mot
+            # dans les cent premiers pixels, c'était deux fois de trop.
+            f'<div class="bh-contexte">'
+            f'<div class="bh-filtre">{filtres.resume()}</div></div>',
+            unsafe_allow_html=True)
+
+
 with _sb_marque:
     st.markdown(
         f'<div class="apri-marque">'
         f'<img src="data:image/png;base64,{assets.EMBLEME_APRI}" alt="APRI">'
         f'<div class="apri-bloc-nom"><div class="apri-nom">APRI</div>'
         f'<div class="apri-filet"></div>'
-        f'<div class="apri-baseline">{T("a_accroche")}</div></div></div>',
+        f'<div class="apri-baseline">{T("a_titre_court")}</div>'
+        f'<div class="apri-lieu">{T("a_lieu")}</div></div></div>',
         unsafe_allow_html=True)
 
 with _sb_nav:
@@ -825,12 +970,17 @@ with _sb_nav:
                 unsafe_allow_html=True)
 
 with _sb_langue:
+    # Le logo du PNUE est remonté dans le ruban, en haut à droite. Le
+    # répéter ici n'ajouterait rien : la mention institutionnelle en toutes
+    # lettres suffit en pied de colonne.
     st.markdown(
-        f'<div class="apri-org">'
-        f'<img src="data:image/png;base64,{assets.LOGO_UNEP}" alt="UNEP">'
-        f'<div class="apri-pied" style="margin:0">{T("org")}</div></div>'
-        f'<div class="apri-pied">{T("sous_titre_site")}</div>',
-        unsafe_allow_html=True)
+        f'<div class="apri-pied">{T("org")}<br><br>'
+        f'{T("sous_titre_site")}</div>', unsafe_allow_html=True)
+
+# Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
+# besoin de la langue choisie et du résumé des filtres, tous deux fixés par
+# la colonne de gauche qu'on vient de rendre.
+_rendre_ruban()
 
 app_mode = st.session_state["app_mode"]
 

@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-18-histoire"
+VERSION = "2026-08-18-ruban"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -1802,6 +1802,8 @@ DICO = {
                       "fr": "Le projet APRI en bref"},
     "a_titre_court": {"en": "Landscape resilience observatory",
                       "fr": "Observatoire de la résilience des paysages"},
+    "a_lieu": {"en": "Sud and Grand'Anse, Haiti",
+               "fr": "Sud et Grand'Anse, Haïti"},
     "a_localisation": {
         "en": "Ten communal sections in the departments of Sud and "
               "Grand'Anse, in Haiti's Greater South — from the coastal "

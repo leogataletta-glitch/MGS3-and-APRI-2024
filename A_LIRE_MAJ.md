@@ -1,128 +1,78 @@
-# Mise à jour — logo, page d'accueil, histoire d'APRI
+# Mise à jour — le ruban vert, la charte APRI
 
-## D'abord : un chiffre faux qu'il faut que vous sachiez
+## Ce qui change à l'écran
 
-La tuile « Ménages enquêtés » de l'accueil affichait **2 700**. C'est faux.
+**Un ruban vert plein cadre en haut de page**, dans le même vert que la colonne
+de gauche : les deux ne font plus qu'un encadrement, et le contenu blanc s'y
+pose comme une feuille. Il porte les **onglets en pastilles** — l'onglet courant
+en vert clair, les autres qui s'éclaircissent au survol — et, à droite, le
+**logo du PNUE en réserve**, blanc sur le vert.
 
-Ce nombre venait d'un `max()` sur les effectifs de toutes les lignes du
-référentiel, et le maximum tombait sur la **ligne 24, enregistrement des
-naissances**, qui compte des **enfants**, pas des ménages. Le vrai chiffre est
-**1 211 questionnaires** — dont 1 206 rattachés à une section communale — ce
-que le reste du site annonçait déjà correctement partout ailleurs.
+Ce logo blanc est une image nouvelle : la version d'origine est cyan sur fond
+blanc, et posée telle quelle sur le vert elle aurait fait une étiquette collée.
+Je l'ai détourée et passée en blanc, le tracé anticrénelé conservé.
 
-Vous m'avez écrit « plus de 2 000 foyers interrogés » : c'était mon erreur que
-vous repreniez. La page affiche maintenant **1 211**, et le calcul est borné
-par les effectifs par section — une ligne qui déclare nettement plus qu'eux ne
-compte pas des ménages et sort du calcul. C'est écrit dans le code, pour que
-personne n'y remette un `max()` dans six mois.
+**Deux chemins vers les mêmes pages, et c'est voulu.** La colonne de gauche se
+lit ligne à ligne quand on cherche ; le ruban se parcourt du regard quand on
+sait déjà où l'on va. Les deux listes sont construites à partir d'une **source
+unique** dans le code, pour qu'elles ne puissent jamais diverger — c'est le
+seul vrai risque de ce genre de doublon.
 
----
+**Le bloc de marque** de la colonne suit la charte : l'emblème à 58 px, APRI en
+34 px, le filet vert, puis l'accroche sur deux niveaux — *Observatoire de la
+résilience des paysages* en vert clair, *Sud et Grand'Anse, Haïti* en blanc.
 
-## Les quatre corrections demandées
+**Le bandeau de paysage** passe à 300 px et déborde comme le ruban, sans liseré
+blanc entre les deux.
 
-**1. Le logo de la colonne de gauche.** Le fichier d'origine est un
-verrouillage complet — l'emblème *plus* le mot « IRLA/APRI » — et il était
-écrasé dans un carré blanc de 54 px : le sigle y devenait une bouillie de six
-pixels de haut. J'ai découpé **l'emblème seul**, détouré en disque, et je le
-pose directement sur le vert, sans carte blanche. Le nom reste du texte, avec
-le filet vert de la charte. C'est du texte, donc c'est net à toutes les
-tailles et cela suit la langue de l'interface.
+## Trois points techniques, si un jour ça bouge
 
-**2. Plus aucun logo hors de la colonne de gauche.** Retiré des **neuf pages**
-qui en portaient un en tête. Le logo du PNUE, qui était à droite de la barre
-du haut, **descend au pied de la colonne**, sous le sélecteur de langue, à côté
-de la mention institutionnelle. Les deux marques sont donc réunies au même
-endroit, visibles en permanence, et le contenu n'en porte plus aucune.
+**La pleine largeur.** Le contenu du site reste borné à 1240 px — une ligne qui
+court sur 1900 px ne se lit pas. Le ruban, lui, doit toucher les deux bords :
+sa largeur est `calc(100vw - 310px)`, où 310 px est la largeur fixe de la
+colonne de gauche. Si un jour vous changez cette largeur, **changez les deux
+valeurs ensemble**, sinon le ruban dépasse à droite et le logo du PNUE sort de
+l'écran.
 
-**3. Les cinq tuiles de l'accueil sont supprimées.** Vous aviez raison : trois
-d'entre elles n'apprenaient rien. Il reste **une ligne** — 10 sections
-communales · 2 départements · 1 211 ménages enquêtés — suivie de la
-**localisation** : les départements du Sud et de la Grand'Anse, dans le Grand
-Sud d'Haïti, de la plaine littorale à l'intérieur montagneux, chaque section
-enquêtée en entier avec une cible d'au moins 120 ménages.
+**Streamlit ne sait pas encadrer une rangée de boutons.** Chaque appel à
+`st.markdown` vit dans son propre conteneur : une balise ouverte dans l'un et
+fermée dans le suivant ne s'emboîte jamais. On glisse donc une ancre invisible
+dans la rangée, et le CSS habille la rangée **qui la contient**, via `:has()`.
 
-**4. L'histoire d'APRI**, en quatre paragraphes, à la place du bloc « Le projet
-APRI en bref » :
+**L'en-tête de Streamlit** est rendu transparent et sans hauteur pour que le
+ruban touche le haut de la fenêtre. Son bouton de menu reste cliquable
+au-dessus ; le logo du PNUE garde 44 px de dégagement à droite pour ne pas
+passer dessous.
 
-- **Le point de départ** — l'ouragan Melissa d'octobre 2025 : Haïti, qui n'a
-  reçu que plusieurs jours de pluie, a compté 43 décès, autant que la Jamaïque
-  touchée de plein fouet, quand la République dominicaine, sous des pluies
-  comparables, en comptait un seul. Ce ne sont pas les aléas qui décident des
-  pertes, mais l'état du territoire qui les reçoit.
-- **Ce que mesure l'indice** — la résilience générale, sept dimensions, des
-  capacités détenues *avant* le choc.
-- **Comment il est construit** — les trois sources : enquête ménage stratifiée,
-  vingt-cinq ans d'imagerie satellitaire, recensement des OCB.
-- **Ce qu'il ne prétend pas dire** — la circularité de tout indice composite,
-  l'absence de validation après choc réel, et la couverture réelle : 66 des
-  128 lignes calculées à ce jour.
+## Deux suppressions
 
-Ce dernier paragraphe n'est pas une précaution de style. C'est ce qui empêche
-qu'un score soit cité comme une prévision dans une réunion où vous ne serez
-pas.
+Le **nom de la page** n'apparaît plus sous le bandeau : le ruban le montre déjà
+en pastille verte et chaque page le répète en titre. Trois fois le même mot
+dans les cent premiers pixels, c'était deux fois de trop. Il ne reste que le
+rappel du filtre actif — un chiffre lu sans savoir qu'un filtre est posé est un
+chiffre mal lu.
 
----
-
-## Deux défauts trouvés en vérifiant, corrigés au passage
-
-**Le sous-titre des pages de dimension était encore faux.** J'avais renommé la
-clé la semaine dernière, mais en lui laissant le texte de la page de
-téléchargement : les pages de dimension affichaient donc toujours « Jeux de
-données anonymisés ». C'était exactement ce que montrait votre capture
-d'écran, et ma correction précédente ne l'avait pas réglé. Elles annoncent
-maintenant « Résultats par section communale, et la source de chaque chiffre »,
-et la synthèse a enfin son propre sous-titre.
-
-**« Mouline » se coupait en « Moulin / e »** dans le cartouche « section la
-moins bien placée ». Le rétrécissement automatique ne se déclenchait qu'à
-partir de onze caractères, ce qui suffit sur la carte mais pas dans une
-colonne quatre fois plus étroite. Le palier descend à sept.
-
----
+Le **logo du PNUE en pied de colonne** disparaît, puisqu'il est maintenant en
+haut à droite. La mention institutionnelle en toutes lettres reste.
 
 ## L'envoi
 
-**Onze fichiers, un seul commit.** `app.py` refuse de démarrer si `i18n.py`
-n'est pas à la version `2026-08-18-histoire` — c'est ce garde-fou qui vous
-évite une page à moitié cassée.
+**Trois fichiers, un seul commit.** `app.py` refuse de démarrer si `i18n.py`
+n'est pas à la version `2026-08-18-ruban`.
 
 | Fichier | Ce qui change |
 |---|---|
-| `assets.py` | l'emblème détouré, nouvelle image `EMBLEME_APRI` |
-| `app.py` | marque de la colonne, logo PNUE en pied, plus de logo en barre du haut |
-| `i18n.py` | 15 clés nouvelles, 3 corrigées, version `2026-08-18-histoire` |
-| `accueil_page.py` | ligne de périmètre, localisation, histoire d'APRI |
-| `map_render.py` | palier de rétrécissement à sept caractères |
-| `synthese_page.py` | logo retiré, sous-titre propre |
-| `dimension_page.py` | sous-titre corrigé |
-| `methodologie_page.py`, `ocb_page.py`, `pistes_page.py`, `resilience_page.py`, `saillants_page.py`, `telechargements_page.py`, `environnement_page.py` | logo retiré de l'en-tête |
+| `app.py` | le ruban, les onglets, le bloc de marque, le bandeau |
+| `assets.py` | `LOGO_UNEP_BLANC`, le logo du PNUE en réserve |
+| `i18n.py` | la clé `a_lieu`, version `2026-08-18-ruban` |
 
-Sur GitHub : `Add file` → `Upload files`, glissez tout, un seul
-`Commit changes`. Streamlit Cloud redéploie en une à deux minutes.
+Sur GitHub : `Add file` → `Upload files`, les trois, un seul `Commit changes`.
 
----
+## Vérifié
 
-## Ce qui a été vérifié
-
-- 21 modules compilent ; **96 rendus complets** de l'application — 12 pages ×
-  4 combinaisons de filtres × 2 langues — **zéro exception** ;
-- **781 clés** de traduction, aucun doublon, toutes avec un `fr` et un `en` ;
-- **aucune clé brute** affichée à l'écran, dans les deux langues ;
-- captures d'écran réelles du navigateur relues une par une : marque de la
-  colonne, pied de colonne, accueil, page de dimension ;
-- `i18n.VERSION` = `app.I18N_ATTENDU` = `2026-08-18-histoire`.
-
----
-
-## Ce qui reste ouvert
-
-- Les **fiches actions** portent encore l'ancien contenu « pistes ».
-- Trois **fiches institutionnelles** (CASEC, école, santé) attendent leur
-  section communale.
-- **Dimension VII** : décision à prendre sur ses neuf proxys à composante
-  unique.
-- **Environnement** : érosion RUSLE (L59/L60), tampon marin au large pour
-  L58/L61/L63, seconde date de mangrove pour L57.
-
-*Le dépôt reste privé, le mot de passe se règle dans les Secrets de Streamlit
-Cloud, et le jeu de données en ligne garde ses colonnes identifiantes vidées.*
+- 21 modules compilent ; **96 rendus complets** — 12 pages × 4 combinaisons de
+  filtres × 2 langues — **zéro exception** ;
+- **782 clés** de traduction, aucun doublon, toutes avec un `fr` et un `en` ;
+- aucune clé brute affichée, dans les deux langues ;
+- navigation testée dans le navigateur : cliquer un onglet du ruban change bien
+  de page, et la colonne de gauche suit — les deux restent d'accord.
