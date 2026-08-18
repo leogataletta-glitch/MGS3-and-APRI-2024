@@ -1,71 +1,45 @@
-# La barre « Share / Deploy / ⋮ » est supprimée
+# Les mots du bandeau sont supprimés
 
-## Envoyez `app.py`. C'est tout ce qu'il faut pour ça.
+## Envoyez `app.py`. Un seul fichier.
 
-Vous aviez raison de vous agacer : je l'avais rendue **transparente**, pas
-supprimée. Le fond disparaissait, le texte restait — et il se posait par-dessus
-le logo du PNUE. Elle est maintenant **retirée de la mise en page**.
+Le bandeau vert ne porte plus que le **logo du PNUE**. « Overview », « The six
+dimensions », « Summary by group or locality », « Action sheets », « Survey
+methodology », « Data downloads » : tout est retiré.
 
-Ce que j'ai retiré : `Share`, `Deploy`, l'étoile, le menu ⋮, le widget d'état,
-la barre colorée de chargement en haut de fenêtre, et le pied « Made with
-Streamlit ». Ce sont les commandes de l'atelier Streamlit, pas du site.
+C'était une redite, et vous aviez raison de le dire. La colonne de gauche
+affiche ces six entrées en permanence, et chaque page répète son nom en titre :
+le même mot trois fois dans les cent premiers pixels.
 
-**Visés sous tous leurs noms.** Streamlit renomme ces éléments d'une version à
-l'autre ; n'en cibler qu'un revient à voir la barre revenir au prochain
-déploiement. Les onze sélecteurs connus sont listés, et vérifiés dans le
-navigateur : les cinq éléments sont soit absents du DOM, soit à
-`display: none`, hauteur nulle.
+**La navigation vit désormais uniquement dans la colonne de gauche.** Rien
+n'est perdu — les six entrées y sont toutes, au même endroit qu'avant.
 
-**Ce qui n'est pas touché** : le bouton `«` de repli de la colonne de gauche. Il
-appartient à la barre latérale, pas à cet en-tête, et il reste utile.
+Retiré aussi : le code des onglets et leur feuille de style, 3 700 caractères
+qui ne servaient plus à rien. Un bouton mort dans un fichier finit toujours par
+réapparaître à l'écran un jour ou l'autre.
 
----
+## Ce que le bandeau garde
 
-## Un fichier en plus, facultatif : `.streamlit/config.toml`
-
-**La correction de `app.py` suffit** — je l'ai vérifié en démarrant le site
-sans ce fichier, la barre reste absente. Le `config.toml` est une seconde
-serrure, plus quelques réglages utiles :
-
-- `toolbarMode = "minimal"` — le réglage officiel de Streamlit. Il agit avant
-  même que la page ne s'affiche, là où la feuille de style agit après coup :
-  avec les deux, la barre ne peut plus apparaître même une fraction de seconde
-  au chargement.
-- `showErrorDetails = false` — plus de trace Python à l'écran pour un
-  visiteur. Une erreur technique dans un tableau de bord institutionnel
-  n'aide personne et inquiète tout le monde.
-- **thème clair imposé** — sans cela, un visiteur dont le système est en mode
-  sombre voit Streamlit inverser les fonds, et les cartes comme les graphiques,
-  dessinés sur blanc, deviennent illisibles. Celui-là vaut la peine.
-
-**Pour l'envoyer sur GitHub**, comme c'est un fichier dans un sous-dossier :
-`Add file` → `Create new file`, puis tapez comme nom de fichier
-`.streamlit/config.toml` — GitHub crée le dossier tout seul dès que vous tapez
-la barre oblique. Collez-y le contenu, `Commit`.
-
-Si cela vous ennuie, sautez-le : `app.py` seul règle le problème que vous
-signaliez.
-
----
-
-## L'envoi
-
-| Fichier | |
-|---|---|
-| `app.py` | **la correction** — barre d'outils supprimée |
-| `.streamlit/config.toml` | facultatif — seconde serrure + thème clair imposé |
-
-Et, si ce n'est pas encore fait, les quatre fichiers de la mise à jour
-précédente, qui apportent les sous-onglets par dimension :
-`questions_dimension.py` (nouveau), `dimension_page.py`, `accueil_page.py`,
-`i18n.py`.
+- le **vert plein cadre**, d'un bord à l'autre, le même que la colonne : les
+  deux forment un encadrement et le contenu blanc s'y pose comme une feuille ;
+- le **logo du PNUE** en réserve, en haut à droite ;
+- le **bandeau de paysage** en dessous, pleine largeur ;
+- et, seulement lorsqu'un filtre est réellement posé, la **pastille du filtre
+  actif** — un chiffre lu sans savoir qu'un filtre est posé est un chiffre mal
+  lu. Sans filtre, rien.
 
 ## Vérifié
 
-- barre d'outils : les cinq éléments absents ou à hauteur nulle, **avec et
-  sans** `config.toml` ;
-- capture d'écran du navigateur relue : le logo du PNUE est seul en haut à
-  droite, plus rien ne se superpose ;
+- capture d'écran du navigateur relue : plus un seul mot dans le bandeau,
+  le logo seul en haut à droite, la barre d'outils de Streamlit toujours
+  absente ;
+- la navigation par la colonne fonctionne — testée au clic, la page change ;
 - 48 rendus complets — 6 pages × 4 combinaisons de filtres × 2 langues —
   **zéro exception, zéro message d'erreur** ;
-- le bouton de repli de la colonne de gauche fonctionne toujours.
+- aucune clé de traduction brute affichée, dans les deux langues.
+
+---
+
+*Si les fichiers des mises à jour précédentes ne sont pas encore en ligne, ils
+restent à envoyer : `questions_dimension.py` (nouveau), `dimension_page.py`,
+`accueil_page.py`, `i18n.py` — ce sont eux qui apportent les deux sous-onglets
+sous chaque dimension.*

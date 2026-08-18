@@ -610,77 +610,33 @@ st.markdown("""
     margin-top: 10px; padding: 0 3px;
   }
 
-  /* ================= le ruban du haut ===================================
-     Une barre vert profond qui court d'un bord à l'autre du contenu, dans le
-     même vert que la colonne de gauche : les deux ne font plus qu'un cadre,
-     et le contenu blanc s'y pose comme une feuille.
+  /* ================= le bandeau du haut =================================
+     Une barre vert profond qui court d'un bord à l'autre, dans le même vert
+     que la colonne de gauche : les deux ne font plus qu'un cadre, et le
+     contenu blanc s'y pose comme une feuille.
 
-     PLEINE LARGEUR. Le contenu du site est borné à 1240 px — une ligne qui
-     court sur 1900 px ne se lit pas. Le ruban, lui, doit toucher les deux
-     bords. D'où le débord : 100vw de large, ramené à gauche de la moitié de
-     la fenêtre, plus la moitié de la colonne de gauche (155 px sur 310) pour
-     compenser le décalage qu'elle impose à la zone principale.
+     ELLE NE PORTE QUE LE LOGO DU PNUE. Elle a d'abord repris les six entrées
+     de navigation ; c'était une redite — la colonne de gauche les affiche en
+     permanence, et chaque page répète son nom en titre. Trois fois le même mot
+     dans les cent premiers pixels.
 
-     PAS DE MARQUEUR PROPRE DANS STREAMLIT. On ne peut pas encadrer une rangée
-     de boutons dans son propre HTML : chaque appel à st.markdown vit dans son
-     conteneur. On glisse donc une ancre invisible dans la rangée, et on
-     habille la rangée qui la contient — c'est ce que fait :has(). */
-  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre) {
-    /* Largeur = la fenêtre MOINS la colonne de gauche, qui est fixe à
-       310 px. Avec 100vw tout court, le ruban dépassait de 310 px à droite
-       et le logo du PNUE, dernière colonne, sortait de l'écran. */
-    width: calc(100vw - 310px) !important;
-    max-width: calc(100vw - 310px) !important;
+     PLEINE LARGEUR. Le contenu du site reste borné à 1240 px — une ligne qui
+     court sur 1900 px ne se lit pas. Le bandeau, lui, touche les deux bords :
+     largeur = la fenêtre MOINS la colonne de gauche, fixe à 310 px. Si un jour
+     vous changez cette largeur, changez les deux valeurs ensemble, sinon le
+     bandeau dépasse à droite et le logo sort de l'écran. */
+  .ruban-seul {
+    width: calc(100vw - 310px); max-width: calc(100vw - 310px);
     margin-left: calc(-50vw + 50% + 155px);
     /* Les feuilles de style injectées par st.markdown occupent chacune un
        bloc vide en tête de page, et la gouttière verticale de Streamlit
-       s'ajoute par-dessus : 32 px de blanc avant le ruban. On les remonte. */
+       s'ajoute par-dessus : 32 px de blanc avant le bandeau. On les remonte. */
     margin-top: -32px; margin-bottom: 0;
     background: linear-gradient(180deg, #14402f 0%, #0f3327 100%);
-    padding: 10px 24px 10px 26px;
-    align-items: center; gap: 3px !important;
-    flex-wrap: nowrap !important;
+    padding: 12px 26px; min-height: 70px;
+    display: flex; align-items: center; justify-content: flex-end;
   }
-  .ruban-ancre { display: none; }
-
-  /* Les onglets du ruban : des boutons Streamlit déguisés en pastilles.
-     Au repos ils sont transparents — c'est le ruban qui porte la couleur ;
-     au survol un voile clair ; l'onglet courant prend la pastille verte. */
-  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
-  div[data-testid="stButton"] > button {
-    background: transparent !important; border: none !important;
-    box-shadow: none !important;
-    color: rgba(255,255,255,.88) !important;
-    font-size: 12.5px !important; font-weight: 500 !important;
-    line-height: 1.25 !important; letter-spacing: .005em !important;
-    padding: 9px 7px !important; min-height: 44px !important;
-    height: auto !important; border-radius: 999px !important;
-    white-space: normal !important; text-align: center !important;
-    justify-content: center !important;
-    transition: background .13s ease, color .13s ease;
-  }
-  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
-  div[data-testid="stButton"] > button:hover {
-    background: rgba(255,255,255,.11) !important;
-    color: #ffffff !important; transform: none !important;
-  }
-  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
-  div[data-testid="stButton"] > button[kind="primary"] {
-    background: #5f9e3f !important; color: #ffffff !important;
-    font-weight: 600 !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,.20) !important;
-  }
-  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
-  div[data-testid="stButton"] > button[kind="primary"]:hover {
-    background: #6cb047 !important;
-  }
-  .ruban-unep {
-    display: flex; justify-content: flex-end; align-items: center;
-    /* La barre d'outils de Streamlit ayant été retirée, plus rien ne vient
-       se poser à droite : le logo peut revenir près du bord. */
-    padding-right: 12px;
-  }
-  .ruban-unep img { height: 46px; display: block; }
+  .ruban-logo { height: 46px; display: block; }
 
   /* Le bandeau de paysage suit le ruban et déborde comme lui : les deux
      forment un seul en-tête, sans liseré blanc entre eux. */
@@ -954,54 +910,33 @@ def _entree_nav(mode, icone):
 # o\u00f9 l'on va. Ce qu'il ne faut surtout pas, c'est que les deux listes
 # divergent \u2014 d'o\u00f9 la source unique `_NAV`, dont les deux se servent.
 def _rendre_ruban():
+    """Le bandeau vert du haut : le logo du PNUE, et rien d'autre.
+
+    IL N'Y A PLUS D'ONGLETS ICI. Les six entrées y étaient reprises mot pour
+    mot depuis la colonne de gauche, qui les affiche déjà en permanence : deux
+    menus identiques à quinze centimètres l'un de l'autre, et le nom de la page
+    répété une troisième fois par son propre titre. La navigation vit dans la
+    colonne ; le bandeau ne porte que la marque institutionnelle.
+
+    UN SEUL APPEL À st.markdown pour tout le bloc. Streamlit isole chaque
+    appel dans son propre conteneur : une balise ouverte dans l'un et fermée
+    dans le suivant ne s'emboîte jamais, et le style se perd sans qu'aucune
+    erreur ne le signale.
+    """
     with _ruban:
-        # Une colonne par onglet, plus une derni\u00e8re pour le logo du PNUE. Les
-        # largeurs suivent la longueur des intitul\u00e9s, sinon \u00ab Vue d'ensemble \u00bb
-        # et \u00ab T\u00e9l\u00e9chargement des donn\u00e9es \u00bb recevraient la m\u00eame place et le
-        # second passerait sur trois lignes.
-        #
-        # Deux contraintes, pas une : la longueur TOTALE d\u00e9cide de la place
-        # qu'il faut, mais le MOT LE PLUS LONG d\u00e9cide de la largeur minimale \u2014
-        # sous elle, le navigateur coupe le mot en deux plut\u00f4t que de d\u00e9border,
-        # et \u00ab Overview \u00bb devenait \u00ab Overvie / w \u00bb.
-        def _poids(lib):
-            mots = lib.split()
-            return max(len(lib) / 11.5, (max(map(len, mots)) if mots else 1) / 8)
-
-        poids = [_poids(LIBELLE_MODE[m]) for m, _ in _NAV]
-        cols = st.columns(poids + [1.7], vertical_alignment="center")
-        for col, (mode, _icone) in zip(cols, _NAV):
-            with col:
-                if mode == _NAV[0][0]:
-                    st.markdown('<div class="ruban-ancre"></div>',
-                                unsafe_allow_html=True)
-                st.button(LIBELLE_MODE[mode], key=f"ruban_{mode}",
-                          on_click=_bascule, args=(mode,),
-                          type=("primary"
-                                if st.session_state["app_mode"] == mode
-                                else "secondary"),
-                          use_container_width=True)
-        with cols[-1]:
-            st.markdown(
-                f'<div class="ruban-unep"><img alt="UNEP" '
-                f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}"></div>',
-                unsafe_allow_html=True)
-
-        # Sous le ruban : le bandeau de paysage pleine largeur, puis la ligne
-        # de contexte \u2014 page courante et filtre actif.
         st.markdown(
+            f'<div class="ruban-seul">'
+            f'<img class="ruban-logo" alt="UNEP" '
+            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}"></div>'
             f'<img src="data:image/jpeg;base64,{assets.PAYSAGE_CAMP_PERRIN}" '
             f'class="bandeau-haut" '
             f'style="width:100%;height:300px;object-fit:cover;'
             f'object-position:50% 62%;display:block">'
             # RIEN D'ÉCRIT SOUS LE BANDEAU QUAND AUCUN FILTRE N'EST POSÉ.
-            # Le nom de la page est déjà dans le ruban, en pastille verte, et
-            # chaque page le répète en titre. Quant au rappel du filtre, il ne
-            # disait rien tant qu'il n'y a pas de filtre : « dix sections
-            # communales, tous les répondants » répétait la ligne de périmètre
-            # de l'accueil trois centimètres plus bas. Il n'apparaît donc que
-            # lorsqu'un filtre est effectivement posé — c'est-à-dire dans le
-            # seul cas où l'oublier fait mal lire un chiffre.
+            # Chaque page porte déjà son titre. Le rappel du filtre, lui, ne
+            # disait rien tant qu'aucun filtre n'était choisi. Il n'apparaît
+            # donc que lorsqu'un filtre est effectivement posé — le seul cas
+            # où l'oublier fait mal lire un chiffre.
             + (f'<div class="bh-contexte">'
                f'<div class="bh-filtre">{filtres.resume()}</div></div>'
                if filtres.actif() else '<div class="bh-vide"></div>'),
