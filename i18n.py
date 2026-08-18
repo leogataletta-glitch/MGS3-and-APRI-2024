@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-17-ergonomie"
+VERSION = "2026-08-18-menu"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -1651,6 +1651,12 @@ DICO = {
     "nav_verifier": {"en": "Verify and download",
                      "fr": "Vérifier et télécharger"},
     "nav_langue": {"en": "Language", "fr": "Langue"},
+
+    "mode_dimensions": {"en": "The six dimensions", "fr": "Les six dimensions"},
+    "mode_dimensions_sous": {
+        "en": "physical, institutional, environmental, economic, social, human",
+        "fr": "physique, institutionnelle, environnementale, économique, "
+              "sociale, humaine"},
 
     "e_bloc5": {"en": "What the environmental dimension still lacks",
                 "fr": "Ce qui manque encore à la dimension environnementale"},

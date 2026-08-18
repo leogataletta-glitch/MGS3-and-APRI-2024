@@ -383,71 +383,101 @@ st.markdown("""
   /* ================= barre latérale : la navigation du site =============
      Vert profond plutôt que le gris par défaut : la navigation doit se
      détacher franchement du contenu, sinon l'œil hésite entre les deux à
-     chaque changement de page. Les boutons y perdent leur relief de tuile —
-     un menu ne se survole pas comme une carte à cliquer, il se parcourt. */
+     chaque changement de page. */
   section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #123c30 0%, #0d2f26 100%) !important;
     border-right: none;
-    width: 288px !important;
+    width: 310px !important; min-width: 310px !important;
   }
-  section[data-testid="stSidebar"] > div { padding-top: 14px; }
+  section[data-testid="stSidebar"] > div { padding: 18px 14px 14px; }
 
   .apri-marque {
-    display: flex; align-items: center; gap: 11px;
-    padding: 4px 6px 16px; margin-bottom: 4px;
-    border-bottom: 1px solid rgba(255,255,255,.10);
+    display: flex; align-items: center; gap: 13px;
+    padding: 2px 4px 18px; margin-bottom: 2px;
+    border-bottom: 1px solid rgba(255,255,255,.12);
   }
   .apri-marque img {
-    width: 46px; height: 46px; object-fit: contain;
-    background: #ffffff; border-radius: 11px; padding: 4px;
+    width: 54px; height: 54px; object-fit: contain; flex: 0 0 54px;
+    background: #ffffff; border-radius: 13px; padding: 5px;
   }
   .apri-nom {
-    font-family: "Outfit", sans-serif; font-size: 25px; font-weight: 700;
+    font-family: "Outfit", sans-serif; font-size: 30px; font-weight: 700;
     color: #ffffff; letter-spacing: .01em; line-height: 1;
   }
   .apri-baseline {
-    font-size: 11px; color: rgba(255,255,255,.62); line-height: 1.35;
-    margin-top: 3px;
+    font-size: 11.5px; color: rgba(255,255,255,.60); line-height: 1.35;
+    margin-top: 4px;
   }
   .nav-groupe {
-    font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase;
-    color: rgba(255,255,255,.42); font-weight: 700;
-    margin: 15px 0 6px 7px;
+    font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(255,255,255,.40); font-weight: 700;
+    margin: 18px 0 8px 4px;
   }
   .apri-pied {
-    font-size: 10.5px; color: rgba(255,255,255,.40); line-height: 1.5;
-    padding: 12px 7px 4px; margin-top: 6px;
-    border-top: 1px solid rgba(255,255,255,.10);
+    font-size: 10.5px; color: rgba(255,255,255,.38); line-height: 1.5;
+    padding: 14px 4px 4px; margin-top: 10px;
+    border-top: 1px solid rgba(255,255,255,.12);
   }
 
-  /* Les boutons de la barre latérale : plats, alignés à gauche, sans ombre.
-     Le mode courant est plein, les autres transparents — un seul repère
-     visuel, celui qui répond à « où suis-je ». */
+  /* --- les entrées de menu ---------------------------------------------
+     Trois réglages qui comptent, et qui manquaient tous les trois au premier
+     essai :
+
+     ALIGNEMENT — le bouton de Streamlit centre son contenu par défaut, à
+     trois niveaux imbriqués. Un libellé sur deux lignes se retrouvait alors
+     indenté au premier rang et collé au bord au second. Il faut forcer
+     l'alignement à gauche sur le bouton ET sur ses conteneurs internes, sinon
+     l'un des trois reprend la main.
+
+     TAILLE — 15,5 px et 46 px de hauteur minimale : un menu se vise au
+     curseur sans regarder, il lui faut une cible franche.
+
+     SURVOL — un fond qui s'éclaircit légèrement. Sans retour au survol, rien
+     ne distingue une ligne cliquable d'un simple titre. */
   section[data-testid="stSidebar"] div[data-testid="stButton"] > button {
-    height: auto !important; min-height: 0;
-    padding: 9px 13px !important; border-radius: 9px;
+    display: flex !important; align-items: center !important;
+    justify-content: flex-start !important;
+    width: 100% !important; min-height: 46px !important; height: auto !important;
+    padding: 11px 15px !important; border-radius: 10px !important;
     border: 1px solid transparent !important;
     background: transparent !important; box-shadow: none !important;
-    text-align: left; justify-content: flex-start;
-    transition: background .14s ease, color .14s ease;
-    margin-bottom: 1px;
+    transition: background .15s ease, border-color .15s ease;
+    margin-bottom: 3px;
+  }
+  section[data-testid="stSidebar"] div[data-testid="stButton"] > button > div,
+  section[data-testid="stSidebar"] div[data-testid="stButton"] > button
+    div[data-testid="stMarkdownContainer"] {
+    width: 100% !important; text-align: left !important;
+    display: block !important;
   }
   section[data-testid="stSidebar"] div[data-testid="stButton"] > button p {
     font-family: "Outfit", sans-serif !important;
-    font-size: 14.5px !important; font-weight: 500 !important;
-    color: rgba(255,255,255,.78) !important; text-align: left; margin: 0;
+    font-size: 15.5px !important; font-weight: 500 !important;
+    line-height: 1.35 !important;
+    color: rgba(255,255,255,.82) !important;
+    text-align: left !important; width: 100%; margin: 0 !important;
   }
   section[data-testid="stSidebar"] div[data-testid="stButton"] > button:hover {
-    background: rgba(255,255,255,.07) !important; transform: none;
+    background: rgba(255,255,255,.11) !important;
+    border-color: rgba(255,255,255,.16) !important;
+    transform: none !important;
+  }
+  section[data-testid="stSidebar"]
+    div[data-testid="stButton"] > button:hover p {
+    color: #ffffff !important;
   }
   section[data-testid="stSidebar"]
     div[data-testid="stButton"] > button[kind="primary"] {
     background: #1f7a5a !important; border-color: transparent !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,.22) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,.26) !important;
   }
   section[data-testid="stSidebar"]
     div[data-testid="stButton"] > button[kind="primary"] p {
     color: #ffffff !important; font-weight: 600 !important;
+  }
+  section[data-testid="stSidebar"]
+    div[data-testid="stButton"] > button[kind="primary"]:hover {
+    background: #23895f !important;
   }
 
   /* Le sélecteur de langue, seul widget non bouton de la colonne */
@@ -455,16 +485,12 @@ st.markdown("""
   section[data-testid="stSidebar"] .stRadio label p {
     color: rgba(255,255,255,.72) !important;
   }
-  section[data-testid="stSidebar"] .stRadio > div[role="radiogroup"] > label {
-    background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.14);
-  }
-  section[data-testid="stSidebar"]
-    .stRadio > div[role="radiogroup"] > label > div:last-child p {
-    color: rgba(255,255,255,.86) !important;
-  }
   section[data-testid="stSidebar"] div[data-baseweb="select"] > div {
-    background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16);
+    background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.18);
     color: #ffffff;
+  }
+  section[data-testid="stSidebar"] div[data-baseweb="select"] svg {
+    fill: rgba(255,255,255,.7);
   }
 
   /* --- sous-onglets : mêmes codes que les tuiles d'entrée, en compact ---
@@ -518,7 +544,7 @@ st.markdown("""
 # ne plante pas — elle affiche le nom des clés manquantes au milieu du texte, ce
 # qui est beaucoup plus déroutant qu'une erreur franche. On préfère le dire.
 # ----------------------------------------------------------------------
-I18N_ATTENDU = "2026-08-17-ergonomie"
+I18N_ATTENDU = "2026-08-18-menu"
 if getattr(i18n, "VERSION", None) != I18N_ATTENDU:
     st.error(
         f"**i18n.py est dans une version qui ne correspond pas au reste de "
@@ -529,6 +555,13 @@ if getattr(i18n, "VERSION", None) != I18N_ATTENDU:
         f"avec cette mise à jour, à la racine du dépôt, corrige l'affichage.\n\n"
         f"*i18n.py is out of date — re-upload the version delivered with this "
         f"update to the repository root.*")
+    # On ARRÊTE ici. Jusqu'ici l'application continuait de se dessiner avec
+    # des noms de clés en guise de textes, et le message rouge se perdait
+    # au-dessus d'une page qui semblait fonctionner — au point qu'on a pris
+    # plusieurs fois l'affichage cassé pour un défaut de mise en page. Une
+    # page vide sous un message franc est plus honnête qu'une page à moitié
+    # juste.
+    st.stop()
 
 st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
 
@@ -569,6 +602,7 @@ MODE_ACTIONS = "actions"
 MODE_SYNTHESE = "synthese"
 LIBELLE_MODE = {m: T(m) for m in MODES_DIM}
 LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
+                     "dimensions": T("mode_dimensions"),
                      MODE_METHODO: T("mode_methodo"),
                      MODE_DONNEES: T("mode_donnees"),
                      MODE_ACTIONS: T("mode_actions"),
@@ -615,12 +649,19 @@ def _bascule(mode):
 # en pavés sur la page occupaient un écran entier avant le premier chiffre ;
 # en colonne fixe, elles tiennent sans rien pousser vers le bas, et l'onglet
 # courant reste visible où qu'on soit dans la page.
+# Six entrées seulement dans la colonne. Les six dimensions n'y sont PAS :
+# elles forment une famille homogène qu'on parcourt en comparant, et une
+# rangée d'onglets se parcourt du regard alors qu'une liste verticale se lit
+# une ligne après l'autre. Elles vivent donc sous l'entrée « Les six
+# dimensions », en onglets, comme avant la refonte.
+MODE_DIMENSIONS = "dimensions"
 _NAV = [
-    ("nav_general", [(MODE_ACCUEIL, "◉")]),
-    ("nav_dimensions", [(m, i) for m, i in zip(
-        MODES_DIM, ["▤", "◈", "❦", "◍", "◎", "✚"])]),
-    ("nav_agir", [(MODE_SYNTHESE, "◐"), (MODE_ACTIONS, "➜")]),
-    ("nav_verifier", [(MODE_METHODO, "§"), (MODE_DONNEES, "⤓")]),
+    (MODE_ACCUEIL, "◉"),
+    (MODE_DIMENSIONS, "▦"),
+    (MODE_SYNTHESE, "◐"),
+    (MODE_ACTIONS, "➜"),
+    (MODE_METHODO, "§"),
+    (MODE_DONNEES, "⤓"),
 ]
 
 
@@ -641,11 +682,10 @@ with _sb_marque:
         unsafe_allow_html=True)
 
 with _sb_nav:
-    for cle_groupe, entrees in _NAV:
-        st.markdown(f'<div class="nav-groupe">{T(cle_groupe)}</div>',
-                    unsafe_allow_html=True)
-        for mode, icone in entrees:
-            _entree_nav(mode, icone)
+    st.markdown(f'<div class="nav-groupe">{T("nav_general")}</div>',
+                unsafe_allow_html=True)
+    for mode, icone in _NAV:
+        _entree_nav(mode, icone)
     st.markdown('<div class="nav-groupe">' + T("nav_langue") + '</div>',
                 unsafe_allow_html=True)
 
@@ -663,12 +703,17 @@ app_mode = st.session_state["app_mode"]
 if app_mode == MODE_ACCUEIL:
     accueil_page.render()
 
-if app_mode in MODES_DIM:
-    dimension_page.render(app_mode)
-    if app_mode == "dim3":
-        environnement_page.render(entete=False)
-    elif app_mode == "dim5":
-        ocb_page.render(entete=False)
+if app_mode == MODE_DIMENSIONS:
+    _onglets_dim = st.tabs([T(m) for m in MODES_DIM])
+    for _i, _m in enumerate(MODES_DIM):
+        with _onglets_dim[_i]:
+            dimension_page.render(_m)
+            # Deux dimensions prolongent leur page avec un détail qui existait
+            # déjà, plutôt que d'en dupliquer la logique.
+            if _m == "dim3":
+                environnement_page.render(entete=False)
+            elif _m == "dim5":
+                ocb_page.render(entete=False)
 
 if app_mode == MODE_METHODO:
     methodologie_page.render()
