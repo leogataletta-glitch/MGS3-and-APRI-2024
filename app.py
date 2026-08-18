@@ -615,28 +615,72 @@ st.markdown("""
      que la colonne de gauche : les deux ne font plus qu'un cadre, et le
      contenu blanc s'y pose comme une feuille.
 
-     ELLE NE PORTE QUE LE LOGO DU PNUE. Elle a d'abord repris les six entrées
-     de navigation ; c'était une redite — la colonne de gauche les affiche en
-     permanence, et chaque page répète son nom en titre. Trois fois le même mot
-     dans les cent premiers pixels.
+     ELLE PORTE DEUX CHOSES : la langue à gauche, le logo du PNUE à droite.
+     Elle a d'abord repris les six entrées de navigation ; c'était une redite —
+     la colonne de gauche les affiche en permanence.
 
      PLEINE LARGEUR. Le contenu du site reste borné à 1240 px — une ligne qui
      court sur 1900 px ne se lit pas. Le bandeau, lui, touche les deux bords :
      largeur = la fenêtre MOINS la colonne de gauche, fixe à 310 px. Si un jour
      vous changez cette largeur, changez les deux valeurs ensemble, sinon le
-     bandeau dépasse à droite et le logo sort de l'écran. */
-  .ruban-seul {
-    width: calc(100vw - 310px); max-width: calc(100vw - 310px);
+     bandeau dépasse à droite et le logo sort de l'écran.
+
+     Streamlit ne donne pas de marqueur propre à une rangée de colonnes : on y
+     glisse une ancre invisible et on habille la rangée qui la contient. */
+  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre) {
+    width: calc(100vw - 310px) !important;
+    max-width: calc(100vw - 310px) !important;
     margin-left: calc(-50vw + 50% + 155px);
     /* Les feuilles de style injectées par st.markdown occupent chacune un
        bloc vide en tête de page, et la gouttière verticale de Streamlit
        s'ajoute par-dessus : 32 px de blanc avant le bandeau. On les remonte. */
     margin-top: -32px; margin-bottom: 0;
     background: linear-gradient(180deg, #14402f 0%, #0f3327 100%);
-    padding: 12px 26px; min-height: 70px;
-    display: flex; align-items: center; justify-content: flex-end;
+    padding: 11px 24px 11px 22px; min-height: 70px;
+    align-items: center; gap: 4px !important; flex-wrap: nowrap !important;
   }
-  .ruban-logo { height: 46px; display: block; }
+  .ruban-ancre { display: none; }
+
+  .ruban-globe {
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.62); height: 38px;
+  }
+
+  /* Les deux langues : des boutons Streamlit déguisés en pastilles. Au repos
+     transparents — c'est le bandeau qui porte la couleur ; au survol un voile
+     clair ; la langue courante prend la pastille verte. */
+  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
+  div[data-testid="stButton"] > button {
+    background: transparent !important; border: none !important;
+    box-shadow: none !important;
+    color: rgba(255,255,255,.80) !important;
+    font-size: 13.5px !important; font-weight: 500 !important;
+    line-height: 1.2 !important; white-space: nowrap !important;
+    padding: 8px 12px !important; min-height: 38px !important;
+    height: auto !important; border-radius: 999px !important;
+    justify-content: center !important;
+    transition: background .13s ease, color .13s ease;
+  }
+  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
+  div[data-testid="stButton"] > button:hover {
+    background: rgba(255,255,255,.11) !important;
+    color: #ffffff !important; transform: none !important;
+  }
+  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
+  div[data-testid="stButton"] > button[kind="primary"] {
+    background: #5f9e3f !important; color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,.20) !important;
+  }
+  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
+  div[data-testid="stButton"] > button[kind="primary"]:hover {
+    background: #6cb047 !important;
+  }
+  .ruban-unep {
+    display: flex; justify-content: flex-end; align-items: center;
+    padding-right: 12px;
+  }
+  .ruban-unep img { height: 46px; display: block; }
 
   /* Le bandeau de paysage suit le ruban et déborde comme lui : les deux
      forment un seul en-tête, sans liseré blanc entre eux. */
@@ -807,12 +851,18 @@ _sb_marque = st.sidebar.container()
 _sb_nav = st.sidebar.container()
 _sb_langue = st.sidebar.container()
 
-with _sb_langue:
-    _code = st.selectbox(
-        T("langue"), list(i18n.LANGUES.keys()),
-        format_func=lambda c: i18n.LANGUES[c], key="choix_langue",
-        label_visibility="collapsed")
-i18n.set_lang(_code)
+# LA LANGUE EST LUE ICI, AVANT TOUT APPEL À T(), ET CHANGÉE DANS LE BANDEAU.
+# Le menu déroulant de la colonne de gauche a disparu : deux mots côte à côte
+# se lisent et se cliquent d'un seul geste, là où un menu demandait d'ouvrir,
+# viser, choisir. Le bouton n'écrit que dans l'état de session ; Streamlit
+# relance le script derrière, et la langue est déjà bonne quand la première
+# ligne de texte se dessine.
+st.session_state.setdefault("choix_langue", i18n.DEFAUT)
+i18n.set_lang(st.session_state["choix_langue"])
+
+
+def _changer_langue(code):
+    st.session_state["choix_langue"] = code
 
 # ---- bandeau : logo PNUE + les deux entrées du tableau de bord ----------
 # Le mode est stocké sous un code stable, pas sous son libellé : sinon un
@@ -910,24 +960,53 @@ def _entree_nav(mode, icone):
 # o\u00f9 l'on va. Ce qu'il ne faut surtout pas, c'est que les deux listes
 # divergent \u2014 d'o\u00f9 la source unique `_NAV`, dont les deux se servent.
 def _rendre_ruban():
-    """Le bandeau vert du haut : le logo du PNUE, et rien d'autre.
+    """Le bandeau vert du haut : les deux langues à gauche, le logo à droite.
 
-    IL N'Y A PLUS D'ONGLETS ICI. Les six entrées y étaient reprises mot pour
-    mot depuis la colonne de gauche, qui les affiche déjà en permanence : deux
-    menus identiques à quinze centimètres l'un de l'autre, et le nom de la page
-    répété une troisième fois par son propre titre. La navigation vit dans la
-    colonne ; le bandeau ne porte que la marque institutionnelle.
+    IL N'Y A PAS D'ONGLETS ICI. Les six entrées y étaient reprises mot pour mot
+    depuis la colonne de gauche, qui les affiche déjà en permanence : deux
+    menus identiques à quinze centimètres l'un de l'autre. La navigation vit
+    dans la colonne ; le bandeau porte la langue et la marque.
 
-    UN SEUL APPEL À st.markdown pour tout le bloc. Streamlit isole chaque
-    appel dans son propre conteneur : une balise ouverte dans l'un et fermée
-    dans le suivant ne s'emboîte jamais, et le style se perd sans qu'aucune
-    erreur ne le signale.
+    LA LANGUE EN DEUX MOTS, PAS EN MENU. « Français » et « English » côte à
+    côte, avec le globe : on lit et on clique d'un seul geste, là où un menu
+    déroulant demandait d'ouvrir, viser, choisir — pour deux choix.
+
+    Streamlit n'encadre pas une rangée de boutons dans son propre HTML : chaque
+    appel à st.markdown vit dans son conteneur. On glisse donc une ancre
+    invisible dans la rangée, et le CSS habille la rangée QUI LA CONTIENT, via
+    :has().
     """
     with _ruban:
+        cols = st.columns([0.5, 1.15, 1.15, 6, 2.2],
+                          vertical_alignment="center")
+        with cols[0]:
+            st.markdown(
+                '<div class="ruban-ancre"></div>'
+                '<div class="ruban-globe" title="Langue / Language">'
+                # Globe dessiné en SVG plutôt qu'un émoji : l'émoji change de
+                # dessin et de couleur selon le système, et rendait la barre
+                # bariolée sur Windows.
+                '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" '
+                'stroke="currentColor" stroke-width="1.7" '
+                'stroke-linecap="round"><circle cx="12" cy="12" r="9"/>'
+                '<path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18'
+                'M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg></div>',
+                unsafe_allow_html=True)
+        for col, code in zip(cols[1:3], ("fr", "en")):
+            with col:
+                st.button(i18n.LANGUES[code], key=f"lang_{code}",
+                          on_click=_changer_langue, args=(code,),
+                          type=("primary"
+                                if st.session_state["choix_langue"] == code
+                                else "secondary"),
+                          use_container_width=True)
+        with cols[-1]:
+            st.markdown(
+                f'<div class="ruban-unep"><img alt="UNEP" '
+                f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}"></div>',
+                unsafe_allow_html=True)
+
         st.markdown(
-            f'<div class="ruban-seul">'
-            f'<img class="ruban-logo" alt="UNEP" '
-            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}"></div>'
             f'<img src="data:image/jpeg;base64,{assets.PAYSAGE_CAMP_PERRIN}" '
             f'class="bandeau-haut" '
             f'style="width:100%;height:300px;object-fit:cover;'
@@ -960,8 +1039,6 @@ with _sb_nav:
         _entree_nav(mode, icone)
     st.markdown('<div class="f-separateur"></div>', unsafe_allow_html=True)
     filtres.rendre_panneau()
-    st.markdown('<div class="nav-groupe">' + T("nav_langue") + '</div>',
-                unsafe_allow_html=True)
 
 with _sb_langue:
     # Le logo du PNUE est remonté dans le ruban, en haut à droite. Le
