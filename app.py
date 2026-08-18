@@ -786,9 +786,13 @@ I18N_CLES_REQUISES = [
     "f_paysage", "f_tous_paysages", "f_resume_paysage",
     "f_resume_section_pay", "f_resume_paysage_groupe", "f_incoherent",
     "s_mode_paysage", "s_note_paysage", "pay_Littoral", "pay_Montagne",
-    "d_onglet_questions", "d_onglet_indicateurs", "q_intro", "q_base",
-    "q_croise", "q_aucune_dim", "q_note_rattachement",
 ]
+# Les textes de l'onglet « questions » ne figurent PAS dans cette liste, bien
+# qu'ils soient nouveaux : `questions_dimension.py` les porte lui-même et les
+# verse dans le dictionnaire à l'import, avant que ce contrôle ne s'exécute.
+# C'est le principe qu'il faut suivre pour toute fonction nouvelle — un module
+# qui apporte une fonction apporte ses textes — de sorte qu'un `i18n.py` resté
+# en arrière ne puisse plus bloquer une page qui, elle, est complète.
 _manquantes = [c for c in I18N_CLES_REQUISES if c not in getattr(i18n, "DICO", {})]
 if _manquantes:
     st.error(

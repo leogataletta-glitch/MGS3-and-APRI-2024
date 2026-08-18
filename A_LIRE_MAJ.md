@@ -1,92 +1,68 @@
-# Mise à jour — bandeau nettoyé, et deux sous-onglets par dimension
+# Correction — `i18n.py` ne peut plus bloquer une page complète
 
-## 1. Plus rien d'écrit sous le bandeau
+## Envoyez ces quatre fichiers. `i18n.py` n'est plus indispensable.
 
-Le titre « APRI — Observatoire de la résilience des paysages » répétait mot
-pour mot ce que la colonne de gauche affiche en permanence, à quinze
-centimètres de là. Il est retiré : la page d'accueil commence maintenant par le
-premier fait — 10 sections, 2 départements, 1 211 ménages — au lieu de se
-présenter une deuxième fois.
-
-Le rappel du filtre part avec, **mais seulement quand aucun filtre n'est
-posé**. « Dix sections communales, tous les répondants » ne disait rien que la
-ligne de périmètre ne dise trois centimètres plus bas. Dès qu'un filtre est
-réellement choisi, la pastille revient — c'est le seul cas où l'oublier fait
-mal lire un chiffre.
-
-## 2. Deux sous-onglets sous chaque dimension
-
-**« Les questions posées, et les réponses »**, puis **« Indicateurs de
-résilience »**. Les questions d'abord, volontairement : un score sur dix est un
-résultat de calcul, et qui arrive sur une dimension veut d'abord savoir ce
-qu'on a demandé aux ménages. L'indicateur se comprend mieux quand on a lu la
-question dont il sort.
-
-Chaque question s'affiche avec son intitulé exact, sa note (réponse unique ou
-multiple) et la répartition des réponses en barres horizontales — pourcentage
-et effectif. **Le filtre de la colonne de gauche s'y applique** : choisir
-Dumont recalcule toutes les répartitions sur les 122 ménages de Dumont, sans
-attente, parce que le cache porte déjà chaque section, chaque paysage et chaque
-sous-population.
-
-### Comment une question est rattachée à une dimension
-
-C'est le point délicat, et l'écran le dit lui-même. Deux niveaux :
-
-**Lien certain** — la question alimente un indicateur de cette dimension. Ce
-n'est pas une opinion : `resultats.json` porte, pour chaque indicateur, le
-texte de la question dont il est tiré. Ces questions affichent une pastille
-avec le numéro de ligne (`L4`, `L31`…). Il y en a 39 sur l'ensemble des six
-dimensions.
-
-**Rattachement thématique** — la question appartient au même module du
-questionnaire qu'une question du premier groupe. J'ai construit le tableau
-module → dimension en comptant, pour chaque module, les dimensions des
-indicateurs qui y puisent ; puis je l'ai complété à la main pour les modules
-dont aucun indicateur ne se sert encore. **C'est un choix éditorial**, il est
-annoncé comme tel en bas de l'onglet, et deux cas méritent votre avis :
-
-- **« Sécurité alimentaire »** arrivait à égalité entre la dimension physique
-  et la dimension humaine. Je l'ai rangée dans la dimension économique, dont
-  l'intitulé la nomme explicitement.
-- **La dimension environnementale** n'a qu'une question à lien certain : elle
-  est mesurée par satellite, pas par questionnaire. Je lui ai rattaché les
-  modules où le ménage décrit la pression qu'il exerce sur le milieu ou celle
-  qu'il subit — irrigation, intrants, arbres fruitiers plantés, causes de perte
-  de récolte. Discutable ; dites-moi si vous voyez les choses autrement.
-
-### Un module = un volet repliable
-
-La dimension économique porte à elle seule plus de trois cents questions : les
-batteries par culture et par espèce pêchée, une question par culture. Déroulées
-d'un bloc, elles noieraient les dix questions qui comptent. Chaque module est
-donc un volet ; **ceux qui contiennent une question reliée à un indicateur
-s'ouvrent d'office**, les autres attendent qu'on les demande.
-
-### Deux choses à savoir
-
-Les **intitulés des questions et des modalités restent en français** même en
-version anglaise : ce sont les libellés du questionnaire de terrain, pas des
-textes d'interface. Les traduire reviendrait à réécrire ce qui a été demandé
-aux ménages.
-
-Le **détail environnemental** (les onze indicateurs satellitaires) et les
-**fiches d'organisations de base** se trouvent désormais dans le sous-onglet
-« Indicateurs de résilience » de leur dimension. Avant les sous-onglets ils
-étaient rendus après la page ; ils seraient tombés hors des deux onglets.
-
-## L'envoi
-
-**Cinq fichiers, un seul commit.** `app.py` refuse de démarrer si `i18n.py`
-n'est pas à la version `2026-08-18-questions`.
-
-| Fichier | Ce qui change |
+| Fichier | |
 |---|---|
-| `questions_dimension.py` | **fichier nouveau** — l'onglet des questions |
+| `questions_dimension.py` | **nouveau** — l'onglet des questions, **et ses textes** |
 | `dimension_page.py` | les deux sous-onglets |
-| `app.py` | bandeau nettoyé, complément passé au bon onglet |
-| `i18n.py` | 11 clés nouvelles, version `2026-08-18-questions` |
+| `app.py` | bandeau nettoyé, contrôle assoupli |
 | `accueil_page.py` | titre retiré sous le bandeau |
+| *(`i18n.py`)* | *facultatif désormais — le catalogue complet, si l'envoi passe* |
+
+---
+
+## Ce qui n'allait pas, et ce que j'ai changé
+
+Deux fois de suite, la mise à jour est arrivée en ligne sans son `i18n.py`, et
+le site s'est arrêté sur « il manque des clés de traduction » — alors que le
+seul fichier réellement neuf était `questions_dimension.py`. J'ai d'abord
+corrigé le message, puis le contrôle. Ni l'un ni l'autre ne s'attaquait à la
+cause : **une page complète dépendait d'un autre fichier pour ses propres
+mots.**
+
+Les fichiers sont poussés à la main, un par un. En oublier un est normal.
+C'est l'architecture qui doit y survivre, pas vous qui devez être infaillible.
+
+**Un module qui apporte une fonction apporte désormais ses textes.**
+`questions_dimension.py` porte ses onze libellés dans un dictionnaire `TEXTES`,
+versé dans le catalogue commun à l'import — et seulement si la clé n'y est pas
+déjà, de sorte qu'un `i18n.py` à jour reste maître. Les mêmes clés restent dans
+`i18n.py`, qui garde son rôle de catalogue complet, mais elles n'y sont plus
+indispensables au fonctionnement.
+
+**Vérifié pour de vrai**, pas en principe : j'ai rejoué votre situation exacte
+— `i18n.py` resté à la version `ruban`, les onze clés retirées, tous les autres
+fichiers à jour. Résultat : **411 blocs rendus, aucune erreur, l'onglet des
+questions parfaitement lisible.**
+
+C'est la règle à suivre pour toute fonction nouvelle. Elle est écrite en
+commentaire dans les deux fichiers concernés, pour qu'on ne l'oublie pas.
+
+---
+
+## Rappel de ce que contient cette mise à jour
+
+**Plus rien d'écrit sous le bandeau de l'accueil.** Le titre « APRI —
+Observatoire de la résilience des paysages » répétait la colonne de gauche à
+quinze centimètres de là. Le rappel du filtre ne s'affiche plus que lorsqu'un
+filtre est réellement posé.
+
+**Deux sous-onglets sous chaque dimension** — « Les questions posées, et les
+réponses », puis « Indicateurs de résilience ». Chaque question avec son
+intitulé exact, sa note, et la répartition en barres : pourcentage et effectif.
+Le filtre de la colonne s'y applique instantanément.
+
+**Le rattachement des questions**, à deux niveaux, dit à l'écran : le *lien
+certain* (39 questions dont un indicateur est explicitement tiré, avec la
+pastille du numéro de ligne) et le *rattachement thématique* par module de
+questionnaire, qui est un choix éditorial. Deux cas méritent votre avis : la
+sécurité alimentaire, rangée dans la dimension économique après une égalité
+dans le calcul automatique ; et la dimension environnementale, à laquelle j'ai
+rattaché irrigation, intrants, arbres fruitiers et causes de perte de récolte,
+faute de questions d'enquête qui la mesurent directement.
+
+---
 
 ## Vérifié
 
@@ -94,7 +70,5 @@ n'est pas à la version `2026-08-18-questions`.
   filtres × 2 langues — **zéro exception, zéro message d'erreur** ;
 - 793 clés de traduction, aucun doublon, toutes avec un `fr` et un `en` ;
 - aucune clé brute affichée, dans les deux langues ;
-- **les 42 modules du questionnaire sont rattachés**, aucun oublié, aucun
-  module déclaré qui n'existe pas dans les données ;
-- rendu réel dans le navigateur : les deux sous-onglets, les volets par module,
-  les barres avec pourcentage et effectif.
+- **le scénario du `i18n.py` en retard rejoué** : la page se rend entièrement ;
+- les 42 modules du questionnaire tous rattachés, aucun oublié.
