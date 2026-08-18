@@ -1,71 +1,100 @@
-# À faire maintenant : renvoyer `i18n.py`
+# Mise à jour — bandeau nettoyé, et deux sous-onglets par dimension
 
-Le message rouge dit vrai. Il manque sur GitHub la dernière version de
-`i18n.py` — celle qui contient la clé `a_lieu`, utilisée par le nouveau bloc de
-marque de la colonne de gauche. Sans elle, « Sud et Grand'Anse, Haïti »
-s'afficherait sous la forme `a_lieu`.
+## 1. Plus rien d'écrit sous le bandeau
 
-**Envoyez `i18n.py` depuis `MAJ_resilience`** (233 829 octets, daté
-d'aujourd'hui). C'est le seul fichier réellement manquant.
+Le titre « APRI — Observatoire de la résilience des paysages » répétait mot
+pour mot ce que la colonne de gauche affiche en permanence, à quinze
+centimètres de là. Il est retiré : la page d'accueil commence maintenant par le
+premier fait — 10 sections, 2 départements, 1 211 ménages — au lieu de se
+présenter une deuxième fois.
 
-Renvoyez aussi `app.py` : il porte la correction ci-dessous.
+Le rappel du filtre part avec, **mais seulement quand aucun filtre n'est
+posé**. « Dix sections communales, tous les répondants » ne disait rien que la
+ligne de périmètre ne dise trois centimètres plus bas. Dès qu'un filtre est
+réellement choisi, la pastille revient — c'est le seul cas où l'oublier fait
+mal lire un chiffre.
 
----
+## 2. Deux sous-onglets sous chaque dimension
 
-## Pourquoi ce message revenait tout le temps — et pourquoi il ne reviendra plus
+**« Les questions posées, et les réponses »**, puis **« Indicateurs de
+résilience »**. Les questions d'abord, volontairement : un score sur dix est un
+résultat de calcul, et qui arrive sur une dimension veut d'abord savoir ce
+qu'on a demandé aux ménages. L'indicateur se comprend mieux quand on a lu la
+question dont il sort.
 
-Le garde-fou comparait une **date** : `i18n.VERSION` contre la date attendue
-par `app.py`. Au moindre écart, il arrêtait le site. C'était trop strict. Une
-mise à jour qui ne touchait qu'à la mise en page bloquait tout l'affichage
-alors que rien n'était cassé, et vous envoyait renvoyer un fichier de 230 ko
-sans raison. Ce faux positif vous a coûté plus de temps que la panne qu'il
-prévient — cinq fois.
+Chaque question s'affiche avec son intitulé exact, sa note (réponse unique ou
+multiple) et la répartition des réponses en barres horizontales — pourcentage
+et effectif. **Le filtre de la colonne de gauche s'y applique** : choisir
+Dumont recalcule toutes les répartitions sur les 122 ménages de Dumont, sans
+attente, parce que le cache porte déjà chaque section, chaque paysage et chaque
+sous-population.
 
-Il vérifie désormais **la présence des clés**, pas la date. Le défaut à
-attraper est précis : une clé appelée par le code manque du dictionnaire, et
-son *nom* s'affiche à la place du texte. C'est exactement cela qui est testé,
-sur les 21 clés introduites par les mises à jour récentes.
+### Comment une question est rattachée à une dimension
 
-Conséquence pratique :
+C'est le point délicat, et l'écran le dit lui-même. Deux niveaux :
 
-| Situation | Avant | Maintenant |
-|---|---|---|
-| `i18n.py` d'une version antérieure, mais toutes les clés présentes | site bloqué | **rien, le site fonctionne** |
-| une clé réellement absente | site bloqué | site bloqué, avec le **nom des clés manquantes** |
-| tout à jour | site fonctionne | site fonctionne |
+**Lien certain** — la question alimente un indicateur de cette dimension. Ce
+n'est pas une opinion : `resultats.json` porte, pour chaque indicateur, le
+texte de la question dont il est tiré. Ces questions affichent une pastille
+avec le numéro de ligne (`L4`, `L31`…). Il y en a 39 sur l'ensemble des six
+dimensions.
 
-Les trois cas ont été rejoués pour de vrai — vieux fichier, fichier amputé de
-deux clés, fichier à jour — et se comportent comme le tableau l'annonce. Dans
-le cas amputé, le message nomme maintenant les clés en cause : plus besoin de
-deviner quel fichier renvoyer.
+**Rattachement thématique** — la question appartient au même module du
+questionnaire qu'une question du premier groupe. J'ai construit le tableau
+module → dimension en comptant, pour chaque module, les dimensions des
+indicateurs qui y puisent ; puis je l'ai complété à la main pour les modules
+dont aucun indicateur ne se sert encore. **C'est un choix éditorial**, il est
+annoncé comme tel en bas de l'onglet, et deux cas méritent votre avis :
 
-**Aujourd'hui le message est justifié** : `a_lieu` manque vraiment sur GitHub.
-C'est la dernière fois qu'il se déclenche pour une simple différence de date.
+- **« Sécurité alimentaire »** arrivait à égalité entre la dimension physique
+  et la dimension humaine. Je l'ai rangée dans la dimension économique, dont
+  l'intitulé la nomme explicitement.
+- **La dimension environnementale** n'a qu'une question à lien certain : elle
+  est mesurée par satellite, pas par questionnaire. Je lui ai rattaché les
+  modules où le ménage décrit la pression qu'il exerce sur le milieu ou celle
+  qu'il subit — irrigation, intrants, arbres fruitiers plantés, causes de perte
+  de récolte. Discutable ; dites-moi si vous voyez les choses autrement.
 
----
+### Un module = un volet repliable
 
-## Rappel du design livré
+La dimension économique porte à elle seule plus de trois cents questions : les
+batteries par culture et par espèce pêchée, une question par culture. Déroulées
+d'un bloc, elles noieraient les dix questions qui comptent. Chaque module est
+donc un volet ; **ceux qui contiennent une question reliée à un indicateur
+s'ouvrent d'office**, les autres attendent qu'on les demande.
 
-Le ruban vert plein cadre, les onglets en pastilles, le logo du PNUE en réserve
-à droite, le bloc de marque sur deux niveaux et le bandeau à 300 px — tout cela
-est dans `app.py` et `assets.py`, déjà en ligne d'après le message d'erreur
-(c'est le nouveau `app.py` qui l'affiche).
+### Deux choses à savoir
+
+Les **intitulés des questions et des modalités restent en français** même en
+version anglaise : ce sont les libellés du questionnaire de terrain, pas des
+textes d'interface. Les traduire reviendrait à réécrire ce qui a été demandé
+aux ménages.
+
+Le **détail environnemental** (les onze indicateurs satellitaires) et les
+**fiches d'organisations de base** se trouvent désormais dans le sous-onglet
+« Indicateurs de résilience » de leur dimension. Avant les sous-onglets ils
+étaient rendus après la page ; ils seraient tombés hors des deux onglets.
 
 ## L'envoi
 
-| Fichier | Pourquoi |
-|---|---|
-| `i18n.py` | **manquant en ligne** — c'est la cause du message rouge |
-| `app.py` | garde-fou corrigé |
-| `assets.py` | par sécurité, s'il n'était pas passé |
+**Cinq fichiers, un seul commit.** `app.py` refuse de démarrer si `i18n.py`
+n'est pas à la version `2026-08-18-questions`.
 
-Sur GitHub : `Add file` → `Upload files`, les trois ensemble, un seul
-`Commit changes`.
+| Fichier | Ce qui change |
+|---|---|
+| `questions_dimension.py` | **fichier nouveau** — l'onglet des questions |
+| `dimension_page.py` | les deux sous-onglets |
+| `app.py` | bandeau nettoyé, complément passé au bon onglet |
+| `i18n.py` | 11 clés nouvelles, version `2026-08-18-questions` |
+| `accueil_page.py` | titre retiré sous le bandeau |
 
 ## Vérifié
 
-- 96 rendus complets — 12 pages × 4 combinaisons de filtres × 2 langues —
-  **zéro exception, zéro message d'erreur** ;
-- 782 clés de traduction, aucun doublon, toutes avec un `fr` et un `en` ;
+- 22 modules compilent ; **48 rendus complets** — 6 pages × 4 combinaisons de
+  filtres × 2 langues — **zéro exception, zéro message d'erreur** ;
+- 793 clés de traduction, aucun doublon, toutes avec un `fr` et un `en` ;
 - aucune clé brute affichée, dans les deux langues ;
-- les trois comportements du garde-fou rejoués un par un.
+- **les 42 modules du questionnaire sont rattachés**, aucun oublié, aucun
+  module déclaré qui n'existe pas dans les données ;
+- rendu réel dans le navigateur : les deux sous-onglets, les volets par module,
+  les barres avec pourcentage et effectif.

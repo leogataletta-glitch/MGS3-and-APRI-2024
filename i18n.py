@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-18-ruban"
+VERSION = "2026-08-18-questions"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -1804,6 +1804,60 @@ DICO = {
                       "fr": "Observatoire de la résilience des paysages"},
     "a_lieu": {"en": "Sud and Grand'Anse, Haiti",
                "fr": "Sud et Grand'Anse, Haïti"},
+    # ---- onglets « questions » et « indicateurs » de chaque dimension
+    "d_onglet_questions": {"en": "Questions asked, and the answers",
+                           "fr": "Les questions posées, et les réponses"},
+    "d_onglet_indicateurs": {"en": "Resilience indicators",
+                             "fr": "Indicateurs de résilience"},
+    "q_intro": {
+        "en": "{n} questions from the household survey relate to this "
+              "dimension. {lien} of them directly feed one of its indicators "
+              "and carry the line number; the others belong to the same "
+              "questionnaire module.",
+        "fr": "{n} questions de l'enquête ménage relèvent de cette dimension. "
+              "{lien} d'entre elles alimentent directement un de ses "
+              "indicateurs et en portent le numéro de ligne ; les autres "
+              "appartiennent au même module du questionnaire."},
+    "q_base": {"en": "Percentages of {cible} — base: {n} respondents.",
+               "fr": "Pourcentages sur {cible} — base : {n} répondants."},
+    "q_croise": {
+        "en": "A section crossed with a group is not available at question "
+              "level: the figures below are those of the section alone.",
+        "fr": "Le croisement d'une section et d'un groupe n'existe pas au "
+              "niveau des questions : les chiffres ci-dessous sont ceux de la "
+              "section seule."},
+    "q_ligne": {"en": "L{n}", "fr": "L{n}"},
+    "q_n_questions": {"en": "{n} questions", "fr": "{n} questions"},
+    "q_base_nulle": {"en": "No respondent under this filter.",
+                     "fr": "Aucun répondant sous ce filtre."},
+    "q_absent": {"en": "The survey answer cache is missing from the "
+                       "repository (data/cache_national.pkl).",
+                 "fr": "Le cache des réponses est absent du dépôt "
+                       "(data/cache_national.pkl)."},
+    "q_aucune_dim": {
+        "en": "This dimension is measured by satellite, not by questionnaire: "
+              "forest cover, rainfall, vegetation, surface temperature and "
+              "aridity are observed, not declared. The few survey questions "
+              "that touch the environment — irrigation, inputs, causes of "
+              "crop loss — are listed here as soon as they are attached.",
+        "fr": "Cette dimension est mesurée par satellite, pas par "
+              "questionnaire : couvert forestier, pluie, végétation, "
+              "température de surface et aridité sont observés, non déclarés. "
+              "Les quelques questions d'enquête qui touchent à "
+              "l'environnement — irrigation, intrants, causes de perte de "
+              "récolte — apparaissent ici dès qu'elles sont rattachées."},
+    "q_note_rattachement": {
+        "en": "Questions carrying a line number are linked to the dimension "
+              "by the data itself: the indicator states which question it is "
+              "drawn from. The others are attached through their "
+              "questionnaire module — that grouping is an editorial choice, "
+              "and a debatable one for modules that serve several dimensions.",
+        "fr": "Les questions qui portent un numéro de ligne sont rattachées à "
+              "la dimension par la donnée elle-même : l'indicateur dit de "
+              "quelle question il est tiré. Les autres le sont par leur "
+              "module de questionnaire — ce regroupement est un choix "
+              "éditorial, discutable pour les modules qui servent plusieurs "
+              "dimensions."},
     "a_localisation": {
         "en": "Ten communal sections in the departments of Sud and "
               "Grand'Anse, in Haiti's Greater South — from the coastal "

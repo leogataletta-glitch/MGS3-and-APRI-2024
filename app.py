@@ -674,9 +674,11 @@ st.markdown("""
      quoi porte l'affichage à droite. Un chiffre lu sans savoir qu'un filtre
      est posé est un chiffre mal lu. */
   .bh-contexte {
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center; justify-content: flex-start;
     gap: 16px; flex-wrap: wrap; margin: 12px 0 10px;
   }
+  /* Sans ligne de contenu, le bandeau collerait au titre de la page. */
+  .bh-vide { height: 22px; }
   .bh-page {
     font-size: 16.5px; font-weight: 700; color: #101728;
     letter-spacing: -.01em;
@@ -763,7 +765,7 @@ st.markdown("""
 # ne plante pas — elle affiche le nom des clés manquantes au milieu du texte, ce
 # qui est beaucoup plus déroutant qu'une erreur franche. On préfère le dire.
 # ----------------------------------------------------------------------
-I18N_ATTENDU = "2026-08-18-ruban"
+I18N_ATTENDU = "2026-08-18-questions"
 
 # CE QUI EST VÉRIFIÉ, C'EST LA PRÉSENCE DES CLÉS, PAS LA DATE.
 #
@@ -784,6 +786,8 @@ I18N_CLES_REQUISES = [
     "f_paysage", "f_tous_paysages", "f_resume_paysage",
     "f_resume_section_pay", "f_resume_paysage_groupe", "f_incoherent",
     "s_mode_paysage", "s_note_paysage", "pay_Littoral", "pay_Montagne",
+    "d_onglet_questions", "d_onglet_indicateurs", "q_intro", "q_base",
+    "q_croise", "q_aucune_dim", "q_note_rattachement",
 ]
 _manquantes = [c for c in I18N_CLES_REQUISES if c not in getattr(i18n, "DICO", {})]
 if _manquantes:
@@ -965,11 +969,17 @@ def _rendre_ruban():
             f'class="bandeau-haut" '
             f'style="width:100%;height:300px;object-fit:cover;'
             f'object-position:50% 62%;display:block">'
-            # Pas de nom de page ici : le ruban le montre déjà en pastille
-            # verte, et chaque page le répète en titre. Trois fois le même mot
-            # dans les cent premiers pixels, c'était deux fois de trop.
-            f'<div class="bh-contexte">'
-            f'<div class="bh-filtre">{filtres.resume()}</div></div>',
+            # RIEN D'ÉCRIT SOUS LE BANDEAU QUAND AUCUN FILTRE N'EST POSÉ.
+            # Le nom de la page est déjà dans le ruban, en pastille verte, et
+            # chaque page le répète en titre. Quant au rappel du filtre, il ne
+            # disait rien tant qu'il n'y a pas de filtre : « dix sections
+            # communales, tous les répondants » répétait la ligne de périmètre
+            # de l'accueil trois centimètres plus bas. Il n'apparaît donc que
+            # lorsqu'un filtre est effectivement posé — c'est-à-dire dans le
+            # seul cas où l'oublier fait mal lire un chiffre.
+            + (f'<div class="bh-contexte">'
+               f'<div class="bh-filtre">{filtres.resume()}</div></div>'
+               if filtres.actif() else '<div class="bh-vide"></div>'),
             unsafe_allow_html=True)
 
 
@@ -1016,16 +1026,19 @@ if app_mode == MODE_ACCUEIL:
     accueil_page.render(actualites=lambda: actualites.rendre(_bascule))
 
 if app_mode == MODE_DIMENSIONS:
+    # Deux dimensions prolongent leur page avec un détail qui existait déjà,
+    # plutôt que d'en dupliquer la logique. Ce détail est passé à la page de
+    # dimension, qui le place dans le bon sous-onglet — celui des indicateurs.
+    # Avant l'apparition des sous-onglets il était rendu après la page, ce qui
+    # le laissait désormais hors des deux onglets, en bas de l'écran.
+    _COMPLEMENT = {
+        "dim3": lambda: environnement_page.render(entete=False),
+        "dim5": lambda: ocb_page.render(entete=False),
+    }
     _onglets_dim = st.tabs([T(m) for m in MODES_DIM])
     for _i, _m in enumerate(MODES_DIM):
         with _onglets_dim[_i]:
-            dimension_page.render(_m)
-            # Deux dimensions prolongent leur page avec un détail qui existait
-            # déjà, plutôt que d'en dupliquer la logique.
-            if _m == "dim3":
-                environnement_page.render(entete=False)
-            elif _m == "dim5":
-                ocb_page.render(entete=False)
+            dimension_page.render(_m, complement=_COMPLEMENT.get(_m))
 
 if app_mode == MODE_METHODO:
     methodologie_page.render()

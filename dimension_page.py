@@ -23,6 +23,7 @@ import streamlit.components.v1 as components
 
 import assets
 import filtres
+import questions_dimension
 import i18n
 import map_render
 from i18n import T
@@ -289,8 +290,19 @@ def _carte_dimension(lignes, teinte, cle):
         f'{svg}</div>'), hauteur
 
 
-def render(cle_dim):
-    """Rend l'onglet d'une dimension. `cle_dim` vaut dim1 … dim6."""
+def render(cle_dim, complement=None):
+    """Rend l'onglet d'une dimension. `cle_dim` vaut dim1 … dim6.
+
+    Deux sous-onglets. LES QUESTIONS D'ABORD, LES INDICATEURS ENSUITE : un
+    score sur dix est un résultat de calcul, et qui arrive sur une dimension
+    veut d'abord savoir ce qu'on a demandé aux ménages. L'indicateur se
+    comprend mieux quand on a lu la question dont il sort.
+
+    `complement` est une fonction rendue à la fin de l'onglet des indicateurs.
+    Deux dimensions s'en servent — l'environnement pour ses onze indicateurs
+    satellitaires, le social pour les fiches d'organisations de base — plutôt
+    que de dupliquer ici une page qui existait déjà.
+    """
     res, vent = _charger()
     dimension = dict(DIMENSIONS).get(cle_dim)
     teinte = TEINTES.get(cle_dim, "#1a6bb0")
@@ -309,6 +321,17 @@ def render(cle_dim):
         st.info(T("e_absent"))
         st.stop()
 
+    _o_questions, _o_indicateurs = st.tabs(
+        [T("d_onglet_questions"), T("d_onglet_indicateurs")])
+    with _o_questions:
+        questions_dimension.rendre(cle_dim)
+    with _o_indicateurs:
+        _rendre_indicateurs(cle_dim, res, vent, dimension, teinte, complement)
+
+
+def _rendre_indicateurs(cle_dim, res, vent, dimension, teinte, complement):
+    """Le contenu de l'onglet « indicateurs » — ce que rendait `render` avant
+    l'apparition des sous-onglets, déplacé tel quel dans sa propre fonction."""
     lignes = [r for r in res if r["dimension"] == dimension]
     n_faits, n_tot, p_faits, p_tot = couverture(lignes)
     score = score_dimension(lignes, "Total")
@@ -396,6 +419,12 @@ def render(cle_dim):
                         f'line-height:1.6;margin:0 0 11px">{_e(exp)}</p>',
                         unsafe_allow_html=True)
                 st.markdown(_fiche_source(r), unsafe_allow_html=True)
+
+    # Le détail propre à deux dimensions — environnement, organisations de
+    # base — vient ici, à la fin des indicateurs, et non dans l'onglet des
+    # questions : ce sont des mesures, pas des réponses de ménage.
+    if complement is not None:
+        complement()
 
     st.caption(T("e_source"))
     st.caption(T("credit"))

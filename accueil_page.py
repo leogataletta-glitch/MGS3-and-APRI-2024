@@ -184,15 +184,11 @@ def render(actualites=None):
     st.markdown(_STYLE_PERIMETRE, unsafe_allow_html=True)
 
     # ------------------------------------------------------------- bandeau
-    # Ni logo ni pavé de bienvenue : la marque est en permanence dans la
-    # colonne de gauche, et un écran d'accueil qui commence par se présenter
-    # lui-même repousse le premier fait vers le bas de page.
-    st.markdown(
-        f'<div style="font-size:31px;font-weight:700;color:#101728;'
-        f'letter-spacing:-.025em;line-height:1.15;margin:2px 0 2px">'
-        f'<span style="color:#1f7a5a">APRI</span> — {T("a_titre_court")}</div>',
-        unsafe_allow_html=True)
-
+    # RIEN SOUS LE BANDEAU. Ni logo, ni pavé de bienvenue, ni titre : « APRI —
+    # Observatoire de la résilience des paysages » répétait mot pour mot ce
+    # que la colonne de gauche affiche en permanence, à quinze centimètres de
+    # là. La page commence donc par le premier fait — le périmètre — au lieu
+    # de se présenter une deuxième fois.
     if not res:
         st.info(T("e_absent"))
         st.stop()
