@@ -43,7 +43,6 @@ y compris quand elles le contredisent.
 import json
 import os
 
-import networkx as nx
 import numpy as np
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -51,6 +50,22 @@ GRAPHE = os.path.join(APP_DIR, "data", "graphe_causal.json")
 
 SECTIONS = ["Anse à Drick", "Barbois", "Dumont", "Débouchette", "Mouline",
             "Quentin", "Beaulieu", "Blactote", "Dalmette", "Trichet"]
+
+# Longueur maximale d'une boucle énumérée, et plafond du nombre de boucles.
+# Sans bornes, l'énumération des cycles d'un graphe dense explose
+# combinatoirement et bloque la page.
+#
+# LA BORNE A ÉTÉ RELEVÉE APRÈS VÉRIFICATION. À dix, elle coupait six boucles
+# de onze à treize nœuds — l'algorithme était juste, la borne était trop
+# basse, et la liste sortait incomplète sans le dire. Comparée à une
+# implémentation de référence, l'énumération retrouve maintenant les
+# trente-huit boucles du modèle, sans doublon ni cycle en trop.
+#
+# `boucles()` porte un drapeau `tronque` : le jour où quelqu'un densifiera le
+# modèle au point de heurter ces bornes, la liste le dira au lieu de mentir
+# par omission.
+BOUCLE_MAX = 16
+BOUCLES_MAX = 2000
 
 SEUIL_NUL = 0.05     # sous 0,05 point sur 10, l'effet est dit négligeable
 TENDU = 0.90         # au-delà, le système est fortement bouclé : on le dit
@@ -178,32 +193,68 @@ def direction(delta):
     return "nul"
 
 
+def _cycles(succ, ids):
+    """Énumère les cycles élémentaires du graphe, sans dépendance extérieure.
+
+    ÉCRIT À LA MAIN PLUTÔT QU'IMPORTÉ. La première version appelait networkx,
+    qui n'est pas dans `requirements.txt` : le site est tombé au déploiement
+    sur un ModuleNotFoundError. Ajouter la dépendance aurait marché, mais
+    ajouter un paquet entier pour une seule fonction de vingt lignes — et un
+    fichier de plus à ne pas oublier d'envoyer — coûte plus que de l'écrire.
+
+    Le principe est classique : une exploration en profondeur depuis chaque
+    nœud de départ, en n'autorisant que les nœuds d'INDICE SUPÉRIEUR OU ÉGAL au
+    départ. Chaque cycle n'est ainsi énuméré qu'une fois, à partir de son plus
+    petit indice, au lieu d'une fois par nœud qu'il contient.
+    """
+    rang = {v: i for i, v in enumerate(ids)}
+    trouves, coupe = [], False
+    for depart in ids:
+        r0 = rang[depart]
+        pile = [(depart, [depart], {depart})]
+        while pile:
+            noeud, chemin, vus = pile.pop()
+            if len(trouves) >= BOUCLES_MAX:
+                coupe = True
+                break
+            for suiv in succ.get(noeud, ()):
+                if suiv == depart:
+                    trouves.append(list(chemin))
+                elif (rang[suiv] > r0 and suiv not in vus
+                      and len(chemin) < BOUCLE_MAX):
+                    pile.append((suiv, chemin + [suiv], vus | {suiv}))
+        if coupe:
+            break
+    return trouves, coupe
+
+
 def boucles(graphe):
     """Les boucles du graphe, classées renforçante / équilibrante.
 
     Le signe d'une boucle est le PRODUIT des signes de ses arêtes : pair de
-    liens négatifs → renforçante, impair → équilibrante. C'est la définition
-    de la dynamique des systèmes, pas une convention d'affichage.
+    liens négatifs → renforçante, impair → équilibrante. C'est la définition de
+    la dynamique des systèmes, pas une convention d'affichage.
 
-    Triées par longueur puis par force, la force d'une boucle étant le produit
-    de celles de ses arêtes — c'est ce qui décide de son poids réel dans la
-    propagation.
+    La force d'une boucle est le produit de celles de ses arêtes — c'est elle
+    qui décide de son poids réel dans la propagation.
     """
-    D = nx.DiGraph()
-    for n in graphe["noeuds"]:
-        D.add_node(n["id"])
+    succ, arc = {}, {}
     for e in graphe["aretes"]:
-        D.add_edge(e["de"], e["vers"], signe=e["signe"], force=e["force"])
+        succ.setdefault(e["de"], []).append(e["vers"])
+        arc[(e["de"], e["vers"])] = (e["signe"], e["force"])
+    ids = [n["id"] for n in graphe["noeuds"]]
+    cycles, coupe = _cycles(succ, ids)
     out = []
-    for cycle in nx.simple_cycles(D):
+    for cycle in cycles:
         signe, force = 1, 1.0
         for i, u in enumerate(cycle):
             v = cycle[(i + 1) % len(cycle)]
-            signe *= D[u][v]["signe"]
-            force *= D[u][v]["force"]
+            sg, fo = arc[(u, v)]
+            signe *= sg
+            force *= fo
         out.append({"noeuds": cycle,
                     "type": "renforcante" if signe > 0 else "equilibrante",
-                    "force": force, "n": len(cycle)})
+                    "force": force, "n": len(cycle), "tronque": coupe})
     return sorted(out, key=lambda b: (b["n"], -b["force"]))
 
 
@@ -290,21 +341,19 @@ def leviers(graphe, lst_boucles=None):
         résilience.
     """
     lst = lst_boucles if lst_boucles is not None else boucles(graphe)
-    D = nx.DiGraph()
-    for n in graphe["noeuds"]:
-        D.add_node(n["id"])
+    entrant, sortant = {}, {}
     for e in graphe["aretes"]:
-        D.add_edge(e["de"], e["vers"])
+        sortant[e["de"]] = sortant.get(e["de"], 0) + 1
+        entrant[e["vers"]] = entrant.get(e["vers"], 0) + 1
     out = []
     for n in graphe["noeuds"]:
         cle = n["id"]
         dedans = [b for b in lst if cle in b["noeuds"]]
         renf = sum(1 for b in dedans if b["type"] == "renforcante")
         equi = len(dedans) - renf
+        ent, sor = entrant.get(cle, 0), sortant.get(cle, 0)
         out.append({
-            "id": cle,
-            "entrant": D.in_degree(cle), "sortant": D.out_degree(cle),
-            "degre": D.in_degree(cle) + D.out_degree(cle),
+            "id": cle, "entrant": ent, "sortant": sor, "degre": ent + sor,
             "boucles": len(dedans), "renforcantes": renf, "equilibrantes": equi,
             "bascule": renf > 0 and equi > 0,
             "poids_boucles": sum(b["force"] for b in dedans),

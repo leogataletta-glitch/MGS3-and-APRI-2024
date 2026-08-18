@@ -1,3 +1,6 @@
 streamlit>=1.32
 pandas>=2.0
 openpyxl>=3.1
+# numpy arrive déjà avec pandas, mais le module des boucles causales
+# s'en sert directement : autant que la dépendance soit écrite.
+numpy>=1.24
