@@ -38,13 +38,29 @@ GROUPE_CLE = {"Homme": "hommes", "Femme": "femmes", "Cat A": "cat_a",
               "Cat B": "cat_b", "Cat C": "cat_c", "<25": "age_25",
               "25-39": "age_25_39", "40-59": "age_40_59", "60+": "age_60"}
 
+PAYSAGES = ["Littoral", "Montagne"]
+
+# Une section communale appartient tout entière à un paysage : c'est une
+# propriété du lieu, pas du répondant. Ce tableau reprend à l'identique
+# `ventilation.json["paysage"]` ; il est recopié ici pour que le module des
+# filtres n'ait pas à charger un fichier de données, et il est vérifié au
+# démarrage par `verifier_paysages()` ci-dessous pour qu'il ne puisse pas
+# diverger en silence.
+SECTION_PAYSAGE = {
+    "Anse à Drick": "Montagne", "Barbois": "Montagne", "Beaulieu": "Littoral",
+    "Blactote": "Littoral", "Dalmette": "Littoral", "Débouchette": "Montagne",
+    "Dumont": "Montagne", "Mouline": "Montagne", "Quentin": "Montagne",
+    "Trichet": "Littoral"}
+
 TOUTES = "__toutes__"
 TOUS = "__tous__"
+TOUS_P = "__tous_paysages__"
 
 
 def _defaut():
     st.session_state.setdefault("f_section", TOUTES)
     st.session_state.setdefault("f_groupe", TOUS)
+    st.session_state.setdefault("f_paysage", TOUS_P)
 
 
 def section():
@@ -57,8 +73,18 @@ def groupe():
     return st.session_state["f_groupe"]
 
 
+def paysage():
+    _defaut()
+    return st.session_state["f_paysage"]
+
+
+def libelle_paysage(v):
+    return T("f_tous_paysages") if v == TOUS_P else T("pay_" + v)
+
+
 def actif():
-    return section() != TOUTES or groupe() != TOUS
+    return (section() != TOUTES or groupe() != TOUS
+            or paysage() != TOUS_P)
 
 
 def libelle_section(v):
@@ -72,20 +98,44 @@ def libelle_groupe(v):
 def reinitialiser():
     st.session_state["f_section"] = TOUTES
     st.session_state["f_groupe"] = TOUS
+    st.session_state["f_paysage"] = TOUS_P
+
+
+def incoherent():
+    """Vrai quand la section demandée n'appartient pas au paysage demandé —
+    Dumont est en montagne, la croiser avec « Littoral » ne désigne aucun
+    répondant. On ne bloque pas le choix, on le dit à l'écran."""
+    s, p = section(), paysage()
+    if s == TOUTES or p == TOUS_P:
+        return False
+    return SECTION_PAYSAGE.get(s) != p
 
 
 def cible():
     """La clé à lire dans `scores_corriges`, quand une seule dimension de
-    filtre est posée. Rend None quand les deux le sont — il faut alors passer
-    par la ventilation, ce dont `score()` se charge."""
-    s, g = section(), groupe()
-    if s == TOUTES and g == TOUS:
-        return "Total"
-    if s != TOUTES and g == TOUS:
-        return s
-    if s == TOUTES and g != TOUS:
+    filtre est posée. Rend None quand section ET groupe le sont — il faut
+    alors passer par la ventilation croisée, ce dont `score()` se charge.
+
+    Ordre de priorité, du plus précis au moins précis :
+
+      1. la SECTION, si elle est posée. Une section est incluse tout entière
+         dans un paysage ; demander « Dumont » et « Montagne » désigne le même
+         ensemble de répondants que « Dumont » seul, et le score de la section
+         est le plus fin des deux. Le paysage est donc ignoré ici — pas perdu :
+         `resume()` le rappelle entre parenthèses.
+      2. le PAYSAGE, s'il est posé sans section. Il prime sur le groupe parce
+         qu'il est porté par TOUS les indicateurs, y compris satellitaires, là
+         où le groupe n'est ventilé que dans l'enquête.
+      3. le GROUPE.
+    """
+    s, g, p = section(), groupe(), paysage()
+    if s != TOUTES:
+        return s if g == TOUS else None
+    if p != TOUS_P:
+        return p
+    if g != TOUS:
         return g
-    return None
+    return "Total"
 
 
 def score(indic, vent=None):
@@ -121,15 +171,39 @@ def valeur(indic, vent=None):
 
 
 def resume():
-    """Une phrase disant sur quoi porte l'affichage, pour le haut des pages."""
-    s, g = section(), groupe()
-    if s == TOUTES and g == TOUS:
-        return T("f_resume_tout")
-    if s != TOUTES and g == TOUS:
+    """Une phrase disant sur quoi porte l'affichage, pour le haut des pages.
+
+    Elle suit exactement l'ordre de priorité de `cible()` : ce qui est écrit
+    est ce qui est calculé. Quand un filtre est ignoré parce qu'un plus fin le
+    recouvre, la phrase le dit plutôt que de le passer sous silence — sinon on
+    lit un chiffre de section en croyant lire un chiffre de paysage.
+    """
+    s, g, p = section(), groupe(), paysage()
+    if s != TOUTES:
+        if g != TOUS:
+            return T("f_resume_croise", s=s, g=libelle_groupe(g))
+        if p != TOUS_P:
+            return T("f_resume_section_pay", s=s,
+                     p=libelle_paysage(SECTION_PAYSAGE.get(s, p)))
         return T("f_resume_section", s=s)
-    if s == TOUTES and g != TOUS:
+    if p != TOUS_P:
+        if g != TOUS:
+            return T("f_resume_paysage_groupe", p=libelle_paysage(p),
+                     g=libelle_groupe(g))
+        return T("f_resume_paysage", p=libelle_paysage(p))
+    if g != TOUS:
         return T("f_resume_groupe", g=libelle_groupe(g))
-    return T("f_resume_croise", s=s, g=libelle_groupe(g))
+    return T("f_resume_tout")
+
+
+def avertissement():
+    """Le message à afficher quand la combinaison demandée n'a pas de sens
+    géographique. Rend None quand tout va bien."""
+    if not incoherent():
+        return None
+    s, p = section(), paysage()
+    return T("f_incoherent", s=s, p=libelle_paysage(p),
+             vrai=libelle_paysage(SECTION_PAYSAGE.get(s, p)))
 
 
 # ------------------------------------------------------------------ colonne
@@ -151,6 +225,9 @@ def rendre_panneau():
         T("f_section"), [TOUTES] + SECTIONS, format_func=libelle_section,
         key="f_section", label_visibility="visible")
     st.selectbox(
+        T("f_paysage"), [TOUS_P] + PAYSAGES, format_func=libelle_paysage,
+        key="f_paysage", label_visibility="visible")
+    st.selectbox(
         T("f_groupe"), [TOUS] + GROUPES, format_func=libelle_groupe,
         key="f_groupe", label_visibility="visible")
 
@@ -160,6 +237,8 @@ def rendre_panneau():
     chips = []
     if section() != TOUTES:
         chips.append((T("f_section"), section()))
+    if paysage() != TOUS_P:
+        chips.append((T("f_paysage"), libelle_paysage(paysage())))
     if groupe() != TOUS:
         chips.append((T("f_groupe"), libelle_groupe(groupe())))
     if chips:
@@ -171,3 +250,7 @@ def rendre_panneau():
     else:
         st.markdown(f'<div class="f-vide">{T("f_aucun")}</div>',
                     unsafe_allow_html=True)
+
+    av = avertissement()
+    if av:
+        st.warning(av, icon="⚠")

@@ -16,7 +16,6 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 
-import assets
 import i18n
 from i18n import T
 
@@ -450,17 +449,11 @@ def _bloc(cle_titre, cle_desc, teinte, nom_fichier, mime, format_txt,
 def render():
     lang = i18n.get_lang()
 
-    col_logo, col_titre = st.columns([1, 6])
-    with col_logo:
-        st.markdown(
-            f'<img src="data:image/png;base64,{assets.LOGO_UNEP}" '
-            f'style="width:132px;margin-top:6px">', unsafe_allow_html=True)
-    with col_titre:
-        st.title(T("d_titre"))
-        st.markdown(
-            '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
-            'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
-            + T("d_sous_titre") + "</p>", unsafe_allow_html=True)
+    st.title(T("d_titre"))
+    st.markdown(
+        '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+        'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
+        + T("d_sous_titre") + "</p>", unsafe_allow_html=True)
 
     st.markdown(
         '<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '

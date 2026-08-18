@@ -6,9 +6,14 @@ avec quelles données, et qu'est-ce que ça donne ». Le reste — le détail pa
 dimension, la méthode, les téléchargements — vient après, pour qui veut
 creuser.
 
-D'où l'ordre de cette page : le périmètre d'abord (combien de sections,
-combien de ménages, combien d'indicateurs), les résultats saillants ensuite,
-le classement des sections, et enfin la carte et les ressources.
+D'où l'ordre de cette page : trois chiffres de périmètre et la localisation,
+l'histoire du projet ensuite — ce qu'est APRI, d'où cela vient, ce que l'indice
+ne prétend pas dire — puis les résultats saillants, la carte et les livraisons
+récentes.
+
+AUCUN LOGO DANS LE CONTENU. La marque APRI et celle du PNUE vivent dans la
+colonne de gauche, où elles sont visibles en permanence ; les répéter en tête
+de chaque page vole la place du titre sans rien apprendre à personne.
 
 TOUS LES CHIFFRES SONT CALCULÉS, AUCUN N'EST ÉCRIT EN DUR. Une page d'accueil
 qui affiche des nombres figés devient fausse à la première mise à jour des
@@ -22,7 +27,6 @@ import os
 import streamlit as st
 import streamlit.components.v1 as components
 
-import assets
 import i18n
 import map_render
 from i18n import T
@@ -103,9 +107,9 @@ def _carte_vignette(res):
     if not dispo:
         return None, 0
     seuils = map_render.nice_thresholds(dispo)
-    hauteur = 430
+    hauteur = 620
     svg, seuils_ret, _m = map_render.render_map_svg(
-        valeurs, {s: 1 for s in SECTIONS}, seuils, width=560, height=hauteur,
+        valeurs, {s: 1 for s in SECTIONS}, seuils, width=1040, height=hauteur,
         polarity="eleve_bon", unite="")
     legende = "".join(
         f'<span style="display:inline-flex;align-items:center;gap:6px;'
@@ -119,88 +123,74 @@ def _carte_vignette(res):
             f'{legende}</div>{svg}</div>'), hauteur
 
 
-def _barres_sections_svg(scores, largeur=880):
-    """Classement des sections, barres verticales, du meilleur au moins bon.
+def _menages_enquetes(res):
+    """Le nombre de ménages enquêtés.
 
-    Une seule teinte : il n'y a qu'une grandeur. Le score est écrit au-dessus
-    de chaque barre — à cette hauteur, l'œil ne lit pas un écart de trois
-    dixièmes, et c'est justement l'ordre de grandeur qui sépare ces
-    territoires.
+    Pas de `@st.cache_data` ici : le cache devrait hacher `res`, une liste de
+    128 dictionnaires, ce qui coûterait plus cher que le calcul lui-même.
+
+    L'ancienne version affichait `max(n)` sur toutes les lignes de résultat,
+    soit 2 700 — qui est le nombre d'ENFANTS de la ligne 24 (enregistrement
+    des naissances), pas de ménages. Le site annonçait donc en vitrine plus du
+    double du vrai chiffre.
+
+    Toutes les lignes ne comptent pas la même chose : la plupart comptent des
+    ménages, quelques-unes comptent des individus. On borne donc le max par
+    les effectifs par section communale, qui, eux, comptent des questionnaires
+    et rien d'autre. Une ligne qui déclare nettement plus que ce total ne
+    compte pas des ménages, et sort du calcul.
+
+    Reste l'écart entre les deux : 1 211 questionnaires collectés, 1 206
+    rattachés à une section communale. C'est le premier chiffre — le nombre de
+    foyers réellement interrogés — qui est annoncé ici.
     """
-    ordre = sorted(scores.items(), key=lambda kv: -kv[1])
-    H, TOP, BAS, GAUCHE = 300, 26, 86, 40
-    plot_h = H - TOP - BAS
-    pas = (largeur - GAUCHE - 16) / max(len(ordre), 1)
-    barre = pas * 0.56
-    vmax = 10.0
-
-    parts = []
-    for g in (0, 2, 4, 6, 8, 10):
-        y = TOP + plot_h * (1 - g / vmax)
-        parts.append(f'<line x1="{GAUCHE}" y1="{y:.1f}" x2="{largeur - 16}" '
-                     f'y2="{y:.1f}" stroke="#eef2f7" stroke-width="1"/>')
-        parts.append(f'<text class="ag" x="{GAUCHE - 9}" y="{y + 4:.1f}" '
-                     f'text-anchor="end">{g}</text>')
-
-    for i, (sec, v) in enumerate(ordre):
-        h = plot_h * v / vmax
-        x = GAUCHE + i * pas + (pas - barre) / 2
-        y = TOP + plot_h - h
-        parts.append(
-            f'<g><title>{_e(sec)} — {v:.2f} / 10</title>'
-            f'<rect x="{x:.1f}" y="{y:.1f}" width="{barre:.1f}" '
-            f'height="{max(h, 1):.1f}" rx="3" fill="#1f7a5a"/></g>')
-        parts.append(f'<text class="av" x="{x + barre / 2:.1f}" '
-                     f'y="{y - 7:.1f}" text-anchor="middle">'
-                     f'{v:.2f}</text>'.replace('.', ','))
-        parts.append(
-            f'<text class="al" transform="translate({x + barre / 2:.1f},'
-            f'{H - BAS + 12}) rotate(-38)" text-anchor="end">'
-            f'{_e(sec)}</text>')
-
-    return f"""<svg viewBox="0 0 {largeur} {H}" width="100%"
-     style="max-width:{largeur}px;display:block" role="img">
-  <style>
-    .ag{{font:11px system-ui,-apple-system,sans-serif;fill:#a9b0be;
-        font-variant-numeric:tabular-nums}}
-    .av{{font:700 12.5px system-ui,-apple-system,sans-serif;fill:#101728;
-        font-variant-numeric:tabular-nums}}
-    .al{{font:12px system-ui,-apple-system,sans-serif;fill:#52514e}}
-  </style>
-  {''.join(parts)}
-</svg>"""
+    p = _trouver("ventilation.json")
+    if not p or not res:
+        return None
+    with open(p, encoding="utf-8") as f:
+        eff = (json.load(f) or {}).get("effectifs") or {}
+    rattaches = sum((d or {}).get("Total") or 0 for d in eff.values())
+    if not rattaches:
+        return None
+    plafond = rattaches * 1.1
+    plausibles = [n for n in ((r.get("n") or {}).get("Total") for r in res)
+                  if n and n <= plafond]
+    return max(plausibles) if plausibles else rattaches
 
 
-def _tuile(icone, lib, val, unite, sous):
-    return (f'<div style="flex:1 1 190px;min-width:170px;background:#fff;'
-            f'border:1px solid #e7ecf3;border-radius:14px;padding:15px 17px;'
-            f'box-shadow:0 1px 2px rgba(16,23,40,.04)">'
-            f'<div style="font-size:19px;line-height:1">{icone}</div>'
-            f'<div style="font-size:29px;font-weight:700;color:#101728;'
-            f'font-variant-numeric:tabular-nums;margin-top:6px;'
-            f'letter-spacing:-.02em">{_e(val)}'
-            + (f'<span style="font-size:15px;font-weight:600;color:#6b7590;'
-               f'margin-left:3px">{_e(unite)}</span>' if unite else '')
-            + f'</div>'
-            f'<div style="font-size:13.5px;color:#3c4761;font-weight:600;'
-            f'margin-top:2px">{_e(lib)}</div>'
-            f'<div style="font-size:12px;color:#8a93a5;margin-top:1px">'
-            f'{_e(sous)}</div></div>')
+_STYLE_PERIMETRE = """
+<style>
+  .a-perimetre { display:flex; gap:34px; flex-wrap:wrap; margin:16px 0 6px;
+                 padding:0 0 2px; }
+  .a-per-item  { display:flex; align-items:baseline; gap:9px; }
+  .a-per-val   { font-size:30px; font-weight:700; color:#101728;
+                 letter-spacing:-.025em; font-variant-numeric:tabular-nums;
+                 line-height:1; }
+  .a-per-lib   { font-size:14.5px; color:#5a6478; }
+  .a-local     { font-size:15.5px; color:#3c4761; line-height:1.6;
+                 max-width:88ch; margin:6px 0 4px; }
+  .a-hist-t    { font-size:13px; letter-spacing:.06em; text-transform:uppercase;
+                 font-weight:700; color:#1f7a5a; margin:0 0 4px; }
+  .a-hist-p    { font-size:15.5px; color:#3c4761; line-height:1.65;
+                 max-width:92ch; margin:0 0 15px; }
+  .a-hist-p:last-child { margin-bottom:2px; }
+  .a-hist-p b  { color:#101728; font-weight:650; }
+</style>
+"""
 
 
 def render(actualites=None):
     res = _charger()
+    st.markdown(_STYLE_PERIMETRE, unsafe_allow_html=True)
 
     # ------------------------------------------------------------- bandeau
+    # Ni logo ni pavé de bienvenue : la marque est en permanence dans la
+    # colonne de gauche, et un écran d'accueil qui commence par se présenter
+    # lui-même repousse le premier fait vers le bas de page.
     st.markdown(
-        f'<div style="display:flex;align-items:center;gap:18px;margin:2px 0 4px">'
-        f'<img src="data:image/png;base64,{assets.LOGO_APRI}" '
-        f'style="width:96px">'
-        f'<div><div style="font-size:31px;font-weight:700;color:#101728;'
-        f'letter-spacing:-.025em;line-height:1.15">{T("a_bienvenue")} '
-        f'<span style="color:#1f7a5a">APRI</span></div>'
-        f'<div style="font-size:15px;color:#6b7590;margin-top:2px">'
-        f'{T("a_accroche")}</div></div></div>',
+        f'<div style="font-size:31px;font-weight:700;color:#101728;'
+        f'letter-spacing:-.025em;line-height:1.15;margin:2px 0 2px">'
+        f'<span style="color:#1f7a5a">APRI</span> — {T("a_titre_court")}</div>',
         unsafe_allow_html=True)
 
     if not res:
@@ -209,25 +199,44 @@ def render(actualites=None):
 
     scores_sec = {s: score_pondere(res, s) for s in SECTIONS}
     scores_sec = {s: v for s, v in scores_sec.items() if v is not None}
-    global_ = score_pondere(res, "Total")
-    n_scores = sum(1 for r in res
-                   if (r.get("scores_corriges") or {}).get("Total") is not None)
-    base = max((r.get("n") or {}).get("Total") or 0 for r in res)
 
     # --------------------------------------------------------- le périmètre
+    # Cinq tuiles disaient cinq chiffres dont trois n'apprenaient rien à qui
+    # arrive sur le site. Il en reste trois, sur une ligne, suivis de la
+    # localisation : de quel territoire parle-t-on, et sur quelle base.
+    #
+    # ATTENTION AU NOMBRE DE MÉNAGES. L'ancienne tuile affichait le maximum
+    # des effectifs de toutes les lignes, soit 2 700 — qui est le nombre
+    # d'ENFANTS de la ligne 24 (enregistrement des naissances), pas de
+    # ménages. Le bon dénominateur est le nombre de questionnaires, lu dans
+    # les effectifs par section : ne pas revenir à un max() sur les lignes.
     st.markdown(
-        '<div style="display:flex;gap:13px;flex-wrap:wrap;margin:14px 0 4px">'
-        + _tuile("◉", T("a_p_sections"), str(len(SECTIONS)), "",
-                 T("a_p_sections_sous"))
-        + _tuile("◈", T("a_p_departements"), "2", "",
-                 T("a_p_departements_sous"))
-        + _tuile("▤", T("a_p_indicateurs"), f"{n_scores}", f"/ {len(res)}",
-                 T("a_p_indicateurs_sous"))
-        + _tuile("◍", T("a_p_menages"), _fmt(base, 0), "",
-                 T("a_p_menages_sous"))
-        + _tuile("★", T("a_p_score"), _fmt(global_, 2), "/ 10",
-                 T("a_p_score_sous"))
-        + '</div>', unsafe_allow_html=True)
+        '<div class="a-perimetre">'
+        + ''.join(
+            f'<div class="a-per-item"><span class="a-per-val">{_e(v)}</span>'
+            f'<span class="a-per-lib">{_e(l)}</span></div>'
+            for v, l in [(str(len(SECTIONS)), T("a_p_sections")),
+                         ("2", T("a_p_departements")),
+                         (_fmt(_menages_enquetes(res), 0), T("a_p_menages"))])
+        + '</div>'
+        f'<p class="a-local">{T("a_localisation")}</p>',
+        unsafe_allow_html=True)
+
+    # -------------------------------------------------------- l'histoire
+    # Quatre volets « quoi / où / comment / pourquoi » disaient les mêmes
+    # choses en trop peu de mots pour qu'on comprenne de quoi il s'agit. Un
+    # récit court les remplace : d'où vient la démarche, ce qu'elle mesure,
+    # comment elle est construite, et ce qu'elle ne prétend pas dire — cette
+    # dernière partie n'est pas une précaution de style, c'est la condition
+    # pour que les chiffres soient utilisés correctement.
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc ambre">{T("a_histoire")}</div>',
+                    unsafe_allow_html=True)
+        st.markdown(
+            ''.join(f'<p class="a-hist-p"><b>{_e(T("a_h_" + c + "_t"))}</b> '
+                    f'{T("a_h_" + c)}</p>'
+                    for c in ("origine", "mesure", "construction", "portee")),
+            unsafe_allow_html=True)
 
     # ------------------------------------------------- résultats saillants
     with st.container(border=True):
@@ -262,59 +271,24 @@ def render(actualites=None):
                     + ''.join(cartes) + '</div>', unsafe_allow_html=True)
         st.caption(T("a_bloc_saillants_note"))
 
-    # ------------------------------------------------ classement + carte
-    # La colonne de droite porte la carte PUIS les actualités, comme la
-    # maquette : ce qui situe d'abord, ce qui vient de changer ensuite.
-    gauche, droite = st.columns([3, 2], gap="medium")
-    with gauche:
-        with st.container(border=True):
-            st.markdown(
-                f'<div class="titre-bloc vert">{T("a_bloc_classement")}</div>',
-                unsafe_allow_html=True)
-            svg = _barres_sections_svg(scores_sec)
-            components.html(
-                '<div style="background:#ffffff;font-family:system-ui,'
-                "-apple-system,'Segoe UI',sans-serif\">" + svg + "</div>",
-                height=315, scrolling=False)
-            st.caption(T("a_bloc_classement_note",
-                         h=max(scores_sec, key=scores_sec.get),
-                         b=min(scores_sec, key=scores_sec.get)))
-
-    with droite:
-        with st.container(border=True):
-            st.markdown(f'<div class="titre-bloc">{T("a_bloc_carte")}</div>',
-                        unsafe_allow_html=True)
-            carte = _carte_vignette(res)
-            if carte[0]:
-                components.html(carte[0], height=carte[1] + 34,
-                                scrolling=False)
-            st.caption(T("a_bloc_carte_note"))
-
-        if actualites is not None:
-            actualites()
-
-    # ---------------------------------------------------- par où commencer
+    # ------------------------------------------------------------- la carte
+    # Le diagramme en barres est retiré. Il disait la même chose que la carte
+    # — le classement des dix sections — mais sans dire OÙ, et son échelle
+    # arrondissait des écarts de trois dixièmes en barres identiques. La carte
+    # porte le score ET la géographie ; deux vues du même chiffre, dont l'une
+    # en dit moins, ne valent pas deux blocs.
     with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc ambre">{T("a_bloc_guide")}</div>',
+        st.markdown(f'<div class="titre-bloc vert">{T("a_bloc_carte")}</div>',
                     unsafe_allow_html=True)
-        pistes = [
-            ("dim3", T("a_guide_env"), "#2a6b3f"),
-            ("synthese", T("a_guide_synthese"), "#1a6bb0"),
-            ("actions", T("a_guide_actions"), "#a8690a"),
-            ("methodologie", T("a_guide_methodo"), "#6b4fa8"),
-        ]
-        st.markdown(
-            '<div style="display:flex;gap:12px;flex-wrap:wrap">'
-            + ''.join(
-                f'<div style="flex:1 1 230px;min-width:210px;'
-                f'border-left:3px solid {c};padding:2px 0 2px 13px">'
-                f'<div style="font-size:12px;letter-spacing:.06em;'
-                f'text-transform:uppercase;color:{c};font-weight:700">'
-                f'{_e(T(cle))}</div>'
-                f'<div style="font-size:14.5px;color:#3c4761;line-height:1.55;'
-                f'margin-top:2px">{_e(txt)}</div></div>'
-                for cle, txt, c in pistes)
-            + '</div>', unsafe_allow_html=True)
+        carte = _carte_vignette(res)
+        if carte[0]:
+            components.html(carte[0], height=carte[1] + 40, scrolling=False)
+        st.caption(T("a_bloc_carte_note",
+                     h=max(scores_sec, key=scores_sec.get),
+                     b=min(scores_sec, key=scores_sec.get)))
+
+    if actualites is not None:
+        actualites()
 
     st.caption(T("e_source"))
     st.caption(T("credit"))

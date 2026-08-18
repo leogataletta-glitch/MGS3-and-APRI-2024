@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-18-filtres"
+VERSION = "2026-08-18-histoire"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -1300,8 +1300,8 @@ DICO = {
 
     # --- refonte APRI : les six dimensions comme onglets ------------------
     "d_sous_titre": {
-        "en": "APRI — Landscape Resilience Index · Greater South, Haiti",
-        "fr": "APRI — Indice de résilience des paysages · Grand Sud, Haïti"},
+        "en": "Anonymised datasets and result tables",
+        "fr": "Jeux de données anonymisés et tables de résultats"},
     "d_src_menage": {"en": "Household survey", "fr": "Enquête ménage"},
     "d_src_satellite": {"en": "Satellite", "fr": "Satellite"},
     "d_src_ocb": {"en": "CBO survey", "fr": "Enquête OCB"},
@@ -1459,7 +1459,7 @@ DICO = {
                   "fr": "santé, éducation, mortalité, couverture des soins"},
 
     # --- synthèse par groupe ou localité ---------------------------------
-    "s_intro": {
+    "syn_intro": {
         "en": "The six dimension tabs answer « how does this territory fare on "
               "water, on forest, on health ». This one answers the reverse "
               "question, often the real one: « what does this group, or this "
@@ -1492,7 +1492,7 @@ DICO = {
               "répondant — et les afficher avec un écart nul laisserait croire "
               "à une égalité mesurée là où il n'y a qu'une absence de "
               "ventilation."},
-    "s_bloc_profil": {"en": "{c} across the six dimensions",
+    "syn_bloc_profil": {"en": "{c} across the six dimensions",
                       "fr": "{c} sur les six dimensions"},
     "s_c_score": {"en": "Mean score", "fr": "Score moyen"},
     "s_c_score_sous": {"en": "across the six dimensions",
@@ -1616,8 +1616,15 @@ DICO = {
               "qu'elles partagent."},
     "a_bloc_carte": {"en": "Where they are", "fr": "Où elles se trouvent"},
     "a_bloc_carte_note": {
-        "en": "The same score, on the map. Hover a section to read it.",
-        "fr": "Le même score, sur la carte. Survole une section pour le lire."},
+        "en": "Weighted mean of every scored indicator, section by section. "
+              "{h} comes first, {b} last — but the spread is barely more than "
+              "one point on ten: no section here is doing well, and the gap "
+              "between them matters less than the level they all share.",
+        "fr": "Moyenne pondérée de tous les indicateurs scorés, section par "
+              "section. {h} vient en tête, {b} en dernier — mais l'écart "
+              "dépasse à peine un point sur dix : aucune section ne va bien "
+              "ici, et la distance entre elles compte moins que le niveau "
+              "qu'elles partagent."},
 
     "a_bloc_guide": {"en": "Where to start", "fr": "Par où commencer"},
     "a_guide_env": {
@@ -1675,6 +1682,24 @@ DICO = {
     "f_resume_groupe": {"en": "Filtered on: {g}.", "fr": "Filtré sur : {g}."},
     "f_resume_croise": {"en": "Filtered on {s}, {g}.",
                         "fr": "Filtré sur {s}, {g}."},
+    "f_resume_section_pay": {
+        "en": "Filtered on {s} ({p} landscape).",
+        "fr": "Filtré sur {s} (paysage {p})."},
+    "f_resume_paysage_groupe": {
+        "en": "Filtered on: {p} landscape. The group filter ({g}) does not "
+              "apply here — landscape already designates a set of "
+              "respondents.",
+        "fr": "Filtré sur le paysage : {p}. Le filtre par groupe ({g}) ne "
+              "s'applique pas ici — le paysage désigne déjà un ensemble de "
+              "répondants."},
+    "f_incoherent": {
+        "en": "{s} lies in the {vrai} landscape, not {p}. The section is the "
+              "finer of the two filters, so it is the one applied; change or "
+              "clear the landscape filter to remove this warning.",
+        "fr": "{s} se trouve dans le paysage {vrai}, pas {p}. La section est "
+              "le plus fin des deux filtres : c'est elle qui s'applique. "
+              "Changez ou retirez le filtre de paysage pour lever cet "
+              "avertissement."},
     "f_note_satellite": {
         "en": "Satellite indicators carry no breakdown by sex or age: forest, "
               "rainfall and temperature do not vary with the respondent. Under "
@@ -1744,6 +1769,191 @@ DICO = {
               "des organisations de base, en classeurs avec une feuille "
               "« lisez-moi »."},
 
+    # Noms courts : un cartouche est dimensionné pour un nombre, pas pour
+    # « IV. Économie, moyens d'existence et sécurité alimentaire ».
+    "dim1_court": {"en": "I. Physical", "fr": "I. Physique"},
+    "dim2_court": {"en": "II. Institutions", "fr": "II. Institutions"},
+    "dim3_court": {"en": "III. Environment", "fr": "III. Environnement"},
+    "dim4_court": {"en": "IV. Economy", "fr": "IV. Économie"},
+    "dim5_court": {"en": "V. Social", "fr": "V. Social"},
+    "dim6_court": {"en": "VI. Human", "fr": "VI. Humain"},
+
+    # --- lecture par paysage ---------------------------------------------
+    "s_mode_paysage": {"en": "Landscape", "fr": "Paysage"},
+    "f_paysage": {"en": "Landscape", "fr": "Paysage"},
+    "f_tous_paysages": {"en": "All landscapes", "fr": "Tous les paysages"},
+    "pay_Littoral": {"en": "Coastal", "fr": "Littoral"},
+    "pay_Montagne": {"en": "Mountain", "fr": "Montagne"},
+    "f_resume_paysage": {"en": "Filtered on: {p} landscape.",
+                         "fr": "Filtré sur le paysage : {p}."},
+    "s_note_paysage": {
+        "en": "Landscape splits the respondents in two — coastal and mountain "
+              "— across all ten sections. Unlike sex or age, it is a property "
+              "of the place as much as of the household, so satellite "
+              "indicators do carry a value for it.",
+        "fr": "Le paysage partage les répondants en deux — littoral et "
+              "montagne — à travers les dix sections. Contrairement au sexe ou "
+              "à l'âge, c'est une propriété du lieu autant que du ménage : les "
+              "indicateurs satellitaires portent donc bien une valeur pour "
+              "lui."},
+
+    # --- le projet, en bref ----------------------------------------------
+    "a_bloc_projet": {"en": "The APRI project in brief",
+                      "fr": "Le projet APRI en bref"},
+    "a_titre_court": {"en": "Landscape resilience observatory",
+                      "fr": "Observatoire de la résilience des paysages"},
+    "a_localisation": {
+        "en": "Ten communal sections in the departments of Sud and "
+              "Grand'Anse, in Haiti's Greater South — from the coastal "
+              "plain to the mountain interior. Each section was surveyed in "
+              "full, with a target of at least 120 households, so that every "
+              "figure on this site can be read at the level where local "
+              "action is actually decided.",
+        "fr": "Dix sections communales des départements du Sud et de la "
+              "Grand'Anse, dans le Grand Sud d'Haïti — de la plaine "
+              "littorale à l'intérieur montagneux. Chaque section a été "
+              "enquêtée en entier, avec une cible d'au moins 120 ménages, "
+              "pour que chaque chiffre du site se lise à l'échelle où "
+              "l'action locale se décide réellement."},
+    "a_histoire": {"en": "What APRI is, and where it comes from",
+                   "fr": "Ce qu'est APRI, et d'où cela vient"},
+    "a_h_origine_t": {"en": "The starting point.", "fr": "Le point de départ."},
+    "a_h_origine": {
+        "en": "Haiti's Greater South combines high exposure to climate "
+              "hazards with long-standing structural vulnerability. Hurricane "
+              "Melissa, in October 2025, showed what that costs: the core of "
+              "the system stayed away from the country, which received only "
+              "several days of rain, and Haiti still counted 43 deaths — as "
+              "many as Jamaica, which took a direct hit, while the Dominican "
+              "Republic, under comparable rainfall, counted one. What decides "
+              "the losses is not the strength of the hazard but the state of "
+              "the territory that receives it. That state is what APRI "
+              "measures.",
+        "fr": "Le Grand Sud d'Haïti cumule une exposition élevée aux aléas "
+              "climatiques et une vulnérabilité structurelle ancienne. "
+              "L'ouragan Melissa, en octobre 2025, a montré ce que cela "
+              "coûte : le cœur du système est resté à l'écart du pays, qui "
+              "n'a reçu que plusieurs jours de pluie, et Haïti a compté 43 "
+              "décès — autant que la Jamaïque, touchée de plein fouet, quand "
+              "la République dominicaine, sous des pluies comparables, en "
+              "comptait un seul. Ce qui décide des pertes n'est pas la force "
+              "de l'aléa, mais l'état du territoire qui le reçoit. C'est cet "
+              "état qu'APRI mesure."},
+    "a_h_mesure_t": {"en": "What the index measures.",
+                     "fr": "Ce que mesure l'indice."},
+    "a_h_mesure": {
+        "en": "APRI — the Integrated Resilient Landscape Approach, IRLA — "
+              "treats a landscape as a socio-ecological system and assesses "
+              "general resilience: the capacity to anticipate, absorb and "
+              "adapt to multiple disturbances, not the response to one "
+              "hazard. It reads a territory across seven dimensions — "
+              "physical, institutional, environmental, economic, social, "
+              "human, cultural — each scored from 0 to 10, where 10 is the "
+              "most favourable configuration. These are capacities held "
+              "before the shock, not damage recorded after it.",
+        "fr": "APRI — l'approche paysagère de résilience intégrée, IRLA en "
+              "anglais — traite le paysage comme un système socio-écologique "
+              "et évalue la résilience générale : la capacité d'anticiper, "
+              "d'absorber et de s'adapter à des perturbations multiples, et "
+              "non la réponse à un aléa unique. Elle lit un territoire sur "
+              "sept dimensions — physique, institutionnelle, "
+              "environnementale, économique, sociale, humaine, culturelle — "
+              "chacune notée de 0 à 10, où 10 est la configuration la plus "
+              "favorable. Ce sont des capacités détenues avant le choc, pas "
+              "des dégâts constatés après."},
+    "a_h_construction_t": {"en": "How it is built.",
+                           "fr": "Comment il est construit."},
+    "a_h_construction": {
+        "en": "Three sources feed it. A household survey, stratified by "
+              "landscape, age, sex and economic category, drawn from "
+              "georeferenced buildings so that areas without a reliable "
+              "administrative register are still covered. Twenty-five years "
+              "of satellite imagery for forest cover, rainfall, vegetation, "
+              "surface temperature and aridity — measured, not declared. And "
+              "a survey of the community-based organisations that carry local "
+              "action. Every figure on this site states which of the three it "
+              "comes from.",
+        "fr": "Trois sources l'alimentent. Une enquête ménage stratifiée par "
+              "paysage, âge, sexe et catégorie économique, tirée sur des "
+              "bâtiments géoréférencés pour que les zones sans registre "
+              "administratif fiable soient couvertes malgré tout. "
+              "Vingt-cinq ans d'imagerie satellitaire pour le couvert "
+              "forestier, la pluie, la végétation, la température de surface "
+              "et l'aridité — mesurés, non déclarés. Et un recensement des "
+              "organisations communautaires de base qui portent l'action "
+              "locale. Chaque chiffre du site dit de laquelle des trois il "
+              "vient."},
+    "a_h_portee_t": {"en": "What it does not claim.",
+                     "fr": "Ce qu'il ne prétend pas dire."},
+    "a_h_portee": {
+        "en": "APRI is a framing and prioritisation tool, not a forecast. "
+              "Like any composite index it defines resilience by the "
+              "variables assumed to produce it, so a rising score first means "
+              "the measured dimensions have moved — not necessarily that real "
+              "resilience has. It describes capacities at one moment, and has "
+              "not yet been confronted with trajectories observed after an "
+              "actual shock. The methodology tab sets out these limits in "
+              "full, alongside the coverage actually achieved: 66 of the 128 "
+              "framework lines are computed to date.",
+        "fr": "APRI est un outil de cadrage et de priorisation, pas de "
+              "prévision. Comme tout indice composite, il définit la "
+              "résilience par les variables supposées la produire : un score "
+              "qui monte signifie d'abord que les dimensions mesurées ont "
+              "bougé, pas nécessairement que la résilience réelle a "
+              "progressé. Il décrit des capacités à un instant donné, et n'a "
+              "pas encore été confronté à des trajectoires observées après "
+              "un choc réel. L'onglet méthodologie expose ces limites en "
+              "entier, avec la couverture réellement atteinte : 66 des 128 "
+              "lignes du référentiel sont calculées à ce jour."},
+    "a_projet_quoi_t": {"en": "What it measures", "fr": "Ce qu'il mesure"},
+    "a_projet_quoi": {
+        "en": "The resilience of a landscape and of the households living in "
+              "it, on 128 indicators spread over seven dimensions — physical, "
+              "institutional, environmental, economic, social, human, "
+              "cultural. Each indicator is scored from 0 to 10 on a published "
+              "scale, then weighted.",
+        "fr": "La résilience d'un paysage et des ménages qui y vivent, sur "
+              "128 indicateurs répartis en sept dimensions — physique, "
+              "institutionnelle, environnementale, économique, sociale, "
+              "humaine, culturelle. Chaque indicateur est noté de 0 à 10 sur "
+              "un barème publié, puis pondéré."},
+    "a_projet_ou_t": {"en": "Where", "fr": "Où"},
+    "a_projet_ou": {
+        "en": "Ten communal sections of Sud and Grand'Anse, in the Greater "
+              "South of Haiti — a territory that lost 12.8 % of its forest "
+              "cover since 2000, most of it to Hurricane Matthew, and where "
+              "the spring growing season now receives 83 % of its normal "
+              "rainfall.",
+        "fr": "Dix sections communales du Sud et de la Grand'Anse, dans le "
+              "Grand Sud d'Haïti — un territoire qui a perdu 12,8 % de son "
+              "couvert forestier depuis 2000, l'essentiel avec l'ouragan "
+              "Matthew, et où la campagne de printemps ne reçoit plus que "
+              "83 % de sa pluie normale."},
+    "a_projet_comment_t": {"en": "With what data", "fr": "Avec quelles données"},
+    "a_projet_comment": {
+        "en": "A household survey of 1 211 respondents, a separate survey of "
+              "community-based organisations, and satellite imagery — Hansen "
+              "for forest, CHIRPS for rainfall over 45 years, Sentinel-2 and "
+              "MODIS for vegetation and temperature. Every indicator carries "
+              "its source, question and scale, openly.",
+        "fr": "Une enquête auprès de 1 211 ménages, une enquête distincte "
+              "auprès des organisations de base, et l'imagerie satellitaire — "
+              "Hansen pour la forêt, CHIRPS pour la pluie sur 45 ans, "
+              "Sentinel-2 et MODIS pour la végétation et la température. "
+              "Chaque indicateur porte sa source, sa question et son barème, "
+              "ouvertement."},
+    "a_projet_pourquoi_t": {"en": "What it is for", "fr": "À quoi il sert"},
+    "a_projet_pourquoi": {
+        "en": "To decide where to act, and on what. An index that ranks "
+              "without saying where its figures come from cannot be argued "
+              "with — so this one states its sources, its gaps and its "
+              "reservations, including the scales we found inverted or "
+              "ambiguous.",
+        "fr": "À décider où agir, et sur quoi. Un indice qui classe sans dire "
+              "d'où viennent ses chiffres ne se discute pas — celui-ci "
+              "affiche donc ses sources, ses lacunes et ses réserves, y "
+              "compris les barèmes trouvés inversés ou ambigus."},
+
     "e_bloc5": {"en": "What the environmental dimension still lacks",
                 "fr": "Ce qui manque encore à la dimension environnementale"},
     "e_bloc5_texte": {
@@ -1808,9 +2018,13 @@ DICO = {
 
     # ------------------------------------------------------------ téléchargements
     "d_titre": {"en": "Data downloads", "fr": "Téléchargement des données"},
-    "d_sous_titre": {
-        "en": "Anonymised datasets and result tables",
-        "fr": "Jeux de données anonymisés et tables de résultats"},
+    "dim_sous_titre": {
+        "en": "Results by communal section, and the source of every figure",
+        "fr": "Résultats par section communale, et la source de chaque "
+              "chiffre"},
+    "syn_sous_titre": {
+        "en": "One territory or one group, read across all six dimensions",
+        "fr": "Un territoire ou un groupe, lu sur les six dimensions"},
     "d_intro": {
         "en": "Every file below is generated from the same computation engine "
               "as the dashboard, so figures always match what is displayed on "

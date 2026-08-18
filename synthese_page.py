@@ -36,7 +36,6 @@ import os
 import streamlit as st
 import streamlit.components.v1 as components
 
-import assets
 import filtres
 import i18n
 import map_render
@@ -49,6 +48,10 @@ SECTIONS = ["Anse à Drick", "Barbois", "Dumont", "Débouchette", "Mouline",
             "Quentin", "Beaulieu", "Blactote", "Dalmette", "Trichet"]
 GROUPES = ["Femme", "Homme", "<25", "25-39", "40-59", "60+",
            "Cat A", "Cat B", "Cat C"]
+# Le paysage est une troisième façon de couper la population, et la seule des
+# trois qui soit AUSSI une propriété du lieu : les indicateurs satellitaires
+# portent donc une valeur pour lui, contrairement au sexe ou à l'âge.
+PAYSAGES = ["Littoral", "Montagne"]
 GROUPE_CLE = {"Homme": "hommes", "Femme": "femmes", "Cat A": "cat_a",
               "Cat B": "cat_b", "Cat C": "cat_c", "<25": "age_25",
               "25-39": "age_25_39", "40-59": "age_40_59", "60+": "age_60"}
@@ -100,7 +103,11 @@ def nom_indic(r):
 
 
 def _libelle(cible, mode):
-    return cible if mode == "section" else T(GROUPE_CLE.get(cible, cible))
+    if mode == "section":
+        return cible
+    if mode == "paysage":
+        return T("pay_" + cible)
+    return T(GROUPE_CLE.get(cible, cible))
 
 
 def _score(lignes, cible):
@@ -126,6 +133,9 @@ def _profil(res, cible, mode):
     out = []
     for cle, dim, coul in DIMENSIONS:
         lignes = [r for r in res if r["dimension"] == dim]
+        # Seule la lecture par GROUPE écarte les indicateurs territoriaux.
+        # Par paysage, ils gardent tout leur sens : littoral et montagne ne
+        # reçoivent ni la même pluie ni le même couvert.
         if mode == "groupe":
             lignes = [r for r in lignes if (r.get("source") or "menage") == "menage"]
         v = _score(lignes, cible)
@@ -250,17 +260,11 @@ def _tableau_ecarts(res, cible, mode, sens, limite=12):
 def render():
     res, _vent = _charger()
 
-    col_logo, col_titre = st.columns([1, 6])
-    with col_logo:
-        st.markdown(
-            f'<img src="data:image/png;base64,{assets.LOGO_APRI}" '
-            f'style="width:118px;margin-top:6px">', unsafe_allow_html=True)
-    with col_titre:
-        st.title(T("mode_synthese"))
-        st.markdown(
-            '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
-            'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
-            + T("d_sous_titre") + "</p>", unsafe_allow_html=True)
+    st.title(T("mode_synthese"))
+    st.markdown(
+        '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+        'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
+        + T("syn_sous_titre") + "</p>", unsafe_allow_html=True)
 
     if not res:
         st.info(T("e_absent"))
@@ -271,23 +275,29 @@ def render():
         'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:16px;'
         'color:#3c4761;box-shadow:0 1px 2px rgba(16,23,40,.05),'
         '0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px;max-width:96ch">'
-        + T("s_intro") + "</div>", unsafe_allow_html=True)
+        + T("syn_intro") + "</div>", unsafe_allow_html=True)
 
     # Le filtre de la colonne pré-remplit le sélecteur : on arrive ici avec ce
     # qu'on regardait ailleurs, sans avoir à le rechoisir. Le sélecteur reste
     # néanmoins, parce que cette page-ci sert précisément à comparer plusieurs
     # cibles d'affilée.
-    _pref_mode = "groupe" if filtres.groupe() != filtres.TOUS else "section"
+    _modes = ["section", "groupe", "paysage"]
+    _pref_mode = ("paysage" if filtres.paysage() != filtres.TOUS_P
+                  else "groupe" if filtres.groupe() != filtres.TOUS
+                  else "section")
     c1, c2 = st.columns([1, 2])
     with c1:
-        mode = st.radio(T("s_mode"), ["section", "groupe"],
+        mode = st.radio(T("s_mode"), _modes,
                         format_func=lambda m: T("s_mode_" + m),
                         horizontal=True,
-                        index=0 if _pref_mode == "section" else 1,
+                        index=_modes.index(_pref_mode),
                         key=f"syn_mode_{i18n.get_lang()}")
     with c2:
-        options = SECTIONS if mode == "section" else GROUPES
-        _pref = (filtres.section() if mode == "section" else filtres.groupe())
+        options = (SECTIONS if mode == "section"
+                   else PAYSAGES if mode == "paysage" else GROUPES)
+        _pref = (filtres.section() if mode == "section"
+                 else filtres.paysage() if mode == "paysage"
+                 else filtres.groupe())
         _idx = options.index(_pref) if _pref in options else 0
         cible = st.selectbox(T("s_cible"), options, index=_idx,
                              format_func=lambda c: _libelle(c, mode),
@@ -295,6 +305,8 @@ def render():
 
     if mode == "groupe":
         st.caption(T("s_note_groupe"))
+    elif mode == "paysage":
+        st.caption(T("s_note_paysage"))
 
     profil = _profil(res, cible, mode)
     dispo = [p for p in profil if p["valeur"] is not None]
@@ -306,7 +318,7 @@ def render():
     # -------------------------------------------------------- vue d'ensemble
     with st.container(border=True):
         st.markdown(
-            f'<div class="titre-bloc">{T("s_bloc_profil", c=_libelle(cible, mode))}</div>',
+            f'<div class="titre-bloc">{T("syn_bloc_profil", c=_libelle(cible, mode))}</div>',
             unsafe_allow_html=True)
         forts = sorted(dispo, key=lambda p: p["valeur"] - p["reference"])
         for col, lib, val, unite, sous, coul in zip(
@@ -318,8 +330,8 @@ def render():
                    and global_cible > global_ref else "")
                   + _fmt((global_cible - global_ref)
                          if (global_cible and global_ref) else None, 2)),
-                 T(forts[0]["cle"]) if forts else "—",
-                 T(forts[-1]["cle"]) if forts else "—"],
+                 T(forts[0]["cle"] + "_court") if forts else "—",
+                 T(forts[-1]["cle"] + "_court") if forts else "—"],
                 ["/ 10", "", "", ""],
                 [T("s_c_score_sous"), T("s_c_ecart_sous"),
                  T("s_c_faible_sous",

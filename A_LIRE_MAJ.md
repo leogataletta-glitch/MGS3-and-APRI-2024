@@ -1,101 +1,128 @@
-# Filtres actifs, barre du haut, dernières livraisons
+# Mise à jour — logo, page d'accueil, histoire d'APRI
 
-## Les 7 fichiers à mettre sur GitHub **dans le même commit**
+## D'abord : un chiffre faux qu'il faut que vous sachiez
 
-| Fichier | Où | État |
-|---|---|---|
-| `app.py` | racine | remplacé |
-| `i18n.py` | racine | remplacé |
-| `filtres.py` | racine | **nouveau** |
-| `actualites.py` | racine | **nouveau** |
-| `accueil_page.py` | racine | remplacé |
-| `dimension_page.py` | racine | remplacé |
-| `synthese_page.py` | racine | remplacé |
+La tuile « Ménages enquêtés » de l'accueil affichait **2 700**. C'est faux.
 
-Version **`2026-08-18-filtres`**.
+Ce nombre venait d'un `max()` sur les effectifs de toutes les lignes du
+référentiel, et le maximum tombait sur la **ligne 24, enregistrement des
+naissances**, qui compte des **enfants**, pas des ménages. Le vrai chiffre est
+**1 211 questionnaires** — dont 1 206 rattachés à une section communale — ce
+que le reste du site annonçait déjà correctement partout ailleurs.
 
----
-
-## 1 · Les filtres actifs — et ils marchent vraiment
-
-Le bloc de ta maquette est en bas de la colonne verte : **Section communale**
-et **Groupe**, avec les pastilles de ce qui est appliqué et un bouton
-Réinitialiser qui s'éteint quand il n'y a rien à réinitialiser.
-
-Ce ne sont pas des filtres décoratifs. **Toutes les pages les lisent.** Choisis
-Dumont dans la colonne, passe d'une dimension à l'autre : tu restes sur Dumont.
-Avant, chaque page avait son sélecteur et on retombait sur l'ensemble à chaque
-changement d'onglet.
-
-### Le croisement section × groupe
-
-Les deux filtres ensemble ne se lisent pas dans le même fichier que chacun pris
-seul. `resultats.json` porte les scores par section **ou** par groupe ;
-`ventilation.json` porte le croisement. Le module `filtres.py` choisit la bonne
-source selon ce qui est demandé — c'est tout l'intérêt d'un module dédié plutôt
-que le même branchement recopié dans cinq pages, où il finirait par diverger.
-
-### Ce que le filtre ne peut pas faire, et qui est dit à l'écran
-
-**Un indicateur satellitaire n'a pas de ventilation par sexe.** La forêt, la
-pluie et la température ne varient pas selon le répondant. Sous un filtre de
-groupe, ces lignes gardent donc leur valeur de section, et une note le signale
-sous le tableau — plutôt que d'afficher un chiffre identique en laissant croire
-à une égalité mesurée.
+Vous m'avez écrit « plus de 2 000 foyers interrogés » : c'était mon erreur que
+vous repreniez. La page affiche maintenant **1 211**, et le calcul est borné
+par les effectifs par section — une ligne qui déclare nettement plus qu'eux ne
+compte pas des ménages et sort du calcul. C'est écrit dans le code, pour que
+personne n'y remette un `max()` dans six mois.
 
 ---
 
-## 2 · La barre du haut, avec les deux logos
+## Les quatre corrections demandées
 
-Une barre blanche en tête de contenu : à gauche le PNUE et le nom de la page
-courante, au centre **ce sur quoi porte l'affichage**, à droite le logo du
-PNUE.
+**1. Le logo de la colonne de gauche.** Le fichier d'origine est un
+verrouillage complet — l'emblème *plus* le mot « IRLA/APRI » — et il était
+écrasé dans un carré blanc de 54 px : le sigle y devenait une bouillie de six
+pixels de haut. J'ai découpé **l'emblème seul**, détouré en disque, et je le
+pose directement sur le vert, sans carte blanche. Le nom reste du texte, avec
+le filet vert de la charte. C'est du texte, donc c'est net à toutes les
+tailles et cela suit la langue de l'interface.
 
-Les deux logos cohabitent sans se disputer la place : **APRI porte le produit**
-dans la colonne verte, **le PNUE porte l'institution** en haut de page.
+**2. Plus aucun logo hors de la colonne de gauche.** Retiré des **neuf pages**
+qui en portaient un en tête. Le logo du PNUE, qui était à droite de la barre
+du haut, **descend au pied de la colonne**, sous le sélecteur de langue, à côté
+de la mention institutionnelle. Les deux marques sont donc réunies au même
+endroit, visibles en permanence, et le contenu n'en porte plus aucune.
 
-La pastille centrale n'est pas un ornement. Elle dit « Dix sections communales,
-tous les répondants » ou « Filtré sur Dumont, Femmes ». **Un chiffre lu sans
-savoir qu'un filtre est posé est un chiffre mal lu** — c'est le risque que
-crée un filtre global, et c'est le seul moyen honnête de le désamorcer.
+**3. Les cinq tuiles de l'accueil sont supprimées.** Vous aviez raison : trois
+d'entre elles n'apprenaient rien. Il reste **une ligne** — 10 sections
+communales · 2 départements · 1 211 ménages enquêtés — suivie de la
+**localisation** : les départements du Sud et de la Grand'Anse, dans le Grand
+Sud d'Haïti, de la plaine littorale à l'intérieur montagneux, chaque section
+enquêtée en entier avec une cible d'au moins 120 ménages.
+
+**4. L'histoire d'APRI**, en quatre paragraphes, à la place du bloc « Le projet
+APRI en bref » :
+
+- **Le point de départ** — l'ouragan Melissa d'octobre 2025 : Haïti, qui n'a
+  reçu que plusieurs jours de pluie, a compté 43 décès, autant que la Jamaïque
+  touchée de plein fouet, quand la République dominicaine, sous des pluies
+  comparables, en comptait un seul. Ce ne sont pas les aléas qui décident des
+  pertes, mais l'état du territoire qui les reçoit.
+- **Ce que mesure l'indice** — la résilience générale, sept dimensions, des
+  capacités détenues *avant* le choc.
+- **Comment il est construit** — les trois sources : enquête ménage stratifiée,
+  vingt-cinq ans d'imagerie satellitaire, recensement des OCB.
+- **Ce qu'il ne prétend pas dire** — la circularité de tout indice composite,
+  l'absence de validation après choc réel, et la couverture réelle : 66 des
+  128 lignes calculées à ce jour.
+
+Ce dernier paragraphe n'est pas une précaution de style. C'est ce qui empêche
+qu'un score soit cité comme une prévision dans une réunion où vous ne serez
+pas.
 
 ---
 
-## 3 · Dernières livraisons
+## Deux défauts trouvés en vérifiant, corrigés au passage
 
-Le panneau « Actualités & Rapports » de ta maquette, en colonne de droite sur
-l'accueil, sous la carte. Chez nous ce ne sont pas des nouvelles — un
-observatoire n'en produit pas — mais **les livrables** : ce qui vient d'être
-calculé, avec une pastille « Nouveau », et un bouton qui mène à l'onglet
-concerné.
+**Le sous-titre des pages de dimension était encore faux.** J'avais renommé la
+clé la semaine dernière, mais en lui laissant le texte de la page de
+téléchargement : les pages de dimension affichaient donc toujours « Jeux de
+données anonymisés ». C'était exactement ce que montrait votre capture
+d'écran, et ma correction précédente ne l'avait pas réglé. Elles annoncent
+maintenant « Résultats par section communale, et la source de chaque chiffre »,
+et la synthèse a enfin son propre sous-titre.
 
-- Température et santé de la végétation, 25 ans — **Nouveau**
-- Six indices de végétation par Sentinel-2 — **Nouveau**
-- La pluie passe à la campagne agricole — **Nouveau**
-- Méthode, barèmes et réserves
-- Télécharger les données
-
-**Chaque entrée pointe vers un onglet réel du site**, jamais vers une page qui
-n'existe pas : une liste de ressources qui mène à des impasses détruit la
-confiance plus sûrement qu'une liste courte.
+**« Mouline » se coupait en « Moulin / e »** dans le cartouche « section la
+moins bien placée ». Le rétrécissement automatique ne se déclenchait qu'à
+partir de onze caractères, ce qui suffit sur la carte mais pas dans une
+colonne quatre fois plus étroite. Le palier descend à sept.
 
 ---
 
-## 4 · Un bogue que j'ai trouvé en vérifiant
+## L'envoi
 
-La barre du haut affiche le nom de la page courante, mais elle était dessinée
-**avant** que l'état de navigation soit initialisé. Streamlit lève alors une
-erreur qui masque toute la page — et cela ne se serait vu qu'au premier
-chargement, sur une session neuve, donc chez toi et pas chez moi. L'ordre est
-corrigé.
+**Onze fichiers, un seul commit.** `app.py` refuse de démarrer si `i18n.py`
+n'est pas à la version `2026-08-18-histoire` — c'est ce garde-fou qui vous
+évite une page à moitié cassée.
+
+| Fichier | Ce qui change |
+|---|---|
+| `assets.py` | l'emblème détouré, nouvelle image `EMBLEME_APRI` |
+| `app.py` | marque de la colonne, logo PNUE en pied, plus de logo en barre du haut |
+| `i18n.py` | 15 clés nouvelles, 3 corrigées, version `2026-08-18-histoire` |
+| `accueil_page.py` | ligne de périmètre, localisation, histoire d'APRI |
+| `map_render.py` | palier de rétrécissement à sept caractères |
+| `synthese_page.py` | logo retiré, sous-titre propre |
+| `dimension_page.py` | sous-titre corrigé |
+| `methodologie_page.py`, `ocb_page.py`, `pistes_page.py`, `resilience_page.py`, `saillants_page.py`, `telechargements_page.py`, `environnement_page.py` | logo retiré de l'en-tête |
+
+Sur GitHub : `Add file` → `Upload files`, glissez tout, un seul
+`Commit changes`. Streamlit Cloud redéploie en une à deux minutes.
 
 ---
 
-## Ce qui reste
+## Ce qui a été vérifié
 
-Les filtres de ta maquette comptent aussi **Paysage**, **Niveau de richesse**
-et **Accès à l'eau**. Je n'ai mis que section et groupe, parce que ce sont les
-deux seules ventilations que portent les fichiers de résultats. Les trois
-autres supposeraient de recalculer les scores sur des sous-populations qui
-n'existent pas encore dans les données — faisable, mais c'est un passage par
-le pipeline, pas un réglage d'affichage. Dis-moi si tu les veux.
+- 21 modules compilent ; **96 rendus complets** de l'application — 12 pages ×
+  4 combinaisons de filtres × 2 langues — **zéro exception** ;
+- **781 clés** de traduction, aucun doublon, toutes avec un `fr` et un `en` ;
+- **aucune clé brute** affichée à l'écran, dans les deux langues ;
+- captures d'écran réelles du navigateur relues une par une : marque de la
+  colonne, pied de colonne, accueil, page de dimension ;
+- `i18n.VERSION` = `app.I18N_ATTENDU` = `2026-08-18-histoire`.
+
+---
+
+## Ce qui reste ouvert
+
+- Les **fiches actions** portent encore l'ancien contenu « pistes ».
+- Trois **fiches institutionnelles** (CASEC, école, santé) attendent leur
+  section communale.
+- **Dimension VII** : décision à prendre sur ses neuf proxys à composante
+  unique.
+- **Environnement** : érosion RUSLE (L59/L60), tampon marin au large pour
+  L58/L61/L63, seconde date de mangrove pour L57.
+
+*Le dépôt reste privé, le mot de passe se règle dans les Secrets de Streamlit
+Cloud, et le jeu de données en ligne garde ses colonnes identifiantes vidées.*

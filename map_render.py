@@ -535,6 +535,24 @@ def cartouche_html(libelle, valeur, unite='%', sous_titre='',
     def _bloc(v, u, note, taille):
         if isinstance(v, bool) or not isinstance(v, (int, float)):
             txt = str(v)
+            # Un cartouche est dimensionné pour un NOMBRE. Quand on y met un
+            # nom — « II. Institutions et gouvernance » — les 46 px le
+            # coupent au milieu d'un mot. On rétrécit donc la casse à mesure
+            # que le texte s'allonge, au lieu de laisser la boîte se déformer.
+            # Les paliers sont calés sur la colonne la plus étroite où ce
+            # cartouche est utilisé : un quart de la largeur de contenu, soit
+            # environ 200 px de texte utile. « Mouline » — sept caractères,
+            # dont un M large — y débordait encore à pleine casse et se
+            # coupait en « Moulin / e ». D'où le palier à six caractères : dès
+            # qu'un nom apparaît à la place d'un nombre, on rétrécit.
+            if len(txt) > 26:
+                taille = max(17, int(taille * 0.40))
+            elif len(txt) > 16:
+                taille = max(20, int(taille * 0.50))
+            elif len(txt) > 10:
+                taille = max(24, int(taille * 0.62))
+            elif len(txt) > 6:
+                taille = max(28, int(taille * 0.78))
         elif isinstance(v, int):
             # Un effectif s'écrit sans décimale : « 627 », pas « 627,0 ».
             txt = f'{int(v):,}'.replace(',', '\u202f')
@@ -543,7 +561,8 @@ def cartouche_html(libelle, valeur, unite='%', sous_titre='',
         return (f'<div style="font-family:Outfit,Inter,system-ui,sans-serif;'
                 f'font-size:{taille}px;font-weight:600;color:{INK};'
                 f'line-height:1.05;font-variant-numeric:tabular-nums;'
-                f'letter-spacing:-0.02em">{txt}'
+                f'letter-spacing:-0.02em;overflow-wrap:break-word;'
+                f'word-break:normal;hyphens:auto">{txt}'
                 f'<span style="font-size:{max(15, int(taille * 0.42))}px;'
                 f'font-weight:400;color:{MUTED};letter-spacing:0"> {u}</span></div>'
                 f'<div style="font-size:12.5px;color:{INK2};margin-top:3px;'

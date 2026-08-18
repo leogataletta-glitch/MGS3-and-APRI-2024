@@ -393,22 +393,42 @@ st.markdown("""
   }
   section[data-testid="stSidebar"] > div { padding: 18px 14px 14px; }
 
+  /* Le bloc de marque, sur le modèle de la charte : l'emblème détouré posé
+     directement sur le vert — pas de carte blanche, qui faisait une tache —
+     puis le nom en texte et un filet vert sous le sigle. L'emblème est
+     l'image EMBLEME_APRI, découpée du logo complet : le verbal « IRLA/APRI »
+     du fichier d'origine devenait illisible à cette taille. */
   .apri-marque {
-    display: flex; align-items: center; gap: 13px;
-    padding: 2px 4px 18px; margin-bottom: 2px;
+    display: flex; align-items: center; gap: 14px;
+    padding: 2px 2px 16px; margin-bottom: 2px;
     border-bottom: 1px solid rgba(255,255,255,.12);
   }
   .apri-marque img {
-    width: 54px; height: 54px; object-fit: contain; flex: 0 0 54px;
-    background: #ffffff; border-radius: 13px; padding: 5px;
+    width: 52px; height: 52px; flex: 0 0 52px; display: block;
   }
+  .apri-bloc-nom { min-width: 0; }
   .apri-nom {
-    font-family: "Outfit", sans-serif; font-size: 30px; font-weight: 700;
+    font-family: "Outfit", sans-serif; font-size: 31px; font-weight: 700;
     color: #ffffff; letter-spacing: .01em; line-height: 1;
   }
+  .apri-filet {
+    width: 46px; height: 3px; border-radius: 2px; background: #7cb342;
+    margin: 6px 0 0;
+  }
   .apri-baseline {
-    font-size: 11.5px; color: rgba(255,255,255,.60); line-height: 1.35;
-    margin-top: 4px;
+    font-size: 11.5px; color: rgba(255,255,255,.62); line-height: 1.35;
+    margin-top: 6px;
+  }
+  /* Pied de colonne : le logo du PNUE y descend, puisque les logos ne
+     doivent plus apparaître dans le contenu des pages. */
+  .apri-org {
+    display: flex; align-items: center; gap: 10px;
+    margin-top: 14px; padding-top: 13px;
+    border-top: 1px solid rgba(255,255,255,.12);
+  }
+  .apri-org img {
+    width: 34px; height: 34px; flex: 0 0 34px; object-fit: contain;
+    background: #ffffff; border-radius: 6px; padding: 2px;
   }
   .nav-groupe {
     font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
@@ -419,6 +439,13 @@ st.markdown("""
     font-size: 10.5px; color: rgba(255,255,255,.38); line-height: 1.5;
     padding: 14px 4px 4px; margin-top: 10px;
     border-top: 1px solid rgba(255,255,255,.12);
+  }
+  /* Dans le bloc PNUE, la mention institutionnelle est déjà séparée par le
+     filet de .apri-org : lui laisser le sien dessinait deux traits l'un sur
+     l'autre. */
+  .apri-org .apri-pied {
+    border-top: none; padding: 0; margin: 0; font-size: 11px;
+    color: rgba(255,255,255,.55);
   }
 
   /* --- les entrées de menu ---------------------------------------------
@@ -638,7 +665,7 @@ st.markdown("""
 # ne plante pas — elle affiche le nom des clés manquantes au milieu du texte, ce
 # qui est beaucoup plus déroutant qu'une erreur franche. On préfère le dire.
 # ----------------------------------------------------------------------
-I18N_ATTENDU = "2026-08-18-filtres"
+I18N_ATTENDU = "2026-08-18-histoire"
 if getattr(i18n, "VERSION", None) != I18N_ATTENDU:
     st.error(
         f"**i18n.py est dans une version qui ne correspond pas au reste de "
@@ -722,18 +749,19 @@ def _bascule(mode):
 # propre conteneur, si bien qu'une balise ouverte dans l'un et fermée dans le
 # suivant ne s'emboîte jamais — le style se perd sans qu'aucune erreur ne le
 # signale.
-# La barre du haut : à gauche le commanditaire et la page courante, au centre
-# ce sur quoi porte l'affichage — un chiffre lu sans savoir qu'un filtre est
-# posé est un chiffre mal lu — et à droite le logo du PNUE. Les deux logos
-# cohabitent ainsi sans se disputer la place : APRI porte le produit dans la
-# colonne, le PNUE porte l'institution en haut de page.
+# La barre du haut : à gauche le commanditaire et la page courante, à droite ce
+# sur quoi porte l'affichage — un chiffre lu sans savoir qu'un filtre est posé
+# est un chiffre mal lu.
+# Plus aucun logo ici. Les deux marques sont réunies dans la colonne de gauche —
+# APRI en tête, le PNUE en pied — et le contenu des pages n'en porte aucun : un
+# logo répété à chaque en-tête mange la place du titre sans rien apprendre à
+# personne, puisqu'il est déjà à l'écran en permanence.
 st.markdown(
     f'<div class="barre-haut">'
     f'<div class="bh-gauche"><span class="org-mention">{T("org")}</span>'
     f'<div class="bh-page">{LIBELLE_MODE.get(st.session_state["app_mode"], "")}'
     f'</div></div>'
     f'<div class="bh-filtre">{filtres.resume()}</div>'
-    f'<img class="bh-logo" src="data:image/png;base64,{assets.LOGO_UNEP}">'
     f'</div>'
     f'<img src="data:image/jpeg;base64,{assets.PAYSAGE_CAMP_PERRIN}" '
     f'style="width:100%;height:92px;object-fit:cover;object-position:50% 62%;'
@@ -780,8 +808,9 @@ def _entree_nav(mode, icone):
 with _sb_marque:
     st.markdown(
         f'<div class="apri-marque">'
-        f'<img src="data:image/png;base64,{assets.LOGO_APRI}">'
-        f'<div><div class="apri-nom">APRI</div>'
+        f'<img src="data:image/png;base64,{assets.EMBLEME_APRI}" alt="APRI">'
+        f'<div class="apri-bloc-nom"><div class="apri-nom">APRI</div>'
+        f'<div class="apri-filet"></div>'
         f'<div class="apri-baseline">{T("a_accroche")}</div></div></div>',
         unsafe_allow_html=True)
 
@@ -797,7 +826,10 @@ with _sb_nav:
 
 with _sb_langue:
     st.markdown(
-        f'<div class="apri-pied">{T("org")}<br>{T("sous_titre_site")}</div>',
+        f'<div class="apri-org">'
+        f'<img src="data:image/png;base64,{assets.LOGO_UNEP}" alt="UNEP">'
+        f'<div class="apri-pied" style="margin:0">{T("org")}</div></div>'
+        f'<div class="apri-pied">{T("sous_titre_site")}</div>',
         unsafe_allow_html=True)
 
 app_mode = st.session_state["app_mode"]

@@ -295,17 +295,15 @@ def render(cle_dim):
     dimension = dict(DIMENSIONS).get(cle_dim)
     teinte = TEINTES.get(cle_dim, "#1a6bb0")
 
-    col_logo, col_titre = st.columns([1, 6])
-    with col_logo:
-        st.markdown(
-            f'<img src="data:image/png;base64,{assets.LOGO_APRI}" '
-            f'style="width:118px;margin-top:6px">', unsafe_allow_html=True)
-    with col_titre:
-        st.title(T(cle_dim))
-        st.markdown(
-            '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
-            'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
-            + T("d_sous_titre") + "</p>", unsafe_allow_html=True)
+    # Pas de logo ici : il est déjà dans la colonne de gauche et dans la barre
+    # du haut. Un troisième exemplaire sur la même vue n'ajoute rien et pousse
+    # le premier chiffre sous la ligne de flottaison.
+    st.markdown(
+        f'<h2 style="font-size:27px;font-weight:700;color:#101728;'
+        f'letter-spacing:-.02em;margin:2px 0 0">{T(cle_dim)}</h2>'
+        f'<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+        f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
+        f'{T("dim_sous_titre")}</p>', unsafe_allow_html=True)
 
     if not res:
         st.info(T("e_absent"))

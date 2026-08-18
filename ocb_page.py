@@ -13,7 +13,6 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 
-import assets
 import i18n
 import map_render
 from i18n import T
@@ -73,17 +72,11 @@ def render(entete=True):
     st.markdown(_styles(), unsafe_allow_html=True)
 
     if entete:
-        col_logo, col_titre = st.columns([1, 6])
-        with col_logo:
-            st.markdown(
-                f'<img src="data:image/png;base64,{assets.LOGO_APRI}" '
-                f'style="width:118px;margin-top:6px">', unsafe_allow_html=True)
-        with col_titre:
-            st.title(T("o_titre"))
-            st.markdown(
-                '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
-                'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
-                + T("o_sous_titre") + "</p>", unsafe_allow_html=True)
+        st.title(T("o_titre"))
+        st.markdown(
+            '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+            'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
+            + T("o_sous_titre") + "</p>", unsafe_allow_html=True)
 
     if doc is None:
         st.error("ocb.json")
