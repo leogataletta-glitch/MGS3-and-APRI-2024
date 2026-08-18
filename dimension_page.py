@@ -58,6 +58,55 @@ DIM7 = "VII. CULTURAL, IDENTITY-BASED, AND PSYCHOLOGICAL DIMENSION"
 # recopiées finissent toujours par diverger.
 TEINTES = dict(cadre_page.TEINTES)
 
+# ---------------------------------------------------------------------------
+# LES TEXTES DE CETTE PAGE VOYAGENT AVEC ELLE — même règle que partout
+# ailleurs depuis les trois pannes de déploiement : un module qui apporte une
+# fonction apporte ses propres textes, versés dans le dictionnaire commun à
+# l'import et seulement si la clé n'y est pas déjà.
+# ---------------------------------------------------------------------------
+TEXTES = {
+    "d_indics_titre": {"en": "Indicators", "fr": "Indicateurs"},
+    "d_indics_note": {
+        "en": "The resilience indicators of this dimension, computed from the "
+              "survey, from satellite imagery or from the registers, and "
+              "scored out of ten. **Lowest score first** — a resilience "
+              "dashboard is read by what is missing. Open one to see its "
+              "figures, its source and its spread across the ten communal "
+              "sections.",
+        "fr": "Les indicateurs de résilience de cette dimension, calculés à "
+              "partir de l'enquête, de l'imagerie satellitaire ou des "
+              "registres, et notés sur dix. **Score le plus bas en tête** — un "
+              "tableau de bord de résilience se lit par ce qui manque. Ouvrez-"
+              "en un pour voir ses chiffres, sa source et sa dispersion entre "
+              "les dix sections communales."},
+    "d_chercher": {"en": "Search an indicator",
+                   "fr": "Rechercher un indicateur"},
+    "d_rien": {"en": "No indicator matches this search.",
+               "fr": "Aucun indicateur ne correspond à cette recherche."},
+    "d_n_indics": {"en": "{n} indicators", "fr": "{n} indicateurs"},
+    "d_bloc_comparaison": {"en": "Across the ten communal sections",
+                           "fr": "Entre les dix sections communales"},
+    "d_bloc_distribution": {"en": "Answers to the survey question",
+                            "fr": "Réponses à la question d'enquête"},
+    "d_bloc_tableau": {"en": "Comparative table — every indicator at once",
+                       "fr": "Tableau comparatif — tous les indicateurs d'un "
+                             "coup"},
+    "d_ferme_note": {
+        "en": "Everything is closed by default: you open what you want to "
+              "read.",
+        "fr": "Tout est fermé par défaut : on ouvre ce qu'on veut lire."},
+    "d_c_valeur": {"en": "Measured value", "fr": "Valeur mesurée"},
+    "d_c_poids2": {"en": "Weight in the dimension",
+                   "fr": "Poids dans la dimension"},
+    "d_pas_de_section": {
+        "en": "This indicator is not broken down by communal section.",
+        "fr": "Cet indicateur n'est pas ventilé par section communale."},
+    "d_onglet_ind2": {"en": "Indicators", "fr": "Indicateurs"},
+    "d_onglet_q2": {"en": "Survey results", "fr": "Résultats du questionnaire"},
+}
+for _c, _v in TEXTES.items():
+    i18n.DICO.setdefault(_c, _v)
+
 
 def _e(t):
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
@@ -298,10 +347,16 @@ def _carte_dimension(lignes, teinte, cle):
 def render(cle_dim, complement=None):
     """Rend l'onglet d'une dimension. `cle_dim` vaut dim1 … dim6.
 
-    Deux sous-onglets. LES QUESTIONS D'ABORD, LES INDICATEURS ENSUITE : un
-    score sur dix est un résultat de calcul, et qui arrive sur une dimension
-    veut d'abord savoir ce qu'on a demandé aux ménages. L'indicateur se
-    comprend mieux quand on a lu la question dont il sort.
+    L'ORDRE DE LECTURE EST CELUI D'UN OUTIL D'ANALYSE, ET IL A CHANGÉ :
+
+        dimension → description → filtres → liste d'indicateurs → détail
+
+    Les filtres sont dans la page, sous le titre, et non plus dans la marge.
+    La liste d'indicateurs est fermée : on ouvre celui qu'on veut lire, au lieu
+    de recevoir trente graphiques d'un coup. Les indicateurs passent devant les
+    questions parce que ce sont eux le produit de la plateforme ; les réponses
+    brutes restent accessibles dans le second onglet, et cet onglet dit
+    lui-même qu'un module de questionnaire n'est pas un indicateur.
 
     `complement` est une fonction rendue à la fin de l'onglet des indicateurs.
     Deux dimensions s'en servent — l'environnement pour ses onze indicateurs
@@ -326,27 +381,166 @@ def render(cle_dim, complement=None):
         st.info(T("e_absent"))
         st.stop()
 
-    _o_questions, _o_indicateurs = st.tabs(
-        [T("d_onglet_questions"), T("d_onglet_indicateurs")])
-    with _o_questions:
-        questions_dimension.rendre(cle_dim)
-    with _o_indicateurs:
-        _rendre_indicateurs(cle_dim, res, vent, dimension, teinte, complement)
-
-
-def _rendre_indicateurs(cle_dim, res, vent, dimension, teinte, complement):
-    """Le contenu de l'onglet « indicateurs » — ce que rendait `render` avant
-    l'apparition des sous-onglets, déplacé tel quel dans sa propre fonction."""
-    lignes = [r for r in res if r["dimension"] == dimension]
-    n_faits, n_tot, p_faits, p_tot = couverture(lignes)
-    score = score_dimension(lignes, "Total")
-
+    # La description de la dimension, puis les filtres : le lecteur sait ce
+    # qu'il regarde avant de choisir sur qui il le regarde.
     st.markdown(
         f'<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
         f'solid {teinte};border-radius:14px;padding:13px 17px;font-size:16px;'
         f'color:#3c4761;box-shadow:0 1px 2px rgba(16,23,40,.05),'
         f'0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px;max-width:96ch">'
         f'{T(cle_dim + "_intro")}</div>', unsafe_allow_html=True)
+
+    filtres.barre(cle=cle_dim)
+
+    _o_indicateurs, _o_questions = st.tabs(
+        [T("d_onglet_ind2"), T("d_onglet_q2")])
+    with _o_indicateurs:
+        _rendre_indicateurs(cle_dim, res, vent, dimension, teinte, complement)
+    with _o_questions:
+        questions_dimension.rendre(cle_dim)
+
+
+def _couleur_score(sc):
+    return ("#8a93a5" if sc is None else
+            "#b4451f" if sc <= 3 else "#c98a2e" if sc <= 6 else "#2a6b3f")
+
+
+ACC_STYLE = """
+<style>
+  .ind-tete  { display:flex; gap:14px; align-items:baseline; flex-wrap:wrap;
+               margin:0 0 10px; }
+  .ind-kpi   { display:flex; flex-direction:column; }
+  .ind-kpi-l { font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+               font-weight:700; color:#8a93a5; }
+  .ind-kpi-v { font-size:20px; font-weight:700; color:#101728;
+               font-variant-numeric:tabular-nums; line-height:1.2; }
+  .ind-sec   { display:grid; grid-template-columns:minmax(96px,1.3fr) 5fr 46px;
+               gap:10px; align-items:center; padding:3px 0; }
+  .ind-sec-l { font-size:13px; color:#3c4761; }
+  .ind-sec-p { background:#f1f4f9; border-radius:5px; height:14px;
+               overflow:hidden; }
+  .ind-sec-b { height:100%; border-radius:5px; }
+  .ind-sec-v { font-size:13px; font-weight:700; text-align:right;
+               font-variant-numeric:tabular-nums; }
+  .ind-lab   { font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+               font-weight:700; color:#8a93a5; margin:14px 0 4px; }
+</style>
+"""
+
+
+def _comparaison_sections(r, teinte):
+    """La dispersion d'un indicateur entre les dix sections communales.
+
+    C'est la comparaison que le lecteur cherche en ouvrant un indicateur :
+    non pas « combien », mais « où ». Les sections sont classées du score le
+    plus bas, comme le reste de la page.
+    """
+    sc = r.get("scores_corriges") or {}
+    paires = [(s, sc.get(s)) for s in SECTIONS]
+    paires = [(s, v) for s, v in paires if v is not None]
+    if not paires:
+        return None
+    paires.sort(key=lambda kv: kv[1])
+    return "".join(
+        f'<div class="ind-sec"><div class="ind-sec-l">{_e(s)}</div>'
+        f'<div class="ind-sec-p"><div class="ind-sec-b" style="width:'
+        f'{max(10 * float(v), 1):.0f}%;background:{_couleur_score(v)}">'
+        f'</div></div>'
+        f'<div class="ind-sec-v" style="color:{_couleur_score(v)}">'
+        f'{_fmt(v, 1)}</div></div>' for s, v in paires)
+
+
+def _accordeon_indicateurs(lignes, vent, teinte, cle_dim):
+    """La liste d'indicateurs, FERMÉE PAR DÉFAUT.
+
+    Le reproche fait à l'ancienne page était juste : elle déroulait tout, et
+    une page qui déroule tout ne se parcourt pas, elle se subit. Chaque
+    indicateur est ici une ligne repliée qui porte l'essentiel — son nom, son
+    score, sa source — et n'ouvre son détail que si on le lui demande.
+    """
+    st.markdown(ACC_STYLE, unsafe_allow_html=True)
+    st.markdown(questions_dimension.STYLE, unsafe_allow_html=True)
+
+    def _sc(r):
+        return filtres.score(r, vent)
+
+    ordre = sorted(lignes, key=lambda r: (_sc(r) is None, _sc(r) or 0,
+                                          r["ligne"]))
+    cherche = (st.text_input(T("d_chercher"), key=f"d_rech_{cle_dim}",
+                             placeholder="…") or "").strip().lower()
+    if cherche:
+        ordre = [r for r in ordre if cherche in nom_indic(r).lower()
+                 or cherche in (r.get("question") or "").lower()]
+        if not ordre:
+            st.info(T("d_rien"))
+            return
+
+    for r in ordre:
+        sc = _sc(r)
+        val = filtres.valeur(r, vent)
+        # L'étiquette d'un volet Streamlit ne prend pas de HTML : le score y
+        # est donc écrit en toutes lettres plutôt que peint. La couleur revient
+        # à l'ouverture, où elle a la place d'exister.
+        titre = (f'{nom_indic(r)}   ·   '
+                 + (f'{_fmt(sc, 1)} / 10' if sc is not None
+                    else T("d_non_calcule")))
+        with st.expander(titre, expanded=bool(cherche) and len(ordre) == 1):
+            unite = r.get("unite") or ("%" if source_de(r) == "menage" else "")
+            aff = (f'{_fmt(val, 2)} {unite}'.strip()
+                   if isinstance(val, (int, float)) else "—")
+            st.markdown(
+                f'<div class="ind-tete">'
+                f'<div class="ind-kpi"><div class="ind-kpi-l">'
+                f'{_e(T("d_col_score"))}</div><div class="ind-kpi-v" '
+                f'style="color:{_couleur_score(sc)}">'
+                f'{_fmt(sc, 1) if sc is not None else "—"}'
+                f'<span style="font-size:12px;color:#8a93a5"> / 10</span>'
+                f'</div></div>'
+                f'<div class="ind-kpi"><div class="ind-kpi-l">'
+                f'{_e(T("d_c_valeur"))}</div>'
+                f'<div class="ind-kpi-v">{_e(aff)}</div></div>'
+                f'<div class="ind-kpi"><div class="ind-kpi-l">'
+                f'{_e(T("d_c_poids2"))}</div><div class="ind-kpi-v">'
+                f'{_fmt(r.get("ponderation"), 2)}</div></div>'
+                f'<div style="margin-left:auto">{_badge(source_de(r))}</div>'
+                f'</div>', unsafe_allow_html=True)
+
+            exp = expl_indic(r)
+            if exp:
+                st.markdown(
+                    f'<p style="font-size:15px;color:#3c4761;line-height:1.6;'
+                    f'margin:0 0 11px;max-width:92ch">{_e(exp)}</p>',
+                    unsafe_allow_html=True)
+            st.markdown(_fiche_source(r), unsafe_allow_html=True)
+
+            # La comparaison entre sections — « où », et pas seulement
+            # « combien ».
+            comp = _comparaison_sections(r, teinte)
+            st.markdown(
+                f'<div class="ind-lab">{_e(T("d_bloc_comparaison"))}</div>'
+                + (comp or f'<div style="font-size:13px;color:#8a93a5;'
+                           f'font-style:italic">'
+                           f'{_e(T("d_pas_de_section"))}</div>'),
+                unsafe_allow_html=True)
+
+            # La répartition des réponses, quand l'indicateur sort d'une
+            # question d'enquête : un score sans sa distribution demande qu'on
+            # le croie sur parole.
+            if source_de(r) == "menage":
+                html, base, _t = questions_dimension.distribution(
+                    r.get("question"), teinte)
+                if html:
+                    st.markdown(
+                        f'<div class="ind-lab">'
+                        f'{_e(T("d_bloc_distribution"))}</div>' + html,
+                        unsafe_allow_html=True)
+
+
+def _rendre_indicateurs(cle_dim, res, vent, dimension, teinte, complement):
+    """Le contenu de l'onglet « indicateurs »."""
+    lignes = [r for r in res if r["dimension"] == dimension]
+    n_faits, n_tot, p_faits, p_tot = couverture(lignes)
+    score = score_dimension(lignes, "Total")
 
     # ------------------------------------------------------------ chiffres
     with st.container(border=True):
@@ -386,44 +580,33 @@ def _rendre_indicateurs(cle_dim, res, vent, dimension, teinte, complement):
             st.caption(T("d_bloc_carte_note"))
             components.html(html, height=hauteur + 46, scrolling=False)
 
-    # ------------------------------------------- les indicateurs et leur source
+    # --------------------------------------------- LA LISTE DES INDICATEURS
+    # Une seule liste, fermée, à la place des deux blocs d'avant — un tableau
+    # déroulé de tous les indicateurs, puis une seconde liste de leurs sources.
+    # Rien n'est perdu : chiffres, source, question, barème, base et
+    # comparaison entre sections se trouvent maintenant dans le volet de
+    # l'indicateur concerné, et le tableau comparatif reste disponible plus
+    # bas, replié.
     with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc">{T("d_bloc_indicateurs")}</div>',
-                    unsafe_allow_html=True)
-        # Plus de sélecteur ici : le filtre de la colonne de gauche fait foi
-        # pour toute l'application. Un sélecteur par page obligeait à
-        # rechoisir Dumont à chaque changement de dimension, et surtout
-        # laissait croire qu'on comparait deux territoires alors qu'on en
-        # regardait deux fois le même.
-        cible = filtres.cible() or filtres.section()
-        st.caption(filtres.resume())
-        st.markdown(_tableau_indicateurs(lignes, cible, teinte, vent),
-                    unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="titre-bloc">{T("d_indics_titre")} · '
+            f'{T("d_n_indics", n=len(lignes))}</div>', unsafe_allow_html=True)
+        st.markdown(T("d_indics_note"))
+        st.caption(filtres.resume() + " — " + T("d_ferme_note"))
+        _accordeon_indicateurs(lignes, vent, teinte, cle_dim)
         st.caption(T("d_bloc_indicateurs_note"))
         if filtres.groupe() != filtres.TOUS:
             st.caption(T("f_note_satellite"))
 
-    # ------------------------------------------------- la source, ligne à ligne
-    with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc vert">{T("d_bloc_sources")}</div>',
+    # ------------------------------------------------ le tableau, en dernier
+    # « Indicateurs clés → graphiques → cartes → comparaisons → tableaux
+    # détaillés » : le tableau ferme la marche, replié, pour qui veut tout
+    # voir d'un coup ou copier des chiffres.
+    with st.expander(T("d_bloc_tableau")):
+        cible = filtres.cible() or filtres.section()
+        st.markdown(_tableau_indicateurs(lignes, cible, teinte, vent),
                     unsafe_allow_html=True)
-        st.markdown(
-            f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
-            f'margin:4px 0 12px;max-width:92ch">{T("d_bloc_sources_texte")}</p>',
-            unsafe_allow_html=True)
-        for r in sorted(lignes, key=lambda x: x["ligne"]):
-            sc = filtres.score(r, vent)
-            etiquette = (f'L{r["ligne"]} · {nom_indic(r)}'
-                         + (f'  —  {sc}/10' if sc is not None
-                            else f'  —  {T("d_non_calcule")}'))
-            with st.expander(etiquette):
-                exp = expl_indic(r)
-                if exp:
-                    st.markdown(
-                        f'<p style="font-size:15.5px;color:#3c4761;'
-                        f'line-height:1.6;margin:0 0 11px">{_e(exp)}</p>',
-                        unsafe_allow_html=True)
-                st.markdown(_fiche_source(r), unsafe_allow_html=True)
+        st.caption(T("d_bloc_sources_texte"))
 
     # Le détail propre à deux dimensions — environnement, organisations de
     # base — vient ici, à la fin des indicateurs, et non dans l'onglet des

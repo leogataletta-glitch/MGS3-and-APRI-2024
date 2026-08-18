@@ -1,73 +1,89 @@
-# Trois corrections — à pousser dans le MÊME commit
+# Results Analysis — nouvelle architecture d'interface
+
+## Envoyez ces cinq fichiers dans le MÊME commit
 
 | Fichier | |
 |---|---|
-| `interventions_page.py` | anciennes pistes supprimées · activités et indicateurs de performance rendus visibles |
-| `boucles_page.py` | l'exploration part des indicateurs les plus alarmants |
-| `app.py` | ne charge plus les anciennes pistes |
+| `app.py` | la colonne de gauche ne porte plus les filtres |
+| `filtres.py` | la barre de filtres dans la page |
+| `dimension_page.py` | dimension → description → filtres → liste d'indicateurs |
+| `questions_dimension.py` | intitulés professionnels, tout replié, recherche |
+| `synthese_page.py` | reprend la barre de filtres, puisqu'elle lit les filtres |
 
-**Les trois ensemble.** `app.py` n'importe plus `pistes_page` et appelle les
-fiches sans argument : envoyé seul, il ne casserait rien, mais envoyer
-`interventions_page.py` seul laisserait l'ancien `app.py` continuer à demander
-les anciennes pistes. J'ai prévu le coup — la nouvelle page accepte l'argument
-et l'ignore — mais le plus simple reste de pousser les trois d'un bloc.
+Les cinq ensemble : `app.py` n'appelle plus le panneau latéral, et
+`dimension_page.py` appelle une fonction qui n'existe que dans le nouveau
+`filtres.py`.
 
-## 1 · Anciennes pistes de travail — supprimées
+## Ce qui a changé
 
-Le volet replié du bas est retiré, et l'import qui l'alimentait aussi.
+**Les filtres ont quitté la marge.** Ils sont dans la page, sous le titre et la
+description de la dimension, en une bande horizontale : *Section communale ·
+Paysage · Groupe · Réinitialiser*. Un filtre posé dans la colonne de gauche est
+un filtre qu'on oublie — il agit sur des chiffres situés à quarante centimètres
+de lui, et rien à l'écran ne relie les deux. Ici il est juste au-dessus du
+résultat qu'il commande.
 
-## 2 · Activités techniques / sociales et indicateurs de performance
+L'état reste commun à toute la plateforme : le choix vous suit d'une rubrique à
+l'autre, et la pastille du bandeau haut continue de rappeler ce qui est filtré.
 
-**Ils étaient déjà là, mais illisibles** — un petit label gris en capitales au
-milieu de la fiche, qui se perdait entre les paragraphes. C'est ma faute : le
-protocole demande ces blocs, les afficher discrètement revient à ne pas les
-afficher.
+**La colonne de gauche ne fait plus que naviguer** — Vue d'ensemble, Cadre de
+résilience, Analyse des résultats, Boucles de rétroaction, Profils territoriaux
+et sociaux, Fiches d'intervention, Données.
 
-Ils portent maintenant :
+**Plus rien ne se déroule tout seul.** La page est maintenant :
 
-- **deux encadrés côte à côte**, ⚙ *Activités techniques* en bleu et ◍
-  *Activités sociales* en turquoise, avec filet de couleur et titre lisible ;
-- **un encadré vert « ◎ Indicateurs de performance »** avec l'objectif de score
-  en gros caractères — **+2,5 pt**, **+2,0 pt**, **+1,5 pt** selon la fiche —
-  suivi du point de départ mesuré et du point visé : *4,0 / 10 → 6,5 / 10*.
+    dimension → description → filtres → liste d'indicateurs → détail
 
-Une précision utile : si vous regardez la plateforme en ligne, elle affiche
-encore la version précédente tant que `interventions_page.py` n'est pas poussé
-sur GitHub. Ce que je décris est dans le fichier que je viens de déposer.
+La liste d'indicateurs est compacte et **entièrement fermée**. Chaque ligne
+porte le nom de l'indicateur et son score — *Achèvement de l'éducation primaire
+(adultes) · 0,0 / 10* — et rien d'autre tant qu'on ne l'ouvre pas. Les
+indicateurs sont classés **du score le plus bas** : un tableau de bord de
+résilience se lit par ce qui manque.
 
-## 3 · Les boucles partent maintenant des indicateurs les plus alarmants
+À l'ouverture d'un indicateur : score, valeur mesurée, poids, source, sa
+définition, la question d'enquête mot pour mot avec ses modalités, le barème,
+la base, **la dispersion entre les dix sections communales** en barres, et **la
+répartition des réponses** quand l'indicateur sort d'une question de ménage.
 
-Vous avez raison, et c'était l'erreur de conception de la page : elle
-s'ouvrait sur l'eau, un levier confortable. Une boucle ne mérite d'être suivie
-que si elle passe par ce qui est réellement en défaut.
+Un **champ de recherche** est posé au-dessus de la liste, dans les deux onglets.
 
-En tête de la page, avant tout contrôle, un bloc **« Partir des indicateurs les
-plus alarmants »** : les huit lignes les plus basses du référentiel, classées
-par score croissant puis par pondération décroissante — à score égal, celle qui
-pèse le plus dans l'indice passe devant. Chacune est un bouton qui devient le
-levier ; le levier par défaut n'est plus l'eau mais **la sécurité alimentaire
-(L108, 0/10, pondération 3,61)**, la ligne la plus alarmante que le graphe
-sache atteindre.
+**Les deux niveaux sont maintenant distingués, et dits.** L'onglet
+*Indicateurs* vient en premier — c'est le produit de la plateforme. L'onglet
+*Résultats du questionnaire* vient ensuite, et il s'ouvre sur un avertissement
+en toutes lettres : *ce sont des réponses brutes, pas des indicateurs de
+résilience ; un module de questionnaire n'est pas un indicateur du
+référentiel*. C'était l'ambiguïté principale de l'ancienne page.
 
-Les huit : sécurité alimentaire (0/10) · électricité (0/10) · participation à
-la préparation aux catastrophes (0/10) · achèvement du primaire (0/10) ·
-comités locaux de gestion des risques (1/10) · capital social d'entraide
-(1/10) · population sous 50 % du revenu médian (1/10) · combustibles propres
-(1/10).
+**Les codes du questionnaire ont disparu de l'écran.** « AQ. PROFIL DU
+RÉPONDANT » devient *Profil du répondant*, « AF. COMPOSITION DU FOYER » devient
+*Composition du foyer*. Les quarante-deux modules ont un intitulé analytique en
+français et en anglais ; les codes restent les clés en base, comme vous le
+demandiez. Un module qui échapperait au tableau ne fait pas réapparaître son
+code : le préfixe est retiré et la casse rétablie automatiquement.
 
-**Et ce que le modèle ne sait pas atteindre est nommé**, sous les huit boutons
-plutôt que passé sous silence : macroplastiques en milieu marin (0/10),
-couverture des aires protégées marines et côtières (0/10), couverture des aires
-protégées terrestres (0/10), participation à la gouvernance locale (1/10).
-Quatre indicateurs au plus bas pour lesquels le graphe ne pose aucune relation
-— aucune boucle ne peut donc les traverser. C'est une limite du modèle causal,
-pas une bonne nouvelle sur ces indicateurs.
+Les modules du questionnaire sont eux aussi **tous fermés** — ils s'ouvraient
+auparavant dès qu'ils contenaient une question reliée à un indicateur, ce qui
+déroulait des dizaines de graphiques d'un coup. Chaque volet fermé indique le
+nombre de questions et, par une flèche, combien d'entre elles alimentent un
+indicateur.
+
+## Rien n'a été retiré
+
+Le tableau comparatif de tous les indicateurs de la dimension existe toujours :
+il ferme la marche, replié, pour qui veut tout voir d'un coup ou copier des
+chiffres. L'ancien bloc « la source, ligne à ligne » n'a pas été supprimé — son
+contenu est passé dans le volet de l'indicateur concerné, là où on le cherche.
+Les quatre chiffres clés et la carte par section communale restent à leur
+place, avant la liste.
 
 ## Vérifié
 
-- **42 rendus complets** — 7 pages × 3 combinaisons de filtres × 2 langues —
-  zéro exception, zéro clé de traduction brute ;
-- pages ouvertes dans le navigateur : le bloc des alarmants avec son levier
-  actif en bleu, les deux encadrés d'activités, l'encadré vert des indicateurs
-  de performance ;
-- le classement des alarmants recoupé directement sur `resultats.json`.
+- **42 rendus complets** — 7 pages × 3 combinaisons de filtres × 2 langues,
+  avec trois dimensions différentes — zéro exception, zéro clé de traduction
+  brute ;
+- **aucun code de questionnaire dans le texte rendu**, contrôlé par expression
+  régulière sur les deux langues ;
+- les 42 modules présents dans le cache ont bien un intitulé propre ;
+- pages ouvertes dans le navigateur, en français et en anglais : la bande de
+  filtres, les deux onglets, la liste fermée, un indicateur ouvert avec sa
+  question, son barème, sa base et sa dispersion entre sections.

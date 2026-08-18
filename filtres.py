@@ -206,6 +206,63 @@ def avertissement():
              vrai=libelle_paysage(SECTION_PAYSAGE.get(s, p)))
 
 
+# ---------------------------------------------------------------- dans la page
+BARRE_STYLE = """
+<style>
+  div[data-testid="stHorizontalBlock"]:has(.f-ancre) {
+      background:#f7fafd; border:1px solid #e3eaf3; border-radius:12px;
+      padding:10px 14px 4px; margin:6px 0 4px; align-items:end; }
+  div[data-testid="stHorizontalBlock"]:has(.f-ancre) label p {
+      font-size:11px !important; letter-spacing:.08em; text-transform:uppercase;
+      font-weight:700 !important; color:#6b7590 !important; }
+  /* Le bouton s'étirait sur toute la hauteur de la carte et pesait plus que
+     les trois sélecteurs réunis, alors qu'il n'est qu'une sortie de secours. */
+  div[data-testid="stHorizontalBlock"]:has(.f-ancre) button {
+      height:40px; min-height:40px; margin-bottom:16px;
+      font-size:13px !important; }
+  .f-ancre { display:none; }
+</style>
+"""
+
+
+def barre(cle="p"):
+    """La zone de filtres, DANS LA PAGE, sous le titre de la rubrique.
+
+    POURQUOI ELLE A QUITTÉ LA COLONNE DE GAUCHE. Un filtre posé dans la marge
+    est un filtre qu'on oublie : il agit sur des chiffres qui se trouvent à
+    quarante centimètres de lui, et rien à l'écran ne relie les deux. Ici, il
+    est juste au-dessus du résultat qu'il commande, dans le sens de lecture.
+    La colonne de gauche ne fait plus que naviguer.
+
+    `cle` distingue les widgets si deux barres devaient coexister dans un même
+    rendu ; l'état, lui, reste unique — `f_section`, `f_paysage`, `f_groupe` —
+    de sorte que le choix suit l'utilisateur d'une rubrique à l'autre.
+    """
+    _defaut()
+    st.markdown(BARRE_STYLE, unsafe_allow_html=True)
+    c1, c2, c3, c4 = st.columns([3, 2.4, 2.6, 1.5],
+                                vertical_alignment="bottom")
+    with c1:
+        st.markdown('<span class="f-ancre"></span>', unsafe_allow_html=True)
+        st.selectbox(T("f_section"), [TOUTES] + SECTIONS,
+                     format_func=libelle_section, key="f_section")
+    with c2:
+        st.selectbox(T("f_paysage"), [TOUS_P] + PAYSAGES,
+                     format_func=libelle_paysage, key="f_paysage")
+    with c3:
+        st.selectbox(T("f_groupe"), [TOUS] + GROUPES,
+                     format_func=libelle_groupe, key="f_groupe")
+    with c4:
+        st.button(T("f_reinitialiser"), key=f"f_reset_{cle}",
+                  on_click=reinitialiser, use_container_width=True,
+                  disabled=not actif())
+
+    av = avertissement()
+    if av:
+        st.warning(av, icon="⚠")
+    return resume()
+
+
 # ------------------------------------------------------------------ colonne
 def rendre_panneau():
     """Le bloc « Filtres actifs » de la colonne de gauche."""

@@ -277,6 +277,11 @@ def render():
         '0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px;max-width:96ch">'
         + T("syn_intro") + "</div>", unsafe_allow_html=True)
 
+    # Les filtres ont quitté la colonne de gauche, qui ne fait plus que
+    # naviguer. Ils sont ici, sous le titre, comme sur toutes les pages qui
+    # les lisent — l'état reste commun, il suit d'une rubrique à l'autre.
+    filtres.barre(cle="syn")
+
     # Le filtre de la colonne pré-remplit le sélecteur : on arrive ici avec ce
     # qu'on regardait ailleurs, sans avoir à le rechoisir. Le sélecteur reste
     # néanmoins, parce que cette page-ci sert précisément à comparer plusieurs

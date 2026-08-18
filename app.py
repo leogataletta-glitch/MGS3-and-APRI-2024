@@ -1184,10 +1184,13 @@ with _sb_marque:
 with _sb_nav:
     st.markdown(f'<div class="nav-groupe">{T("nav_general")}</div>',
                 unsafe_allow_html=True)
+    # LA COLONNE DE GAUCHE NE SERT PLUS QU'À NAVIGUER. Les filtres d'analyse
+    # en ont été retirés : posés à côté du contenu, ils obligeaient l'œil à
+    # faire l'aller-retour entre la marge et le tableau, et rien ne disait
+    # qu'ils s'appliquaient à ce qu'on lisait. Ils sont maintenant dans la page
+    # elle-même, sous le titre de la rubrique, là où le résultat est affiché.
     for mode, icone in _NAV:
         _entree_nav(mode, icone)
-    st.markdown('<div class="f-separateur"></div>', unsafe_allow_html=True)
-    filtres.rendre_panneau()
 
 with _sb_langue:
     # Le logo du PNUE est remonté dans le ruban, en haut à droite. Le

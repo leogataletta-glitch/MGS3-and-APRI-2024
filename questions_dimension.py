@@ -89,6 +89,7 @@ TEXTES = {
               "section seule."},
     "q_ligne": {"en": "L{n}", "fr": "L{n}"},
     "q_n_questions": {"en": "{n} questions", "fr": "{n} questions"},
+    "q_1_question": {"en": "1 question", "fr": "1 question"},
     "q_base_nulle": {"en": "No respondent under this filter.",
                      "fr": "Aucun répondant sous ce filtre."},
     "q_absent": {"en": "The survey answer cache is missing from the "
@@ -107,6 +108,22 @@ TEXTES = {
               "Les quelques questions d'enquête qui touchent à "
               "l'environnement — irrigation, intrants, causes de perte de "
               "récolte — apparaissent ici dès qu'elles sont rattachées."},
+    "q_titre": {"en": "Survey results", "fr": "Résultats du questionnaire"},
+    "q_avert_niveau": {
+        "en": "**These are raw survey answers, not resilience indicators.** A "
+              "questionnaire module is a group of questions asked together — "
+              "it is not an indicator of the framework. The indicators, "
+              "computed from these answers and scored out of ten, are in the "
+              "first tab.",
+        "fr": "**Ce sont des réponses brutes, pas des indicateurs de "
+              "résilience.** Un module de questionnaire est un groupe de "
+              "questions posées ensemble — ce n'est pas un indicateur du "
+              "référentiel. Les indicateurs, calculés à partir de ces réponses "
+              "et notés sur dix, sont dans le premier onglet."},
+    "q_chercher": {"en": "Search a topic or a question",
+                   "fr": "Rechercher un thème ou une question"},
+    "q_rien": {"en": "No question matches this search.",
+               "fr": "Aucune question ne correspond à cette recherche."},
     "q_note_rattachement": {
         "en": "Questions carrying a line number are linked to the dimension "
               "by the data itself: the indicator states which question it is "
@@ -185,6 +202,135 @@ MODULE_DIMENSION = {
     "O. MIGRATION": "dim6",
     "P. MIGRATION ÉCONOMIQUE ET ASPIRATIONS": "dim6",
 }
+
+# ---------------------------------------------------------------------------
+# LES CODES DU QUESTIONNAIRE NE SORTENT PAS DU BACKEND.
+#
+# « AQ. PROFIL DU RÉPONDANT », « AF. COMPOSITION DU FOYER » : ces préfixes
+# servent à l'enquêteur et au fichier de données, pas au lecteur. Ils restent
+# les clés du dictionnaire — c'est par eux que les questions sont rattachées —
+# mais l'écran affiche un intitulé analytique.
+#
+# Un module absent de ce tableau ne fait pas réapparaître son code : la
+# fonction `libelle_module` retire le préfixe et remet la casse normale. Le
+# tableau est là pour la qualité de l'intitulé, pas pour la sécurité de
+# l'affichage.
+# ---------------------------------------------------------------------------
+MODULE_LABEL = {
+    "AI. LOGEMENT / HABITAT":
+        ("Housing and shelter", "Logement et habitat"),
+    "AJ. EAU, ASSAINISSEMENT ET HYGIÈNE (WASH)":
+        ("Water, sanitation and hygiene", "Eau, assainissement et hygiène"),
+    "C. ÉNERGIE DOMESTIQUE":
+        ("Household energy", "Énergie domestique"),
+    "D. CONNECTIVITÉ / COMMUNICATION":
+        ("Connectivity and communication", "Connectivité et communication"),
+    "E. GESTION DES DÉCHETS SOLIDES":
+        ("Solid waste management", "Gestion des déchets solides"),
+    "G. ACCÈS AUX INFRASTRUCTURES DE SANTÉ ET D'ÉDUCATION":
+        ("Access to health and education facilities",
+         "Accès aux infrastructures de santé et d'éducation"),
+    "F. ACCÈS AUX SERVICES ADMINISTRATIFS":
+        ("Access to administrative services",
+         "Accès aux services administratifs"),
+    "H. ENFANTS NÉS DANS LA SECTION COMMUNALE":
+        ("Births and civil registration",
+         "Naissances et enregistrement à l'état civil"),
+    "I. GOUVERNANCE ET INTÉGRITÉ":
+        ("Governance and integrity", "Gouvernance et intégrité"),
+    "J. GESTION DES RISQUES ET DES CATASTROPHES":
+        ("Disaster risk management", "Gestion des risques et des catastrophes"),
+    "K. PARTICIPATION COMMUNAUTAIRE ET CITOYENNE":
+        ("Community and civic participation",
+         "Participation communautaire et citoyenne"),
+    "AO. AGRICULTURE — QUANTITÉ D'INTRANTS APPLIQUÉE":
+        ("Agricultural inputs applied", "Intrants agricoles appliqués"),
+    "AP. AGRICULTURE — IRRIGATION":
+        ("Irrigation", "Irrigation"),
+    "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS":
+        ("Fruit trees planted", "Arbres fruitiers plantés"),
+    "AR. AGRICULTURE — FACTEURS D'ÉVOLUTION DES RENDEMENTS":
+        ("Drivers of yield change", "Facteurs d'évolution des rendements"),
+    "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE":
+        ("Causes of crop loss", "Circonstances de perte de production"),
+    "N. SÉCURITÉ ALIMENTAIRE (12 DERNIERS MOIS)":
+        ("Food security over the past year",
+         "Sécurité alimentaire sur les douze derniers mois"),
+    "AG. SOURCES DE REVENUS DU FOYER":
+        ("Household income sources", "Sources de revenus du foyer"),
+    "AH. ÉLEVAGE (PROXY DE RICHESSE — MODULE DE SCORING)":
+        ("Livestock as a wealth proxy", "Élevage, indicateur de richesse"),
+    "Q. EMPLOI ET REVENUS":
+        ("Employment and income", "Emploi et revenus"),
+    "R. FONCIER AGRICOLE":
+        ("Agricultural land tenure", "Foncier agricole"),
+    "S. ÉPARGNE, CRÉDIT ET RÉSILIENCE FINANCIÈRE":
+        ("Savings, credit and financial resilience",
+         "Épargne, crédit et résilience financière"),
+    "T. AGRICULTURE — PRATIQUES GÉNÉRALES":
+        ("Farming practices", "Pratiques agricoles"),
+    "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE":
+        ("Area cultivated, by crop", "Superficie cultivée, par culture"),
+    "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE":
+        ("Planting calendar, by crop", "Calendrier de semis, par culture"),
+    "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE":
+        ("Annual yields, by crop", "Rendements annuels, par culture"),
+    "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE":
+        ("Five-year yield trend, by crop",
+         "Évolution des rendements sur cinq ans, par culture"),
+    "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE":
+        ("Share of production lost, by crop",
+         "Part de production perdue, par culture"),
+    "Y. PÊCHE — PRATIQUES GÉNÉRALES":
+        ("Fishing practices", "Pratiques de pêche"),
+    "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE":
+        ("Species caught and fishing grounds", "Espèces pêchées et zones"),
+    "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE":
+        ("Revenue per fishing trip, by species",
+         "Revenu par sortie, par espèce"),
+    "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE":
+        ("Most profitable season, by species",
+         "Saison la plus rentable, par espèce"),
+    "AC. ÉLEVAGE — GÉNÉRALITÉS":
+        ("Livestock holdings", "Cheptel"),
+    "AD. ÉLEVAGE — MORTALITÉ":
+        ("Livestock mortality", "Mortalité du cheptel"),
+    "AE. FACTEUR LIMITANT LES BÉNÉFICES (PÊCHE / AGRICULTURE / ÉLEVAGE)":
+        ("Constraints on livelihood returns",
+         "Facteurs limitant les revenus d'activité"),
+    "AK. ENTRAIDE COMMUNAUTAIRE (6 DERNIERS MOIS)":
+        ("Community mutual aid", "Entraide communautaire"),
+    "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE":
+        ("Social life and community capital",
+         "Vie sociale et capital communautaire"),
+    "M. ÉDUCATION ET SOUTIEN SOCIAL":
+        ("Education and social support", "Éducation et soutien social"),
+    "AF. COMPOSITION DU FOYER":
+        ("Household composition", "Composition du foyer"),
+    "AQ. PROFIL DU RÉPONDANT":
+        ("Respondent profile", "Profil du répondant"),
+    "O. MIGRATION":
+        ("Migration", "Migration"),
+    "P. MIGRATION ÉCONOMIQUE ET ASPIRATIONS":
+        ("Economic migration and aspirations",
+         "Migration économique et aspirations"),
+}
+
+_PREFIXE = None
+
+
+def libelle_module(cat):
+    """L'intitulé lisible d'un module. Jamais son code."""
+    import re
+    couple = MODULE_LABEL.get(cat)
+    if couple:
+        return couple[1] if i18n.get_lang() == "fr" else couple[0]
+    # Repli : on retire le préfixe alphabétique et on rétablit la casse. Un
+    # module oublié dans le tableau s'affiche proprement, pas en « AB. ».
+    nu = re.sub(r"^[A-Z]{1,3}\.\s*", "", cat or "").strip()
+    nu = re.sub(r"\s*\((?:proxy|module)[^)]*\)", "", nu, flags=re.I).strip()
+    return (nu[:1].upper() + nu[1:].lower()) if nu else cat
+
 
 # Teinte par dimension, la même que dans la page d'indicateurs.
 # Palette VALIDÉE, importée de cadre_page — cinq contrôles passés :
@@ -375,6 +521,11 @@ def rendre(cle_dim):
 
     n_q = sum(len(v) for _, v in groupes)
     n_lien = sum(1 for _, v in groupes for _t, lg in v if lg)
+
+    # LE NIVEAU EST DIT AVANT TOUT LE RESTE. Un module de questionnaire n'est
+    # pas un indicateur de résilience, et une page qui les empile sans le dire
+    # laisse croire que si.
+    st.warning(T("q_avert_niveau"))
     st.markdown(
         f'<p style="font-size:15px;color:#3c4761;line-height:1.6;'
         f'max-width:92ch;margin:2px 0 4px">'
@@ -387,23 +538,68 @@ def rendre(cle_dim):
     if croise:
         st.caption(T("q_croise"))
 
-    # UN MODULE = UN VOLET REPLIABLE. La dimension économique porte à elle
-    # seule plus de trois cents questions — les batteries par culture et par
-    # espèce pêchée, une question par culture. Déroulées d'un bloc, elles
-    # noieraient les dix questions qui comptent. Les volets qui contiennent
-    # une question reliée à un indicateur s'ouvrent d'office ; les autres
-    # attendent qu'on les demande.
+    cherche = (st.text_input(T("q_chercher"), key=f"q_rech_{cle_dim}",
+                             placeholder="…") or "").strip().lower()
+    if cherche:
+        filtres_g = []
+        for module, questions in groupes:
+            gardees = [(t, lg) for t, lg in questions
+                       if cherche in (t.get("question") or "").lower()
+                       or cherche in libelle_module(module).lower()]
+            if gardees:
+                filtres_g.append((module, gardees))
+        groupes = filtres_g
+        if not groupes:
+            st.info(T("q_rien"))
+            return
+
+    # UN MODULE = UN VOLET REPLIABLE, ET TOUS SONT FERMÉS.
+    #
+    # Ils s'ouvraient auparavant dès qu'ils contenaient une question reliée à
+    # un indicateur, ce qui déroulait d'un coup des dizaines de graphiques et
+    # rendait la page interminable. Le lecteur choisit maintenant ce qu'il
+    # ouvre ; le nombre de questions et le nombre de liens sont écrits sur le
+    # volet fermé, ce qui suffit à savoir où aller.
     #
     # TOUT LE MODULE EST ÉCRIT EN UN SEUL APPEL. Un appel par question — plus
     # de trois cents — ferait autant de conteneurs Streamlit, et la page
     # mettrait plusieurs secondes à se dessiner.
     for module, questions in groupes:
-        ouvert = any(lg for _t, lg in questions)
-        titre = f'{module}  ·  {T("q_n_questions", n=len(questions))}'
-        with st.expander(titre, expanded=ouvert):
+        n_l = sum(1 for _t, lg in questions if lg)
+        combien = (T("q_1_question") if len(questions) == 1
+                   else T("q_n_questions", n=len(questions)))
+        titre = (f'{libelle_module(module)}  ·  {combien}'
+                 + (f'  ·  {n_l} ↗' if n_l else ''))
+        with st.expander(titre, expanded=bool(cherche)):
             st.markdown(
                 "".join(_carte_question(t, lg, base, teinte)
                         for t, lg in questions),
                 unsafe_allow_html=True)
 
     st.caption(T("q_note_rattachement"))
+
+
+# ---------------------------------------------------------------------------
+# LA DISTRIBUTION D'UNE QUESTION, RENDUE POUR LA PAGE DES INDICATEURS.
+#
+# Un indicateur d'enquête est un score tiré d'une question ; l'ouvrir sans
+# montrer la répartition des réponses revient à demander de croire le calcul
+# sur parole. Cette fonction est ici, et non dans la page des indicateurs,
+# parce que c'est ici que vit le cache des réponses et la logique de filtre :
+# deux implémentations finiraient par diverger.
+# ---------------------------------------------------------------------------
+def distribution(question, teinte):
+    """Rend (html, base, question_trouvée) pour une question de l'enquête."""
+    d = _charger()
+    q = (question or "").strip().lower()
+    if not d or not q:
+        return None, 0, None
+    cible = filtres.cible()
+    if cible is None:
+        cible = filtres.section()
+    _CLE[0] = cible if cible in d["base_n"] else "Total"
+    base = d["base_n"].get(_CLE[0]) or 0
+    for t in d["themes"]:
+        if (t.get("question") or "").strip().lower() == q:
+            return _barres(t.get("rows") or [], base, teinte), base, t
+    return None, base, None
