@@ -847,6 +847,77 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# ---------------------------------------------------------------------------
+# APP.PY PORTE LES INTITULÉS DE SA PROPRE NAVIGATION.
+#
+# C'est le principe déjà appliqué à `questions_dimension.py`, et je ne l'avais
+# pas suivi ici : les six noms de rubrique et les six lignes de carte vivaient
+# dans `i18n.py` seul. Un `i18n.py` resté en arrière — ce qui arrive, les
+# fichiers étant poussés à la main — et la page s'arrêtait sur « il manque des
+# clés », alors que le fichier réellement neuf était app.py.
+#
+# DEUX TRAITEMENTS, ET LA DIFFÉRENCE COMPTE :
+#   · les clés NOUVELLES (les lignes de carte) sont posées en setdefault — un
+#     i18n.py à jour reste maître ;
+#   · les clés RENOMMÉES (les six rubriques) sont ÉCRASÉES. Un setdefault ne
+#     servirait à rien : la clé existe déjà dans l'ancien fichier, avec
+#     l'ancien nom, et c'est précisément celui-là qu'il faut remplacer.
+#
+# `i18n.py` garde les mêmes valeurs et son rôle de catalogue complet.
+# ---------------------------------------------------------------------------
+TEXTES_NAV = {
+    "mode_accueil": {"en": "Overview", "fr": "Vue d'ensemble"},
+    "mode_methodo": {"en": "Resilience Framework",
+                     "fr": "Cadre de résilience"},
+    "mode_dimensions": {"en": "Results Analysis",
+                        "fr": "Analyse des résultats"},
+    "mode_synthese": {"en": "Territorial and Social Profiles",
+                      "fr": "Profils territoriaux et sociaux"},
+    "mode_actions": {"en": "Intervention Profiles",
+                     "fr": "Fiches d'intervention"},
+    "mode_donnees": {"en": "Data", "fr": "Données"},
+    "dim1_carte": {
+        "en": "Housing, water, sanitation, energy, roads, schools and health "
+              "facilities",
+        "fr": "Logement, eau, assainissement, énergie, routes, écoles et "
+              "centres de santé"},
+    "dim2_carte": {
+        "en": "Civil registration, governance, early warning, disaster "
+              "preparedness, participation",
+        "fr": "État civil, gouvernance, alerte précoce, préparation aux "
+              "catastrophes, participation"},
+    "dim3_carte": {
+        "en": "Forest cover, rainfall, vegetation, surface temperature and "
+              "aridity, by satellite",
+        "fr": "Couvert forestier, pluie, végétation, température de surface "
+              "et aridité, par satellite"},
+    "dim4_carte": {
+        "en": "Employment, income, savings and credit, farming, fishing, "
+              "food security",
+        "fr": "Emploi, revenus, épargne et crédit, agriculture, pêche, "
+              "sécurité alimentaire"},
+    "dim5_carte": {
+        "en": "Social capital, mutual aid, community organisations and their "
+              "reach",
+        "fr": "Capital social, entraide, organisations communautaires et "
+              "leur portée"},
+    "dim6_carte": {
+        "en": "Education, health, support networks and access to essential "
+              "services",
+        "fr": "Éducation, santé, réseaux de soutien et accès aux services "
+              "essentiels"},
+}
+# Les six rubriques : app.py est la source, puisqu'il est le seul à s'en servir
+# et qu'il est toujours du voyage.
+_RENOMMEES = ("mode_accueil", "mode_methodo", "mode_dimensions",
+              "mode_synthese", "mode_actions", "mode_donnees")
+for _c, _v in TEXTES_NAV.items():
+    if _c in _RENOMMEES:
+        i18n.DICO[_c] = _v
+    else:
+        i18n.DICO.setdefault(_c, _v)
+
+
 # ----------------------------------------------------------------------
 # Garde-fou : les fichiers sont poussés à la main sur GitHub, un par un. Si le
 # dictionnaire de traduction est resté sur une version antérieure, l'application
@@ -874,8 +945,6 @@ I18N_CLES_REQUISES = [
     "f_paysage", "f_tous_paysages", "f_resume_paysage",
     "f_resume_section_pay", "f_resume_paysage_groupe", "f_incoherent",
     "s_mode_paysage", "s_note_paysage", "pay_Littoral", "pay_Montagne",
-    "dim1_carte", "dim2_carte", "dim3_carte",
-    "dim4_carte", "dim5_carte", "dim6_carte",
 ]
 # Les textes de l'onglet « questions » ne figurent PAS dans cette liste, bien
 # qu'ils soient nouveaux : `questions_dimension.py` les porte lui-même et les
