@@ -24,10 +24,12 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 import accueil_page
+import actualites
 import assets
 import croisement_page
 import dimension_page
 import environnement_page
+import filtres
 import i18n
 import map_render
 import methodologie_page
@@ -493,6 +495,98 @@ st.markdown("""
     fill: rgba(255,255,255,.7);
   }
 
+  /* --- le bloc « filtres actifs » de la colonne ------------------------ */
+  .f-separateur {
+    height: 1px; background: rgba(255,255,255,.12); margin: 16px 2px 2px;
+  }
+  section[data-testid="stSidebar"] div[data-testid="stSelectbox"] label p {
+    font-size: 11.5px !important; letter-spacing: .04em;
+    color: rgba(255,255,255,.55) !important; font-weight: 600 !important;
+    text-transform: uppercase;
+  }
+  /* Le bouton « Réinitialiser » ne doit pas ressembler à une entrée de menu :
+     il agit sur le filtre, pas sur la navigation. C'est le seul bouton de la
+     colonne placé dans une rangée de colonnes — on le cible par là, faute de
+     pouvoir donner une classe à un bouton Streamlit. */
+  section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]
+    div[data-testid="stButton"] > button {
+    min-height: 0 !important; padding: 4px 9px !important;
+    justify-content: center !important; margin: 0;
+    border: 1px solid rgba(255,255,255,.18) !important;
+  }
+  section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]
+    div[data-testid="stButton"] > button p {
+    font-size: 11.5px !important; font-weight: 600 !important;
+    text-align: center !important;
+    color: rgba(255,255,255,.70) !important;
+  }
+  section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]
+    div[data-testid="stButton"] > button:disabled {
+    opacity: .35; border-color: rgba(255,255,255,.10) !important;
+  }
+  .f-chips { display: flex; flex-direction: column; gap: 6px; margin-top: 11px; }
+  .f-chip {
+    display: flex; align-items: baseline; gap: 8px;
+    background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.14);
+    border-radius: 9px; padding: 7px 11px;
+  }
+  .f-chip-cle {
+    font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+    color: rgba(255,255,255,.50); font-weight: 700; white-space: nowrap;
+  }
+  .f-chip-val {
+    font-size: 13.5px; color: #ffffff; font-weight: 600;
+  }
+  .f-vide {
+    font-size: 11.5px; color: rgba(255,255,255,.42); line-height: 1.5;
+    margin-top: 10px; padding: 0 3px;
+  }
+
+  /* --- la barre du haut de page --------------------------------------- */
+  .barre-haut {
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+    padding: 10px 16px; margin: 0 0 10px;
+    background: #ffffff; border: 1px solid #e7ecf3; border-radius: 13px;
+    box-shadow: 0 1px 2px rgba(16,23,40,.04);
+  }
+  .bh-gauche { flex: 0 1 auto; }
+  .bh-page {
+    font-size: 16.5px; font-weight: 700; color: #101728;
+    letter-spacing: -.01em; margin-top: -2px;
+  }
+  .bh-filtre {
+    flex: 1 1 220px; text-align: center;
+    font-size: 13px; color: #1f7a5a; font-weight: 600;
+    background: #eaf6f0; border: 1px solid #cfe9dd; border-radius: 999px;
+    padding: 5px 14px;
+  }
+  .bh-logo { height: 34px; flex: 0 0 auto; }
+
+  /* --- le panneau des dernières livraisons ---------------------------- */
+  .n-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 11px 0 3px;
+  }
+  .n-icone {
+    flex: 0 0 34px; width: 34px; height: 34px; border-radius: 9px;
+    background: #eaf6f0; color: #1f7a5a; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .n-corps { flex: 1 1 auto; min-width: 0; }
+  .n-titre {
+    font-size: 14.5px; font-weight: 700; color: #101728; line-height: 1.35;
+  }
+  .n-badge {
+    display: inline-block; margin-left: 7px; vertical-align: middle;
+    background: #eaf6f0; color: #1f7a5a; border: 1px solid #cfe9dd;
+    border-radius: 999px; padding: 1px 8px;
+    font-size: 10px; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .n-texte {
+    font-size: 13px; color: #6b7590; line-height: 1.5; margin-top: 3px;
+  }
+
   /* --- sous-onglets : mêmes codes que les tuiles d'entrée, en compact ---
      Les onglets natifs de Streamlit sont un soulignement discret ; à dix
      entrées, on ne voit plus lesquelles sont cliquables. On leur donne la
@@ -544,7 +638,7 @@ st.markdown("""
 # ne plante pas — elle affiche le nom des clés manquantes au milieu du texte, ce
 # qui est beaucoup plus déroutant qu'une erreur franche. On préfère le dire.
 # ----------------------------------------------------------------------
-I18N_ATTENDU = "2026-08-18-menu"
+I18N_ATTENDU = "2026-08-18-filtres"
 if getattr(i18n, "VERSION", None) != I18N_ATTENDU:
     st.error(
         f"**i18n.py est dans une version qui ne correspond pas au reste de "
@@ -608,6 +702,17 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      MODE_ACTIONS: T("mode_actions"),
                      MODE_SYNTHESE: T("mode_synthese")})
 
+# L'état de navigation doit exister AVANT la barre du haut, qui affiche le nom
+# de la page courante. L'initialiser plus bas laissait la barre lire une clé
+# absente — et Streamlit lève alors une erreur qui masque toute la page.
+if "app_mode" not in st.session_state:
+    st.session_state["app_mode"] = MODE_ACCUEIL
+
+
+def _bascule(mode):
+    st.session_state["app_mode"] = mode
+
+
 # L'identité APRI vit maintenant dans la barre latérale : la répéter en haut
 # du contenu volerait un tiers d'écran avant le premier chiffre. Il reste ici
 # une ligne institutionnelle — le commanditaire et le titre long, qu'une
@@ -617,28 +722,27 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
 # propre conteneur, si bien qu'une balise ouverte dans l'un et fermée dans le
 # suivant ne s'emboîte jamais — le style se perd sans qu'aucune erreur ne le
 # signale.
+# La barre du haut : à gauche le commanditaire et la page courante, au centre
+# ce sur quoi porte l'affichage — un chiffre lu sans savoir qu'un filtre est
+# posé est un chiffre mal lu — et à droite le logo du PNUE. Les deux logos
+# cohabitent ainsi sans se disputer la place : APRI porte le produit dans la
+# colonne, le PNUE porte l'institution en haut de page.
 st.markdown(
-    f'<div style="display:flex;align-items:center;'
-    f'justify-content:space-between;gap:16px;margin:0 0 8px;flex-wrap:wrap">'
-    f'<div><span class="org-mention">{T("org")}</span>'
-    f'<div style="font-size:15px;color:#3c4761;font-weight:600;'
-    f'margin-top:-2px">{T("titre_site")}</div></div>'
-    f'<img src="data:image/png;base64,{assets.LOGO_UNEP}" '
-    f'style="height:38px"></div>'
+    f'<div class="barre-haut">'
+    f'<div class="bh-gauche"><span class="org-mention">{T("org")}</span>'
+    f'<div class="bh-page">{LIBELLE_MODE.get(st.session_state["app_mode"], "")}'
+    f'</div></div>'
+    f'<div class="bh-filtre">{filtres.resume()}</div>'
+    f'<img class="bh-logo" src="data:image/png;base64,{assets.LOGO_UNEP}">'
+    f'</div>'
     f'<img src="data:image/jpeg;base64,{assets.PAYSAGE_CAMP_PERRIN}" '
-    f'style="width:100%;height:96px;object-fit:cover;object-position:50% 62%;'
+    f'style="width:100%;height:92px;object-fit:cover;object-position:50% 62%;'
     f'border-radius:10px;margin:2px 0 14px">', unsafe_allow_html=True)
 
 # Les deux entrées sont mises au même niveau, en haut de page : ce sont deux
 # lectures différentes de la même enquête, pas un mode principal et une option.
 # Deux grands pavés cliquables plutôt qu'un bouton radio : l'entrée dans le
 # tableau de bord doit se voir de loin.
-if "app_mode" not in st.session_state:
-    st.session_state["app_mode"] = MODE_ACCUEIL
-
-
-def _bascule(mode):
-    st.session_state["app_mode"] = mode
 
 
 # Trois entrées d'analyse sur la première rangée, les deux entrées documentaires
@@ -686,6 +790,8 @@ with _sb_nav:
                 unsafe_allow_html=True)
     for mode, icone in _NAV:
         _entree_nav(mode, icone)
+    st.markdown('<div class="f-separateur"></div>', unsafe_allow_html=True)
+    filtres.rendre_panneau()
     st.markdown('<div class="nav-groupe">' + T("nav_langue") + '</div>',
                 unsafe_allow_html=True)
 
@@ -701,7 +807,7 @@ app_mode = st.session_state["app_mode"]
 # dupliquer la logique — l'environnement avec ses onze indicateurs
 # satellitaires, le social avec les fiches d'organisations de base.
 if app_mode == MODE_ACCUEIL:
-    accueil_page.render()
+    accueil_page.render(actualites=lambda: actualites.rendre(_bascule))
 
 if app_mode == MODE_DIMENSIONS:
     _onglets_dim = st.tabs([T(m) for m in MODES_DIM])

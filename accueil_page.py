@@ -188,7 +188,7 @@ def _tuile(icone, lib, val, unite, sous):
             f'{_e(sous)}</div></div>')
 
 
-def render():
+def render(actualites=None):
     res = _charger()
 
     # ------------------------------------------------------------- bandeau
@@ -263,6 +263,8 @@ def render():
         st.caption(T("a_bloc_saillants_note"))
 
     # ------------------------------------------------ classement + carte
+    # La colonne de droite porte la carte PUIS les actualités, comme la
+    # maquette : ce qui situe d'abord, ce qui vient de changer ensuite.
     gauche, droite = st.columns([3, 2], gap="medium")
     with gauche:
         with st.container(border=True):
@@ -287,6 +289,9 @@ def render():
                 components.html(carte[0], height=carte[1] + 34,
                                 scrolling=False)
             st.caption(T("a_bloc_carte_note"))
+
+        if actualites is not None:
+            actualites()
 
     # ---------------------------------------------------- par où commencer
     with st.container(border=True):

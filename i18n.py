@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-18-menu"
+VERSION = "2026-08-18-filtres"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -1657,6 +1657,92 @@ DICO = {
         "en": "physical, institutional, environmental, economic, social, human",
         "fr": "physique, institutionnelle, environnementale, économique, "
               "sociale, humaine"},
+
+    # --- filtres actifs, communs à tout le site --------------------------
+    "f_titre": {"en": "Active filters", "fr": "Filtres actifs"},
+    "f_reinitialiser": {"en": "Reset", "fr": "Réinitialiser"},
+    "f_section": {"en": "Communal section", "fr": "Section communale"},
+    "f_groupe": {"en": "Group", "fr": "Groupe"},
+    "f_toutes_sections": {"en": "All ten sections",
+                          "fr": "Les dix sections"},
+    "f_tous_groupes": {"en": "All respondents", "fr": "Tous les répondants"},
+    "f_aucun": {"en": "No filter — the whole territory, all respondents.",
+                "fr": "Aucun filtre — tout le territoire, tous les répondants."},
+    "f_resume_tout": {
+        "en": "Ten communal sections, all respondents.",
+        "fr": "Dix sections communales, tous les répondants."},
+    "f_resume_section": {"en": "Filtered on {s}.", "fr": "Filtré sur {s}."},
+    "f_resume_groupe": {"en": "Filtered on: {g}.", "fr": "Filtré sur : {g}."},
+    "f_resume_croise": {"en": "Filtered on {s}, {g}.",
+                        "fr": "Filtré sur {s}, {g}."},
+    "f_note_satellite": {
+        "en": "Satellite indicators carry no breakdown by sex or age: forest, "
+              "rainfall and temperature do not vary with the respondent. Under "
+              "a group filter they keep their section value — which is the "
+              "honest reading, not an equality.",
+        "fr": "Les indicateurs satellitaires n'ont pas de ventilation par sexe "
+              "ni par âge : la forêt, la pluie et la température ne varient "
+              "pas selon le répondant. Sous un filtre de groupe, ils gardent "
+              "leur valeur de section — c'est la lecture honnête, pas une "
+              "égalité."},
+
+    # --- actualités et ressources ----------------------------------------
+    "n_titre": {"en": "Latest additions", "fr": "Dernières livraisons"},
+    "n_sous_titre": {
+        "en": "What has been computed recently, and where to verify or "
+              "download it.",
+        "fr": "Ce qui vient d'être calculé, et où le vérifier ou le "
+              "télécharger."},
+    "n_nouveau": {"en": "New", "fr": "Nouveau"},
+    "n_ouvrir": {"en": "Open", "fr": "Ouvrir"},
+    "n_thermique": {"en": "Temperature and vegetation health, 25 years",
+                    "fr": "Température et santé de la végétation, 25 ans"},
+    "n_thermique_texte": {
+        "en": "MODIS unlocks three indicators — VHI, surface temperature "
+              "anomaly, thermal condition — with twenty-five years of depth. "
+              "It also gives the true UNEP aridity index: Dumont is already "
+              "semi-arid.",
+        "fr": "MODIS débloque trois indicateurs — VHI, anomalie de température "
+              "de surface, condition thermique — avec vingt-cinq ans de "
+              "profondeur. Il donne aussi le vrai indice d'aridité UNEP : "
+              "Dumont est déjà semi-aride."},
+    "n_vegetation": {"en": "Six vegetation indices from Sentinel-2",
+                     "fr": "Six indices de végétation par Sentinel-2"},
+    "n_vegetation_texte": {
+        "en": "NDVI, NDMI, EVI, SAVI, VARI and fractional cover, on the "
+              "January-March dry season. Quentin comes last on four of them — "
+              "four independent measures naming one territory.",
+        "fr": "NDVI, NDMI, EVI, SAVI, VARI et fraction de couverture, sur la "
+              "saison sèche de janvier à mars. Quentin est dernier sur quatre "
+              "d'entre eux — quatre mesures indépendantes qui désignent un "
+              "seul territoire."},
+    "n_saison": {"en": "Rainfall moved to the growing season",
+                 "fr": "La pluie passe à la campagne agricole"},
+    "n_saison_texte": {
+        "en": "On the calendar year the territory sits at 96 % of normal "
+              "rainfall; on the spring campaign, at 83 %. The four rainfall "
+              "indicators now read the campaign — which confirms what "
+              "households were saying.",
+        "fr": "Sur l'année civile le territoire est à 96 % de sa pluie "
+              "normale ; sur la campagne de printemps, à 83 %. Les quatre "
+              "indicateurs pluviométriques lisent désormais la campagne — ce "
+              "qui confirme ce que disaient les ménages."},
+    "n_methodo": {"en": "Method, scales and reservations",
+                  "fr": "Méthode, barèmes et réserves"},
+    "n_methodo_texte": {
+        "en": "How the index is built, what each scale is worth, and every "
+              "reservation recorded along the way — including the scales we "
+              "found inverted or ambiguous.",
+        "fr": "Comment l'indice est construit, ce que vaut chaque barème, et "
+              "toutes les réserves relevées chemin faisant — y compris les "
+              "barèmes trouvés inversés ou ambigus."},
+    "n_base": {"en": "Download the data", "fr": "Télécharger les données"},
+    "n_base_texte": {
+        "en": "Indicators, breakdowns, composite score and the community "
+              "organisation survey, as spreadsheets with a read-me sheet.",
+        "fr": "Indicateurs, ventilations, score composite et enquête auprès "
+              "des organisations de base, en classeurs avec une feuille "
+              "« lisez-moi »."},
 
     "e_bloc5": {"en": "What the environmental dimension still lacks",
                 "fr": "Ce qui manque encore à la dimension environnementale"},

@@ -22,6 +22,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 import assets
+import filtres
 import i18n
 import map_render
 from i18n import T
@@ -172,7 +173,7 @@ def couverture(lignes):
 
 
 # -------------------------------------------------------------------- rendu
-def _tableau_indicateurs(lignes, cible, teinte):
+def _tableau_indicateurs(lignes, cible, teinte, vent=None):
     entetes = [T("d_col_ligne"), T("d_col_indicateur"), T("d_col_source"),
                T("d_col_valeur"), T("d_col_score"), T("d_col_poids")]
     out = ['<div style="overflow-x:auto"><table style="width:100%;'
@@ -187,12 +188,14 @@ def _tableau_indicateurs(lignes, cible, teinte):
          'font-variant-numeric:tabular-nums')
     # Triés du score le plus bas : un tableau de bord de résilience se lit par
     # ce qui manque, pas par ce qui va bien.
-    ordre = sorted(lignes, key=lambda r: (scores_de(r, cible) is None,
-                                          scores_de(r, cible) or 0,
+    def _sc(r):
+        return filtres.score(r, vent)
+
+    ordre = sorted(lignes, key=lambda r: (_sc(r) is None, _sc(r) or 0,
                                           r["ligne"]))
     for r in ordre:
-        sc = scores_de(r, cible)
-        val = (r.get("valeurs") or {}).get(cible)
+        sc = _sc(r)
+        val = filtres.valeur(r, vent)
         coul = ("#8a93a5" if sc is None else
                 "#b4451f" if sc <= 3 else "#c98a2e" if sc <= 6 else "#2a6b3f")
         unite = r.get("unite") or ("%" if source_de(r) == "menage" else "")
@@ -288,7 +291,7 @@ def _carte_dimension(lignes, teinte, cle):
 
 def render(cle_dim):
     """Rend l'onglet d'une dimension. `cle_dim` vaut dim1 … dim6."""
-    res, _vent = _charger()
+    res, vent = _charger()
     dimension = dict(DIMENSIONS).get(cle_dim)
     teinte = TEINTES.get(cle_dim, "#1a6bb0")
 
@@ -361,14 +364,18 @@ def render(cle_dim):
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc">{T("d_bloc_indicateurs")}</div>',
                     unsafe_allow_html=True)
-        cibles = ["Total"] + SECTIONS
-        cible = st.selectbox(
-            T("d_cible"), cibles,
-            format_func=lambda c: T("d_cible_ensemble") if c == "Total" else c,
-            key=f"dim_cible_{cle_dim}_{i18n.get_lang()}")
-        st.markdown(_tableau_indicateurs(lignes, cible, teinte),
+        # Plus de sélecteur ici : le filtre de la colonne de gauche fait foi
+        # pour toute l'application. Un sélecteur par page obligeait à
+        # rechoisir Dumont à chaque changement de dimension, et surtout
+        # laissait croire qu'on comparait deux territoires alors qu'on en
+        # regardait deux fois le même.
+        cible = filtres.cible() or filtres.section()
+        st.caption(filtres.resume())
+        st.markdown(_tableau_indicateurs(lignes, cible, teinte, vent),
                     unsafe_allow_html=True)
         st.caption(T("d_bloc_indicateurs_note"))
+        if filtres.groupe() != filtres.TOUS:
+            st.caption(T("f_note_satellite"))
 
     # ------------------------------------------------- la source, ligne à ligne
     with st.container(border=True):
@@ -379,7 +386,7 @@ def render(cle_dim):
             f'margin:4px 0 12px;max-width:92ch">{T("d_bloc_sources_texte")}</p>',
             unsafe_allow_html=True)
         for r in sorted(lignes, key=lambda x: x["ligne"]):
-            sc = scores_de(r, "Total")
+            sc = filtres.score(r, vent)
             etiquette = (f'L{r["ligne"]} · {nom_indic(r)}'
                          + (f'  —  {sc}/10' if sc is not None
                             else f'  —  {T("d_non_calcule")}'))

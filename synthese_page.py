@@ -37,6 +37,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 import assets
+import filtres
 import i18n
 import map_render
 from i18n import T
@@ -272,15 +273,23 @@ def render():
         '0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px;max-width:96ch">'
         + T("s_intro") + "</div>", unsafe_allow_html=True)
 
+    # Le filtre de la colonne pré-remplit le sélecteur : on arrive ici avec ce
+    # qu'on regardait ailleurs, sans avoir à le rechoisir. Le sélecteur reste
+    # néanmoins, parce que cette page-ci sert précisément à comparer plusieurs
+    # cibles d'affilée.
+    _pref_mode = "groupe" if filtres.groupe() != filtres.TOUS else "section"
     c1, c2 = st.columns([1, 2])
     with c1:
         mode = st.radio(T("s_mode"), ["section", "groupe"],
                         format_func=lambda m: T("s_mode_" + m),
                         horizontal=True,
+                        index=0 if _pref_mode == "section" else 1,
                         key=f"syn_mode_{i18n.get_lang()}")
     with c2:
         options = SECTIONS if mode == "section" else GROUPES
-        cible = st.selectbox(T("s_cible"), options,
+        _pref = (filtres.section() if mode == "section" else filtres.groupe())
+        _idx = options.index(_pref) if _pref in options else 0
+        cible = st.selectbox(T("s_cible"), options, index=_idx,
                              format_func=lambda c: _libelle(c, mode),
                              key=f"syn_cible_{mode}_{i18n.get_lang()}")
 
