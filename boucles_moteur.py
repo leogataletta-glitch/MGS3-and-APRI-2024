@@ -89,9 +89,152 @@ TENDU = 0.90         # au-delà, le système est fortement bouclé : on le dit
 RAYON_CIBLE = 0.60
 
 
+# ---------------------------------------------------------------------------
+# LE MODÈLE VOYAGE AVEC LE CODE.
+#
+# Le graphe vivait dans `data/graphe_causal.json` seul. Le fichier n'est pas
+# arrivé en ligne, et la page est tombée sur un FileNotFoundError — le même
+# scénario que le dictionnaire de traduction, pour la même raison : les
+# fichiers sont poussés à la main, un par un, et en oublier un est normal.
+#
+# Le modèle par défaut est donc écrit ici, en clair. Un fichier
+# `data/graphe_causal.json` reste lu EN PRIORITÉ s'il existe : c'est ce qui
+# permet de corriger le modèle en atelier, avec les acteurs, sans toucher au
+# code. Mais son absence ne casse plus rien.
+#
+# Chaque arête porte son signe, sa force, son niveau de justification et sa
+# source en clair — c'est fait pour être relu et contesté ligne à ligne.
+# ---------------------------------------------------------------------------
+GRAPHE_DEFAUT = {
+    "noeuds": [
+        {"id": "eau", "ligne": 4, "dim": "dim1", "fr": "Accès à l'eau de boisson", "en": "Access to drinking water"},
+        {"id": "assain", "ligne": 3, "dim": "dim1", "fr": "Assainissement géré en sécurité", "en": "Safely managed sanitation"},
+        {"id": "elec", "ligne": 5, "dim": "dim1", "fr": "Accès à l'électricité", "en": "Access to electricity"},
+        {"id": "cuisson", "ligne": 6, "dim": "dim1", "fr": "Combustibles propres de cuisson", "en": "Clean cooking fuels"},
+        {"id": "sante_acces", "ligne": 15, "dim": "dim1", "fr": "Centre de santé à moins de 30 min", "en": "Health facility within 30 min"},
+        {"id": "ecole", "ligne": 16, "dim": "dim1", "fr": "École primaire à moins de 30 min", "en": "Primary school within 30 min"},
+        {"id": "abris", "ligne": 14, "dim": "dim1", "fr": "Abris d'urgence opérationnels", "en": "Operational emergency shelters"},
+        {"id": "logement", "ligne": 10, "dim": "dim1", "fr": "Qualité structurelle du logement", "en": "Housing structural quality"},
+        {"id": "mobile", "ligne": 7, "dim": "dim1", "fr": "Couverture par un réseau mobile", "en": "Mobile network coverage"},
+        {"id": "alerte", "ligne": 22, "dim": "dim2", "fr": "Accès aux messages d'alerte", "en": "Access to early warning"},
+        {"id": "comites", "ligne": 28, "dim": "dim2", "fr": "Comités locaux de gestion des risques", "en": "Local disaster risk committees"},
+        {"id": "prepa", "ligne": 23, "dim": "dim2", "fr": "Participation à la préparation", "en": "Participation in preparedness"},
+        {"id": "services", "ligne": 30, "dim": "dim2", "fr": "Satisfaction des services publics", "en": "Satisfaction with public services"},
+        {"id": "etat_civil", "ligne": 24, "dim": "dim2", "fr": "Enregistrement des naissances", "en": "Birth registration"},
+        {"id": "foret", "ligne": 54, "dim": "dim3", "fr": "Couvert forestier", "en": "Forest cover"},
+        {"id": "pluie", "ligne": 45, "dim": "dim3", "fr": "Pluie rapportée à la normale", "en": "Rainfall against normal"},
+        {"id": "aridite", "ligne": 44, "dim": "dim3", "fr": "Absence d'aridité anormale", "en": "Absence of abnormal aridity"},
+        {"id": "vegetation", "ligne": 36, "dim": "dim3", "fr": "Santé de la végétation (VHI)", "en": "Vegetation health (VHI)"},
+        {"id": "emploi", "ligne": 76, "dim": "dim4", "fr": "Taux d'emploi", "en": "Employment rate"},
+        {"id": "revenu", "ligne": 78, "dim": "dim4", "fr": "Revenu au-dessus du seuil", "en": "Income above the threshold"},
+        {"id": "reserve", "ligne": 81, "dim": "dim4", "fr": "Réserve de revenu", "en": "Income reserve"},
+        {"id": "transferts", "ligne": 79, "dim": "dim4", "fr": "Couverture par les transferts", "en": "Remittance coverage"},
+        {"id": "compte", "ligne": 72, "dim": "dim4", "fr": "Compte financier", "en": "Financial account"},
+        {"id": "foncier", "ligne": 74, "dim": "dim4", "fr": "Sécurité foncière", "en": "Land tenure security"},
+        {"id": "entraide", "ligne": 95, "dim": "dim5", "fr": "Capital social d'entraide", "en": "Bonding social capital"},
+        {"id": "passerelle", "ligne": 96, "dim": "dim5", "fr": "Capital social de passerelle", "en": "Bridging social capital"},
+        {"id": "ocb", "ligne": 27, "dim": "dim5", "fr": "Appartenance à une organisation", "en": "Membership of an organisation"},
+        {"id": "securite", "ligne": 90, "dim": "dim5", "fr": "Sentiment de sécurité", "en": "Sense of safety"},
+        {"id": "alimentaire", "ligne": 108, "dim": "dim6", "fr": "Sécurité alimentaire", "en": "Food security"},
+        {"id": "education", "ligne": 107, "dim": "dim6", "fr": "Achèvement du primaire", "en": "Primary education completed"},
+        {"id": "identite", "ligne": 103, "dim": "dim6", "fr": "Carte d'identité nationale", "en": "National identity card"},
+        {"id": "sante", "ligne": None, "dim": "dim6", "fr": "État de santé", "en": "Health status"},
+        {"id": "travail", "ligne": None, "dim": "dim6", "fr": "Capacité de travail", "en": "Capacity to work"},
+        {"id": "temps_eau", "ligne": None, "dim": "dim1", "fr": "Temps libéré de la corvée d'eau", "en": "Time freed from water collection"},
+        {"id": "prod_agri", "ligne": None, "dim": "dim4", "fr": "Productivité agricole", "en": "Agricultural productivity"},
+        {"id": "erosion", "ligne": None, "dim": "dim3", "fr": "Stabilité des sols", "en": "Soil stability"},
+        {"id": "pression_bois", "ligne": None, "dim": "dim3", "fr": "Faible pression sur le bois-énergie", "en": "Low pressure on fuelwood"},
+        {"id": "abondance_bois", "ligne": None, "dim": "dim3", "fr": "Ressource ligneuse disponible", "en": "Available woody resource"},
+        {"id": "agro_durable", "ligne": None, "dim": "dim3", "fr": "Pratiques agricoles conservatrices", "en": "Conservation farming practices"},
+        {"id": "fertilite", "ligne": None, "dim": "dim3", "fr": "Fertilité des sols", "en": "Soil fertility"},
+        {"id": "infiltration", "ligne": None, "dim": "dim3", "fr": "Infiltration et recharge en eau", "en": "Infiltration and water recharge"},
+        {"id": "biodiv", "ligne": None, "dim": "dim3", "fr": "Biodiversité", "en": "Biodiversity"},
+        {"id": "controle", "ligne": None, "dim": "dim2", "fr": "Contrôle forestier", "en": "Forest law enforcement"},
+        {"id": "sensib", "ligne": None, "dim": "dim5", "fr": "Sensibilisation et adaptation des pratiques", "en": "Awareness and practice change"},
+        {"id": "ancrage", "ligne": None, "dim": "dim6", "fr": "Maintien de la population sur place", "en": "People staying in place"},
+    ],
+    "aretes": [
+        {"de": "eau", "vers": "sante", "signe": 1, "force": 0.75, "just": "documentee", "ref_fr": "OMS : l'eau non améliorée est le premier facteur des maladies diarrhéiques", "ref_en": "WHO: unimproved water is the leading driver of diarrhoeal disease", "rho": None, "p": None},
+        {"de": "assain", "vers": "sante", "signe": 1, "force": 0.7, "just": "documentee", "ref_fr": "ODD 6.2 : l'assainissement géré en sécurité réduit la charge de morbidité", "ref_en": "SDG 6.2: safely managed sanitation lowers disease burden", "rho": None, "p": None},
+        {"de": "cuisson", "vers": "sante", "signe": 1, "force": 0.45, "just": "documentee", "ref_fr": "OMS : la combustion de biomasse en intérieur cause des infections respiratoires", "ref_en": "WHO: indoor biomass burning causes respiratory infection", "rho": None, "p": None},
+        {"de": "sante_acces", "vers": "sante", "signe": 1, "force": 0.55, "just": "documentee", "ref_fr": "Distance au soin et recours effectif : relation établie en milieu rural", "ref_en": "Distance to care and effective use: established in rural settings", "rho": None, "p": None},
+        {"de": "sante", "vers": "travail", "signe": 1, "force": 0.8, "just": "theorique", "ref_fr": "Cadre IRLA : la capacité de travail dépend de l'état de santé", "ref_en": "IRLA framework: capacity to work depends on health status", "rho": None, "p": None},
+        {"de": "travail", "vers": "emploi", "signe": 1, "force": 0.55, "just": "theorique", "ref_fr": "Cadre IRLA : capacité de travail et participation à l'emploi", "ref_en": "IRLA framework: capacity to work and labour participation", "rho": None, "p": None},
+        {"de": "emploi", "vers": "revenu", "signe": 1, "force": 0.7, "just": "theorique", "ref_fr": "Relation d'usage entre emploi et niveau de revenu", "ref_en": "Standard relation between employment and income level", "rho": 0.49, "p": 0.15},
+        {"de": "revenu", "vers": "alimentaire", "signe": 1, "force": 0.65, "just": "documentee", "ref_fr": "FAO : le revenu est le premier déterminant de l'accès économique aux aliments", "ref_en": "FAO: income is the primary determinant of economic access to food", "rho": None, "p": None},
+        {"de": "alimentaire", "vers": "sante", "signe": 1, "force": 0.5, "just": "documentee", "ref_fr": "L'insécurité alimentaire dégrade l'état nutritionnel et sanitaire", "ref_en": "Food insecurity degrades nutritional and health status", "rho": None, "p": None},
+        {"de": "eau", "vers": "temps_eau", "signe": 1, "force": 0.65, "just": "documentee", "ref_fr": "Le temps de collecte chute quand la source est proche et améliorée", "ref_en": "Collection time drops when the source is nearby and improved", "rho": None, "p": None},
+        {"de": "temps_eau", "vers": "travail", "signe": 1, "force": 0.4, "just": "hypothese", "ref_fr": "Hypothèse de modélisation : le temps libéré se reporte sur le travail", "ref_en": "Modelling assumption: freed time shifts to productive work", "rho": None, "p": None},
+        {"de": "temps_eau", "vers": "education", "signe": 1, "force": 0.35, "just": "documentee", "ref_fr": "La corvée d'eau pèse sur la scolarisation, en particulier des filles", "ref_en": "Water collection weighs on schooling, girls in particular", "rho": None, "p": None},
+        {"de": "revenu", "vers": "services", "signe": 1, "force": 0.3, "just": "hypothese", "ref_fr": "Hypothèse : un revenu plus élevé permet d'accéder aux services payants", "ref_en": "Assumption: higher income enables access to fee-based services", "rho": -0.42, "p": 0.229},
+        {"de": "services", "vers": "eau", "signe": 1, "force": 0.45, "just": "theorique", "ref_fr": "Cadre IRLA : la qualité du service public conditionne l'accès à l'eau", "ref_en": "IRLA framework: public service quality conditions water access", "rho": 0.08, "p": 0.821},
+        {"de": "compte", "vers": "revenu", "signe": 1, "force": 0.35, "just": "documentee", "ref_fr": "ODD 8.10 : l'inclusion financière soutient l'accumulation et l'investissement", "ref_en": "SDG 8.10: financial inclusion supports accumulation and investment", "rho": -0.38, "p": 0.277},
+        {"de": "revenu", "vers": "compte", "signe": 1, "force": 0.4, "just": "theorique", "ref_fr": "Un revenu régulier est la condition d'ouverture d'un compte", "ref_en": "Regular income is the precondition for opening an account", "rho": -0.38, "p": 0.277},
+        {"de": "pluie", "vers": "vegetation", "signe": 1, "force": 0.65, "just": "empirique", "ref_fr": "Année sèche 2021 : creux de NDVI dans 7 sections sur 10", "ref_en": "Dry year 2021: NDVI trough in 7 of 10 sections", "rho": -0.01, "p": 0.984},
+        {"de": "aridite", "vers": "prod_agri", "signe": 1, "force": 0.55, "just": "documentee", "ref_fr": "L'indice d'aridité UNEP conditionne le potentiel agricole", "ref_en": "The UNEP aridity index conditions agricultural potential", "rho": None, "p": None},
+        {"de": "vegetation", "vers": "prod_agri", "signe": 1, "force": 0.5, "just": "theorique", "ref_fr": "La santé de la végétation approche l'état des cultures", "ref_en": "Vegetation health approximates the state of crops", "rho": None, "p": None},
+        {"de": "prod_agri", "vers": "revenu", "signe": 1, "force": 0.55, "just": "theorique", "ref_fr": "Cadre IRLA : la production agricole est une source de revenu dominante", "ref_en": "IRLA framework: agricultural output is a dominant income source", "rho": None, "p": None},
+        {"de": "prod_agri", "vers": "alimentaire", "signe": 1, "force": 0.6, "just": "theorique", "ref_fr": "Autoconsommation : la production alimente directement le ménage", "ref_en": "Own consumption: production feeds the household directly", "rho": None, "p": None},
+        {"de": "foncier", "vers": "prod_agri", "signe": 1, "force": 0.45, "just": "documentee", "ref_fr": "ODD 1.4.2 : la sécurité foncière soutient l'investissement de long terme", "ref_en": "SDG 1.4.2: tenure security supports long-term investment", "rho": None, "p": None},
+        {"de": "mobile", "vers": "alerte", "signe": 1, "force": 0.6, "just": "theorique", "ref_fr": "Le message d'alerte passe par le réseau mobile", "ref_en": "The warning message travels over the mobile network", "rho": 0.3, "p": 0.402},
+        {"de": "alerte", "vers": "prepa", "signe": 1, "force": 0.45, "just": "theorique", "ref_fr": "Recevoir l'alerte est la condition d'une réponse préparée", "ref_en": "Receiving the warning is the precondition of a prepared response", "rho": -0.41, "p": 0.242},
+        {"de": "comites", "vers": "prepa", "signe": 1, "force": 0.55, "just": "theorique", "ref_fr": "Un comité local organise les exercices et l'évacuation", "ref_en": "A local committee organises drills and evacuation", "rho": 0.65, "p": 0.044},
+        {"de": "prepa", "vers": "abris", "signe": 1, "force": 0.3, "just": "hypothese", "ref_fr": "Hypothèse : la préparation entretient les abris existants", "ref_en": "Assumption: preparedness maintains existing shelters", "rho": 0.46, "p": 0.18},
+        {"de": "ocb", "vers": "comites", "signe": 1, "force": 0.5, "just": "theorique", "ref_fr": "Les comités se recrutent dans le tissu associatif existant", "ref_en": "Committees recruit from the existing associative fabric", "rho": 0.28, "p": 0.427},
+        {"de": "etat_civil", "vers": "identite", "signe": 1, "force": 0.65, "just": "documentee", "ref_fr": "L'acte de naissance est la pièce d'entrée de l'état civil", "ref_en": "The birth certificate is the entry document of civil registration", "rho": 0.47, "p": 0.172},
+        {"de": "identite", "vers": "compte", "signe": 1, "force": 0.55, "just": "documentee", "ref_fr": "L'identité légale conditionne l'ouverture d'un compte", "ref_en": "Legal identity conditions account opening", "rho": 0.3, "p": 0.404},
+        {"de": "identite", "vers": "services", "signe": 1, "force": 0.4, "just": "theorique", "ref_fr": "Sans pièce d'identité, l'accès aux services publics est entravé", "ref_en": "Without identity papers, access to public services is impeded", "rho": 0.43, "p": 0.221},
+        {"de": "ocb", "vers": "passerelle", "signe": 1, "force": 0.55, "just": "theorique", "ref_fr": "Putnam : l'appartenance associative construit le capital de passerelle", "ref_en": "Putnam: associational membership builds bridging capital", "rho": -0.15, "p": 0.67},
+        {"de": "passerelle", "vers": "transferts", "signe": 1, "force": 0.3, "just": "hypothese", "ref_fr": "Hypothèse : les réseaux étendus portent les transferts", "ref_en": "Assumption: extended networks carry remittances", "rho": 0.19, "p": 0.593},
+        {"de": "entraide", "vers": "alimentaire", "signe": 1, "force": 0.4, "just": "documentee", "ref_fr": "L'entraide de proximité amortit les chocs alimentaires courts", "ref_en": "Close-knit mutual aid cushions short food shocks", "rho": None, "p": None},
+        {"de": "transferts", "vers": "reserve", "signe": 1, "force": 0.45, "just": "theorique", "ref_fr": "Les transferts alimentent la réserve de précaution", "ref_en": "Remittances feed the precautionary reserve", "rho": 0.78, "p": 0.007},
+        {"de": "reserve", "vers": "alimentaire", "signe": 1, "force": 0.5, "just": "theorique", "ref_fr": "Une réserve permet de passer une soudure sans réduire les repas", "ref_en": "A reserve carries a lean season without cutting meals", "rho": None, "p": None},
+        {"de": "securite", "vers": "passerelle", "signe": 1, "force": 0.35, "just": "hypothese", "ref_fr": "Hypothèse : l'insécurité restreint les déplacements et les liens", "ref_en": "Assumption: insecurity restricts movement and ties", "rho": 0.3, "p": 0.402},
+        {"de": "entraide", "vers": "securite", "signe": 1, "force": 0.3, "just": "hypothese", "ref_fr": "Hypothèse : la densité des liens nourrit le sentiment de sécurité", "ref_en": "Assumption: density of ties feeds the sense of safety", "rho": 0.33, "p": 0.346},
+        {"de": "ecole", "vers": "education", "signe": 1, "force": 0.55, "just": "documentee", "ref_fr": "La distance à l'école pèse sur l'achèvement du primaire", "ref_en": "Distance to school weighs on primary completion", "rho": None, "p": None},
+        {"de": "education", "vers": "emploi", "signe": 1, "force": 0.45, "just": "documentee", "ref_fr": "Le niveau d'éducation conditionne l'accès à l'emploi formel", "ref_en": "Education level conditions access to formal employment", "rho": None, "p": None},
+        {"de": "elec", "vers": "education", "signe": 1, "force": 0.3, "just": "documentee", "ref_fr": "L'éclairage domestique allonge le temps d'étude", "ref_en": "Domestic lighting extends study time", "rho": None, "p": None},
+        {"de": "logement", "vers": "sante", "signe": 1, "force": 0.35, "just": "documentee", "ref_fr": "Un logement précaire expose aux intempéries et aux vecteurs", "ref_en": "Precarious housing exposes to weather and vectors", "rho": None, "p": None},
+        {"de": "cuisson", "vers": "pression_bois", "signe": 1, "force": 0.6, "just": "documentee", "ref_fr": "Un ménage passé au gaz ou au solaire cesse d'acheter du charbon de bois", "ref_en": "A household on gas or solar stops buying charcoal", "rho": None, "p": None},
+        {"de": "pression_bois", "vers": "foret", "signe": 1, "force": 0.65, "just": "documentee", "ref_fr": "La coupe pour le charbon est le premier moteur du recul du couvert", "ref_en": "Cutting for charcoal is the first driver of tree cover loss", "rho": None, "p": None},
+        {"de": "foret", "vers": "abondance_bois", "signe": 1, "force": 0.7, "just": "theorique", "ref_fr": "Le couvert disponible détermine la ressource ligneuse", "ref_en": "Available cover determines the woody resource", "rho": None, "p": None},
+        {"de": "abondance_bois", "vers": "pression_bois", "signe": 1, "force": 0.45, "just": "documentee", "ref_fr": "La raréfaction fait monter le prix, rend la coupe rentable et attire des producteurs", "ref_en": "Scarcity raises the price, makes cutting profitable and draws in producers", "rho": None, "p": None},
+        {"de": "agro_durable", "vers": "fertilite", "signe": 1, "force": 0.6, "just": "documentee", "ref_fr": "Le brûlis répété détruit la matière organique et les racines", "ref_en": "Repeated slash-and-burn destroys organic matter and roots", "rho": None, "p": None},
+        {"de": "fertilite", "vers": "prod_agri", "signe": 1, "force": 0.65, "just": "documentee", "ref_fr": "La fertilité commande le rendement", "ref_en": "Fertility governs yield", "rho": None, "p": None},
+        {"de": "prod_agri", "vers": "agro_durable", "signe": 1, "force": 0.45, "just": "documentee", "ref_fr": "Une productivité faible pousse à ouvrir de nouvelles parcelles par le feu", "ref_en": "Low productivity pushes households to open new plots by fire", "rho": None, "p": None},
+        {"de": "prod_agri", "vers": "foret", "signe": 1, "force": 0.4, "just": "documentee", "ref_fr": "Une productivité faible pousse au défrichement de nouvelles terres", "ref_en": "Low productivity pushes clearing of new land", "rho": None, "p": None},
+        {"de": "erosion", "vers": "prod_agri", "signe": 1, "force": 0.6, "just": "documentee", "ref_fr": "La perte de sol arable réduit les rendements", "ref_en": "Loss of topsoil reduces yields", "rho": None, "p": None},
+        {"de": "foret", "vers": "erosion", "signe": 1, "force": 0.7, "just": "documentee", "ref_fr": "Le couvert arboré retient les sols sur pente : RUSLE, facteur C", "ref_en": "Tree cover holds soil on slopes: RUSLE, C factor", "rho": None, "p": None},
+        {"de": "foret", "vers": "infiltration", "signe": 1, "force": 0.6, "just": "documentee", "ref_fr": "Sans couvert, l'eau ruisselle au lieu de s'infiltrer", "ref_en": "Without cover, water runs off instead of infiltrating", "rho": None, "p": None},
+        {"de": "infiltration", "vers": "aridite", "signe": 1, "force": 0.5, "just": "documentee", "ref_fr": "La perte d'humidité du sol aggrave la sécheresse", "ref_en": "Loss of soil moisture deepens drought", "rho": None, "p": None},
+        {"de": "aridite", "vers": "vegetation", "signe": 1, "force": 0.55, "just": "theorique", "ref_fr": "L'aridité anormale dégrade l'état de la végétation", "ref_en": "Abnormal aridity degrades vegetation condition", "rho": -0.31, "p": 0.387},
+        {"de": "vegetation", "vers": "foret", "signe": 1, "force": 0.35, "just": "theorique", "ref_fr": "Une végétation en mauvais état empêche la régénération du couvert", "ref_en": "Vegetation in poor condition prevents cover regeneration", "rho": -0.32, "p": 0.372},
+        {"de": "foret", "vers": "revenu", "signe": 1, "force": 0.35, "just": "documentee", "ref_fr": "Le recul du couvert réduit les revenus agricoles et forestiers durables", "ref_en": "Cover loss reduces sustainable farm and forest income", "rho": 0.28, "p": 0.427},
+        {"de": "revenu", "vers": "pression_bois", "signe": 1, "force": 0.45, "just": "documentee", "ref_fr": "À court de liquidités, le ménage coupe davantage pour vendre", "ref_en": "Short of cash, the household cuts more to sell", "rho": None, "p": None},
+        {"de": "foret", "vers": "biodiv", "signe": 1, "force": 0.55, "just": "documentee", "ref_fr": "La perte du couvert fait disparaître les espèces qui régénèrent", "ref_en": "Cover loss removes the species that regenerate it", "rho": None, "p": None},
+        {"de": "biodiv", "vers": "foret", "signe": 1, "force": 0.4, "just": "documentee", "ref_fr": "Dispersion des graines et pollinisation : la faune régénère le couvert", "ref_en": "Seed dispersal and pollination: wildlife regenerates cover", "rho": None, "p": None},
+        {"de": "prod_agri", "vers": "ancrage", "signe": 1, "force": 0.5, "just": "documentee", "ref_fr": "La dégradation des conditions de vie pousse à migrer vers les villes ou l'étranger", "ref_en": "Deteriorating living conditions push migration to cities or abroad", "rho": None, "p": None},
+        {"de": "ancrage", "vers": "pression_bois", "signe": -1, "force": 0.4, "just": "documentee", "ref_fr": "Le départ d'une partie de la population allège la pression locale sur la forêt", "ref_en": "Out-migration of part of the population eases local pressure on the forest", "rho": None, "p": None},
+        {"de": "foret", "vers": "sensib", "signe": -1, "force": 0.35, "just": "documentee", "ref_fr": "Sécheresses et inondations sensibilisent les communautés à la valeur des forêts", "ref_en": "Droughts and floods make communities aware of the value of forests", "rho": None, "p": None},
+        {"de": "sensib", "vers": "agro_durable", "signe": 1, "force": 0.5, "just": "documentee", "ref_fr": "Agroforesterie, compostage, charbon écologique : les pratiques s'adaptent", "ref_en": "Agroforestry, composting, eco-charcoal: practices adapt", "rho": None, "p": None},
+        {"de": "abondance_bois", "vers": "cuisson", "signe": -1, "force": 0.4, "just": "documentee", "ref_fr": "Quand le charbon devient trop cher, les ménages se tournent vers le gaz ou le solaire", "ref_en": "When charcoal gets too expensive, households turn to gas or solar", "rho": None, "p": None},
+        {"de": "controle", "vers": "pression_bois", "signe": 1, "force": 0.45, "just": "theorique", "ref_fr": "L'absence de contrôle forestier laisse la coupe se faire sans frein", "ref_en": "Absent enforcement leaves cutting unchecked", "rho": None, "p": None},
+        {"de": "services", "vers": "controle", "signe": 1, "force": 0.4, "just": "theorique", "ref_fr": "Le contrôle forestier est un service public parmi d'autres", "ref_en": "Forest enforcement is one public service among others", "rho": None, "p": None},
+    ],
+}
+
+
 def charger(chemin=None):
-    with open(chemin or GRAPHE, encoding="utf-8") as f:
-        return json.load(f)
+    """Le graphe : celui du fichier s'il existe, celui du module sinon."""
+    p = chemin or GRAPHE
+    try:
+        with open(p, encoding="utf-8") as f:
+            g = json.load(f)
+        if g.get("noeuds") and g.get("aretes"):
+            return g
+    except (OSError, ValueError):
+        pass
+    return GRAPHE_DEFAUT
 
 
 def matrice(graphe, brute=False):
