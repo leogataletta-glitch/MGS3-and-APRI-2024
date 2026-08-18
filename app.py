@@ -37,7 +37,6 @@ import i18n
 import map_render
 import methodologie_page
 import ocb_page
-import pistes_page
 import resilience_page
 import saillants_page
 import synthese_page
@@ -1270,10 +1269,10 @@ if app_mode == MODE_BOUCLES:
     boucles_page.render()
 
 if app_mode == MODE_ACTIONS:
-    # Les fiches descendent maintenant des leviers calculés par l'analyse des
-    # boucles. Les anciennes pistes, écrites avant cette analyse, sont gardées
-    # dans le volet replié du bas : elles ont servi, elles ne commandent plus.
-    interventions_page.render(anciennes=pistes_page.render)
+    # Les fiches descendent des leviers calculés par l'analyse des boucles.
+    # Les anciennes pistes de travail, écrites avant cette analyse, ont été
+    # retirées : elles ne commandaient plus rien et brouillaient la page.
+    interventions_page.render()
 
 if app_mode == MODE_SYNTHESE:
     synthese_page.render()

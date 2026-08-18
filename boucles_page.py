@@ -46,6 +46,7 @@ DATA = os.path.join(APP_DIR, "data")
 # jamais une teinte au point neutre. Les deux pôles sont pris dans la palette
 # déjà validée du site.
 HAUSSE, BAISSE, NUL = "#1a8a4f", "#c33a24", "#9aa4b5"
+ALERTE = "#d1730c"
 ENCRE, ENCRE2, ENCRE3 = "#101728", "#3c4761", "#6b7590"
 
 JUST_COULEUR = {"documentee": "#1a8a4f", "empirique": "#2166ac",
@@ -70,6 +71,27 @@ TEXTES = {
               "que le territoire fera. Les associations observées entre "
               "sections communales sont montrées à part, et quatre d'entre "
               "elles vont contre le modèle."},
+    # ---- le point de départ : les indicateurs les plus alarmants
+    "bcl_alarme": {"en": "Start from the most alarming indicators",
+                   "fr": "Partir des indicateurs les plus alarmants"},
+    "bcl_alarme_note": {
+        "en": "The lowest-scored lines of the framework, heaviest weight "
+              "first. This is where the exploration should begin: a loop is "
+              "worth following when it passes through what is actually "
+              "failing. Click one to make it the lever.",
+        "fr": "Les lignes du référentiel les plus basses, à pondération "
+              "décroissante. C'est de là que l'exploration doit partir : une "
+              "boucle mérite d'être suivie quand elle passe par ce qui est "
+              "réellement en défaut. Cliquez-en une pour en faire le levier."},
+    "bcl_alarme_hors": {
+        "en": "Alarming and **outside the model** — the graph poses no "
+              "relation for these, so no loop can reach them. They are named "
+              "here rather than left out in silence:",
+        "fr": "Alarmants et **hors du modèle** — le graphe ne pose aucune "
+              "relation pour eux, aucune boucle ne peut donc les atteindre. "
+              "Ils sont nommés ici plutôt que passés sous silence :"},
+    "bcl_alarme_actif": {"en": "current lever", "fr": "levier actuel"},
+    "bcl_poids_court": {"en": "weight", "fr": "pond."},
     "bcl_levier": {"en": "Lever — the indicator you act on",
                    "fr": "Levier — l'indicateur sur lequel on agit"},
     "bcl_variation": {"en": "Change applied, in points out of 10",
@@ -284,6 +306,43 @@ def _libelle(n):
     return n["fr"] if i18n.get_lang() == "fr" else n["en"]
 
 
+def _nom_indic(r):
+    if i18n.get_lang() == "fr" and r.get("indicateur_fr"):
+        return r["indicateur_fr"]
+    return r.get("indicateur", "")
+
+
+def alarmants(graphe, par_ligne, combien=8):
+    """Les indicateurs de résilience les plus alarmants, et lesquels le graphe
+    sait atteindre.
+
+    L'EXPLORATION DOIT PARTIR DE LÀ. Une boucle n'a d'intérêt que si elle passe
+    par ce qui est réellement en défaut ; commencer par un levier confortable
+    donne une jolie cascade et aucune décision. On classe donc les lignes
+    scorées par score croissant, puis par pondération décroissante — à score
+    égal, celle qui pèse le plus dans l'indice passe devant.
+
+    Deux listes sont rendues, et la seconde compte autant que la première :
+    les indicateurs alarmants que le graphe NE COUVRE PAS. Aucune boucle ne
+    peut les atteindre, et le taire donnerait l'illusion que le modèle voit
+    tout le territoire.
+    """
+    noeud_de = {n["ligne"]: n for n in graphe["noeuds"] if n.get("ligne")}
+    lignes = []
+    for lg, r in par_ligne.items():
+        s = (r.get("scores_corriges") or {}).get("Total")
+        if s is None:
+            continue
+        lignes.append({"ligne": lg, "r": r, "score": float(s),
+                       "poids": r.get("ponderation") or 1,
+                       "noeud": noeud_de.get(lg)})
+    lignes.sort(key=lambda x: (x["score"], -x["poids"]))
+    dedans = [x for x in lignes if x["noeud"]][:combien]
+    plafond = dedans[-1]["score"] if dedans else 0
+    dehors = [x for x in lignes if not x["noeud"] and x["score"] <= plafond]
+    return dedans, dehors[:6]
+
+
 def _ref(e):
     return e["ref_fr"] if i18n.get_lang() == "fr" else e["ref_en"]
 
@@ -472,9 +531,42 @@ def render():
     if clic in ids:
         st.session_state["bcl_levier"] = clic
         del st.query_params["levier"]
-    st.session_state.setdefault("bcl_levier", "eau")
+    # ---- ON PART DES INDICATEURS LES PLUS ALARMANTS, pas d'un levier
+    # confortable. Le bloc est rendu AVANT les contrôles, pour que le clic
+    # puisse fixer le levier avant que le menu déroulant ne soit instancié.
+    dedans, dehors = alarmants(graphe, par_ligne)
+    st.session_state.setdefault(
+        "bcl_levier", dedans[0]["noeud"]["id"] if dedans else "eau")
     if st.session_state["bcl_levier"] not in ids:
         st.session_state["bcl_levier"] = ids[0]
+
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc">{T("bcl_alarme")}</div>',
+                    unsafe_allow_html=True)
+        st.caption(T("bcl_alarme_note"))
+        cols = st.columns(4)
+        for i, x in enumerate(dedans):
+            with cols[i % 4]:
+                actif = x["noeud"]["id"] == st.session_state["bcl_levier"]
+                st.markdown(
+                    f'<div style="font-size:11px;font-weight:800;'
+                    f'color:{BAISSE if x["score"] <= 2 else ALERTE};'
+                    f'font-variant-numeric:tabular-nums">'
+                    f'{_fmt(x["score"], 0)}/10 '
+                    f'<span style="color:{ENCRE3};font-weight:600">· L'
+                    f'{x["ligne"]} · {_e(T("bcl_poids_court"))} '
+                    f'{_fmt(x["poids"], 2)}</span></div>',
+                    unsafe_allow_html=True)
+                if st.button(_nom_indic(x["r"]), key=f"alarme_{x['ligne']}",
+                             use_container_width=True,
+                             type="primary" if actif else "secondary"):
+                    st.session_state["bcl_levier"] = x["noeud"]["id"]
+                    st.rerun()
+        if dehors:
+            st.markdown(
+                T("bcl_alarme_hors") + " " + " · ".join(
+                    f'L{x["ligne"]} {_nom_indic(x["r"])} '
+                    f'({_fmt(x["score"], 0)}/10)' for x in dehors))
 
     mesures = [n for n in graphe["noeuds"] if n.get("ligne") is not None]
     c1, c2, c3 = st.columns([2.2, 2.2, 2])

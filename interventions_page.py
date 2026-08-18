@@ -463,14 +463,6 @@ TEXTES = {
               "effect — and the harder to obtain.",
         "fr": "D'après Meadows : plus le niveau est élevé, plus l'effet est "
               "structurel — et plus il est difficile à obtenir."},
-    "int_ancien": {"en": "Earlier working notes",
-                   "fr": "Anciennes pistes de travail"},
-    "int_ancien_note": {
-        "en": "The working hypotheses written before the causal analysis, kept "
-              "for the record.",
-        "fr": "Les hypothèses de travail écrites avant l'analyse causale, "
-              "gardées pour mémoire."},
-
     # ---------------- fiche : cuisson
     "int_cuisson_t": {"en": "Break the poverty–charcoal link",
                       "fr": "Casser le lien pauvreté–charbon"},
@@ -1274,6 +1266,18 @@ STYLE = """
   .int-eff { font-size:27px; font-weight:700; letter-spacing:-.03em;
              font-variant-numeric:tabular-nums; line-height:1; }
   .int-num { font-variant-numeric:tabular-nums; }
+  /* LES DEUX BLOCS QUE LE PROTOCOLE EXIGE, RENDUS IMPOSSIBLES À MANQUER.
+     Ils étaient signalés par un simple label gris en capitales et se
+     perdaient dans la fiche ; ils portent maintenant un encadré, un filet de
+     couleur et un titre lisible. */
+  .int-box { border:1px solid #e3e9f1; border-left:4px solid #c7d2e0;
+             border-radius:8px; padding:11px 14px; height:100%;
+             background:#fbfcfe; }
+  .int-box-t { font-size:12.5px; font-weight:800; letter-spacing:.02em;
+               margin:0 0 6px; }
+  .int-box p { margin:0; font-size:13.5px; color:#3c4761; line-height:1.6; }
+  .int-perf { border:1px solid #cfe6da; border-radius:8px; padding:12px 14px;
+              background:#f3faf6; }
 </style>
 """
 
@@ -1521,6 +1525,15 @@ def _bloc_justification(f):
 
 
 def render(anciennes=None):
+    # `anciennes` est accepté et IGNORÉ. Les anciennes pistes de travail ont été
+    # retirées de la page : elles précédaient l'analyse causale et n'ajoutaient
+    # rien à des fiches qui en descendent. L'argument reste dans la signature
+    # pour qu'un app.py non encore mis à jour n'échoue pas au démarrage.
+    del anciennes
+    return _render()
+
+
+def _render():
     graphe, par_ligne = _charger()
     par_id = {n["id"]: n for n in graphe["noeuds"]}
     st.markdown(STYLE, unsafe_allow_html=True)
@@ -1649,40 +1662,49 @@ def render(anciennes=None):
                 f'<p class="int-x">{_e(T("int_" + f["id"] + "_o"))}</p>',
                 unsafe_allow_html=True)
 
+            # ACTIVITÉS TECHNIQUES ET SOCIALES, dans deux encadrés distincts.
+            # Le protocole demande les deux ; les fondre dans un même
+            # paragraphe reviendrait à n'en montrer qu'une.
             at, asoc = st.columns(2)
             with at:
                 st.markdown(
-                    f'<div class="int-lab">{_e(T("int_act_tech"))}</div>'
-                    f'<p class="int-x" style="font-size:13.5px">'
-                    f'{_e(T("int_" + f["id"] + "_at"))}</p>',
+                    f'<div class="int-box" style="border-left-color:#2166ac">'
+                    f'<div class="int-box-t" style="color:#2166ac">⚙ '
+                    f'{_e(T("int_act_tech"))}</div>'
+                    f'<p>{_e(T("int_" + f["id"] + "_at"))}</p></div>',
                     unsafe_allow_html=True)
             with asoc:
                 st.markdown(
-                    f'<div class="int-lab">{_e(T("int_act_soc"))}</div>'
-                    f'<p class="int-x" style="font-size:13.5px">'
-                    f'{_e(T("int_" + f["id"] + "_as"))}</p>',
+                    f'<div class="int-box" style="border-left-color:#0f8fa8">'
+                    f'<div class="int-box-t" style="color:#0f8fa8">◍ '
+                    f'{_e(T("int_act_soc"))}</div>'
+                    f'<p>{_e(T("int_" + f["id"] + "_as"))}</p></div>',
                     unsafe_allow_html=True)
 
             # INDICATEURS DE PERFORMANCE : la cible chiffrée sur le levier, et
             # les lignes déjà mesurées qui la constateront.
-            st.markdown(
-                f'<div class="int-lab">{_e(T("int_perf"))}</div>',
-                unsafe_allow_html=True)
+            # INDICATEURS DE PERFORMANCE : l'objectif de score chiffré, en
+            # gros, avec le point de départ mesuré et le point visé. C'est le
+            # livrable du protocole ; il ne doit pas se lire comme une note.
             dep = (_fmt(f["depart"]) + " / 10") if f["depart"] is not None \
                 else "—"
             vise = (_fmt(min(10.0, f["depart"] + f["cible"])) + " / 10") \
                 if f["depart"] is not None else "—"
             st.markdown(
-                f'<div style="display:flex;gap:26px;flex-wrap:wrap;'
+                f'<div class="int-perf">'
+                f'<div class="int-box-t" style="color:{HAUSSE}">◎ '
+                f'{_e(T("int_perf"))}</div>'
+                f'<div style="display:flex;gap:28px;flex-wrap:wrap;'
                 f'align-items:baseline">'
-                f'<div><span class="int-num" style="font-size:22px;'
-                f'font-weight:700;color:{HAUSSE}">'
+                f'<div><span class="int-num" style="font-size:30px;'
+                f'font-weight:800;letter-spacing:-.02em;color:{HAUSSE}">'
                 f'{_fmt(f["cible"], 1, True)} pt</span>'
-                f'<span style="font-size:12px;color:{ENCRE3};margin-left:7px">'
-                f'{_e(T("int_perf_cible"))} — {_e(_libelle(f["noeud"]))}</span>'
-                f'</div>'
-                f'<div style="font-size:13.5px;color:{ENCRE2}" class="int-num">'
-                f'{_e(dep)} → <b>{_e(vise)}</b></div></div>',
+                f'<span style="font-size:12.5px;color:{ENCRE2};'
+                f'margin-left:9px">{_e(T("int_perf_cible"))} — '
+                f'{_e(_libelle(f["noeud"]))}</span></div>'
+                f'<div style="font-size:15px;color:{ENCRE2};font-weight:600" '
+                f'class="int-num">{_e(dep)} → <b style="color:{ENCRE}">'
+                f'{_e(vise)}</b></div></div></div>',
                 unsafe_allow_html=True)
             if f["suivi"]:
                 st.markdown("".join(
@@ -1733,8 +1755,3 @@ def render(anciennes=None):
     st.caption(T("int_perf_note"))
     st.caption(T("int_effet_note"))
     st.caption(T("int_n_note"))
-
-    if anciennes is not None:
-        with st.expander(T("int_ancien")):
-            st.caption(T("int_ancien_note"))
-            anciennes()

@@ -1,82 +1,73 @@
-# Fiches d'intervention — désormais construites sur les leviers des boucles
-
-## Envoyez ces deux fichiers
+# Trois corrections — à pousser dans le MÊME commit
 
 | Fichier | |
 |---|---|
-| `interventions_page.py` | **nouveau** — les fiches et leurs textes |
-| `app.py` | l'onglet pointe vers les nouvelles fiches |
+| `interventions_page.py` | anciennes pistes supprimées · activités et indicateurs de performance rendus visibles |
+| `boucles_page.py` | l'exploration part des indicateurs les plus alarmants |
+| `app.py` | ne charge plus les anciennes pistes |
 
-## Ce qui change
+**Les trois ensemble.** `app.py` n'importe plus `pistes_page` et appelle les
+fiches sans argument : envoyé seul, il ne casserait rien, mais envoyer
+`interventions_page.py` seul laisserait l'ancien `app.py` continuer à demander
+les anciennes pistes. J'ai prévu le coup — la nouvelle page accepte l'argument
+et l'ignore — mais le plus simple reste de pousser les trois d'un bloc.
 
-Les fiches ne sont plus écrites à côté de l'analyse : **elles en descendent**.
-Chaque fiche agit sur un levier du graphe causal, et tout le reste est calculé
-par le moteur des boucles :
+## 1 · Anciennes pistes de travail — supprimées
 
-- **l'effet simulé sur l'indice** — on pousse le levier de deux points et on
-  laisse la propagation traverser le graphe ;
-- **les indicateurs de suivi** — les lignes du référentiel que la simulation
-  déplace le plus. Ils ne sont pas inventés pour la fiche : ce sont des
-  indicateurs **déjà mesurés**, donc le suivi est outillé le jour où l'action
-  démarre ;
-- **les boucles traversées**, et combien sont renforçantes, combien
-  équilibrantes ;
-- **le classement des fiches**, par effet décroissant.
+Le volet replié du bas est retiré, et l'import qui l'alimentait aussi.
 
-Changez une relation dans le modèle, et les fiches se réordonnent d'elles-mêmes.
+## 2 · Activités techniques / sociales et indicateurs de performance
 
-Huit fiches : cuisson propre, agroforesterie et fertilité, eau, inclusion
-financière, alerte et comités, foncier, contrôle forestier, état civil. Chacune
-porte son objectif, ses activités, ses acteurs, sa faisabilité, son **niveau
-d'intervention d'après Meadows**, et **la boucle qu'il s'agit de retourner**.
+**Ils étaient déjà là, mais illisibles** — un petit label gris en capitales au
+milieu de la fiche, qui se perdait entre les paragraphes. C'est ma faute : le
+protocole demande ces blocs, les afficher discrètement revient à ne pas les
+afficher.
 
-## Le résultat qui mérite votre attention
+Ils portent maintenant :
 
-Le calcul fait apparaître une tension que je n'avais pas anticipée, et qui est
-maintenant écrite en tête de page :
+- **deux encadrés côte à côte**, ⚙ *Activités techniques* en bleu et ◍
+  *Activités sociales* en turquoise, avec filet de couleur et titre lisible ;
+- **un encadré vert « ◎ Indicateurs de performance »** avec l'objectif de score
+  en gros caractères — **+2,5 pt**, **+2,0 pt**, **+1,5 pt** selon la fiche —
+  suivi du point de départ mesuré et du point visé : *4,0 / 10 → 6,5 / 10*.
 
-**Les fiches à effet immédiat ne sont pas les leviers de basculement.**
+Une précision utile : si vous regardez la plateforme en ligne, elle affiche
+encore la version précédente tant que `interventions_page.py` n'est pas poussé
+sur GitHub. Ce que je décris est dans le fichier que je viens de déposer.
 
-L'eau, le foncier et l'alerte déplacent le plus l'indice — mais appartiennent à
-peu de boucles, ou à aucune. Leur effet est direct et **borné**.
+## 3 · Les boucles partent maintenant des indicateurs les plus alarmants
 
-Les pratiques agricoles conservatrices et le contrôle forestier le déplacent
-dix fois moins — et ce sont les **deux seules fiches présentes dans des boucles
-des deux sens**, donc les deux seules capables de retourner une dynamique
-dégradante en dynamique régulatrice.
+Vous avez raison, et c'était l'erreur de conception de la page : elle
+s'ouvrait sur l'eau, un levier confortable. Une boucle ne mérite d'être suivie
+que si elle passe par ce qui est réellement en défaut.
 
-Un programme a besoin des deux : les premières pour montrer des résultats dans
-la saison, les secondes pour changer ce que le système se fait à lui-même.
-C'est exactement la distinction que fait votre document entre ajuster un flux
-et casser une boucle — sauf qu'ici elle sort du calcul, pas d'une intuition.
+En tête de la page, avant tout contrôle, un bloc **« Partir des indicateurs les
+plus alarmants »** : les huit lignes les plus basses du référentiel, classées
+par score croissant puis par pondération décroissante — à score égal, celle qui
+pèse le plus dans l'indice passe devant. Chacune est un bouton qui devient le
+levier ; le levier par défaut n'est plus l'eau mais **la sécurité alimentaire
+(L108, 0/10, pondération 3,61)**, la ligne la plus alarmante que le graphe
+sache atteindre.
 
-## Deux choix que je dois signaler
+Les huit : sécurité alimentaire (0/10) · électricité (0/10) · participation à
+la préparation aux catastrophes (0/10) · achèvement du primaire (0/10) ·
+comités locaux de gestion des risques (1/10) · capital social d'entraide
+(1/10) · population sous 50 % du revenu médian (1/10) · combustibles propres
+(1/10).
 
-**Seuls des leviers actionnables portent une fiche.** L'aridité et l'état de la
-végétation arrivent en tête du classement des effets, mais on ne monte pas un
-projet « sur l'aridité » : ce sont des états résultants. Les fiches agissent sur
-ce qui se décide — un équipement, une pratique, une règle, un flux
-d'information.
-
-**Le classement n'est pas une priorisation.** Il suit l'effet simulé, pas la
-faisabilité ni la priorité politique. La faisabilité est affichée à côté de
-chaque fiche ; c'est l'atelier qui tranche. Le modèle propose.
-
-Les anciennes pistes sont gardées, repliées en bas de page.
+**Et ce que le modèle ne sait pas atteindre est nommé**, sous les huit boutons
+plutôt que passé sous silence : macroplastiques en milieu marin (0/10),
+couverture des aires protégées marines et côtières (0/10), couverture des aires
+protégées terrestres (0/10), participation à la gouvernance locale (1/10).
+Quatre indicateurs au plus bas pour lesquels le graphe ne pose aucune relation
+— aucune boucle ne peut donc les traverser. C'est une limite du modèle causal,
+pas une bonne nouvelle sur ces indicateurs.
 
 ## Vérifié
 
 - **42 rendus complets** — 7 pages × 3 combinaisons de filtres × 2 langues —
-  zéro exception, zéro message d'erreur ;
-- aucune clé de traduction brute affichée, dans les deux langues ;
-- page ouverte dans le navigateur : le récapitulatif, les huit fiches, les
-  indicateurs de suivi et les pastilles de basculement ;
-- les textes de la page voyagent dans `interventions_page.py`, selon la règle
-  des trois pannes précédentes.
-
-## La suite possible
-
-Chaque fiche pourrait porter un **effet par section communale** plutôt qu'un
-effet national : le moteur sait déjà le faire, il suffit de brancher le filtre
-de la colonne de gauche. Une fiche « cuisson propre » n'a pas la même portée à
-Quentin qu'à Dalmette. Dites-moi si cela vous intéresse.
+  zéro exception, zéro clé de traduction brute ;
+- pages ouvertes dans le navigateur : le bloc des alarmants avec son levier
+  actif en bleu, les deux encadrés d'activités, l'encadré vert des indicateurs
+  de performance ;
+- le classement des alarmants recoupé directement sur `resultats.json`.
