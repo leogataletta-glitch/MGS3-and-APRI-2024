@@ -1,74 +1,71 @@
-# Correction — `i18n.py` ne peut plus bloquer une page complète
+# La barre « Share / Deploy / ⋮ » est supprimée
 
-## Envoyez ces quatre fichiers. `i18n.py` n'est plus indispensable.
+## Envoyez `app.py`. C'est tout ce qu'il faut pour ça.
+
+Vous aviez raison de vous agacer : je l'avais rendue **transparente**, pas
+supprimée. Le fond disparaissait, le texte restait — et il se posait par-dessus
+le logo du PNUE. Elle est maintenant **retirée de la mise en page**.
+
+Ce que j'ai retiré : `Share`, `Deploy`, l'étoile, le menu ⋮, le widget d'état,
+la barre colorée de chargement en haut de fenêtre, et le pied « Made with
+Streamlit ». Ce sont les commandes de l'atelier Streamlit, pas du site.
+
+**Visés sous tous leurs noms.** Streamlit renomme ces éléments d'une version à
+l'autre ; n'en cibler qu'un revient à voir la barre revenir au prochain
+déploiement. Les onze sélecteurs connus sont listés, et vérifiés dans le
+navigateur : les cinq éléments sont soit absents du DOM, soit à
+`display: none`, hauteur nulle.
+
+**Ce qui n'est pas touché** : le bouton `«` de repli de la colonne de gauche. Il
+appartient à la barre latérale, pas à cet en-tête, et il reste utile.
+
+---
+
+## Un fichier en plus, facultatif : `.streamlit/config.toml`
+
+**La correction de `app.py` suffit** — je l'ai vérifié en démarrant le site
+sans ce fichier, la barre reste absente. Le `config.toml` est une seconde
+serrure, plus quelques réglages utiles :
+
+- `toolbarMode = "minimal"` — le réglage officiel de Streamlit. Il agit avant
+  même que la page ne s'affiche, là où la feuille de style agit après coup :
+  avec les deux, la barre ne peut plus apparaître même une fraction de seconde
+  au chargement.
+- `showErrorDetails = false` — plus de trace Python à l'écran pour un
+  visiteur. Une erreur technique dans un tableau de bord institutionnel
+  n'aide personne et inquiète tout le monde.
+- **thème clair imposé** — sans cela, un visiteur dont le système est en mode
+  sombre voit Streamlit inverser les fonds, et les cartes comme les graphiques,
+  dessinés sur blanc, deviennent illisibles. Celui-là vaut la peine.
+
+**Pour l'envoyer sur GitHub**, comme c'est un fichier dans un sous-dossier :
+`Add file` → `Create new file`, puis tapez comme nom de fichier
+`.streamlit/config.toml` — GitHub crée le dossier tout seul dès que vous tapez
+la barre oblique. Collez-y le contenu, `Commit`.
+
+Si cela vous ennuie, sautez-le : `app.py` seul règle le problème que vous
+signaliez.
+
+---
+
+## L'envoi
 
 | Fichier | |
 |---|---|
-| `questions_dimension.py` | **nouveau** — l'onglet des questions, **et ses textes** |
-| `dimension_page.py` | les deux sous-onglets |
-| `app.py` | bandeau nettoyé, contrôle assoupli |
-| `accueil_page.py` | titre retiré sous le bandeau |
-| *(`i18n.py`)* | *facultatif désormais — le catalogue complet, si l'envoi passe* |
+| `app.py` | **la correction** — barre d'outils supprimée |
+| `.streamlit/config.toml` | facultatif — seconde serrure + thème clair imposé |
 
----
-
-## Ce qui n'allait pas, et ce que j'ai changé
-
-Deux fois de suite, la mise à jour est arrivée en ligne sans son `i18n.py`, et
-le site s'est arrêté sur « il manque des clés de traduction » — alors que le
-seul fichier réellement neuf était `questions_dimension.py`. J'ai d'abord
-corrigé le message, puis le contrôle. Ni l'un ni l'autre ne s'attaquait à la
-cause : **une page complète dépendait d'un autre fichier pour ses propres
-mots.**
-
-Les fichiers sont poussés à la main, un par un. En oublier un est normal.
-C'est l'architecture qui doit y survivre, pas vous qui devez être infaillible.
-
-**Un module qui apporte une fonction apporte désormais ses textes.**
-`questions_dimension.py` porte ses onze libellés dans un dictionnaire `TEXTES`,
-versé dans le catalogue commun à l'import — et seulement si la clé n'y est pas
-déjà, de sorte qu'un `i18n.py` à jour reste maître. Les mêmes clés restent dans
-`i18n.py`, qui garde son rôle de catalogue complet, mais elles n'y sont plus
-indispensables au fonctionnement.
-
-**Vérifié pour de vrai**, pas en principe : j'ai rejoué votre situation exacte
-— `i18n.py` resté à la version `ruban`, les onze clés retirées, tous les autres
-fichiers à jour. Résultat : **411 blocs rendus, aucune erreur, l'onglet des
-questions parfaitement lisible.**
-
-C'est la règle à suivre pour toute fonction nouvelle. Elle est écrite en
-commentaire dans les deux fichiers concernés, pour qu'on ne l'oublie pas.
-
----
-
-## Rappel de ce que contient cette mise à jour
-
-**Plus rien d'écrit sous le bandeau de l'accueil.** Le titre « APRI —
-Observatoire de la résilience des paysages » répétait la colonne de gauche à
-quinze centimètres de là. Le rappel du filtre ne s'affiche plus que lorsqu'un
-filtre est réellement posé.
-
-**Deux sous-onglets sous chaque dimension** — « Les questions posées, et les
-réponses », puis « Indicateurs de résilience ». Chaque question avec son
-intitulé exact, sa note, et la répartition en barres : pourcentage et effectif.
-Le filtre de la colonne s'y applique instantanément.
-
-**Le rattachement des questions**, à deux niveaux, dit à l'écran : le *lien
-certain* (39 questions dont un indicateur est explicitement tiré, avec la
-pastille du numéro de ligne) et le *rattachement thématique* par module de
-questionnaire, qui est un choix éditorial. Deux cas méritent votre avis : la
-sécurité alimentaire, rangée dans la dimension économique après une égalité
-dans le calcul automatique ; et la dimension environnementale, à laquelle j'ai
-rattaché irrigation, intrants, arbres fruitiers et causes de perte de récolte,
-faute de questions d'enquête qui la mesurent directement.
-
----
+Et, si ce n'est pas encore fait, les quatre fichiers de la mise à jour
+précédente, qui apportent les sous-onglets par dimension :
+`questions_dimension.py` (nouveau), `dimension_page.py`, `accueil_page.py`,
+`i18n.py`.
 
 ## Vérifié
 
-- 22 modules compilent ; **48 rendus complets** — 6 pages × 4 combinaisons de
-  filtres × 2 langues — **zéro exception, zéro message d'erreur** ;
-- 793 clés de traduction, aucun doublon, toutes avec un `fr` et un `en` ;
-- aucune clé brute affichée, dans les deux langues ;
-- **le scénario du `i18n.py` en retard rejoué** : la page se rend entièrement ;
-- les 42 modules du questionnaire tous rattachés, aucun oublié.
+- barre d'outils : les cinq éléments absents ou à hauteur nulle, **avec et
+  sans** `config.toml` ;
+- capture d'écran du navigateur relue : le logo du PNUE est seul en haut à
+  droite, plus rien ne se superpose ;
+- 48 rendus complets — 6 pages × 4 combinaisons de filtres × 2 langues —
+  **zéro exception, zéro message d'erreur** ;
+- le bouton de repli de la colonne de gauche fonctionne toujours.

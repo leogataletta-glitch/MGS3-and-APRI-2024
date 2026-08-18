@@ -200,14 +200,35 @@ st.markdown("""
      air sous le bandeau, via la marge de .bh-contexte. */
   .block-container { max-width: 1240px; padding-top: 0; padding-bottom: 5rem; }
 
-  /* L'en-tête de Streamlit est rendu transparent et sans hauteur propre : le
-     ruban vert doit toucher le haut de la fenêtre, comme dans la charte. Ses
-     boutons (menu, plein écran) restent cliquables au-dessus du ruban — on les
-     efface visuellement, pas fonctionnellement. */
-  header[data-testid="stHeader"] {
-    background: transparent !important; height: 0 !important;
+  /* ================= la barre d'outils de Streamlit : SUPPRIMÉE ==========
+     « Share », « Deploy », le menu ⋮, la barre colorée de chargement : ce sont
+     les commandes de l'ATELIER Streamlit, pas du site. Elles se posaient en
+     haut à droite, par-dessus le logo du PNUE, et n'ont rien à faire dans un
+     tableau de bord institutionnel qu'on montre à des partenaires.
+
+     Les rendre transparentes ne suffisait pas — le texte restait lisible sur
+     le vert. Elles sont maintenant retirées de la mise en page, à tous les
+     noms sous lesquels Streamlit les publie : le nom change d'une version à
+     l'autre, et n'en viser qu'un revient à voir la barre revenir au prochain
+     déploiement.
+
+     Ce qui n'est PAS touché : le bouton de repli de la colonne de gauche, qui
+     appartient à la barre latérale et non à cet en-tête. */
+  header[data-testid="stHeader"],
+  [data-testid="stToolbar"],
+  [data-testid="stToolbarActions"],
+  [data-testid="stStatusWidget"],
+  [data-testid="stDecoration"],
+  [data-testid="stAppDeployButton"],
+  [data-testid="stMainMenu"],
+  #MainMenu,
+  .stDeployButton,
+  .stAppDeployButton,
+  footer {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
   }
-  header[data-testid="stHeader"] * { color: rgba(255,255,255,.65) !important; }
 
   /* --- titres --- */
   h1, h2, h3 {
@@ -655,9 +676,9 @@ st.markdown("""
   }
   .ruban-unep {
     display: flex; justify-content: flex-end; align-items: center;
-    /* 44 px de dégagement à droite : Streamlit y pose son propre bouton de
-       menu, qui viendrait sinon se superposer au logo du PNUE. */
-    padding-right: 44px;
+    /* La barre d'outils de Streamlit ayant été retirée, plus rien ne vient
+       se poser à droite : le logo peut revenir près du bord. */
+    padding-right: 12px;
   }
   .ruban-unep img { height: 46px; display: block; }
 

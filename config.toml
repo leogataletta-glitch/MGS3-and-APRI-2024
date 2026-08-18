@@ -1,0 +1,33 @@
+# Réglages de l'application, lus par Streamlit au démarrage.
+#
+# CE FICHIER DOIT ÊTRE ENVOYÉ SUR GITHUB, dans un dossier « .streamlit » à la
+# racine du dépôt, à côté de app.py. Sans lui, la barre d'outils de Streamlit
+# — « Share », « Deploy », le menu ⋮ — revient se poser en haut à droite,
+# par-dessus le logo du PNUE.
+
+[client]
+# « minimal » retire la barre d'outils pour tout le monde. C'est le réglage
+# officiel, et il agit avant même que la page ne s'affiche : la feuille de
+# style de app.py fait la même chose, mais après coup. Les deux ensemble, la
+# barre ne peut plus apparaître, même une fraction de seconde au chargement.
+toolbarMode = "minimal"
+
+# Pas de message d'erreur technique à l'écran pour un visiteur : une trace
+# Python dans un tableau de bord institutionnel n'aide personne et inquiète
+# tout le monde. Les erreurs restent dans les journaux du serveur.
+showErrorDetails = false
+
+[theme]
+# Le thème clair est imposé : sans cette ligne, un visiteur dont le système est
+# en mode sombre voit Streamlit inverser les fonds, et les cartes comme les
+# graphiques — dessinés sur blanc — deviennent illisibles.
+base = "light"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f4f8fc"
+textColor = "#3c4761"
+primaryColor = "#1f7a5a"
+
+[server]
+# Le bandeau « Made with Streamlit » et la collecte d'usage n'ont pas leur
+# place sur un site du PNUE.
+enableStaticServing = false
