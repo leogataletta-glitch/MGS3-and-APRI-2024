@@ -229,6 +229,98 @@ TEXTES = {
                "fr": "Il hiérarchise et priorise. Il ne prédit pas ce qu'un "
                      "aléa donné coûtera à une section donnée."},
 
+    # --- le second volet : l'analyse causale
+    "cad_dbc": {"en": "The second strand — causal loop diagrams",
+                "fr": "Le second volet — les diagrammes de boucles causales"},
+    "cad_dbc_x": {
+        "en": "In a socio-ecological system, interactions are not linear: a "
+              "cause becomes a consequence, and some effects feed themselves. "
+              "Where a problem tree shows the visible chain of causes and "
+              "effects, a causal loop diagram shows the internal feedbacks — "
+              "why a system persists, degrades, or finds its balance again. "
+              "That is the heart of resilience.",
+        "fr": "Dans un système socio-écologique, les interactions ne sont pas "
+              "linéaires : une cause devient une conséquence, et certains "
+              "effets s'auto-renforcent. Là où l'arbre à problèmes montre la "
+              "chaîne visible des causes et des effets, le diagramme de "
+              "boucles causales montre les rétroactions internes — pourquoi "
+              "un système persiste, se dégrade, ou retrouve son équilibre. "
+              "C'est le cœur de la résilience."},
+    "cad_dbc_1_t": {"en": "1 · The symptom", "fr": "1 · La variable symptôme"},
+    "cad_dbc_1": {
+        "en": "Start from the indicator in red — falling tree cover, dropping "
+              "yields, rising erosion. It is the visible malfunction, and the "
+              "entry point for going back up to causes and down to effects.",
+        "fr": "Partir de l'indicateur en rouge — recul du couvert végétal, "
+              "baisse de productivité, érosion accrue. C'est le "
+              "dysfonctionnement visible, et le point d'entrée pour remonter "
+              "aux causes et descendre aux conséquences."},
+    "cad_dbc_2_t": {"en": "2 · The circular chains",
+                    "fr": "2 · Les enchaînements circulaires"},
+    "cad_dbc_2": {
+        "en": "Spot where an effect becomes a cause in turn. Slash-and-burn "
+              "costs fertility, which pushes farmers to burn new land: the "
+              "process feeds itself. That is a feedback loop.",
+        "fr": "Repérer où un effet devient à son tour une cause. Le brûlis "
+              "coûte de la fertilité, ce qui pousse à ouvrir de nouvelles "
+              "terres par le feu : le processus s'auto-alimente. C'est une "
+              "boucle de rétroaction."},
+    "cad_dbc_3_t": {"en": "3 · The levers", "fr": "3 · Les leviers"},
+    "cad_dbc_3": {
+        "en": "Find the nodes with many links that sit in loops of opposite "
+              "sign: acting there can tip the system from a degrading "
+              "dynamic into a resilience one. The tool computes them.",
+        "fr": "Trouver les nœuds très connectés qui appartiennent à des "
+              "boucles de sens opposé : agir là peut faire basculer le "
+              "système d'une dynamique dégradante vers une dynamique de "
+              "résilience. L'outil les calcule."},
+    "cad_dbc_4_t": {"en": "4 · The action sheet",
+                    "fr": "4 · La fiche d'action"},
+    "cad_dbc_4": {
+        "en": "For each lever: expected effect on the score, feasibility, key "
+              "actors, time horizon, and the performance indicators that will "
+              "tell whether it worked.",
+        "fr": "Pour chaque levier : effet attendu sur le score, faisabilité, "
+              "acteurs clés, horizon de mise en œuvre, et les indicateurs de "
+              "performance qui diront si cela a marché."},
+    "cad_lecture": {"en": "How to read a loop", "fr": "Comment lire une boucle"},
+    "cad_lecture_x": {
+        "en": "Each arrow carries a polarity. **+** the two variables move "
+              "the same way; **−** they move opposite ways. Multiply the "
+              "signs around the loop: an even number of **−** makes it "
+              "**reinforcing (R)** — it accelerates its own dynamic; an odd "
+              "number makes it **balancing (B)** — it pulls the system back "
+              "towards a resting point. Simpler still: raise A; if A ends up "
+              "higher, the loop is R; if A ends up lower, it is B.",
+        "fr": "Chaque flèche porte une polarité. **+** les deux variables "
+              "changent dans le même sens ; **−** en sens opposé. On "
+              "multiplie les signes le long de la boucle : un nombre pair de "
+              "**−** la rend **renforçante (R)** — elle accélère sa propre "
+              "dynamique ; un nombre impair la rend **équilibrante (B)** — "
+              "elle ramène le système vers un point de repos. Plus simple "
+              "encore : j'augmente A ; si A finit plus haut, la boucle est "
+              "R ; si A finit plus bas, elle est B."},
+    "cad_lecture_piege": {
+        "en": "**The trap: « positive » does not mean « good ».** It says the "
+              "variables move together. A reinforcing loop pushed upward is a "
+              "virtuous spiral (R+); the same loop pushed downward is a "
+              "vicious one (R−). And a balancing loop can lock a system into "
+              "a degraded state (B−) — falling yields drive out-migration, "
+              "which eases pressure and lets the forest return, but through "
+              "rural collapse.",
+        "fr": "**Le piège : « positive » ne veut pas dire « bonne ».** Cela "
+              "dit que les variables bougent ensemble. Une boucle renforçante "
+              "poussée à la hausse est une spirale vertueuse (R+) ; la même "
+              "poussée à la baisse est vicieuse (R−). Et une boucle "
+              "équilibrante peut figer le système dans un état dégradé "
+              "(B−) — la baisse des rendements pousse à la migration, ce qui "
+              "allège la pression et laisse la forêt revenir, mais par "
+              "effondrement rural."},
+    "cad_dbc_lien": {
+        "en": "The tool is in the **Feedback Loops** tab: push a lever, watch "
+              "the wave travel, isolate a loop.",
+        "fr": "L'outil est dans l'onglet **Boucles de rétroaction** : "
+              "poussez un levier, suivez l'onde, isolez une boucle."},
     "cad_doc": {"en": "The full methodological document",
                 "fr": "Le document méthodologique complet"},
     "cad_doc_note": {
@@ -355,6 +447,61 @@ STYLE = """
                   width:6px; height:6px; border-radius:50%; background:#c3ccda; }
 </style>
 """
+
+
+def _schema_boucles():
+    """Les deux types de boucle, dessinés — la convention de Sterman.
+
+    Deux cercles accolés, chacun portant sa lettre : R pour le renforcement,
+    B pour l'amortissement. Les polarités sont posées sur les liens, parce que
+    c'est leur produit qui décide du type — un schéma qui montrerait les
+    cercles sans les signes ne servirait à rien.
+    """
+    return """<svg viewBox="0 0 360 190" width="100%" style="max-width:360px"
+     font-family="Inter,system-ui,sans-serif">
+  <circle cx="108" cy="95" r="56" fill="none" stroke="#1a8a4f"
+          stroke-width="2"/>
+  <circle cx="248" cy="95" r="56" fill="none" stroke="#d1730c"
+          stroke-width="2"/>
+  <path d="M96 66 a20 20 0 1 1 24 0" fill="none" stroke="#1a8a4f"
+        stroke-width="1.6" marker-end="url(#fr)"/>
+  <path d="M236 124 a20 20 0 1 0 24 0" fill="none" stroke="#d1730c"
+        stroke-width="1.6" marker-end="url(#fa)"/>
+  <defs>
+    <marker id="fr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5"
+            markerHeight="5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#1a8a4f"/></marker>
+    <marker id="fa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5"
+            markerHeight="5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#d1730c"/></marker>
+  </defs>
+  <text x="108" y="101" text-anchor="middle" font-size="26" font-weight="700"
+        fill="#1a8a4f">R</text>
+  <text x="248" y="101" text-anchor="middle" font-size="26" font-weight="700"
+        fill="#d1730c">B</text>
+  <circle cx="46" cy="95" r="13" fill="#fff" stroke="#101728"
+          stroke-width="1.6"/>
+  <text x="46" y="100" text-anchor="middle" font-size="13"
+        font-weight="700" fill="#101728">A</text>
+  <circle cx="178" cy="95" r="13" fill="#fff" stroke="#101728"
+          stroke-width="1.6"/>
+  <text x="178" y="100" text-anchor="middle" font-size="13"
+        font-weight="700" fill="#101728">B</text>
+  <circle cx="310" cy="95" r="13" fill="#fff" stroke="#101728"
+          stroke-width="1.6"/>
+  <text x="310" y="100" text-anchor="middle" font-size="13"
+        font-weight="700" fill="#101728">C</text>
+  <text x="118" y="30" text-anchor="middle" font-size="15" font-weight="700"
+        fill="#1a8a4f">+</text>
+  <text x="238" y="30" text-anchor="middle" font-size="15" font-weight="700"
+        fill="#d1730c">&#8722;</text>
+  <text x="300" y="168" text-anchor="middle" font-size="15" font-weight="700"
+        fill="#d1730c">+</text>
+  <text x="56" y="168" text-anchor="middle" font-size="15" font-weight="700"
+        fill="#1a8a4f">+</text>
+  <text x="180" y="182" text-anchor="middle" font-size="10.5" fill="#6b7590">
+    Sterman, 2000</text>
+</svg>"""
 
 
 def _cartouche(titre, texte, couleur):
@@ -530,6 +677,34 @@ def render(doc_complet=None):
                       for k in ("cad_st1", "cad_st2", "cad_st3", "cad_st4"))
             + '</ul>', unsafe_allow_html=True)
         st.caption(T("cad_tirage"))
+
+    # ------------------------------------- le second volet : les boucles
+    with st.container(border=True):
+        st.markdown(
+            f'<div class="cad-h">{T("cad_dbc")}</div>'
+            f'<p class="cad-note">{T("cad_dbc_x")}</p>'
+            '<div class="cad-grille">'
+            + "".join(
+                f'<div style="flex:1 1 220px;min-width:200px;'
+                f'border-left:3px solid {c};padding:2px 0 2px 14px">'
+                f'<div style="font-size:14.5px;font-weight:700;color:{ENCRE}">'
+                f'{_e(T(k + "_t"))}</div>'
+                f'<div style="font-size:13px;color:{ENCRE2};line-height:1.5;'
+                f'margin-top:3px">{_e(T(k))}</div></div>'
+                for k, c in (("cad_dbc_1", "#c33a24"), ("cad_dbc_2", "#d1730c"),
+                             ("cad_dbc_3", "#2166ac"), ("cad_dbc_4", "#1a8a4f")))
+            + '</div>', unsafe_allow_html=True)
+
+        st.markdown(f'<div class="cad-h" style="font-size:15px;'
+                    f'margin:20px 0 6px">{T("cad_lecture")}</div>',
+                    unsafe_allow_html=True)
+        g, d = st.columns([1.15, 1])
+        with g:
+            st.markdown(T("cad_lecture_x"))
+            st.warning(T("cad_lecture_piege"))
+        with d:
+            st.markdown(_schema_boucles(), unsafe_allow_html=True)
+        st.caption(T("cad_dbc_lien"))
 
     # ---------------------------------------------------------- les limites
     with st.container(border=True):

@@ -26,6 +26,7 @@ import streamlit.components.v1 as components
 import accueil_page
 import actualites
 import assets
+import boucles_page
 import cadre_page
 import croisement_page
 import dimension_page
@@ -906,11 +907,13 @@ TEXTES_NAV = {
               "services",
         "fr": "Éducation, santé, réseaux de soutien et accès aux services "
               "essentiels"},
+    "mode_boucles": {"en": "Feedback Loops", "fr": "Boucles de rétroaction"},
 }
-# Les six rubriques : app.py est la source, puisqu'il est le seul à s'en servir
+# Les sept rubriques : app.py est la source, puisqu'il est le seul à s'en servir
 # et qu'il est toujours du voyage.
 _RENOMMEES = ("mode_accueil", "mode_methodo", "mode_dimensions",
-              "mode_synthese", "mode_actions", "mode_donnees")
+              "mode_synthese", "mode_actions", "mode_donnees",
+              "mode_boucles")
 for _c, _v in TEXTES_NAV.items():
     if _c in _RENOMMEES:
         i18n.DICO[_c] = _v
@@ -1016,12 +1019,14 @@ MODES_DIM = ["dim1", "dim2", "dim3", "dim4", "dim5", "dim6"]
 MODE_METHODO, MODE_DONNEES = "methodologie", "donnees"
 MODE_ACTIONS = "actions"
 MODE_SYNTHESE = "synthese"
+MODE_BOUCLES = "boucles"
 LIBELLE_MODE = {m: T(m) for m in MODES_DIM}
 LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      "dimensions": T("mode_dimensions"),
                      MODE_METHODO: T("mode_methodo"),
                      MODE_DONNEES: T("mode_donnees"),
                      MODE_ACTIONS: T("mode_actions"),
+                     MODE_BOUCLES: T("mode_boucles"),
                      MODE_SYNTHESE: T("mode_synthese")})
 
 # L'état de navigation doit exister AVANT la barre du haut, qui affiche le nom
@@ -1082,6 +1087,7 @@ _NAV = [
     (MODE_ACCUEIL, "◉"),
     (MODE_METHODO, "◈"),
     (MODE_DIMENSIONS, "▦"),
+    (MODE_BOUCLES, "⟳"),
     (MODE_SYNTHESE, "◐"),
     (MODE_ACTIONS, "➜"),
     (MODE_DONNEES, "⤓"),
@@ -1258,6 +1264,9 @@ if app_mode == MODE_METHODO:
             croisement_page.render(entete=False)
 
     cadre_page.render(doc_complet=_document_methodologique)
+
+if app_mode == MODE_BOUCLES:
+    boucles_page.render()
 
 if app_mode == MODE_ACTIONS:
     pistes_page.render()
