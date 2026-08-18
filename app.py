@@ -764,22 +764,46 @@ st.markdown("""
 # qui est beaucoup plus déroutant qu'une erreur franche. On préfère le dire.
 # ----------------------------------------------------------------------
 I18N_ATTENDU = "2026-08-18-ruban"
-if getattr(i18n, "VERSION", None) != I18N_ATTENDU:
+
+# CE QUI EST VÉRIFIÉ, C'EST LA PRÉSENCE DES CLÉS, PAS LA DATE.
+#
+# La première version du garde-fou comparait `i18n.VERSION` à la date attendue,
+# et arrêtait l'application au moindre écart. C'était trop strict : une mise à
+# jour qui ne touche qu'à la mise en page bloquait tout le site alors que rien
+# n'était cassé, et le message envoyait renvoyer un fichier de 230 ko sans
+# raison. Ce faux positif a coûté plus de temps que la panne qu'il prévient.
+#
+# Le vrai défaut à attraper est précis : une clé appelée par le code manque du
+# dictionnaire, et son NOM s'affiche à la place du texte. C'est donc cela qu'on
+# teste — les clés introduites par les mises à jour récentes. Manquantes, on
+# arrête franchement ; présentes, on se tait, quelle que soit la date.
+I18N_CLES_REQUISES = [
+    "a_lieu", "a_titre_court", "a_localisation", "a_histoire",
+    "a_h_origine", "a_h_mesure", "a_h_construction", "a_h_portee",
+    "dim_sous_titre", "syn_sous_titre", "syn_intro",
+    "f_paysage", "f_tous_paysages", "f_resume_paysage",
+    "f_resume_section_pay", "f_resume_paysage_groupe", "f_incoherent",
+    "s_mode_paysage", "s_note_paysage", "pay_Littoral", "pay_Montagne",
+]
+_manquantes = [c for c in I18N_CLES_REQUISES if c not in getattr(i18n, "DICO", {})]
+if _manquantes:
     st.error(
-        f"**i18n.py est dans une version qui ne correspond pas au reste de "
-        f"l'application** — attendue : `{I18N_ATTENDU}`, trouvée : "
-        f"`{getattr(i18n, 'VERSION', 'aucune')}`.\n\n"
-        f"Les textes vont s'afficher sous forme de noms de clés "
-        f"(`mode_ocb`, `o_intro`…). Renvoyer sur GitHub le `i18n.py` livré "
-        f"avec cette mise à jour, à la racine du dépôt, corrige l'affichage.\n\n"
-        f"*i18n.py is out of date — re-upload the version delivered with this "
-        f"update to the repository root.*")
-    # On ARRÊTE ici. Jusqu'ici l'application continuait de se dessiner avec
-    # des noms de clés en guise de textes, et le message rouge se perdait
-    # au-dessus d'une page qui semblait fonctionner — au point qu'on a pris
-    # plusieurs fois l'affichage cassé pour un défaut de mise en page. Une
-    # page vide sous un message franc est plus honnête qu'une page à moitié
-    # juste.
+        f"**i18n.py n'est pas à jour** — il manque "
+        f"{len(_manquantes)} clé(s) de traduction que le reste de "
+        f"l'application appelle : `" + "`, `".join(_manquantes[:6]) + "`"
+        + ("…" if len(_manquantes) > 6 else "") + ".\n\n"
+        f"Version attendue `{I18N_ATTENDU}`, trouvée "
+        f"`{getattr(i18n, 'VERSION', 'aucune')}`. Sans ces clés, les textes "
+        f"s'affichent sous forme de noms (`mode_ocb`, `o_intro`…). Renvoyer "
+        f"sur GitHub le `i18n.py` livré avec cette mise à jour, à la racine du "
+        f"dépôt, corrige l'affichage.\n\n"
+        f"*i18n.py is missing translation keys — re-upload the version "
+        f"delivered with this update to the repository root.*")
+    # On ARRÊTE ici. L'application continuait autrefois de se dessiner avec des
+    # noms de clés en guise de textes, et le message rouge se perdait au-dessus
+    # d'une page qui semblait fonctionner — au point qu'on a pris plusieurs
+    # fois l'affichage cassé pour un défaut de mise en page. Une page vide sous
+    # un message franc est plus honnête qu'une page à moitié juste.
     st.stop()
 
 st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
