@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-16-modis"
+VERSION = "2026-08-17-ergonomie"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -41,8 +41,15 @@ DICO = {
     "org": {"en": "United Nations Environment Programme — UNEP",
             "fr": "Programme des Nations Unies pour l'environnement — PNUE"},
     "titre_site": {
-        "en": "Household resilience survey 2024 — Sud and Grand'Anse, Haiti",
-        "fr": "Enquête ménage résilience 2024 — Sud et Grand'Anse, Haïti"},
+        "en": "APRI — Landscape Resilience Index · Sud and Grand'Anse, Haiti",
+        "fr": "APRI — Indice de résilience des paysages · Sud et Grand'Anse, Haïti"},
+    "sous_titre_site": {
+        "en": "1 211 households · 10 communal sections · 128 indicators across "
+              "seven dimensions · household survey 2024, satellite imagery and "
+              "community-based organisations",
+        "fr": "1 211 ménages · 10 sections communales · 128 indicateurs sur "
+              "sept dimensions · enquête ménage 2024, imagerie satellitaire et "
+              "organisations de base"},
     "mode_questions": {"en": "Descriptive results",
                        "fr": "Résultats descriptifs"},
     "mode_resilience": {"en": "Resilience index (IRLA / APRI)",
@@ -1290,6 +1297,360 @@ DICO = {
     "e_ap_col_ap": {"en": "Protected", "fr": "Protégé"},
     "e_ap_col_mang": {"en": "Mangrove 2000", "fr": "Mangrove 2000"},
     "e_ap_col_part": {"en": "Of the section", "fr": "De la section"},
+
+    # --- refonte APRI : les six dimensions comme onglets ------------------
+    "d_sous_titre": {
+        "en": "APRI — Landscape Resilience Index · Greater South, Haiti",
+        "fr": "APRI — Indice de résilience des paysages · Grand Sud, Haïti"},
+    "d_src_menage": {"en": "Household survey", "fr": "Enquête ménage"},
+    "d_src_satellite": {"en": "Satellite", "fr": "Satellite"},
+    "d_src_ocb": {"en": "CBO survey", "fr": "Enquête OCB"},
+    "d_src_absente": {"en": "Source missing", "fr": "Source à trouver"},
+
+    "d_bloc_chiffres": {"en": "The dimension in four figures",
+                        "fr": "La dimension en quatre chiffres"},
+    "d_c_score": {"en": "Dimension score", "fr": "Score de la dimension"},
+    "d_c_score_sous": {"en": "weighted mean of {n} indicators",
+                       "fr": "moyenne pondérée de {n} indicateurs"},
+    "d_c_couverture": {"en": "Framework covered", "fr": "Cadre couvert"},
+    "d_c_couverture_sous": {"en": "{a} of {b} indicators, by weight",
+                            "fr": "{a} indicateurs sur {b}, en poids"},
+    "d_c_haut": {"en": "Best placed", "fr": "La mieux placée"},
+    "d_c_haut_sous": {"en": "score {v}", "fr": "score {v}"},
+    "d_c_bas": {"en": "Least well placed", "fr": "La moins bien placée"},
+    "d_c_bas_sous": {"en": "score {v}", "fr": "score {v}"},
+    "d_c_note": {
+        "en": "Uncomputed indicators are excluded from the mean, never counted "
+              "as zeros. A missing indicator is not a bad indicator: treating "
+              "it as zero would punish the territory for a gap in the "
+              "measuring system. The covered share, beside it, is what tells "
+              "you how much the mean is worth.",
+        "fr": "Les indicateurs non calculés sont exclus de la moyenne, jamais "
+              "comptés comme des zéros. Un indicateur manquant n'est pas un "
+              "indicateur mauvais : l'assimiler à zéro punirait le territoire "
+              "pour une lacune du dispositif de mesure. La part couverte, à "
+              "côté, est ce qui dit ce que vaut la moyenne."},
+    "d_bloc_carte": {"en": "Section by section",
+                     "fr": "Section par section"},
+    "d_bloc_carte_note": {
+        "en": "Weighted mean of the dimension's scored indicators, computed "
+              "separately for each section. A section with fewer computed "
+              "indicators is not penalised — hover to see how many it rests on.",
+        "fr": "Moyenne pondérée des indicateurs scorés de la dimension, "
+              "calculée séparément pour chaque section. Une section qui compte "
+              "moins d'indicateurs calculés n'est pas pénalisée — survole pour "
+              "voir sur combien elle repose."},
+    "d_info_carte": {"en": "{n} indicators computed",
+                     "fr": "{n} indicateurs calculés"},
+    "d_bloc_indicateurs": {"en": "Every indicator of the dimension",
+                           "fr": "Tous les indicateurs de la dimension"},
+    "d_bloc_indicateurs_note": {
+        "en": "Sorted from the lowest score up: a resilience dashboard is read "
+              "by what is missing, not by what is going well. The weight column "
+              "is the indicator's weight in the framework — they are not equal.",
+        "fr": "Triés du score le plus bas : un tableau de bord de résilience se "
+              "lit par ce qui manque, pas par ce qui va bien. La colonne de "
+              "poids est celui de l'indicateur dans le cadre — ils ne se valent "
+              "pas tous."},
+    "d_cible": {"en": "Read for", "fr": "Lire pour"},
+    "d_cible_ensemble": {"en": "All ten sections", "fr": "Ensemble des 10 sections"},
+    "d_col_ligne": {"en": "Line", "fr": "Ligne"},
+    "d_col_indicateur": {"en": "Indicator", "fr": "Indicateur"},
+    "d_col_source": {"en": "Source", "fr": "Source"},
+    "d_col_valeur": {"en": "Value", "fr": "Valeur"},
+    "d_col_score": {"en": "Score", "fr": "Score"},
+    "d_col_poids": {"en": "Weight", "fr": "Poids"},
+
+    "d_bloc_sources": {"en": "Where each figure comes from",
+                       "fr": "D'où vient chaque chiffre"},
+    "d_bloc_sources_texte": {
+        "en": "A score without its source is a figure that can neither be "
+              "checked nor challenged. Every indicator below carries the survey "
+              "question that feeds it, word for word and with its answer "
+              "options, or the satellite sensor it comes from, or the register "
+              "that would unlock it. Open a line to see it.",
+        "fr": "Un score sans sa source est un chiffre qu'on ne peut ni vérifier "
+              "ni contester. Chaque indicateur ci-dessous porte la question "
+              "d'enquête qui l'alimente, mot pour mot et avec ses modalités, ou "
+              "le capteur satellitaire dont il vient, ou le registre qui le "
+              "débloquerait. Ouvre une ligne pour la voir."},
+    "d_bloc_question": {"en": "Survey question", "fr": "Question de l'enquête"},
+    "d_bloc_origine": {"en": "Origin of the data", "fr": "Origine de la donnée"},
+    "d_bloc_bareme": {"en": "Scoring scale", "fr": "Barème de notation"},
+    "d_bloc_note": {"en": "Method and reservations",
+                    "fr": "Méthode et réserves"},
+    "d_bloc_base": {"en": "Base", "fr": "Base"},
+    "d_base_texte": {"en": "{n} households surveyed",
+                     "fr": "{n} ménages enquêtés"},
+    "d_modalites": {"en": "Answers counted", "fr": "Modalités retenues"},
+    "d_non_calcule": {"en": "not computed", "fr": "non calculé"},
+
+    # noms et introductions des six dimensions
+    "dim1_intro": {
+        "en": "Roads, housing, water, sanitation, waste, energy — what a "
+              "territory is physically made of, and what a shock destroys "
+              "first. This dimension carries the heaviest weight of the "
+              "framework.",
+        "fr": "Routes, logement, eau, assainissement, déchets, énergie — ce "
+              "dont un territoire est physiquement fait, et ce qu'un choc "
+              "détruit en premier. C'est la dimension la plus lourdement "
+              "pondérée du cadre."},
+    "dim2_intro": {
+        "en": "Local authorities, schools, health facilities, warning systems, "
+              "connectivity. The best-documented dimension of the index — and "
+              "the one where the household survey has most to say.",
+        "fr": "Collectivités, écoles, structures de santé, systèmes d'alerte, "
+              "connectivité. C'est la dimension la mieux documentée de "
+              "l'indice — et celle où l'enquête ménage a le plus à dire."},
+    "dim3_intro": {
+        "en": "Forest cover, vegetation, water, rainfall, temperature, "
+              "protected areas. Almost entirely measured by satellite, which "
+              "is what makes it verifiable independently of any declaration. "
+              "Its detailed reading lives in its own tab.",
+        "fr": "Couvert forestier, végétation, eau, pluie, température, aires "
+              "protégées. Mesurée presque entièrement par satellite, ce qui la "
+              "rend vérifiable indépendamment de toute déclaration. Sa lecture "
+              "détaillée vit dans son propre onglet."},
+    "dim4_intro": {
+        "en": "Income, employment, farming, fishing, livestock, food security. "
+              "The dimension that decides whether a household absorbs a shock "
+              "or is undone by it.",
+        "fr": "Revenus, emploi, agriculture, pêche, élevage, sécurité "
+              "alimentaire. C'est la dimension qui décide si un ménage absorbe "
+              "un choc ou s'y défait."},
+    "dim5_intro": {
+        "en": "Community organisation, mutual aid, women's autonomy, conflict, "
+              "isolation. The community-based organisations surveyed "
+              "separately belong here — they are this dimension's living "
+              "tissue, and they have their own file.",
+        "fr": "Organisation communautaire, entraide, autonomie des femmes, "
+              "conflits, isolement. Les organisations de base enquêtées "
+              "séparément relèvent d'ici — elles sont le tissu vivant de cette "
+              "dimension, et elles ont leur propre fiche."},
+    "dim6_intro": {
+        "en": "Health, education, mortality, care coverage. The least "
+              "documented dimension after the cultural one: most of its "
+              "indicators need health registers that the household survey "
+              "cannot replace.",
+        "fr": "Santé, éducation, mortalité, couverture des soins. C'est la "
+              "dimension la moins documentée après la culturelle : l'essentiel "
+              "de ses indicateurs demande des registres sanitaires que "
+              "l'enquête ménage ne peut pas remplacer."},
+
+    # --- onglets de la refonte -------------------------------------------
+    "mode_actions": {"en": "Action sheets", "fr": "Fiches actions"},
+    "mode_actions_sous": {"en": "what the figures suggest doing, and with whom",
+                          "fr": "ce que les chiffres suggèrent de faire, et avec qui"},
+    "mode_synthese": {"en": "Summary by group or locality",
+                      "fr": "Synthèse par groupe ou localité"},
+    "mode_synthese_sous": {"en": "one section or one group, across all six dimensions",
+                           "fr": "une section ou un groupe, sur les six dimensions"},
+    "dim1_sous": {"en": "roads, housing, water, sanitation, energy",
+                  "fr": "routes, logement, eau, assainissement, énergie"},
+    "dim2_sous": {"en": "authorities, schools, health, warning systems",
+                  "fr": "collectivités, écoles, santé, systèmes d'alerte"},
+    "dim3_sous": {"en": "forest, vegetation, water, rainfall, temperature",
+                  "fr": "forêt, végétation, eau, pluie, température"},
+    "dim4_sous": {"en": "income, farming, fishing, food security",
+                  "fr": "revenus, agriculture, pêche, sécurité alimentaire"},
+    "dim5_sous": {"en": "community organisation, mutual aid, isolation",
+                  "fr": "organisation communautaire, entraide, isolement"},
+    "dim6_sous": {"en": "health, education, mortality, care coverage",
+                  "fr": "santé, éducation, mortalité, couverture des soins"},
+
+    # --- synthèse par groupe ou localité ---------------------------------
+    "s_intro": {
+        "en": "The six dimension tabs answer « how does this territory fare on "
+              "water, on forest, on health ». This one answers the reverse "
+              "question, often the real one: « what does this group, or this "
+              "section, experience across all dimensions ». One overall score "
+              "can cover a territory that is weak everywhere or one that has "
+              "collapsed on a single front — and those two situations do not "
+              "call for the same response.",
+        "fr": "Les six onglets de dimension répondent à « que vaut ce "
+              "territoire sur l'eau, sur la forêt, sur la santé ». Celui-ci "
+              "répond à la question inverse, et c'est souvent la vraie : « que "
+              "vit ce groupe, ou cette section, sur l'ensemble des "
+              "dimensions ». Un même score d'ensemble peut recouvrir un "
+              "territoire faible partout ou un territoire effondré sur un seul "
+              "volet, et ces deux situations n'appellent pas la même réponse."},
+    "s_mode": {"en": "Read by", "fr": "Lire par"},
+    "s_mode_section": {"en": "Communal section", "fr": "Section communale"},
+    "s_mode_groupe": {"en": "Group", "fr": "Groupe"},
+    "s_cible": {"en": "Which one", "fr": "Laquelle"},
+    "s_note_groupe": {
+        "en": "Read by group, only household-survey indicators are shown. "
+              "Satellite indicators are identical for every group within a "
+              "section — forest, rainfall and temperature do not vary with the "
+              "respondent's sex — and showing them as a zero gap would suggest "
+              "a measured equality where there is only an absence of "
+              "disaggregation.",
+        "fr": "En lecture par groupe, seuls les indicateurs issus de l'enquête "
+              "ménage sont retenus. Les indicateurs satellitaires sont "
+              "identiques pour tous les groupes d'une même section — la forêt, "
+              "la pluie et la température ne varient pas selon le sexe du "
+              "répondant — et les afficher avec un écart nul laisserait croire "
+              "à une égalité mesurée là où il n'y a qu'une absence de "
+              "ventilation."},
+    "s_bloc_profil": {"en": "{c} across the six dimensions",
+                      "fr": "{c} sur les six dimensions"},
+    "s_c_score": {"en": "Mean score", "fr": "Score moyen"},
+    "s_c_score_sous": {"en": "across the six dimensions",
+                       "fr": "sur les six dimensions"},
+    "s_c_ecart": {"en": "Gap to the whole", "fr": "Écart à l'ensemble"},
+    "s_c_ecart_sous": {"en": "points on the APRI scale",
+                       "fr": "points sur l'échelle APRI"},
+    "s_c_faible": {"en": "Widest shortfall", "fr": "Retard le plus marqué"},
+    "s_c_faible_sous": {"en": "{v} points below", "fr": "{v} points d'écart"},
+    "s_c_fort": {"en": "Strongest suit", "fr": "Point le plus fort"},
+    "s_c_fort_sous": {"en": "{v} points above", "fr": "{v} points d'écart"},
+    "s_reference": {"en": "All respondents", "fr": "Ensemble"},
+    "s_haltere_note": {
+        "en": "Hollow dot: the whole. Full dot: {c}. The line between them is "
+              "the gap — that is what the chart is for, and why it is not two "
+              "bars side by side. The gap carries no colour of its own: on "
+              "« households using charcoal » being above the mean is bad, on "
+              "« access to electricity » it is good. The direction is shown, "
+              "the judgement belongs to the indicator.",
+        "fr": "Point creux : l'ensemble. Point plein : {c}. Le trait entre les "
+              "deux est l'écart — c'est ce que le graphique sert à montrer, et "
+              "pourquoi ce ne sont pas deux barres côte à côte. L'écart n'a pas "
+              "de couleur propre : sur « ménages utilisant le charbon », être "
+              "au-dessus de la moyenne est mauvais, sur « accès à "
+              "l'électricité » c'est bon. La direction est montrée, le jugement "
+              "appartient à l'indicateur."},
+    "s_bloc_bas": {"en": "Where the shortfall is widest",
+                   "fr": "Là où le retard est le plus marqué"},
+    "s_bloc_bas_note": {
+        "en": "The twelve indicators where this target scores furthest below "
+              "the whole. Sorted by the size of the gap, not by the score "
+              "itself: a low score shared by everyone says something about the "
+              "territory, a low score for one target alone says something "
+              "about that target.",
+        "fr": "Les douze indicateurs où cette cible est le plus en dessous de "
+              "l'ensemble. Triés par l'ampleur de l'écart et non par le score "
+              "lui-même : un score bas partagé par tous dit quelque chose du "
+              "territoire, un score bas pour une seule cible dit quelque chose "
+              "de cette cible."},
+    "s_bloc_haut": {"en": "Where it stands above",
+                    "fr": "Là où elle est au-dessus"},
+    "s_bloc_haut_note": {
+        "en": "The same reading in the other direction. Read together with the "
+              "table above, it says whether a target is uniformly behind or "
+              "behind on one front and ahead on another — which decides "
+              "whether the response is general or targeted.",
+        "fr": "La même lecture en sens inverse. Lu avec le tableau précédent, "
+              "il dit si une cible est uniformément en retard, ou en retard sur "
+              "un front et en avance sur un autre — ce qui décide si la réponse "
+              "est générale ou ciblée."},
+    "s_col_cible": {"en": "Target", "fr": "Cible"},
+    "s_col_ref": {"en": "Whole", "fr": "Ensemble"},
+    "s_col_ecart": {"en": "Gap", "fr": "Écart"},
+
+    "m_croisement_libre": {
+        "en": "Free exploration — cross any two survey questions",
+        "fr": "Exploration libre — croiser deux questions de l'enquête"},
+
+    # --- page d'accueil ---------------------------------------------------
+    "mode_accueil": {"en": "Overview", "fr": "Vue d'ensemble"},
+    "mode_accueil_sous": {"en": "the territory in one screen",
+                          "fr": "le territoire en un écran"},
+    "a_bienvenue": {"en": "Welcome to", "fr": "Bienvenue sur"},
+    "a_accroche": {
+        "en": "Landscape resilience observatory · Sud and Grand'Anse, Haiti",
+        "fr": "Observatoire de la résilience des paysages · Sud et "
+              "Grand'Anse, Haïti"},
+    "a_p_sections": {"en": "Communal sections", "fr": "Sections communales"},
+    "a_p_sections_sous": {"en": "surveyed in full", "fr": "enquêtées en entier"},
+    "a_p_departements": {"en": "Departments", "fr": "Départements"},
+    "a_p_departements_sous": {"en": "Sud and Grand'Anse",
+                              "fr": "Sud et Grand'Anse"},
+    "a_p_indicateurs": {"en": "Indicators computed",
+                        "fr": "Indicateurs calculés"},
+    "a_p_indicateurs_sous": {"en": "of the APRI framework",
+                             "fr": "du cadre APRI"},
+    "a_p_menages": {"en": "Households surveyed", "fr": "Ménages enquêtés"},
+    "a_p_menages_sous": {"en": "2024 field survey", "fr": "enquête terrain 2024"},
+    "a_p_score": {"en": "Overall APRI score", "fr": "Score APRI d'ensemble"},
+    "a_p_score_sous": {"en": "weighted mean", "fr": "moyenne pondérée"},
+
+    "a_bloc_saillants": {"en": "What the survey says first",
+                         "fr": "Ce que l'enquête dit en premier"},
+    "a_bloc_saillants_texte": {
+        "en": "Four figures from the household survey, chosen because they "
+              "decide the rest: a household without water, without sanitation, "
+              "without electricity and short of food has little left with which "
+              "to absorb a shock.",
+        "fr": "Quatre chiffres de l'enquête ménage, retenus parce qu'ils "
+              "commandent le reste : un ménage sans eau, sans assainissement, "
+              "sans électricité et à court de nourriture n'a plus grand-chose "
+              "avec quoi absorber un choc."},
+    "a_bloc_saillants_note": {
+        "en": "Values read directly from the results file — nothing on this "
+              "page is hard-coded, so it stays true when the data is updated.",
+        "fr": "Valeurs relues directement du fichier de résultats — rien n'est "
+              "écrit en dur sur cette page, elle reste donc juste quand les "
+              "données changent."},
+    "a_v_eau": {"en": "have access to improved drinking water",
+                "fr": "ont accès à une eau de boisson améliorée"},
+    "a_v_assainissement": {"en": "have safely managed sanitation",
+                           "fr": "ont un assainissement géré en sécurité"},
+    "a_v_electricite": {"en": "have access to electricity",
+                        "fr": "ont accès à l'électricité"},
+    "a_v_alimentaire": {"en": "experience food insecurity",
+                        "fr": "vivent une insécurité alimentaire"},
+    "a_v_score": {"en": "APRI score {s}/10", "fr": "score APRI {s}/10"},
+    "a_v_ligne": {"en": "line {n}", "fr": "ligne {n}"},
+
+    "a_bloc_classement": {"en": "Resilience by communal section",
+                          "fr": "Résilience par section communale"},
+    "a_bloc_classement_note": {
+        "en": "Weighted mean of every scored indicator, section by section. "
+              "{h} comes first, {b} last — but the spread is barely more than "
+              "one point on ten: no section here is doing well, and the gap "
+              "between them matters less than the level they all share.",
+        "fr": "Moyenne pondérée de tous les indicateurs scorés, section par "
+              "section. {h} vient en tête, {b} en dernier — mais l'écart "
+              "dépasse à peine un point sur dix : aucune section ne va bien "
+              "ici, et la distance entre elles compte moins que le niveau "
+              "qu'elles partagent."},
+    "a_bloc_carte": {"en": "Where they are", "fr": "Où elles se trouvent"},
+    "a_bloc_carte_note": {
+        "en": "The same score, on the map. Hover a section to read it.",
+        "fr": "Le même score, sur la carte. Survole une section pour le lire."},
+
+    "a_bloc_guide": {"en": "Where to start", "fr": "Par où commencer"},
+    "a_guide_env": {
+        "en": "The best-documented dimension, and the only one measured "
+              "independently of any declaration: forest, vegetation, rainfall, "
+              "temperature, all by satellite.",
+        "fr": "La dimension la mieux documentée, et la seule mesurée "
+              "indépendamment de toute déclaration : forêt, végétation, pluie, "
+              "température, le tout par satellite."},
+    "a_guide_synthese": {
+        "en": "Pick a section or a group — women, young people, "
+              "socio-economic categories — and see where it stands across all "
+              "six dimensions.",
+        "fr": "Choisir une section ou un groupe — femmes, jeunes, catégories "
+              "socio-économiques — et voir où il se situe sur les six "
+              "dimensions."},
+    "a_guide_actions": {
+        "en": "What the figures suggest doing, with whom, and what could go "
+              "wrong. Hypotheses, not prescriptions.",
+        "fr": "Ce que les chiffres suggèrent de faire, avec qui, et ce qui "
+              "peut mal tourner. Des hypothèses, pas des prescriptions."},
+    "a_guide_methodo": {
+        "en": "How the index is built, what its scales are worth, and every "
+              "reservation we have recorded along the way.",
+        "fr": "Comment l'indice est construit, ce que valent ses barèmes, et "
+              "toutes les réserves relevées chemin faisant."},
+
+    "nav_general": {"en": "Explore the data", "fr": "Explorer les données"},
+    "nav_dimensions": {"en": "The six dimensions", "fr": "Les six dimensions"},
+    "nav_agir": {"en": "Read and act", "fr": "Lire et agir"},
+    "nav_verifier": {"en": "Verify and download",
+                     "fr": "Vérifier et télécharger"},
+    "nav_langue": {"en": "Language", "fr": "Langue"},
 
     "e_bloc5": {"en": "What the environmental dimension still lacks",
                 "fr": "Ce qui manque encore à la dimension environnementale"},

@@ -77,7 +77,7 @@ def _vecteur(index, bits, qi, labels):
     return m
 
 
-def render():
+def render(entete=True):
     index, manquants, bits, groupes = _charger()
     if index is None:
         st.title(T("c_titre"))

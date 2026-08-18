@@ -1,0 +1,396 @@
+"""Une dimension de l'APRI, présentée pour elle-même.
+
+Six onglets bâtis sur ce seul module. Chacun montre, pour sa dimension : le
+score pondéré, la part du cadre effectivement couverte, la carte des sections,
+et surtout — indicateur par indicateur — D'OÙ VIENT LA DONNÉE.
+
+C'est le point de la refonte. Un score sans sa source est un chiffre qu'on ne
+peut ni vérifier ni contester ; un tableau de bord institutionnel doit pouvoir
+répondre à « d'où sortez-vous ça » sur chaque ligne, sans que le lecteur ait à
+ouvrir un fichier annexe. Chaque indicateur porte donc ici sa question
+d'enquête et ses modalités, ou son capteur satellitaire, ou son registre.
+
+Les dimensions III et V délèguent une partie de leur contenu aux modules qui
+existaient déjà — le détail environnemental et les fiches d'organisations —
+plutôt que d'en dupliquer la logique.
+"""
+
+import json
+import os
+
+import streamlit as st
+import streamlit.components.v1 as components
+
+import assets
+import i18n
+import map_render
+from i18n import T
+
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA = os.path.join(APP_DIR, "data")
+
+SECTIONS = ["Anse à Drick", "Barbois", "Dumont", "Débouchette", "Mouline",
+            "Quentin", "Beaulieu", "Blactote", "Dalmette", "Trichet"]
+
+# L'ordre est celui du cadre, pas celui de la couverture : une dimension mal
+# documentée ne doit pas se retrouver reléguée en fin de liste, sinon le
+# tableau de bord cache ses propres lacunes.
+DIMENSIONS = [
+    ("dim1", "I. PHYSICAL AND INFRASTRUCTURAL DIMENSION"),
+    ("dim2", "II. INSTITUTIONAL, TECHNOLOGICAL, AND GOVERNANCE  DIMENSION"),
+    ("dim3", "III.  ENVIRONMENTAL AND ECOLOGICAL DIMENSION"),
+    ("dim4", "IV. ECONOMIC, LIVELIHOODS, AND FOOD SECURITY DIMENSION"),
+    ("dim5", "V. SOCIAL AND COMMUNITY DIMENSION"),
+    ("dim6", "VI. HUMAN DIMENSION"),
+]
+# La septième dimension du cadre n'a aucun indicateur calculé : elle n'a donc
+# pas d'onglet. Elle reste listée dans les lacunes de la méthodologie, pour
+# qu'une absence ne passe pas pour une inexistence.
+DIM7 = "VII. CULTURAL, IDENTITY-BASED, AND PSYCHOLOGICAL DIMENSION"
+
+TEINTES = {"dim1": "#1a6bb0", "dim2": "#6b4fa8", "dim3": "#2a6b3f",
+           "dim4": "#a8690a", "dim5": "#0b7f74", "dim6": "#b4451f"}
+
+
+def _e(t):
+    return (str(t).replace("&", "&amp;").replace("<", "&lt;")
+            .replace(">", "&gt;"))
+
+
+def _fmt(v, dec=1):
+    if v is None:
+        return "—"
+    return f"{v:,.{dec}f}".replace(",", " ").replace(".", ",")
+
+
+def _trouver(nom):
+    for c in (os.path.join(DATA, nom), os.path.join(APP_DIR, nom)):
+        if os.path.exists(c):
+            return c
+    return None
+
+
+@st.cache_data(show_spinner=False)
+def _charger():
+    res = vent = None
+    if _trouver("resultats.json"):
+        with open(_trouver("resultats.json"), encoding="utf-8") as f:
+            res = json.load(f)
+    if _trouver("ventilation.json"):
+        with open(_trouver("ventilation.json"), encoding="utf-8") as f:
+            vent = json.load(f)
+    return res, vent
+
+
+def nom_indic(r):
+    if i18n.get_lang() == "fr" and r.get("indicateur_fr"):
+        return r["indicateur_fr"]
+    return r["indicateur"]
+
+
+def note_indic(r):
+    return (r.get("note") if i18n.get_lang() == "fr" else r.get("note_en")) \
+        or r.get("note") or ""
+
+
+def expl_indic(r):
+    return (r.get("expl_fr") if i18n.get_lang() == "fr"
+            else r.get("expl_en")) or ""
+
+
+def source_de(r):
+    """Clé de source d'un indicateur — c'est elle qui décide de tout l'affichage.
+
+    Le fichier de résultats ne porte de champ `source` que pour ce qui ne vient
+    pas de l'enquête ménage. L'absence de champ vaut donc « enquête », et il
+    vaut mieux l'écrire ici une fois que de le supposer à dix endroits.
+    """
+    s = r.get("source")
+    if s == "satellite":
+        return "satellite"
+    if s == "OCB":
+        return "ocb"
+    if r.get("calculable") == "non":
+        return "absente"
+    return "menage"
+
+
+BADGES = {
+    "menage": ("#1a6bb0", "#eaf3fb"),
+    "satellite": ("#2a6b3f", "#e8f4ec"),
+    "ocb": ("#0b7f74", "#e5f6f3"),
+    "absente": ("#8a93a5", "#f2f4f7"),
+}
+
+
+def _badge(cle):
+    coul, fond = BADGES[cle]
+    return (f'<span style="display:inline-block;padding:2px 9px;'
+            f'border-radius:999px;background:{fond};color:{coul};'
+            f'font-size:11px;font-weight:700;letter-spacing:.04em;'
+            f'text-transform:uppercase;white-space:nowrap">'
+            f'{_e(T("d_src_" + cle))}</span>')
+
+
+def scores_de(r, cible):
+    return (r.get("scores_corriges") or {}).get(cible)
+
+
+def est_score(r):
+    sc = r.get("scores_corriges") or {}
+    return sc.get("Total") is not None or any(v is not None
+                                              for v in sc.values())
+
+
+# ------------------------------------------------------------------ agrégats
+def score_dimension(lignes, cible):
+    """Moyenne pondérée des indicateurs scorés de la dimension.
+
+    Les indicateurs non calculés sont EXCLUS du dénominateur, jamais comptés
+    comme des zéros. Un indicateur manquant n'est pas un indicateur mauvais :
+    l'assimiler à zéro punirait le territoire pour une lacune du dispositif de
+    mesure, et rendrait le score dépendant de l'avancement du projet plutôt
+    que de l'état du paysage. La part réellement couverte est affichée à côté,
+    c'est elle qui dit ce que vaut la moyenne.
+    """
+    num = den = 0.0
+    for r in lignes:
+        sc = scores_de(r, cible)
+        if sc is None:
+            continue
+        p = r.get("ponderation") or 1
+        num += sc * p
+        den += p
+    return (num / den) if den else None
+
+
+def couverture(lignes):
+    total = sum((r.get("ponderation") or 0) for r in lignes)
+    faits = sum((r.get("ponderation") or 0) for r in lignes if est_score(r))
+    n_faits = sum(1 for r in lignes if est_score(r))
+    return n_faits, len(lignes), faits, total
+
+
+# -------------------------------------------------------------------- rendu
+def _tableau_indicateurs(lignes, cible, teinte):
+    entetes = [T("d_col_ligne"), T("d_col_indicateur"), T("d_col_source"),
+               T("d_col_valeur"), T("d_col_score"), T("d_col_poids")]
+    out = ['<div style="overflow-x:auto"><table style="width:100%;'
+           'border-collapse:collapse;font-size:14.5px">',
+           '<tr>' + ''.join(
+               f'<th style="text-align:{"left" if i < 3 else "right"};'
+               f'padding:9px 10px;border-bottom:2px solid #e6ecf4;'
+               f'font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;'
+               f'color:#6b7590;font-weight:700">{_e(h)}</th>'
+               for i, h in enumerate(entetes)) + '</tr>']
+    C = ('padding:9px 10px;border-bottom:1px solid #f0f4f9;text-align:right;'
+         'font-variant-numeric:tabular-nums')
+    # Triés du score le plus bas : un tableau de bord de résilience se lit par
+    # ce qui manque, pas par ce qui va bien.
+    ordre = sorted(lignes, key=lambda r: (scores_de(r, cible) is None,
+                                          scores_de(r, cible) or 0,
+                                          r["ligne"]))
+    for r in ordre:
+        sc = scores_de(r, cible)
+        val = (r.get("valeurs") or {}).get(cible)
+        coul = ("#8a93a5" if sc is None else
+                "#b4451f" if sc <= 3 else "#c98a2e" if sc <= 6 else "#2a6b3f")
+        unite = r.get("unite") or ("%" if source_de(r) == "menage" else "")
+        aff = (f'{_fmt(val, 2)} {unite}'.strip()
+               if isinstance(val, (int, float)) else "—")
+        out.append(
+            f'<tr><td style="padding:9px 10px;border-bottom:1px solid #f0f4f9;'
+            f'color:#8a93a5;font-variant-numeric:tabular-nums">{r["ligne"]}</td>'
+            f'<td style="padding:9px 10px;border-bottom:1px solid #f0f4f9">'
+            f'{_e(nom_indic(r))}</td>'
+            f'<td style="padding:9px 10px;border-bottom:1px solid #f0f4f9">'
+            f'{_badge(source_de(r))}</td>'
+            f'<td style="{C};color:#6b7590">{aff}</td>'
+            f'<td style="{C};font-weight:700;color:{coul}">'
+            f'{sc if sc is not None else "—"}</td>'
+            f'<td style="{C};color:#a9b0be">'
+            f'{_fmt(r.get("ponderation"), 2)}</td></tr>')
+    out.append('</table></div>')
+    return ''.join(out)
+
+
+def _fiche_source(r):
+    """D'où vient cette donnée — le cœur de la refonte.
+
+    Trois cas seulement, et chacun se raconte différemment. L'enquête ménage
+    doit citer sa question et ses modalités mot pour mot : c'est ce qui permet
+    à quelqu'un du terrain de dire « cette question a été mal comprise ». Le
+    satellite doit nommer son capteur et sa résolution. Un indicateur non
+    calculé doit dire quelle source le débloquerait, faute de quoi il passe
+    pour une négligence.
+    """
+    src = source_de(r)
+    parts = []
+    q = (r.get("question") or "").strip()
+    mod = (r.get("modalites") or "").strip()
+
+    if src == "menage" and q:
+        parts.append((T("d_bloc_question"),
+                      f'<em>« {_e(q)} »</em>'
+                      + (f'<div style="margin-top:5px;color:#6b7590;'
+                         f'font-size:14px">{_e(T("d_modalites"))} : '
+                         f'{_e(mod)}</div>' if mod else '')))
+    elif src in ("satellite", "ocb") and q:
+        parts.append((T("d_bloc_origine"), _e(q)))
+
+    if r.get("echelle"):
+        parts.append((T("d_bloc_bareme"), _e(r["echelle"])))
+    note = note_indic(r)
+    if note:
+        parts.append((T("d_bloc_note"), _e(note)))
+
+    n = (r.get("n") or {}).get("Total")
+    if n:
+        parts.append((T("d_bloc_base"), T("d_base_texte", n=n)))
+
+    return ''.join(
+        f'<div style="margin:0 0 11px">'
+        f'<div style="font-size:11.5px;letter-spacing:.06em;'
+        f'text-transform:uppercase;color:#1a6bb0;font-weight:700">{_e(t)}</div>'
+        f'<div style="font-size:14.5px;color:#3c4761;line-height:1.6;'
+        f'margin-top:2px">{c}</div></div>' for t, c in parts)
+
+
+def _carte_dimension(lignes, teinte, cle):
+    valeurs = {s: score_dimension(lignes, s) for s in SECTIONS}
+    valeurs = {s: (round(v, 2) if v is not None else None)
+               for s, v in valeurs.items()}
+    dispo = [v for v in valeurs.values() if v is not None]
+    if not dispo:
+        return None
+    seuils = map_render.nice_thresholds(dispo)
+    infos = {s: T("d_info_carte", n=sum(1 for r in lignes
+                                        if scores_de(r, s) is not None))
+             for s in SECTIONS}
+    hauteur = 620
+    svg, seuils_ret, _m = map_render.render_map_svg(
+        valeurs, {s: 1 for s in SECTIONS}, seuils, height=hauteur,
+        polarity="eleve_bon", unite="", infos=infos)
+    legende = "".join(
+        f'<span style="display:inline-flex;align-items:center;gap:7px;'
+        f'margin-right:18px"><span style="width:22px;height:12px;'
+        f'border-radius:3px;background:{c};box-shadow:inset 0 0 0 1px '
+        f'rgba(0,0,0,.12)"></span><span style="font-size:13px;'
+        f'color:#52514e">{lab}</span></span>'
+        for c, lab in map_render.legend_items(seuils_ret, "eleve_bon", ""))
+    return (
+        '<div style="font-family:system-ui,-apple-system,\'Segoe UI\','
+        'sans-serif;background:#ffffff"><div style="margin:0 0 8px">'
+        f'<span style="font-size:11.5px;color:#898781;letter-spacing:.05em;'
+        f'margin-right:14px">{T("legende_seuils")}</span>{legende}</div>'
+        f'{svg}</div>'), hauteur
+
+
+def render(cle_dim):
+    """Rend l'onglet d'une dimension. `cle_dim` vaut dim1 … dim6."""
+    res, _vent = _charger()
+    dimension = dict(DIMENSIONS).get(cle_dim)
+    teinte = TEINTES.get(cle_dim, "#1a6bb0")
+
+    col_logo, col_titre = st.columns([1, 6])
+    with col_logo:
+        st.markdown(
+            f'<img src="data:image/png;base64,{assets.LOGO_APRI}" '
+            f'style="width:118px;margin-top:6px">', unsafe_allow_html=True)
+    with col_titre:
+        st.title(T(cle_dim))
+        st.markdown(
+            '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+            'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
+            + T("d_sous_titre") + "</p>", unsafe_allow_html=True)
+
+    if not res:
+        st.info(T("e_absent"))
+        st.stop()
+
+    lignes = [r for r in res if r["dimension"] == dimension]
+    n_faits, n_tot, p_faits, p_tot = couverture(lignes)
+    score = score_dimension(lignes, "Total")
+
+    st.markdown(
+        f'<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
+        f'solid {teinte};border-radius:14px;padding:13px 17px;font-size:16px;'
+        f'color:#3c4761;box-shadow:0 1px 2px rgba(16,23,40,.05),'
+        f'0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px;max-width:96ch">'
+        f'{T(cle_dim + "_intro")}</div>', unsafe_allow_html=True)
+
+    # ------------------------------------------------------------ chiffres
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc">{T("d_bloc_chiffres")}</div>',
+                    unsafe_allow_html=True)
+        meilleures = [(s, score_dimension(lignes, s)) for s in SECTIONS]
+        meilleures = [(s, v) for s, v in meilleures if v is not None]
+        haut = max(meilleures, key=lambda kv: kv[1]) if meilleures else None
+        bas = min(meilleures, key=lambda kv: kv[1]) if meilleures else None
+
+        for col, lib, val, unite, sous, coul in zip(
+                st.columns(4),
+                [T("d_c_score"), T("d_c_couverture"), T("d_c_haut"),
+                 T("d_c_bas")],
+                [_fmt(score, 2), _fmt(100 * p_faits / p_tot, 0) if p_tot else "—",
+                 haut[0] if haut else "—", bas[0] if bas else "—"],
+                ["/ 10", "%", "", ""],
+                [T("d_c_score_sous", n=n_faits),
+                 T("d_c_couverture_sous", a=n_faits, b=n_tot),
+                 T("d_c_haut_sous", v=_fmt(haut[1], 2)) if haut else "",
+                 T("d_c_bas_sous", v=_fmt(bas[1], 2)) if bas else ""],
+                [teinte, "#6b7590", "#2a6b3f", "#b4451f"]):
+            with col:
+                st.markdown(
+                    map_render.cartouche_html(lib, val, unite, sous,
+                                              couleur=coul),
+                    unsafe_allow_html=True)
+        st.caption(T("d_c_note"))
+
+    # --------------------------------------------------------------- carte
+    carte = _carte_dimension(lignes, teinte, cle_dim)
+    if carte:
+        html, hauteur = carte
+        with st.container(border=True):
+            st.markdown(f'<div class="titre-bloc vert">{T("d_bloc_carte")}</div>',
+                        unsafe_allow_html=True)
+            st.caption(T("d_bloc_carte_note"))
+            components.html(html, height=hauteur + 46, scrolling=False)
+
+    # ------------------------------------------- les indicateurs et leur source
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc">{T("d_bloc_indicateurs")}</div>',
+                    unsafe_allow_html=True)
+        cibles = ["Total"] + SECTIONS
+        cible = st.selectbox(
+            T("d_cible"), cibles,
+            format_func=lambda c: T("d_cible_ensemble") if c == "Total" else c,
+            key=f"dim_cible_{cle_dim}_{i18n.get_lang()}")
+        st.markdown(_tableau_indicateurs(lignes, cible, teinte),
+                    unsafe_allow_html=True)
+        st.caption(T("d_bloc_indicateurs_note"))
+
+    # ------------------------------------------------- la source, ligne à ligne
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc vert">{T("d_bloc_sources")}</div>',
+                    unsafe_allow_html=True)
+        st.markdown(
+            f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
+            f'margin:4px 0 12px;max-width:92ch">{T("d_bloc_sources_texte")}</p>',
+            unsafe_allow_html=True)
+        for r in sorted(lignes, key=lambda x: x["ligne"]):
+            sc = scores_de(r, "Total")
+            etiquette = (f'L{r["ligne"]} · {nom_indic(r)}'
+                         + (f'  —  {sc}/10' if sc is not None
+                            else f'  —  {T("d_non_calcule")}'))
+            with st.expander(etiquette):
+                exp = expl_indic(r)
+                if exp:
+                    st.markdown(
+                        f'<p style="font-size:15.5px;color:#3c4761;'
+                        f'line-height:1.6;margin:0 0 11px">{_e(exp)}</p>',
+                        unsafe_allow_html=True)
+                st.markdown(_fiche_source(r), unsafe_allow_html=True)
+
+    st.caption(T("e_source"))
+    st.caption(T("credit"))

@@ -23,8 +23,10 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 
+import accueil_page
 import assets
 import croisement_page
+import dimension_page
 import environnement_page
 import i18n
 import map_render
@@ -33,6 +35,7 @@ import ocb_page
 import pistes_page
 import resilience_page
 import saillants_page
+import synthese_page
 import telechargements_page
 from i18n import T
 
@@ -377,6 +380,93 @@ st.markdown("""
   /* --- iframes des graphiques : coins arrondis, fond blanc --- */
   iframe { border-radius: 12px; background: #ffffff; }
 
+  /* ================= barre latérale : la navigation du site =============
+     Vert profond plutôt que le gris par défaut : la navigation doit se
+     détacher franchement du contenu, sinon l'œil hésite entre les deux à
+     chaque changement de page. Les boutons y perdent leur relief de tuile —
+     un menu ne se survole pas comme une carte à cliquer, il se parcourt. */
+  section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #123c30 0%, #0d2f26 100%) !important;
+    border-right: none;
+    width: 288px !important;
+  }
+  section[data-testid="stSidebar"] > div { padding-top: 14px; }
+
+  .apri-marque {
+    display: flex; align-items: center; gap: 11px;
+    padding: 4px 6px 16px; margin-bottom: 4px;
+    border-bottom: 1px solid rgba(255,255,255,.10);
+  }
+  .apri-marque img {
+    width: 46px; height: 46px; object-fit: contain;
+    background: #ffffff; border-radius: 11px; padding: 4px;
+  }
+  .apri-nom {
+    font-family: "Outfit", sans-serif; font-size: 25px; font-weight: 700;
+    color: #ffffff; letter-spacing: .01em; line-height: 1;
+  }
+  .apri-baseline {
+    font-size: 11px; color: rgba(255,255,255,.62); line-height: 1.35;
+    margin-top: 3px;
+  }
+  .nav-groupe {
+    font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase;
+    color: rgba(255,255,255,.42); font-weight: 700;
+    margin: 15px 0 6px 7px;
+  }
+  .apri-pied {
+    font-size: 10.5px; color: rgba(255,255,255,.40); line-height: 1.5;
+    padding: 12px 7px 4px; margin-top: 6px;
+    border-top: 1px solid rgba(255,255,255,.10);
+  }
+
+  /* Les boutons de la barre latérale : plats, alignés à gauche, sans ombre.
+     Le mode courant est plein, les autres transparents — un seul repère
+     visuel, celui qui répond à « où suis-je ». */
+  section[data-testid="stSidebar"] div[data-testid="stButton"] > button {
+    height: auto !important; min-height: 0;
+    padding: 9px 13px !important; border-radius: 9px;
+    border: 1px solid transparent !important;
+    background: transparent !important; box-shadow: none !important;
+    text-align: left; justify-content: flex-start;
+    transition: background .14s ease, color .14s ease;
+    margin-bottom: 1px;
+  }
+  section[data-testid="stSidebar"] div[data-testid="stButton"] > button p {
+    font-family: "Outfit", sans-serif !important;
+    font-size: 14.5px !important; font-weight: 500 !important;
+    color: rgba(255,255,255,.78) !important; text-align: left; margin: 0;
+  }
+  section[data-testid="stSidebar"] div[data-testid="stButton"] > button:hover {
+    background: rgba(255,255,255,.07) !important; transform: none;
+  }
+  section[data-testid="stSidebar"]
+    div[data-testid="stButton"] > button[kind="primary"] {
+    background: #1f7a5a !important; border-color: transparent !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,.22) !important;
+  }
+  section[data-testid="stSidebar"]
+    div[data-testid="stButton"] > button[kind="primary"] p {
+    color: #ffffff !important; font-weight: 600 !important;
+  }
+
+  /* Le sélecteur de langue, seul widget non bouton de la colonne */
+  section[data-testid="stSidebar"] label,
+  section[data-testid="stSidebar"] .stRadio label p {
+    color: rgba(255,255,255,.72) !important;
+  }
+  section[data-testid="stSidebar"] .stRadio > div[role="radiogroup"] > label {
+    background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.14);
+  }
+  section[data-testid="stSidebar"]
+    .stRadio > div[role="radiogroup"] > label > div:last-child p {
+    color: rgba(255,255,255,.86) !important;
+  }
+  section[data-testid="stSidebar"] div[data-baseweb="select"] > div {
+    background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16);
+    color: #ffffff;
+  }
+
   /* --- sous-onglets : mêmes codes que les tuiles d'entrée, en compact ---
      Les onglets natifs de Streamlit sont un soulignement discret ; à dix
      entrées, on ne voit plus lesquelles sont cliquables. On leur donne la
@@ -428,7 +518,7 @@ st.markdown("""
 # ne plante pas — elle affiche le nom des clés manquantes au milieu du texte, ce
 # qui est beaucoup plus déroutant qu'une erreur franche. On préfère le dire.
 # ----------------------------------------------------------------------
-I18N_ATTENDU = "2026-08-16-modis"
+I18N_ATTENDU = "2026-08-17-ergonomie"
 if getattr(i18n, "VERSION", None) != I18N_ATTENDU:
     st.error(
         f"**i18n.py est dans une version qui ne correspond pas au reste de "
@@ -447,8 +537,16 @@ st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
 # `lang`, que toutes les pages lisent. Pas de rerun forcé — Streamlit relance
 # déjà le script quand le menu change, et le reste de la page est construit
 # après cette ligne.
-_l1, _l2 = st.columns([6, 1])
-with _l2:
+# La colonne se construit en trois conteneurs réservés d'avance : le choix de
+# la langue doit être LU avant tout appel à T(), mais AFFICHÉ en bas de la
+# barre. Les conteneurs gardent leur place dans la page pendant qu'on les
+# remplit dans un autre ordre — sans eux, la langue s'afficherait au-dessus du
+# logo, ce qui n'a aucun sens dans un menu.
+_sb_marque = st.sidebar.container()
+_sb_nav = st.sidebar.container()
+_sb_langue = st.sidebar.container()
+
+with _sb_langue:
     _code = st.selectbox(
         T("langue"), list(i18n.LANGUES.keys()),
         format_func=lambda c: i18n.LANGUES[c], key="choix_langue",
@@ -459,46 +557,50 @@ i18n.set_lang(_code)
 # Le mode est stocké sous un code stable, pas sous son libellé : sinon un
 # changement de langue laisserait dans la session une valeur qui ne correspond
 # plus à aucun mode.
-MODE_QUESTIONS, MODE_RESILIENCE, MODE_CROISEMENT = "questions", "resilience", "croisement"
+# Dix entrées : les six dimensions du cadre APRI, puis la méthode, les
+# données, les fiches actions et la synthèse. La septième dimension du cadre —
+# culturelle, identitaire et psychologique — n'a aucun indicateur calculé et
+# n'a donc pas d'onglet ; elle reste listée dans la méthodologie, pour qu'une
+# absence ne passe pas pour une inexistence.
+MODE_ACCUEIL = "accueil"
+MODES_DIM = ["dim1", "dim2", "dim3", "dim4", "dim5", "dim6"]
 MODE_METHODO, MODE_DONNEES = "methodologie", "donnees"
-MODE_OCB = "ocb"
-MODE_SAILLANTS = "saillants"
-MODE_PISTES = "pistes"
-MODE_ENV = "environnement"
-LIBELLE_MODE = {MODE_QUESTIONS: T("mode_questions"),
-                MODE_RESILIENCE: T("mode_resilience"),
-                MODE_CROISEMENT: T("mode_croisement"),
-                MODE_METHODO: T("mode_methodo"),
-                MODE_DONNEES: T("mode_donnees"),
-                MODE_OCB: T("mode_ocb"),
-                MODE_SAILLANTS: T("mode_saillants"),
-                MODE_PISTES: T("mode_pistes"),
-                MODE_ENV: T("mode_environnement")}
+MODE_ACTIONS = "actions"
+MODE_SYNTHESE = "synthese"
+LIBELLE_MODE = {m: T(m) for m in MODES_DIM}
+LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
+                     MODE_METHODO: T("mode_methodo"),
+                     MODE_DONNEES: T("mode_donnees"),
+                     MODE_ACTIONS: T("mode_actions"),
+                     MODE_SYNTHESE: T("mode_synthese")})
 
-_logo, _entete = st.columns([1, 6])
-with _logo:
-    st.markdown(
-        f'<img src="data:image/png;base64,{assets.LOGO_UNEP}" '
-        f'style="width:168px;margin:2px 0 0 2px">', unsafe_allow_html=True)
-with _entete:
-    st.markdown(
-        f'<p class="org-mention">{T("org")}</p>'
-        f'<p style="font-size:27px;font-weight:700;letter-spacing:-.02em;'
-        f'margin:2px 0 0 2px;color:#101728;line-height:1.2">'
-        f'{T("titre_site")}</p>', unsafe_allow_html=True)
-
-# Bandeau : le dessin est rogné en hauteur pour rester un décor, pas une page.
+# L'identité APRI vit maintenant dans la barre latérale : la répéter en haut
+# du contenu volerait un tiers d'écran avant le premier chiffre. Il reste ici
+# une ligne institutionnelle — le commanditaire et le titre long, qu'une
+# capture d'écran doit porter avec elle — et le bandeau, réduit de moitié pour
+# rester un décor.
+# Un SEUL bloc HTML : Streamlit isole chaque appel à st.markdown dans son
+# propre conteneur, si bien qu'une balise ouverte dans l'un et fermée dans le
+# suivant ne s'emboîte jamais — le style se perd sans qu'aucune erreur ne le
+# signale.
 st.markdown(
+    f'<div style="display:flex;align-items:center;'
+    f'justify-content:space-between;gap:16px;margin:0 0 8px;flex-wrap:wrap">'
+    f'<div><span class="org-mention">{T("org")}</span>'
+    f'<div style="font-size:15px;color:#3c4761;font-weight:600;'
+    f'margin-top:-2px">{T("titre_site")}</div></div>'
+    f'<img src="data:image/png;base64,{assets.LOGO_UNEP}" '
+    f'style="height:38px"></div>'
     f'<img src="data:image/jpeg;base64,{assets.PAYSAGE_CAMP_PERRIN}" '
-    f'style="width:100%;height:172px;object-fit:cover;object-position:50% 62%;'
-    f'border-radius:10px;margin:8px 0 12px">', unsafe_allow_html=True)
+    f'style="width:100%;height:96px;object-fit:cover;object-position:50% 62%;'
+    f'border-radius:10px;margin:2px 0 14px">', unsafe_allow_html=True)
 
 # Les deux entrées sont mises au même niveau, en haut de page : ce sont deux
 # lectures différentes de la même enquête, pas un mode principal et une option.
 # Deux grands pavés cliquables plutôt qu'un bouton radio : l'entrée dans le
 # tableau de bord doit se voir de loin.
 if "app_mode" not in st.session_state:
-    st.session_state["app_mode"] = MODE_QUESTIONS
+    st.session_state["app_mode"] = MODE_ACCUEIL
 
 
 def _bascule(mode):
@@ -508,348 +610,81 @@ def _bascule(mode):
 # Trois entrées d'analyse sur la première rangée, les deux entrées documentaires
 # sur la seconde : cinq pavés d'affilée deviendraient trop étroits pour que
 # leur intitulé reste lisible.
-_ENTREES = (
-    (MODE_SAILLANTS, T("mode_saillants_sous")),
-    (MODE_QUESTIONS, T("mode_questions_sous")),
-    (MODE_RESILIENCE, T("mode_resilience_sous")),
-    (MODE_CROISEMENT, T("mode_croisement_sous")),
-    (MODE_METHODO, T("mode_methodo_sous")),
-    (MODE_PISTES, T("mode_pistes_sous")),
-    (MODE_ENV, T("mode_environnement_sous")),
-    (MODE_OCB, T("mode_ocb_sous")),
-    (MODE_DONNEES, T("mode_donnees_sous")),
-)
+# La navigation vit dans la barre latérale, groupée : l'entrée générale, les
+# six dimensions du cadre, puis ce qui sert à agir et à vérifier. Onze entrées
+# en pavés sur la page occupaient un écran entier avant le premier chiffre ;
+# en colonne fixe, elles tiennent sans rien pousser vers le bas, et l'onglet
+# courant reste visible où qu'on soit dans la page.
+_NAV = [
+    ("nav_general", [(MODE_ACCUEIL, "◉")]),
+    ("nav_dimensions", [(m, i) for m, i in zip(
+        MODES_DIM, ["▤", "◈", "❦", "◍", "◎", "✚"])]),
+    ("nav_agir", [(MODE_SYNTHESE, "◐"), (MODE_ACTIONS, "➜")]),
+    ("nav_verifier", [(MODE_METHODO, "§"), (MODE_DONNEES, "⤓")]),
+]
 
 
-def _pave(col, mode, sous):
-    with col:
-        st.button(LIBELLE_MODE[mode], key=f"btn_{mode}",
-                  on_click=_bascule, args=(mode,),
-                  type="primary" if st.session_state["app_mode"] == mode
-                  else "secondary",
-                  use_container_width=True)
-        st.markdown(
-            f'<p style="font-size:12.5px;color:#898781;margin:-6px 0 0;'
-            f'text-align:center;line-height:1.35">{sous}</p>',
-            unsafe_allow_html=True)
+def _entree_nav(mode, icone):
+    actif = st.session_state["app_mode"] == mode
+    st.button(f"{icone}\u2003{LIBELLE_MODE[mode]}", key=f"nav_{mode}",
+              on_click=_bascule, args=(mode,),
+              type="primary" if actif else "secondary",
+              use_container_width=True)
 
 
-# Les pavés se répartissent par rangées de quatre. Une rangée fixe de trois
-# devenait fausse dès qu'un onglet s'ajoutait ; ici la disposition suit le
-# nombre d'entrées, et la dernière rangée reste alignée sur les précédentes
-# grâce aux colonnes vides.
-_PAR_RANGEE = 4
-for _debut in range(0, len(_ENTREES), _PAR_RANGEE):
-    _rangee = _ENTREES[_debut:_debut + _PAR_RANGEE]
-    _cols = st.columns(_PAR_RANGEE, gap="medium")
-    for _col, (_mode, _sous) in zip(_cols, _rangee):
-        _pave(_col, _mode, _sous)
-    if _debut + _PAR_RANGEE < len(_ENTREES):
-        st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+with _sb_marque:
+    st.markdown(
+        f'<div class="apri-marque">'
+        f'<img src="data:image/png;base64,{assets.LOGO_APRI}">'
+        f'<div><div class="apri-nom">APRI</div>'
+        f'<div class="apri-baseline">{T("a_accroche")}</div></div></div>',
+        unsafe_allow_html=True)
+
+with _sb_nav:
+    for cle_groupe, entrees in _NAV:
+        st.markdown(f'<div class="nav-groupe">{T(cle_groupe)}</div>',
+                    unsafe_allow_html=True)
+        for mode, icone in entrees:
+            _entree_nav(mode, icone)
+    st.markdown('<div class="nav-groupe">' + T("nav_langue") + '</div>',
+                unsafe_allow_html=True)
+
+with _sb_langue:
+    st.markdown(
+        f'<div class="apri-pied">{T("org")}<br>{T("sous_titre_site")}</div>',
+        unsafe_allow_html=True)
 
 app_mode = st.session_state["app_mode"]
-st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
 
-if app_mode == MODE_RESILIENCE:
-    resilience_page.render()
-    st.stop()
+# Les six onglets de dimension passent tous par le même module ; deux d'entre
+# eux prolongent leur page avec un détail qui existait déjà, plutôt que d'en
+# dupliquer la logique — l'environnement avec ses onze indicateurs
+# satellitaires, le social avec les fiches d'organisations de base.
+if app_mode == MODE_ACCUEIL:
+    accueil_page.render()
 
-if app_mode == MODE_CROISEMENT:
-    croisement_page.render()
-    st.stop()
+if app_mode in MODES_DIM:
+    dimension_page.render(app_mode)
+    if app_mode == "dim3":
+        environnement_page.render(entete=False)
+    elif app_mode == "dim5":
+        ocb_page.render(entete=False)
 
 if app_mode == MODE_METHODO:
     methodologie_page.render()
-    st.stop()
+    # Le croisement des questions entre elles n'a plus d'onglet propre : les
+    # questions vivent désormais sous l'indicateur qu'elles alimentent, dans
+    # chaque dimension. L'outil d'exploration libre reste néanmoins accessible
+    # ici — une fonction qui marchait ne se supprime pas au motif qu'on a
+    # réorganisé la façade.
+    with st.expander(T("m_croisement_libre")):
+        croisement_page.render(entete=False)
 
-if app_mode == MODE_SAILLANTS:
-    saillants_page.render()
-    st.stop()
-
-if app_mode == MODE_ENV:
-    environnement_page.render()
-    st.stop()
-
-if app_mode == MODE_PISTES:
+if app_mode == MODE_ACTIONS:
     pistes_page.render()
-    st.stop()
 
-if app_mode == MODE_OCB:
-    ocb_page.render()
-    st.stop()
+if app_mode == MODE_SYNTHESE:
+    synthese_page.render()
 
 if app_mode == MODE_DONNEES:
     telechargements_page.render()
-    st.stop()
-
-st.subheader(LIBELLE_MODE[MODE_QUESTIONS])
-st.caption(T("q_consigne"))
-
-with st.sidebar:
-    st.header(T("filtres"))
-    f_sexe = st.multiselect(T("sexe"), ["Homme", "Femme"],
-                            format_func=lambda x: T("homme") if x == "Homme"
-                            else T("femme"))
-    f_cat = st.multiselect(T("categorie_eco"), ["A", "B", "C"],
-                           format_func=lambda x: {"A": T("cat_a"), "B": T("cat_b"),
-                                                  "C": T("cat_c")}[x])
-    f_age = st.multiselect(T("groupe_age"), ["<25", "25-39", "40-59", "60+"],
-                           format_func=lambda x: {"<25": T("age_25"),
-                                                  "25-39": T("age_25_39"),
-                                                  "40-59": T("age_40_59"),
-                                                  "60+": T("age_60")}[x])
-    f_paysage = st.multiselect(T("paysage"), ["Littoral", "Montagne"],
-                               format_func=lambda x: T("littoral")
-                               if x == "Littoral" else T("montagne"))
-    f_sections = st.multiselect(T("section_communale"), list(SECTION_RAW.keys()))
-
-data = compute_filtered(
-    tuple(f_sexe), tuple(f_cat), tuple(f_age), tuple(f_paysage), tuple(f_sections)
-)
-base_n = data["base_n"]
-themes = data["themes"]
-
-st.markdown(
-    '<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px solid '
-    '#1a6bb0;border-radius:14px;padding:13px 17px;font-size:16px;color:#3c4761;'
-    'box-shadow:0 1px 2px rgba(16,23,40,.05),0 8px 20px rgba(16,23,40,.06)">'
-    + T("q_population", n=base_n["Total"], h=base_n["Homme"], f=base_n["Femme"])
-    + "&nbsp;" + map_render.bulle("base", texte="") + '</div>',
-    unsafe_allow_html=True)
-
-if base_n["Total"] == 0:
-    st.warning(T("q_vide"))
-    st.stop()
-
-with st.container(border=True):
-    st.markdown(f'<div class="titre-bloc">{T("q_bloc1")}</div>',
-                unsafe_allow_html=True)
-    index = load_questions_index()
-
-    # Les catégories portent en interne un code de tri hérité des classeurs Excel
-    # ("AJ. EAU, ASSAINISSEMENT…"). On ne l'affiche pas, et surtout on garde l'ordre
-    # d'apparition dans le questionnaire plutôt qu'un tri alphabétique sur ce code —
-    # qui ferait remonter la pêche en tête.
-    CAT_CODE = re.compile(r"^[A-Z]{1,3}\.\s*")
-    cats_raw = []
-    for q in index:
-        if q["category"] not in cats_raw:
-            cats_raw.append(q["category"])
-    cat_display = [CAT_CODE.sub("", c) for c in cats_raw]
-    cat_of_display = dict(zip(cat_display, cats_raw))
-
-    chosen = st.selectbox(T("q_categorie"), cat_display,
-                          help=T("q_categorie_aide"))
-    cat_choice = cat_of_display[chosen]
-    q_options = [q for q in index if q["category"] == cat_choice]
-    q_labels = [q["question"] for q in q_options]
-    q_choice_label = st.selectbox(T("q_question"), q_labels)
-    theme_i = next(q["i"] for q in q_options if q["question"] == q_choice_label)
-    theme = themes[theme_i]
-
-with st.container(border=True):
-    st.markdown(f'<div class="titre-bloc vert">{T("q_bloc2")}</div>',
-                unsafe_allow_html=True)
-    st.subheader(theme["question"])
-    if theme.get("note"):
-        _note = theme["note"]
-        if "multiple" in _note.lower():
-            st.markdown(
-                '<p style="font-size:15px;color:#3c4761;margin:0 0 6px">'
-                + _note + '&nbsp;'
-                + map_render.bulle("réponses multiples", texte="") + '</p>',
-                unsafe_allow_html=True)
-        else:
-            st.caption(_note)
-
-    # ---- les chiffres saillants, en gros, avant tout graphique ----------------
-    # Même traitement que sur l'onglet Résilience : on lit d'abord un chiffre, pas
-    # un graphique. Ici, les trois réponses les plus fréquentes sur la population
-    # filtrée, avec l'effectif qui les porte.
-    _base_total = base_n.get("Total", 0)
-    _top = sorted(theme["rows"], key=lambda r: -r[1].get("Total", 0))[:3]
-    _top = [(lab, g.get("Total", 0)) for lab, g in _top if g.get("Total", 0) > 0]
-    if _top and _base_total:
-        _teintes = ["#2a78d6", "#5b6b7a", "#898781"]
-        _cols = st.columns(len(_top))
-        for _c, (_lab, _n), _teinte in zip(_cols, _top, _teintes):
-            _pourcent = round(_n / _base_total * 100, 1)
-            with _c:
-                st.markdown(
-                    map_render.cartouche_html(
-                        _lab, _pourcent, "%",
-                        T("q_soit", n=_n, base=_base_total),
-                        couleur=_teinte),
-                    unsafe_allow_html=True)
-        st.caption(T("q_top3"))
-
-    # ---- graphique : répartition sur la population filtrée (colonne Total) ----
-    # Rendu maison plutôt que st.bar_chart : celui-ci impose une graduation d'axe
-    # très dense et une couleur peu maîtrisable. Ici la valeur est écrite au bout
-    # de chaque barre, donc aucun axe n'est nécessaire.
-    bar_rows = [(label, group_n.get("Total", 0)) for label, group_n in theme["rows"]]
-    bar_svg = map_render.render_bars_svg(bar_rows, base_n.get("Total", 0))
-    n_bars = len(bar_rows)
-    components.html(
-        f'<div style="background:#ffffff;font-family:system-ui,-apple-system,'
-        f'\'Segoe UI\',sans-serif">{bar_svg}</div>',
-        height=n_bars * 28 + 26, scrolling=False)
-
-with st.container(border=True):
-    st.markdown(f'<div class="titre-bloc ambre">{T("q_bloc3")}</div>',
-                unsafe_allow_html=True)
-    # ---- carte : une couleur par seuil, une section communale par forme ----
-    st.markdown("### " + T("q_carte"))
-    row_labels = [lab for lab, _ in theme["rows"]]
-    rows_dict = dict(theme["rows"])
-
-
-    # Bornes chiffrées des modalités. La référence est map_render.lower_bound —
-    # la même fonction qui ordonne les barres, pour que graphique et carte ne
-    # puissent pas diverger. Les deux définitions de secours ci-dessous ne servent
-    # qu'au cas où map_render.py serait resté sur une version plus ancienne : sans
-    # elles, l'app planterait au lieu de simplement perdre le tri des barres.
-    _ESPACE_MILLIERS = re.compile(r"(?<=\d)[\s  ](?=\d)")
-    _ZERO_DEBUT = ("aucun", "aucune", "moins de", "inférieur", "inferieur", "pas de")
-
-
-    def _lower_bound_local(label):
-        s = _ESPACE_MILLIERS.sub("", str(label).strip().lower())
-        if s.startswith(_ZERO_DEBUT):
-            return 0
-        m = re.search(r"\d+", s)
-        return int(m.group()) if m else None
-
-
-    lower_bound = getattr(map_render, "lower_bound", _lower_bound_local)
-
-    nums = {lab: lower_bound(lab) for lab in row_labels}
-    chiffrees = [lab for lab in row_labels if nums[lab] is not None]
-    bornes = [nums[lab] for lab in chiffrees]
-    is_numeric = len(chiffrees) >= 3 and len(set(bornes)) == len(bornes)
-
-    # Une question à choix unique répartit chaque foyer dans une seule modalité :
-    # les cumuler est donc exact. Sur une question à choix multiples, un même foyer
-    # peut apparaître dans plusieurs, et la somme dépasserait le compte réel.
-    somme_pct = (sum(g.get("Total", 0) for _, g in theme["rows"]) / base_n["Total"] * 100
-                 if base_n.get("Total") else 0)
-    choix_multiple = somme_pct > 101
-
-    mode = "liste"
-    if is_numeric:
-        mode = st.radio(
-            T("q_quoi_carto"),
-            ["seuil", "liste"],
-            format_func=lambda k: {"seuil": T("q_mode_seuil"),
-                                   "liste": T("q_mode_liste")}[k],
-            horizontal=True, key=f"mode_{theme_i}_{i18n.get_lang()}")
-
-    if mode == "seuil":
-        paliers = sorted(bornes)[1:]            # la borne la plus basse ne filtre rien
-        seuil = st.selectbox(T("q_seuil"), paliers,
-                             format_func=lambda v: T("q_seuil_fmt", v=v),
-                             key=f"seuil_{theme_i}")
-        selection = [lab for lab in chiffrees if nums[lab] >= seuil]
-        map_choice = T("q_seuil_fmt", v=seuil)
-        st.caption(T("q_cumule") + ", ".join(f"« {lab} »" for lab in selection))
-        hors = [lab for lab in row_labels if nums[lab] is None]
-        if hors:
-            st.caption(T("q_hors") + ", ".join(f"« {lab} »" for lab in hors))
-    else:
-        selection = st.multiselect(
-            T("q_reponses_carto"), row_labels, default=[row_labels[0]],
-            key=f"sel_{theme_i}", help=T("q_reponses_aide"))
-        map_choice = " + ".join(selection)
-
-    if not selection:
-        st.info(T("q_choisir_reponse"))
-        st.stop()
-
-    if len(selection) > 1 and choix_multiple:
-        st.warning(T("q_avert_multi"))
-
-    map_counts = {g: sum(rows_dict[lab].get(g, 0) for lab in selection)
-                  for g in map_render.SECTIONS}
-    map_values = {
-        s: (round(map_counts.get(s, 0) / base_n[s] * 100, 1) if base_n.get(s) else None)
-        for s in map_render.SECTIONS
-    }
-    if mode != "seuil" and len(selection) > 1:
-        st.caption(T("q_cumule") + ", ".join(f"« {lab} »" for lab in selection))
-
-    POLARITY_LABELS = {
-        "eleve_mauvais": T("pol_mauvais"),
-        "eleve_bon": T("pol_bon"),
-        "neutre": T("pol_neutre"),
-    }
-    suggestion = map_render.guess_polarity(theme["question"], selection[0])
-    pol_key = f"pol_{theme_i}_{map_choice}_{i18n.get_lang()}"
-    polarity = st.radio(
-        T("sens_couleurs"),
-        list(POLARITY_LABELS.keys()),
-        index=list(POLARITY_LABELS.keys()).index(suggestion),
-        format_func=lambda k: POLARITY_LABELS[k],
-        horizontal=True, key=pol_key,
-        help=T("pol_aide"))
-
-    with st.expander(T("regler_seuils")):
-        auto = st.checkbox(T("seuils_auto"), value=True)
-        auto_T = map_render.nice_thresholds([v for v in map_values.values() if v is not None])
-        if auto:
-            thresholds = auto_T
-        else:
-            c1, c2, c3 = st.columns(3)
-            thresholds = [
-                c1.number_input(T("seuil_n", i=1), value=float(auto_T[0]), step=1.0),
-                c2.number_input(T("seuil_n", i=2), value=float(auto_T[1]), step=1.0),
-                c3.number_input(T("seuil_n", i=3), value=float(auto_T[2]), step=1.0),
-            ]
-            thresholds = sorted(thresholds)
-
-    map_height = 720
-    svg, seuils_ret, mode = map_render.render_map_svg(
-        map_values, base_n, thresholds, height=map_height, polarity=polarity)
-
-    legend_html = "".join(
-        f'<span style="display:inline-flex;align-items:center;gap:7px;margin-right:18px">'
-        f'<span style="width:22px;height:12px;border-radius:3px;background:{c};'
-        f'box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)"></span>'
-        f'<span style="font-size:13px;color:#52514e">{lab}</span></span>'
-        for c, lab in map_render.legend_items(seuils_ret, polarity))
-
-    # Streamlit assainit le SVG inséré via st.markdown (il vide les <circle>/<text>) :
-    # on passe donc par un composant HTML isolé, qui rend le SVG tel quel.
-    components.html(
-        f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
-                        background:#ffffff">
-          <div style="margin:0 0 8px"><span style="font-size:11.5px;color:#898781;
-            letter-spacing:.05em;margin-right:14px">{T("legende_seuils")}</span>{legend_html}</div>
-          {svg}
-        </div>""",
-        height=map_height + 46, scrolling=False)
-
-    st.caption(map_render.polarity_caption(polarity))
-
-    if mode == "disques":
-        st.caption(
-            T("contours_disques"))
-    else:
-        st.caption(T("contours_officiels"))
-
-with st.container(border=True):
-    st.markdown(f'<div class="titre-bloc">{T("q_bloc4")}</div>',
-                unsafe_allow_html=True)
-    # ---- tableau détaillé avec tous les sous-groupes ----
-    st.markdown("**" + T("q_detail") + "**")
-    detail_df = rows_to_dataframe(theme, base_n)
-    st.dataframe(detail_df, use_container_width=True, hide_index=True)
-
-    st.download_button(
-        T("q_telecharger_xlsx"),
-        data=export_excel(theme, base_n),
-        file_name="resultat_filtre.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    )
-
-st.caption(T("q_source"))
-st.caption(T("credit"))

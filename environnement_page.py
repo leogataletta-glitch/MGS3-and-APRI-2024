@@ -1378,22 +1378,23 @@ def _onglet_lacunes(res):
                 unsafe_allow_html=True)
 
 
-def render():
+def render(entete=True):
     (foret, res, pluie, grille, saison, indices, thermo,
      aires) = _charger()
     st.markdown(_styles(), unsafe_allow_html=True)
 
-    col_logo, col_titre = st.columns([1, 6])
-    with col_logo:
-        st.markdown(
-            f'<img src="data:image/png;base64,{assets.LOGO_APRI}" '
-            f'style="width:118px;margin-top:6px">', unsafe_allow_html=True)
-    with col_titre:
-        st.title(T("e_titre"))
-        st.markdown(
-            '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
-            'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
-            + T("e_sous_titre") + "</p>", unsafe_allow_html=True)
+    if entete:
+        col_logo, col_titre = st.columns([1, 6])
+        with col_logo:
+            st.markdown(
+                f'<img src="data:image/png;base64,{assets.LOGO_APRI}" '
+                f'style="width:118px;margin-top:6px">', unsafe_allow_html=True)
+        with col_titre:
+            st.title(T("e_titre"))
+            st.markdown(
+                '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+                'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
+                + T("e_sous_titre") + "</p>", unsafe_allow_html=True)
 
     if foret is None:
         st.info(T("e_absent"))
