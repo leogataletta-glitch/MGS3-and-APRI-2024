@@ -22,6 +22,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 import assets
+import cadre_page
 import filtres
 import questions_dimension
 import i18n
@@ -50,8 +51,12 @@ DIMENSIONS = [
 # qu'une absence ne passe pas pour une inexistence.
 DIM7 = "VII. CULTURAL, IDENTITY-BASED, AND PSYCHOLOGICAL DIMENSION"
 
-TEINTES = {"dim1": "#1a6bb0", "dim2": "#6b4fa8", "dim3": "#2a6b3f",
-           "dim4": "#a8690a", "dim5": "#0b7f74", "dim6": "#b4451f"}
+# Palette VALIDÉE, importée de cadre_page — cinq contrôles passés :
+# bande de clarté, plancher de saturation, séparation des paires
+# voisines en vision déficiente, plancher en vision normale, contraste
+# sur le fond. Une seule définition pour tout le site : deux palettes
+# recopiées finissent toujours par diverger.
+TEINTES = dict(cadre_page.TEINTES)
 
 
 def _e(t):

@@ -12,7 +12,7 @@ import streamlit as st
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
-VERSION = "2026-08-18-questions"
+VERSION = "2026-08-18-cadre"
 
 LANGUES = {"en": "English", "fr": "Français"}
 DEFAUT = "en"
@@ -56,10 +56,9 @@ DICO = {
                         "fr": "Indice de résilience (IRLA / APRI)"},
     "mode_croisement": {"en": "Cross-tabulation",
                         "fr": "Analyse croisée"},
-    "mode_methodo": {"en": "Survey methodology",
-                     "fr": "Méthodologie d'enquête"},
-    "mode_donnees": {"en": "Data downloads",
-                     "fr": "Téléchargement des données"},
+    "mode_methodo": {"en": "Resilience Framework",
+                     "fr": "Cadre de résilience"},
+    "mode_donnees": {"en": "Data", "fr": "Données"},
     "mode_questions_sous": {
         "en": "Univariate distributions for the 503 survey items, disaggregated "
               "by sex, age, economic status and landscape",
@@ -1438,11 +1437,12 @@ DICO = {
               "l'enquête ménage ne peut pas remplacer."},
 
     # --- onglets de la refonte -------------------------------------------
-    "mode_actions": {"en": "Action sheets", "fr": "Fiches actions"},
+    "mode_actions": {"en": "Intervention Profiles",
+                     "fr": "Fiches d'intervention"},
     "mode_actions_sous": {"en": "what the figures suggest doing, and with whom",
                           "fr": "ce que les chiffres suggèrent de faire, et avec qui"},
-    "mode_synthese": {"en": "Summary by group or locality",
-                      "fr": "Synthèse par groupe ou localité"},
+    "mode_synthese": {"en": "Territorial and Social Profiles",
+                      "fr": "Profils territoriaux et sociaux"},
     "mode_synthese_sous": {"en": "one section or one group, across all six dimensions",
                            "fr": "une section ou un groupe, sur les six dimensions"},
     "dim1_sous": {"en": "roads, housing, water, sanitation, energy",
@@ -1659,7 +1659,8 @@ DICO = {
                      "fr": "Vérifier et télécharger"},
     "nav_langue": {"en": "Language", "fr": "Langue"},
 
-    "mode_dimensions": {"en": "The six dimensions", "fr": "Les six dimensions"},
+    "mode_dimensions": {"en": "Results Analysis",
+                        "fr": "Analyse des résultats"},
     "mode_dimensions_sous": {
         "en": "physical, institutional, environmental, economic, social, human",
         "fr": "physique, institutionnelle, environnementale, économique, "
@@ -1772,6 +1773,39 @@ DICO = {
     # Noms courts : un cartouche est dimensionné pour un nombre, pas pour
     # « IV. Économie, moyens d'existence et sécurité alimentaire ».
     "dim1_court": {"en": "I. Physical", "fr": "I. Physique"},
+    # Une ligne par carte de dimension : ce qu'on y trouve, pas ce que la
+    # dimension signifie — l'intitulé le dit déjà. Douze mots au plus, sinon
+    # la carte grandit et la rangée se déforme.
+    "dim1_carte": {
+        "en": "Housing, water, sanitation, energy, roads, schools and health "
+              "facilities",
+        "fr": "Logement, eau, assainissement, énergie, routes, écoles et "
+              "centres de santé"},
+    "dim2_carte": {
+        "en": "Civil registration, governance, early warning, disaster "
+              "preparedness, participation",
+        "fr": "État civil, gouvernance, alerte précoce, préparation aux "
+              "catastrophes, participation"},
+    "dim3_carte": {
+        "en": "Forest cover, rainfall, vegetation, surface temperature and "
+              "aridity, by satellite",
+        "fr": "Couvert forestier, pluie, végétation, température de surface "
+              "et aridité, par satellite"},
+    "dim4_carte": {
+        "en": "Employment, income, savings and credit, farming, fishing, "
+              "food security",
+        "fr": "Emploi, revenus, épargne et crédit, agriculture, pêche, "
+              "sécurité alimentaire"},
+    "dim5_carte": {
+        "en": "Social capital, mutual aid, community organisations and their "
+              "reach",
+        "fr": "Capital social, entraide, organisations communautaires et "
+              "leur portée"},
+    "dim6_carte": {
+        "en": "Education, health, support networks and access to essential "
+              "services",
+        "fr": "Éducation, santé, réseaux de soutien et accès aux services "
+              "essentiels"},
     "dim2_court": {"en": "II. Institutions", "fr": "II. Institutions"},
     "dim3_court": {"en": "III. Environment", "fr": "III. Environnement"},
     "dim4_court": {"en": "IV. Economy", "fr": "IV. Économie"},

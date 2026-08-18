@@ -41,6 +41,7 @@ import pickle
 
 import streamlit as st
 
+import cadre_page
 import filtres
 import i18n
 from i18n import T
@@ -186,8 +187,12 @@ MODULE_DIMENSION = {
 }
 
 # Teinte par dimension, la même que dans la page d'indicateurs.
-TEINTE = {"dim1": "#1a6bb0", "dim2": "#6b4fa8", "dim3": "#2a6b3f",
-          "dim4": "#a8690a", "dim5": "#b4451f", "dim6": "#0f7b8a"}
+# Palette VALIDÉE, importée de cadre_page — cinq contrôles passés :
+# bande de clarté, plancher de saturation, séparation des paires
+# voisines en vision déficiente, plancher en vision normale, contraste
+# sur le fond. Une seule définition pour tout le site : deux palettes
+# recopiées finissent toujours par diverger.
+TEINTE = dict(cadre_page.TEINTES)
 
 # Recopié plutôt qu'importé de resilience_page : cet import-là entraînerait
 # pandas et tout le module de cartographie pour un dictionnaire de sept lignes.

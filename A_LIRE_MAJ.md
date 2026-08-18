@@ -1,48 +1,125 @@
-# La langue passe dans le bandeau
+# Restructuration — six rubriques, cadre visuel, onglets de dimension
 
-## Envoyez `app.py`. Un seul fichier.
+## Les six rubriques
 
-**Français** et **English** côte à côte en haut à gauche, précédés d'un globe.
-La langue courante porte la pastille verte, l'autre s'éclaircit au survol. Un
-clic, et tout le site bascule.
+| Ordre | Français | English |
+|---|---|---|
+| 1 | Vue d'ensemble | Overview |
+| 2 | **Cadre de résilience** | **Resilience Framework** |
+| 3 | Analyse des résultats | Results Analysis |
+| 4 | Profils territoriaux et sociaux | Territorial and Social Profiles |
+| 5 | Fiches d'intervention | Intervention Profiles |
+| 6 | Données | Data |
 
-Le menu déroulant du bas de la colonne de gauche disparaît — pour deux choix,
-il fallait ouvrir, viser, choisir, alors que deux mots se lisent et se
-cliquent d'un seul geste. Le titre « LANGUE » de la colonne part avec lui.
-
-Le bandeau porte donc maintenant **la langue à gauche, le logo du PNUE à
-droite**, et rien entre les deux.
-
-## Deux détails de fabrication
-
-**Le globe est dessiné en SVG**, pas en émoji. L'émoji 🌐 change de dessin et
-de couleur selon le système d'exploitation, et rendait la barre bariolée sur
-Windows. Le tracé suit la couleur du texte et reste discret.
-
-**La langue est lue avant le premier mot affiché.** Le bouton n'écrit que dans
-l'état de session ; Streamlit relance le script derrière, si bien que la
-traduction est déjà en place quand la première ligne se dessine. Aucun
-scintillement, aucun texte à moitié traduit.
-
-## Un point à décider
-
-La langue par défaut, au tout premier chargement, reste **l'anglais** — c'était
-déjà le cas avec le menu déroulant, je n'ai rien changé. Si vous préférez que
-le site s'ouvre en français, dites-le : c'est un mot à changer dans `i18n.py`.
-
-## Vérifié
-
-- capture d'écran du navigateur relue, puis **clic réel sur « Français »** :
-  la colonne, le bandeau et toute la page basculent ;
-- 48 rendus complets — 6 pages × 4 combinaisons de filtres × 2 langues —
-  **zéro exception, zéro message d'erreur** ;
-- aucune clé de traduction brute affichée, dans les deux langues ;
-- la barre d'outils de Streamlit reste absente, le bandeau touche le haut de
-  la fenêtre.
+**L'ordre suit la lecture, pas la fabrication** : on découvre le territoire, on
+apprend ce qu'on mesure et comment, on lit les résultats par dimension, on
+compare territoires et groupes, on passe à l'action ; les données brutes ferment
+la marche pour qui veut refaire les calculs. Le cadre est donc remonté en
+deuxième position.
 
 ---
 
-*Si les fichiers des mises à jour précédentes ne sont pas encore en ligne, ils
-restent à envoyer : `questions_dimension.py` (nouveau), `dimension_page.py`,
-`accueil_page.py`, `i18n.py` — ce sont eux qui apportent les deux sous-onglets
-sous chaque dimension.*
+## Cadre de résilience — une page qui se regarde
+
+L'ancienne page de méthodologie était sept blocs de texte. Personne ne lit sept
+blocs de texte sur un tableau de bord. Elle est remplacée par six schémas :
+
+- **trois cartouches d'ouverture** — résilience générale / capacités détenues
+  avant le choc / échelle 0-10 ;
+- **le cadre AAA** — anticiper, absorber, s'adapter, une ligne chacun ;
+- **les sept dimensions et leur poids** — une ligne par dimension : poids dans
+  l'indice en barre, part en pourcentage, couverture en barre, indicateurs
+  calculés sur total. On voit d'un coup que l'environnement pèse 29,9 % de
+  l'indice et n'est couvert qu'à 44 %, quand les institutions pèsent 13,4 %
+  couverts à 93 % ;
+- **la chaîne de calcul** — métrique › barème › pondération › agrégation ;
+- **le plan de sondage** — quatre chiffres clés et les quatre strates ;
+- **les limites** — circularité, absence de validation empirique, mesure
+  statique, cadrage et non prévision.
+
+**Le document méthodologique complet n'est pas perdu** : il est en bas de page,
+dans un volet replié, avec l'outil de croisement libre.
+
+**Tous les chiffres de cette page sont calculés** depuis `resultats.json`.
+Aucun poids, aucune couverture n'est écrit en dur : si un indicateur est calculé
+demain, la page le dit d'elle-même. Une page de méthode qui annonce des poids
+faux est pire qu'une page absente, parce qu'on la croit.
+
+---
+
+## Analyse des résultats — six cartes rectangulaires
+
+Les six dimensions sont désormais des **cartes** : nom en gras, une ligne
+disant ce qu'on y trouve, la carte courante en aplat bleu plein, les autres
+blanches avec une ombre qui se renforce au survol. Deux rangées de trois.
+
+Deux gains, pas un seul :
+
+- la cible est franche, on vise sans chercher ;
+- **seule la dimension demandée est calculée.** Les anciens onglets Streamlit
+  rendaient les six pages à chaque affichage, y compris les trois cents
+  questions de la dimension économique : sept secondes pour en montrer une.
+
+Chaque dimension garde ses deux sous-onglets — les questions posées, puis les
+indicateurs de résilience.
+
+---
+
+## Les couleurs ont été validées, pas choisies à l'œil
+
+Les sept teintes de dimension passent les cinq contrôles d'un validateur de
+palette : bande de clarté, plancher de saturation, séparation des paires
+**voisines** en vision déficiente (deutéranopie, protanopie, tritanopie),
+plancher en vision normale, contraste sur le fond. L'ancienne palette échouait
+trois de ces cinq contrôles — deux dimensions voisines y étaient
+indistinguables pour un lecteur protanope.
+
+L'ordre des teintes n'est donc pas sémantique : il est contraint par ces
+voisinages, puisque les dimensions se lisent toujours de I à VII. Seul le vert
+de l'environnement est un choix de sens, et il a été gardé. Les pastilles ne
+servent jamais seules : le nom de la dimension les accompagne toujours.
+
+La palette est définie **une seule fois**, dans `cadre_page.py`, et importée
+par les deux autres modules — deux palettes recopiées finissent toujours par
+diverger.
+
+---
+
+## L'envoi
+
+**Cinq fichiers, un seul commit.**
+
+| Fichier | |
+|---|---|
+| `cadre_page.py` | **nouveau** — la page Cadre de résilience et ses textes |
+| `app.py` | rubriques renommées et réordonnées, cartes de dimension |
+| `i18n.py` | les six intitulés, les six lignes de carte |
+| `dimension_page.py` | palette validée |
+| `questions_dimension.py` | palette validée |
+
+## Vérifié
+
+- 23 modules compilent ; **48 rendus complets** — 6 pages × 4 combinaisons de
+  filtres × 2 langues — **zéro exception, zéro message d'erreur** ;
+- 799 clés de traduction, aucun doublon ; aucune collision entre les textes
+  portés par les modules ;
+- aucune clé brute affichée, dans les deux langues ;
+- palette repassée au validateur : **cinq contrôles sur cinq** ;
+- captures d'écran relues en français et en anglais : les six rubriques, la
+  page Cadre entière, les cartes de dimension.
+
+---
+
+## Ce qui reste ouvert
+
+Vous demandez une hiérarchie visuelle nette et l'ordre **indicateurs clés →
+graphiques → cartes → comparaisons → tableaux**. Les pages de dimension le
+suivent déjà en partie (quatre chiffres, puis carte, puis indicateurs). Deux
+pages n'ont pas encore été retravaillées dans cet esprit :
+
+- **Profils territoriaux et sociaux** — la comparaison entre territoires et
+  groupes ; c'est là que le gain serait le plus visible ;
+- **Fiches d'intervention** — elles portent encore l'ancien contenu « pistes »,
+  sans lien avec une dimension ni une section.
+
+Dites-moi par laquelle continuer.

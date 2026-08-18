@@ -26,6 +26,7 @@ import streamlit.components.v1 as components
 import accueil_page
 import actualites
 import assets
+import cadre_page
 import croisement_page
 import dimension_page
 import environnement_page
@@ -710,6 +711,72 @@ st.markdown("""
     padding: 5px 14px;
   }
 
+  /* ================= les cartes des six dimensions ======================
+     Le sélecteur de dimension de « Analyse des résultats ». Chaque carte porte
+     le nom de la dimension et une ligne qui dit ce qu'on y trouve — comme sur
+     une couverture de dossier. La carte courante prend un aplat plein ; les
+     autres restent blanches, avec un filet et une ombre légère qui se
+     renforcent au survol.
+
+     Le libellé du bouton contient deux lignes séparées par un saut : Streamlit
+     les rend dans un même paragraphe, d'où `white-space: pre-line` — sans lui,
+     le saut serait avalé et les deux lignes se colleraient. */
+  .cartes-ancre { display: none; }
+
+  /* Les cartes sont visées par leur CLÉ : Streamlit pose une classe
+     « st-key-<clé> » sur le conteneur de chaque widget. C'est la seule
+     accroche stable — viser « tous les boutons de cette rangée » attraperait
+     aussi ceux des pages rendues en dessous. */
+  div[class*="st-key-carte_dim"] > div > button {
+    display: flex !important; flex-direction: column !important;
+    align-items: flex-start !important; justify-content: flex-start !important;
+    text-align: left !important; white-space: pre-line !important;
+    width: 100% !important; min-height: 104px !important; height: 100% !important;
+    padding: 15px 17px !important; border-radius: 14px !important;
+    background: #ffffff !important; border: 1px solid #e3eaf3 !important;
+    color: #101728 !important;
+    font-size: 15.5px !important; font-weight: 700 !important;
+    line-height: 1.3 !important; letter-spacing: -.01em !important;
+    box-shadow: 0 1px 2px rgba(16,23,40,.05) !important;
+    transition: box-shadow .15s ease, transform .15s ease,
+                border-color .15s ease !important;
+  }
+  div[class*="st-key-carte_dim"] > div > button:hover {
+    border-color: #c9d8ea !important;
+    box-shadow: 0 3px 6px rgba(16,23,40,.07),
+                0 14px 30px rgba(16,23,40,.10) !important;
+    transform: translateY(-2px) !important;
+  }
+  /* Le libellé porte le titre en gras markdown et la ligne descriptive en
+     texte simple. Streamlit les rend dans un même paragraphe : le titre
+     devient un <strong>, ce qui suffit à les habiller séparément.
+     (Le premier essai passait par ::first-line — mais ce pseudo-élément vise
+     la première ligne VISUELLE, si bien que le début du sous-titre héritait
+     du gras dès que le titre tenait sur une seule ligne.) */
+  div[class*="st-key-carte_dim"] > div > button p {
+    font-size: 12.5px !important; font-weight: 400 !important;
+    color: #6b7590 !important; line-height: 1.45 !important;
+    text-align: left !important; margin: 0 !important;
+  }
+  div[class*="st-key-carte_dim"] > div > button p strong {
+    display: block; margin-bottom: 7px;
+    font-size: 15.5px; font-weight: 700; color: #101728;
+    line-height: 1.3; letter-spacing: -.01em;
+  }
+  div[class*="st-key-carte_dim"] > div > button[kind="primary"] {
+    background: #14508f !important; border-color: #14508f !important;
+    box-shadow: 0 3px 8px rgba(20,80,143,.28) !important;
+  }
+  div[class*="st-key-carte_dim"] > div > button[kind="primary"] p {
+    color: rgba(255,255,255,.84) !important;
+  }
+  div[class*="st-key-carte_dim"] > div > button[kind="primary"] p strong {
+    color: #ffffff;
+  }
+  div[class*="st-key-carte_dim"] > div > button[kind="primary"]:hover {
+    background: #175da4 !important; border-color: #175da4 !important;
+  }
+
   /* --- le panneau des dernières livraisons ---------------------------- */
   .n-item {
     display: flex; gap: 12px; align-items: flex-start;
@@ -786,7 +853,7 @@ st.markdown("""
 # ne plante pas — elle affiche le nom des clés manquantes au milieu du texte, ce
 # qui est beaucoup plus déroutant qu'une erreur franche. On préfère le dire.
 # ----------------------------------------------------------------------
-I18N_ATTENDU = "2026-08-18-questions"
+I18N_ATTENDU = "2026-08-18-cadre"
 
 # CE QUI EST VÉRIFIÉ, C'EST LA PRÉSENCE DES CLÉS, PAS LA DATE.
 #
@@ -807,6 +874,8 @@ I18N_CLES_REQUISES = [
     "f_paysage", "f_tous_paysages", "f_resume_paysage",
     "f_resume_section_pay", "f_resume_paysage_groupe", "f_incoherent",
     "s_mode_paysage", "s_note_paysage", "pay_Littoral", "pay_Montagne",
+    "dim1_carte", "dim2_carte", "dim3_carte",
+    "dim4_carte", "dim5_carte", "dim6_carte",
 ]
 # Les textes de l'onglet « questions » ne figurent PAS dans cette liste, bien
 # qu'ils soient nouveaux : `questions_dimension.py` les porte lui-même et les
@@ -935,12 +1004,17 @@ _ruban = st.container()
 # une ligne après l'autre. Elles vivent donc sous l'entrée « Les six
 # dimensions », en onglets, comme avant la refonte.
 MODE_DIMENSIONS = "dimensions"
+# L'ORDRE EST CELUI DE LA LECTURE, pas celui de la fabrication : on découvre le
+# territoire (vue d'ensemble), on apprend ce qu'on mesure et comment (cadre de
+# résilience), on lit les résultats par dimension, on compare les territoires
+# et les groupes, on passe à l'action, et les données brutes ferment la marche
+# pour qui veut refaire les calculs.
 _NAV = [
     (MODE_ACCUEIL, "◉"),
+    (MODE_METHODO, "◈"),
     (MODE_DIMENSIONS, "▦"),
     (MODE_SYNTHESE, "◐"),
     (MODE_ACTIONS, "➜"),
-    (MODE_METHODO, "§"),
     (MODE_DONNEES, "⤓"),
 ]
 
@@ -1066,26 +1140,55 @@ if app_mode == MODE_DIMENSIONS:
     # Deux dimensions prolongent leur page avec un détail qui existait déjà,
     # plutôt que d'en dupliquer la logique. Ce détail est passé à la page de
     # dimension, qui le place dans le bon sous-onglet — celui des indicateurs.
-    # Avant l'apparition des sous-onglets il était rendu après la page, ce qui
-    # le laissait désormais hors des deux onglets, en bas de l'écran.
     _COMPLEMENT = {
         "dim3": lambda: environnement_page.render(entete=False),
         "dim5": lambda: ocb_page.render(entete=False),
     }
-    _onglets_dim = st.tabs([T(m) for m in MODES_DIM])
-    for _i, _m in enumerate(MODES_DIM):
-        with _onglets_dim[_i]:
-            dimension_page.render(_m, complement=_COMPLEMENT.get(_m))
+
+    # DES CARTES, PAS DES ONGLETS DE STREAMLIT.
+    #
+    # `st.tabs` donnait six intitulés en petit, soulignés, qu'il fallait
+    # chercher — et surtout il RENDAIT LES SIX PAGES à chaque affichage, y
+    # compris les trois cents questions de la dimension économique. Sept
+    # secondes pour en montrer une.
+    #
+    # Une rangée de cartes rectangulaires règle les deux : la cible est
+    # franche, l'onglet courant se distingue par un aplat de couleur, et seule
+    # la dimension demandée est calculée.
+    st.markdown('<div class="cartes-ancre"></div>', unsafe_allow_html=True)
+    st.session_state.setdefault("dim_active", MODES_DIM[0])
+    if st.session_state["dim_active"] not in MODES_DIM:
+        st.session_state["dim_active"] = MODES_DIM[0]
+
+    def _choisir_dim(m):
+        st.session_state["dim_active"] = m
+
+    _rangees = [MODES_DIM[:3], MODES_DIM[3:]]
+    for _rangee in _rangees:
+        for _col, _m in zip(st.columns(len(_rangee)), _rangee):
+            with _col:
+                _actif = st.session_state["dim_active"] == _m
+                st.button(f'**{T(_m)}**\n\n{T(_m + "_carte")}',
+                          key=f"carte_{_m}",
+                          on_click=_choisir_dim, args=(_m,),
+                          type="primary" if _actif else "secondary",
+                          use_container_width=True)
+
+    _m = st.session_state["dim_active"]
+    dimension_page.render(_m, complement=_COMPLEMENT.get(_m))
 
 if app_mode == MODE_METHODO:
-    methodologie_page.render()
-    # Le croisement des questions entre elles n'a plus d'onglet propre : les
-    # questions vivent désormais sous l'indicateur qu'elles alimentent, dans
-    # chaque dimension. L'outil d'exploration libre reste néanmoins accessible
-    # ici — une fonction qui marchait ne se supprime pas au motif qu'on a
-    # réorganisé la façade.
-    with st.expander(T("m_croisement_libre")):
-        croisement_page.render(entete=False)
+    # « Cadre de résilience » a remplacé la page de méthodologie : des schémas
+    # à la place de sept blocs de texte. Le document complet n'est pas perdu —
+    # il est rendu dans le volet replié du bas, avec l'outil de croisement
+    # libre. Une fonction qui marchait ne se supprime pas au motif qu'on a
+    # réorganisé la façade ; on la range.
+    def _document_methodologique():
+        methodologie_page.render()
+        with st.expander(T("m_croisement_libre")):
+            croisement_page.render(entete=False)
+
+    cadre_page.render(doc_complet=_document_methodologique)
 
 if app_mode == MODE_ACTIONS:
     pistes_page.render()
