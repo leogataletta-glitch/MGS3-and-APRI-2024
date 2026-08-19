@@ -1,45 +1,51 @@
-# La photo, et le vert de la colonne
+# Le bleu est parti : une seule couleur d'accent, le vert
 
 ## Un seul fichier
 
 | Fichier | |
 |---|---|
-| `app.py` | la photo réservée au cadre de résilience, et le vert de la colonne désaturé |
+| `app.py` | tout tient dans la feuille de style |
 
-Rien d'autre à renvoyer : les deux changements tiennent dans ce fichier.
+## Ce qui change
 
-## La photo
-
-Elle ne s'affiche plus que sur **Cadre de résilience**, la page d'entrée. Partout
-ailleurs, la page commence directement par son titre.
-
-Ce que cela rend : 300 pixels en tête de chaque page, soit un tiers d'écran. Sur
-*Analyse des résultats*, les six cartes de dimension sont maintenant visibles
-sans faire défiler ; sur *Note aux bailleurs*, les quatre chiffres et le premier
-constat le sont aussi.
-
-## Le vert
-
-Il est **désaturé, pas éclairci** — même teinte, même profondeur, mais 30 % de
-saturation au lieu de 54 %.
+Tout ce qui **signale un état** — survol, sélection, champ actif — était bleu ;
+c'est désormais le vert de la maison. Le bleu venait d'une charte antérieure et
+ne se justifiait plus : la colonne de navigation, l'emblème et les pastilles de
+filtre sont verts, de sorte qu'un onglet actif en bleu était la seule pièce
+d'une autre couleur — l'œil y lisait un autre type d'objet.
 
 | | avant | après |
 |---|---|---|
-| Haut de la colonne | `#123c30` | `#203c35` |
-| Bas de la colonne | `#0d2f26` | `#192e29` |
-| Pastille de l'onglet actif | `#63c493` | `#7cc0a0` |
+| Carte de dimension active | `#14508f` | `#1c6349` |
+| Survol d'une carte de dimension | bordure `#c9d8ea` | `#c3ded0` |
+| Sous-onglet sélectionné | dégradé bleu | dégradé vert |
+| Survol d'un sous-onglet | fond `#f4f8fc` | `#f2f9f5` |
+| Bouton principal | dégradé bleu | dégradé vert |
+| Survol de bouton, de liste, de radio | bordure `#b9d3ea` | `#b6d8c6` |
+| Langue active, en haut à gauche | `#2f7fd6` | `#1c6349` |
+| Pastille de rubrique, filet des encadrés, champ actif | `#1a6bb0` | `#1a6b52` |
 
-La pastille suit le fond, et il fallait qu'elle le suive : sur un vert adouci,
-l'ancien vert vif de l'entrée active serait devenu la seule couleur franche de
-l'écran — on aurait déplacé le problème d'un centimètre.
+**La langue a suivi, elle aussi.** Elle était volontairement bleue pour ne pas
+se confondre avec la navigation. C'est la distinction qui a fini par coûter
+plus qu'elle ne rapportait : deux couleurs d'accent sur un même écran se lisent
+comme deux familles d'objets, et il n'y en a qu'une ici. La position — en haut,
+hors de la colonne — suffit à distinguer un choix de langue d'un onglet de page.
 
-La colonne se détache toujours nettement du contenu blanc ; elle ne lui prend
-plus le regard.
+## Ce qui reste bleu, et pourquoi
+
+**Les barres des graphiques.** Le bleu y est une couleur de série, pas un état :
+dans le comparateur de groupes, le meilleur est vert, le pire est rouge, et les
+autres sont bleus — les repeindre en vert ferait passer tout le monde pour le
+meilleur. Une couleur qui code une donnée et une couleur qui code un état ne
+peuvent pas être la même.
+
+Dites-le-moi si vous voulez tout de même une gamme verte pour les graphiques :
+c'est une décision de lecture, pas une contrainte technique.
 
 ## Vérifié
 
 - **66 rendus** — 11 pages × 3 combinaisons de filtres × 2 langues — zéro
   exception ;
-- au navigateur : la photo présente sur le cadre de résilience, absente du
-  territoire, de l'analyse des résultats et de la note aux bailleurs ; le filet
-  sous les six onglets de dimension toujours en place.
+- au navigateur : survol d'une carte de dimension, onglet actif, pastille de
+  rubrique, encadré d'information, bouton de langue — plus une seule pièce de
+  chrome bleue.

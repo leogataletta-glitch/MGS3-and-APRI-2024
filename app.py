@@ -188,7 +188,13 @@ st.markdown(("""
     --fond-2:     #f4f8fc;
     --carte:      #ffffff;
     --bord:       #e6ecf4;
-    --accent:     #1a6bb0;
+    /* L'ACCENT DU CONTENU EST VERT DEPUIS QUE LES ÉTATS SÉLECTIONNÉS LE
+       SONT. Il restait bleu — hérité d'une charte antérieure — et servait la
+       pastille de rubrique, le filet des encadrés d'information, le liseré de
+       champ actif : trois pièces de chrome qui juraient avec un onglet actif
+       vert à quelques centimètres. Les couleurs de données ne bougent pas :
+       un graphique bleu reste bleu, c'est une donnée, pas un état. */
+    --accent:     #1a6b52;
     --accent-2:   #0f9d8f;
     --accent-3:   #f0a02a;
     --ombre:      0 1px 2px rgba(16,23,40,.04), 0 6px 18px rgba(16,23,40,.05);
@@ -285,7 +291,7 @@ st.markdown(("""
       > div[data-testid="stElementContainer"] .titre-bloc):hover,
   div[data-testid="stVerticalBlockBorderWrapper"]:hover {
     box-shadow: var(--ombre-haut); transform: translateY(-3px) !important;
-    border-color: #cddcf0 !important;
+    border-color: #c3ded0 !important;
   }
   /* Les blocs des conditions du croisement, imbriqués, restent discrets. */
   div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"]
@@ -303,7 +309,7 @@ st.markdown(("""
     display: inline-flex; align-items: center; gap: 9px;
     font-family: "Outfit", sans-serif; font-weight: 700; font-size: 13px;
     letter-spacing: .06em; text-transform: uppercase;
-    color: var(--accent); background: #eaf3fb;
+    color: var(--accent); background: #eaf5f0;
     padding: 6px 13px; border-radius: 999px; margin: 0 0 4px;
   }
   .titre-bloc.vert  { color: #0b7f74; background: #e5f6f3; }
@@ -319,9 +325,9 @@ st.markdown(("""
     font-size: 15.5px; border-radius: 11px; border: 1.5px solid var(--bord);
     background: #f7fafd; transition: border-color .15s ease, box-shadow .15s ease;
   }
-  div[data-baseweb="select"] > div:hover { border-color: #b9d3ea; }
+  div[data-baseweb="select"] > div:hover { border-color: #b6d8c6; }
   div[data-baseweb="select"] > div:focus-within {
-    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,107,176,.14);
+    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,107,82,.16);
   }
 
   /* --- bandeau d'info --- */
@@ -367,15 +373,22 @@ st.markdown(("""
   }
   div[data-testid="stButton"] > button:hover {
     transform: translateY(-3px); box-shadow: var(--ombre-haut);
-    border-color: #b9d3ea;
+    border-color: #b6d8c6;
   }
   div[data-testid="stButton"] > button[kind="primary"],
   div[data-testid="stButton"] > button[kind="primary"] p,
   div[data-testid="stButton"] > button[kind="primary"] div { color: #fff !important; }
+  /* L'ÉTAT SÉLECTIONNÉ EST VERT, PAS BLEU, ET IL L'EST PARTOUT.
+     Le bleu venait d'une charte antérieure et ne se justifiait plus : la
+     colonne de navigation, les pastilles de filtre et l'emblème sont verts,
+     de sorte qu'un onglet actif en bleu était la seule pièce d'une autre
+     couleur — l'œil y lisait un autre type d'objet. Même teinte pour tous
+     les états sélectionnés, du bouton à l'onglet en passant par la carte de
+     dimension. */
   div[data-testid="stButton"] > button[kind="primary"] {
-    background: linear-gradient(135deg, #1f7ac4 0%, #15588f 100%) !important;
+    background: linear-gradient(135deg, #2b8663 0%, #1c6349 100%) !important;
     border-color: transparent !important;
-    box-shadow: 0 2px 6px rgba(21,88,143,.28), 0 14px 30px rgba(21,88,143,.24);
+    box-shadow: 0 2px 6px rgba(28,99,73,.28), 0 14px 30px rgba(28,99,73,.24);
   }
   div[data-testid="stButton"] > button[kind="secondary"],
   div[data-testid="stButton"] > button[kind="secondary"] p {
@@ -390,7 +403,7 @@ st.markdown(("""
     transition: all .15s ease;
   }
   .stRadio > div[role="radiogroup"] > label:hover {
-    border-color: #b9d3ea; background: #eaf3fb;
+    border-color: #b6d8c6; background: #eef8f2;
   }
   .stRadio > div[role="radiogroup"] > label > div:last-child p {
     font-size: 14.5px !important; font-weight: 600 !important;
@@ -413,12 +426,12 @@ st.markdown(("""
   /* --- téléchargements : bouton doux --- */
   div[data-testid="stDownloadButton"] > button {
     height: auto; padding: 9px 18px !important; border-radius: 999px;
-    background: #eaf3fb !important; border: 1.5px solid #cfe2f3 !important;
+    background: #eaf5f0 !important; border: 1.5px solid #cde4d9 !important;
     color: var(--accent) !important; font-weight: 600 !important;
     font-size: 14.5px !important; box-shadow: none;
   }
   div[data-testid="stDownloadButton"] > button:hover {
-    background: #dcebf8 !important; transform: translateY(-1px);
+    background: #dcefe5 !important; transform: translateY(-1px);
   }
 
   /* --- iframes des graphiques : coins arrondis, fond blanc --- */
@@ -731,21 +744,24 @@ st.markdown(("""
   }
   div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
   div[data-testid="stButton"] > button:hover {
-    background: #eef3f9 !important;
+    background: #eef7f2 !important;
     color: #101728 !important; transform: none !important;
   }
-  /* La langue active en pastille bleue : le vert est la couleur de la
-     navigation, et deux verts différents sur le même écran se lisaient comme
-     deux états du même objet. */
+  /* La langue active suit la même couleur que tout le reste. Elle était en
+     bleu pour ne pas se confondre avec la navigation ; c'est la distinction
+     qui a fini par coûter plus qu'elle ne rapportait — deux couleurs d'accent
+     sur un même écran se lisent comme deux familles d'objets, et il n'y en a
+     qu'une ici. La position et le contexte suffisent à distinguer un choix de
+     langue d'un onglet de page. */
   div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
   div[data-testid="stButton"] > button[kind="primary"] {
-    background: #2f7fd6 !important; color: #ffffff !important;
+    background: #1c6349 !important; color: #ffffff !important;
     font-weight: 600 !important;
     box-shadow: 0 1px 4px rgba(0,0,0,.22) !important;
   }
   div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
   div[data-testid="stButton"] > button[kind="primary"]:hover {
-    background: #3d8ce0 !important;
+    background: #237556 !important;
   }
   .ruban-unep {
     display: flex; justify-content: flex-end; align-items: center;
@@ -843,7 +859,7 @@ st.markdown(("""
                 border-color .15s ease !important;
   }
   div[class*="st-key-carte_dim"] > div > button:hover {
-    border-color: #c9d8ea !important;
+    border-color: #c3ded0 !important;
     box-shadow: 0 3px 6px rgba(16,23,40,.07),
                 0 14px 30px rgba(16,23,40,.10) !important;
     transform: translateY(-2px) !important;
@@ -865,8 +881,8 @@ st.markdown(("""
     line-height: 1.3; letter-spacing: -.01em;
   }
   div[class*="st-key-carte_dim"] > div > button[kind="primary"] {
-    background: #14508f !important; border-color: #14508f !important;
-    box-shadow: 0 3px 8px rgba(20,80,143,.28) !important;
+    background: #1c6349 !important; border-color: #1c6349 !important;
+    box-shadow: 0 3px 8px rgba(28,99,73,.28) !important;
   }
   div[class*="st-key-carte_dim"] > div > button[kind="primary"] p {
     color: rgba(255,255,255,.84) !important;
@@ -875,7 +891,7 @@ st.markdown(("""
     color: #ffffff;
   }
   div[class*="st-key-carte_dim"] > div > button[kind="primary"]:hover {
-    background: #175da4 !important; border-color: #175da4 !important;
+    background: #237556 !important; border-color: #237556 !important;
   }
 
   /* --- le panneau des dernières livraisons ---------------------------- */
@@ -924,13 +940,13 @@ st.markdown(("""
     color: var(--encre-2) !important; margin: 0;
   }
   .stTabs [data-baseweb="tab-list"] button[data-baseweb="tab"]:hover {
-    transform: translateY(-2px); border-color: #b9d3ea; background: #f4f8fc;
+    transform: translateY(-2px); border-color: #b6d8c6; background: #f2f9f5;
     box-shadow: 0 2px 5px rgba(16,23,40,.07), 0 10px 22px rgba(16,23,40,.09);
   }
   .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] {
-    background: linear-gradient(135deg, #1f7ac4 0%, #15588f 100%);
+    background: linear-gradient(135deg, #2b8663 0%, #1c6349 100%);
     border-color: transparent;
-    box-shadow: 0 2px 6px rgba(21,88,143,.26), 0 10px 22px rgba(21,88,143,.20);
+    box-shadow: 0 2px 6px rgba(28,99,73,.26), 0 10px 22px rgba(28,99,73,.20);
   }
   .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] p {
     color: #ffffff !important;
@@ -942,7 +958,7 @@ st.markdown(("""
   .cartouche { transition: box-shadow .2s ease, transform .2s ease,
                            border-color .2s ease; }
   .cartouche:hover {
-    transform: translateY(-3px) !important; border-color: #cddcf0 !important;
+    transform: translateY(-3px) !important; border-color: #c3ded0 !important;
     box-shadow: 0 3px 6px rgba(16,23,40,.07), 0 18px 38px rgba(16,23,40,.13) !important;
   }
 </style>
