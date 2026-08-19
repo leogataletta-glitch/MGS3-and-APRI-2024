@@ -431,7 +431,7 @@ st.markdown(("""
   /* Le bloc de marque remonte : dix-huit pixels de blanc au-dessus d'un
      logo, sur une colonne qui commence en haut de l'écran, ne servaient
      qu'à repousser l'identité vers le bas. */
-  section[data-testid="stSidebar"] > div { padding: 6px 14px 14px; }
+  section[data-testid="stSidebar"] > div { padding: 0 14px 14px; }
 
   /* Le bloc de marque, sur le modèle de la charte : l'emblème détouré posé
      directement sur le vert — pas de carte blanche, qui faisait une tache —
@@ -440,7 +440,7 @@ st.markdown(("""
      du fichier d'origine devenait illisible à cette taille. */
   .apri-marque {
     display: flex; align-items: center; gap: 15px;
-    padding: 6px 2px 16px; margin-bottom: 2px;
+    padding: 0 2px 14px; margin-bottom: 0;
     border-bottom: 1px solid rgba(255,255,255,.12);
   }
   .apri-marque img {
@@ -687,7 +687,7 @@ st.markdown(("""
        porte deja l'identite, et elle poussait le premier chiffre de chaque
        page sous la ligne de flottaison. Il reste une barre claire, la plus
        discrete possible : elle ne porte que la langue et le logo. */
-    background: #ffffff; border-bottom: 1px solid #e6ecf4;
+    background: #ffffff; border-bottom: none;
     padding: 10px 24px 10px 22px; min-height: 78px;
     align-items: center; gap: 4px !important; flex-wrap: nowrap !important;
   }
@@ -779,6 +779,28 @@ st.markdown(("""
      Le libellé du bouton contient deux lignes séparées par un saut : Streamlit
      les rend dans un même paragraphe, d'où `white-space: pre-line` — sans lui,
      le saut serait avalé et les deux lignes se colleraient. */
+  /* ================= justification du texte courant ====================
+     Les paragraphes du contenu sont justifies : sur une colonne bornee a
+     1240 px, un bord droit en dents de scie hache la lecture, et le site
+     est fait de blocs de prose autant que de chiffres.
+
+     CE QUI EN EST EXCLU, ET POURQUOI : les libelles de bouton (justifier
+     deux mots ecarte les lettres), les legendes sous les figures (deux
+     lignes justifiees creusent des rivieres blanches), et les cellules de
+     tableau (leur alignement porte un sens — les nombres a droite). */
+  section[data-testid="stMain"] div[data-testid="stMarkdownContainer"] p,
+  section[data-testid="stMain"] div[data-testid="stMarkdownContainer"] li {
+    text-align: justify; text-justify: inter-word; hyphens: auto;
+  }
+  section[data-testid="stMain"] div[data-testid="stButton"] p,
+  section[data-testid="stMain"] div[data-testid="stCaptionContainer"] p,
+  section[data-testid="stMain"] table p,
+  section[data-testid="stMain"] td p, section[data-testid="stMain"] th p {
+    text-align: inherit; hyphens: none;
+  }
+  section[data-testid="stMain"] div[data-testid="stButton"] p {
+    text-align: left;
+  }
   .cartes-ancre { display: none; }
   /* UN TRAIT SOUS LES SIX CARTES. Sans lui, la rangée de dimensions et le
      titre de la dimension ouverte se touchaient : on ne voyait pas où
@@ -1237,9 +1259,6 @@ def _rendre_ruban():
         # coupent en deux lignes.
         for col, code in zip(cols[0:2], ("fr", "en")):
             with col:
-                if code == "fr":
-                    st.markdown('<div class="ruban-ancre"></div>',
-                                unsafe_allow_html=True)
                 st.button(i18n.LANGUES[code], key=f"lang_{code}",
                           on_click=_changer_langue, args=(code,),
                           type=("primary"
@@ -1248,6 +1267,7 @@ def _rendre_ruban():
                           use_container_width=True)
         with cols[-1]:
             st.markdown(
+                f'<div class="ruban-ancre"></div>'
                 f'<div class="ruban-unep"><img alt="UNEP" '
                 f'src="data:image/png;base64,{assets.LOGO_UNEP_BLEU}"></div>',
                 unsafe_allow_html=True)

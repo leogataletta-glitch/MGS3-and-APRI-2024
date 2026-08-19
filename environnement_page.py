@@ -1243,9 +1243,22 @@ def _serie_indice_svg(serie, reference, couleur, largeur=1040):
 
 
 def _tableau_indice(indices, champ, ref):
-    """Les dix sections sur un indice : référence, récent, variation."""
+    """Les dix sections sur un indice : référence, récent, variation.
+
+    LA COLONNE « SURFACE EN EAU » N'EST PLUS AFFICHÉE PARTOUT. Elle vient de
+    `indices_vegetation.json`, où la fraction en eau est mesurée ; les indices
+    thermiques vivent dans un autre fichier, qui ne la porte pas. Sur les
+    onglets Température et Sécheresse, la colonne s'affichait donc pour ne
+    montrer que des tirets, sur les dix lignes.
+
+    Une colonne vide n'est pas neutre : elle se lit comme une mesure manquante,
+    alors qu'il s'agit d'une grandeur qui n'a rien à faire là. On teste donc la
+    présence de la donnée, et on ne dessine la colonne que si elle existe.
+    """
+    a_de_l_eau = any(d.get("frac_eau_moy") is not None
+                     for d in indices["sections"].values())
     entetes = [T("e_sc_section"), T("e_i_ref"), T("e_i_recent"),
-               T("e_i_variation"), T("e_i_eau")]
+               T("e_i_variation")] + ([T("e_i_eau")] if a_de_l_eau else [])
     out = ['<div style="overflow-x:auto"><table style="width:100%;'
            'border-collapse:collapse;font-size:14.5px">']
     out.append('<tr>' + ''.join(
@@ -1279,9 +1292,10 @@ def _tableau_indice(indices, champ, ref):
             f'<td style="{C}">{_fmt(m_b, 3) if m_b is not None else "—"}</td>'
             f'<td style="{C};color:{coul};font-weight:700">'
             f'{(("+" if var > 0 else "") + _fmt(var, 1) + " %") if var is not None else "—"}</td>'
-            f'<td style="{C};color:#8a93a5">'
-            f'{_fmt(100 * eau, 2) + " %" if eau is not None else "—"}</td>'
-            f'</tr>')
+            + (f'<td style="{C};color:#8a93a5">'
+               f'{_fmt(100 * eau, 2) + " %" if eau is not None else "—"}</td>'
+               if a_de_l_eau else '')
+            + '</tr>')
     out.append('</table></div>')
     return ''.join(out)
 
