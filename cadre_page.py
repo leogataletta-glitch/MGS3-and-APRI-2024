@@ -618,6 +618,22 @@ def render(doc_complet=None):
         st.info(T("e_absent"))
         return
 
+    # LE RÉCIT APRI, DÉPLACÉ DEPUIS L'ACCUEIL ET GARDÉ ENTIER.
+    # Il ouvrait la page d'accueil sur quatre paragraphes de prose que
+    # personne ne lisait : arriver sur un mur de texte ne donne pas envie
+    # d'entrer. Il est ici, en tête de la page où l'on vient précisément
+    # chercher la méthode, et il y précède les schémas.
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc ambre">{T("a_histoire")}</div>',
+                    unsafe_allow_html=True)
+        st.markdown(
+            "".join(
+                f'<p style="font-size:15.5px;color:#3c4761;line-height:1.65;'
+                f'max-width:92ch;margin:0 0 15px"><b style="color:#101728">'
+                f'{T("a_h_" + c + "_t")}</b> {T("a_h_" + c)}</p>'
+                for c in ("origine", "mesure", "construction", "portee")),
+            unsafe_allow_html=True)
+
     # ------------------------------------------------- ce que mesure l'indice
     st.markdown(
         '<div class="cad-grille" style="margin:16px 0 4px">'

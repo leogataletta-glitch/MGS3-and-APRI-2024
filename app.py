@@ -960,7 +960,7 @@ st.markdown(("""
 # `i18n.py` garde les mêmes valeurs et son rôle de catalogue complet.
 # ---------------------------------------------------------------------------
 TEXTES_NAV = {
-    "mode_accueil": {"en": "Overview", "fr": "Vue d'ensemble"},
+    "mode_accueil": {"en": "The territory", "fr": "Le territoire"},
     "mode_methodo": {"en": "Resilience Framework",
                      "fr": "Cadre de résilience"},
     "mode_dimensions": {"en": "Results Analysis",
@@ -1147,7 +1147,7 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
 # de la page courante. L'initialiser plus bas laissait la barre lire une clé
 # absente — et Streamlit lève alors une erreur qui masque toute la page.
 if "app_mode" not in st.session_state:
-    st.session_state["app_mode"] = MODE_ACCUEIL
+    st.session_state["app_mode"] = MODE_METHODO
 
 
 def _bascule(mode):
@@ -1197,9 +1197,13 @@ MODE_DIMENSIONS = "dimensions"
 # résilience), on lit les résultats par dimension, on compare les territoires
 # et les groupes, on passe à l'action, et les données brutes ferment la marche
 # pour qui veut refaire les calculs.
+# L'ORDRE A CHANGÉ : le cadre de résilience ouvre la marche, le territoire
+# vient juste après. On dit d'abord ce qu'on mesure, puis où on l'a mesuré ;
+# les résultats suivent. L'accueil, devenu « Le territoire », n'a plus à porter
+# le récit de la méthode, qui est passé dans le cadre.
 _NAV = [
-    (MODE_ACCUEIL, "grille"),
     (MODE_METHODO, "bouclier"),
+    (MODE_ACCUEIL, "epingle"),
     (MODE_DIMENSIONS, "barres"),
     (MODE_RADAR, "radar"),
     (MODE_BOUCLES, "boucle"),

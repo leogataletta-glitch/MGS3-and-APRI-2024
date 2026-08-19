@@ -31,6 +31,7 @@ import filtres
 import icones
 import i18n
 import map_render
+import territoire_page
 from i18n import T
 
 # Les textes de cette page voyagent avec elle — même règle que partout
@@ -305,6 +306,17 @@ ACCES = [
 ]
 
 
+def _effectifs_sections():
+    """Le nombre de questionnaires par section, lu des effectifs de la
+    ventilation — le même chiffre que partout ailleurs sur le site."""
+    p = _trouver("ventilation.json")
+    if not p:
+        return {}
+    with open(p, encoding="utf-8") as f:
+        eff = (json.load(f) or {}).get("effectifs") or {}
+    return {k: (v or {}).get("Total") for k, v in eff.items()}
+
+
 def _aller(mode):
     """Le raccourci pose simplement le mode dans l'état de session — le même
     que celui qu'écrit un clic dans la colonne de gauche. Pas de callback à
@@ -363,12 +375,12 @@ def render(actualites=None):
         f'<p class="a-note-x">{T("a_localisation")}</p></div>',
         unsafe_allow_html=True)
 
-    # LES FILTRES SONT ICI AUSSI, ET ILS AGISSENT VRAIMENT. Les afficher sur
-    # la page d'accueil sans qu'ils changent quoi que ce soit serait pire que
-    # de ne pas les afficher : les chiffres saillants et le nombre de ménages
-    # suivent donc la sélection, et la carte reste la vue par section, qui est
-    # sa raison d'être.
-    filtres.barre(cle="accueil")
+    # PLUS DE BARRE DE FILTRES ICI. Une page qui présente un territoire n'a
+    # rien à filtrer : le filtre servait à restreindre des chiffres de
+    # cadrage, ce qui n'a pas de sens quand le propos est justement le
+    # périmètre entier. Les filtres restent partout où ils commandent une
+    # analyse.
+    territoire_page.cartes()
 
     # -------------------------------------------------------- l'histoire
     # Quatre volets « quoi / où / comment / pourquoi » disaient les mêmes
@@ -377,20 +389,22 @@ def render(actualites=None):
     # comment elle est construite, et ce qu'elle ne prétend pas dire — cette
     # dernière partie n'est pas une précaution de style, c'est la condition
     # pour que les chiffres soient utilisés correctement.
-    # L'histoire à gauche, les accès rapides à droite : le récit se lit, les
-    # raccourcis se cliquent, et les deux n'ont pas à se disputer la largeur
-    # de la page.
+    # LE RÉCIT APRI A QUITTÉ CETTE PAGE. Quatre paragraphes de prose en
+    # ouverture ne se lisaient pas : on arrivait sur un mur de texte au lieu
+    # d'un territoire. Ils sont maintenant en tête de « Cadre de résilience »,
+    # là où quelqu'un vient chercher la méthode — entiers, rien n'est perdu.
+    #
+    # Restent ici la liste des sections et les accès rapides.
     _g, _d = st.columns([2.35, 1])
     with _g:
         with st.container(border=True):
             st.markdown(
-                f'<div class="titre-bloc ambre">{T("a_histoire")}</div>',
+                f'<div class="titre-bloc">{T("tr_liste")}</div>',
                 unsafe_allow_html=True)
+            _geo = territoire_page._geo()
             st.markdown(
-                ''.join(f'<p class="a-hist-p"><b>{_e(T("a_h_" + c + "_t"))}</b> '
-                        f'{T("a_h_" + c)}</p>'
-                        for c in ("origine", "mesure", "construction",
-                                  "portee")),
+                territoire_page.tableau(_geo, _effectifs_sections(),
+                                        filtres.SECTION_PAYSAGE),
                 unsafe_allow_html=True)
     with _d:
         with st.container(border=True):
