@@ -680,15 +680,19 @@ st.markdown(("""
        bloc vide en tête de page, et la gouttière verticale de Streamlit
        s'ajoute par-dessus : 32 px de blanc avant le bandeau. On les remonte. */
     margin-top: -32px; margin-bottom: 0;
-    background: linear-gradient(180deg, #14402f 0%, #0f3327 100%);
-    padding: 11px 24px 11px 22px; min-height: 70px;
+    /* PLUS DE VERT ICI. La bande verte doublait la colonne de gauche, qui
+       porte deja l'identite, et elle poussait le premier chiffre de chaque
+       page sous la ligne de flottaison. Il reste une barre claire, la plus
+       discrete possible : elle ne porte que la langue et le logo. */
+    background: #ffffff; border-bottom: 1px solid #e6ecf4;
+    padding: 10px 24px 10px 22px; min-height: 62px;
     align-items: center; gap: 4px !important; flex-wrap: nowrap !important;
   }
   .ruban-ancre { display: none; }
 
   .ruban-globe {
     display: flex; align-items: center; justify-content: center;
-    color: rgba(255,255,255,.62); height: 38px;
+    color: #8a93a5; height: 38px;
   }
 
   /* Les deux langues : des boutons Streamlit déguisés en pastilles. Au repos
@@ -698,7 +702,7 @@ st.markdown(("""
   div[data-testid="stButton"] > button {
     background: transparent !important; border: none !important;
     box-shadow: none !important;
-    color: rgba(255,255,255,.80) !important;
+    color: #3c4761 !important;
     font-size: 13.5px !important; font-weight: 500 !important;
     line-height: 1.2 !important; white-space: nowrap !important;
     padding: 8px 12px !important; min-height: 38px !important;
@@ -708,8 +712,8 @@ st.markdown(("""
   }
   div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
   div[data-testid="stButton"] > button:hover {
-    background: rgba(255,255,255,.11) !important;
-    color: #ffffff !important; transform: none !important;
+    background: #eef3f9 !important;
+    color: #101728 !important; transform: none !important;
   }
   /* La langue active en pastille bleue : le vert est la couleur de la
      navigation, et deux verts différents sur le même écran se lisaient comme
@@ -1227,7 +1231,7 @@ def _rendre_ruban():
         with cols[-1]:
             st.markdown(
                 f'<div class="ruban-unep"><img alt="UNEP" '
-                f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}"></div>',
+                f'src="data:image/png;base64,{assets.LOGO_UNEP_BLEU}"></div>',
                 unsafe_allow_html=True)
 
         st.markdown(
