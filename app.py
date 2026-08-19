@@ -210,9 +210,9 @@ st.markdown(("""
     font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
     color: var(--encre-2);
   }
-  /* padding-top nul : le ruban vert est le premier élément de chaque page
-     et doit toucher le haut de la fenêtre. Le reste du contenu retrouve son
-     air sous le bandeau, via la marge de .bh-contexte. */
+  /* padding-top nul : la photo est le premier élément de la page d'entrée et
+     doit toucher le haut de la fenêtre. Sur les autres pages, où il n'y a
+     plus rien au-dessus du titre, c'est .bh-vide qui redonne l'air. */
   .block-container { max-width: 1240px; padding-top: 0; padding-bottom: 5rem; }
 
   /* ================= la barre d'outils de Streamlit : SUPPRIMÉE ==========
@@ -683,99 +683,79 @@ st.markdown(("""
     margin-top: 10px; padding: 0 3px;
   }
 
-  /* ================= le bandeau du haut =================================
-     Une barre vert profond qui court d'un bord à l'autre, dans le même vert
-     que la colonne de gauche : les deux ne font plus qu'un cadre, et le
-     contenu blanc s'y pose comme une feuille.
+  /* ================= l'en-tête de page ===================================
+     IL N'Y A PLUS DE RUBAN, et les règles qui l'habillaient ont été retirées
+     avec lui : une rangée pleine largeur, des boutons de langue déguisés en
+     pastilles, un cadre pour le logo. Les trois contenus sont partis ailleurs
+     — la langue en tête de la colonne verte, le logo sur la photo, les
+     onglets dans la colonne depuis longtemps — et une feuille de style qui
+     décrit un élément disparu est un piège pour la prochaine retouche. */
 
-     ELLE PORTE DEUX CHOSES : la langue à gauche, le logo du PNUE à droite.
-     Elle a d'abord repris les six entrées de navigation ; c'était une redite —
-     la colonne de gauche les affiche en permanence.
-
-     PLEINE LARGEUR. Le contenu du site reste borné à 1240 px — une ligne qui
-     court sur 1900 px ne se lit pas. Le bandeau, lui, touche les deux bords :
-     largeur = la fenêtre MOINS la colonne de gauche, fixe à 310 px. Si un jour
-     vous changez cette largeur, changez les deux valeurs ensemble, sinon le
-     bandeau dépasse à droite et le logo sort de l'écran.
-
-     Streamlit ne donne pas de marqueur propre à une rangée de colonnes : on y
-     glisse une ancre invisible et on habille la rangée qui la contient. */
-  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre) {
-    width: calc(100vw - 310px) !important;
-    max-width: calc(100vw - 310px) !important;
-    margin-left: calc(-50vw + 50% + 155px);
-    /* Les feuilles de style injectées par st.markdown occupent chacune un
-       bloc vide en tête de page, et la gouttière verticale de Streamlit
-       s'ajoute par-dessus : 32 px de blanc avant le bandeau. On les remonte. */
-    margin-top: -32px; margin-bottom: 0;
-    /* PLUS DE VERT ICI. La bande verte doublait la colonne de gauche, qui
-       porte deja l'identite, et elle poussait le premier chiffre de chaque
-       page sous la ligne de flottaison. Il reste une barre claire, la plus
-       discrete possible : elle ne porte que la langue et le logo. */
-    background: #ffffff; border-bottom: none;
-    padding: 10px 24px 10px 22px; min-height: 78px;
-    align-items: center; gap: 4px !important; flex-wrap: nowrap !important;
-  }
-  .ruban-ancre { display: none; }
-
-  .ruban-globe {
-    display: flex; align-items: center; justify-content: center;
-    color: #8a93a5; height: 38px;
-  }
-
-  /* Les deux langues : des boutons Streamlit déguisés en pastilles. Au repos
-     transparents — c'est le bandeau qui porte la couleur ; au survol un voile
-     clair ; la langue courante prend la pastille verte. */
-  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
-  div[data-testid="stButton"] > button {
-    background: transparent !important; border: none !important;
-    box-shadow: none !important;
-    color: #3c4761 !important;
-    font-size: 13.5px !important; font-weight: 500 !important;
-    line-height: 1.2 !important; white-space: nowrap !important;
-    padding: 8px 12px !important; min-height: 38px !important;
-    height: auto !important; border-radius: 999px !important;
-    justify-content: center !important;
-    transition: background .13s ease, color .13s ease;
-  }
-  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
-  div[data-testid="stButton"] > button p {
-    white-space: nowrap !important;
-  }
-  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
-  div[data-testid="stButton"] > button:hover {
-    background: #eef7f2 !important;
-    color: #101728 !important; transform: none !important;
-  }
-  /* La langue active suit la même couleur que tout le reste. Elle était en
-     bleu pour ne pas se confondre avec la navigation ; c'est la distinction
-     qui a fini par coûter plus qu'elle ne rapportait — deux couleurs d'accent
-     sur un même écran se lisent comme deux familles d'objets, et il n'y en a
-     qu'une ici. La position et le contexte suffisent à distinguer un choix de
-     langue d'un onglet de page. */
-  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
-  div[data-testid="stButton"] > button[kind="primary"] {
-    background: #1c6349 !important; color: #ffffff !important;
-    font-weight: 600 !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,.22) !important;
-  }
-  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
-  div[data-testid="stButton"] > button[kind="primary"]:hover {
-    background: #237556 !important;
-  }
-  .ruban-unep {
-    display: flex; justify-content: flex-end; align-items: center;
-    padding-right: 12px;
-  }
-  .ruban-unep img { height: 62px; display: block; }
-
-  /* Le bandeau de paysage suit le ruban et déborde comme lui : les deux
-     forment un seul en-tête, sans liseré blanc entre eux. */
+  /* La photo déborde la colonne de texte et touche les deux bords : c'est
+     un en-tête, pas une illustration posée dans le contenu. */
   .bandeau-haut {
     width: calc(100vw - 310px) !important;
     max-width: calc(100vw - 310px) !important;
     margin-left: calc(-50vw + 50% + 155px);
-    margin-top: 0; margin-bottom: 0;
+    /* LES 32 PIXELS REPRIS. Chaque feuille de style injectée par st.markdown
+       laisse un bloc vide en tête de page, et la gouttière de Streamlit
+       s'ajoute par-dessus : la photo commençait 32 px sous le haut de la
+       fenêtre, avec une bande blanche au-dessus d'elle. */
+    margin-top: -32px; margin-bottom: 0;
+  }
+  /* L'enveloppe existe pour que le logo puisse se poser DANS la photo :
+     un élément en position absolue se place par rapport au premier parent
+     positionné, et l'image seule n'en est pas un. */
+  .bandeau-enveloppe { position: relative; display: block; line-height: 0; }
+  /* Le voile : sombre à gauche, éteint aux deux tiers. Il ne couvre pas
+     l'image, il lui donne un coin lisible. */
+  .bandeau-voile {
+    position: absolute; top: 0; left: 0; bottom: 0;
+    width: min(58%, 640px); pointer-events: none;
+    background: linear-gradient(100deg, rgba(10,24,18,.66) 0%,
+                rgba(10,24,18,.42) 38%, rgba(10,24,18,0) 100%);
+  }
+  .bandeau-logo {
+    position: absolute; top: 24px; left: 34px; height: 62px;
+    opacity: .95; filter: drop-shadow(0 1px 8px rgba(0,0,0,.35));
+  }
+
+  /* --- les deux langues, en tête de la colonne verte ------------------- */
+  /* Elles empruntent la classe `st-key-lang_*` de leur bouton : c'est le seul
+     point d'accroche stable que Streamlit offre sur un widget précis. Tout ce
+     que la colonne impose aux boutons — fond, relief, soulèvement au survol —
+     est défait ici, et il faut le défaire explicitement : ces règles-là sont
+     posées en !important. */
+  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button,
+  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button[kind="primary"] {
+    background: transparent !important; border: none !important;
+    box-shadow: none !important; padding: 0 !important;
+    min-height: 0 !important; height: auto !important;
+    justify-content: flex-start !important; transform: none !important;
+  }
+  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button p {
+    font-size: 12px !important; font-weight: 700 !important;
+    letter-spacing: .1em !important; text-transform: uppercase;
+    color: rgba(255,255,255,.40) !important;
+    transition: color .15s ease;
+  }
+  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button:hover p {
+    color: rgba(255,255,255,.78) !important;
+  }
+  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button[kind="primary"] p {
+    color: #ffffff !important;
+  }
+  /* La rangée de langue ouvre la colonne : un peu d'air au-dessus, un filet
+     en dessous pour la séparer de la marque sans la souligner. */
+  section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:has(
+      div[class*="st-key-lang_"]) {
+    padding: 14px 2px 12px; margin-bottom: 2px;
+    border-bottom: 1px solid rgba(255,255,255,.10);
   }
 
   /* La ligne de contexte, sous le ruban : la page courante à gauche, ce sur
@@ -786,7 +766,7 @@ st.markdown(("""
     gap: 16px; flex-wrap: wrap; margin: 12px 0 10px;
   }
   /* Sans ligne de contenu, le bandeau collerait au titre de la page. */
-  .bh-vide { height: 22px; }
+  .bh-vide { height: 20px; }
   .bh-page {
     font-size: 16.5px; font-weight: 700; color: #101728;
     letter-spacing: -.01em;
@@ -1123,6 +1103,11 @@ st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
 # barre. Les conteneurs gardent leur place dans la page pendant qu'on les
 # remplit dans un autre ordre — sans eux, la langue s'afficherait au-dessus du
 # logo, ce qui n'a aucun sens dans un menu.
+# LA LANGUE EST MONTÉE EN TÊTE DE LA COLONNE, AU-DESSUS DE LA MARQUE.
+# Elle occupait le ruban blanc du haut, qui n'existait que pour elle et pour
+# le logo ; les deux étant partis — la langue ici, le logo sur la photo — le
+# ruban a disparu et chaque page commence par son titre.
+_sb_langue_haut = st.sidebar.container()
 _sb_marque = st.sidebar.container()
 _sb_nav = st.sidebar.container()
 _sb_langue = st.sidebar.container()
@@ -1276,52 +1261,17 @@ def _entree_nav(mode, icone):
 # o\u00f9 l'on va. Ce qu'il ne faut surtout pas, c'est que les deux listes
 # divergent \u2014 d'o\u00f9 la source unique `_NAV`, dont les deux se servent.
 def _rendre_ruban():
-    """Le bandeau vert du haut : les deux langues à gauche, le logo à droite.
+    """L'en-tête de page : la photo, et rien d'autre.
 
-    IL N'Y A PAS D'ONGLETS ICI. Les six entrées y étaient reprises mot pour mot
-    depuis la colonne de gauche, qui les affiche déjà en permanence : deux
-    menus identiques à quinze centimètres l'un de l'autre. La navigation vit
-    dans la colonne ; le bandeau porte la langue et la marque.
-
-    LA LANGUE EN DEUX MOTS, PAS EN MENU. « Français » et « English » côte à
-    côte, avec le globe : on lit et on clique d'un seul geste, là où un menu
-    déroulant demandait d'ouvrir, viser, choisir — pour deux choix.
-
-    Streamlit n'encadre pas une rangée de boutons dans son propre HTML : chaque
-    appel à st.markdown vit dans son conteneur. On glisse donc une ancre
-    invisible dans la rangée, et le CSS habille la rangée QUI LA CONTIENT, via
-    :has().
+    IL N'Y A PLUS DE RUBAN. Cette barre blanche a porté successivement des
+    onglets (retirés : la colonne de gauche les affichait déjà), la langue
+    (montée en tête de cette colonne) et le logo du PNUE (posé sur la photo).
+    Vidée de ses trois contenus, elle n'était plus qu'une bande de blanc en
+    haut de chaque page ; la fonction ne s'en va pas, c'est le contenant qui
+    disparaît. Reste ici la photo — sur la seule page d'entrée — et le rappel
+    du filtre posé, quand il y en a un.
     """
     with _ruban:
-        # Les deux colonnes de langue sont plus larges depuis que le globe
-        # a disparu : à 1,15 elles reprenaient sa place et coupaient
-        # « Français » en deux lignes.
-        cols = st.columns([1.6, 1.6, 5.2, 2.6],
-                          vertical_alignment="center")
-        # LE GLOBE A ÉTÉ RETIRÉ. « Français » et « English » sont écrits en
-        # toutes lettres dans leur propre langue : un pictogramme devant deux
-        # mots qui se lisent déjà n'ajoutait rien.
-        #
-        # L'ANCRE RESTE DANS LA PREMIÈRE COLONNE, ET C'EST ESSENTIEL : la
-        # feuille de style habille la rangée QUI CONTIENT cette ancre, via
-        # :has(). Sortie de la rangée, elle emporte tout le style avec elle —
-        # les boutons redeviennent des cartes blanches et les libellés se
-        # coupent en deux lignes.
-        for col, code in zip(cols[0:2], ("fr", "en")):
-            with col:
-                st.button(i18n.LANGUES[code], key=f"lang_{code}",
-                          on_click=_changer_langue, args=(code,),
-                          type=("primary"
-                                if st.session_state["choix_langue"] == code
-                                else "secondary"),
-                          use_container_width=True)
-        with cols[-1]:
-            st.markdown(
-                f'<div class="ruban-ancre"></div>'
-                f'<div class="ruban-unep"><img alt="UNEP" '
-                f'src="data:image/png;base64,{assets.LOGO_UNEP_BLEU}"></div>',
-                unsafe_allow_html=True)
-
         # LA PHOTO N'EST PLUS QUE SUR LE CADRE DE RÉSILIENCE, ET C'EST UN
         # CHOIX DE FONCTION, PAS DE GOÛT. Un bandeau de 300 px répété en tête
         # de chaque page repoussait chaque fois le premier chiffre sous la
@@ -1329,11 +1279,22 @@ def _rendre_ruban():
         # d'être regardée. Elle reste là où elle dit quelque chose : la page
         # d'entrée, celle qui présente le paysage qu'on mesure.
         photo = st.session_state.get("app_mode") == MODE_METHODO
+        # LE LOGO DU PNUE EST POSÉ SUR LA PHOTO, EN BLANC, ET IL LUI FAUT UN
+        # VOILE. La photo est un dessin clair : un logo blanc posé dessus
+        # disparaîtrait purement et simplement. Le voile est un dégradé sombre
+        # qui s'éteint vers la droite — il fonce l'angle où se pose la marque
+        # et laisse l'image intacte partout ailleurs. Sans lui, la seule autre
+        # option aurait été de reprendre le logo bleu, c'est-à-dire de revenir
+        # à ce qu'on cherchait à quitter.
         st.markdown(
-            (f'<img src="data:image/jpeg;base64,{assets.PAYSAGE_CAMP_PERRIN}" '
-             f'class="bandeau-haut" '
+            (f'<div class="bandeau-haut bandeau-enveloppe">'
+             f'<img src="data:image/jpeg;base64,{assets.PAYSAGE_CAMP_PERRIN}" '
              f'style="width:100%;height:300px;object-fit:cover;'
-             f'object-position:50% 62%;display:block">' if photo else "")
+             f'object-position:50% 62%;display:block">'
+             f'<div class="bandeau-voile"></div>'
+             f'<img class="bandeau-logo" alt="UNEP" '
+             f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
+             f'</div>' if photo else "")
             # RIEN D'ÉCRIT SOUS LE BANDEAU QUAND AUCUN FILTRE N'EST POSÉ.
             # Chaque page porte déjà son titre. Le rappel du filtre, lui, ne
             # disait rien tant qu'aucun filtre n'était choisi. Il n'apparaît
@@ -1344,6 +1305,22 @@ def _rendre_ruban():
                if filtres.actif() else '<div class="bh-vide"></div>'),
             unsafe_allow_html=True)
 
+
+# LES DEUX LANGUES, EN TÊTE DE LA COLONNE, FONDUES DANS LE VERT.
+# Deux mots posés sur le fond, sans cadre ni pastille : la langue courante en
+# blanc franc, l'autre en blanc estompé. C'est le seul endroit du site où un
+# état se lit à la valeur du texte et non à sa couleur de fond — et c'est
+# voulu : un choix de langue n'est pas une page, il ne doit pas se présenter
+# comme un onglet.
+with _sb_langue_haut:
+    _cl = st.columns([1.25, 1, 0.5])
+    for _col, _code in zip(_cl[0:2], ("fr", "en")):
+        with _col:
+            st.button(i18n.LANGUES[_code], key=f"lang_{_code}",
+                      on_click=_changer_langue, args=(_code,),
+                      type=("primary"
+                            if st.session_state["choix_langue"] == _code
+                            else "secondary"))
 
 with _sb_marque:
     st.markdown(
