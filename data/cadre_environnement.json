@@ -1,0 +1,346 @@
+{
+ "terrain": [
+  {
+   "nom": "Richesse spécifique",
+   "unite": "Odonates (Od) nombre d’espèces observées sur un transect standardisé\n\nOiseaux (Oi) nombre d’espèces observées sur un transect standardisé\n\nPolinisateurs (Po) nombre d’espèces de pollinisateurs ou de groupes morpho spécifiques sur un transect standardisé",
+   "s0": "(Od) Absence totale d’odonates ou seulement une espèce tolérante signe d’eau stagnante polluée ravin érodé ou rivière coupée par l’ensablement\n(Oi) Absence totale d’oiseaux ou présence unique d’espèces tolérantes et ubiquistes comme xxx signe d’une dégradation extrême du paysage agricole et d’une quasi disparition des habitats naturels\n(Po) Absence totale de pollinisateurs ou présence unique d’un taxon tolérant et opportuniste comme xxx mais sans abeilles sauvages ni papillons signe d’une dégradation extrême absence de fleurs sauvages pesticides intensifs ou sols nus",
+   "s10": "(Od) Plus de quinze espèces dans un même tronçon présence de familles sensibles comme xxxx  signe d’une eau claire d’une bonne connectivité forestière et d’une très faible pression humaine dans le bassin\n\n(Oi) Plus de 25 (?) espèces dans un même transect dont présence d’endémiques ou quasi endémiques sensibles comme xxx ou espèces forestières de haute qualité signe d’un état proche de référence avec haute diversité et forte capacité de récupération écologique\n(Po) Plus de vingt cinq espèces sur un transect incluant grande diversité d’abeilles sauvages  papillons diurnes variés et plusieurs sphinx nocturnes sensibles signe d’un habitat  avec mosaïque florale diversifiée haute connectivité et forte capacité de récupération"
+  },
+  {
+   "nom": "Abondance Relative",
+   "unite": "Odonates (Od) nombre d’individus observés par taxon ou groupe fonctionnel sur un transect standardisé\nOiseaux (Oi) nombre d’individus observés par guildes fonctionnelles sur un transect standardisé\nPollinisateurs (Po) nombre d’individus observés par taxon ou groupe fonctionnel sur un transect standardisé",
+   "s0": "(Od) Absence totale d’individus ou une ou deux libellules très tolérantes, activité quasi nulle, eau dégradée, stagnante ou très turbide, habitats larvaires détruits.\n\n(Oi) Absence totale d’oiseaux ou un seul individu généraliste tolérant, silence écologique, absence d’insectivores et de nectarivores, paysage très dégradé.\n\n(Po) Absence totale d’individus, seulement une ou deux observations opportunistes, aucune abeille sauvage ni papillon, absence totale d’activité florale.",
+   "s10": "(Od) Plus de cinquante individus observés sur un transect, présence de familles sensibles, eau claire, habitats connectés et forte capacité de récupération.\n\n(Oi) Plus de trente espèces et très forte abondance d’individus, présence d’espèces sensibles et endémiques, état proche d’une référence écologique.\n\n(Po) Plus de cent individus cumulés avec grande diversité d’abeilles sauvages, papillons diurnes et sphinx nocturnes sensibles, mosaïque florale riche et connectée."
+  },
+  {
+   "nom": "Diversité fonctionnelle",
+   "unite": "Odonates (Od) diversité des traits fonctionnels, par exemple strates de vol, modes de chasse, types d’habitats larvaires, préférences hydriques\nOiseaux (Oi) diversité des guildes fonctionnelles, par exemple insectivores, frugivores, nectarivores, granivores, carnivores, rapaces\nPollinisateurs (Po) diversité des groupes fonctionnels, par exemple abeilles sauvages généralistes, abeilles spécialistes, papillons diurnes, sphinx nocturnes, syrphides, coléoptères floricoles",
+   "s0": "(Od) Une seule fonction représentée, uniquement des espèces très tolérantes. Un seul mode de chasse, une seule strate de vol, absence totale de spécialisations.\n\n(Oi) Une seule guilde dominée par des espèces généralistes. Aucun insectivore forestier, frugivore ou nectarivore.\n\n(Po) Un seul groupe fonctionnel, dominé par des espèces opportunistes. Aucun pollinisateur spécialisé.",
+   "s10": "(Od) Ensemble complet de fonctions, strates de vol variées, modes de chasse multiples, espèces lentiques et lotiques, diversité maximale de microhabitats larvaires, forte complémentarité fonctionnelle\n\n(Oi) Guildes complètes et équilibrées, réseau trophique fonctionnel, bonne représentation d’insectivores spécialisés, de frugivores de canopée et de nectarivores sensibles.\n\n(Po) Large éventail de groupes fonctionnels, forte présence d’abeilles spécialistes, papillons de différents microhabitats, sphinx nocturnes sensibles, activité de pollinisation diversifiée et stable."
+  },
+  {
+   "nom": "Diversité phylogénétique",
+   "unite": "Odonates (Od) diversité en lignées évolutives et en familles (par exemple Libellulidae, Coenagrionidae, Calopterygidae, Gomphidae)\nOiseaux (Oi) diversité en familles et ordres aviens (par exemple Thraupidae, Trochilidae, Turdidae, Accipitridae)\nPollinisateurs (Po) diversité en familles et lignées profondes (par exemple Apidae, Halictidae, Andrenidae, Pieridae, Nymphalidae, Sphingidae, Syrphidae)",
+   "s0": "(Od) Une seule famille représentée, aucune lignée sensible ou profonde, système très simplifié.\n\n(Oi) Très faible profondeur évolutive, une ou deux familles généralistes seulement.\n\n(Po) Un seul groupe dominant, absence totale des lignées spécialisées ou nocturnes, phylogénie réduite au strict minimum.",
+   "s10": "(Od) Plusieurs familles présentes, lignées divergentes anciennes bien représentées, forte profondeur évolutive indiquant un habitat fonctionnel.\n\n(Oi) Multiples familles et ordres aviens présents, présence d’espèces issues de lignées profondes, forte représentation évolutive.\n\n(Po) Large spectre phylogénétique incluant plusieurs familles d’abeilles sauvages, de papillons diurnes et de sphinx nocturnes, structure évolutive riche et complète."
+  },
+  {
+   "nom": "Shannon (H’)",
+   "unite": "Odonates (Od)\nValeur de H’ reflétant la richesse en espèces d’odonates et l’équilibre de leurs effectifs\nOiseaux (Oi)\nValeur de H’ reflétant la richesse en espèces d’oiseaux et la répartition équilibrée entre guildes fonctionnelles\nPollinisateurs (Po)\nValeur de H’ reflétant la richesse en espèces ou groupes morpho fonctionnels de pollinisateurs et l’équilibre de leurs effectifs",
+   "s0": "H’ = 0,00 à 0,10\nUne seule espèce très tolérante, aucune équitabilité.\nOiseaux (Oi)\nH’ = 0,00 à 0,15\nUne ou deux espèces ubiquistes dominent entièrement.\nPollinisateurs (Po)\nH’ = 0,00 à 0,10\nUn seul groupe ou taxon opportuniste présent.",
+   "s10": "Odonates (Od)\nH’ = 2,0 à 2,2\nRichesse spécifique élevée, familles sensibles présentes, répartition équilibrée des effectifs.\nOiseaux (Oi)\nH’ = 2,8 à 3,0\nGrand nombre d’espèces réparties entre plusieurs guildes, forte équitabilité, présence d’espèces sensibles et endémiques.\nPollinisateurs (Po)\nH’ = 2,6 à 2,8\nTrès forte diversité d’abeilles sauvages, papillons diurnes variés, sphinx nocturnes, groupes bien équilibrés en abondance."
+  },
+  {
+   "nom": "Simpson (1–D)",
+   "unite": "Odonates (Od)\nValeur de l’indice de Simpson (1–D) reflétant la probabilité que deux odonates choisis au hasard appartiennent à des espèces différentes, donc la richesse en espèces et la faiblesse de la dominance\nOiseaux (Oi)\nValeur de l’indice de Simpson (1–D) reflétant la probabilité que deux oiseaux choisis au hasard appartiennent à des espèces différentes, donc la diversité en espèces et l’équilibre entre guildes fonctionnelles\nPollinisateurs (Po)\nValeur de l’indice de Simpson (1–D) reflétant la probabilité que deux pollinisateurs choisis au hasard appartiennent à des espèces ou groupes morpho fonctionnels différents, donc la diversité et la faiblesse de la dominance d’un seul groupe",
+   "s0": "Odonates (Od) 0,00 à 0,05\nUne espèce ultra dominante, aucune diversité réelle.\nOiseaux (Oi) 0,00 à 0,10\nUne ou deux espèces ubiquistes dominent tout le paysage.\nPollinisateurs (Po)  0,00 à 0,05\nUn seul groupe fonctionnel observé, aucune diversité.",
+   "s10": "Odonates (Od) 0,80 à 0,85\nAucune espèce dominante, diversité équilibrée, familles sensibles présentes.\nOiseaux (Oi) 0,88 à 0,92\nTrès forte diversité et équitabilité, guildes complètes, présence d’espèces sensibles et endémiques.\nPollinisateurs (Po) 0,85 à 0,90\nTrès forte diversité, répartition équilibrée entre abeilles sauvages, papillons, sphinx, syrphides."
+  }
+ ],
+ "vegetation": [
+  {
+   "nom": "NDVI médiane saison sèche",
+   "mesure": "Activité végétale sous contrainte hydrique lors de la période la plus sèche, calculée avec la médiane pour éviter les valeurs aberrantes.",
+   "lien": "Un NDVI élevé en saison sèche montre que la végétation reste active malgré le stress hydrique et possède une forte résistance structurelle.",
+   "seuils": "0 =  < 0,30 ; 10 = > 0,70"
+  },
+  {
+   "nom": "Variabilité NDVI (SD ou CV)",
+   "mesure": "Instabilité temporelle ou spatiale de la végétation, révélant des zones stressées ou dégradées.",
+   "lien": "Une variabilité faible indique une végétation stable capable de maintenir ses fonctions même sous perturbations.",
+   "seuils": "0 = > 0,35 ; 10 = < 0,10"
+  },
+  {
+   "nom": "EVI",
+   "mesure": "Vigueur et densité de la végétation, corrigée des saturations du NDVI dans les milieux très verts.",
+   "lien": "Un EVI élevé reflète une biomasse dense et productive capable d’absorber les chocs climatiques.",
+   "seuils": "0 = < 0,20 ; 10 = > 0,55"
+  },
+  {
+   "nom": "SAVI",
+   "mesure": "Indice de végétation adapté aux zones sèches qui corrige l’effet du sol nu.",
+   "lien": "Un SAVI élevé indique une bonne couverture écologique dans les milieux arides et une meilleure résistance aux sécheresses.",
+   "seuils": "0 = < 0,15 ; 10 = > 0,45"
+  },
+  {
+   "nom": "VARI",
+   "mesure": "Mesure de la végétation dans les zones côtières turbides ou très lumineuses où le NDVI ne fonctionne pas bien.",
+   "lien": "Un VARI élevé indique que la végétation reste fonctionnelle malgré salinité, érosion et intrusions marines.",
+   "seuils": "0 =  < 0,05 ; 10 =  > 0,25"
+  },
+  {
+   "nom": "FVC",
+   "mesure": "Proportion du sol réellement couverte par la végétation (canopée, arbustes, herbacées).",
+   "lien": "Une couverture élevée protège sols, biodiversité et microclimat et augmente la résistance générale du paysage.",
+   "seuils": "0 = < 20 % ; 10 = > 80 %"
+  },
+  {
+   "nom": "NDWI ou MNDWI",
+   "mesure": "Humidité de la végétation et des sols, présence d’eau libre.",
+   "lien": "Un NDWI élevé montre une bonne disponibilité hydrique, ce qui réduit l’impact des sécheresses et soutient la régénération.",
+   "seuils": "0 =  < -0,20 ; 10 =  > 0,20"
+  },
+  {
+   "nom": "Couvert forestier terrestre",
+   "mesure": "Surface forestière stable et continue, mesurée par télédétection.",
+   "lien": "Une forte couverture forestière stabilise les sols, retient l’eau et réduit l’exposition aux événements climatiques extrêmes.",
+   "seuils": "0 = forêt < 15 % ; 10 = forêt > 60 %"
+  },
+  {
+   "nom": "Sol dégradé SDG 15.3.1 (%)",
+   "mesure": "Proportion de sols classés comme dégradés selon les standards internationaux.",
+   "lien": "Un sol peu dégradé retient mieux l’eau, soutient plus d’espèces et offre une meilleure capacité de récupération.",
+   "seuils": "0 = >60 % de sols dégradés ; 10 = <10 %"
+  },
+  {
+   "nom": "Seagrass surface",
+   "mesure": "Étendue des herbiers marins en hectares.",
+   "lien": "Des herbiers étendus stabilisent les fonds, améliorent la clarté de l’eau et soutiennent les stades juvéniles d’espèces marines.",
+   "seuils": "0 = <20 % de couverture ; 10 = >80 %"
+  },
+  {
+   "nom": "Mangroves surface",
+   "mesure": "Surface totale de mangroves mesurée par satellite.",
+   "lien": "Une mangrove étendue protège le littoral, atténue les tempêtes et soutient la reproduction halieutique.",
+   "seuils": "0 = <20 % de la surface historique ; 10 = >80 % de la surface historique"
+  }
+ ],
+ "fragmentation": [
+  {
+   "nom": "Nombre de patchs d’habitat",
+   "mesure": "Nombre total d’unités d’habitat naturel séparées dans un paysage. Plus il y en a, plus les grands habitats ont été découpés.",
+   "lien": "Un faible nombre de patchs indique un paysage compact où les espèces peuvent se déplacer facilement, se nourrir et maintenir des populations stables.",
+   "seuils": "0 = multiplication des patchs, >200 patchs par 100 km² ; 10 = paysage peu morcelé, <40 patchs par 100 km²"
+  },
+  {
+   "nom": "Taille moyenne des patchs",
+   "mesure": "Superficie moyenne d’un patch en hectares, indicateur direct de la capacité d’un habitat à soutenir une population viable.",
+   "lien": "Des patchs plus grands offrent des zones centrales stables où les espèces peuvent vivre, se reproduire et résister aux perturbations.",
+   "seuils": "0 = patchs très petits <1 ha ; 10 = patchs larges >20 ha"
+  },
+  {
+   "nom": "Taille médiane des patchs",
+   "mesure": "Taille typique de la majorité des patchs, robuste aux valeurs extrêmes.",
+   "lien": "Une taille médiane élevée montre que la fragmentation n’est pas localisée mais faible sur tout le paysage.",
+   "seuils": "0 = médiane <0,5 ha ; 10 = médiane >10 ha"
+  },
+  {
+   "nom": "Densité d’edges",
+   "mesure": "Longueur totale des lisières entre habitats naturels et milieux dégradés, rapportée à la surface.",
+   "lien": "Une faible densité d’edges indique un habitat continu où les conditions écologiques internes restent stables.",
+   "seuils": "0 = densité très élevée >100 m/ha ; 10 = faible densité <20 m/ha"
+  },
+  {
+   "nom": "Contraste habitat matrice",
+   "mesure": "Différence entre l’habitat naturel (forêt, mangrove) et la matrice environnante (agriculture, urbain).",
+   "lien": "Un faible contraste permet aux espèces de circuler entre patchs, ce qui renforce la connectivité et la persistance des populations sensibles.",
+   "seuils": "0 = contraste fort (forêt entourée d’urbain ou d’agriculture conventionnelle) ; 10 = contraste faible (mosaïque arborée ou agroforesterie)"
+  },
+  {
+   "nom": "Distance moyenne entre patchs",
+   "mesure": "Distance moyenne entre les centres des patchs d’habitat, mesurée en mètres.",
+   "lien": "Des distances faibles facilitent la dispersion, la recolonisation et réduisent le risque d’isolement génétique.",
+   "seuils": "0 = distances >1000 m ; 10 = distances <200 m"
+  },
+  {
+   "nom": "Surface totale CORE",
+   "mesure": "Surface totale des habitats de très bonne qualité capables de maintenir des populations (forêt fermée, zones humides permanentes).",
+   "lien": "Une grande surface CORE soutient la reproduction, la survie et la stabilité écologique, ce qui accroît la résilience du paysage.",
+   "seuils": "0 = <5 % de CORE ; 10 = >25 % de CORE"
+  },
+  {
+   "nom": "Surface totale MOVE",
+   "mesure": "Surface des habitats intermédiaires permettant aux espèces de se déplacer entre les noyaux CORE.",
+   "lien": "Un paysage avec beaucoup de MOVE est plus perméable et permet aux espèces de circuler même si le CORE est fragmenté.",
+   "seuils": "0 = <10 % de MOVE ; 10 = >40 %"
+  },
+  {
+   "nom": "Ratio CORE / habitat favorable",
+   "mesure": "Proportion de CORE par rapport à l’ensemble des habitats naturels favorables au maintien des espèces.",
+   "lien": "Un ratio élevé indique une forte qualité écologique et une bonne capacité de persistance des populations sensibles.",
+   "seuils": "0 = <0,10 ; 10 = >0,40"
+  },
+  {
+   "nom": "Ratio CORE+MOVE / habitat favorable",
+   "mesure": "Proportion des habitats permettant la vie ou le déplacement des espèces par rapport à toute la zone naturelle.",
+   "lien": "Un ratio élevé révèle un paysage très perméable où la fragmentation a peu d’effets sur la mobilité écologique.",
+   "seuils": "0 = <0,30 ; 10 = >0,70"
+  }
+ ],
+ "connectivite": [
+  {
+   "nom": "PC(d*/2)",
+   "mesure": "Probabilité de connexion entre patchs pour une distance restrictive correspondant aux espèces peu mobiles.",
+   "lien": "Un PC faible à cette distance montre que les espèces les plus sensibles ne peuvent presque pas circuler, ce qui fragilise rapidement les populations locales.",
+   "seuils": "0 = PC < 0,05 ; 10 = PC > 0,40"
+  },
+  {
+   "nom": "PC(d*)",
+   "mesure": "Probabilité de connexion entre patchs pour la distance centrale de dispersion typique des espèces cibles.",
+   "lien": "Un PC élevé à cette distance indique que la majorité des espèces peuvent rejoindre d’autres habitats et maintenir leurs populations.",
+   "seuils": "0 = PC < 0,10 ; 10 = PC > 0,60"
+  },
+  {
+   "nom": "PC(2d*)",
+   "mesure": "Probabilité de connexion entre patchs pour les espèces très mobiles.",
+   "lien": "Un PC élevé signifie que les espèces les plus mobiles peuvent utiliser l’ensemble du paysage pour se disperser et recoloniser après perturbation.",
+   "seuils": "0 = PC < 0,20 ; 10 = PC > 0,75"
+  },
+  {
+   "nom": "IIC(d*/2)",
+   "mesure": "Connectivité structurelle des habitats pour les espèces peu mobiles.",
+   "lien": "Un IIC élevé révèle que même les espèces à faible déplacement disposent de réseaux de patchs accessibles, ce qui réduit le risque d’isolement.",
+   "seuils": "0 = IIC très faible ; 10 = IIC élevé et continu"
+  },
+  {
+   "nom": "IIC(d*)",
+   "mesure": "Connectivité structurelle pour la distance de dispersion typique.",
+   "lien": "Un bon score indique un paysage où les patchs sont suffisamment proches pour maintenir des échanges réguliers entre populations.",
+   "seuils": "0 = paysage très morcelé ; 10 = habitat largement connecté"
+  },
+  {
+   "nom": "IIC(2d*)",
+   "mesure": "Connectivité structurelle pour les espèces très mobiles.",
+   "lien": "Un bon score reflète une trame paysagère très perméable, permettant la recolonisation rapide après perturbation.",
+   "seuils": "0 = IIC faible ; 10 = IIC optimal avec réseau continu"
+  },
+  {
+   "nom": "dIIC totale",
+   "mesure": "Importance globale d’un patch dans la connectivité totale du paysage.",
+   "lien": "Une valeur élevée signifie que certains patchs jouent un rôle clé dans la stabilité et la résilience du réseau écologique.",
+   "seuils": "0 = aucune contribution des patchs ; 10 = patchs critiques connectés"
+  },
+  {
+   "nom": "dIIC intra",
+   "mesure": "Contribution interne d’un patch à la connectivité locale.",
+   "lien": "Un score élevé montre que les patchs fournissent des noyaux écologiques essentiels au maintien des populations.",
+   "seuils": "0 = patchs trop petits ou isolés ; 10 = patchs offrant des noyaux stables"
+  },
+  {
+   "nom": "dIIC flux",
+   "mesure": "Contribution au flux de déplacement entre patchs.",
+   "lien": "Un score élevé montre un paysage offrant de bonnes opportunités de circulation entre habitats.",
+   "seuils": "0 = flux très limités ; 10 = flux continus dans tout le paysage"
+  },
+  {
+   "nom": "dIIC connector",
+   "mesure": "Rôle d’un patch comme pont ou corridor essentiel reliant deux zones.",
+   "lien": "Une bonne valeur implique que les corridors critiques sont présents et non coupés, ce qui réduit l’isolement écologique.",
+   "seuils": "0 = absence de corridors ; 10 = corridors multiples et non fragmentés"
+  },
+  {
+   "nom": "Distance effective de dispersion pour guildes",
+   "mesure": "Distance réelle que peuvent parcourir amphibiens, oiseaux, pollinisateurs, odonates et chauves-souris.",
+   "lien": "Une distance adaptée garantit que les distances d’analyse sont réalistes et que la connectivité reflète les capacités biologiques des espèces.",
+   "seuils": "0 = distances inadaptées ou trop longues entraînant fausse connectivité ; 10 = distances ajustées par guilde"
+  },
+  {
+   "nom": "Ratio R = PCobs / PCmax",
+   "mesure": "Normalisation de la connectivité réelle par rapport à une connectivité parfaite.",
+   "lien": "Un ratio élevé montre que le paysage fonctionne presque comme s’il était intact, ce qui maximise la résilience écologique.",
+   "seuils": "0 = R < 0,30 ; 10 = R > 0,60"
+  }
+ ],
+ "cotier": [
+  {
+   "nom": "Turbidité et qualité de l’eau côtière",
+   "contexte": "Très important pour Haïti à cause de l’érosion et des bassins versants fortement dégradés",
+   "points": [
+    "Turbidité côtière moyenne (Sentinel-2)",
+    "Variabilité mensuelle de la turbidité",
+    "Extension des panaches turbides après pluie",
+    "TSS / matières en suspension (proxy par réflectance)",
+    "Transparence côtière (Kd490)"
+   ],
+   "verdict": "absolument pertinent et facile à produire"
+  },
+  {
+   "nom": "Mangroves",
+   "contexte": "Écosystèmes clés en Haïti, souvent dégradés mais présents sur tout le littoral sud et nord-est",
+   "points": [
+    "Surface totale des mangroves (Global Mangrove Watch + Sentinel-2)",
+    "Perte annuelle / gain annuel",
+    "Fragmentation (IIC, PC simple)",
+    "Largeur moyenne de la mangrove (shoreline buffering capacity)",
+    "Distance mangrove–ligne de côte (protection effective)"
+   ],
+   "verdict": "essentiel pour la résilience côtière en Haïti"
+  },
+  {
+   "nom": "Herbiers marins",
+   "contexte": "Très difficiles en Haïti, peu de données historiques mais Sentinel-2 fonctionne relativement bien",
+   "points": [
+    "Surface des herbiers",
+    "Fragmentation herbiers",
+    "Connectivité mangrove–herbier–récif (distance simple)"
+   ],
+   "verdict": "faisable mais attention aux confusions (sables, algues)"
+  },
+  {
+   "nom": "Récifs coralliens",
+   "contexte": "Indicateurs critiques, Haïti = un des pays au monde avec le plus faible niveau de monitoring, mais Allen Coral Atlas fournit des produits utilisables",
+   "points": [
+    "Pourcentage de corail vivant",
+    "Couverture alguale (macroalgae cover)",
+    "Indice de complexité/rugosité (depuis Allen Coral Atlas ou photo-mosaïques)",
+    "Anomalies thermiques (SST, Degree Heating Weeks – NOAA Coral Reef Watch)",
+    "Stress par turbidité sur récifs (croisement turbidité – récif)"
+   ],
+   "verdict": ""
+  },
+  {
+   "nom": "Dynamique littorale",
+   "contexte": "Haïti est très exposée à l’érosion, particulièrement dans le Sud et le Nord-Ouest",
+   "points": [
+    "Taux d’érosion côtière (m/an) – Landsat, DSAS",
+    "Migration de la ligne de rivage",
+    "Accrétion / perte de plages",
+    "Indice d’exposition côtière (distance corail → côte, angle d’attaque houle)"
+   ],
+   "verdict": "essentiel dans un pays très vulnérable aux ouragans"
+  },
+  {
+   "nom": "Indicateurs intégrés simples",
+   "contexte": "Approche plus réaliste pour Haïti, étant donné la disponibilité de données et les capacités locales",
+   "points": [
+    "Indice intégré de santé côtière (mangroves + herbiers + récifs)",
+    "Indice de pression côtière (turbidité + érosion + urbanisation)",
+    "Indice de protection naturelle du littoral (coral + mangrove + bathy)"
+   ],
+   "verdict": "très utile pour un SIE national parce que lisible pour les décideurs"
+  }
+ ],
+ "hydro": [
+  "Sécheresse, variabilité hydrique, anomalies pluviométriques (SPI, NDWI, indices d’humidité du sol)",
+  "Stress hydrique des végétations",
+  "Déficits hydrologiques prolongés",
+  "Turbidité des eaux douces",
+  "Température de surface (LST)",
+  "Disponibilité hydrique saisonnière",
+  "Indices d’aridité"
+ ],
+ "menages": [
+  "La fréquence d’usage ou d’exploitation : collecte de bois, coupe de mangroves, usage de pesticides, chasse ou prélèvement de ressources sensibles.",
+  "La dépendance aux ressources naturelles, mesurée par la part du revenu ou de l’alimentation provenant de la pêche, de l’agriculture, du charbon ou des produits forestiers.",
+  "La perception locale de l’état de l’environnement : présence ou disparition d’espèces clés, changements observés dans les cours d’eau, réduction des zones forestières.",
+  "La capacité d’adaptation : stratégies adoptées en cas de perte des récoltes, d’inondations ou de sécheresse, diversification des moyens d’existence.",
+  "Le degré d’organisation collective : règles locales de gestion des ressources, comités de vigilance, initiatives communautaires de restauration."
+ ],
+ "intro": {
+  "terrain": "La résilience environnementale peut être appréhendée à partir d’un ensemble de proxys écologiques fondés sur la composition, la structure et le fonctionnement des communautés biologiques. Parmi les groupes taxonomiques  les plus mobilisés dans les paysages tropicaux figurent les odonates, les insectes pollinisateurs et les communautés aviaires. Ces groupes réagissent rapidement aux modifications de l’habitat, ce qui en fait de bons révélateurs de la qualité des milieux et de leur capacité à absorber des perturbations.",
+  "transects": "La mesure de la résilience peut se faire à travers des transects d’anthroposiation, c’est-à-dire des gradients où l’on observe comment la composition des communautés change en fonction du niveau de perturbation humaine. Ces transects montrent la vitesse à laquelle les espèces sensibles disparaissent et la rapidité avec laquelle les espèces généralistes prennent leur place, ce qui constitue un signal important sur la résilience des systèmes écologiques. Plusieurs métriques composent cette approche.",
+  "geo": "Les indicateurs issus des relevés de terrain sont complétés par des indicateurs produits à partir de données géospatiales lesuqelles jouent un rôle essentiel, car elles permettent d’étendre les observations ponctuelles réalisées sur les transects à l’ensemble du territoire. Elles documentent la dynamique des écosystèmes, la fragmentation, la connectivité structurelle et fonctionnelle, la couverture et la qualité des habitats, ou encore l’évolution temporelle des pressions environnementales. Elles constituent ainsi un complément indispensable aux indicateurs biologiques.",
+  "fragmentation": "La fragmentation décrit la manière dont un paysage autrefois continu se retrouve découpé en petits morceaux sous l’effet de l’agriculture, des routes, de l’urbanisation ou des carrières, ce qui rend les déplacements des espèces plus difficiles et fragilise les populations locales. Un paysage très fragmenté présente de nombreux petits patchs, beaucoup de bordures entre milieux naturels et dégradés, un fort contraste entre habitat et matrice environnante, et de grandes distances entre patchs, autant de facteurs qui augmentent l’isolement écologique. À l’inverse, un paysage peu fragmenté offre des habitats de bonne qualité appelés CORE, capables de maintenir des populations viables, et des habitats intermédiaires MOVE qui servent de zones de passage. La qualité de la matrice se mesure notamment par la taille des CORE, la surface des MOVE et les ratios CORE ou CORE+MOVE par rapport au paysage favorable, qui indiquent la perméabilité générale du milieu et donc sa capacité à soutenir la mobilité, la reproduction, la colonisation et la résilience des espèces. Dans un paysage fragmenté, la capacité des espèces à se déplacer dépend fortement de leurs distances de dispersion, ce qui conditionne leur accès aux habitats CORE et aux corridors MOVE. Les amphibiens parcourent rarement plus de quelques centaines de mètres et nécessitent des patchs proches, avec des tailles d’habitats comprises entre 1 et 5 hectares pour rester viables. Les oiseaux forestiers se déplacent sur des distances plus grandes, typiquement autour de 1,5 à 3 kilomètres, avec une tolérance pouvant atteindre 6 kilomètres pour certaines espèces mobiles, et ont besoin de patchs de 5 à 20 hectares pour maintenir des populations stables. Les chauves-souris, beaucoup plus mobiles, peuvent franchir des distances de plusieurs kilomètres, généralement autour de 2 kilomètres dans les modèles de connectivité, mais parfois bien au-delà, avec des besoins en habitats d’au moins une dizaine d’hectares. Ces seuils définissent les distances d’analyse utilisées pour la connectivité (d*/2, d*, 2d*), permettent de tester la facilité de circulation dans différents scénarios et aident à déterminer si un paysage reste perméable ou devient isolant pour la faune.",
+  "connectivite": "La connectivité mesure dans quelle mesure les patchs d’habitat sont reliés entre eux et répond à une question simple mais centrale : une espèce peut-elle réellement passer d’un habitat à un autre dans le paysage actuel. Chaque espèce ayant des capacités de déplacement différentes, la distance de dispersion change selon la guilde. Les amphibiens ne parcourent que quelques centaines de mètres, les oiseaux forestiers plusieurs kilomètres et les chauves-souris parfois des dizaines de kilomètres. Pour tenir compte de cette variabilité, chaque analyse est réalisée avec trois distances seuils : d/2, qui représente une situation restrictive pour les espèces les moins mobiles, d*, qui correspond à la distance typique de déplacement, et 2d*, qui reflète un scénario permissif pour les espèces très mobiles. Ce triptyque permet de tester la robustesse des résultats, car la connectivité peut changer brutalement lorsque l’on modifie un seul seuil, un phénomène connu sous le nom d’effet de percolation. Les distances recommandées varient selon les guildes, par exemple 1,5, 3 et 6 km pour les oiseaux forestiers, 0,5, 1 et 2 km pour les pollinisateurs, ou encore 0,25, 0,5 et 1 km pour les zygoptères et 1, 2 et 4 km pour les anisoptères. Pour quantifier la connectivité, on utilise principalement deux familles d’indicateurs. La Probability of Connectivity (PC) estime la probabilité qu’un individu puisse se déplacer d’un patch à un autre en fonction de leur distance réelle. Elle repose sur la formule pij = exp(−dij / β) avec β = d*/ln2, ce qui garantit que deux patchs séparés par d* ont une probabilité de connexion de 0,5. On calcule PC pour les trois distances d/2, d* et 2d*. L’Integral Index of Connectivity (IIC) complète cette approche en offrant une lecture plus simple, indiquant directement si les patchs sont connectés et à quel degré, tout en permettant d’identifier les noyaux écologiques, les corridors essentiels ou les ponts critiques. On produit pour cela les indices IIC(d/2), IIC(d*), IIC(2d*) ainsi que les déclinaisons dIIC totale, dIIC intra, dIIC flux et dIIC connector. Enfin, pour comparer différents paysages ou différentes guildes, on normalise les valeurs en calculant PCmax, correspondant à un paysage parfaitement connecté, puis R = PCobs / PCmax. Ce ratio s’interprète simplement : R < 0,30 indique une faible connectivité ; 0,30 à 0,60 une connectivité intermédiaire ; et une valeur proche de 0,60 ou supérieure signale une bonne connectivité écologique.",
+  "pression": "Les données de pression anthropique, qu’il s’agisse du changement d’usage des terres, de l’expansion urbaine, de l’intensification agricole ou de l’extraction de matériaux, permettent d’identifier les zones où la résilience écologique est la plus menacée.",
+  "geo_fin": "Grâce à ces indicateurs, les données géospatiales offrent une vision synoptique et temporelle des paysages haïtiens. Combinées aux relevés de terrain, elles permettent non seulement de caractériser l’état actuel des écosystèmes mais aussi de modéliser leur trajectoire, leur capacité à absorber des perturbations et leur potentiel de récupération.",
+  "menages": "Les données d’enquêtes permettent d’identifier des proxys de résilience environnementale à partir de questions posées aux ménages, c’est-à-dire des éléments mesurables qui reflètent à la fois la pression exercée sur les milieux naturels, la dépendance aux ressources et la capacité des familles à s’adapter aux perturbations.",
+  "menages2": "Ce type de données permet par exemple d’évaluer la fréquence d’exploitation des ressources, les pratiques agricoles, l’accès aux services écosystémiques, mais aussi la perception des risques environnementaux, la connaissance des espèces sensibles, ou la capacité des ménages à se réorganiser après un choc. Ces informations apportent une vision complémentaire à l’analyse écologique, car elles montrent comment les comportements humains influencent directement la résilience des écosystèmes.",
+  "bareme": "Scénarios\nLe pire scénario noté 0 correspond à un régime écologique dégradé et stable, caractérisé par la perte de diversité, de fonctions et de connectivité.\nLe meilleur scénario noté 10 correspond au régime écologique sain, stable et optimal à atteindre, caractérisé par la diversité la plus élevée possible selon le contexte, par des fonctions écologiques actives et par une forte capacité de récupération, au-delà de laquelle aucune amélioration supplémentaire ne générerait plus de résilience.",
+  "taxons": [
+   "Les odonates constituent un excellent proxy pour la résilience des milieux aquatiques et riverains, car leurs exigences écologiques sont bien documentées. Certaines familles sont strictement associées aux eaux propres, d’autres tolèrent mieux la dégradation. Leur présence relative informe donc sur le degré d’altération ou de restauration des habitats aquatiques.",
+   "Les oiseaux, enfin, composent un groupe très sensible aux changements d’usage des terres et permettent d’évaluer la richesse aviaire générale, la diversité des niches écologiques et la complexité des strates végétales.",
+   "Les insectes pollinisateurs, quant à eux, renseignent sur la disponibilité florale, la structure de la végétation et la continuité des ressources alimentaires, ce qui permet d’apprécier la stabilité fonctionnelle d’un paysage."
+  ]
+ }
+}
