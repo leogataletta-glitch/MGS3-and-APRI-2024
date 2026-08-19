@@ -30,6 +30,7 @@ import os
 
 import streamlit as st
 
+import environnement_cadre
 import i18n
 import icones
 from i18n import T
@@ -575,6 +576,12 @@ STYLE = """
               text-transform:uppercase; }
   .cad-etage{ font-size:11px; letter-spacing:.11em; text-transform:uppercase;
               font-weight:700; color:#a7b0be; margin:26px 0 8px; }
+  /* LA JUSTIFICATION EST ANNULÉE DANS LES CARTES. La feuille de style du site
+     justifie tous les paragraphes : c'est bon pour une colonne de texte, et
+     cela défigure une carte de deux lignes — les mots s'écartent jusqu'à
+     laisser des couloirs blancs au milieu. */
+  .cad-n-t, .cad-n-x, .cad-carte-x, .cad-liste li { text-align:left !important; }
+  .cad-fl-n, .cad-fl-l, .cad-fl-x { text-align:center !important; }
 </style>
 """
 
@@ -856,6 +863,23 @@ def render(doc_complet=None):
         st.info(T("e_absent"))
         return
 
+    # DEUX ONGLETS, ET LE SECOND N'EST PAS UN SUPPLÉMENT.
+    # La dimension environnementale est la seule qui ne se mesure pas en
+    # interrogeant des ménages : elle demande des transects, des images
+    # satellitaires et des barèmes qui leur sont propres. Fondue dans la page
+    # générale, elle y aurait tenu six lignes ; à part, elle garde son
+    # protocole entier.
+    _ong_apri, _ong_env = st.tabs(
+        [T("env_onglet_apri"), T("env_onglet")])
+    with _ong_env:
+        environnement_cadre.render()
+    with _ong_apri:
+        _cadre_apri(stats, doc_complet)
+
+
+def _cadre_apri(stats, doc_complet):
+    """L'onglet du cadre général, en trois strates : comprendre, explorer,
+    approfondir. Détaché de `render()` pour tenir dans un onglet."""
     menages, n_sections = _menages()
     n_ocb = _n_ocb()
     n_sec_avec = sum(1 for e in stats["dims"].values() if e["faits"])
