@@ -25,6 +25,7 @@ import assets
 import cadre_page
 import filtres
 import questions_dimension
+import questions_resultats
 import radar_page
 import i18n
 import map_render
@@ -392,6 +393,13 @@ def render(cle_dim, complement=None):
         f'{T(cle_dim + "_intro")}</div>', unsafe_allow_html=True)
 
     filtres.barre(cle=cle_dim)
+
+    # LA NOUVELLE ANALYSE DÉTAILLÉE VIENT EN TÊTE, AVANT L'EXISTANT.
+    # Elle suit l'ordre dans lequel la donnée se construit : les réponses aux
+    # questions et leurs effectifs bruts, puis ce que le référentiel en fait —
+    # pondération, score, extrêmes. Rien n'a été retiré en dessous : les
+    # onglets d'origine suivent, intacts.
+    questions_resultats.render(cle_dim, dimension)
 
     _o_indicateurs, _o_questions = st.tabs(
         [T("d_onglet_ind2"), T("d_onglet_q2")])
