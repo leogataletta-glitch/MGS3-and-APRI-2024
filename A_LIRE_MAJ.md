@@ -1,79 +1,83 @@
-# La maquette, appliquée — accueil et colonne de navigation
+# Les radars sont revenus — et une erreur de ma part à signaler
 
-## Envoyez ces quatre fichiers dans le MÊME commit
+## Envoyez ces trois fichiers dans le MÊME commit
 
 | Fichier | |
 |---|---|
-| `icones.py` | **nouveau** — le jeu d'icônes du site |
-| `app.py` | colonne de navigation, pastille de langue |
-| `filtres.py` | barre de filtres avec icônes, correction du changement de langue |
-| `accueil_page.py` | la page d'accueil refaite sur la maquette |
+| `radar_page.py` | **nouveau** — le profil en radar |
+| `dimension_page.py` | le radar de la dimension, entre les chiffres et la carte |
+| `synthese_page.py` | le radar des six dimensions, en tête de page |
 
-`app.py`, `filtres.py` et `accueil_page.py` importent tous les trois
-`icones.py` : sans lui, l'application ne démarre pas.
+`radar.py`, qui dessine la figure, est déjà en ligne — il n'a pas changé.
 
-**Si la livraison précédente n'est pas encore poussée** (`dimension_page.py`,
-`questions_dimension.py`, `synthese_page.py`), poussez tout le dossier d'un
-bloc : `filtres.py` et `app.py` sont communs aux deux.
+## Ce qui s'était passé
 
-## Ce qui a été repris de la maquette
+Vous avez raison : les radars existaient, et ils ont disparu. Le code n'avait
+pas été supprimé — il vivait dans `resilience_page.py`, une page devenue
+**inaccessible** quand la navigation a été refondue. Le module était toujours
+importé par `app.py`, mais plus jamais appelé. C'est pire qu'une suppression :
+rien ne le signalait.
 
-**La colonne de gauche.** Le titre est *Navigation*. Chaque entrée porte une
-icône dessinée — pastilles, bouclier, barres, boucle, personnes, fiche,
-téléchargement — au lieu des glyphes typographiques d'avant, qui ne voulaient
-rien dire et changeaient d'épaisseur d'une machine à l'autre. L'entrée active
-est une **pastille vert clair sur encre foncée** : le vert profond précédent se
-confondait avec le fond de la colonne. En bas, *Filtres rapides* avec le bouton
-**Réinitialiser les filtres** et, dessous, l'état courant en clair — c'est le
-seul raccourci de filtre qui a sa place dans la marge, puisqu'on le cherche
-depuis n'importe quelle page.
+## Ce qui revient, et en mieux
 
-**Les trois chiffres de tête sont devenus des cartes**, chacune avec sa
-pastille d'icône colorée, son nombre en grand et sa précision dessous. Ils
-tenaient auparavant sur une ligne, en petit, et se lisaient comme une légende.
+**Deux niveaux de lecture**, comme dans le cadre APRI :
 
-**La localisation est un encadré d'information** — fond bleuté, pastille « i » —
-et non plus un paragraphe de corps de texte.
+- **les six dimensions** — un axe par dimension, chaque axe portant la moyenne
+  pondérée de ses indicateurs scorés ;
+- **les indicateurs d'une dimension** — un axe par indicateur, pour voir ce
+  qu'une moyenne cache.
 
-**La barre de filtres** est sur la page d'accueil elle aussi, avec une icône
-dans chaque sélecteur (maison, montagne, personnes), les intitulés *Section
-communale · Paysage · Groupe de répondants*, et la ligne
-*« Les résultats se mettent à jour automatiquement selon vos filtres »* avec son
-icône de rafraîchissement — pour qu'on ne cherche pas un bouton « appliquer »
-qui n'existe pas.
+**Trois registres de comparaison**, et c'est l'ajout qui manquait — l'ancien
+radar ne comparait que des sections communales :
 
-**Deux colonnes en bas** : le récit *Ce qu'est APRI, et d'où cela vient* à
-gauche, l'encadré **Accès rapides** à droite — quatre lignes cliquables avec
-icône colorée, titre, sous-titre et chevron, qui mènent aux quatre rubriques.
+- **sections communales** — où l'action se décide ;
+- **paysages** — littoral contre montagne ;
+- **groupes de répondants** — femmes et hommes, tranches d'âge, catégories
+  économiques.
 
-**La langue active** est une pastille bleue et non plus verte : le vert est la
-couleur de la navigation, et deux verts différents sur le même écran se
-lisaient comme deux états du même objet.
+Trois profils superposés au plus, échelle **fixe de 0 à 10** sur tous les axes :
+c'est la condition pour que deux profils se comparent honnêtement. Sous chaque
+figure, le tableau des valeurs exactes au centième — l'œil lit mal un rayon, et
+deux séries proches sont indiscernables sur le dessin.
 
-## Deux points de fond, pas de décoration
+**Où ils se trouvent :**
 
-**Les filtres de l'accueil agissent vraiment.** Afficher une barre de filtres
-au-dessus de chiffres qui ne bougent pas serait pire que de ne pas l'afficher.
-Le nombre de ménages suit donc la sélection — il est recalculé sur les
-effectifs par section et par sous-population de `ventilation.json` — et les
-quatre chiffres saillants sont lus sous le filtre courant au lieu du total. La
-carte, elle, reste la vue par section communale : c'est sa raison d'être.
+- dans **Analyse des résultats**, sur chaque dimension, entre les quatre
+  chiffres clés et la carte — il compare cette dimension entre sections, entre
+  paysages ou entre groupes ;
+- dans **Profils territoriaux et sociaux**, en tête, avec les deux niveaux et
+  les trois registres.
 
-**Un bogue corrigé au passage.** En basculant l'anglais vers le français en
-cours de session, les trois listes de filtres restaient en anglais jusqu'au
-rechargement complet de la page — leurs intitulés étaient rendus sur un widget
-dont la clé ne changeait jamais. Le widget affiché porte maintenant une clé
-suffixée par la langue, donc il est recréé quand elle change ; la valeur
-choisie, elle, reste dans l'état commun et survit au basculement.
+**Deux honnêtetés écrites à l'écran.** L'aire du polygone ne veut rien dire —
+elle dépend de l'ordre des axes, qui vient du cadre et non des données ; on
+compare des rayons. Et en comparaison par groupe, les indicateurs satellitaires
+portent la même valeur pour tous les groupes : c'est une propriété de la source,
+pas une égalité mesurée.
 
-## Vérifié
+Un plafond de douze axes s'applique au niveau des indicateurs — la dimension
+environnementale en compte dix-sept, et à dix-sept sommets les libellés se
+chevauchent. Le radar garde les douze plus bas **et l'écrit** : « cette
+dimension compte 17 indicateurs scorés ; le radar montre les 12 plus bas ».
 
-- **42 rendus complets** — 7 pages × 3 combinaisons de filtres × 2 langues —
-  zéro exception, zéro clé de traduction brute ;
-- page ouverte dans le navigateur, avant et après changement de langue : les
-  icônes de navigation, la pastille active, les filtres rapides, les trois
-  cartes de chiffres, l'encadré d'information, la barre de filtres et les accès
-  rapides ;
-- alignement des titres d'accès rapide contrôlé dans le DOM — Streamlit centre
-  le contenu de ses boutons à trois niveaux imbriqués, il fallait forcer les
-  trois.
+## L'erreur que je dois vous signaler
+
+En vérifiant ce lot, j'ai découvert que **mon banc de test était faux depuis
+plusieurs livraisons**. Il posait la page à afficher dans une clé de session
+nommée `mode`, alors que l'application lit `app_mode` ; et la langue dans
+`lang` au lieu de `choix_langue`. Résultat : mes « 42 rendus, 7 pages × 3
+filtres × 2 langues » rendaient **quarante-deux fois la page d'accueil, en
+français**. La couverture que je vous ai annoncée n'existait pas.
+
+Ce que cela ne remet pas en cause : les captures d'écran, elles, étaient
+réelles — j'ouvrais bien les pages dans un navigateur, et c'est ainsi que les
+défauts d'affichage ont été trouvés et corrigés.
+
+Le banc est réparé. Passé sur l'état actuel du code, avec les bonnes clés :
+**42 rendus, 7 pages × 3 combinaisons de filtres × 2 langues, trois dimensions
+différentes — zéro exception, zéro clé de traduction brute.** Plus quatorze
+scénarios ciblés sur les radars : trois sections superposées, deux groupes,
+deux paysages, le niveau indicateurs, une sélection vide, dans les deux
+langues — tous passent.
+
+Je vous le dis parce qu'une vérification qu'on croit faite est plus dangereuse
+qu'une vérification qu'on sait absente.

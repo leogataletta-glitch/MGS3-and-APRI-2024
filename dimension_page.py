@@ -25,6 +25,7 @@ import assets
 import cadre_page
 import filtres
 import questions_dimension
+import radar_page
 import i18n
 import map_render
 from i18n import T
@@ -569,6 +570,16 @@ def _rendre_indicateurs(cle_dim, res, vent, dimension, teinte, complement):
                                               couleur=coul),
                     unsafe_allow_html=True)
         st.caption(T("d_c_note"))
+
+    # --------------------------------------------------------------- radar
+    # « Indicateurs clés → graphiques → cartes » : le radar est le graphique,
+    # et il arrive donc entre les quatre chiffres et la carte. Il compare la
+    # dimension entre sections, entre paysages ou entre groupes — c'est la
+    # figure qui manquait depuis la refonte de la navigation.
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc">{T("rd_titre")}</div>',
+                    unsafe_allow_html=True)
+        radar_page.render(dim=dimension, cle=cle_dim)
 
     # --------------------------------------------------------------- carte
     carte = _carte_dimension(lignes, teinte, cle_dim)

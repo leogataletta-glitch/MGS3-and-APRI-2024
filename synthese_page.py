@@ -37,6 +37,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 import filtres
+import radar_page
 import i18n
 import map_render
 from i18n import T
@@ -281,6 +282,15 @@ def render():
     # naviguer. Ils sont ici, sous le titre, comme sur toutes les pages qui
     # les lisent — l'état reste commun, il suit d'une rubrique à l'autre.
     filtres.barre(cle="syn")
+
+    # LE PROFIL EN RADAR, à sa place : cette page compare des territoires et
+    # des groupes, et le radar est la figure qui le fait le mieux — six axes,
+    # trois profils superposés, une échelle fixe. Il vivait dans une page
+    # devenue inaccessible ; il est rebranché ici.
+    with st.container(border=True):
+        st.markdown(f'<div class="titre-bloc">{T("rd_titre")}</div>',
+                    unsafe_allow_html=True)
+        radar_page.render(cle="syn")
 
     # Le filtre de la colonne pré-remplit le sélecteur : on arrive ici avec ce
     # qu'on regardait ailleurs, sans avoir à le rechoisir. Le sélecteur reste
