@@ -1,83 +1,80 @@
-# Les radars sont revenus — et une erreur de ma part à signaler
+# Onglet « Diagramme radar de résilience » — et la liste complète à pousser
 
-## Envoyez ces trois fichiers dans le MÊME commit
+## Où sont les fichiers
+
+Tous dans **`C:\Users\LEO_f\Desktop\MAJ_resilience\`**. Rien ailleurs.
+
+## Ce qui vient d'être ajouté
+
+Une **entrée à part entière dans la colonne de gauche**, entre « Analyse des
+résultats » et « Boucles de rétroaction », avec sa propre icône : un hexagone,
+ses rayons et un polygone intérieur — l'icône montre la figure que la rubrique
+produit.
+
+La page porte le radar pour lui-même : les deux niveaux (les six dimensions,
+ou les indicateurs d'une dimension), les trois registres de comparaison
+(sections communales, paysages, groupes de répondants), trois profils
+superposés au plus, et le tableau des valeurs exactes.
+
+Elle porte aussi le **mode d'emploi** qui n'avait sa place ni dans une page de
+dimension ni dans les profils territoriaux : lire la forme et non l'aire,
+pourquoi l'échelle reste fixe de 0 à 10, pourquoi trois profils au maximum, et
+ce que le radar ne peut pas montrer — les indicateurs satellitaires n'ont pas
+de ventilation par répondant, donc comparés par groupe ils portent la même
+valeur pour tous, ce qui est une propriété de la source et non une égalité
+mesurée.
+
+La figure reste également là où elle commente autre chose : dans « Analyse des
+résultats » pour la dimension ouverte, et dans « Profils territoriaux et
+sociaux ». C'est le même moteur — `radar_page.py` — pour les trois vues.
+
+## LA LISTE COMPLÈTE À POUSSER
+
+Vous ne voyiez pas les radars parce que plusieurs livraisons se sont
+accumulées. Voici tout ce qui, dans le dossier, doit se retrouver sur GitHub.
+**Poussez le tout en un seul commit** — ces fichiers s'appellent les uns les
+autres.
 
 | Fichier | |
 |---|---|
-| `radar_page.py` | **nouveau** — le profil en radar |
-| `dimension_page.py` | le radar de la dimension, entre les chiffres et la carte |
-| `synthese_page.py` | le radar des six dimensions, en tête de page |
+| `app.py` | navigation, onglet radar, ergonomie de la maquette |
+| `icones.py` | **nouveau** — le jeu d'icônes, importé par trois fichiers |
+| `filtres.py` | la barre de filtres dans la page |
+| `accueil_page.py` | la page d'accueil refaite |
+| `dimension_page.py` | filtres en page, indicateurs en accordéon fermé, radar |
+| `questions_dimension.py` | intitulés professionnels, modules repliés, recherche |
+| `synthese_page.py` | barre de filtres et radar des six dimensions |
+| `radar_page.py` | **nouveau** — le moteur du radar |
+| `radar_accueil.py` | **nouveau** — la rubrique radar |
+| `interventions_page.py` | les fiches selon le protocole |
+| `boucles_page.py` | l'exploration part des indicateurs les plus alarmants |
 
-`radar.py`, qui dessine la figure, est déjà en ligne — il n'a pas changé.
+Trois de ces fichiers sont **nouveaux** : s'ils manquent, l'application ne
+démarre pas du tout — `app.py` importe `icones` et `radar_accueil`,
+`dimension_page` et `synthese_page` importent `radar_page`.
 
-## Ce qui s'était passé
+`pistes_page.py` n'est plus importé par personne ; il peut rester dans le
+dépôt, il ne sera simplement plus chargé.
 
-Vous avez raison : les radars existaient, et ils ont disparu. Le code n'avait
-pas été supprimé — il vivait dans `resilience_page.py`, une page devenue
-**inaccessible** quand la navigation a été refondue. Le module était toujours
-importé par `app.py`, mais plus jamais appelé. C'est pire qu'une suppression :
-rien ne le signalait.
+## Comment vérifier en dix secondes que le lot est bien passé
 
-## Ce qui revient, et en mieux
+Sur le site, après déploiement :
 
-**Deux niveaux de lecture**, comme dans le cadre APRI :
+1. la colonne de gauche affiche **huit entrées**, dont « Diagramme radar de
+   résilience » en quatrième position ;
+2. la page d'accueil montre **trois cartes** avec une pastille d'icône, et non
+   trois chiffres sur une ligne ;
+3. dans « Analyse des résultats », les filtres sont **dans la page** sous la
+   description de la dimension, et la liste d'indicateurs est **fermée**.
 
-- **les six dimensions** — un axe par dimension, chaque axe portant la moyenne
-  pondérée de ses indicateurs scorés ;
-- **les indicateurs d'une dimension** — un axe par indicateur, pour voir ce
-  qu'une moyenne cache.
+Si l'un des trois manque, c'est que le fichier correspondant n'est pas parti.
 
-**Trois registres de comparaison**, et c'est l'ajout qui manquait — l'ancien
-radar ne comparait que des sections communales :
+## Vérifié
 
-- **sections communales** — où l'action se décide ;
-- **paysages** — littoral contre montagne ;
-- **groupes de répondants** — femmes et hommes, tranches d'âge, catégories
-  économiques.
-
-Trois profils superposés au plus, échelle **fixe de 0 à 10** sur tous les axes :
-c'est la condition pour que deux profils se comparent honnêtement. Sous chaque
-figure, le tableau des valeurs exactes au centième — l'œil lit mal un rayon, et
-deux séries proches sont indiscernables sur le dessin.
-
-**Où ils se trouvent :**
-
-- dans **Analyse des résultats**, sur chaque dimension, entre les quatre
-  chiffres clés et la carte — il compare cette dimension entre sections, entre
-  paysages ou entre groupes ;
-- dans **Profils territoriaux et sociaux**, en tête, avec les deux niveaux et
-  les trois registres.
-
-**Deux honnêtetés écrites à l'écran.** L'aire du polygone ne veut rien dire —
-elle dépend de l'ordre des axes, qui vient du cadre et non des données ; on
-compare des rayons. Et en comparaison par groupe, les indicateurs satellitaires
-portent la même valeur pour tous les groupes : c'est une propriété de la source,
-pas une égalité mesurée.
-
-Un plafond de douze axes s'applique au niveau des indicateurs — la dimension
-environnementale en compte dix-sept, et à dix-sept sommets les libellés se
-chevauchent. Le radar garde les douze plus bas **et l'écrit** : « cette
-dimension compte 17 indicateurs scorés ; le radar montre les 12 plus bas ».
-
-## L'erreur que je dois vous signaler
-
-En vérifiant ce lot, j'ai découvert que **mon banc de test était faux depuis
-plusieurs livraisons**. Il posait la page à afficher dans une clé de session
-nommée `mode`, alors que l'application lit `app_mode` ; et la langue dans
-`lang` au lieu de `choix_langue`. Résultat : mes « 42 rendus, 7 pages × 3
-filtres × 2 langues » rendaient **quarante-deux fois la page d'accueil, en
-français**. La couverture que je vous ai annoncée n'existait pas.
-
-Ce que cela ne remet pas en cause : les captures d'écran, elles, étaient
-réelles — j'ouvrais bien les pages dans un navigateur, et c'est ainsi que les
-défauts d'affichage ont été trouvés et corrigés.
-
-Le banc est réparé. Passé sur l'état actuel du code, avec les bonnes clés :
-**42 rendus, 7 pages × 3 combinaisons de filtres × 2 langues, trois dimensions
-différentes — zéro exception, zéro clé de traduction brute.** Plus quatorze
-scénarios ciblés sur les radars : trois sections superposées, deux groupes,
-deux paysages, le niveau indicateurs, une sélection vide, dans les deux
-langues — tous passent.
-
-Je vous le dis parce qu'une vérification qu'on croit faite est plus dangereuse
-qu'une vérification qu'on sait absente.
+- **48 rendus complets** — 8 pages × 3 combinaisons de filtres × 2 langues,
+  trois dimensions différentes — zéro exception, zéro clé de traduction brute,
+  avec le banc de test corrigé (voir la note de la livraison précédente : il
+  utilisait de mauvaises clés de session et ne rendait que la page d'accueil) ;
+- page ouverte dans le navigateur : l'onglet apparaît avec son icône, la
+  pastille active le désigne, et le radar des six dimensions s'affiche avec ses
+  sélecteurs.

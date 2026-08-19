@@ -38,6 +38,7 @@ import i18n
 import map_render
 import methodologie_page
 import ocb_page
+import radar_accueil
 import resilience_page
 import saillants_page
 import synthese_page
@@ -956,6 +957,8 @@ TEXTES_NAV = {
         "fr": "Éducation, santé, réseaux de soutien et accès aux services "
               "essentiels"},
     "mode_boucles": {"en": "Feedback Loops", "fr": "Boucles de rétroaction"},
+    "mode_radar": {"en": "Resilience Radar",
+                   "fr": "Diagramme radar de résilience"},
     "nav_titre": {"en": "Navigation", "fr": "Navigation"},
     "nav_filtres_rapides": {"en": "Quick filters", "fr": "Filtres rapides"},
     "f_reinit_long": {"en": "Reset the filters",
@@ -1077,6 +1080,7 @@ MODE_METHODO, MODE_DONNEES = "methodologie", "donnees"
 MODE_ACTIONS = "actions"
 MODE_SYNTHESE = "synthese"
 MODE_BOUCLES = "boucles"
+MODE_RADAR = "radar"
 LIBELLE_MODE = {m: T(m) for m in MODES_DIM}
 LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      "dimensions": T("mode_dimensions"),
@@ -1084,7 +1088,8 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      MODE_DONNEES: T("mode_donnees"),
                      MODE_ACTIONS: T("mode_actions"),
                      MODE_BOUCLES: T("mode_boucles"),
-                     MODE_SYNTHESE: T("mode_synthese")})
+                     MODE_SYNTHESE: T("mode_synthese"),
+                     MODE_RADAR: T("mode_radar")})
 
 # L'état de navigation doit exister AVANT la barre du haut, qui affiche le nom
 # de la page courante. L'initialiser plus bas laissait la barre lire une clé
@@ -1144,6 +1149,7 @@ _NAV = [
     (MODE_ACCUEIL, "grille"),
     (MODE_METHODO, "bouclier"),
     (MODE_DIMENSIONS, "barres"),
+    (MODE_RADAR, "radar"),
     (MODE_BOUCLES, "boucle"),
     (MODE_SYNTHESE, "personnes"),
     (MODE_ACTIONS, "fiche"),
@@ -1352,6 +1358,14 @@ if app_mode == MODE_METHODO:
             croisement_page.render(entete=False)
 
     cadre_page.render(doc_complet=_document_methodologique)
+
+if app_mode == MODE_RADAR:
+    # UNE RUBRIQUE À PART, PARCE QU'ON LA CHERCHE POUR ELLE-MÊME.
+    # Le radar est aussi présent dans « Analyse des résultats » (celui de la
+    # dimension ouverte) et dans « Profils territoriaux et sociaux » (celui
+    # des six dimensions) — là, il commente ce qui l'entoure. Ici, il est
+    # l'objet de la page : on y vient pour comparer, pas pour illustrer.
+    radar_accueil.render()
 
 if app_mode == MODE_BOUCLES:
     boucles_page.render()

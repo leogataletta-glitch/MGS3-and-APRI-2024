@@ -46,6 +46,13 @@ TRACES = {
              '<path d="M8.6 13h6.8"/><path d="M8.6 16.4h4.4"/>',
     "telecharger": '<path d="M12 3.6v11"/><path d="M7.4 10.2L12 14.8l4.6-4.6"/>'
                    '<path d="M4.6 19.6h14.8"/>',
+    # Un hexagone, ses rayons, et un polygone intérieur : la figure même que
+    # la rubrique produit. Une icône qui montre son résultat se reconnaît plus
+    # vite qu'une icône qui décrit son outil.
+    "radar": '<path d="M12 2.6l8.1 4.7v9.4L12 21.4 3.9 16.7V7.3z"/>'
+             '<path d="M12 2.6v18.8"/><path d="M3.9 7.3l16.2 9.4"/>'
+             '<path d="M20.1 7.3L3.9 16.7"/>'
+             '<path d="M12 7.1l4.3 2.5v3.2L12 15.6l-4.3-2.8V9.6z"/>',
     # --- chiffres de tête et filtres
     "epingle": '<path d="M19.8 10.4c0 5-7.8 10.8-7.8 10.8S4.2 15.4 4.2 10.4a7.8 '
                '7.8 0 1 1 15.6 0z"/><circle cx="12" cy="10.2" r="2.8"/>',
