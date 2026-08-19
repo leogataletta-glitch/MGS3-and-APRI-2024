@@ -369,11 +369,12 @@ def render(actualites=None):
             f'<div class="a-kpi-l">{_e(lib)}</div>'
             f'<div class="a-kpi-s">{_e(sous)}</div></div></div>'
             for v, lib, sous, ico, coul, fond in kpis)
-        + '</div>'
-        f'<div class="a-note"><div class="a-note-p">'
-        f'{icones.svg("info", "#2f7fd6", 19, 2)}</div>'
-        f'<p class="a-note-x">{T("a_localisation")}</p></div>',
+        + '</div>',
         unsafe_allow_html=True)
+    # L'ENCADRÉ DE LOCALISATION A ÉTÉ RETIRÉ. Il disait en trois lignes ce que
+    # la vignette, la carte nommée et la liste des sections montrent — dix
+    # sections, deux départements, du littoral à la montagne. Un paragraphe qui
+    # répète une carte n'ajoute rien : il occupe la place et retarde la carte.
 
     # PLUS DE BARRE DE FILTRES ICI. Une page qui présente un territoire n'a
     # rien à filtrer : le filtre servait à restreindre des chiffres de
@@ -428,10 +429,10 @@ def render(actualites=None):
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc">{T("a_bloc_saillants")}</div>',
                     unsafe_allow_html=True)
-        st.markdown(
-            f'<p style="font-size:15.5px;line-height:1.6;color:#3c4761;'
-            f'margin:4px 0 12px;max-width:92ch">{T("a_bloc_saillants_texte")}'
-            f'</p>', unsafe_allow_html=True)
+        # Le texte d'introduction est passé SOUS les quatre chiffres, en
+        # légende. Placé au-dessus, il retardait ce qu'on vient voir ; les
+        # chiffres se lisent seuls, et l'explication attend celui qui la
+        # cherche.
         par_ligne = {r["ligne"]: r for r in res}
         cartes = []
         for lg, cle, coul, inverse in VEDETTES:
@@ -457,6 +458,7 @@ def render(actualites=None):
                 f'</div></div>')
         st.markdown('<div style="display:flex;gap:12px;flex-wrap:wrap">'
                     + ''.join(cartes) + '</div>', unsafe_allow_html=True)
+        st.caption(T("a_bloc_saillants_texte"))
         st.caption(T("a_bloc_saillants_note"))
 
     # ------------------------------------------------------------- la carte
