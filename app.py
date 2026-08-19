@@ -23,7 +23,8 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 
-import accueil_page
+# `accueil_page` n'est plus appelé : « Le territoire » ne porte plus que
+# ses deux cartes, et son rendu vit dans `territoire_page`.
 import actualites
 import assets
 import boucles_page
@@ -45,6 +46,7 @@ import resilience_page
 import saillants_page
 import synthese_page
 import telechargements_page
+import territoire_page
 from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -1361,7 +1363,7 @@ app_mode = st.session_state["app_mode"]
 # dupliquer la logique — l'environnement avec ses onze indicateurs
 # satellitaires, le social avec les fiches d'organisations de base.
 if app_mode == MODE_ACCUEIL:
-    accueil_page.render(actualites=lambda: actualites.rendre(_bascule))
+    territoire_page.render()
 
 if app_mode == MODE_DIMENSIONS:
     # Deux dimensions prolongent leur page avec un détail qui existait déjà,
@@ -1452,3 +1454,7 @@ if app_mode == MODE_SYNTHESE:
 
 if app_mode == MODE_DONNEES:
     telechargements_page.render()
+    # Les livraisons récentes ont suivi les jeux de données : c'est ici
+    # qu'on vient voir ce qui est disponible, et donc ce qui vient
+    # d'arriver.
+    actualites.rendre(_bascule)

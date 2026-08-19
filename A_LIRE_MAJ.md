@@ -1,65 +1,60 @@
-# « Vue d'ensemble » devient « Le territoire »
+# « Le territoire » — deux cartes, rien d'autre
 
-## Quatre fichiers, MÊME commit
+## Deux fichiers, MÊME commit
 
 | Fichier | |
 |---|---|
-| `territoire_page.py` | **nouveau** — les deux cartes et la liste des sections |
-| `accueil_page.py` | la page refaite : cartes, chiffres, plus de filtres, plus de récit |
-| `cadre_page.py` | reçoit le récit APRI, entier, en tête |
-| `app.py` | ordre de la colonne, nouveau libellé, page d'entrée |
+| `territoire_page.py` | la page complète : titre, grande carte, vignette |
+| `app.py` | appelle cette page ; les livraisons récentes passent dans « Données » |
 
-## Ce qui change
+## Ce que contient la page, désormais
 
-**La colonne commence par « Cadre de résilience », puis « Le territoire ».**
-On dit d'abord ce qu'on mesure, ensuite où on l'a mesuré, et les résultats
-suivent. C'est aussi la page d'entrée du site désormais.
+**La grande carte** — les dix sections communales avec leurs limites, chacune
+nommée, colorées par département, les limites départementales en tirets,
+Jérémie et Les Cayes en repères. Au survol, chaque section donne sa commune et
+son département.
 
-**La barre de filtres a disparu de cette page.** Vous aviez raison : une page
-qui présente un périmètre n'a rien à filtrer, et le filtre servait à
-restreindre des chiffres de cadrage — c'est-à-dire à contredire le propos. Les
-filtres restent partout où ils commandent une analyse.
+**La vignette de localisation** — Haïti en entier, la zone d'étude en vert
+cerclée de pointillés, à l'extrême sud-ouest du pays.
 
-**Le récit APRI est parti dans « Cadre de résilience », entier.** Les quatre
-paragraphes — origine, ce que mesure l'indice, comment il est construit, ce
-qu'il ne prétend pas dire — ouvrent maintenant la page où l'on vient chercher
-la méthode. Rien n'est perdu, rien n'est raccourci ; c'est un déplacement.
+Et c'est tout. La page tient sur un écran.
 
-**Deux cartes nouvelles, et elles ne font pas le même travail :**
+## Ce qui en est sorti, et où c'est parti
 
-- **la vignette** situe — Haïti en entier, la zone enquêtée en vert cerclée de
-  pointillés, à l'extrême sud-ouest du pays. Sa seule question est « où ? » ;
-  elle ne porte ni valeur ni échelle de couleur ;
-- **la carte de situation** nomme — les dix sections, chacune avec son nom,
-  colorées par département, les limites départementales en tirets, Jérémie et
-  Les Cayes en repères. Sa question est « laquelle ? ». Au survol, chaque
-  section donne sa commune et son département.
+| Ce qui a quitté la page | Où le trouver |
+|---|---|
+| Les trois chiffres de périmètre | le pied de la colonne de gauche les porte déjà |
+| Les quatre résultats saillants | *Analyse des résultats*, dimension par dimension |
+| La carte des scores par section | *Analyse des résultats* et *Profils territoriaux* |
+| Les accès rapides | la colonne de gauche, en permanence |
+| Les livraisons récentes | **déplacées dans « Données »**, avec les jeux de données |
 
-La carte des scores reste plus bas, séparée : elle répond à « combien », et une
-carte qui répond à trois questions à la fois n'en répond bien à aucune.
+Aucune de ces informations n'a été supprimée du site : elles ont été renvoyées
+là où on les attend. Les livraisons récentes sont le seul bloc qui n'avait pas
+d'autre foyer — elles sont maintenant à la suite des téléchargements, ce qui
+est cohérent : c'est là qu'on vient voir ce qui est disponible, donc ce qui
+vient d'arriver.
 
-**Une liste section par section** remplace le pavé de prose : section, commune,
-département, paysage, ménages enquêtés. Les accès rapides et les chiffres
-saillants restent.
+## La règle écrite dans le fichier
 
-## Deux détails de fabrication
+Pas de score, pas d'indicateur, pas de pourcentage, pas de classement, pas même
+un effectif sur cette page. Une carte qui porte des couleurs de résultat répond
+à « combien » avant d'avoir répondu à « où », et le lecteur qui cherchait
+simplement à se situer repart avec un chiffre qu'il n'a pas demandé.
 
-**Les étiquettes se désempilent toutes seules.** Cinq sections se touchent dans
-le coin sud-est ; posés à leur centre, deux noms devenaient illisibles. Les
-étiquettes sont maintenant parcourues du nord au sud et décalées vers le bas
-quand elles tomberaient sur la précédente — un décalage vertical se lit encore
-comme « ce nom appartient à cette tache », ce qui n'est plus vrai d'un décalage
-latéral.
+Les seuls textes restants sont les deux légendes sous les cartes. Une carte
+sans légende se regarde mais ne se lit pas — dites-moi si vous les voulez
+également retirées.
 
-**La projection est faite dans le module**, équirectangulaire avec la longitude
-corrigée du cosinus de la latitude moyenne. À cette échelle et sous cette
-latitude la déformation est invisible, et cela évite d'embarquer une
-bibliothèque cartographique pour tracer deux contours.
+## Un fichier devenu inutile
+
+`accueil_page.py` n'est plus importé par `app.py`. Il peut rester dans le dépôt
+sans effet, ou être supprimé : il ne sert plus rien.
 
 ## Vérifié
 
 - **60 rendus** — 10 pages × 3 combinaisons de filtres × 2 langues — zéro
   exception, zéro clé de traduction brute ;
-- page ouverte au navigateur : la vignette, la carte nommée avec ses dix
-  étiquettes toutes lisibles, la liste des sections, et le récit APRI retrouvé
-  en tête du Cadre de résilience.
+- page ouverte au navigateur : hauteur totale 1 199 px, soit un écran, les deux
+  cartes et rien d'autre ;
+- les livraisons récentes retrouvées au bas de « Données ».

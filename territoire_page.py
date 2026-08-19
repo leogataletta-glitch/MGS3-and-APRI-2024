@@ -7,11 +7,15 @@ récit était juste mais personne ne le lisait : arriver sur un mur de prose ne
 donne pas envie d'entrer. Quant aux filtres, ils n'avaient rien à commander —
 une page de présentation ne se filtre pas.
 
-Ce qui manquait était plus simple, et c'est ce que la page fait maintenant :
-DIRE OÙ L'ON EST. Une vignette d'Haïti entier pour situer la région d'un coup
-d'œil, la carte des dix sections avec leurs départements et leurs communes,
-puis les chiffres du périmètre. Le récit APRI est parti dans « Cadre de
-résilience », là où quelqu'un vient chercher la méthode.
+Ce qui manquait était plus simple, et c'est tout ce que la page fait
+désormais : DIRE OÙ L'ON EST. Deux cartes, et rien d'autre.
+
+AUCUNE DONNÉE D'ANALYSE ICI, ET C'EST UNE RÈGLE, PAS UN OUBLI. Pas de score,
+pas d'indicateur, pas de pourcentage, pas de classement, pas même un effectif.
+Une carte qui porte des couleurs de résultat répond à « combien » avant d'avoir
+répondu à « où », et le lecteur qui cherchait simplement à se situer repart
+avec un chiffre qu'il n'a pas demandé. Les résultats vivent dans les autres
+rubriques, où ils sont attendus.
 
 LES DEUX CARTES NE FONT PAS LE MÊME TRAVAIL
 
@@ -21,9 +25,8 @@ LES DEUX CARTES NE FONT PAS LE MÊME TRAVAIL
   · LA CARTE DE SITUATION nomme. Les dix sections, leurs limites, les trois
     départements et les deux villes-repères. Sa question est « laquelle ? ».
 
-Une troisième carte, plus bas, porte les scores. Elle répond à « combien », et
-c'est pour cela qu'elle est séparée : une carte qui répond à trois questions à
-la fois n'en répond bien à aucune.
+Une carte qui répond à deux questions à la fois n'en répond bien à aucune :
+c'est pour cela qu'elles sont deux, et qu'aucune ne porte de valeur.
 
 LA PROJECTION EST FAITE ICI, VOLONTAIREMENT SIMPLE. Équirectangulaire, avec la
 longitude corrigée du cosinus de la latitude moyenne — à cette échelle et sous
@@ -57,8 +60,8 @@ SECTIONS = ["Anse à Drick", "Barbois", "Dumont", "Débouchette", "Mouline",
 TEXTES = {
     "tr_titre": {"en": "The territory", "fr": "Le territoire"},
     "tr_sous_titre": {
-        "en": "Where the survey took place, and what it covers",
-        "fr": "Où l'enquête a eu lieu, et ce qu'elle couvre"},
+        "en": "Where the studied territories are",
+        "fr": "Où se situent les territoires étudiés"},
     "tr_vignette": {"en": "Where it is", "fr": "Où c'est"},
     "tr_vignette_note": {
         "en": "Haiti in full; the surveyed area in green, in the far "
@@ -356,3 +359,21 @@ def tableau(geo, effectifs, paysages):
             f'text-align:right;font-variant-numeric:tabular-nums">'
             f'{effectifs.get(nom, "—")}</td></tr>')
     return "".join(li) + "</table>"
+
+
+def render():
+    """La page entière : un titre, deux cartes, rien d'autre.
+
+    Ce qui a quitté cette page — les chiffres de périmètre, les quatre
+    résultats saillants, la carte des scores, les accès rapides — n'a pas
+    disparu du site : les résultats sont dans « Analyse des résultats » et
+    « Fiche synthèse », la navigation est dans la colonne de gauche, et les
+    livraisons récentes sont passées dans « Données ».
+    """
+    st.markdown(
+        f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+        f'letter-spacing:-.02em;margin:2px 0 0">{T("tr_titre")}</h2>'
+        f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+        f'text-transform:uppercase;margin:2px 0 14px;font-weight:600">'
+        f'{T("tr_sous_titre")}</p>', unsafe_allow_html=True)
+    cartes()
