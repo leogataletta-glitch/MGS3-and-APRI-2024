@@ -428,7 +428,10 @@ st.markdown(("""
     border-right: none;
     width: 310px !important; min-width: 310px !important;
   }
-  section[data-testid="stSidebar"] > div { padding: 18px 14px 14px; }
+  /* Le bloc de marque remonte : dix-huit pixels de blanc au-dessus d'un
+     logo, sur une colonne qui commence en haut de l'écran, ne servaient
+     qu'à repousser l'identité vers le bas. */
+  section[data-testid="stSidebar"] > div { padding: 6px 14px 14px; }
 
   /* Le bloc de marque, sur le modèle de la charte : l'emblème détouré posé
      directement sur le vert — pas de carte blanche, qui faisait une tache —
@@ -436,20 +439,20 @@ st.markdown(("""
      l'image EMBLEME_APRI, découpée du logo complet : le verbal « IRLA/APRI »
      du fichier d'origine devenait illisible à cette taille. */
   .apri-marque {
-    display: flex; align-items: center; gap: 14px;
-    padding: 2px 2px 16px; margin-bottom: 2px;
+    display: flex; align-items: center; gap: 15px;
+    padding: 6px 2px 16px; margin-bottom: 2px;
     border-bottom: 1px solid rgba(255,255,255,.12);
   }
   .apri-marque img {
-    width: 58px; height: 58px; flex: 0 0 58px; display: block;
+    width: 76px; height: 76px; flex: 0 0 76px; display: block;
   }
   .apri-bloc-nom { min-width: 0; }
   .apri-nom {
-    font-family: "Outfit", sans-serif; font-size: 34px; font-weight: 700;
+    font-family: "Outfit", sans-serif; font-size: 42px; font-weight: 700;
     color: #ffffff; letter-spacing: .01em; line-height: 1;
   }
   .apri-filet {
-    width: 52px; height: 3px; border-radius: 2px; background: #7cb342;
+    width: 64px; height: 3px; border-radius: 2px; background: #7cb342;
     margin: 5px 0 0;
   }
   /* Deux niveaux dans l'accroche, comme sur la charte : ce qu'est
@@ -685,7 +688,7 @@ st.markdown(("""
        page sous la ligne de flottaison. Il reste une barre claire, la plus
        discrete possible : elle ne porte que la langue et le logo. */
     background: #ffffff; border-bottom: 1px solid #e6ecf4;
-    padding: 10px 24px 10px 22px; min-height: 62px;
+    padding: 10px 24px 10px 22px; min-height: 78px;
     align-items: center; gap: 4px !important; flex-wrap: nowrap !important;
   }
   .ruban-ancre { display: none; }
@@ -711,6 +714,10 @@ st.markdown(("""
     transition: background .13s ease, color .13s ease;
   }
   div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
+  div[data-testid="stButton"] > button p {
+    white-space: nowrap !important;
+  }
+  div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
   div[data-testid="stButton"] > button:hover {
     background: #eef3f9 !important;
     color: #101728 !important; transform: none !important;
@@ -732,7 +739,7 @@ st.markdown(("""
     display: flex; justify-content: flex-end; align-items: center;
     padding-right: 12px;
   }
-  .ruban-unep img { height: 46px; display: block; }
+  .ruban-unep img { height: 62px; display: block; }
 
   /* Le bandeau de paysage suit le ruban et déborde comme lui : les deux
      forment un seul en-tête, sans liseré blanc entre eux. */
@@ -773,6 +780,15 @@ st.markdown(("""
      les rend dans un même paragraphe, d'où `white-space: pre-line` — sans lui,
      le saut serait avalé et les deux lignes se colleraient. */
   .cartes-ancre { display: none; }
+  /* UN TRAIT SOUS LES SIX CARTES. Sans lui, la rangée de dimensions et le
+     titre de la dimension ouverte se touchaient : on ne voyait pas où
+     finissait le choix et où commençait le résultat. Le filet ferme le
+     sélecteur, comme le bord bas d'une rangée d'onglets. */
+  .cartes-trait {
+    height: 1px; background: linear-gradient(90deg, #d7e0ec 0%,
+      #e6ecf4 55%, rgba(230,236,244,0) 100%);
+    margin: 18px 0 4px;
+  }
 
   /* Les cartes sont visées par leur CLÉ : Streamlit pose une classe
      « st-key-<clé> » sur le conteneur de chaque widget. C'est la seule
@@ -1205,23 +1221,25 @@ def _rendre_ruban():
     :has().
     """
     with _ruban:
-        cols = st.columns([0.5, 1.15, 1.15, 6, 2.2],
+        # Les deux colonnes de langue sont plus larges depuis que le globe
+        # a disparu : à 1,15 elles reprenaient sa place et coupaient
+        # « Français » en deux lignes.
+        cols = st.columns([1.6, 1.6, 5.2, 2.6],
                           vertical_alignment="center")
-        with cols[0]:
-            st.markdown(
-                '<div class="ruban-ancre"></div>'
-                '<div class="ruban-globe" title="Langue / Language">'
-                # Globe dessiné en SVG plutôt qu'un émoji : l'émoji change de
-                # dessin et de couleur selon le système, et rendait la barre
-                # bariolée sur Windows.
-                '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" '
-                'stroke="currentColor" stroke-width="1.7" '
-                'stroke-linecap="round"><circle cx="12" cy="12" r="9"/>'
-                '<path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18'
-                'M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg></div>',
-                unsafe_allow_html=True)
-        for col, code in zip(cols[1:3], ("fr", "en")):
+        # LE GLOBE A ÉTÉ RETIRÉ. « Français » et « English » sont écrits en
+        # toutes lettres dans leur propre langue : un pictogramme devant deux
+        # mots qui se lisent déjà n'ajoutait rien.
+        #
+        # L'ANCRE RESTE DANS LA PREMIÈRE COLONNE, ET C'EST ESSENTIEL : la
+        # feuille de style habille la rangée QUI CONTIENT cette ancre, via
+        # :has(). Sortie de la rangée, elle emporte tout le style avec elle —
+        # les boutons redeviennent des cartes blanches et les libellés se
+        # coupent en deux lignes.
+        for col, code in zip(cols[0:2], ("fr", "en")):
             with col:
+                if code == "fr":
+                    st.markdown('<div class="ruban-ancre"></div>',
+                                unsafe_allow_html=True)
                 st.button(i18n.LANGUES[code], key=f"lang_{code}",
                           on_click=_changer_langue, args=(code,),
                           type=("primary"
@@ -1346,6 +1364,8 @@ if app_mode == MODE_DIMENSIONS:
                           on_click=_choisir_dim, args=(_m,),
                           type="primary" if _actif else "secondary",
                           use_container_width=True)
+
+    st.markdown('<div class="cartes-trait"></div>', unsafe_allow_html=True)
 
     _m = st.session_state["dim_active"]
     dimension_page.render(_m, complement=_COMPLEMENT.get(_m))
