@@ -1,60 +1,78 @@
-# « Le territoire » — deux cartes, rien d'autre
+# « Note aux bailleurs » — une page de restitution, entièrement calculée
 
 ## Deux fichiers, MÊME commit
 
 | Fichier | |
 |---|---|
-| `territoire_page.py` | la page complète : titre, grande carte, vignette |
-| `app.py` | appelle cette page ; les livraisons récentes passent dans « Données » |
+| `note_bailleurs.py` | **nouveau** — la page entière, ses textes FR/EN, ses calculs |
+| `app.py` | l'entrée « Note aux bailleurs » dans la colonne de gauche, après *Fiches d'intervention* |
 
-## Ce que contient la page, désormais
+Le fichier `i18n.py` n'a pas à être renvoyé : la page porte ses propres textes,
+comme les modules récents.
 
-**La grande carte** — les dix sections communales avec leurs limites, chacune
-nommée, colorées par département, les limites départementales en tirets,
-Jérémie et Les Cayes en repères. Au survol, chaque section donne sa commune et
-son département.
+## Ce que contient la page
 
-**La vignette de localisation** — Haïti en entier, la zone d'étude en vert
-cerclée de pointillés, à l'extrême sud-ouest du pays.
+**Quatre chiffres en tête** — 1 211 ménages sur 10 sections, l'indice global
+4,54 / 10, les 15 indicateurs à 0 ou 1 sur 10 (21 % du poids du référentiel),
+et l'effet modélisé du portefeuille complet : +0,335.
 
-Et c'est tout. La page tient sur un écran.
+**1 · Ce que l'enquête établit — six constats.** Un par dimension, et *aucun
+n'est choisi à la main* : pour chaque dimension, l'indicateur qui coûte le plus
+à l'indice, c'est-à-dire sa pondération multipliée par les points qui lui
+manquent sur dix. Chaque carte donne la valeur mesurée, la part non couverte,
+le score, la part de l'écart total, la localité et le groupe les plus touchés,
+la base de réponses, et l'explication de ce que compte exactement l'indicateur.
 
-## Ce qui en est sorti, et où c'est parti
+Ce que la règle donne aujourd'hui : électricité (17,3 %), participation à la
+préparation aux catastrophes (4,6 %), macroplastiques, population sous 50 % du
+revenu médian, capital social d'entraide, insécurité alimentaire (60,4 %).
 
-| Ce qui a quitté la page | Où le trouver |
-|---|---|
-| Les trois chiffres de périmètre | le pied de la colonne de gauche les porte déjà |
-| Les quatre résultats saillants | *Analyse des résultats*, dimension par dimension |
-| La carte des scores par section | *Analyse des résultats* et *Profils territoriaux* |
-| Les accès rapides | la colonne de gauche, en permanence |
-| Les livraisons récentes | **déplacées dans « Données »**, avec les jeux de données |
+> **Pourquoi une règle par dimension, et pas le classement brut ?** Le
+> classement brut plaçait quatre constats sur six dans la même dimension —
+> eau, électricité, assainissement, santé. Une note qui ne parle que de cela
+> laisse croire que le reste va bien.
 
-Aucune de ces informations n'a été supprimée du site : elles ont été renvoyées
-là où on les attend. Les livraisons récentes sont le seul bloc qui n'avait pas
-d'autre foyer — elles sont maintenant à la suite des téléchargements, ce qui
-est cohérent : c'est là qu'on vient voir ce qui est disponible, donc ce qui
-vient d'arriver.
+**2 · Ce que nous proposons — les huit fiches**, classées par l'effet que le
+modèle causal leur donne sur l'indice. Chacune indique son effet, son horizon,
+sa faisabilité, le levier et sa cible (« 4,0 → 6,5 / 10 »), les acteurs, et à
+quel constat elle répond — directement, ou par la dimension.
 
-## La règle écrite dans le fichier
+**3 · Ce que le portefeuille complet déplace** — 4,54 → 4,87. Avec, dites en
+toutes lettres, les trois limites : le gain vaut 6,1 % des points qui manquent
+à l'indice ; la propagation n'atteint que 51 % du poids du référentiel ; et le
+constat n° 5, le capital social d'entraide, n'est traité par aucune fiche.
 
-Pas de score, pas d'indicateur, pas de pourcentage, pas de classement, pas même
-un effectif sur cette page. Une carte qui porte des couleurs de résultat répond
-à « combien » avant d'avoir répondu à « où », et le lecteur qui cherchait
-simplement à se situer repart avec un chiffre qu'il n'a pas demandé.
+**4 · Si le budget n'en couvre qu'une partie.** Le premier lot, ce sont les
+fiches à la fois de faisabilité haute et d'horizon court — eau, carte
+d'identité, comités de gestion des risques. **Trois fiches sur huit portent
+64 % du gain modélisé du portefeuille.** C'est la phrase de la page.
 
-Les seuls textes restants sont les deux légendes sous les cartes. Une carte
-sans légende se regarde mais ne se lit pas — dites-moi si vous les voulez
-également retirées.
+**5 · Ce que cette note ne promet pas.** Cinq réserves : un effet simulé n'est
+pas un impact évalué ; la cible de chaque levier est une hypothèse ; la
+dimension environnementale est satellitaire et ne bouge pas dans l'horizon
+annoncé ; la septième dimension n'a aucun indicateur ; les horizons qualifient
+la nature du changement, pas un calendrier.
 
-## Un fichier devenu inutile
+## Deux points où le calcul a corrigé ce que j'allais écrire
 
-`accueil_page.py` n'est plus importé par `app.py`. Il peut rester dans le dépôt
-sans effet, ou être supprimé : il ne sert plus rien.
+**« 2 700 ménages ».** Prendre la plus grande base du référentiel donnait
+2 700, parce que certains indicateurs se comptent en personnes du foyer et non
+en foyers. Le chiffre juste — 1 211 — est lu dans l'index des croisements,
+c'est-à-dire l'effectif de l'enquête elle-même.
+
+**« Le portefeuille déplace moins que la somme de ses fiches ».** C'est le cas
+ordinaire, et je l'avais écrit d'avance. Le calcul dit l'inverse ici : les huit
+effets s'additionnent *exactement*, parce que les huit leviers atteignent des
+indicateurs disjoints. La page affiche donc l'une ou l'autre phrase selon ce
+que le calcul trouve — et changera d'elle-même le jour où un levier sera
+ajouté au graphe.
 
 ## Vérifié
 
-- **60 rendus** — 10 pages × 3 combinaisons de filtres × 2 langues — zéro
+- **66 rendus** — 11 pages × 3 combinaisons de filtres × 2 langues — zéro
   exception, zéro clé de traduction brute ;
-- page ouverte au navigateur : hauteur totale 1 199 px, soit un écran, les deux
-  cartes et rien d'autre ;
-- les livraisons récentes retrouvées au bas de « Données ».
+- page ouverte au navigateur dans les deux langues : les quatre chiffres des
+  cartes tiennent sur une ligne, les six constats, les huit fiches et les cinq
+  réserves s'affichent en entier ;
+- les chiffres de la page recoupent ceux des *Fiches d'intervention* : mêmes
+  effets, même classement, même indice de départ (4,54).

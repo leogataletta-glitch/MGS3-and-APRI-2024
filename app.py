@@ -40,6 +40,7 @@ import interventions_page
 import i18n
 import map_render
 import methodologie_page
+import note_bailleurs
 import ocb_page
 import radar_accueil
 import resilience_page
@@ -1009,6 +1010,7 @@ TEXTES_NAV = {
                         "fr": "Croisement des résultats"},
     "mode_fiche": {"en": "Landscape synthesis sheet",
                    "fr": "Fiche synthèse — paysages"},
+    "mode_bailleurs": {"en": "Donor briefing", "fr": "Note aux bailleurs"},
     "nav_titre": {"en": "Navigation", "fr": "Navigation"},
     "nav_filtres_rapides": {"en": "Quick filters", "fr": "Filtres rapides"},
     "f_reinit_long": {"en": "Reset the filters",
@@ -1133,6 +1135,7 @@ MODE_BOUCLES = "boucles"
 MODE_RADAR = "radar"
 MODE_CROISEMENT = "croisement"
 MODE_FICHE = "fiche_paysages"
+MODE_BAILLEURS = "bailleurs"
 LIBELLE_MODE = {m: T(m) for m in MODES_DIM}
 LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      "dimensions": T("mode_dimensions"),
@@ -1143,7 +1146,8 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      MODE_SYNTHESE: T("mode_synthese"),
                      MODE_RADAR: T("mode_radar"),
                      MODE_CROISEMENT: T("mode_croisement"),
-                     MODE_FICHE: T("mode_fiche")})
+                     MODE_FICHE: T("mode_fiche"),
+                     MODE_BAILLEURS: T("mode_bailleurs")})
 
 # L'état de navigation doit exister AVANT la barre du haut, qui affiche le nom
 # de la page courante. L'initialiser plus bas laissait la barre lire une clé
@@ -1213,6 +1217,11 @@ _NAV = [
     (MODE_SYNTHESE, "personnes"),
     (MODE_FICHE, "montagne"),
     (MODE_ACTIONS, "fiche"),
+    # LA NOTE AUX BAILLEURS VIENT APRÈS LES FICHES, ET AVANT LES DONNÉES.
+    # Elle est la sortie de tout ce qui précède : elle ne se comprend qu'après
+    # les fiches, dont elle reprend les chiffres, et elle doit rester au-dessus
+    # des téléchargements, qui ferment toujours la marche.
+    (MODE_BAILLEURS, "cible"),
     (MODE_DONNEES, "telecharger"),
 ]
 
@@ -1448,6 +1457,13 @@ if app_mode == MODE_ACTIONS:
     # Les anciennes pistes de travail, écrites avant cette analyse, ont été
     # retirées : elles ne commandaient plus rien et brouillaient la page.
     interventions_page.render()
+
+if app_mode == MODE_BAILLEURS:
+    # La page de restitution : constats calculés, réponses classées par le
+    # modèle, et ce que le modèle ne couvre pas. Aucun filtre — une note se
+    # cite, et une note dont les chiffres dépendent d'un filtre posé ailleurs
+    # ne se cite pas.
+    note_bailleurs.render()
 
 if app_mode == MODE_SYNTHESE:
     synthese_page.render()
