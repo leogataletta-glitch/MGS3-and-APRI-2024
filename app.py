@@ -427,9 +427,14 @@ st.markdown(("""
   /* ================= barre latérale : la navigation du site =============
      Vert profond plutôt que le gris par défaut : la navigation doit se
      détacher franchement du contenu, sinon l'œil hésite entre les deux à
-     chaque changement de page. */
+     chaque changement de page.
+     LE VERT A ÉTÉ DÉSATURÉ, PAS ÉCLAIRCI. Il montait à 54 % de saturation :
+     une couleur franche, qui tirait l'œil vers la colonne alors que la
+     colonne ne fait que porter les noms des pages. Il descend à 30 %, en
+     gardant la même teinte et la même profondeur — la colonne se détache
+     toujours du contenu blanc, mais elle ne le concurrence plus. */
   section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #123c30 0%, #0d2f26 100%) !important;
+    background: linear-gradient(180deg, #203c35 0%, #192e29 100%) !important;
     border-right: none;
     width: 310px !important; min-width: 310px !important;
   }
@@ -555,7 +560,9 @@ st.markdown(("""
      sans chercher. */
   section[data-testid="stSidebar"]
     div[data-testid="stButton"] > button[kind="primary"] {
-    background: linear-gradient(180deg,#63c493 0%,#4fb383 100%) !important;
+    /* La pastille suit la colonne : sur un vert désaturé, l'ancien vert vif
+       de l'entrée active devenait la seule couleur franche de l'écran. */
+    background: linear-gradient(180deg,#7cc0a0 0%,#68ae8e 100%) !important;
     border-color: transparent !important;
     box-shadow: 0 2px 12px rgba(0,0,0,.22) !important;
   }
@@ -565,7 +572,7 @@ st.markdown(("""
   }
   section[data-testid="stSidebar"]
     div[data-testid="stButton"] > button[kind="primary"]:hover {
-    background: linear-gradient(180deg,#6ecd9c 0%,#57bb8b 100%) !important;
+    background: linear-gradient(180deg,#88c9ac 0%,#72b697 100%) !important;
   }
 
   /* La couleur du bouton lui-même sert aux icônes : elles sont peintes en
@@ -1299,11 +1306,18 @@ def _rendre_ruban():
                 f'src="data:image/png;base64,{assets.LOGO_UNEP_BLEU}"></div>',
                 unsafe_allow_html=True)
 
+        # LA PHOTO N'EST PLUS QUE SUR LE CADRE DE RÉSILIENCE, ET C'EST UN
+        # CHOIX DE FONCTION, PAS DE GOÛT. Un bandeau de 300 px répété en tête
+        # de chaque page repoussait chaque fois le premier chiffre sous la
+        # ligne de flottaison, et une image qu'on revoit à chaque clic cesse
+        # d'être regardée. Elle reste là où elle dit quelque chose : la page
+        # d'entrée, celle qui présente le paysage qu'on mesure.
+        photo = st.session_state.get("app_mode") == MODE_METHODO
         st.markdown(
-            f'<img src="data:image/jpeg;base64,{assets.PAYSAGE_CAMP_PERRIN}" '
-            f'class="bandeau-haut" '
-            f'style="width:100%;height:300px;object-fit:cover;'
-            f'object-position:50% 62%;display:block">'
+            (f'<img src="data:image/jpeg;base64,{assets.PAYSAGE_CAMP_PERRIN}" '
+             f'class="bandeau-haut" '
+             f'style="width:100%;height:300px;object-fit:cover;'
+             f'object-position:50% 62%;display:block">' if photo else "")
             # RIEN D'ÉCRIT SOUS LE BANDEAU QUAND AUCUN FILTRE N'EST POSÉ.
             # Chaque page porte déjà son titre. Le rappel du filtre, lui, ne
             # disait rien tant qu'aucun filtre n'était choisi. Il n'apparaît
