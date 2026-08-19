@@ -27,8 +27,21 @@ identique en laissant croire à une égalité mesurée.
 
 import streamlit as st
 
+import icones
 import i18n
 from i18n import T
+
+TEXTES = {
+    "f_groupe_long": {"en": "Respondent group", "fr": "Groupe de répondants"},
+    "f_auto": {
+        "en": "Results update automatically as you change the filters.",
+        "fr": "Les résultats se mettent à jour automatiquement selon vos "
+              "filtres."},
+    "f_reinit_long": {"en": "Reset the filters",
+                      "fr": "Réinitialiser les filtres"},
+}
+for _c, _v in TEXTES.items():
+    i18n.DICO.setdefault(_c, _v)
 
 SECTIONS = ["Anse à Drick", "Barbois", "Dumont", "Débouchette", "Mouline",
             "Quentin", "Beaulieu", "Blactote", "Dalmette", "Trichet"]
@@ -207,22 +220,73 @@ def avertissement():
 
 
 # ---------------------------------------------------------------- dans la page
+_ICONE_DE = {"f_section": "maison", "f_paysage": "montagne",
+             "f_groupe": "personnes"}
+
+
+def _css_icones_selects():
+    """Une icône dans chaque sélecteur, à gauche du texte.
+
+    Streamlit ne laisse rien insérer dans un `selectbox` ; on peint donc
+    l'icône en `::before` sur le conteneur du widget, repéré par sa classe
+    `st-key-<clé>`, et on décale le texte d'autant. C'est le même procédé que
+    pour les entrées de navigation.
+    """
+    out = []
+    for cle, ico in _ICONE_DE.items():
+        base = f'div[class*="st-key-{cle}"] div[data-baseweb="select"]'
+        out.append(f'{base} {{ position:relative; }}')
+        out.append(f'{base} > div:first-child {{ padding-left:38px; }}')
+        out.append(
+            f'{base}::before {{ content:""; position:absolute; left:13px; '
+            f'top:50%; transform:translateY(-50%); width:18px; height:18px; '
+            f'z-index:1; pointer-events:none; background-color:#5a7ea8; '
+            f'-webkit-mask:{icones.masque(ico)} center/contain no-repeat; '
+            f'mask:{icones.masque(ico)} center/contain no-repeat; }}')
+    return "".join(out)
+
+
 BARRE_STYLE = """
 <style>
   div[data-testid="stHorizontalBlock"]:has(.f-ancre) {
       background:#f7fafd; border:1px solid #e3eaf3; border-radius:12px;
-      padding:10px 14px 4px; margin:6px 0 4px; align-items:end; }
+      padding:12px 16px 4px; margin:6px 0 2px; align-items:end; }
   div[data-testid="stHorizontalBlock"]:has(.f-ancre) label p {
-      font-size:11px !important; letter-spacing:.08em; text-transform:uppercase;
-      font-weight:700 !important; color:#6b7590 !important; }
+      font-size:12.5px !important; letter-spacing:0; text-transform:none;
+      font-weight:600 !important; color:#3c4761 !important; }
   /* Le bouton s'étirait sur toute la hauteur de la carte et pesait plus que
      les trois sélecteurs réunis, alors qu'il n'est qu'une sortie de secours. */
   div[data-testid="stHorizontalBlock"]:has(.f-ancre) button {
       height:40px; min-height:40px; margin-bottom:16px;
       font-size:13px !important; }
   .f-ancre { display:none; }
+  .f-auto  { display:flex; align-items:center; gap:7px; font-size:12.5px;
+             color:#6b7590; margin:2px 0 12px 4px; }
 </style>
 """
+
+
+def _select(cle, options, libelle, etiquette):
+    """Un sélecteur dont l'affichage suit la langue, même changée en cours de
+    route.
+
+    LE BOGUE QUE CELA CORRIGE. Les options étaient rendues par `format_func`
+    sur un widget dont la clé ne changeait jamais ; en basculant de l'anglais
+    au français, les intitulés des trois listes restaient en anglais jusqu'au
+    rechargement complet de la page. Le widget affiché porte donc une clé
+    suffixée par la langue — il est recréé quand elle change — tandis que la
+    VALEUR reste dans `f_section` / `f_paysage` / `f_groupe`, que tout le site
+    lit. Le choix survit au changement de langue, l'étiquette non.
+    """
+    w = f"{cle}__{i18n.get_lang()}"
+    courant = st.session_state[cle]
+
+    def _repercuter():
+        st.session_state[cle] = st.session_state[w]
+
+    st.selectbox(etiquette, options, format_func=libelle,
+                 index=options.index(courant) if courant in options else 0,
+                 key=w, on_change=_repercuter)
 
 
 def barre(cle="p"):
@@ -239,23 +303,31 @@ def barre(cle="p"):
     de sorte que le choix suit l'utilisateur d'une rubrique à l'autre.
     """
     _defaut()
-    st.markdown(BARRE_STYLE, unsafe_allow_html=True)
+    st.markdown(BARRE_STYLE + "<style>" + _css_icones_selects() + "</style>",
+                unsafe_allow_html=True)
     c1, c2, c3, c4 = st.columns([3, 2.4, 2.6, 1.5],
                                 vertical_alignment="bottom")
     with c1:
         st.markdown('<span class="f-ancre"></span>', unsafe_allow_html=True)
-        st.selectbox(T("f_section"), [TOUTES] + SECTIONS,
-                     format_func=libelle_section, key="f_section")
+        _select("f_section", [TOUTES] + SECTIONS, libelle_section,
+                T("f_section"))
     with c2:
-        st.selectbox(T("f_paysage"), [TOUS_P] + PAYSAGES,
-                     format_func=libelle_paysage, key="f_paysage")
+        _select("f_paysage", [TOUS_P] + PAYSAGES, libelle_paysage,
+                T("f_paysage"))
     with c3:
-        st.selectbox(T("f_groupe"), [TOUS] + GROUPES,
-                     format_func=libelle_groupe, key="f_groupe")
+        _select("f_groupe", [TOUS] + GROUPES, libelle_groupe,
+                T("f_groupe_long"))
     with c4:
         st.button(T("f_reinitialiser"), key=f"f_reset_{cle}",
                   on_click=reinitialiser, use_container_width=True,
                   disabled=not actif())
+
+    # Dire que le recalcul est automatique évite qu'on cherche un bouton
+    # « appliquer » qui n'existe pas — et qu'on croie, faute de l'avoir
+    # trouvé, que rien ne s'est passé.
+    st.markdown(
+        f'<div class="f-auto">{icones.svg("rafraichir", "#5a7ea8", 15, 2)}'
+        f'<span>{T("f_auto")}</span></div>', unsafe_allow_html=True)
 
     av = avertissement()
     if av:

@@ -1,89 +1,79 @@
-# Results Analysis — nouvelle architecture d'interface
+# La maquette, appliquée — accueil et colonne de navigation
 
-## Envoyez ces cinq fichiers dans le MÊME commit
+## Envoyez ces quatre fichiers dans le MÊME commit
 
 | Fichier | |
 |---|---|
-| `app.py` | la colonne de gauche ne porte plus les filtres |
-| `filtres.py` | la barre de filtres dans la page |
-| `dimension_page.py` | dimension → description → filtres → liste d'indicateurs |
-| `questions_dimension.py` | intitulés professionnels, tout replié, recherche |
-| `synthese_page.py` | reprend la barre de filtres, puisqu'elle lit les filtres |
+| `icones.py` | **nouveau** — le jeu d'icônes du site |
+| `app.py` | colonne de navigation, pastille de langue |
+| `filtres.py` | barre de filtres avec icônes, correction du changement de langue |
+| `accueil_page.py` | la page d'accueil refaite sur la maquette |
 
-Les cinq ensemble : `app.py` n'appelle plus le panneau latéral, et
-`dimension_page.py` appelle une fonction qui n'existe que dans le nouveau
-`filtres.py`.
+`app.py`, `filtres.py` et `accueil_page.py` importent tous les trois
+`icones.py` : sans lui, l'application ne démarre pas.
 
-## Ce qui a changé
+**Si la livraison précédente n'est pas encore poussée** (`dimension_page.py`,
+`questions_dimension.py`, `synthese_page.py`), poussez tout le dossier d'un
+bloc : `filtres.py` et `app.py` sont communs aux deux.
 
-**Les filtres ont quitté la marge.** Ils sont dans la page, sous le titre et la
-description de la dimension, en une bande horizontale : *Section communale ·
-Paysage · Groupe · Réinitialiser*. Un filtre posé dans la colonne de gauche est
-un filtre qu'on oublie — il agit sur des chiffres situés à quarante centimètres
-de lui, et rien à l'écran ne relie les deux. Ici il est juste au-dessus du
-résultat qu'il commande.
+## Ce qui a été repris de la maquette
 
-L'état reste commun à toute la plateforme : le choix vous suit d'une rubrique à
-l'autre, et la pastille du bandeau haut continue de rappeler ce qui est filtré.
+**La colonne de gauche.** Le titre est *Navigation*. Chaque entrée porte une
+icône dessinée — pastilles, bouclier, barres, boucle, personnes, fiche,
+téléchargement — au lieu des glyphes typographiques d'avant, qui ne voulaient
+rien dire et changeaient d'épaisseur d'une machine à l'autre. L'entrée active
+est une **pastille vert clair sur encre foncée** : le vert profond précédent se
+confondait avec le fond de la colonne. En bas, *Filtres rapides* avec le bouton
+**Réinitialiser les filtres** et, dessous, l'état courant en clair — c'est le
+seul raccourci de filtre qui a sa place dans la marge, puisqu'on le cherche
+depuis n'importe quelle page.
 
-**La colonne de gauche ne fait plus que naviguer** — Vue d'ensemble, Cadre de
-résilience, Analyse des résultats, Boucles de rétroaction, Profils territoriaux
-et sociaux, Fiches d'intervention, Données.
+**Les trois chiffres de tête sont devenus des cartes**, chacune avec sa
+pastille d'icône colorée, son nombre en grand et sa précision dessous. Ils
+tenaient auparavant sur une ligne, en petit, et se lisaient comme une légende.
 
-**Plus rien ne se déroule tout seul.** La page est maintenant :
+**La localisation est un encadré d'information** — fond bleuté, pastille « i » —
+et non plus un paragraphe de corps de texte.
 
-    dimension → description → filtres → liste d'indicateurs → détail
+**La barre de filtres** est sur la page d'accueil elle aussi, avec une icône
+dans chaque sélecteur (maison, montagne, personnes), les intitulés *Section
+communale · Paysage · Groupe de répondants*, et la ligne
+*« Les résultats se mettent à jour automatiquement selon vos filtres »* avec son
+icône de rafraîchissement — pour qu'on ne cherche pas un bouton « appliquer »
+qui n'existe pas.
 
-La liste d'indicateurs est compacte et **entièrement fermée**. Chaque ligne
-porte le nom de l'indicateur et son score — *Achèvement de l'éducation primaire
-(adultes) · 0,0 / 10* — et rien d'autre tant qu'on ne l'ouvre pas. Les
-indicateurs sont classés **du score le plus bas** : un tableau de bord de
-résilience se lit par ce qui manque.
+**Deux colonnes en bas** : le récit *Ce qu'est APRI, et d'où cela vient* à
+gauche, l'encadré **Accès rapides** à droite — quatre lignes cliquables avec
+icône colorée, titre, sous-titre et chevron, qui mènent aux quatre rubriques.
 
-À l'ouverture d'un indicateur : score, valeur mesurée, poids, source, sa
-définition, la question d'enquête mot pour mot avec ses modalités, le barème,
-la base, **la dispersion entre les dix sections communales** en barres, et **la
-répartition des réponses** quand l'indicateur sort d'une question de ménage.
+**La langue active** est une pastille bleue et non plus verte : le vert est la
+couleur de la navigation, et deux verts différents sur le même écran se
+lisaient comme deux états du même objet.
 
-Un **champ de recherche** est posé au-dessus de la liste, dans les deux onglets.
+## Deux points de fond, pas de décoration
 
-**Les deux niveaux sont maintenant distingués, et dits.** L'onglet
-*Indicateurs* vient en premier — c'est le produit de la plateforme. L'onglet
-*Résultats du questionnaire* vient ensuite, et il s'ouvre sur un avertissement
-en toutes lettres : *ce sont des réponses brutes, pas des indicateurs de
-résilience ; un module de questionnaire n'est pas un indicateur du
-référentiel*. C'était l'ambiguïté principale de l'ancienne page.
+**Les filtres de l'accueil agissent vraiment.** Afficher une barre de filtres
+au-dessus de chiffres qui ne bougent pas serait pire que de ne pas l'afficher.
+Le nombre de ménages suit donc la sélection — il est recalculé sur les
+effectifs par section et par sous-population de `ventilation.json` — et les
+quatre chiffres saillants sont lus sous le filtre courant au lieu du total. La
+carte, elle, reste la vue par section communale : c'est sa raison d'être.
 
-**Les codes du questionnaire ont disparu de l'écran.** « AQ. PROFIL DU
-RÉPONDANT » devient *Profil du répondant*, « AF. COMPOSITION DU FOYER » devient
-*Composition du foyer*. Les quarante-deux modules ont un intitulé analytique en
-français et en anglais ; les codes restent les clés en base, comme vous le
-demandiez. Un module qui échapperait au tableau ne fait pas réapparaître son
-code : le préfixe est retiré et la casse rétablie automatiquement.
-
-Les modules du questionnaire sont eux aussi **tous fermés** — ils s'ouvraient
-auparavant dès qu'ils contenaient une question reliée à un indicateur, ce qui
-déroulait des dizaines de graphiques d'un coup. Chaque volet fermé indique le
-nombre de questions et, par une flèche, combien d'entre elles alimentent un
-indicateur.
-
-## Rien n'a été retiré
-
-Le tableau comparatif de tous les indicateurs de la dimension existe toujours :
-il ferme la marche, replié, pour qui veut tout voir d'un coup ou copier des
-chiffres. L'ancien bloc « la source, ligne à ligne » n'a pas été supprimé — son
-contenu est passé dans le volet de l'indicateur concerné, là où on le cherche.
-Les quatre chiffres clés et la carte par section communale restent à leur
-place, avant la liste.
+**Un bogue corrigé au passage.** En basculant l'anglais vers le français en
+cours de session, les trois listes de filtres restaient en anglais jusqu'au
+rechargement complet de la page — leurs intitulés étaient rendus sur un widget
+dont la clé ne changeait jamais. Le widget affiché porte maintenant une clé
+suffixée par la langue, donc il est recréé quand elle change ; la valeur
+choisie, elle, reste dans l'état commun et survit au basculement.
 
 ## Vérifié
 
-- **42 rendus complets** — 7 pages × 3 combinaisons de filtres × 2 langues,
-  avec trois dimensions différentes — zéro exception, zéro clé de traduction
-  brute ;
-- **aucun code de questionnaire dans le texte rendu**, contrôlé par expression
-  régulière sur les deux langues ;
-- les 42 modules présents dans le cache ont bien un intitulé propre ;
-- pages ouvertes dans le navigateur, en français et en anglais : la bande de
-  filtres, les deux onglets, la liste fermée, un indicateur ouvert avec sa
-  question, son barème, sa base et sa dispersion entre sections.
+- **42 rendus complets** — 7 pages × 3 combinaisons de filtres × 2 langues —
+  zéro exception, zéro clé de traduction brute ;
+- page ouverte dans le navigateur, avant et après changement de langue : les
+  icônes de navigation, la pastille active, les filtres rapides, les trois
+  cartes de chiffres, l'encadré d'information, la barre de filtres et les accès
+  rapides ;
+- alignement des titres d'accès rapide contrôlé dans le DOM — Streamlit centre
+  le contenu de ses boutons à trois niveaux imbriqués, il fallait forcer les
+  trois.

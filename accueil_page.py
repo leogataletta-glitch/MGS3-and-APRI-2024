@@ -27,9 +27,34 @@ import os
 import streamlit as st
 import streamlit.components.v1 as components
 
+import filtres
+import icones
 import i18n
 import map_render
 from i18n import T
+
+# Les textes de cette page voyagent avec elle — même règle que partout
+# ailleurs : versés dans le dictionnaire commun à l'import, et seulement si la
+# clé n'y est pas déjà.
+TEXTES = {
+    "a_p_sections_s": {"en": "Covered in Sud and Grand'Anse",
+                       "fr": "Couvertes dans le Sud et la Grand'Anse"},
+    "a_p_departements_s": {"en": "Sud and Grand'Anse",
+                           "fr": "Sud et Grand'Anse"},
+    "a_p_menages_s": {"en": "Household survey, 2024",
+                      "fr": "Enquête ménage, 2024"},
+    "a_acces": {"en": "Quick access", "fr": "Accès rapides"},
+    "a_acces_dimensions": {"en": "Explore the indicators",
+                           "fr": "Explorer les indicateurs"},
+    "a_acces_synthese": {"en": "Data by territory",
+                         "fr": "Données par territoire"},
+    "a_acces_actions": {"en": "Solutions and actions",
+                        "fr": "Solutions et actions"},
+    "a_acces_donnees": {"en": "Available datasets",
+                        "fr": "Jeux de données disponibles"},
+}
+for _c, _v in TEXTES.items():
+    i18n.DICO.setdefault(_c, _v)
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(APP_DIR, "data")
@@ -158,25 +183,134 @@ def _menages_enquetes(res):
     return max(plausibles) if plausibles else rattaches
 
 
+def menages_filtres(res):
+    """Le nombre de ménages que la sélection courante désigne.
+
+    Afficher un filtre au-dessus d'un chiffre qui ne bouge pas est pire que de
+    ne pas afficher le filtre du tout. Les effectifs par section et par
+    sous-population sont dans `ventilation.json` ; on les additionne selon ce
+    qui est demandé, dans le même ordre de priorité que `filtres.cible()`.
+    """
+    p = _trouver("ventilation.json")
+    if not p:
+        return None
+    with open(p, encoding="utf-8") as f:
+        v = json.load(f) or {}
+    eff = v.get("effectifs") or {}
+    pays = v.get("paysage") or {}
+    s, g, pa = filtres.section(), filtres.groupe(), filtres.paysage()
+    col = g if g != filtres.TOUS else "Total"
+    if s != filtres.TOUTES:
+        return (eff.get(s) or {}).get(col)
+    if pa != filtres.TOUS_P:
+        return sum((eff.get(k) or {}).get(col) or 0
+                   for k in eff if pays.get(k) == pa) or None
+    if g != filtres.TOUS:
+        return sum((d or {}).get(col) or 0 for d in eff.values()) or None
+    return _menages_enquetes(res)
+
+
 _STYLE_PERIMETRE = """
 <style>
-  .a-perimetre { display:flex; gap:34px; flex-wrap:wrap; margin:16px 0 6px;
-                 padding:0 0 2px; }
-  .a-per-item  { display:flex; align-items:baseline; gap:9px; }
-  .a-per-val   { font-size:30px; font-weight:700; color:#101728;
-                 letter-spacing:-.025em; font-variant-numeric:tabular-nums;
-                 line-height:1; }
-  .a-per-lib   { font-size:14.5px; color:#5a6478; }
-  .a-local     { font-size:15.5px; color:#3c4761; line-height:1.6;
-                 max-width:88ch; margin:6px 0 4px; }
+  /* LES TROIS CHIFFRES DE PÉRIMÈTRE, EN CARTES.
+     Ils tenaient sur une ligne, en petit, et se lisaient comme une légende.
+     Une carte par chiffre, avec sa pastille d'icône, son nombre en grand et
+     sa précision dessous : c'est la première chose qu'on voit en arrivant,
+     elle doit peser ce qu'elle vaut. */
+  .a-kpi      { display:grid; grid-template-columns:repeat(auto-fit,
+                minmax(260px,1fr)); gap:16px; margin:18px 0 6px; }
+  .a-kpi-c    { display:flex; align-items:center; gap:15px; background:#fff;
+                border:1px solid #e6ecf4; border-radius:14px;
+                padding:16px 18px;
+                box-shadow:0 1px 2px rgba(16,23,40,.04),
+                           0 6px 18px rgba(16,23,40,.05); }
+  .a-kpi-p    { width:52px; height:52px; flex:0 0 52px; border-radius:14px;
+                display:flex; align-items:center; justify-content:center; }
+  .a-kpi-v    { font-size:31px; font-weight:700; letter-spacing:-.025em;
+                line-height:1; font-variant-numeric:tabular-nums; }
+  .a-kpi-l    { font-size:14.5px; font-weight:600; color:#101728;
+                margin-top:4px; }
+  .a-kpi-s    { font-size:12.5px; color:#8a93a5; margin-top:2px;
+                line-height:1.35; }
+  /* L'encadré de localisation : une note de cadrage, pas un paragraphe de
+     corps de texte — d'où le fond bleuté et la pastille d'information. */
+  .a-note     { display:flex; gap:14px; align-items:flex-start;
+                background:#f2f7fd; border:1px solid #dfeaf6;
+                border-radius:14px; padding:15px 18px; margin:12px 0 6px; }
+  .a-note-p   { width:34px; height:34px; flex:0 0 34px; border-radius:999px;
+                background:#dbeafe; display:flex; align-items:center;
+                justify-content:center; }
+  .a-note-x   { font-size:15px; color:#3c4761; line-height:1.6; margin:0;
+                max-width:96ch; }
   .a-hist-t    { font-size:13px; letter-spacing:.06em; text-transform:uppercase;
                  font-weight:700; color:#1f7a5a; margin:0 0 4px; }
   .a-hist-p    { font-size:15.5px; color:#3c4761; line-height:1.65;
                  max-width:92ch; margin:0 0 15px; }
   .a-hist-p:last-child { margin-bottom:2px; }
   .a-hist-p b  { color:#101728; font-weight:650; }
+  /* Les accès rapides : une ligne par destination, icône colorée à gauche,
+     chevron à droite. Ce sont de vrais boutons Streamlit — le chevron et
+     l'icône sont peints par la feuille de style, le libellé et le
+     sous-titre voyagent dans le libellé du bouton. */
+  .a-liens-t  { font-size:15px; font-weight:700; color:#101728;
+                margin:2px 0 10px; }
+  div[class*="st-key-acces_"] div[data-testid="stButton"] > button {
+      display:flex !important; justify-content:flex-start !important;
+      align-items:center !important; text-align:left !important;
+      background:#fff !important; border:1px solid #eef2f7 !important;
+      border-radius:11px !important; padding:9px 12px !important;
+      min-height:56px !important; box-shadow:none !important;
+      margin-bottom:6px; }
+  div[class*="st-key-acces_"] div[data-testid="stButton"] > button:hover {
+      background:#f6f9fd !important; border-color:#dbe6f2 !important;
+      transform:none !important; }
+  /* Titre et sous-titre dans un seul libellé : Streamlit rend le markdown
+     du bouton, `**gras**` devient un <strong> qu'on peut viser, et
+     `white-space:pre-line` conserve le passage à la ligne. C'est le procédé
+     déjà employé par les cartes de dimension. */
+  /* Le bouton de Streamlit centre son contenu à trois niveaux imbriqués : il
+     faut forcer l'alignement sur les conteneurs intérieurs, sinon les titres
+     ne commencent pas tous à la même abscisse. */
+  div[class*="st-key-acces_"] div[data-testid="stButton"] > button > div,
+  div[class*="st-key-acces_"] div[data-testid="stButton"] > button
+    div[data-testid="stMarkdownContainer"] {
+      width:100% !important; text-align:left !important;
+      display:block !important; }
+  /* `!important` n'est pas un caprice : la feuille générale impose 18 px et
+     600 aux libellés de bouton, et sans cela le sous-titre se lisait plus
+     gros que le titre — exactement l'inverse de ce qu'il faut. */
+  div[class*="st-key-acces_"] div[data-testid="stButton"] > button p {
+      text-align:left !important; margin:0 !important;
+      white-space:pre-line !important;
+      font-size:12.5px !important; font-weight:400 !important;
+      color:#8a93a5 !important; line-height:1.45 !important; }
+  div[class*="st-key-acces_"] div[data-testid="stButton"] > button p strong {
+      display:block; font-size:14.5px !important; font-weight:600 !important;
+      color:#101728 !important; line-height:1.4 !important; }
+  div[class*="st-key-acces_"] div[data-testid="stButton"] > button::after {
+      content:"›"; margin-left:auto; font-size:19px; color:#b6bfcd;
+      line-height:1; }
 </style>
 """
+
+# Les quatre destinations de l'encadré « accès rapides », et la couleur de
+# leur pastille. L'identifiant de mode est celui d'app.py : le raccourci ne
+# fait que le poser dans l'état de session, comme le ferait un clic dans la
+# colonne de gauche.
+ACCES = [
+    ("dimensions", "barres", "#2f7fd6", "#e8f1fc"),
+    ("synthese", "personnes", "#1f7a5a", "#e6f4ee"),
+    ("actions", "cible", "#7048b6", "#efe9f9"),
+    ("donnees", "telecharger", "#c98a2e", "#fdf3e3"),
+]
+
+
+def _aller(mode):
+    """Le raccourci pose simplement le mode dans l'état de session — le même
+    que celui qu'écrit un clic dans la colonne de gauche. Pas de callback à
+    faire descendre depuis app.py : une chaîne de plus à maintenir pour une
+    affectation d'une ligne."""
+    st.session_state["app_mode"] = mode
 
 
 def render(actualites=None):
@@ -206,17 +340,35 @@ def render(actualites=None):
     # d'ENFANTS de la ligne 24 (enregistrement des naissances), pas de
     # ménages. Le bon dénominateur est le nombre de questionnaires, lu dans
     # les effectifs par section : ne pas revenir à un max() sur les lignes.
+    kpis = [
+        (str(len(SECTIONS)), T("a_p_sections"), T("a_p_sections_s"),
+         "epingle", "#2f7fd6", "#e8f1fc"),
+        ("2", T("a_p_departements"), T("a_p_departements_s"),
+         "carte", "#1f7a5a", "#e6f4ee"),
+        (_fmt(menages_filtres(res), 0), T("a_p_menages"),
+         T("a_p_menages_s"), "personnes", "#7048b6", "#efe9f9"),
+    ]
     st.markdown(
-        '<div class="a-perimetre">'
-        + ''.join(
-            f'<div class="a-per-item"><span class="a-per-val">{_e(v)}</span>'
-            f'<span class="a-per-lib">{_e(l)}</span></div>'
-            for v, l in [(str(len(SECTIONS)), T("a_p_sections")),
-                         ("2", T("a_p_departements")),
-                         (_fmt(_menages_enquetes(res), 0), T("a_p_menages"))])
+        '<div class="a-kpi">' + ''.join(
+            f'<div class="a-kpi-c">'
+            f'<div class="a-kpi-p" style="background:{fond}">'
+            f'{icones.svg(ico, coul, 25, 1.9)}</div><div>'
+            f'<div class="a-kpi-v" style="color:{coul}">{_e(v)}</div>'
+            f'<div class="a-kpi-l">{_e(lib)}</div>'
+            f'<div class="a-kpi-s">{_e(sous)}</div></div></div>'
+            for v, lib, sous, ico, coul, fond in kpis)
         + '</div>'
-        f'<p class="a-local">{T("a_localisation")}</p>',
+        f'<div class="a-note"><div class="a-note-p">'
+        f'{icones.svg("info", "#2f7fd6", 19, 2)}</div>'
+        f'<p class="a-note-x">{T("a_localisation")}</p></div>',
         unsafe_allow_html=True)
+
+    # LES FILTRES SONT ICI AUSSI, ET ILS AGISSENT VRAIMENT. Les afficher sur
+    # la page d'accueil sans qu'ils changent quoi que ce soit serait pire que
+    # de ne pas les afficher : les chiffres saillants et le nombre de ménages
+    # suivent donc la sélection, et la carte reste la vue par section, qui est
+    # sa raison d'être.
+    filtres.barre(cle="accueil")
 
     # -------------------------------------------------------- l'histoire
     # Quatre volets « quoi / où / comment / pourquoi » disaient les mêmes
@@ -225,14 +377,38 @@ def render(actualites=None):
     # comment elle est construite, et ce qu'elle ne prétend pas dire — cette
     # dernière partie n'est pas une précaution de style, c'est la condition
     # pour que les chiffres soient utilisés correctement.
-    with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc ambre">{T("a_histoire")}</div>',
-                    unsafe_allow_html=True)
-        st.markdown(
-            ''.join(f'<p class="a-hist-p"><b>{_e(T("a_h_" + c + "_t"))}</b> '
-                    f'{T("a_h_" + c)}</p>'
-                    for c in ("origine", "mesure", "construction", "portee")),
-            unsafe_allow_html=True)
+    # L'histoire à gauche, les accès rapides à droite : le récit se lit, les
+    # raccourcis se cliquent, et les deux n'ont pas à se disputer la largeur
+    # de la page.
+    _g, _d = st.columns([2.35, 1])
+    with _g:
+        with st.container(border=True):
+            st.markdown(
+                f'<div class="titre-bloc ambre">{T("a_histoire")}</div>',
+                unsafe_allow_html=True)
+            st.markdown(
+                ''.join(f'<p class="a-hist-p"><b>{_e(T("a_h_" + c + "_t"))}</b> '
+                        f'{T("a_h_" + c)}</p>'
+                        for c in ("origine", "mesure", "construction",
+                                  "portee")),
+                unsafe_allow_html=True)
+    with _d:
+        with st.container(border=True):
+            st.markdown(
+                "<style>" + "".join(
+                    icones.regle_masque(
+                        f'div[class*="st-key-acces_{m}"] '
+                        f'div[data-testid="stButton"] > button', ico, 21, 13)
+                    + f'div[class*="st-key-acces_{m}"] '
+                      f'div[data-testid="stButton"] > button::before '
+                      f'{{ background-color:{coul}; }}'
+                    for m, ico, coul, _f in ACCES) + "</style>"
+                + f'<div class="a-liens-t">{_e(T("a_acces"))}</div>',
+                unsafe_allow_html=True)
+            for mode, _ico, _c, _f in ACCES:
+                st.button(f'**{T("mode_" + mode)}**\n{T("a_acces_" + mode)}',
+                          key=f"acces_{mode}", use_container_width=True,
+                          on_click=_aller, args=(mode,))
 
     # ------------------------------------------------- résultats saillants
     with st.container(border=True):
@@ -248,8 +424,10 @@ def render(actualites=None):
             r = par_ligne.get(lg)
             if not r:
                 continue
-            val = (r.get("valeurs") or {}).get("Total")
-            sc = (r.get("scores_corriges") or {}).get("Total")
+            # Sous le filtre courant, et non plus sur le total : la barre
+            # de filtres est au-dessus, elle doit commander ces chiffres.
+            val = filtres.valeur(r)
+            sc = filtres.score(r)
             cartes.append(
                 f'<div style="flex:1 1 210px;min-width:190px;background:#fff;'
                 f'border:1px solid #e7ecf3;border-left:4px solid {coul};'

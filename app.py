@@ -32,6 +32,7 @@ import croisement_page
 import dimension_page
 import environnement_page
 import filtres
+import icones
 import interventions_page
 import i18n
 import map_render
@@ -163,7 +164,7 @@ if not check_password():
 # connexion aux polices Google échoue), et une largeur de ligne bornée —
 # une phrase qui court sur 1400 px est illisible, c'est ce qui rendait les
 # blocs de texte pénibles à lire.
-st.markdown("""
+st.markdown(("""
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
@@ -538,18 +539,38 @@ st.markdown("""
     div[data-testid="stButton"] > button:hover p {
     color: #ffffff !important;
   }
+  /* L'ENTRÉE ACTIVE : une pastille vert clair, encre foncée.
+     Le vert profond d'avant se confondait avec le fond de la colonne dès que
+     l'écran était mal réglé — on ne voyait plus où l'on se trouvait. Un fond
+     clair sur fond sombre, c'est l'inverse du contenu, et l'œil le trouve
+     sans chercher. */
   section[data-testid="stSidebar"]
     div[data-testid="stButton"] > button[kind="primary"] {
-    background: #1f7a5a !important; border-color: transparent !important;
-    box-shadow: 0 2px 10px rgba(0,0,0,.26) !important;
+    background: linear-gradient(180deg,#63c493 0%,#4fb383 100%) !important;
+    border-color: transparent !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,.22) !important;
   }
   section[data-testid="stSidebar"]
     div[data-testid="stButton"] > button[kind="primary"] p {
-    color: #ffffff !important; font-weight: 600 !important;
+    color: #0b2b22 !important; font-weight: 700 !important;
   }
   section[data-testid="stSidebar"]
     div[data-testid="stButton"] > button[kind="primary"]:hover {
-    background: #23895f !important;
+    background: linear-gradient(180deg,#6ecd9c 0%,#57bb8b 100%) !important;
+  }
+
+  /* La couleur du bouton lui-même sert aux icônes : elles sont peintes en
+     `currentColor`, donc elles suivent l'état — repos, survol, actif — sans
+     qu'on ait à écrire trois fois la même règle par icône. */
+  section[data-testid="stSidebar"] div[data-testid="stButton"] > button {
+    color: rgba(255,255,255,.72) !important;
+  }
+  section[data-testid="stSidebar"] div[data-testid="stButton"] > button:hover {
+    color: #ffffff !important;
+  }
+  section[data-testid="stSidebar"]
+    div[data-testid="stButton"] > button[kind="primary"] {
+    color: #0b2b22 !important;
   }
 
   /* Le sélecteur de langue, seul widget non bouton de la colonne */
@@ -565,10 +586,31 @@ st.markdown("""
     fill: rgba(255,255,255,.7);
   }
 
-  /* --- le bloc « filtres actifs » de la colonne ------------------------ */
+  /* --- le raccourci « filtres rapides » de la colonne ------------------ */
   .f-separateur {
     height: 1px; background: rgba(255,255,255,.12); margin: 16px 2px 2px;
   }
+  .nav-etat {
+    font-size: 11.5px; color: rgba(255,255,255,.46); line-height: 1.45;
+    padding: 6px 6px 0;
+  }
+  /* Le bouton de remise à zéro ne doit pas se lire comme une entrée de menu :
+     il agit sur le filtre, pas sur la navigation. Contour discret, hauteur
+     réduite, et son icône de rafraîchissement. */
+  section[data-testid="stSidebar"] div[class*="st-key-f_reset_global"]
+    div[data-testid="stButton"] > button {
+    min-height: 38px !important; padding: 8px 13px !important;
+    border: 1px solid rgba(255,255,255,.20) !important;
+    background: rgba(255,255,255,.05) !important;
+    border-radius: 9px !important;
+  }
+  section[data-testid="stSidebar"] div[class*="st-key-f_reset_global"]
+    div[data-testid="stButton"] > button p {
+    font-size: 13.5px !important; font-weight: 500 !important;
+  }
+  section[data-testid="stSidebar"] div[class*="st-key-f_reset_global"]
+    div[data-testid="stButton"] > button:disabled { opacity: .5; }
+  __ICONE_RESET__
   section[data-testid="stSidebar"] div[data-testid="stSelectbox"] label p {
     font-size: 11.5px !important; letter-spacing: .04em;
     color: rgba(255,255,255,.55) !important; font-weight: 600 !important;
@@ -668,15 +710,18 @@ st.markdown("""
     background: rgba(255,255,255,.11) !important;
     color: #ffffff !important; transform: none !important;
   }
+  /* La langue active en pastille bleue : le vert est la couleur de la
+     navigation, et deux verts différents sur le même écran se lisaient comme
+     deux états du même objet. */
   div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
   div[data-testid="stButton"] > button[kind="primary"] {
-    background: #5f9e3f !important; color: #ffffff !important;
+    background: #2f7fd6 !important; color: #ffffff !important;
     font-weight: 600 !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,.20) !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,.22) !important;
   }
   div[data-testid="stHorizontalBlock"]:has(.ruban-ancre)
   div[data-testid="stButton"] > button[kind="primary"]:hover {
-    background: #6cb047 !important;
+    background: #3d8ce0 !important;
   }
   .ruban-unep {
     display: flex; justify-content: flex-end; align-items: center;
@@ -846,7 +891,10 @@ st.markdown("""
     box-shadow: 0 3px 6px rgba(16,23,40,.07), 0 18px 38px rgba(16,23,40,.13) !important;
   }
 </style>
-""", unsafe_allow_html=True)
+""").replace("__ICONE_RESET__", icones.regle_masque(
+    'section[data-testid="stSidebar"] div[class*="st-key-f_reset_global"] '
+    'div[data-testid="stButton"] > button', "rafraichir", 16, 10)),
+    unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------------
 # APP.PY PORTE LES INTITULÉS DE SA PROPRE NAVIGATION.
@@ -908,6 +956,15 @@ TEXTES_NAV = {
         "fr": "Éducation, santé, réseaux de soutien et accès aux services "
               "essentiels"},
     "mode_boucles": {"en": "Feedback Loops", "fr": "Boucles de rétroaction"},
+    "nav_titre": {"en": "Navigation", "fr": "Navigation"},
+    "nav_filtres_rapides": {"en": "Quick filters", "fr": "Filtres rapides"},
+    "f_reinit_long": {"en": "Reset the filters",
+                      "fr": "Réinitialiser les filtres"},
+    "f_groupe_long": {"en": "Respondent group", "fr": "Groupe de répondants"},
+    "f_auto": {
+        "en": "Results update automatically as you change the filters.",
+        "fr": "Les résultats se mettent à jour automatiquement selon vos "
+              "filtres."},
 }
 # Les sept rubriques : app.py est la source, puisqu'il est le seul à s'en servir
 # et qu'il est toujours du voyage.
@@ -1084,19 +1141,31 @@ MODE_DIMENSIONS = "dimensions"
 # et les groupes, on passe à l'action, et les données brutes ferment la marche
 # pour qui veut refaire les calculs.
 _NAV = [
-    (MODE_ACCUEIL, "◉"),
-    (MODE_METHODO, "◈"),
-    (MODE_DIMENSIONS, "▦"),
-    (MODE_BOUCLES, "⟳"),
-    (MODE_SYNTHESE, "◐"),
-    (MODE_ACTIONS, "➜"),
-    (MODE_DONNEES, "⤓"),
+    (MODE_ACCUEIL, "grille"),
+    (MODE_METHODO, "bouclier"),
+    (MODE_DIMENSIONS, "barres"),
+    (MODE_BOUCLES, "boucle"),
+    (MODE_SYNTHESE, "personnes"),
+    (MODE_ACTIONS, "fiche"),
+    (MODE_DONNEES, "telecharger"),
 ]
+
+# LES ICONES SONT PEINTES PAR LA FEUILLE DE STYLE, PAS ECRITES DANS LE LIBELLE.
+# On ne peut rien inserer dans le contenu d'un bouton Streamlit ; en revanche
+# chaque widget porte une classe `st-key-<cle>`, ce qui permet de viser un
+# bouton precis et de lui poser son icone en `::before`. Les glyphes
+# typographiques qui servaient jusqu'ici ne disaient rien, et leur graisse
+# changeait d'une police systeme a l'autre.
+_CSS_ICONES_NAV = "<style>" + "".join(
+    icones.regle_masque(
+        f'section[data-testid="stSidebar"] div[class*="st-key-nav_{_m}"] '
+        f'div[data-testid="stButton"] > button', _i)
+    for _m, _i in _NAV) + "</style>"
 
 
 def _entree_nav(mode, icone):
     actif = st.session_state["app_mode"] == mode
-    st.button(f"{icone}\u2003{LIBELLE_MODE[mode]}", key=f"nav_{mode}",
+    st.button(LIBELLE_MODE[mode], key=f"nav_{mode}",
               on_click=_bascule, args=(mode,),
               type="primary" if actif else "secondary",
               use_container_width=True)
@@ -1182,7 +1251,8 @@ with _sb_marque:
         unsafe_allow_html=True)
 
 with _sb_nav:
-    st.markdown(f'<div class="nav-groupe">{T("nav_general")}</div>',
+    st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
+    st.markdown(f'<div class="nav-groupe">{T("nav_titre")}</div>',
                 unsafe_allow_html=True)
     # LA COLONNE DE GAUCHE NE SERT PLUS QU'À NAVIGUER. Les filtres d'analyse
     # en ont été retirés : posés à côté du contenu, ils obligeaient l'œil à
@@ -1191,6 +1261,21 @@ with _sb_nav:
     # elle-même, sous le titre de la rubrique, là où le résultat est affiché.
     for mode, icone in _NAV:
         _entree_nav(mode, icone)
+
+    # UN RACCOURCI, PAS UN PANNEAU. Les trois sélecteurs sont dans la page,
+    # sous le titre de la rubrique — c'est là qu'ils doivent être. Reste ici
+    # la seule commande qu'on cherche depuis n'importe où : tout remettre à
+    # zéro, avec l'état courant écrit dessous pour qu'on sache s'il y a
+    # quelque chose à remettre à zéro.
+    st.markdown(f'<div class="f-separateur"></div>'
+                f'<div class="nav-groupe">{T("nav_filtres_rapides")}</div>',
+                unsafe_allow_html=True)
+    st.button(T("f_reinit_long"), key="f_reset_global",
+              on_click=filtres.reinitialiser, use_container_width=True,
+              disabled=not filtres.actif())
+    st.markdown(
+        f'<div class="nav-etat">{T("f_aucun") if not filtres.actif() else filtres.resume()}</div>',
+        unsafe_allow_html=True)
 
 with _sb_langue:
     # Le logo du PNUE est remonté dans le ruban, en haut à droite. Le
