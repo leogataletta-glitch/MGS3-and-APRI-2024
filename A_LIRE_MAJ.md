@@ -1,76 +1,80 @@
-# Analyse détaillée — ajoutée EN TÊTE de « Analyse des résultats »
+# Fiche synthèse — résilience des paysages
 
 ## Deux fichiers, MÊME commit
 
 | Fichier | |
 |---|---|
-| `questions_resultats.py` | **nouveau** — les deux nouvelles sections |
-| `dimension_page.py` | les appelle avant l'existant |
+| `fiche_paysages.py` | **nouveau** — la fiche |
+| `app.py` | l'onglet dans la colonne de gauche |
 
-Il s'appuie aussi sur `croisement_moteur.py`, livré au lot précédent : si ce
-dernier n'est pas encore poussé, envoyez-le avec.
+Elle s'appuie sur `croisement_moteur.py`, livré précédemment : s'il n'est pas
+encore poussé, envoyez-le avec. **Rien n'a été supprimé ni modifié ailleurs.**
 
-**Rien n'a été retiré, remplacé ni réorganisé.** Les onglets *Indicateurs* et
-*Résultats du questionnaire*, la carte, les quatre chiffres clés, le radar,
-l'accordéon et le tableau comparatif sont intacts, à leur place, sous les
-nouvelles sections.
+## Ce que contient la fiche
 
-## Ce qui s'ajoute, dans l'ordre demandé
+**1 · Les deux paysages, d'ensemble** — les deux scores face à face, l'écart au
+milieu, celui qui est en tête marqué comme tel, puis les six dimensions en
+barres avec l'écart en points colorié au profit du paysage qu'il avantage.
 
-**1 · Résultats des questions — effectifs absolus.** Une ligne par question de
-la dimension : question · réponse de référence · effectif · part · meilleur
-groupe · pire groupe · meilleure localité · pire localité. Un filtre de
-population au-dessus — tous les répondants, sexe, classe d'âge, groupe
-socio-économique, paysage, localité — et une recherche.
+> Littoral **4,87** · Montagne **4,30** · écart **0,57**
 
-**2 · Comparaison visuelle.** Une question au choix, la ou les réponses
-comparées, et des barres classées par groupe **ou** par localité, avec le trait
-pointillé de l'ensemble et les deux extrémités en vert et rouge.
+**2 · Ce qui les sépare le plus** — tous les indicateurs classés par ampleur
+d'écart : Rang · Indicateur · Dimension · Littoral · Montagne · Écart · Paysage
+le plus favorable. Un curseur règle la profondeur du classement, et un
+diagramme divergent montre les mêmes écarts d'un coup — vers la gauche la
+montagne, vers la droite le littoral.
 
-**3 · Indicateurs de résilience.** Indicateur · dimension · source/questions ·
-pondération · score · meilleur groupe · pire groupe · meilleure localité · pire
-localité. La colonne source nomme la question d'enquête dont l'indicateur est
-tiré — c'est la traçabilité entre les deux tableaux.
+Les écarts se lisent **sur le score sur dix**, pas sur la valeur brute : un
+score se compare d'un indicateur à l'autre, un pourcentage de ménages ne se
+compare pas à un hectare de forêt.
 
-**4 · Filtres, y compris combinés.** Un interrupteur « combiner plusieurs
-filtres » ouvre cinq sélecteurs simultanés : femmes + montagne + Cat C.
+**3 · Le paysage comme système social** — le croisement paysage × découpage
+social, au choix : groupe socio-économique, sexe, classe d'âge ou localité.
+Paysage · Groupe · Répondants · Indice · Rang · Niveau de vulnérabilité.
 
-**5 · Comparaison Groupe / Localité** pour un indicateur, en barres.
+**4 · Les deux extrémités** et **5 · la matrice des profils** — le groupe le
+plus vulnérable et le plus résilient, calculés, puis la matrice à trois lignes
+(le plus vulnérable / intermédiaire / le plus résilient) par colonne de paysage.
+Les scores proches gardent leur rang : aucune différence n'est forcée.
 
-## Trois choses que je dois signaler
+**6 · Ce qu'il faut retenir** — cinq phrases **composées à partir des chiffres
+du jour**, pas écrites d'avance. Elles répondent aux cinq questions posées :
+quel paysage est en tête, quelles variables les séparent le plus, quel groupe
+est le plus vulnérable, lequel s'en sort le mieux, et s'il existe un groupe
+pénalisé par un paysage en particulier.
 
-**« Meilleur » suppose un sens, et je ne l'invente pas.** Un pourcentage élevé
-n'est pas une bonne nouvelle en soi : *80 % cuisinent au charbon* est mauvais,
-*80 % ont l'eau améliorée* est bon. Le sens n'est connu que là où la question
-**alimente un indicateur**, qui porte son barème. Ces lignes-là disent
-« meilleur » et « pire », en vert et rouge. Les autres portent un **○** et
-leurs colonnes se lisent « plus haut / plus bas », en encre neutre. Deviner le
-sens des autres aurait donné un tableau qui a l'air complet et se trompe une
-fois sur deux.
+Sur les données actuelles, la dernière conclusion tombe du bon côté de la
+nuance : l'écart littoral–montagne est du même ordre pour les trois catégories
+socio-économiques, ce qui **désigne un effet de paysage plutôt qu'un effet
+social**. La fiche l'écrit ainsi plutôt que de forcer un « groupe
+particulièrement pénalisé » qui n'existe pas dans ces chiffres.
 
-**Un défaut trouvé et corrigé en route.** La première version affichait
-« Trichet 123,3 % » sur la source d'eau de boisson. Plusieurs questions
-acceptent plusieurs réponses — un foyer peut cocher deux sources améliorées —
-et additionner les effectifs des modalités le compte deux fois. Les parts sont
-maintenant calculées par **union exacte** sur les bits de `croisement.npz` :
-chaque foyer est compté une fois. Contrôle passé sur cent parts, plus aucune
-au-dessus de 100 %.
+## Le point de méthode, écrit aussi dans la fiche
 
-**Les scores combinés sont recalculés, et c'est écrit.** Aucun fichier ne porte
-le score de « femmes × montagne × Cat C » : le référentiel publie
-vingt-deux découpages, pas leurs croisements. Sous une combinaison, les scores
-sont donc recalculés par le moteur de croisement — possible pour les 25
-indicateurs dont la définition se reproduit exactement, soit 37 % du poids du
-référentiel — et un avertissement le dit au-dessus du tableau. Sans
-combinaison, les scores affichés sont **ceux publiés**, non recalculés.
+**Deux sources de scores, et il faut savoir laquelle on lit.**
+
+- Le **paysage seul** est un découpage publié : le référentiel donne le score
+  de chaque indicateur pour le littoral et pour la montagne, sur les 66
+  indicateurs scorés. Les blocs 1 et 2 n'y recalculent rien.
+- Le **paysage croisé avec un groupe** — « montagne × catégorie A » — n'existe
+  dans aucun fichier : le référentiel publie vingt-deux découpages, pas leurs
+  croisements. Les blocs 3 à 5 sont donc recalculés par le moteur de
+  croisement, avec la même méthode, sur les 25 indicateurs dont la définition
+  se reproduit exactement — 37 % du poids du référentiel.
+
+Les deux échelles ne se comparent donc pas entre elles, et la fiche le dit là
+où elles se touchent ; chacune se compare parfaitement avec elle-même, ce qui
+est tout ce qu'un classement demande.
+
+Un exemple de ce que cela change : le score d'ensemble publié du littoral est
+4,87, tandis que l'indice partiel de « littoral × catégorie C » vaut 4,61. Ces
+deux nombres ne se soustraient pas.
 
 ## Vérifié
 
-- **54 rendus** — 9 pages × 3 combinaisons de filtres × 2 langues — zéro
+- **60 rendus** — 10 pages × 3 combinaisons de filtres × 2 langues — zéro
   exception, zéro clé de traduction brute ;
-- les six dimensions ouvertes une à une dans les deux langues : deux d'entre
-  elles tombaient au premier essai, sur une question sans indicateur associé —
-  corrigé, la garde précède maintenant l'accès ;
-- page ouverte au navigateur : les deux tableaux, la traçabilité
-  « alimente la ligne N », les repères ○, et les barres par groupe et par
-  localité.
+- les quatre découpages du bloc 3 joués dans les deux langues ;
+- page ouverte au navigateur : le duel, les dimensions, le classement des
+  écarts, le diagramme divergent, la table croisée, les deux extrémités, la
+  matrice et les enseignements.

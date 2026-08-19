@@ -32,6 +32,7 @@ import croisement_page
 import croisement_resultats
 import dimension_page
 import environnement_page
+import fiche_paysages
 import filtres
 import icones
 import interventions_page
@@ -1004,6 +1005,8 @@ TEXTES_NAV = {
                    "fr": "Diagramme radar de résilience"},
     "mode_croisement": {"en": "Cross-tabulation of results",
                         "fr": "Croisement des résultats"},
+    "mode_fiche": {"en": "Landscape synthesis sheet",
+                   "fr": "Fiche synthèse — paysages"},
     "nav_titre": {"en": "Navigation", "fr": "Navigation"},
     "nav_filtres_rapides": {"en": "Quick filters", "fr": "Filtres rapides"},
     "f_reinit_long": {"en": "Reset the filters",
@@ -1127,6 +1130,7 @@ MODE_SYNTHESE = "synthese"
 MODE_BOUCLES = "boucles"
 MODE_RADAR = "radar"
 MODE_CROISEMENT = "croisement"
+MODE_FICHE = "fiche_paysages"
 LIBELLE_MODE = {m: T(m) for m in MODES_DIM}
 LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      "dimensions": T("mode_dimensions"),
@@ -1136,7 +1140,8 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      MODE_BOUCLES: T("mode_boucles"),
                      MODE_SYNTHESE: T("mode_synthese"),
                      MODE_RADAR: T("mode_radar"),
-                     MODE_CROISEMENT: T("mode_croisement")})
+                     MODE_CROISEMENT: T("mode_croisement"),
+                     MODE_FICHE: T("mode_fiche")})
 
 # L'état de navigation doit exister AVANT la barre du haut, qui affiche le nom
 # de la page courante. L'initialiser plus bas laissait la barre lire une clé
@@ -1200,6 +1205,7 @@ _NAV = [
     (MODE_BOUCLES, "boucle"),
     (MODE_CROISEMENT, "loupe"),
     (MODE_SYNTHESE, "personnes"),
+    (MODE_FICHE, "montagne"),
     (MODE_ACTIONS, "fiche"),
     (MODE_DONNEES, "telecharger"),
 ]
@@ -1422,6 +1428,11 @@ if app_mode == MODE_CROISEMENT:
     # filtres de la colonne : ses conditions SONT son filtre, et deux
     # mecanismes de selection sur la meme page se contrediraient.
     croisement_resultats.render()
+
+if app_mode == MODE_FICHE:
+    # Une fiche de restitution : elle se lit d'une traite, du chiffre
+    # d'ensemble aux enseignements, sans rien demander a l'utilisateur.
+    fiche_paysages.render()
 
 if app_mode == MODE_BOUCLES:
     boucles_page.render()
