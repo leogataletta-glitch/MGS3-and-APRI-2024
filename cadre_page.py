@@ -31,6 +31,7 @@ import os
 import streamlit as st
 
 import i18n
+import icones
 from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -321,6 +322,100 @@ TEXTES = {
               "the wave travel, isolate a loop.",
         "fr": "L'outil est dans l'onglet **Boucles de rétroaction** : "
               "poussez un levier, suivez l'onde, isolez une boucle."},
+    # ================= STRATE 1 — les quatre cartouches de tête =============
+    "cad_n1_t": {"en": "What APRI measures", "fr": "Ce que mesure APRI"},
+    "cad_n1": {"en": "A territory's capacity to anticipate, absorb and adapt "
+                     "to disturbances.",
+               "fr": "La capacité d'un territoire à anticiper, absorber et "
+                     "s'adapter aux perturbations."},
+    "cad_n2_t": {"en": "What the index captures", "fr": "Ce que l'indice saisit"},
+    "cad_n2": {"en": "The capacities a territory already holds before a shock, "
+                     "across {n} dimensions of resilience.",
+               "fr": "Les capacités que le territoire détient déjà avant le "
+                     "choc, sur {n} dimensions de la résilience."},
+    "cad_n3_t": {"en": "How it is measured", "fr": "Comment il est mesuré"},
+    "cad_n3": {"en": "A 0 to 10 score built from {i} indicators and three "
+                     "independent data sources.",
+               "fr": "Un score de 0 à 10 construit sur {i} indicateurs et "
+                     "trois sources de données indépendantes."},
+    "cad_n4_t": {"en": "What it does NOT measure",
+                 "fr": "Ce qu'il ne mesure PAS"},
+    "cad_n4": {"en": "Not the damage suffered after an event, and not a "
+                     "forecast of what a hazard will cost.",
+               "fr": "Ni les dommages subis après un événement, ni une "
+                     "prévision de ce que coûtera un aléa."},
+
+    # ================= le schéma d'ensemble ==================================
+    "cad_apercu": {"en": "APRI at a glance", "fr": "APRI en un coup d'œil"},
+    "cad_ap_note": {
+        "en": "Read left to right: the index is defined by three attributes, "
+              "spread over dimensions, computed from indicators, and returned "
+              "as one score. Every figure below is counted from the framework "
+              "file, not written by hand.",
+        "fr": "De gauche à droite : l'indice se définit par trois attributs, "
+              "se déploie en dimensions, se calcule sur des indicateurs, et "
+              "se rend en un score. Chaque chiffre ci-dessous est compté dans "
+              "le fichier du référentiel, non écrit à la main."},
+    "cad_ap_1": {"en": "attributes", "fr": "attributs"},
+    "cad_ap_2": {"en": "dimensions", "fr": "dimensions"},
+    "cad_ap_3": {"en": "indicators", "fr": "indicateurs"},
+    "cad_ap_3x": {"en": "{f} scored to date", "fr": "{f} scorés à ce jour"},
+    "cad_ap_4": {"en": "score", "fr": "score"},
+    "cad_ap_4x": {"en": "0 = most critical, 10 = most favourable",
+                  "fr": "0 = le plus critique, 10 = le plus favorable"},
+    "cad_ap_1x": {"en": "anticipate · absorb · adapt",
+                  "fr": "anticiper · absorber · s'adapter"},
+    "cad_ap_2x": {"en": "{s} carrying a computed indicator",
+                  "fr": "{s} portant un indicateur calculé"},
+
+    # ================= les trois sources =====================================
+    "cad_src": {"en": "How the index is built", "fr": "Comment l'indice est construit"},
+    "cad_src_note": {
+        "en": "Three sources, each answering what the others cannot reach. "
+              "A single one would leave a blind spot.",
+        "fr": "Trois sources, chacune répondant là où les autres n'atteignent "
+              "pas. Une seule laisserait un angle mort."},
+    "cad_src1_t": {"en": "Household survey", "fr": "Enquête ménage"},
+    "cad_src1": {"en": "What families live through: water, energy, income, "
+                       "food, health, mutual aid.",
+                 "fr": "Ce que vivent les familles : eau, énergie, revenus, "
+                       "alimentation, santé, entraide."},
+    "cad_src1_c": {"en": "{n} questionnaires", "fr": "{n} questionnaires"},
+    "cad_src2_t": {"en": "Geospatial data", "fr": "Données géospatiales"},
+    "cad_src2": {"en": "What no questionnaire can see: forest cover, rainfall, "
+                       "vegetation, surface temperature, aridity.",
+                 "fr": "Ce qu'aucun questionnaire ne voit : couvert forestier, "
+                       "pluie, végétation, température de surface, aridité."},
+    "cad_src2_c": {"en": "25 years of imagery", "fr": "25 ans d'imagerie"},
+    "cad_src3_t": {"en": "Community-based assessment",
+                   "fr": "Évaluation communautaire"},
+    "cad_src3": {"en": "What holds the territory together: the base "
+                       "organisations, their reach and their capacity to act.",
+                 "fr": "Ce qui tient le territoire : les organisations de "
+                       "base, leur portée et leur capacité d'action."},
+    "cad_src3_c": {"en": "{n} organisations surveyed",
+                   "fr": "{n} organisations recensées"},
+
+    # ================= les volets repliés ====================================
+    "cad_v_pourquoi": {"en": "Why APRI?", "fr": "Pourquoi APRI ?"},
+    "cad_v_mesure": {"en": "What exactly does APRI measure?",
+                     "fr": "Que mesure exactement APRI ?"},
+    "cad_v_dims": {"en": "The seven dimensions, and what each weighs",
+                   "fr": "Les sept dimensions, et ce que chacune pèse"},
+    "cad_v_meth": {"en": "Data sources and methodology",
+                   "fr": "Sources de données et méthodologie"},
+    "cad_v_limites": {"en": "What APRI cannot tell us",
+                      "fr": "Ce qu'APRI ne peut pas dire"},
+    "cad_v_boucles": {"en": "The second strand — causal loop diagrams",
+                      "fr": "Le second volet — les diagrammes de boucles causales"},
+    "cad_strate2": {"en": "Explore", "fr": "Explorer"},
+    "cad_strate3": {"en": "Go deeper", "fr": "Approfondir"},
+    "cad_strate3_note": {
+        "en": "Nothing has been removed: the full method is here, folded. "
+              "Open only what you need.",
+        "fr": "Rien n'a été retiré : la méthode complète est ici, repliée. "
+              "N'ouvrez que ce dont vous avez besoin."},
+
     "cad_doc": {"en": "The full methodological document",
                 "fr": "Le document méthodologique complet"},
     "cad_doc_note": {
@@ -445,6 +540,41 @@ STYLE = """
                   padding:6px 0 6px 16px; position:relative; }
   .cad-liste li::before { content:""; position:absolute; left:0; top:13px;
                   width:6px; height:6px; border-radius:50%; background:#c3ccda; }
+
+  /* --- STRATE 1 : les quatre cartouches de tête ------------------------- */
+  /* LES QUATRE CARTES TIENNENT SUR UNE RANGÉE, ET C'EST LA CONDITION DE
+     LEUR LECTURE : la quatrième dit ce que l'indice NE mesure PAS, et
+     renvoyée seule à la ligne suivante elle se lisait comme une note de bas
+     de page. À 235 px de base elles débordaient de douze pixels. */
+  .cad-n    { flex:1 1 200px; min-width:186px; background:#fff;
+              border:1px solid #e3eaf3; border-radius:14px; padding:16px 18px;
+              box-shadow:0 1px 2px rgba(16,23,40,.05); }
+  .cad-n-i  { width:34px; height:34px; border-radius:10px; display:flex;
+              align-items:center; justify-content:center; margin-bottom:11px; }
+  .cad-n-t  { font-size:14.5px; font-weight:700; color:#101728;
+              letter-spacing:-.01em; margin:0 0 5px; line-height:1.25; }
+  .cad-n-x  { font-size:13.5px; color:#3c4761; line-height:1.55; margin:0; }
+
+  /* --- le schéma d'ensemble --------------------------------------------- */
+  .cad-flux { display:flex; align-items:stretch; gap:4px; flex-wrap:wrap; }
+  .cad-fl   { flex:1 1 150px; min-width:132px; text-align:center;
+              padding:13px 10px; border:1px solid #e3eaf3; border-radius:13px;
+              background:#fff; }
+  .cad-fl-n { font-size:26px; font-weight:700; color:#101728; line-height:1;
+              letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
+  .cad-fl-l { font-size:12.5px; font-weight:700; color:#3c4761; margin-top:5px;
+              letter-spacing:.02em; }
+  .cad-fl-x { font-size:11.5px; color:#8a93a5; margin-top:3px; line-height:1.4; }
+  .cad-fl-c { align-self:center; color:#c3ccda; font-size:20px; flex:0 0 auto; }
+
+  /* --- les trois sources ------------------------------------------------- */
+  .cad-src  { flex:1 1 260px; min-width:230px; background:#fff;
+              border:1px solid #e3eaf3; border-radius:14px; padding:15px 17px;
+              position:relative; }
+  .cad-src-c{ font-size:11.5px; font-weight:700; letter-spacing:.06em;
+              text-transform:uppercase; }
+  .cad-etage{ font-size:11px; letter-spacing:.11em; text-transform:uppercase;
+              font-weight:700; color:#a7b0be; margin:26px 0 8px; }
 </style>
 """
 
@@ -601,9 +731,117 @@ def _chiffre(val, lab, sous):
             f'<div class="cad-sous">{_e(sous)}</div></div>')
 
 
+def _icone(nom, couleur):
+    return (f'<div class="cad-n-i" style="background:{couleur}17;color:{couleur}">'
+            + icones.svg(nom, couleur=couleur, taille=19) + '</div>')
+
+
+def _tete(stats, n_sec_avec):
+    """STRATE 1 — quatre cartouches, et rien d'autre à lire.
+
+    LES QUATRE QUESTIONS SONT CELLES QU'ON POSE DANS CET ORDRE : ce que
+    l'indice mesure, ce qu'il saisit, comment il le mesure, et — la plus
+    utile — ce qu'il ne mesure pas. La quatrième est traitée comme les trois
+    autres, en carte pleine et non en note de bas de page : une limite qu'on
+    lit après coup n'a jamais empêché personne de se tromper.
+    """
+    n = [("cad_n1", "cible", "#2166ac", {}),
+         ("cad_n2", "bouclier", "#1a8a4f", {"n": len(stats["dims"])}),
+         ("cad_n3", "barres", "#d1730c", {"i": stats["n"]}),
+         ("cad_n4", "info", "#8a93a5", {})]
+    fond = ' style="background:#fafbfd"'
+    return ('<div class="cad-grille" style="margin:14px 0 2px">' + "".join(
+        '<div class="cad-n"' + (fond if k == "cad_n4" else "") + '>'
+        + _icone(ic, c)
+        + f'<p class="cad-n-t">{_e(T(k + "_t"))}</p>'
+        + f'<p class="cad-n-x">{_e(T(k, **kw))}</p></div>'
+        for k, ic, c, kw in n) + '</div>')
+
+
+def _apercu(stats, n_sec_avec):
+    """Le schéma d'ensemble : APRI → attributs → dimensions → indicateurs → score.
+
+    Quatre pavés chiffrés reliés par des chevrons. Les chiffres viennent du
+    référentiel : sept dimensions parce qu'il en compte sept, cent vingt-huit
+    indicateurs parce qu'il en liste cent vingt-huit. Un schéma de méthode qui
+    annoncerait un compte faux se retournerait contre la méthode.
+    """
+    cases = [("3", T("cad_ap_1"), T("cad_ap_1x")),
+             (str(len(stats["dims"])), T("cad_ap_2"),
+              T("cad_ap_2x", s=n_sec_avec)),
+             (str(stats["n"]), T("cad_ap_3"),
+              T("cad_ap_3x", f=stats["faits"])),
+             ("0–10", T("cad_ap_4"), T("cad_ap_4x"))]
+    blocs = []
+    for i, (v, lab, sous) in enumerate(cases):
+        if i:
+            blocs.append('<div class="cad-fl-c">&rsaquo;</div>')
+        blocs.append(f'<div class="cad-fl"><div class="cad-fl-n">{_e(v)}</div>'
+                     f'<div class="cad-fl-l">{_e(lab)}</div>'
+                     f'<div class="cad-fl-x">{_e(sous)}</div></div>')
+    return '<div class="cad-flux">' + "".join(blocs) + '</div>'
+
+
+def _attributs():
+    """Les trois attributs, en cartes égales — c'est la définition d'APRI."""
+    return ('<div class="cad-grille">' + "".join(
+        f'<div class="cad-n" style="flex:1 1 240px;border-top:3px solid {c}">'
+        + _icone(ic, c)
+        + f'<p class="cad-n-t" style="font-size:16px">{_e(T(k + "_t"))}</p>'
+        + f'<p class="cad-n-x">{_e(T(k))}</p></div>'
+        for k, ic, c in (("cad_a1", "loupe", "#2166ac"),
+                         ("cad_a2", "bouclier", "#d1730c"),
+                         ("cad_a3", "rafraichir", "#1a8a4f")))
+        + '</div>')
+
+
+def _sources(menages, n_ocb):
+    """Les trois sources, en parcours : enquête → satellite → communautés."""
+    src = [("cad_src1", "personnes", "#2166ac",
+            T("cad_src1_c", n=_fmt(menages, 0)) if menages else ""),
+           ("cad_src2", "carte", "#1a8a4f", T("cad_src2_c")),
+           ("cad_src3", "maison", "#d1730c",
+            T("cad_src3_c", n=n_ocb) if n_ocb else "")]
+    blocs = []
+    for i, (k, ic, c, chiffre) in enumerate(src):
+        if i:
+            blocs.append('<div class="cad-fl-c" style="align-self:center">'
+                         '&rsaquo;</div>')
+        blocs.append(
+            f'<div class="cad-src" style="border-top:3px solid {c}">'
+            + _icone(ic, c)
+            + f'<p class="cad-n-t">{_e(T(k + "_t"))}</p>'
+            + f'<p class="cad-n-x">{_e(T(k))}</p>'
+            + (f'<div class="cad-src-c" style="color:{c};margin-top:9px">'
+               f'{_e(chiffre)}</div>' if chiffre else "")
+            + '</div>')
+    return ('<div class="cad-flux" style="align-items:stretch">'
+            + "".join(blocs) + '</div>')
+
+
+def _n_ocb():
+    p = _trouver("ocb.json")
+    if not p:
+        return None
+    try:
+        with open(p, encoding="utf-8") as f:
+            return len(json.load(f).get("fiches") or [])
+    except Exception:
+        return None
+
+
 def render(doc_complet=None):
-    """`doc_complet` est une fonction rendue dans le volet replié du bas —
-    l'ancienne page de méthodologie, gardée entière pour qui veut le détail."""
+    """La page en trois strates : comprendre, explorer, approfondir.
+
+    POURQUOI TROIS STRATES, ET PAS UN TEXTE MIEUX ÉCRIT.
+    La version précédente disait les mêmes choses, toutes à la fois, en huit
+    blocs dépliés. Le contenu était juste et personne ne le lisait : sur un
+    tableau de bord, un mur de prose se saute. Ce qui a changé n'est donc pas
+    le fond mais la PROFONDEUR — quatre cartes et deux schémas pour
+    comprendre en trente secondes, deux blocs pour explorer, six volets
+    repliés pour la méthode. Rien n'a été supprimé : tout ce qui était visible
+    est encore là, un cran plus bas.
+    """
     stats = _stats()
     st.markdown(STYLE, unsafe_allow_html=True)
 
@@ -618,67 +856,80 @@ def render(doc_complet=None):
         st.info(T("e_absent"))
         return
 
-    # LE RÉCIT APRI, DÉPLACÉ DEPUIS L'ACCUEIL ET GARDÉ ENTIER.
-    # Il ouvrait la page d'accueil sur quatre paragraphes de prose que
-    # personne ne lisait : arriver sur un mur de texte ne donne pas envie
-    # d'entrer. Il est ici, en tête de la page où l'on vient précisément
-    # chercher la méthode, et il y précède les schémas.
+    menages, n_sections = _menages()
+    n_ocb = _n_ocb()
+    n_sec_avec = sum(1 for e in stats["dims"].values() if e["faits"])
+
+    # ================= STRATE 1 — COMPRENDRE ==============================
+    st.markdown(_tete(stats, n_sec_avec), unsafe_allow_html=True)
+
     with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc ambre">{T("a_histoire")}</div>',
+        st.markdown(f'<div class="cad-h">{_e(T("cad_apercu"))}</div>'
+                    f'<p class="cad-note">{_e(T("cad_ap_note"))}</p>'
+                    + _apercu(stats, n_sec_avec), unsafe_allow_html=True)
+        st.markdown(f'<div class="cad-h" style="font-size:15px;'
+                    f'margin:22px 0 4px">{_e(T("cad_aaa"))}</div>'
+                    f'<p class="cad-note" style="margin-bottom:11px">'
+                    f'{_e(T("cad_aaa_note"))}</p>' + _attributs(),
                     unsafe_allow_html=True)
-        st.markdown(
-            "".join(
-                f'<p style="font-size:15.5px;color:#3c4761;line-height:1.65;'
-                f'max-width:92ch;margin:0 0 15px"><b style="color:#101728">'
-                f'{T("a_h_" + c + "_t")}</b> {T("a_h_" + c)}</p>'
-                for c in ("origine", "mesure", "construction", "portee")),
-            unsafe_allow_html=True)
 
-    # ------------------------------------------------- ce que mesure l'indice
-    st.markdown(
-        '<div class="cad-grille" style="margin:16px 0 4px">'
-        + _cartouche(T("cad_quoi_t"), T("cad_quoi"), "#2166ac")
-        + _cartouche(T("cad_quand_t"), T("cad_quand"), "#1a8a4f")
-        + _cartouche(T("cad_echelle_t"), T("cad_echelle"), "#d1730c")
-        + '</div>', unsafe_allow_html=True)
+    with st.container(border=True):
+        st.markdown(f'<div class="cad-h">{_e(T("cad_src"))}</div>'
+                    f'<p class="cad-note">{_e(T("cad_src_note"))}</p>'
+                    + _sources(menages, n_ocb), unsafe_allow_html=True)
 
-    # ------------------------------------------------------------ le cadre AAA
+    # ================= STRATE 2 — EXPLORER ================================
+    st.markdown(f'<div class="cad-etage">{_e(T("cad_strate2"))}</div>',
+                unsafe_allow_html=True)
+
     with st.container(border=True):
         st.markdown(
-            f'<div class="cad-h">{T("cad_aaa")}</div>'
-            f'<p class="cad-note">{T("cad_aaa_note")}</p>'
-            '<div class="cad-grille">'
-            + "".join(
-                f'<div style="flex:1 1 230px;min-width:200px;'
-                f'border-left:3px solid {c};padding:2px 0 2px 14px">'
-                f'<div style="font-size:15.5px;font-weight:700;color:{ENCRE}">'
-                f'{_e(T(k + "_t"))}</div>'
-                f'<div style="font-size:13.5px;color:{ENCRE2};line-height:1.5;'
-                f'margin-top:3px">{_e(T(k))}</div></div>'
-                for k, c in (("cad_a1", "#2166ac"), ("cad_a2", "#d1730c"),
-                             ("cad_a3", "#1a8a4f")))
-            + '</div>', unsafe_allow_html=True)
-
-    # -------------------------------------------------- les sept dimensions
-    with st.container(border=True):
-        st.markdown(
-            f'<div class="cad-h">{T("cad_dims")}</div>'
-            f'<p class="cad-note">{T("cad_dims_note")}</p>'
+            f'<div class="cad-h">{_e(T("cad_dims"))}</div>'
+            f'<p class="cad-note">{_e(T("cad_dims_note"))}</p>'
             + _tableau_dimensions(stats), unsafe_allow_html=True)
         st.caption(T("cad_dim7_note"))
 
-    # ---------------------------------------------------- la chaîne de calcul
     with st.container(border=True):
         st.markdown(f'<div class="cad-h" style="margin-bottom:11px">'
-                    f'{T("cad_chaine")}</div>' + _chaine(stats["poids_total"]),
+                    f'{_e(T("cad_chaine"))}</div>' + _chaine(stats["poids_total"]),
                     unsafe_allow_html=True)
 
-    # ------------------------------------------------------- plan de sondage
-    menages, n_sections = _menages()
-    with st.container(border=True):
+    # ================= STRATE 3 — APPROFONDIR =============================
+    # TOUT CE QUI SUIT ÉTAIT DÉPLIÉ, ET C'ÉTAIT LÀ LE DÉFAUT. Rien n'en a été
+    # retiré : le récit d'origine, la portée, le plan de sondage, les limites,
+    # le second volet et le document complet sont intacts, mais fermés. Une
+    # information qu'on doit ouvrir se lit mieux qu'une information qu'on doit
+    # sauter.
+    st.markdown(f'<div class="cad-etage">{_e(T("cad_strate3"))}</div>'
+                f'<p class="cad-note" style="margin-top:-4px">'
+                f'{_e(T("cad_strate3_note"))}</p>', unsafe_allow_html=True)
+
+    with st.expander(T("cad_v_pourquoi")):
         st.markdown(
-            f'<div class="cad-h" style="margin-bottom:11px">'
-            f'{T("cad_sondage")}</div>'
+            "".join(
+                f'<p style="font-size:15px;color:#3c4761;line-height:1.65;'
+                f'max-width:92ch;margin:0 0 14px"><b style="color:#101728">'
+                f'{T("a_h_" + c + "_t")}</b> {T("a_h_" + c)}</p>'
+                for c in ("origine", "portee")), unsafe_allow_html=True)
+
+    with st.expander(T("cad_v_mesure")):
+        st.markdown(
+            f'<p style="font-size:15px;color:#3c4761;line-height:1.65;'
+            f'max-width:92ch;margin:0 0 16px"><b style="color:#101728">'
+            f'{T("a_h_mesure_t")}</b> {T("a_h_mesure")}</p>'
+            '<div class="cad-grille">'
+            + _cartouche(T("cad_quoi_t"), T("cad_quoi"), "#2166ac")
+            + _cartouche(T("cad_quand_t"), T("cad_quand"), "#1a8a4f")
+            + _cartouche(T("cad_echelle_t"), T("cad_echelle"), "#d1730c")
+            + '</div>', unsafe_allow_html=True)
+
+    with st.expander(T("cad_v_meth")):
+        st.markdown(
+            f'<p style="font-size:15px;color:#3c4761;line-height:1.65;'
+            f'max-width:92ch;margin:0 0 16px"><b style="color:#101728">'
+            f'{T("a_h_construction_t")}</b> {T("a_h_construction")}</p>'
+            f'<div class="cad-h" style="font-size:15px;margin-bottom:11px">'
+            f'{_e(T("cad_sondage"))}</div>'
             '<div class="cad-grille">'
             + _chiffre(_fmt(menages, 0) if menages else "—",
                        T("cad_s1_t"), T("cad_s1"))
@@ -687,18 +938,23 @@ def render(doc_complet=None):
             + _chiffre("120", T("cad_s4_t"), T("cad_s4"))
             + '</div>'
             f'<div class="cad-h" style="font-size:15px;margin:18px 0 4px">'
-            f'{T("cad_strates")}</div>'
+            f'{_e(T("cad_strates"))}</div>'
             '<ul class="cad-liste">'
             + "".join(f'<li>{_e(T(k))}</li>'
                       for k in ("cad_st1", "cad_st2", "cad_st3", "cad_st4"))
             + '</ul>', unsafe_allow_html=True)
         st.caption(T("cad_tirage"))
 
-    # ------------------------------------- le second volet : les boucles
-    with st.container(border=True):
+    with st.expander(T("cad_v_limites")):
         st.markdown(
-            f'<div class="cad-h">{T("cad_dbc")}</div>'
-            f'<p class="cad-note">{T("cad_dbc_x")}</p>'
+            '<div class="cad-grille">'
+            + "".join(_cartouche(T(k + "_t"), T(k), "#8a93a5")
+                      for k in ("cad_l1", "cad_l2", "cad_l3", "cad_l4"))
+            + '</div>', unsafe_allow_html=True)
+
+    with st.expander(T("cad_v_boucles")):
+        st.markdown(
+            f'<p class="cad-note" style="max-width:92ch">{_e(T("cad_dbc_x"))}</p>'
             '<div class="cad-grille">'
             + "".join(
                 f'<div style="flex:1 1 220px;min-width:200px;'
@@ -710,9 +966,8 @@ def render(doc_complet=None):
                 for k, c in (("cad_dbc_1", "#c33a24"), ("cad_dbc_2", "#d1730c"),
                              ("cad_dbc_3", "#2166ac"), ("cad_dbc_4", "#1a8a4f")))
             + '</div>', unsafe_allow_html=True)
-
         st.markdown(f'<div class="cad-h" style="font-size:15px;'
-                    f'margin:20px 0 6px">{T("cad_lecture")}</div>',
+                    f'margin:20px 0 6px">{_e(T("cad_lecture"))}</div>',
                     unsafe_allow_html=True)
         g, d = st.columns([1.15, 1])
         with g:
@@ -722,17 +977,6 @@ def render(doc_complet=None):
             st.markdown(_schema_boucles(), unsafe_allow_html=True)
         st.caption(T("cad_dbc_lien"))
 
-    # ---------------------------------------------------------- les limites
-    with st.container(border=True):
-        st.markdown(
-            f'<div class="cad-h" style="margin-bottom:11px">'
-            f'{T("cad_limites")}</div>'
-            '<div class="cad-grille">'
-            + "".join(_cartouche(T(k + "_t"), T(k), "#8a93a5")
-                      for k in ("cad_l1", "cad_l2", "cad_l3", "cad_l4"))
-            + '</div>', unsafe_allow_html=True)
-
-    # ------------------------------------- le document complet, replié
     if doc_complet is not None:
         with st.expander(T("cad_doc")):
             st.caption(T("cad_doc_note"))
