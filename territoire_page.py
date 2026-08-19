@@ -88,18 +88,7 @@ TEXTES = {
                        "fr": "Et où il tient le moins bien"},
     "tr_absent": {"en": "Map files missing.",
                   "fr": "Les fichiers cartographiques sont absents."},
-    # --- les deux cartes d'atelier, sous la carte interactive
-    "tr_qgis1": {"en": "Pilot landscapes of the Greater South",
-                 "fr": "Les paysages pilotes du Grand Sud"},
-    "tr_qgis1_note": {
-        "en": "The regional frame: the two pilot landscapes, the sixteen "
-              "protected areas of the Greater South, relief and the road "
-              "network. Drawn in QGIS; the legend below is the map's own, "
-              "rearranged for reading.",
-        "fr": "Le cadre régional : les deux paysages pilotes, les seize aires "
-              "protégées du Grand Sud, le relief et le réseau routier. Dessinée "
-              "sous QGIS ; la légende ci-dessous est celle de la carte, "
-              "réorganisée pour la lecture."},
+    # --- la carte d'atelier des entretiens, sous la carte interactive
     "tr_qgis2": {"en": "Where the interviews were conducted",
                  "fr": "Où les entretiens ont été conduits"},
     "tr_qgis2_note": {
@@ -116,21 +105,11 @@ TEXTES = {
               "GIS processing QGIS · Florent Léo, UNEP Haiti · March 2026",
         "fr": "Échelle 1:250 000 · WGS 84 (EPSG:4326) · Sources OSM / HumData · "
               "Traitements SIG QGIS · Florent Léo, PNUE Haïti · mars 2026"},
-    "tr_l_ap": {"en": "Protected areas of the Greater South",
-                "fr": "Les aires protégées du Grand Sud"},
     "tr_l_sym": {"en": "Map symbols", "fr": "Symboles de la carte"},
     "tr_l_alt": {"en": "Elevation", "fr": "Altitude"},
-    "tr_l_pilote_ga": {"en": "Grand'Anse pilot landscape",
-                       "fr": "Paysage pilote de la Grand'Anse"},
-    "tr_l_pilote_sud": {"en": "Sud pilot landscape",
-                        "fr": "Paysage pilote du Sud"},
     "tr_l_capitale": {"en": "Departmental capital",
                       "fr": "Capitale départementale"},
-    "tr_l_chef": {"en": "Commune seat", "fr": "Chef-lieu de commune"},
     "tr_l_riv": {"en": "Rivers", "fr": "Rivières"},
-    "tr_l_routes": {"en": "Roads", "fr": "Routes"},
-    "tr_l_aires": {"en": "Protected area boundary",
-                   "fr": "Limite d'aire protégée"},
     "tr_l_ent_m": {"en": "Interviews, mountain", "fr": "Entretiens montagne"},
     "tr_l_ent_l": {"en": "Interviews, coast", "fr": "Entretiens littoral"},
     "tr_l_sec": {"en": "Communal section", "fr": "Section communale"},
@@ -413,44 +392,22 @@ def tableau(geo, effectifs, paysages):
 
 
 # ---------------------------------------------------------------------------
-# LES DEUX CARTES D'ATELIER, ET LEUR LÉGENDE REFAITE
+# LA CARTE D'ATELIER DES ENTRETIENS, ET SA LÉGENDE REFAITE
 #
-# Elles viennent de QGIS et portaient leur légende à l'intérieur de l'image :
-# un panneau de vingt-deux pastilles d'altitude sur deux colonnes, une liste
-# de seize aires protégées en petit corps, le tout posé sur la mer. À l'écran,
-# ces panneaux tombaient à 40 % de leur taille d'impression et devenaient
-# illisibles. Ils ont donc été effacés de l'image — la mer sous eux était unie,
-# elle a été reconstituée — et refaits en HTML, où ils se redimensionnent avec
-# la page.
+# Elle vient de QGIS et portait sa légende à l'intérieur de l'image, dans un
+# bandeau de bas de page dessiné pour l'impression. À l'écran, ce bandeau
+# tombait à 40 % de sa taille et devenait illisible. Il a donc été détaché de
+# l'image et refait en HTML, où il suit la largeur de la page : les symboles
+# avec leur figuré exact — trait tireté pour les départements, cercle blanc
+# pour la capitale, carré plein pour les points d'entretien — et les six
+# classes d'altitude avec leurs teintes relevées sur la carte elle-même.
 #
-# TROIS CHANGEMENTS DE FOND, PAS SEULEMENT DE TAILLE :
-#   · les seize aires protégées passent d'une colonne de seize lignes à quatre
-#     colonnes de quatre : on les balaie du regard au lieu de les lire ;
-#   · l'échelle d'altitude passe de vingt-deux pastilles à UN dégradé continu
-#     avec cinq repères chiffrés. Vingt-deux paliers de 150 m ne se
-#     distinguent pas à l'œil et personne ne cherche « entre 1 350 et 1 500 » ;
-#     ce qu'on veut savoir, c'est où est la montagne ;
-#   · les symboles sont sur une seule rangée, avec leur figuré exact — trait
-#     tireté pour les départements, cercle blanc pour la capitale, carré plein
-#     pour les points d'entretien.
+# UNE SECONDE CARTE A ÉTÉ RETIRÉE DE CETTE PAGE : celle des paysages pilotes
+# et des seize aires protégées. Son rendu écran ne tenait pas ses promesses —
+# la mer occupait la moitié du cadre et le trait des aires protégées se
+# perdait. Ce qu'elle apportait est dans la carte interactive du haut, où les
+# aires protégées sont une couche qu'on allume.
 # ---------------------------------------------------------------------------
-
-AIRES = [
-    "APRN-Port-Salut/Aquin", "AP-Fond des Cayes", "AP-Grosse Caye",
-    "AP-Grosse Caye", "APHE-Plaine Cahouane", "APRN-Jérémie-Abricots",
-    "APRN-Baradères Cayémites", "Grotte Marie-Jeanne", "PN-Île-à-Vache",
-    "PNN-Deux Mamelles", "PNN-Grand Bois", "PNN-Grande Colline",
-    "PNN-Macaya", "PNN-Trois Étangs", "PTEM-Abacou", "PTEM-Port-Salut",
-]
-
-# Les dix-huit teintes du barème d'altitude, relevées sur la légende de la
-# carte elle-même : le dégradé affiché est donc CELUI de l'image, pas une
-# palette approchante.
-RAMPE = ["#004d00", "#006600", "#008000", "#339900", "#66b300", "#99cc00",
-         "#cce600", "#ffff00", "#ffcc00", "#ff9933", "#ff6600", "#ff3300",
-         "#ff0000", "#cc0000", "#990000", "#800000", "#663300", "#4d2600"]
-REPERES = [(0, "0"), (600, "600"), (1200, "1 200"), (1800, "1 800"),
-           (2400, "2 400 m")]
 
 RELIEF6 = [("#6aaaa3", "0 – 100"), ("#7caa4a", "100 – 500"),
            ("#bdce90", "500 – 1 000"), ("#e6e0bc", "1 000 – 1 500"),
@@ -502,14 +459,6 @@ def _ligne_sym(figure, couleur, texte, tirets=False):
             f'<span>{_e(texte)}</span></div>')
 
 
-def _degrade():
-    stops = ", ".join(
-        f"{c} {i / (len(RAMPE) - 1) * 100:.1f}%" for i, c in enumerate(RAMPE))
-    reperes = "".join(f"<span>{_e(t)}</span>" for _v, t in REPERES)
-    return (f'<div class="tr-deg" style="background:linear-gradient(90deg,'
-            f'{stops})"></div><div class="tr-rep">{reperes}</div>')
-
-
 def _image(nom):
     p = _trouver(nom)
     if not p:
@@ -517,37 +466,6 @@ def _image(nom):
         return False
     st.image(p, use_container_width=True)
     return True
-
-
-def carte_paysages():
-    st.markdown(f'<div class="titre-bloc vert">{_e(T("tr_qgis1"))}</div>',
-                unsafe_allow_html=True)
-    if not _image("carte_paysages.jpg"):
-        return
-    st.caption(T("tr_qgis1_note"))
-    g, d = st.columns([1.5, 1], gap="medium")
-    with g:
-        st.markdown(
-            f'<div class="tr-lab">{_e(T("tr_l_ap"))}</div>'
-            f'<div class="tr-ap">' + "".join(
-                f'<div><b>{i}.</b>{_e(n)}</div>'
-                for i, n in enumerate(AIRES, 1)) + '</div>',
-            unsafe_allow_html=True)
-    with d:
-        st.markdown(
-            f'<div class="tr-lab">{_e(T("tr_l_sym"))}</div>'
-            f'<div class="tr-sym">'
-            + _ligne_sym("poly", "#8fa6d8", T("tr_l_pilote_ga"))
-            + _ligne_sym("poly", "#d8a8b4", T("tr_l_pilote_sud"))
-            + _ligne_sym("cercle", "#101728", T("tr_l_capitale"))
-            + _ligne_sym("point", "#c33a24", T("tr_l_chef"))
-            + _ligne_sym("ligne", "#4d7fbf", T("tr_l_riv"))
-            + _ligne_sym("ligne", "#8a6a55", T("tr_l_routes"))
-            + _ligne_sym("ligne", "#e9f2e6", T("tr_l_aires"))
-            + '</div>'
-            f'<div class="tr-lab" style="margin-top:14px">'
-            f'{_e(T("tr_l_alt"))}</div>' + _degrade(),
-            unsafe_allow_html=True)
 
 
 def carte_entretiens():
@@ -614,10 +532,8 @@ def render():
     with d:
         st.caption(T("tr_vignette_note"))
 
-    # Les deux cartes d'atelier ferment la page : elles portent ce qu'une
-    # carte web ne donne pas — le relief en couleurs, les seize aires
-    # protégées numérotées, et le rendu institutionnel qu'on met dans un
-    # rapport.
+    # La carte d'atelier ferme la page : elle porte ce qu'une carte web ne
+    # donne pas — le relief en couleurs et le rendu institutionnel qu'on met
+    # dans un rapport.
     st.markdown(STYLE_CARTES, unsafe_allow_html=True)
-    carte_paysages()
     carte_entretiens()
