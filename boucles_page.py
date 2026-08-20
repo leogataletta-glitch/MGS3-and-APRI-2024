@@ -507,6 +507,12 @@ def _legende():
 
 
 # ------------------------------------------------------------------- page
+# Rechargement forcé : Streamlit Cloud avait gardé en mémoire la version
+# précédente de ce module après le commit qui lui a donné son paramètre
+# `entete`. Le script principal, lui, était à jour — il appelait donc
+# `render(entete=False)` sur une fonction qui ne le connaissait pas. Un
+# commit qui touche ce fichier relance le processus et rend les deux
+# cohérents.
 def render(entete=True):
     graphe, par_ligne = _charger()
     diag = M.diagnostic(graphe)
