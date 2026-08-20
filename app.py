@@ -30,7 +30,6 @@ import actualites
 import assets
 import boucles_page
 import cadre_page
-import croisement_page
 import croisement_resultats
 import dimension_page
 import environnement_page
@@ -42,6 +41,7 @@ import i18n
 import map_render
 import methodologie_page
 import note_bailleurs
+import ondes_choc
 import ocb_page
 import radar_accueil
 import resilience_page
@@ -1015,6 +1015,17 @@ TEXTES_NAV = {
                         "fr": "Croisement des résultats"},
     "mode_fiche": {"en": "Landscape synthesis sheet",
                    "fr": "Fiche synthèse — paysages"},
+    # Les trois onglets de « Profils territoriaux et sociaux », qui ont
+    # absorbé le radar et la fiche paysages.
+    "syn_o_profils": {"en": "By territory or group",
+                      "fr": "Par territoire ou par groupe"},
+    "syn_o_paysages": {"en": "Coast against mountain",
+                       "fr": "Littoral contre montagne"},
+    "syn_o_radar": {"en": "Resilience radar",
+                    "fr": "Diagramme radar"},
+    # Les deux lectures du graphe causal : l'onde, puis l'analyse.
+    "bcl_vue_analyse": {"en": "Loops, levers, total effect",
+                        "fr": "Boucles, leviers, effet total"},
     "mode_bailleurs": {"en": "Donor briefing", "fr": "Note aux bailleurs"},
     "nav_titre": {"en": "Navigation", "fr": "Navigation"},
     "nav_filtres_rapides": {"en": "Quick filters", "fr": "Filtres rapides"},
@@ -1142,9 +1153,7 @@ MODE_METHODO, MODE_DONNEES = "methodologie", "donnees"
 MODE_ACTIONS = "actions"
 MODE_SYNTHESE = "synthese"
 MODE_BOUCLES = "boucles"
-MODE_RADAR = "radar"
 MODE_CROISEMENT = "croisement"
-MODE_FICHE = "fiche_paysages"
 MODE_BAILLEURS = "bailleurs"
 # LA PAGE D'ACCUEIL, ET C'EST ELLE QUI OUVRE LE SITE. On arrivait jusqu'ici
 # sur le cadre méthodologique : avant d'apprendre quoi que ce soit du
@@ -1163,9 +1172,7 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      MODE_ACTIONS: T("mode_actions"),
                      MODE_BOUCLES: T("mode_boucles"),
                      MODE_SYNTHESE: T("mode_synthese"),
-                     MODE_RADAR: T("mode_radar"),
                      MODE_CROISEMENT: T("mode_croisement"),
-                     MODE_FICHE: T("mode_fiche"),
                      MODE_BAILLEURS: T("mode_bailleurs"),
                      MODE_PORTAIL: T("mode_portail"),
                      MODE_TRAJECTOIRES: T("mode_trajectoires")})
@@ -1234,11 +1241,15 @@ _NAV = [
     (MODE_ACCUEIL, "epingle"),
     (MODE_DIMENSIONS, "barres"),
     (MODE_TRAJECTOIRES, "rafraichir"),
-    (MODE_RADAR, "radar"),
     (MODE_BOUCLES, "boucle"),
     (MODE_CROISEMENT, "loupe"),
+    # TREIZE ENTRÉES, C'ÉTAIT TROP, ET DEUX D'ENTRE ELLES DISAIENT LA MÊME
+    # CHOSE QUE CELLE-CI. « Diagramme radar » et « Fiche synthèse — paysages »
+    # comparaient des profils, ce que fait déjà cette rubrique : elle propose
+    # les sections, les groupes ET les deux paysages comme découpages. Elles
+    # sont devenues ses deux autres onglets. Rien n'est perdu, on cesse
+    # seulement de proposer trois portes vers la même pièce.
     (MODE_SYNTHESE, "personnes"),
-    (MODE_FICHE, "montagne"),
     (MODE_ACTIONS, "fiche"),
     # LA NOTE AUX BAILLEURS VIENT APRÈS LES FICHES, ET AVANT LES DONNÉES.
     # Elle est la sortie de tout ce qui précède : elle ne se comprend qu'après
@@ -1453,23 +1464,20 @@ if app_mode == MODE_DIMENSIONS:
 if app_mode == MODE_METHODO:
     # « Cadre de résilience » a remplacé la page de méthodologie : des schémas
     # à la place de sept blocs de texte. Le document complet n'est pas perdu —
-    # il est rendu dans le volet replié du bas, avec l'outil de croisement
-    # libre. Une fonction qui marchait ne se supprime pas au motif qu'on a
-    # réorganisé la façade ; on la range.
+    # il est rendu dans le volet replié du bas. Une fonction qui marchait ne se
+    # supprime pas au motif qu'on a réorganisé la façade ; on la range.
+    #
+    # L'OUTIL DE « CROISEMENT LIBRE » A ÉTÉ RETIRÉ D'ICI, ET SUPPRIMÉ DU DÉPÔT.
+    # Il empilait des conditions sur les mêmes 483 questions, avec la même
+    # carte par section et la même ventilation par sexe, catégorie et âge que
+    # « Croisement des résultats » — qui fait tout cela et davantage : profil
+    # de résilience du sous-groupe, comparaison de deux groupes, effectif
+    # attendu sous indépendance. Deux outils qui font la même chose divergent
+    # tôt ou tard, et le lecteur ne sait jamais lequel fait autorité.
     def _document_methodologique():
         methodologie_page.render()
-        with st.expander(T("m_croisement_libre")):
-            croisement_page.render(entete=False)
 
     cadre_page.render(doc_complet=_document_methodologique)
-
-if app_mode == MODE_RADAR:
-    # UNE RUBRIQUE À PART, PARCE QU'ON LA CHERCHE POUR ELLE-MÊME.
-    # Le radar est aussi présent dans « Analyse des résultats » (celui de la
-    # dimension ouverte) et dans « Profils territoriaux et sociaux » (celui
-    # des six dimensions) — là, il commente ce qui l'entoure. Ici, il est
-    # l'objet de la page : on y vient pour comparer, pas pour illustrer.
-    radar_accueil.render()
 
 if app_mode == MODE_CROISEMENT:
     # L'outil d'exploration des reponses individuelles. Il ne lit pas les
@@ -1477,13 +1485,29 @@ if app_mode == MODE_CROISEMENT:
     # mecanismes de selection sur la meme page se contrediraient.
     croisement_resultats.render()
 
-if app_mode == MODE_FICHE:
-    # Une fiche de restitution : elle se lit d'une traite, du chiffre
-    # d'ensemble aux enseignements, sans rien demander a l'utilisateur.
-    fiche_paysages.render()
-
 if app_mode == MODE_BOUCLES:
-    boucles_page.render()
+    # DEUX LECTURES DU MÊME MODÈLE, ET UN SEUL RENDU À LA FOIS.
+    #
+    #   · l'onde — où passe le choc, vague après vague, et quand il revient
+    #     sur ses pas ;
+    #   · l'analyse — l'effet total une fois tout distribué, les boucles
+    #     énumérées, les leviers classés.
+    #
+    # `st.tabs` rendrait les deux à chaque affichage : l'énumération des
+    # trente-huit boucles et l'animation seraient calculées ensemble, pour
+    # n'en montrer qu'une. Un sélecteur ne rend que ce qu'on regarde.
+    st.markdown(
+        f'<h2 style="font-size:27px;font-weight:700;color:#101728;'
+        f'letter-spacing:-.02em;margin:2px 0 0">{T("mode_boucles")}</h2>',
+        unsafe_allow_html=True)
+    _VUES = {T("oc_titre"): "onde", T("bcl_vue_analyse"): "analyse"}
+    _vue = st.radio("vue", list(_VUES), horizontal=True,
+                    label_visibility="collapsed",
+                    key=f"bcl_vue_{i18n.get_lang()}")
+    if _VUES[_vue] == "onde":
+        ondes_choc.render(entete=False)
+    else:
+        boucles_page.render(entete=False)
 
 if app_mode == MODE_ACTIONS:
     # Les fiches descendent des leviers calculés par l'analyse des boucles.
@@ -1499,7 +1523,26 @@ if app_mode == MODE_BAILLEURS:
     note_bailleurs.render()
 
 if app_mode == MODE_SYNTHESE:
-    synthese_page.render()
+    # TROIS FAÇONS DE COMPARER DES PROFILS, SOUS UNE SEULE ENTRÉE.
+    #
+    #   · par territoire ou par groupe — une section contre les neuf autres,
+    #     les femmes contre l'ensemble ;
+    #   · par paysage — la fiche littoral contre montagne, qui se lit d'une
+    #     traite sans rien demander ;
+    #   · par la figure elle-même — le radar, avec son mode d'emploi.
+    #
+    # C'étaient trois entrées de menu. Ce sont trois onglets, et le lecteur
+    # qui cherche « comparer » n'a plus à deviner laquelle des trois portes
+    # mène à ce qu'il veut.
+    st.title(T("mode_synthese"))
+    _o_prof, _o_pays, _o_radar = st.tabs(
+        [T("syn_o_profils"), T("syn_o_paysages"), T("syn_o_radar")])
+    with _o_prof:
+        synthese_page.render(entete=False)
+    with _o_pays:
+        fiche_paysages.render(entete=False)
+    with _o_radar:
+        radar_accueil.render(entete=False)
 
 if app_mode == MODE_DONNEES:
     telechargements_page.render()

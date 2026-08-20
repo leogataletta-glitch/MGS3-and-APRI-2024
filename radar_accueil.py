@@ -110,13 +110,17 @@ def _e(t):
             .replace(">", "&gt;"))
 
 
-def render():
-    st.markdown(
-        f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
-        f'letter-spacing:-.02em;margin:2px 0 0">{T("rda_titre")}</h2>'
-        f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
-        f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
-        f'{T("rda_sous_titre")}</p>', unsafe_allow_html=True)
+def render(entete=True):
+    # `entete=False` quand la page est rendue dans un onglet : le titre de la
+    # rubrique est déjà au-dessus, et deux titres empilés font perdre une
+    # hauteur d'écran sans rien apprendre.
+    if entete:
+        st.markdown(
+            f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+            f'letter-spacing:-.02em;margin:2px 0 0">{T("rda_titre")}</h2>'
+            f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+            f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
+            f'{T("rda_sous_titre")}</p>', unsafe_allow_html=True)
     st.info(T("rda_intro"))
 
     # LA FIGURE D'ABORD, LE MODE D'EMPLOI ENSUITE. Qui arrive ici veut voir un

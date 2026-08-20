@@ -282,9 +282,17 @@ def _annees(c, cles, pas=5):
     return "".join(parts)
 
 
-def _barres(serie, chocs=(), larg=880, haut=230, unite="", couleur=BLEU):
-    """Une grandeur, une teinte. Les années de choc changent de couleur parce
-    qu'elles sont d'une autre nature — un événement, pas une année ordinaire."""
+def barres_annuelles(serie, chocs=(), larg=880, haut=230, unite="",
+                     couleur=BLEU):
+    """Une grandeur, une teinte.
+
+    PUBLIQUE, ET APPELÉE D'AILLEURS. L'onglet « Environnement » de l'analyse
+    des résultats traçait la même chronologie forestière avec sa propre
+    implémentation : deux dessins du même objet, qui auraient divergé au
+    premier réglage. Il appelle désormais celle-ci.
+
+    Les années de choc changent de couleur parce qu'elles sont d'une autre
+    nature — un événement, pas une année ordinaire."""
     if not serie:
         return ""
     cles = sorted(serie, key=int)
@@ -396,7 +404,7 @@ def _bloc_foret(section):
     with st.container(border=True):
         st.markdown(f'<div class="tj-h">{_e(T("tj_f_t"))}</div>'
                     f'<p class="tj-x">{_e(T("tj_f_x"))}</p>'
-                    + _barres(serie, chocs, unite=" ha", couleur=VERT),
+                    + barres_annuelles(serie, chocs, unite=" ha", couleur=VERT),
                     unsafe_allow_html=True)
         st.markdown(
             '<div class="tj-g">'

@@ -158,62 +158,23 @@ def _moyenne_series(sections, cle):
 
 
 # ----------------------------------------------------------------------
-def _serie_annuelle_svg(pertes, annee_pic=None, largeur=1040):
-    """Perte annuelle en barres verticales.
+def _serie_annuelle_svg(pertes, chocs=(), largeur=1040):
+    """Perte annuelle en barres verticales — DESSINÉE PAR `trajectoires`.
 
-    Une série temporelle se lit horizontalement : le temps sur l'axe des x, la
-    grandeur en hauteur. Les barres horizontales de l'application conviennent à
-    un classement, pas à une chronologie — d'où ce rendu dédié. Une seule teinte,
-    parce qu'il n'y a qu'une grandeur ; l'année du pic est écrite en clair,
-    sinon personne ne devine ce que raconte cette silhouette.
+    Cette fonction traçait auparavant ses propres barres. La rubrique
+    « Trajectoires » traçait exactement la même chronologie, sur le même
+    fichier `foret.json`, avec sa propre implémentation : deux dessins du même
+    objet, condamnés à diverger au premier réglage — et c'est arrivé, la marge
+    gauche corrigée d'un côté restait fausse de l'autre.
+
+    Il n'en reste qu'un. L'import est tardif à dessein : `trajectoires` charge
+    ses propres séries, et cet onglet n'a pas à en payer le coût quand il ne
+    dessine pas de chronologie.
     """
-    annees = sorted(pertes, key=int)
-    vals = [pertes[a] for a in annees]
-    vmax = max(vals) or 1
-    H, TOP, BAS, GAUCHE = 210, 26, 30, 52
-    plot_h = H - TOP - BAS
-    pas = (largeur - GAUCHE - 16) / len(annees)
-    barre = pas * 0.62
-
-    parts = []
-    # graduations horizontales, discrètes, sous les barres
-    for frac in (0.25, 0.5, 0.75, 1.0):
-        y = TOP + plot_h * (1 - frac)
-        parts.append(f'<line x1="{GAUCHE}" y1="{y:.1f}" x2="{largeur - 16}" '
-                     f'y2="{y:.1f}" stroke="#eef2f7" stroke-width="1"/>')
-        parts.append(f'<text class="eg" x="{GAUCHE - 8}" y="{y + 4:.1f}" '
-                     f'text-anchor="end">{vmax * frac:.0f}</text>')
-
-    for i, (a, v) in enumerate(zip(annees, vals)):
-        h = plot_h * v / vmax
-        x = GAUCHE + i * pas + (pas - barre) / 2
-        y = TOP + plot_h - h
-        pic = (annee_pic is not None and int(a) == int(annee_pic))
-        col = "#b5451f" if pic else "#7ba05b"
-        parts.append(
-            f'<g><title>{a} — {v:.1f} ha</title>'
-            f'<rect x="{x:.1f}" y="{y:.1f}" width="{barre:.1f}" '
-            f'height="{max(h, 1):.1f}" rx="2" fill="{col}"/></g>')
-        if int(a) % 5 == 1 or pic:
-            parts.append(f'<text class="ea" x="{x + barre / 2:.1f}" '
-                         f'y="{H - 12}" text-anchor="middle">{a}</text>')
-        if pic:
-            parts.append(f'<text class="ep" x="{x + barre / 2:.1f}" '
-                         f'y="{y - 8:.1f}" text-anchor="middle">'
-                         f'{v:.0f} ha</text>')
-
-    return f"""<svg viewBox="0 0 {largeur} {H}" width="100%"
-     style="max-width:{largeur}px;display:block" role="img">
-  <style>
-    .eg{{font:11px system-ui,-apple-system,sans-serif;fill:#898781;
-        font-variant-numeric:tabular-nums}}
-    .ea{{font:11.5px system-ui,-apple-system,sans-serif;fill:#6b7590;
-        font-variant-numeric:tabular-nums}}
-    .ep{{font:700 13px system-ui,-apple-system,sans-serif;fill:#b5451f;
-        font-variant-numeric:tabular-nums}}
-  </style>
-  {''.join(parts)}
-</svg>"""
+    import trajectoires
+    return trajectoires.barres_annuelles(
+        pertes, chocs={str(a) for a in (chocs or ())}, larg=largeur,
+        haut=225, unite=" ha", couleur=trajectoires.VERT)
 
 
 # Rampe temporelle : du jaune pâle (2001) au brun profond (2025). Une seule
@@ -745,7 +706,8 @@ def _onglet_foret(foret, focus):
             f'margin:4px 0 10px;max-width:92ch">'
             f'{T("e_bloc2_texte", p=_fmt(d["part_choc_pct"], 0))}</p>',
             unsafe_allow_html=True)
-        svg = _serie_annuelle_svg(d["pertes_annuelles_ha"], annee_pic=2016)
+        svg = _serie_annuelle_svg(d["pertes_annuelles_ha"],
+                                  chocs=d.get("annees_choc") or ())
         components.html(
             '<div style="background:#ffffff;font-family:system-ui,-apple-system,'
             "'Segoe UI',sans-serif\">" + svg + "</div>",

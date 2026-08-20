@@ -258,14 +258,15 @@ def _tableau_ecarts(res, cible, mode, sens, limite=12):
     return ''.join(out)
 
 
-def render():
+def render(entete=True):
     res, _vent = _charger()
 
-    st.title(T("mode_synthese"))
-    st.markdown(
-        '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
-        'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
-        + T("syn_sous_titre") + "</p>", unsafe_allow_html=True)
+    if entete:
+        st.title(T("mode_synthese"))
+        st.markdown(
+            '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+            'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
+            + T("syn_sous_titre") + "</p>", unsafe_allow_html=True)
 
     if not res:
         st.info(T("e_absent"))

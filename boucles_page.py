@@ -507,17 +507,18 @@ def _legende():
 
 
 # ------------------------------------------------------------------- page
-def render():
+def render(entete=True):
     graphe, par_ligne = _charger()
     diag = M.diagnostic(graphe)
     par_id = {n["id"]: n for n in graphe["noeuds"]}
 
-    st.markdown(
-        f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
-        f'letter-spacing:-.02em;margin:2px 0 0">{T("bcl_titre")}</h2>'
-        f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
-        f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
-        f'{T("bcl_sous_titre")}</p>', unsafe_allow_html=True)
+    if entete:
+        st.markdown(
+            f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+            f'letter-spacing:-.02em;margin:2px 0 0">{T("bcl_titre")}</h2>'
+            f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+            f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
+            f'{T("bcl_sous_titre")}</p>', unsafe_allow_html=True)
 
     # L'avertissement est en tête, pas en pied : il conditionne la lecture de
     # tout ce qui suit.

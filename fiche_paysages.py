@@ -445,14 +445,15 @@ def _diverge(ecarts, n=12):
     return entete + "".join(li)
 
 
-def render():
+def render(entete=True):
     st.markdown(STYLE, unsafe_allow_html=True)
-    st.markdown(
-        f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
-        f'letter-spacing:-.02em;margin:2px 0 0">{T("fp_titre")}</h2>'
-        f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
-        f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
-        f'{T("fp_sous_titre")}</p>', unsafe_allow_html=True)
+    if entete:
+        st.markdown(
+            f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+            f'letter-spacing:-.02em;margin:2px 0 0">{T("fp_titre")}</h2>'
+            f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+            f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
+            f'{T("fp_sous_titre")}</p>', unsafe_allow_html=True)
 
     res = _resultats()
     cat = _catalogue()
