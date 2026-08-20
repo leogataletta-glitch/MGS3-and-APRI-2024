@@ -253,6 +253,23 @@ st.markdown(("""
     height: 0 !important;
   }
 
+  /* LES QUELQUES ENDROITS QUE STREAMLIT HABILLE LUI-MÊME. Les légendes, les
+     libellés de widgets et le contenu des menus déroulants portent la police
+     du thème — « Source Sans » — et non la nôtre : trois familles cohabitaient
+     donc sur la même page sans que personne ne l'ait décidé. On les ramène à
+     Inter, et on rend aux icônes leur propre fonte juste après, sinon elles
+     s'affichent en toutes lettres. */
+  [data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] *,
+  [data-testid="stWidgetLabel"] *, [data-testid="stRadio"] label *,
+  [data-baseweb="select"] div, [data-baseweb="select"] span,
+  [data-baseweb="popover"] li, [data-baseweb="tab"] *,
+  [data-testid="stExpander"] summary * {
+    font-family: "Inter", system-ui, -apple-system, sans-serif !important;
+  }
+  [data-testid="stIconMaterial"], span[class*="material-symbols"] {
+    font-family: "Material Symbols Rounded" !important;
+  }
+
   /* --- titres --- */
   h1, h2, h3 {
     font-family: "Inter", system-ui, -apple-system, sans-serif !important;
