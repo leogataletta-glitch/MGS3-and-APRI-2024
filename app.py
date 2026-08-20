@@ -1287,13 +1287,15 @@ def _rendre_ruban():
     du filtre posé, quand il y en a un.
     """
     with _ruban:
-        # LA PHOTO N'EST PLUS QUE SUR LE CADRE DE RÉSILIENCE, ET C'EST UN
-        # CHOIX DE FONCTION, PAS DE GOÛT. Un bandeau de 300 px répété en tête
-        # de chaque page repoussait chaque fois le premier chiffre sous la
-        # ligne de flottaison, et une image qu'on revoit à chaque clic cesse
-        # d'être regardée. Elle reste là où elle dit quelque chose : la page
-        # d'entrée, celle qui présente le paysage qu'on mesure.
-        photo = st.session_state.get("app_mode") == MODE_METHODO
+        # LA PHOTO NE SERT QUE SUR DEUX PAGES, ET C'EST UN CHOIX DE FONCTION,
+        # PAS DE GOÛT. Un bandeau de 300 px répété en tête de chaque page
+        # repoussait chaque fois le premier chiffre sous la ligne de
+        # flottaison, et une image qu'on revoit à chaque clic cesse d'être
+        # regardée. Elle reste là où elle dit quelque chose : l'accueil, qui
+        # est la porte d'entrée et doit porter la marque du PNUE dès la
+        # première seconde, et le cadre de résilience, qui présente le paysage
+        # qu'on mesure.
+        photo = st.session_state.get("app_mode") in (MODE_PORTAIL, MODE_METHODO)
         # LE LOGO DU PNUE EST POSÉ SUR LA PHOTO, EN BLANC, ET IL LUI FAUT UN
         # VOILE. La photo est un dessin clair : un logo blanc posé dessus
         # disparaîtrait purement et simplement. Le voile est un dégradé sombre
