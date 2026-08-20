@@ -25,6 +25,7 @@ import streamlit.components.v1 as components
 
 # `accueil_page` n'est plus appelé : « Le territoire » ne porte plus que
 # ses deux cartes, et son rendu vit dans `territoire_page`.
+import accueil_apri
 import actualites
 import assets
 import boucles_page
@@ -1144,6 +1145,11 @@ MODE_RADAR = "radar"
 MODE_CROISEMENT = "croisement"
 MODE_FICHE = "fiche_paysages"
 MODE_BAILLEURS = "bailleurs"
+# LA PAGE D'ACCUEIL, ET C'EST ELLE QUI OUVRE LE SITE. On arrivait jusqu'ici
+# sur le cadre méthodologique : avant d'apprendre quoi que ce soit du
+# territoire, on apprenait comment on le mesure. C'est l'ordre d'un rapport,
+# pas celui d'un tableau de bord.
+MODE_PORTAIL = "portail"
 LIBELLE_MODE = {m: T(m) for m in MODES_DIM}
 LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      "dimensions": T("mode_dimensions"),
@@ -1155,13 +1161,14 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      MODE_RADAR: T("mode_radar"),
                      MODE_CROISEMENT: T("mode_croisement"),
                      MODE_FICHE: T("mode_fiche"),
-                     MODE_BAILLEURS: T("mode_bailleurs")})
+                     MODE_BAILLEURS: T("mode_bailleurs"),
+                     MODE_PORTAIL: T("mode_portail")})
 
 # L'état de navigation doit exister AVANT la barre du haut, qui affiche le nom
 # de la page courante. L'initialiser plus bas laissait la barre lire une clé
 # absente — et Streamlit lève alors une erreur qui masque toute la page.
 if "app_mode" not in st.session_state:
-    st.session_state["app_mode"] = MODE_METHODO
+    st.session_state["app_mode"] = MODE_PORTAIL
 
 
 def _bascule(mode):
@@ -1216,6 +1223,7 @@ MODE_DIMENSIONS = "dimensions"
 # les résultats suivent. L'accueil, devenu « Le territoire », n'a plus à porter
 # le récit de la méthode, qui est passé dans le cadre.
 _NAV = [
+    (MODE_PORTAIL, "maison"),
     (MODE_METHODO, "bouclier"),
     (MODE_ACCUEIL, "epingle"),
     (MODE_DIMENSIONS, "barres"),
@@ -1378,6 +1386,10 @@ app_mode = st.session_state["app_mode"]
 # eux prolongent leur page avec un détail qui existait déjà, plutôt que d'en
 # dupliquer la logique — l'environnement avec ses onze indicateurs
 # satellitaires, le social avec les fiches d'organisations de base.
+if app_mode == MODE_PORTAIL:
+    # Quatre écrans : où, ce qu'on a mesuré, ce qu'on a trouvé, quoi faire.
+    accueil_apri.render()
+
 if app_mode == MODE_ACCUEIL:
     territoire_page.render()
 
