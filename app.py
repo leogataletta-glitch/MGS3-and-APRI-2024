@@ -49,6 +49,7 @@ import saillants_page
 import synthese_page
 import telechargements_page
 import territoire_page
+import trajectoires
 from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -1150,6 +1151,10 @@ MODE_BAILLEURS = "bailleurs"
 # territoire, on apprenait comment on le mesure. C'est l'ordre d'un rapport,
 # pas celui d'un tableau de bord.
 MODE_PORTAIL = "portail"
+# LE TEMPS, ENFIN MONTRÉ COMME DU TEMPS. Trois jeux satellitaires sont des
+# séries — la forêt depuis 2000, la pluie depuis 1981, la température depuis
+# 2001 — et le site les lisait comme des instantanés.
+MODE_TRAJECTOIRES = "trajectoires"
 LIBELLE_MODE = {m: T(m) for m in MODES_DIM}
 LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      "dimensions": T("mode_dimensions"),
@@ -1162,7 +1167,8 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      MODE_CROISEMENT: T("mode_croisement"),
                      MODE_FICHE: T("mode_fiche"),
                      MODE_BAILLEURS: T("mode_bailleurs"),
-                     MODE_PORTAIL: T("mode_portail")})
+                     MODE_PORTAIL: T("mode_portail"),
+                     MODE_TRAJECTOIRES: T("mode_trajectoires")})
 
 # L'état de navigation doit exister AVANT la barre du haut, qui affiche le nom
 # de la page courante. L'initialiser plus bas laissait la barre lire une clé
@@ -1227,6 +1233,7 @@ _NAV = [
     (MODE_METHODO, "bouclier"),
     (MODE_ACCUEIL, "epingle"),
     (MODE_DIMENSIONS, "barres"),
+    (MODE_TRAJECTOIRES, "rafraichir"),
     (MODE_RADAR, "radar"),
     (MODE_BOUCLES, "boucle"),
     (MODE_CROISEMENT, "loupe"),
@@ -1389,6 +1396,11 @@ app_mode = st.session_state["app_mode"]
 if app_mode == MODE_PORTAIL:
     # Quatre écrans : où, ce qu'on a mesuré, ce qu'on a trouvé, quoi faire.
     accueil_apri.render()
+
+if app_mode == MODE_TRAJECTOIRES:
+    # Quatre séries physiques — hectares, millimètres, degrés. Aucun score :
+    # les scores vivent dans les autres rubriques.
+    trajectoires.render()
 
 if app_mode == MODE_ACCUEIL:
     territoire_page.render()

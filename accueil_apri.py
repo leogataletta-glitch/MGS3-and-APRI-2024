@@ -156,6 +156,30 @@ TEXTES = {
               "pour les dix — pas sur le référentiel entier, que deux sections "
               "ne couvrent pas complètement. C'est pourquoi ces chiffres "
               "diffèrent un peu de l'indice publié."},
+    "po_3_rep_t": {"en": "4.54 is not a middling territory — it is a "
+                         "territory of extremes",
+                   "fr": "4,54 n'est pas un territoire moyen — c'est un "
+                         "territoire d'extrêmes"},
+    "po_3_rep": {
+        "en": "Spread the {n} scored indicators across the scale and the "
+              "average dissolves: **{bas} % of the framework's weight sits at "
+              "2 out of 10 or below**, while {haut} % sits at 9 or 10. Almost "
+              "nothing is in the middle. An average of 4.54 describes no "
+              "single indicator — it is the resultant of two opposite blocks, "
+              "and that is what makes it actionable: the low block is a list "
+              "of things to build.",
+        "fr": "Étalez les {n} indicateurs scorés sur l'échelle et la moyenne "
+              "se dissout : **{bas} % du poids du référentiel est à 2 sur 10 "
+              "ou moins**, quand {haut} % est à 9 ou 10. Presque rien n'est au "
+              "milieu. Une moyenne de 4,54 ne décrit aucun indicateur — c'est "
+              "la résultante de deux blocs opposés, et c'est ce qui la rend "
+              "utile : le bloc du bas est une liste de choses à construire."},
+    "po_3_rep_ax": {"en": "share of the framework's weight",
+                    "fr": "part du poids du référentiel"},
+    "po_3_pay_t": {"en": "And two landscapes that do not hold up alike",
+                   "fr": "Et deux paysages qui ne tiennent pas pareil"},
+    "po_3_littoral": {"en": "Coastal", "fr": "Littoral"},
+    "po_3_montagne": {"en": "Mountain", "fr": "Montagne"},
     "po_3_dims": {"en": "Where it holds, and where it does not",
                   "fr": "Où ça tient, et où ça ne tient pas"},
     "po_3_faits": {"en": "Three findings that carry the most weight",
@@ -357,6 +381,23 @@ def _mesures(lang):
               "dim": DIM_CLE.get(r.get("dimension") or "")}
              for r in couteux]
 
+    # LA DISTRIBUTION SUR L'ÉCHELLE, EN PART DE POIDS ET NON EN NOMBRE.
+    # Compter les indicateurs traiterait un indicateur pesant 4,6 comme un
+    # indicateur pesant 1 ; c'est le poids qui fait la moyenne, c'est donc le
+    # poids qu'il faut étaler.
+    poids_total = sum((r.get("ponderation") or 1) for r in scores) or 1
+    bandes = []
+    for a_, b_, lab in ((0, 2, "0–2"), (3, 4, "3–4"), (5, 6, "5–6"),
+                        (7, 8, "7–8"), (9, 10, "9–10")):
+        g = [r for r in scores
+             if a_ <= float(r["scores_corriges"]["Total"]) <= b_]
+        bandes.append({"lab": lab, "n": len(g),
+                       "part": sum((r.get("ponderation") or 1)
+                                   for r in g) / poids_total * 100,
+                       "milieu": (a_ + b_) / 2})
+
+    paysages = {p_: moyenne(p_, scores) for p_ in ("Littoral", "Montagne")}
+
     bases = [int((r.get("n") or {}).get("Total") or 0) for r in scores]
     bases = [b for b in bases if b]
     p_idx = _trouver("croisement_index.json")
@@ -372,7 +413,8 @@ def _mesures(lang):
 
     return {"indice": moyenne("Total", scores), "n_scores": len(scores),
             "n_commun": len(commun), "sections": ordre, "dims": dims,
-            "faits": faits, "menages": menages}
+            "faits": faits, "menages": menages, "bandes": bandes,
+            "paysages": paysages}
 
 
 @st.cache_data(show_spinner=False)
@@ -508,6 +550,38 @@ def _ecran_3(m):
         f'<div class="po-s">{_e(T("po_3_idx_x", n=m["n_scores"]))}</div>'
         f'</div>', unsafe_allow_html=True)
 
+    # LA DISTRIBUTION, JUSTE SOUS LA MOYENNE. C'est la contextualisation qui
+    # manquait le plus : un indice composite sans distribution se lit comme un
+    # niveau homogène, et celui-ci ne l'est pas du tout.
+    st.markdown(f'<div class="po-lab">{_e(T("po_3_rep_t"))}</div>',
+                unsafe_allow_html=True)
+    pmax = max((b_["part"] for b_ in m["bandes"]), default=1) or 1
+    cols = st.columns(len(m["bandes"]), gap="small")
+    for col, b_ in zip(cols, m["bandes"]):
+        with col:
+            st.markdown(
+                f'<div style="text-align:center">'
+                f'<div style="height:96px;display:flex;align-items:flex-end;'
+                f'justify-content:center">'
+                f'<div style="width:100%;height:{max(b_["part"] / pmax * 100, 3):.0f}%;'
+                f'background:{_couleur(b_["milieu"])};border-radius:5px 5px 0 0"'
+                f' title="{_e(b_["lab"])} — {_f(b_["part"], 1)} %"></div></div>'
+                f'<div style="border-top:1px solid #e6ecf4;padding-top:5px;'
+                f'font-size:13px;font-weight:700;color:{ENCRE}">'
+                f'{_f(b_["part"], 0)} %</div>'
+                f'<div style="font-size:11.5px;color:{ENCRE3}">'
+                f'{_e(b_["lab"])} / 10</div></div>', unsafe_allow_html=True)
+    st.caption(T("po_3_rep_ax"))
+    # NOMS EXPLICITES, ET C'EST UN BOGUE QUI L'A IMPOSÉ : `bas` et `haut`
+    # désignaient déjà, dix lignes plus haut, les deux sections extrêmes. Les
+    # réutiliser pour des parts de poids écrasait les tuples et la page tombait
+    # sur « cannot unpack non-iterable float ».
+    part_bas = sum(b_["part"] for b_ in m["bandes"] if b_["milieu"] <= 2)
+    part_haut = sum(b_["part"] for b_ in m["bandes"] if b_["milieu"] >= 9)
+    st.markdown(f'<p class="po-x" style="margin-top:8px">'
+                f'{_gras(T("po_3_rep", n=m["n_scores"], bas=_f(part_bas, 0), haut=_f(part_haut, 0)))}</p>',
+                unsafe_allow_html=True)
+
     st.markdown(f'<div class="po-lab">{_e(T("po_3_amp_t"))}</div>'
                 f'<p class="po-x">{_gras(T("po_3_amp", d=_f(ecart)))}</p>',
                 unsafe_allow_html=True)
@@ -528,6 +602,20 @@ def _ecran_3(m):
                     f'font-weight:700;color:{ENCRE3}">{_f(ecart)} pts</div>',
                     unsafe_allow_html=True)
     st.caption(T("po_3_base", n=m["n_commun"]))
+
+    if m["paysages"].get("Littoral") and m["paysages"].get("Montagne"):
+        st.markdown(
+            f'<div class="po-lab">{_e(T("po_3_pay_t"))}</div>'
+            '<div class="po-g" style="margin-top:0">' + "".join(
+                f'<div class="po-c" style="flex:1 1 200px">'
+                f'<div class="po-s" style="margin:0">{_e(lab)}</div>'
+                f'<div class="po-n" style="font-size:29px;color:'
+                f'{_couleur(m["paysages"][cle])}">{_f(m["paysages"][cle])}'
+                f'<span style="font-size:15px;color:#8a93a5"> / 10</span>'
+                f'</div></div>'
+                for cle, lab in (("Littoral", T("po_3_littoral")),
+                                 ("Montagne", T("po_3_montagne"))))
+            + '</div>', unsafe_allow_html=True)
 
     st.markdown(f'<div class="po-lab">{_e(T("po_3_dims"))}</div>',
                 unsafe_allow_html=True)
