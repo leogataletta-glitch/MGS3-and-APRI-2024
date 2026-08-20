@@ -220,6 +220,16 @@ TEXTES = {
                 "fr": "L'analyse des résultats — dimension par dimension"},
     "po_4_p4": {"en": "The territory — where all this takes place",
                 "fr": "Le territoire — où tout cela se passe"},
+    # CHAQUE ÉCRAN A SA PORTE, PAS SEULEMENT LE DERNIER. Un parcours qui ne
+    # donne la main qu'à la fin oblige à traverser les quatre écrans pour
+    # arriver à la carte, alors que l'écran qui parle du territoire est
+    # justement celui d'où l'on veut y aller.
+    "po_porte_1": {"en": "Open the interactive map of the territory",
+                   "fr": "Ouvrir la carte interactive du territoire"},
+    "po_porte_2": {"en": "The resilience framework in detail",
+                   "fr": "Le cadre de résilience en détail"},
+    "po_porte_3": {"en": "The results, dimension by dimension",
+                   "fr": "Les résultats, dimension par dimension"},
     "po_absent": {"en": "Result files missing.",
                   "fr": "Les fichiers de résultats sont absents."},
 }
@@ -455,6 +465,19 @@ def _aller(mode):
     st.session_state["app_mode"] = mode
 
 
+def _porte(cle, mode):
+    """Un seul bouton, à gauche, qui mène à la rubrique correspondante.
+
+    Il n'occupe pas toute la largeur : un bouton pleine largeur se lit comme
+    l'action principale de l'écran, or l'action principale reste d'avancer
+    dans le parcours. Celui-ci est une sortie latérale, il en a la taille.
+    """
+    g, _ = st.columns([1.7, 2.3])
+    with g:
+        st.button(T(cle) + "  →", key=f"po_porte_{mode}_{cle}",
+                  on_click=_aller, args=(mode,), use_container_width=True)
+
+
 def _bouger(delta):
     st.session_state["portail_etape"] = max(
         1, min(4, st.session_state.get("portail_etape", 1) + delta))
@@ -488,6 +511,10 @@ def _ecran_1(m):
                 st.caption(T("po_1_carte"))
         except Exception:
             pass
+    # La vignette montre OÙ, pas QUOI : le détail — les dix sections, les
+    # paysages pilotes, les points d'entretien, les routes — est dans « Le
+    # territoire ». C'est ici qu'on veut y aller, pas trois écrans plus loin.
+    _porte("po_porte_1", "accueil")
 
 
 def _ecran_2(m):
@@ -525,6 +552,7 @@ def _ecran_2(m):
                                      ("po_2_s2", "carte", VERT),
                                      ("po_2_s3", "maison", AMBRE)))
                 + '</div>', unsafe_allow_html=True)
+    _porte("po_porte_2", "methodologie")
 
 
 def _couleur(v):
@@ -647,6 +675,7 @@ def _ecran_3(m):
                     f'<div class="po-s">{_f(x["score"], 0)} / 10</div></div>'
                     for x in m["faits"])
                 + '</div>', unsafe_allow_html=True)
+    _porte("po_porte_3", "dimensions")
 
 
 def _ecran_4(m):
