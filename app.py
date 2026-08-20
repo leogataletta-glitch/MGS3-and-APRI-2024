@@ -263,11 +263,17 @@ st.markdown(("""
   [data-testid="stWidgetLabel"] *, [data-testid="stRadio"] label *,
   [data-baseweb="select"] div, [data-baseweb="select"] span,
   [data-baseweb="popover"] li, [data-baseweb="tab"] *,
-  [data-testid="stExpander"] summary * {
+  [data-testid="stExpander"] summary p {
     font-family: "Inter", system-ui, -apple-system, sans-serif !important;
   }
-  [data-testid="stIconMaterial"], span[class*="material-symbols"] {
-    font-family: "Material Symbols Rounded" !important;
+  /* ET ON REND AUX ICÔNES LEUR FONTE. Une icône Streamlit est une ligature :
+     le mot « arrow_right » dessiné par la fonte Material. Lui imposer Inter
+     l'affiche en toutes lettres au milieu du titre — c'est arrivé sur les
+     volets repliés, et la règle ci-dessus l'a causé avant de le corriger. */
+  [data-testid="stIconMaterial"], span[class*="material-symbols"],
+  [data-testid="stExpander"] summary svg + span:empty,
+  .material-icons, .material-symbols-rounded, .material-symbols-outlined {
+    font-family: "Material Symbols Rounded", "Material Icons" !important;
   }
 
   /* --- titres --- */

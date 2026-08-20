@@ -1,78 +1,118 @@
-# Une porte sur chaque écran de l'accueil
+# Les boucles causales, révisées — et un barème pour les forces
 
-## Un seul fichier — À LA RACINE
-
-| Fichier | Où le déposer |
-|---|---|
-| `accueil_apri.py` | **racine du dépôt** — modifié |
-
----
-
-## Ce qui manquait
-
-L'écran 1 de l'accueil dit **où** : dix sections, deux départements, la
-vignette d'Haïti. Puis il s'arrêtait là. Le détail — les dix sections
-dessinées, les deux paysages pilotes, les 1 195 points d'entretien, les
-routes, le relief — est dans « Le territoire », et rien ne conduisait
-directement de l'un à l'autre. Il fallait traverser les quatre écrans du
-parcours pour trouver une porte, ou repartir dans le menu de gauche.
-
-**Chaque écran a maintenant sa sortie**, sous son contenu :
-
-| Écran | Porte |
-|---|---|
-| 1 · Où ? | Ouvrir la carte interactive du territoire |
-| 2 · Qu'a-t-on mesuré ? | Le cadre de résilience en détail |
-| 3 · Qu'a-t-on trouvé ? | Les résultats, dimension par dimension |
-| 4 · Que faire ? | les quatre portes qui existaient déjà |
-
-Le bouton n'occupe pas toute la largeur, et c'est voulu : un bouton pleine
-largeur se lit comme l'action principale de l'écran, or l'action principale
-reste d'avancer dans le parcours. C'est une sortie latérale, elle en a la
-taille.
-
----
-
-## Un défaut du harnais, corrigé au passage
-
-Le harnais de test rendait les écrans 2, 3 et 4 du parcours — **jamais le
-premier**. C'est précisément celui qui porte la carte du territoire et sa
-nouvelle porte : la seule chose ajoutée aujourd'hui aurait échappé au test.
-Les quatre écrans sont maintenant parcourus, et une quatrième combinaison de
-filtres a été ajoutée pour que la rotation les couvre tous.
-
-**88 rendus** au lieu de 66, zéro exception, zéro clé de traduction brute.
-
-## Vérifié aussi
-
-- ouvert au navigateur : le bouton de l'écran 1 conduit bien à « Le
-  territoire », carte interactive chargée, aucune erreur au journal.
-
----
-
-# Une seule police pour tout le site
-
-## Trois fichiers de plus, MÊME commit — À LA RACINE
+## Cinq fichiers — ATTENTION À L'EMPLACEMENT
 
 | Fichier | Où le déposer |
 |---|---|
+| `graphe_causal.json` | **dans `data/`** — modifié |
+| `ondes_choc.py` | **racine** — modifié |
+| `boucles_page.py` | **racine** — modifié |
 | `app.py` | **racine** — modifié |
-| `map_render.py` | **racine** — modifié |
-| `ocb_page.py` | **racine** — modifié |
+| `A_LIRE_MAJ.md` | **racine** |
 
-Les titres étaient en **Outfit**, une géométrique aux formes rondes, et le
-corps en **Inter**. Deux dessins qui se répondaient mal : le contraste attirait
-l'œil sur la police plutôt que sur le chiffre, et donnait au site un air de
-page produit.
+---
 
-**Inter porte maintenant tout** — titres, corps, cartouches, cartes,
-graphiques. Ses chiffres sont tabulaires, donc les colonnes s'alignent ; ses
-formes sont neutres. Un observatoire n'a pas à avoir de voix typographique.
+## 1. Le défaut que vous avez vu, mesuré
 
-Une seule famille à télécharger au lieu de deux : la page s'ouvre aussi un peu
-plus vite sur une connexion lente.
+« Accès à l'électricité » avait **une seule** arête sortante : vers
+l'achèvement du primaire. La première vague d'un choc sur l'électricité était
+donc l'école, et rien d'autre. Ni l'information, ni la sécurité, ni le revenu.
 
-*Si vous préférez autre chose, c'est un mot à changer : **IBM Plex Sans** est
-plus institutionnelle et un peu technique, **Source Sans 3** est la plus
-discrète des quatre, très proche d'un rapport imprimé. La comparaison est dans
-la conversation.*
+Ce n'était pas un choix de modélisation, c'était une lacune, et elle touchait
+**dix nœuds** : assainissement, téléphonie, logement, foncier, pluie, état
+civil, école, centre de santé, électricité, abris. Les vagues n'avaient donc
+aucune structure de niveau, parce que le graphe n'en avait pas : vingt-quatre
+des soixante-six liens étaient concentrés sur le sous-système de la
+déforestation.
+
+**Seize liens de premier ordre ont été ajoutés** — le graphe passe de 66 à 82
+arêtes. La première vague depuis l'électricité est maintenant :
+
+| Lien | Force | Classe |
+|---|---|---|
+| électricité → accès aux messages d'alerte | 0,50 | documentée |
+| électricité → sentiment de sécurité | 0,50 | documentée |
+| électricité → revenu au-dessus du seuil | 0,50 | documentée |
+| électricité → achèvement du primaire | 0,35 | documentée |
+
+L'électricité a aussi reçu une **entrée** — la qualité du service public —
+sans laquelle elle restait une source pure, que rien dans le modèle ne pouvait
+faire bouger.
+
+---
+
+## 2. Le barème : pourquoi 0,50 et pas 0,30
+
+Cinq échelons nommés, et un plafond par classe de connaissance. La classe dit
+d'où vient le savoir, l'échelon dit combien on lui accorde.
+
+| Échelon | Critère |
+|---|---|
+| **0,20** | lien plausible, mécanisme indirect, aucune mesure |
+| **0,35** | mécanisme direct, mais effet faible ou très dépendant du contexte |
+| **0,50** | effet régulièrement observé, ampleur moyenne, plusieurs contextes |
+| **0,65** | mécanisme direct, sources convergentes, effet de premier ordre |
+| **0,80** | relation structurelle : l'un est la condition de l'autre |
+
+| Classe | Plafond |
+|---|---|
+| structurelle · empirique | 0,80 |
+| documentée | 0,65 |
+| théorique | 0,50 |
+| hypothèse | 0,20 |
+
+**Règle de placement**, appliquée sans exception : échelon haut de la classe si
+le mécanisme est direct et de premier ordre, échelon bas s'il est médié ou
+très variable.
+
+Le barème a immédiatement révélé **trois valeurs incohérentes** dans l'ancien
+modèle — 0,70 et 0,80 avec la mention « théorique », c'est-à-dire au-dessus du
+plafond de leur propre classe. Elles ne sont pas théoriques : l'une des deux
+grandeurs est la condition de l'autre. D'où une cinquième classe,
+**structurelle**, et trois relations à 0,80 : emploi → revenu, couvert →
+ressource ligneuse, réseau mobile → alerte.
+
+Dans l'autre sens, les six **hypothèses** sont descendues à 0,20. Les laisser à
+0,35 revenait à leur accorder le bénéfice du doute.
+
+---
+
+## 3. Un résultat que je ne cherchais pas : le modèle est à la limite
+
+Le rayon spectral du graphe brut vaut **0,987**. Au-dessus de 1, la propagation
+n'a plus de somme : un choc s'amplifie indéfiniment.
+
+On en est à un centième. Et ce n'est pas théorique : avec les hypothèses
+laissées à 0,35, ces mêmes trois relations structurelles à 0,80 donnaient
+**1,007**, donc un modèle qui diverge. Le système est très bouclé, et une seule
+force relevée d'un échelon peut le faire basculer.
+
+Le moteur propage sur une matrice remise à l'échelle — le calcul reste défini
+quoi qu'il arrive — mais le diagnostic affiché à l'écran dit « fortement
+bouclé », et il a raison.
+
+---
+
+## 4. Ce que l'écran montre maintenant
+
+Sous le graphique des ondes, un nouveau panneau : **« Les liens que cette vague
+emprunte »**. À chaque pas, les cinq liens qui portent le plus, avec pour
+chacun sa force, sa classe et la phrase qui la justifie. La question « d'où
+sort ce 0,50 » se pose au moment où l'on voit la vague passer : la réponse est
+maintenant à cet endroit-là.
+
+Le barème complet est dans un volet replié sous le graphique, **« D'où viennent
+les forces »**, et le survol d'une flèche donne la même information.
+
+## Vérifié
+
+- **88 rendus** — 11 pages × 4 combinaisons × 2 langues, les quatre écrans de
+  l'accueil et les deux vues des boucles — zéro exception ;
+- le harnais a d'ailleurs attrapé une erreur que la révision venait
+  d'introduire : la classe « structurelle » manquait dans la légende de
+  l'onglet d'analyse, et la page tombait dès qu'un filtre était posé ;
+- les quatre vagues ouvertes au navigateur dans les deux langues, panneau des
+  liens compris, aucune erreur au journal ;
+- effet du portefeuille recalculé sur le nouveau graphe : **+0,347** au lieu de
+  +0,335. Les chiffres de la note aux bailleurs et de l'accueil bougent en
+  conséquence — c'est normal, le modèle a changé.

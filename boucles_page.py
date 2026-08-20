@@ -49,8 +49,13 @@ HAUSSE, BAISSE, NUL = "#1a8a4f", "#c33a24", "#9aa4b5"
 ALERTE = "#d1730c"
 ENCRE, ENCRE2, ENCRE3 = "#101728", "#3c4761", "#6b7590"
 
-JUST_COULEUR = {"documentee": "#1a8a4f", "empirique": "#2166ac",
-                "theorique": "#7048b6", "hypothese": "#d1730c"}
+# UNE CINQUIÈME CLASSE : « structurelle ». Elle est apparue avec le barème des
+# forces — trois relations portaient 0,70 ou 0,80 sous la mention « théorique »,
+# c'est-à-dire au-dessus du plafond de leur propre classe. Elles ne sont pas
+# théoriques : l'une des deux grandeurs est une composante de l'autre.
+JUST_COULEUR = {"structurel": "#0f7b8a", "documentee": "#1a8a4f",
+                "empirique": "#2166ac", "theorique": "#7048b6",
+                "hypothese": "#d1730c"}
 
 TEXTES = {
     "bcl_titre": {"en": "Feedback Loops", "fr": "Boucles de rétroaction"},
@@ -147,6 +152,10 @@ TEXTES = {
     "bcl_force": {"en": "strength", "fr": "force"},
     "bcl_relations": {"en": "Every relation, and what justifies it",
                       "fr": "Chaque relation, et ce qui la justifie"},
+    "bcl_j_structurel": {"en": "Structural", "fr": "Structurelle"},
+    "bcl_j_structurel_x": {
+        "en": "One is a condition or a component of the other",
+        "fr": "L'un est une condition ou une composante de l'autre"},
     "bcl_j_documentee": {"en": "Documented", "fr": "Documentée"},
     "bcl_j_documentee_x": {"en": "Established in the literature",
                            "fr": "Établie dans la littérature"},
@@ -798,11 +807,12 @@ def render(entete=True):
         leg = "".join(
             f'<span style="display:inline-flex;align-items:center;gap:6px;'
             f'margin:0 16px 6px 0"><span style="width:9px;height:9px;'
-            f'border-radius:2px;background:{JUST_COULEUR[j]}"></span>'
+            f'border-radius:2px;background:{JUST_COULEUR.get(j, "#9aa4b5")}"></span>'
             f'<span style="font-size:12.5px;color:{ENCRE2}">'
             f'<b>{_e(T("bcl_j_" + j))}</b> — {_e(T("bcl_j_" + j + "_x"))}'
             f'</span></span>'
-            for j in ("documentee", "empirique", "theorique", "hypothese"))
+            for j in ("structurel", "documentee", "empirique", "theorique",
+                      "hypothese"))
         st.markdown(f'<div style="margin:2px 0 12px">{leg}</div>',
                     unsafe_allow_html=True)
 
@@ -814,7 +824,7 @@ def render(entete=True):
         lignes = []
         for e in sorted(graphe["aretes"],
                         key=lambda x: (x["just"], -x["force"])):
-            c = JUST_COULEUR[e["just"]]
+            c = JUST_COULEUR.get(e["just"], "#9aa4b5")
             rho = e.get("rho")
             contre = rho is not None and rho * e["signe"] < -0.3
             obs = ("—" if rho is None else _fmt(rho, 2, True))

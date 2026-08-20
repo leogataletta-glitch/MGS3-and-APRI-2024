@@ -134,6 +134,30 @@ TEXTES = {
     "oc_leg_b": {"en": "degrades", "fr": "dégrade"},
     "oc_leg_r": {"en": "return edge (loop)", "fr": "lien de retour (boucle)"},
     "oc_unite": {"en": "points of score (0–10)", "fr": "points de score (0-10)"},
+    "oc_force": {"en": "strength", "fr": "force"},
+    "oc_bareme_ech": {"en": "The five rungs", "fr": "Les cinq échelons"},
+    "oc_bareme_pl": {"en": "Ceiling by class of evidence",
+                     "fr": "Plafond par classe de connaissance"},
+    "oc_rel_t": {"en": "The links this wave travels along",
+                 "fr": "Les liens que cette vague emprunte"},
+    "oc_rel_vide": {"en": "No link carries anything at this step.",
+                    "fr": "Aucun lien ne porte quoi que ce soit à ce pas."},
+    "oc_bareme_t": {"en": "Where the strengths come from",
+                    "fr": "D'où viennent les forces"},
+    "oc_bareme_x": {
+        "en": "Every strength sits on one of five named rungs, and each class "
+              "of evidence has a ceiling: a hypothesis cannot weigh as much "
+              "as a measured relation, however obvious it looks to whoever "
+              "wrote it. The rung is chosen high within its class when the "
+              "mechanism is direct and first-order, low when it is mediated "
+              "or highly context-dependent.",
+        "fr": "Chaque force est posée sur l'un de cinq échelons nommés, et "
+              "chaque classe de connaissance a un plafond : une hypothèse ne "
+              "peut pas peser autant qu'une relation mesurée, même si elle "
+              "paraît évidente à celui qui l'écrit. Dans sa classe, "
+              "l'échelon haut va au mécanisme direct et de premier ordre, "
+              "l'échelon bas au mécanisme médié ou très variable selon le "
+              "contexte."},
     "oc_absent": {"en": "Causal graph unavailable.",
                   "fr": "Le graphe causal n'est pas disponible."},
 }
@@ -144,6 +168,21 @@ for _c, _v in TEXTES.items():
 def _e(t):
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
+
+
+def _nb(v):
+    """0.5 → « 0,50 » : la virgule décimale, et deux décimales toujours."""
+    return f"{v:.2f}".replace(".", ",")
+
+
+@st.cache_data(show_spinner=False)
+def _classes(lang):
+    """Les classes de justification et leur plafond, dans l'ordre décroissant."""
+    g = M.charger()
+    out = []
+    for c in (g.get("bareme") or {}).get("classes", []):
+        out.append({"max": c["max"], "lib": c.get(lang) or c.get("fr")})
+    return out
 
 
 @st.cache_data(show_spinner=False)
@@ -166,13 +205,27 @@ def _graphe(lang):
     A, ids, idx = M.matrice(g)
     noeuds = [{"id": n["id"], "nom": n.get(lang) or n.get("fr") or n["id"],
                "dim": n.get("dim", "")} for n in g["noeuds"]]
+    # CHAQUE ARÊTE EMPORTE SA JUSTIFICATION. La force posée dans le
+    # référentiel (`f`) et la classe de connaissance (`j`) voyagent avec le
+    # lien, en plus du poids mis à l'échelle qui sert au calcul (`w`). Sans
+    # elles, le lecteur voit une vague traverser un lien sans pouvoir demander
+    # d'où sort ce lien ni ce qu'il vaut — et c'est précisément la question
+    # qu'il faut pouvoir poser à un modèle posé à dire d'expert.
+    classes = {c["cle"]: c.get(lang) or c.get("fr")
+               for c in (g.get("bareme") or {}).get("classes", [])}
     aretes = []
     for a in g["aretes"]:
         if a["de"] in idx and a["vers"] in idx:
             aretes.append({"de": a["de"], "vers": a["vers"],
                            "w": round(float(A[idx[a["vers"]], idx[a["de"]]]),
-                                      6)})
+                                      6),
+                           "f": a.get("force"), "j": a.get("just", ""),
+                           "r": a.get("ref_" + lang) or a.get("ref_fr") or ""})
+    bareme = (g.get("bareme") or {}).get("echelons", [])
     return {"noeuds": noeuds, "aretes": aretes,
+            "bareme": [{"v": e["v"], "t": e.get(lang) or e.get("fr")}
+                       for e in bareme],
+            "classes": classes,
             "dims": {d: T(d) for d in sorted(COUL_DIM)}}
 
 
@@ -226,6 +279,17 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
  .li i{width:8px;height:8px;border-radius:50%;flex:none}
  .li b{margin-left:auto;font-variant-numeric:tabular-nums;font-size:12.5px}
  .note{font-size:12.5px;color:#6b7590;line-height:1.5;margin:9px 2px 0}
+ .rl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;padding:8px 0;
+     border-top:1px solid #eef2f7}
+ .rl:first-child{border-top:none}
+ .rl .p{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600}
+ .rl .p i{width:8px;height:8px;border-radius:50%;flex:none}
+ .rl .f{font-size:12px;color:#6b7590;font-variant-numeric:tabular-nums;
+        white-space:nowrap}
+ .rl .j{display:inline-block;font-size:10.5px;font-weight:700;
+        letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;
+        border-radius:999px;background:#eef2f7;color:#6b7590;margin-left:6px}
+ .rl .s{grid-column:2;font-size:12.5px;color:#6b7590;line-height:1.45}
  .ret{border-left:4px solid #b5451f;background:#fdf6f3;border-radius:0 10px
       10px 0;padding:9px 13px;font-size:13.5px;color:#3c4761;margin-top:10px}
  .ret b{color:#b5451f}
@@ -262,6 +326,8 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
   <div class="bloc"><h4>__L_MOUV__</h4><div id="mouv"></div></div>
   <div class="bloc"><h4>__L_CUMUL__</h4><div id="cumul"></div></div>
 </div>
+<div class="bloc" style="margin-top:14px"><h4>__L_REL__</h4>
+  <div id="rel"></div></div>
 <script>
 const D = __DONNEES__, L = __LIBELLES__, CD = __COUL_DIM__;
 const N = D.noeuds, E = D.aretes;
@@ -390,7 +456,9 @@ function dessiner(){
     }
     const coul = on ? (flux>0?HAUSSE:BAISSE) : "#dde5ee";
     s.push(`<path class="ar${on?" on":""}${retour?" rt":""}" d="${d}" `+
-           `stroke="${coul}"><title>${nom(e.de)} → ${nom(e.vers)}</title></path>`);
+           `stroke="${coul}"><title>${nom(e.de)} → ${nom(e.vers)}\n`+
+           `${L.force} ${(e.f||0).toFixed(2).replace('.',',')} · ${cls(e.j)}`+
+           `${e.r ? "\n" + e.r : ""}</title></path>`);
   }
 
   /* nœuds */
@@ -430,6 +498,10 @@ function teinte(hex, t){
   return `rgb(${f(r)},${f(g)},${f(b)})`;
 }
 function noeud(id){ return N[IDX[id]]; }
+/* La classe est rendue par son libellé traduit, tronqué à son premier mot :
+   « Documentée — établie par la littérature » devient « Documentée ». Le
+   texte entier est dans le volet du barème, sous le graphique. */
+function cls(j){ const t=(D.classes||{})[j]||j||""; return t.split(" —")[0]; }
 function nom(id){ return noeud(id).nom; }
 /* LA TRONCATURE DÉPEND DE LA PLACE RESTANTE : un nœud qui porte une valeur
    n'a plus toute la boîte pour son nom, et les deux se chevauchaient. */
@@ -455,6 +527,24 @@ function panneaux(cum, vk){
   for (let j=2; j<vg.length; j++)
     if (Math.abs(vg[j][IDX[src]]) > SEUIL){ kr = j; break; }
   const meme = kr && (vg[kr][IDX[src]] * amp > 0);
+  /* LES LIENS EMPRUNTÉS, AVEC CE QU'ILS VALENT ET D'OÙ ILS SORTENT. C'est la
+     réponse à « pourquoi 0,50 et pas 0,30 » posée au moment exact où la
+     question se pose : quand on voit la vague passer par ce lien. */
+  const passages = E.map(e=>({e, flux:(vg[k-1]?vg[k-1][IDX[e.de]]:0)*e.w}))
+    .filter(x=>Math.abs(x.flux)>SEUIL)
+    .sort((a,b)=>Math.abs(b.flux)-Math.abs(a.flux)).slice(0,5);
+  document.getElementById("rel").innerHTML = (k>0 && passages.length)
+    ? passages.map(({e,flux})=>
+        `<div class="rl"><div class="f">${L.force} `+
+        `${(e.f||0).toFixed(2).replace('.',',')}`+
+        `<span class="j">${cls(e.j)}</span></div>`+
+        `<div class="p"><i style="background:${flux>0?HAUSSE:BAISSE}"></i>`+
+        `${nom(e.de)} → ${nom(e.vers)}`+
+        `<span style="margin-left:auto;color:${flux>0?HAUSSE:BAISSE}">`+
+        `${sig(flux)}</span></div>`+
+        (e.r ? `<div class="s">${e.r}</div>` : "")+`</div>`).join("")
+    : `<p class="note" style="margin:0">${L.rel_vide}</p>`;
+
   document.getElementById("ret").innerHTML = kr
     ? `<div class="ret"><b>${L.retour_t}.</b> ` +
       L.retour.replace("{k}", kr)
@@ -513,6 +603,7 @@ def _html(d, lang):
         "amplifie": T("oc_amplifie"), "attenue": T("oc_attenue"),
         "sans_retour": T("oc_sans_retour"), "hors": T("oc_hors"),
         "rien": T("oc_rien"), "lire": T("oc_lire"), "pause": T("oc_pause"),
+        "rel_vide": T("oc_rel_vide"), "force": T("oc_force"),
     }
     depart = DEPART if any(n["id"] == DEPART for n in d["noeuds"]) \
         else d["noeuds"][0]["id"]
@@ -531,6 +622,7 @@ def _html(d, lang):
             .replace("__L_DISTRIB__", _e(T("oc_distribue")))
             .replace("__L_MOUV__", _e(T("oc_mouv_t")))
             .replace("__L_CUMUL__", _e(T("oc_cumul_t")))
+            .replace("__L_REL__", _e(T("oc_rel_t")))
             .replace("__L_LEGH__", _e(T("oc_leg_h")))
             .replace("__L_LEGB__", _e(T("oc_leg_b")))
             .replace("__L_LEGR__", _e(T("oc_leg_r")))
@@ -561,5 +653,33 @@ def render(entete=True):
     # LA HAUTEUR EST FIXE ET GÉNÉREUSE. Une iframe trop courte coupe le panneau
     # du bas sans rien dire ; personne ne devine qu'il faut faire défiler à
     # l'intérieur d'un cadre qui n'a pas de barre.
-    components.html(_html(d, lang), height=1010, scrolling=False)
+    components.html(_html(d, lang), height=1150, scrolling=False)
     st.caption(T("oc_avert"))
+
+    # LE BARÈME EST REPLIÉ, MAIS IL EST LÀ. Il ne se lit pas en même temps que
+    # l'onde ; il se lit quand on conteste une valeur, et ce jour-là il doit
+    # être sous la main plutôt que dans une annexe.
+    with st.expander(T("oc_bareme_t")):
+        st.markdown(f'<p style="font-size:15px;line-height:1.6;color:{ENCRE2};'
+                    f'text-align:left;max-width:92ch">{T("oc_bareme_x")}</p>',
+                    unsafe_allow_html=True)
+        lignes = "".join(
+            f'<tr><td style="padding:6px 14px 6px 0;font-weight:700;'
+            f'font-variant-numeric:tabular-nums;white-space:nowrap;'
+            f'color:{ENCRE}">{_e(_nb(e["v"]))}</td>'
+            f'<td style="padding:6px 0;color:{ENCRE2}">{_e(e["t"])}</td></tr>'
+            for e in d.get("bareme") or [])
+        plafonds = "".join(
+            f'<tr><td style="padding:6px 14px 6px 0;font-weight:700;'
+            f'font-variant-numeric:tabular-nums;white-space:nowrap;'
+            f'color:{ENCRE}">{_e(_nb(c["max"]))}</td>'
+            f'<td style="padding:6px 0;color:{ENCRE2}">{_e(c["lib"])}</td>'
+            f'</tr>' for c in _classes(lang))
+        st.markdown(
+            f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:26px">'
+            f'<div><div class="titre-bloc">{_e(T("oc_bareme_ech"))}</div>'
+            f'<table style="font-size:14px;border-collapse:collapse">'
+            f'{lignes}</table></div>'
+            f'<div><div class="titre-bloc">{_e(T("oc_bareme_pl"))}</div>'
+            f'<table style="font-size:14px;border-collapse:collapse">'
+            f'{plafonds}</table></div></div>', unsafe_allow_html=True)
