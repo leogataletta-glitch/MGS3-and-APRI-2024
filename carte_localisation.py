@@ -92,6 +92,8 @@ TEXTES = {
     "cl_rs": {"en": "Secondary roads", "fr": "Routes secondaires"},
     "cl_paysage": {"en": "Grand'Anse pilot landscape",
                    "fr": "Paysage pilote de la Grand'Anse"},
+    "cl_paysage_sud": {"en": "Sud pilot landscape",
+                       "fr": "Paysage pilote du Sud"},
     "cl_sections": {"en": "Communal sections surveyed",
                     "fr": "Sections communales étudiées"},
     "cl_villes": {"en": "Reference towns", "fr": "Villes-repères"},
@@ -132,7 +134,12 @@ COULEURS = {
     "riv": "#2a78d6",
     "rp": "#c1521f",
     "rs": "#d98b57",
+    # LES DEUX PAYSAGES PILOTES PARTAGENT LA MÊME TEINTE, et c'est voulu : ce
+    # sont deux exemplaires du même objet, pas deux catégories. La légende les
+    # distingue par leur nom, la carte par leur position — ils sont à cent
+    # kilomètres l'un de l'autre.
     "paysage": "#7048b6",
+    "paysage_sud": "#7048b6",
     "sections": "#1c6349",
     "villes": "#101728",
     "pts_l": "#1f6fbf",
@@ -306,10 +313,16 @@ COUCHES.ap = polys(D.aires_protegees, 'ap',
 COUCHES.riv = lignes(D.rivieres, {color:C.riv, weight:1.3, opacity:.75});
 COUCHES.rp = lignes(D.routes_p, {color:C.rp, weight:2.4, opacity:.9});
 COUCHES.rs = lignes(D.routes_s, {color:C.rs, weight:1.5, opacity:.85});
-COUCHES.paysage = polys(D.paysage_ga, 'paysage',
-  {color:C.paysage, weight:2, dashArray:'4 4', fillColor:C.paysage,
-   fillOpacity:.08},
-  p => pop(L_.paysage_t, '<b>' + L_.paysage + '</b>'));
+const STYLE_PAYSAGE = {color:C.paysage, weight:2, dashArray:'4 4',
+                       fillColor:C.paysage, fillOpacity:.08};
+COUCHES.paysage = polys(D.paysage_ga, 'paysage', STYLE_PAYSAGE,
+  p => pop(L_.paysage_t, '<b>' + L_.paysage + '</b>' +
+      (p && p.NAME ? '<br><span style="color:#8a93a5">'+p.NAME+'</span>' : '')));
+/* Le paysage du Sud est fait de TROIS arrondissements : la couche en porte
+   trois polygones, et chacun donne son nom au clic. */
+COUCHES.paysage_sud = polys(D.paysage_sud, 'paysage_sud', STYLE_PAYSAGE,
+  p => pop(L_.paysage_t, '<b>' + L_.paysage_sud + '</b>' +
+      (p && p.NAME ? '<br><span style="color:#8a93a5">'+p.NAME+'</span>' : '')));
 COUCHES.sections = polys(D.sections, 'sections',
   {color:'#ffffff', weight:1.6, fillColor:C.sections, fillOpacity:.34},
   function(p){
@@ -403,8 +416,8 @@ function basculer(cle, on){
 /* L'ORDRE DE SUPERPOSITION EST REFAIT À CHAQUE ALLUMAGE. Leaflet empile les
    couches dans l'ordre où on les ajoute : sans cela, rallumer les communes
    après les points d'entretien couvrait les points d'un aplat. */
-const ORDRE = ['ombrage','paysage','ap','sections','communes','deps','pays',
-               'riv','rs','rp','pts_l','pts_m','villes'];
+const ORDRE = ['ombrage','paysage','paysage_sud','ap','sections','communes',
+               'deps','pays','riv','rs','rp','pts_l','pts_m','villes'];
 function reordonner(){
   ORDRE.forEach(function(k){
     const c = COUCHES[k];
@@ -448,6 +461,9 @@ def _groupes(d):
             {"cle": "sections", "titre": T("cl_sections"), "on": True,
              "nb": n("sections"),
              "sym": {"type": "poly", "c": COULEURS["sections"]}},
+            {"cle": "paysage_sud", "titre": T("cl_paysage_sud"),
+             "nb": n("paysage_sud"),
+             "sym": {"type": "poly", "c": COULEURS["paysage_sud"], "d": True}},
             {"cle": "paysage", "titre": T("cl_paysage"), "nb": n("paysage_ga"),
              "sym": {"type": "poly", "c": COULEURS["paysage"], "d": True}},
             {"cle": "villes", "titre": T("cl_villes"), "on": True,
@@ -490,7 +506,8 @@ def html(d):
         "dep": T("cl_pop_dep"), "commune": T("cl_pop_commune"),
         "ap": T("cl_pop_ap"), "ville": T("cl_pop_ville"),
         "section": T("cl_pop_section"), "point": T("cl_pop_point"),
-        "paysage": T("cl_paysage"), "paysage_t": T("cl_g_etude"),
+        "paysage": T("cl_paysage"), "paysage_sud": T("cl_paysage_sud"),
+        "paysage_t": T("cl_g_etude"),
     }
     return (GABARIT
             .replace("__LEAFLET__", _leaflet())
