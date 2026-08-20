@@ -302,7 +302,7 @@ def _pastille(texte, actif):
 
 def _titre_partie(texte):
     return (f'<div style="display:flex;align-items:center;gap:10px;'
-            f'margin:22px 0 12px"><span style="font-family:Outfit,Inter,'
+            f'margin:22px 0 12px"><span style="font-family:Inter,'
             f'system-ui,sans-serif;font-size:12px;font-weight:700;'
             f'letter-spacing:.08em;text-transform:uppercase;color:#1a6bb0;'
             f'background:#eaf3fb;padding:5px 12px;border-radius:999px">'
@@ -344,7 +344,7 @@ def _fiche_html(f):
         f'<div style="font-size:11.5px;letter-spacing:.07em;'
         f'text-transform:uppercase;color:#1a6bb0;font-weight:700">'
         f'{_e(T("o_f_organisation"))}</div>'
-        f'<div style="font-family:Outfit,Inter,system-ui,sans-serif;'
+        f'<div style="font-family:Inter,system-ui,sans-serif;'
         f'font-size:23px;font-weight:700;color:#101728;line-height:1.25;'
         f'margin-top:3px">{_e(f["nom"])}</div></div>')
 

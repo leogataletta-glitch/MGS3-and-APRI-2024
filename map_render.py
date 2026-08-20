@@ -558,7 +558,7 @@ def cartouche_html(libelle, valeur, unite='%', sous_titre='',
             txt = f'{int(v):,}'.replace(',', '\u202f')
         else:
             txt = fmt_val(v)
-        return (f'<div style="font-family:Outfit,Inter,system-ui,sans-serif;'
+        return (f'<div style="font-family:Inter,system-ui,sans-serif;'
                 f'font-size:{taille}px;font-weight:600;color:{INK};'
                 f'line-height:1.05;font-variant-numeric:tabular-nums;'
                 f'letter-spacing:-0.02em;overflow-wrap:break-word;'

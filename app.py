@@ -174,7 +174,13 @@ if not check_password():
 # blocs de texte pénibles à lire.
 st.markdown(("""
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+  /* UNE SEULE FAMILLE, ET C'EST UN CHOIX DE SOBRIÉTÉ. Les titres étaient en
+     Outfit, une géométrique aux formes rondes qui donnait au site un air de
+     page produit ; le corps était en Inter. Deux dessins qui se répondaient
+     mal, et un contraste qui attirait l'œil sur la police au lieu du chiffre.
+     Inter porte maintenant tout : ses chiffres sont tabulaires, ses formes
+     neutres, et un observatoire n'a pas à avoir de voix typographique. */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
   /* ------------------------------------------------------------------
      Parti pris : une page web, pas un document. Fond teinté, contenu
@@ -249,7 +255,7 @@ st.markdown(("""
 
   /* --- titres --- */
   h1, h2, h3 {
-    font-family: "Outfit", "Inter", system-ui, sans-serif !important;
+    font-family: "Inter", system-ui, -apple-system, sans-serif !important;
     color: var(--encre); letter-spacing: -0.02em;
   }
   h1 { font-weight: 700 !important; font-size: 2.6rem !important;
@@ -309,7 +315,7 @@ st.markdown(("""
   /* --- l'entête de section, en pilule colorée --- */
   .titre-bloc {
     display: inline-flex; align-items: center; gap: 9px;
-    font-family: "Outfit", sans-serif; font-weight: 700; font-size: 13px;
+    font-family: "Inter", system-ui, sans-serif; font-weight: 700; font-size: 13px;
     letter-spacing: .06em; text-transform: uppercase;
     color: var(--accent); background: #eaf5f0;
     padding: 6px 13px; border-radius: 999px; margin: 0 0 4px;
@@ -363,7 +369,7 @@ st.markdown(("""
   /* --- les trois entrées : grandes tuiles en relief --- */
   div[data-testid="stButton"] > button {
     height: 92px; border-radius: 16px; border: 1.5px solid var(--bord);
-    font-family: "Outfit", sans-serif !important;
+    font-family: "Inter", system-ui, sans-serif !important;
     font-size: 18px !important; font-weight: 600 !important;
     line-height: 1.3; white-space: normal; padding: 12px 20px;
     background: var(--carte); box-shadow: var(--ombre);
@@ -473,7 +479,7 @@ st.markdown(("""
   }
   .apri-bloc-nom { min-width: 0; }
   .apri-nom {
-    font-family: "Outfit", sans-serif; font-size: 42px; font-weight: 700;
+    font-family: "Inter", system-ui, sans-serif; font-size: 42px; font-weight: 700;
     color: #ffffff; letter-spacing: .01em; line-height: 1;
   }
   .apri-filet {
@@ -553,7 +559,7 @@ st.markdown(("""
     display: block !important;
   }
   section[data-testid="stSidebar"] div[data-testid="stButton"] > button p {
-    font-family: "Outfit", sans-serif !important;
+    font-family: "Inter", system-ui, sans-serif !important;
     font-size: 15.5px !important; font-weight: 500 !important;
     line-height: 1.35 !important;
     color: rgba(255,255,255,.82) !important;
@@ -917,7 +923,7 @@ st.markdown(("""
                 background .16s ease, border-color .16s ease;
   }
   .stTabs [data-baseweb="tab-list"] button[data-baseweb="tab"] p {
-    font-family: "Outfit", sans-serif !important;
+    font-family: "Inter", system-ui, sans-serif !important;
     font-size: 15px !important; font-weight: 600 !important;
     color: var(--encre-2) !important; margin: 0;
   }

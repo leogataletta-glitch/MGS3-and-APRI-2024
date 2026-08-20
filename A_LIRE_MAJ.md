@@ -47,3 +47,32 @@ filtres a été ajoutée pour que la rotation les couvre tous.
 
 - ouvert au navigateur : le bouton de l'écran 1 conduit bien à « Le
   territoire », carte interactive chargée, aucune erreur au journal.
+
+---
+
+# Une seule police pour tout le site
+
+## Trois fichiers de plus, MÊME commit — À LA RACINE
+
+| Fichier | Où le déposer |
+|---|---|
+| `app.py` | **racine** — modifié |
+| `map_render.py` | **racine** — modifié |
+| `ocb_page.py` | **racine** — modifié |
+
+Les titres étaient en **Outfit**, une géométrique aux formes rondes, et le
+corps en **Inter**. Deux dessins qui se répondaient mal : le contraste attirait
+l'œil sur la police plutôt que sur le chiffre, et donnait au site un air de
+page produit.
+
+**Inter porte maintenant tout** — titres, corps, cartouches, cartes,
+graphiques. Ses chiffres sont tabulaires, donc les colonnes s'alignent ; ses
+formes sont neutres. Un observatoire n'a pas à avoir de voix typographique.
+
+Une seule famille à télécharger au lieu de deux : la page s'ouvre aussi un peu
+plus vite sur une connexion lente.
+
+*Si vous préférez autre chose, c'est un mot à changer : **IBM Plex Sans** est
+plus institutionnelle et un peu technique, **Source Sans 3** est la plus
+discrète des quatre, très proche d'un rapport imprimé. La comparaison est dans
+la conversation.*
