@@ -44,6 +44,7 @@ import note_bailleurs
 import ondes_choc
 import ocb_page
 import radar_accueil
+import rapport_donateur
 import resilience_page
 import saillants_page
 import systeme_page
@@ -1057,6 +1058,11 @@ TEXTES_NAV = {
     "bcl_vue_analyse": {"en": "Loops, levers, total effect",
                         "fr": "Boucles, leviers, effet total"},
     "mode_bailleurs": {"en": "Donor briefing", "fr": "Note aux bailleurs"},
+    # LE RAPPORT ET LA NOTE NE FONT PAS LE MÊME MÉTIER. La note tient sur une
+    # page et se cite ; le rapport se lit en six chapitres et raconte ce que
+    # l'argent a produit comme connaissance. L'un est un extrait, l'autre le
+    # récit dont il est extrait.
+    "mode_rapport": {"en": "Donor report", "fr": "Rapport donateur"},
     "nav_titre": {"en": "Navigation", "fr": "Navigation"},
     "nav_filtres_rapides": {"en": "Quick filters", "fr": "Filtres rapides"},
     "f_reinit_long": {"en": "Reset the filters",
@@ -1071,7 +1077,7 @@ TEXTES_NAV = {
 # et qu'il est toujours du voyage.
 _RENOMMEES = ("mode_accueil", "mode_methodo", "mode_dimensions",
               "mode_synthese", "mode_actions", "mode_donnees",
-              "mode_boucles", "mode_croisement")
+              "mode_boucles", "mode_croisement", "mode_rapport")
 for _c, _v in TEXTES_NAV.items():
     if _c in _RENOMMEES:
         i18n.DICO[_c] = _v
@@ -1185,6 +1191,7 @@ MODE_SYNTHESE = "synthese"
 MODE_BOUCLES = "boucles"
 MODE_CROISEMENT = "croisement"
 MODE_BAILLEURS = "bailleurs"
+MODE_RAPPORT = "rapport"
 # LA PAGE D'ACCUEIL, ET C'EST ELLE QUI OUVRE LE SITE. On arrivait jusqu'ici
 # sur le cadre méthodologique : avant d'apprendre quoi que ce soit du
 # territoire, on apprenait comment on le mesure. C'est l'ordre d'un rapport,
@@ -1204,6 +1211,7 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      MODE_SYNTHESE: T("mode_synthese"),
                      MODE_CROISEMENT: T("mode_croisement"),
                      MODE_BAILLEURS: T("mode_bailleurs"),
+                     MODE_RAPPORT: T("mode_rapport"),
                      MODE_PORTAIL: T("mode_portail"),
                      MODE_TRAJECTOIRES: T("mode_trajectoires")})
 
@@ -1285,6 +1293,10 @@ _NAV = [
     # Elle est la sortie de tout ce qui précède : elle ne se comprend qu'après
     # les fiches, dont elle reprend les chiffres, et elle doit rester au-dessus
     # des téléchargements, qui ferment toujours la marche.
+    # LE RAPPORT PRÉCÈDE LA NOTE, PARCE QU'IL LA FONDE. Six chapitres qui
+    # partent des volumes de terrain et finissent par ce qui reste après le
+    # projet ; la note qui suit en est la page arrachée.
+    (MODE_RAPPORT, "radar"),
     (MODE_BAILLEURS, "cible"),
     (MODE_DONNEES, "telecharger"),
 ]
@@ -1547,6 +1559,12 @@ if app_mode == MODE_ACTIONS:
     # Les anciennes pistes de travail, écrites avant cette analyse, ont été
     # retirées : elles ne commandaient plus rien et brouillaient la page.
     interventions_page.render()
+
+if app_mode == MODE_RAPPORT:
+    # Aucun filtre non plus, et pour la même raison que la note : un rapport
+    # se cite. Les chiffres y sont ceux de l'enquête entière, et chacun porte
+    # son registre — donnée observée, interprétation, implication.
+    rapport_donateur.render()
 
 if app_mode == MODE_BAILLEURS:
     # La page de restitution : constats calculés, réponses classées par le
