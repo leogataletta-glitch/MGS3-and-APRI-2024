@@ -8,7 +8,7 @@
   "metrique": "Households (%) using improved and non-shared sanitation facilities (flush toilets connected to sewer or septic systems, ventilated improved pit latrines, pit latrines with slab, and composting toilets). Open defecation, pit latrines without slab, buckets and open drains are classified as non-improved.",
   "sens": "valeur haute = score haut",
   "calculable": "approx",
-  "note": "Q31 (réponses multiples) : installations améliorées. Le critère « non partagé » (Q32) n'est pas croisé faute de tableau croisé — valeur légèrement surestimée.",
+  "note": "Q31 (réponses multiples) : installations améliorées. Le critère « non partagé » (Q32) n'est pas croisé faute de tableau croisé, valeur légèrement surestimée.",
   "question": "Type de toilettes habituellement utilisées par le ménage",
   "modalites": "Toilettes à chasse d'eau raccordées à des égouts/fosses septiques + Latrines à fosse ventilée améliorée + Latrines à fosse sèche avec dalle + Latrines à fosse avec dalle + Toilettes à compostage",
   "valeurs": {
@@ -110,7 +110,7 @@
   "bareme_absent": false,
   "bareme_inverse": false,
   "indicateur_fr": "Services d'assainissement gérés en sécurité (ODD 6.2.1.a)",
-  "expl_en": "This counts households whose toilet is of a type that safely keeps people away from waste — a flush toilet connected to a sewer or septic tank, a ventilated improved pit latrine, a latrine with a slab, or a composting toilet. Households were only asked which type of toilet they usually use, so what is actually counted here is the quality of the facility, not whether it is shared with other households. Where sanitation fails, the first heavy rain turns human waste into an epidemic risk for the whole area.",
+  "expl_en": "This counts households whose toilet is of a type that safely keeps people away from waste, a flush toilet connected to a sewer or septic tank, a ventilated improved pit latrine, a latrine with a slab, or a composting toilet. Households were only asked which type of toilet they usually use, so what is actually counted here is the quality of the facility, not whether it is shared with other households. Where sanitation fails, the first heavy rain turns human waste into an epidemic risk for the whole area.",
   "expl_fr": "On compte ici les ménages dont les toilettes isolent réellement les personnes des excréments : chasse d'eau reliée à un égout ou à une fosse septique, latrine à fosse ventilée améliorée, latrine avec dalle ou toilette à compostage. La question posée portait seulement sur le type de toilettes habituellement utilisé : ce qui est compté ici est donc la qualité de l'équipement, sans savoir s'il est partagé avec d'autres ménages. Quand l'assainissement est défaillant, la première grosse pluie transforme les excréments en risque épidémique pour tout le territoire."
  },
  {
@@ -122,7 +122,7 @@
   "metrique": "Households (%) using improved water sources (piped water, boreholes, protected wells, protected springs, rainwater, kiosks and packaged water) and requiring ≤30 minutes round trip to collect drinking water. Non-improved sources include unprotected wells, unprotected springs and surface water.",
   "sens": "valeur haute = score haut",
   "calculable": "approx",
-  "note": "Q33 (réponses multiples) : sources améliorées. Le critère « ≤ 30 min aller-retour » (Q34) n'est pas croisé — valeur surestimée.",
+  "note": "Q33 (réponses multiples) : sources améliorées. Le critère « ≤ 30 min aller-retour » (Q34) n'est pas croisé, valeur surestimée.",
   "question": "Source d'eau de boisson",
   "modalites": "Eau de réseau + Forages ou puits tubulaires + Puits creusés protégés + Sources protégées + Eau de pluie + Kiosques à eau + Eau en bouteille, livrée ou en sachet",
   "valeurs": {
@@ -224,7 +224,7 @@
   "bareme_absent": false,
   "bareme_inverse": false,
   "indicateur_fr": "Accès à une eau de boisson améliorée (ODD 6.1.1)",
-  "expl_en": "This counts households that drink water from a source designed to stay clean — piped water, a borehole, a protected well or spring, rainwater, a water kiosk, or packaged water. The full definition also requires the round trip to fetch water to take no more than thirty minutes, but the survey only asked about the source, so travel time is not part of what is counted here. Safe water keeps disease down and frees the hours, mostly women's and children's, that fetching water would otherwise swallow.",
+  "expl_en": "This counts households that drink water from a source designed to stay clean, piped water, a borehole, a protected well or spring, rainwater, a water kiosk, or packaged water. The full definition also requires the round trip to fetch water to take no more than thirty minutes, but the survey only asked about the source, so travel time is not part of what is counted here. Safe water keeps disease down and frees the hours, mostly women's and children's, that fetching water would otherwise swallow.",
   "expl_fr": "Sont comptés les ménages qui boivent une eau provenant d'une source conçue pour rester propre : réseau, forage, puits ou source protégés, eau de pluie, kiosque ou eau conditionnée. La définition complète exige en plus que l'aller-retour pour puiser l'eau prenne moins de trente minutes, mais l'enquête n'a interrogé que la source : le temps de trajet n'entre donc pas dans ce qui est compté ici. Une eau sûre limite les maladies et libère un temps considérable, celui des femmes et des enfants avant tout."
  },
  {
@@ -338,8 +338,8 @@
   "bareme_absent": false,
   "bareme_inverse": false,
   "indicateur_fr": "Accès à l'électricité (ODD 7.1.1)",
-  "expl_en": "This counts households whose main lighting comes from the public grid or from solar panels. Stopgap solutions — rechargeable bulbs, kerosene lamps, candles, private generators — are deliberately excluded, because they signal the absence of a stable supply rather than access to one. Electricity is what allows food to be kept, clinics to work at night, water to be pumped and phones to be charged when a crisis hits.",
-  "expl_fr": "On compte les ménages dont l'éclairage principal vient du réseau public (EDH) ou de panneaux solaires. Les solutions de dépannage — ampoules rechargeables, lampes à pétrole, bougies, groupes électrogènes — sont volontairement exclues : elles traduisent l'absence d'une alimentation stable plutôt qu'un accès. L'électricité conditionne la conservation des aliments, le fonctionnement des soins la nuit, le pompage de l'eau et la recharge des téléphones en cas de crise."
+  "expl_en": "This counts households whose main lighting comes from the public grid or from solar panels. Stopgap solutions (rechargeable bulbs, kerosene lamps, candles, private generators) are deliberately excluded, because they signal the absence of a stable supply rather than access to one. Electricity is what allows food to be kept, clinics to work at night, water to be pumped and phones to be charged when a crisis hits.",
+  "expl_fr": "On compte les ménages dont l'éclairage principal vient du réseau public (EDH) ou de panneaux solaires. Les solutions de dépannage (ampoules rechargeables, lampes à pétrole, bougies, groupes électrogènes) sont volontairement exclues : elles traduisent l'absence d'une alimentation stable plutôt qu'un accès. L'électricité conditionne la conservation des aliments, le fonctionnement des soins la nuit, le pompage de l'eau et la recharge des téléphones en cas de crise."
  },
  {
   "ligne": 6,
@@ -566,7 +566,7 @@
   "bareme_absent": false,
   "bareme_inverse": false,
   "indicateur_fr": "Couverture par un réseau mobile (ODD 9.c.1)",
-  "expl_en": "This counts households that can pick up a mobile signal at home, including a signal that comes and goes. Nothing was asked about how good or how affordable the service is — only whether a signal reaches the house. Without it a storm warning never arrives, families cannot check on each other, and no relief operation can be coordinated.",
+  "expl_en": "This counts households that can pick up a mobile signal at home, including a signal that comes and goes. Nothing was asked about how good or how affordable the service is, only whether a signal reaches the house. Without it a storm warning never arrives, families cannot check on each other, and no relief operation can be coordinated.",
   "expl_fr": "On compte les ménages qui captent un signal de téléphonie mobile à domicile, y compris lorsqu'il est intermittent. Rien n'a été demandé sur la qualité ni sur le coût du service : seule compte l'existence d'un signal jusqu'à la maison. Sans lui, une alerte cyclonique ne parvient pas, les familles ne peuvent pas prendre de nouvelles et aucun secours ne se coordonne."
  },
  {
@@ -895,7 +895,7 @@
   "sens": "valeur haute = score haut",
   "calculable": "approx",
   "note": "Proxy faible : sensibilisation aux abris d'urgence, pas existence ni caractère opérationnel d'un abri.",
-  "question": "Sensibilisé — Où et comment trouver les abris d'urgence / se mettre à l'abri",
+  "question": "Sensibilisé, Où et comment trouver les abris d'urgence / se mettre à l'abri",
   "modalites": "Oui",
   "valeurs": {
    "Anse à Drick": 23.33,
@@ -996,7 +996,7 @@
   "bareme_absent": false,
   "bareme_inverse": false,
   "indicateur_fr": "Disponibilité d'abris d'urgence opérationnels",
-  "expl_en": "The indicator is meant to record whether a community has at least one emergency shelter that actually works. Shelters could not be checked on the ground, so what is counted here is the share of households saying they have been told where to go and how to take shelter. It therefore measures whether the evacuation instruction has reached people — without which even an existing shelter stays empty.",
+  "expl_en": "The indicator is meant to record whether a community has at least one emergency shelter that actually works. Shelters could not be checked on the ground, so what is counted here is the share of households saying they have been told where to go and how to take shelter. It therefore measures whether the evacuation instruction has reached people, without which even an existing shelter stays empty.",
   "expl_fr": "L'indicateur vise l'existence, dans la communauté, d'au moins un abri d'urgence réellement opérationnel. Les bâtiments n'ayant pas pu être vérifiés sur le terrain, ce qui est compté ici est la part des ménages déclarant avoir été sensibilisés sur où et comment se mettre à l'abri. On mesure donc la diffusion de la consigne d'évacuation, sans laquelle un abri, même existant, reste inutilisé."
  },
  {
@@ -1123,7 +1123,7 @@
   "sens": "valeur haute = score haut",
   "calculable": "oui",
   "note": "Base : foyers ayant des enfants scolarisés en primaire.",
-  "question": "Temps à pied jusqu'à l'école — section primaire (aller simple)",
+  "question": "Temps à pied jusqu'à l'école, section primaire (aller simple)",
   "modalites": "Moins de 15 min + Entre 15 et 30 min",
   "valeurs": {
    "Anse à Drick": 17.5,
@@ -1238,7 +1238,7 @@
   "calculable": "oui",
   "note": "Correspondance exacte : seuls les deux modes de collecte comptent comme gestion adéquate.",
   "question": "Mode d'élimination des déchets solides",
-  "modalites": "Collecte — service public + Collecte — service privé",
+  "modalites": "Collecte (service public + Collecte) service privé",
   "valeurs": {
    "Anse à Drick": 0.0,
    "Barbois": 0.0,
@@ -1714,7 +1714,7 @@
   "metrique": "Households (%) participation in disaster preparedness activities, including drills or awareness meetings on shelters, contingency stocks and document protection, over the past 12 months.",
   "sens": "valeur haute = score haut",
   "calculable": "approx",
-  "note": "Q66 exercice de simulation (12 mois). L'union avec Q67-Q69 n'est pas croisée — valeur sous-estimée par rapport à « au moins une action de préparation ».",
+  "note": "Q66 exercice de simulation (12 mois). L'union avec Q67-Q69 n'est pas croisée, valeur sous-estimée par rapport à « au moins une action de préparation ».",
   "question": "A participé à un exercice de simulation (12 derniers mois)",
   "modalites": "Oui",
   "valeurs": {
@@ -2158,7 +2158,7 @@
   "bareme_absent": false,
   "bareme_inverse": false,
   "indicateur_fr": "Participation à la gouvernance locale",
-  "expl_en": "This counts households with a member sitting on a body that helps run local affairs — a management committee, a watch committee, a local association. The point is no longer attending but holding a seat where decisions are made. These bodies are the ones that organise a response in the first hours after a shock, long before outside help arrives.",
+  "expl_en": "This counts households with a member sitting on a body that helps run local affairs, a management committee, a watch committee, a local association. The point is no longer attending but holding a seat where decisions are made. These bodies are the ones that organise a response in the first hours after a shock, long before outside help arrives.",
   "expl_fr": "Sont comptés les ménages dont un membre siège dans une instance qui participe à la conduite des affaires locales : comité de gestion, comité de vigilance, association locale. Il ne s'agit plus d'assister, mais d'occuper une place où se prennent les décisions. Ce sont ces instances qui organisent la réponse dans les premières heures d'un choc, bien avant toute aide extérieure."
  },
  {
@@ -2535,7 +2535,7 @@
   "sens": "valeur haute = score bas",
   "calculable": "approx",
   "note": "Proxy : absence de stock de contingence familiale. La théorie vise un plan d'urgence communautaire, non interrogé.",
-  "question": "Sensibilisé — Comment établir un stock de contingence familiale",
+  "question": "Sensibilisé, Comment établir un stock de contingence familiale",
   "modalites": "Non",
   "valeurs": {
    "Anse à Drick": 74.38,
@@ -2648,8 +2648,8 @@
   "metrique": "Assesses vegetation activity during the most limiting season by comparing dry-season NDVI to a long-term baseline.",
   "sens": null,
   "calculable": "oui",
-  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas — la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge.",
-  "question": "Imagerie satellitaire — Sentinel-2 niveau 2A",
+  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas, la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge.",
+  "question": "Imagerie satellitaire, Sentinel-2 niveau 2A",
   "modalites": "",
   "valeurs": {
    "Anse à Drick": 4.28,
@@ -2754,7 +2754,7 @@
   "expl_fr": "",
   "unite": "%",
   "source": "satellite",
-  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down — the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age."
+  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down, the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age."
  },
  {
   "ligne": 34,
@@ -2765,8 +2765,8 @@
   "metrique": "Evaluates the capacity of vegetation and soils to retain moisture during the dry season, relative to long term NDMI baseline conditions",
   "sens": null,
   "calculable": "oui",
-  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas — la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. Le NDMI tourne autour de 0,08 : un écart absolu minuscule y devient une variation relative importante. Le sens du mouvement est juste, son ampleur est amplifiée par un dénominateur proche de zéro. La variation calculée sur l'indice remis à l'échelle [0, 1] est donnée dans le fichier de données sous `var_ndmi_stab`, pour la mesure sans l'amplification.",
-  "question": "Imagerie satellitaire — Sentinel-2 niveau 2A",
+  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas, la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. Le NDMI tourne autour de 0,08 : un écart absolu minuscule y devient une variation relative importante. Le sens du mouvement est juste, son ampleur est amplifiée par un dénominateur proche de zéro. La variation calculée sur l'indice remis à l'échelle [0, 1] est donnée dans le fichier de données sous `var_ndmi_stab`, pour la mesure sans l'amplification.",
+  "question": "Imagerie satellitaire, Sentinel-2 niveau 2A",
   "modalites": "",
   "valeurs": {
    "Anse à Drick": 20.86,
@@ -2871,7 +2871,7 @@
   "expl_fr": "",
   "unite": "%",
   "source": "satellite",
-  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down — the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. NDMI sits around 0.08: a tiny absolute change becomes a large relative one. The direction is right, the magnitude is amplified by a near-zero denominator. The change computed on the index rescaled to [0, 1] is given in the data file under `var_ndmi_stab`, for the measurement without the amplification."
+  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down, the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. NDMI sits around 0.08: a tiny absolute change becomes a large relative one. The direction is right, the magnitude is amplified by a near-zero denominator. The change computed on the index rescaled to [0, 1] is given in the data file under `var_ndmi_stab`, for the measurement without the amplification."
  },
  {
   "ligne": 35,
@@ -2882,8 +2882,8 @@
   "metrique": "Measures the persistence or contraction of surface water bodies during the driest period of the year relative to long-term NDWI reference conditions.",
   "sens": null,
   "calculable": "non",
-  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas — la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. NON SCORÉ, et voici pourquoi. L'eau couvre moins de 1 % de chaque section ; seules 5 sur 10 atteignent 50 pixels de 20 m, soit deux hectares, en dessous desquels une moyenne ne porte que sur quelques pixels de bord de rivière. Parmi celles-là, Dalmette voit sa surface en eau varier d'un facteur 20 entre 2019 et 2020, ce qu'aucun phénomène hydrologique n'explique et que la classification seule suffit à produire. Les quatre autres sont stables à ±20 % près — un résultat en soi : les eaux de surface ne se rétractent pas. Mais un indicateur calculable sur quatre sections, qui les place toutes au même score, ajouterait du poids à l'indice sans distinguer aucun territoire. La valeur est affichée dans l'onglet environnemental, elle n'entre pas dans le score.",
-  "question": "Imagerie satellitaire — Sentinel-2 niveau 2A",
+  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas, la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. NON SCORÉ, et voici pourquoi. L'eau couvre moins de 1 % de chaque section ; seules 5 sur 10 atteignent 50 pixels de 20 m, soit deux hectares, en dessous desquels une moyenne ne porte que sur quelques pixels de bord de rivière. Parmi celles-là, Dalmette voit sa surface en eau varier d'un facteur 20 entre 2019 et 2020, ce qu'aucun phénomène hydrologique n'explique et que la classification seule suffit à produire. Les quatre autres sont stables à ±20 % près, un résultat en soi : les eaux de surface ne se rétractent pas. Mais un indicateur calculable sur quatre sections, qui les place toutes au même score, ajouterait du poids à l'indice sans distinguer aucun territoire. La valeur est affichée dans l'onglet environnemental, elle n'entre pas dans le score.",
+  "question": "Imagerie satellitaire, Sentinel-2 niveau 2A",
   "modalites": "",
   "valeurs": {
    "Anse à Drick": null,
@@ -2944,7 +2944,7 @@
   "expl_fr": "",
   "unite": "%",
   "source": "satellite",
-  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down — the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. NOT SCORED, and here is why. Water covers less than 1 % of every section; only 5 of 10 reach 50 pixels of 20 m — two hectares — below which a mean rests on a handful of riverbank pixels. Among those, Dalmette's water area varies twentyfold between 2019 and 2020, which no hydrological process explains and which the classification alone suffices to produce. The other four are stable within ±20 % — a result in itself: surface water is not retreating. But an indicator computable on four sections, placing all of them at the same score, would add weight to the index without distinguishing any territory. The value is shown in the environmental tab; it does not enter the score."
+  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down, the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. NOT SCORED, and here is why. Water covers less than 1 % of every section; only 5 of 10 reach 50 pixels of 20 m (two hectares) below which a mean rests on a handful of riverbank pixels. Among those, Dalmette's water area varies twentyfold between 2019 and 2020, which no hydrological process explains and which the classification alone suffices to produce. The other four are stable within ±20 %, a result in itself: surface water is not retreating. But an indicator computable on four sections, placing all of them at the same score, would add weight to the index without distinguishing any territory. The value is shown in the environmental tab; it does not enter the score."
  },
  {
   "ligne": 36,
@@ -2955,8 +2955,8 @@
   "metrique": "Integrates thermal and hydric stress into a single signal of vegetation functioning",
   "sens": null,
   "calculable": "oui",
-  "note": "Source : MODIS — MOD11A2 pour la température de surface (1 km, composite de 8 jours), MOD13Q1 pour le NDVI (250 m, 16 jours), 2001-2025. Vingt-cinq ans de profondeur, là où Sentinel-2 n'en offre que sept. Les composites L3 arrivent déjà démasqués des nuages par le producteur. Le VCI et le TCI sont des indices de POSITION : ils situent une année entre le minimum et le maximum de toute la série de la section, et n'ont donc de sens que rapportés à ce qu'elle a connu de mieux et de pire en vingt-cinq ans. Évaluation sur la moyenne 2021-2025. À 1 km de résolution, une section de quelques dizaines de km² tient dans une poignée de pixels : le chiffre est une estimation de zone, fiable pour comparer des années entre elles, moins pour comparer deux sections voisines. Variable territoriale, non ventilable par sexe ou par âge.",
-  "question": "Imagerie satellitaire — MODIS",
+  "note": "Source : MODIS, MOD11A2 pour la température de surface (1 km, composite de 8 jours), MOD13Q1 pour le NDVI (250 m, 16 jours), 2001-2025. Vingt-cinq ans de profondeur, là où Sentinel-2 n'en offre que sept. Les composites L3 arrivent déjà démasqués des nuages par le producteur. Le VCI et le TCI sont des indices de POSITION : ils situent une année entre le minimum et le maximum de toute la série de la section, et n'ont donc de sens que rapportés à ce qu'elle a connu de mieux et de pire en vingt-cinq ans. Évaluation sur la moyenne 2021-2025. À 1 km de résolution, une section de quelques dizaines de km² tient dans une poignée de pixels : le chiffre est une estimation de zone, fiable pour comparer des années entre elles, moins pour comparer deux sections voisines. Variable territoriale, non ventilable par sexe ou par âge.",
+  "question": "Imagerie satellitaire, MODIS",
   "modalites": "",
   "valeurs": {
    "Anse à Drick": 65.39,
@@ -3061,7 +3061,7 @@
   "expl_fr": "",
   "unite": "",
   "source": "satellite",
-  "note_en": "Source: MODIS — MOD11A2 for land surface temperature (1 km, 8-day composite), MOD13Q1 for NDVI (250 m, 16-day), 2001-2025. Twenty-five years of depth, where Sentinel-2 offers seven. L3 composites arrive already cloud-masked by the producer. VCI and TCI are POSITION indices: they place a year between the minimum and maximum of the section's whole series, and only mean something relative to its own best and worst over twenty-five years. Evaluated on the 2021-2025 mean. At 1 km, a section of a few dozen km² spans a handful of pixels: the figure is a zonal estimate, reliable for comparing years, less so for comparing neighbouring sections. Territorial variable, not disaggregable by sex or age."
+  "note_en": "Source: MODIS, MOD11A2 for land surface temperature (1 km, 8-day composite), MOD13Q1 for NDVI (250 m, 16-day), 2001-2025. Twenty-five years of depth, where Sentinel-2 offers seven. L3 composites arrive already cloud-masked by the producer. VCI and TCI are POSITION indices: they place a year between the minimum and maximum of the section's whole series, and only mean something relative to its own best and worst over twenty-five years. Evaluated on the 2021-2025 mean. At 1 km, a section of a few dozen km² spans a handful of pixels: the figure is a zonal estimate, reliable for comparing years, less so for comparing neighbouring sections. Territorial variable, not disaggregable by sex or age."
  },
  {
   "ligne": 37,
@@ -3072,8 +3072,8 @@
   "metrique": "Measures vegetation vigor, biomass density and photosynthetic performance under favorable canopy conditions.",
   "sens": "valeur haute = score haut",
   "calculable": "oui",
-  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas — la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. Cet indicateur se score sur le NIVEAU de l'indice et non sur sa variation : son barème est une échelle de valeurs absolues. Valeur retenue : moyenne des saisons sèches 2023-2025. C'est ce qui lui permet de distinguer les sections entre elles, là où le NDVI et le NDMI, notés sur un changement, donnent presque le même score partout.",
-  "question": "Imagerie satellitaire — Sentinel-2 niveau 2A",
+  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas, la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. Cet indicateur se score sur le NIVEAU de l'indice et non sur sa variation : son barème est une échelle de valeurs absolues. Valeur retenue : moyenne des saisons sèches 2023-2025. C'est ce qui lui permet de distinguer les sections entre elles, là où le NDVI et le NDMI, notés sur un changement, donnent presque le même score partout.",
+  "question": "Imagerie satellitaire, Sentinel-2 niveau 2A",
   "modalites": "",
   "valeurs": {
    "Anse à Drick": 0.4144,
@@ -3178,7 +3178,7 @@
   "expl_fr": "",
   "unite": "",
   "source": "satellite",
-  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down — the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. This indicator is scored on the LEVEL of the index, not on its change: its scale is one of absolute values. Value used: mean of the 2023-2025 dry seasons. That is what lets it distinguish sections from one another, where NDVI and NDMI, scored on a change, give almost the same score everywhere."
+  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down, the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. This indicator is scored on the LEVEL of the index, not on its change: its scale is one of absolute values. Value used: mean of the 2023-2025 dry seasons. That is what lets it distinguish sections from one another, where NDVI and NDMI, scored on a change, give almost the same score everywhere."
  },
  {
   "ligne": 38,
@@ -3189,8 +3189,8 @@
   "metrique": "Measure vegetation condition in dry and semi-arid areas where much of the ground is bare soil. Less influence of exposed soil > easier to distinguish real vegetation health from soil brightness.",
   "sens": "valeur haute = score haut",
   "calculable": "oui",
-  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas — la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. Cet indicateur se score sur le NIVEAU de l'indice et non sur sa variation : son barème est une échelle de valeurs absolues. Valeur retenue : moyenne des saisons sèches 2023-2025. C'est ce qui lui permet de distinguer les sections entre elles, là où le NDVI et le NDMI, notés sur un changement, donnent presque le même score partout.",
-  "question": "Imagerie satellitaire — Sentinel-2 niveau 2A",
+  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas, la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. Cet indicateur se score sur le NIVEAU de l'indice et non sur sa variation : son barème est une échelle de valeurs absolues. Valeur retenue : moyenne des saisons sèches 2023-2025. C'est ce qui lui permet de distinguer les sections entre elles, là où le NDVI et le NDMI, notés sur un changement, donnent presque le même score partout.",
+  "question": "Imagerie satellitaire, Sentinel-2 niveau 2A",
   "modalites": "",
   "valeurs": {
    "Anse à Drick": 0.3811,
@@ -3295,7 +3295,7 @@
   "expl_fr": "",
   "unite": "",
   "source": "satellite",
-  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down — the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. This indicator is scored on the LEVEL of the index, not on its change: its scale is one of absolute values. Value used: mean of the 2023-2025 dry seasons. That is what lets it distinguish sections from one another, where NDVI and NDMI, scored on a change, give almost the same score everywhere."
+  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down, the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. This indicator is scored on the LEVEL of the index, not on its change: its scale is one of absolute values. Value used: mean of the 2023-2025 dry seasons. That is what lets it distinguish sections from one another, where NDVI and NDMI, scored on a change, give almost the same score everywhere."
  },
  {
   "ligne": 39,
@@ -3306,8 +3306,8 @@
   "metrique": "Helps distinguish real vegetation from sand, bright soils or turbid water when other methods fail.",
   "sens": "valeur haute = score haut",
   "calculable": "oui",
-  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas — la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. Cet indicateur se score sur le NIVEAU de l'indice et non sur sa variation : son barème est une échelle de valeurs absolues. Valeur retenue : moyenne des saisons sèches 2023-2025. C'est ce qui lui permet de distinguer les sections entre elles, là où le NDVI et le NDMI, notés sur un changement, donnent presque le même score partout.",
-  "question": "Imagerie satellitaire — Sentinel-2 niveau 2A",
+  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas, la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. Cet indicateur se score sur le NIVEAU de l'indice et non sur sa variation : son barème est une échelle de valeurs absolues. Valeur retenue : moyenne des saisons sèches 2023-2025. C'est ce qui lui permet de distinguer les sections entre elles, là où le NDVI et le NDMI, notés sur un changement, donnent presque le même score partout.",
+  "question": "Imagerie satellitaire, Sentinel-2 niveau 2A",
   "modalites": "",
   "valeurs": {
    "Anse à Drick": 0.0513,
@@ -3412,7 +3412,7 @@
   "expl_fr": "",
   "unite": "",
   "source": "satellite",
-  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down — the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. This indicator is scored on the LEVEL of the index, not on its change: its scale is one of absolute values. Value used: mean of the 2023-2025 dry seasons. That is what lets it distinguish sections from one another, where NDVI and NDMI, scored on a change, give almost the same score everywhere."
+  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down, the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. This indicator is scored on the LEVEL of the index, not on its change: its scale is one of absolute values. Value used: mean of the 2023-2025 dry seasons. That is what lets it distinguish sections from one another, where NDVI and NDMI, scored on a change, give almost the same score everywhere."
  },
  {
   "ligne": 40,
@@ -3423,8 +3423,8 @@
   "metrique": "Ground surface (%) effectively covered by vegetation",
   "sens": "valeur haute = score haut",
   "calculable": "oui",
-  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas — la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. Cet indicateur se score sur le NIVEAU de l'indice et non sur sa variation : son barème est une échelle de valeurs absolues. Valeur retenue : moyenne des saisons sèches 2023-2025. C'est ce qui lui permet de distinguer les sections entre elles, là où le NDVI et le NDMI, notés sur un changement, donnent presque le même score partout.",
-  "question": "Imagerie satellitaire — Sentinel-2 niveau 2A",
+  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas, la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. Cet indicateur se score sur le NIVEAU de l'indice et non sur sa variation : son barème est une échelle de valeurs absolues. Valeur retenue : moyenne des saisons sèches 2023-2025. C'est ce qui lui permet de distinguer les sections entre elles, là où le NDVI et le NDMI, notés sur un changement, donnent presque le même score partout.",
+  "question": "Imagerie satellitaire, Sentinel-2 niveau 2A",
   "modalites": "",
   "valeurs": {
    "Anse à Drick": 46.1897,
@@ -3529,7 +3529,7 @@
   "expl_fr": "",
   "unite": "%",
   "source": "satellite",
-  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down — the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. This indicator is scored on the LEVEL of the index, not on its change: its scale is one of absolute values. Value used: mean of the 2023-2025 dry seasons. That is what lets it distinguish sections from one another, where NDVI and NDMI, scored on a change, give almost the same score everywhere."
+  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down, the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. This indicator is scored on the LEVEL of the index, not on its change: its scale is one of absolute values. Value used: mean of the 2023-2025 dry seasons. That is what lets it distinguish sections from one another, where NDVI and NDMI, scored on a change, give almost the same score everywhere."
  },
  {
   "ligne": 41,
@@ -3540,8 +3540,8 @@
   "metrique": "Deviations of seasonal land surface temperature from long term reference conditions.",
   "sens": null,
   "calculable": "oui",
-  "note": "Source : MODIS — MOD11A2 pour la température de surface (1 km, composite de 8 jours), MOD13Q1 pour le NDVI (250 m, 16 jours), 2001-2025. Vingt-cinq ans de profondeur, là où Sentinel-2 n'en offre que sept. Les composites L3 arrivent déjà démasqués des nuages par le producteur. Le VCI et le TCI sont des indices de POSITION : ils situent une année entre le minimum et le maximum de toute la série de la section, et n'ont donc de sens que rapportés à ce qu'elle a connu de mieux et de pire en vingt-cinq ans. Évaluation sur la moyenne 2021-2025. À 1 km de résolution, une section de quelques dizaines de km² tient dans une poignée de pixels : le chiffre est une estimation de zone, fiable pour comparer des années entre elles, moins pour comparer deux sections voisines. Variable territoriale, non ventilable par sexe ou par âge. Le barème gradue une anomalie de température EN POURCENTAGE : un tel rapport n'a de sens qu'une fois l'unité fixée, car +15 % valent +4,3 °C en Celsius et +45 K en Kelvin. Le calcul est fait en CELSIUS, seule lecture qui rende les tranches plausibles pour un climat réel. Anomalie de la saison sèche (janvier-mars), normale 2001-2020.",
-  "question": "Imagerie satellitaire — MODIS",
+  "note": "Source : MODIS, MOD11A2 pour la température de surface (1 km, composite de 8 jours), MOD13Q1 pour le NDVI (250 m, 16 jours), 2001-2025. Vingt-cinq ans de profondeur, là où Sentinel-2 n'en offre que sept. Les composites L3 arrivent déjà démasqués des nuages par le producteur. Le VCI et le TCI sont des indices de POSITION : ils situent une année entre le minimum et le maximum de toute la série de la section, et n'ont donc de sens que rapportés à ce qu'elle a connu de mieux et de pire en vingt-cinq ans. Évaluation sur la moyenne 2021-2025. À 1 km de résolution, une section de quelques dizaines de km² tient dans une poignée de pixels : le chiffre est une estimation de zone, fiable pour comparer des années entre elles, moins pour comparer deux sections voisines. Variable territoriale, non ventilable par sexe ou par âge. Le barème gradue une anomalie de température EN POURCENTAGE : un tel rapport n'a de sens qu'une fois l'unité fixée, car +15 % valent +4,3 °C en Celsius et +45 K en Kelvin. Le calcul est fait en CELSIUS, seule lecture qui rende les tranches plausibles pour un climat réel. Anomalie de la saison sèche (janvier-mars), normale 2001-2020.",
+  "question": "Imagerie satellitaire, MODIS",
   "modalites": "",
   "valeurs": {
    "Anse à Drick": -1.48,
@@ -3646,7 +3646,7 @@
   "expl_fr": "",
   "unite": "%",
   "source": "satellite",
-  "note_en": "Source: MODIS — MOD11A2 for land surface temperature (1 km, 8-day composite), MOD13Q1 for NDVI (250 m, 16-day), 2001-2025. Twenty-five years of depth, where Sentinel-2 offers seven. L3 composites arrive already cloud-masked by the producer. VCI and TCI are POSITION indices: they place a year between the minimum and maximum of the section's whole series, and only mean something relative to its own best and worst over twenty-five years. Evaluated on the 2021-2025 mean. At 1 km, a section of a few dozen km² spans a handful of pixels: the figure is a zonal estimate, reliable for comparing years, less so for comparing neighbouring sections. Territorial variable, not disaggregable by sex or age. The scale grades a temperature anomaly IN PERCENT: such a ratio only means something once the unit is fixed, since +15 % is +4.3 °C in Celsius and +45 K in Kelvin. The computation uses CELSIUS, the only reading that makes the bands plausible for a real climate. Dry-season (January-March) anomaly, 2001-2020 normal."
+  "note_en": "Source: MODIS, MOD11A2 for land surface temperature (1 km, 8-day composite), MOD13Q1 for NDVI (250 m, 16-day), 2001-2025. Twenty-five years of depth, where Sentinel-2 offers seven. L3 composites arrive already cloud-masked by the producer. VCI and TCI are POSITION indices: they place a year between the minimum and maximum of the section's whole series, and only mean something relative to its own best and worst over twenty-five years. Evaluated on the 2021-2025 mean. At 1 km, a section of a few dozen km² spans a handful of pixels: the figure is a zonal estimate, reliable for comparing years, less so for comparing neighbouring sections. Territorial variable, not disaggregable by sex or age. The scale grades a temperature anomaly IN PERCENT: such a ratio only means something once the unit is fixed, since +15 % is +4.3 °C in Celsius and +45 K in Kelvin. The computation uses CELSIUS, the only reading that makes the bands plausible for a real climate. Dry-season (January-March) anomaly, 2001-2020 normal."
  },
  {
   "ligne": 42,
@@ -3657,8 +3657,8 @@
   "metrique": "Current normal conditions vs historical tolerance range of ecosystems.",
   "sens": null,
   "calculable": "oui",
-  "note": "Source : MODIS — MOD11A2 pour la température de surface (1 km, composite de 8 jours), MOD13Q1 pour le NDVI (250 m, 16 jours), 2001-2025. Vingt-cinq ans de profondeur, là où Sentinel-2 n'en offre que sept. Les composites L3 arrivent déjà démasqués des nuages par le producteur. Le VCI et le TCI sont des indices de POSITION : ils situent une année entre le minimum et le maximum de toute la série de la section, et n'ont donc de sens que rapportés à ce qu'elle a connu de mieux et de pire en vingt-cinq ans. Évaluation sur la moyenne 2021-2025. À 1 km de résolution, une section de quelques dizaines de km² tient dans une poignée de pixels : le chiffre est une estimation de zone, fiable pour comparer des années entre elles, moins pour comparer deux sections voisines. Variable territoriale, non ventilable par sexe ou par âge.",
-  "question": "Imagerie satellitaire — MODIS",
+  "note": "Source : MODIS, MOD11A2 pour la température de surface (1 km, composite de 8 jours), MOD13Q1 pour le NDVI (250 m, 16 jours), 2001-2025. Vingt-cinq ans de profondeur, là où Sentinel-2 n'en offre que sept. Les composites L3 arrivent déjà démasqués des nuages par le producteur. Le VCI et le TCI sont des indices de POSITION : ils situent une année entre le minimum et le maximum de toute la série de la section, et n'ont donc de sens que rapportés à ce qu'elle a connu de mieux et de pire en vingt-cinq ans. Évaluation sur la moyenne 2021-2025. À 1 km de résolution, une section de quelques dizaines de km² tient dans une poignée de pixels : le chiffre est une estimation de zone, fiable pour comparer des années entre elles, moins pour comparer deux sections voisines. Variable territoriale, non ventilable par sexe ou par âge.",
+  "question": "Imagerie satellitaire, MODIS",
   "modalites": "",
   "valeurs": {
    "Anse à Drick": 52.21,
@@ -3763,7 +3763,7 @@
   "expl_fr": "",
   "unite": "",
   "source": "satellite",
-  "note_en": "Source: MODIS — MOD11A2 for land surface temperature (1 km, 8-day composite), MOD13Q1 for NDVI (250 m, 16-day), 2001-2025. Twenty-five years of depth, where Sentinel-2 offers seven. L3 composites arrive already cloud-masked by the producer. VCI and TCI are POSITION indices: they place a year between the minimum and maximum of the section's whole series, and only mean something relative to its own best and worst over twenty-five years. Evaluated on the 2021-2025 mean. At 1 km, a section of a few dozen km² spans a handful of pixels: the figure is a zonal estimate, reliable for comparing years, less so for comparing neighbouring sections. Territorial variable, not disaggregable by sex or age."
+  "note_en": "Source: MODIS, MOD11A2 for land surface temperature (1 km, 8-day composite), MOD13Q1 for NDVI (250 m, 16-day), 2001-2025. Twenty-five years of depth, where Sentinel-2 offers seven. L3 composites arrive already cloud-masked by the producer. VCI and TCI are POSITION indices: they place a year between the minimum and maximum of the section's whole series, and only mean something relative to its own best and worst over twenty-five years. Evaluated on the 2021-2025 mean. At 1 km, a section of a few dozen km² spans a handful of pixels: the figure is a zonal estimate, reliable for comparing years, less so for comparing neighbouring sections. Territorial variable, not disaggregable by sex or age."
  },
  {
   "ligne": 43,
@@ -3778,7 +3778,7 @@
   "calculable": "oui",
   "note": "Source : CHIRPS v2.0 (1981-2025), résolution 5,5 km, moyenne sur le polygone de la section. Normale de référence : moyenne 1991-2020, période recommandée par l'OMM. Année évaluée : 2025. À 5,5 km de résolution, une section de quelques dizaines de km² tient dans une poignée de pixels : le chiffre est une estimation de zone, fiable pour comparer des années entre elles, beaucoup moins pour comparer deux sections voisines. Variable territoriale, non ventilable par sexe ou par âge. Calculé sur la CAMPAGNE DE PRINTEMPS (mars-avril-mai) et non sur l'année civile. Aucun barème IRLA ne fixe de période d'accumulation ; sur l'année civile la pluie du Grand Sud est à 96 % de sa normale, sur la campagne à 83 %. L'écart vient de la saison cyclonique, dont les pluies reconstituent le cumul annuel après la récolte sans rien reconstituer dans les champs.",
   "note_en": "Source: CHIRPS v2.0 (1981-2025), 5.5 km resolution, averaged over the section polygon. Reference normal: 1991-2020 mean, the WMO-recommended period. Year evaluated: 2025. At 5.5 km, a section of a few dozen km² spans a handful of pixels: the figure is a zonal estimate, reliable for comparing years, much less so for comparing neighbouring sections. Territorial variable, not disaggregable by sex or age. Computed over the SPRING CAMPAIGN (March-May) rather than the calendar year. No IRLA scale sets an accumulation period; on the calendar year the Grand Sud sits at 96 % of normal rainfall, on the campaign at 83 %. The gap comes from the hurricane season, whose rain restores the annual total after harvest without restoring anything in the fields.",
-  "question": "Imagerie satellitaire — CHIRPS v2.0",
+  "question": "Imagerie satellitaire, CHIRPS v2.0",
   "modalites": "",
   "source": "satellite",
   "unite": "",
@@ -3896,7 +3896,7 @@
   "calculable": "oui",
   "note": "Source : CHIRPS v2.0 (1981-2025), résolution 5,5 km, moyenne sur le polygone de la section. Normale de référence : moyenne 1991-2020, période recommandée par l'OMM. Année évaluée : 2025. À 5,5 km de résolution, une section de quelques dizaines de km² tient dans une poignée de pixels : le chiffre est une estimation de zone, fiable pour comparer des années entre elles, beaucoup moins pour comparer deux sections voisines. Variable territoriale, non ventilable par sexe ou par âge. Calculé sur la CAMPAGNE DE PRINTEMPS (mars-avril-mai) et non sur l'année civile. Aucun barème IRLA ne fixe de période d'accumulation ; sur l'année civile la pluie du Grand Sud est à 96 % de sa normale, sur la campagne à 83 %. L'écart vient de la saison cyclonique, dont les pluies reconstituent le cumul annuel après la récolte sans rien reconstituer dans les champs.",
   "note_en": "Source: CHIRPS v2.0 (1981-2025), 5.5 km resolution, averaged over the section polygon. Reference normal: 1991-2020 mean, the WMO-recommended period. Year evaluated: 2025. At 5.5 km, a section of a few dozen km² spans a handful of pixels: the figure is a zonal estimate, reliable for comparing years, much less so for comparing neighbouring sections. Territorial variable, not disaggregable by sex or age. Computed over the SPRING CAMPAIGN (March-May) rather than the calendar year. No IRLA scale sets an accumulation period; on the calendar year the Grand Sud sits at 96 % of normal rainfall, on the campaign at 83 %. The gap comes from the hurricane season, whose rain restores the annual total after harvest without restoring anything in the fields.",
-  "question": "Imagerie satellitaire — CHIRPS v2.0",
+  "question": "Imagerie satellitaire, CHIRPS v2.0",
   "modalites": "",
   "source": "satellite",
   "unite": "",
@@ -4014,12 +4014,12 @@
   "calculable": "oui",
   "note": "Source : CHIRPS v2.0 (1981-2025), résolution 5,5 km, moyenne sur le polygone de la section. Normale de référence : moyenne 1991-2020, période recommandée par l'OMM. Année évaluée : 2025. À 5,5 km de résolution, une section de quelques dizaines de km² tient dans une poignée de pixels : le chiffre est une estimation de zone, fiable pour comparer des années entre elles, beaucoup moins pour comparer deux sections voisines. Variable territoriale, non ventilable par sexe ou par âge. Calculé sur la CAMPAGNE DE PRINTEMPS (mars-avril-mai) et non sur l'année civile. Aucun barème IRLA ne fixe de période d'accumulation ; sur l'année civile la pluie du Grand Sud est à 96 % de sa normale, sur la campagne à 83 %. L'écart vient de la saison cyclonique, dont les pluies reconstituent le cumul annuel après la récolte sans rien reconstituer dans les champs.",
   "note_en": "Source: CHIRPS v2.0 (1981-2025), 5.5 km resolution, averaged over the section polygon. Reference normal: 1991-2020 mean, the WMO-recommended period. Year evaluated: 2025. At 5.5 km, a section of a few dozen km² spans a handful of pixels: the figure is a zonal estimate, reliable for comparing years, much less so for comparing neighbouring sections. Territorial variable, not disaggregable by sex or age. Computed over the SPRING CAMPAIGN (March-May) rather than the calendar year. No IRLA scale sets an accumulation period; on the calendar year the Grand Sud sits at 96 % of normal rainfall, on the campaign at 83 %. The gap comes from the hurricane season, whose rain restores the annual total after harvest without restoring anything in the fields.",
-  "question": "Imagerie satellitaire — CHIRPS v2.0",
+  "question": "Imagerie satellitaire, CHIRPS v2.0",
   "modalites": "",
   "source": "satellite",
   "unite": "%",
-  "expl_en": "This year's rainfall as a share of normal. The scale peaks between 95 and 100 percent — a territory is best served by the rainfall it is built for, and excess brings flooding and erosion just as shortage brings drought.",
-  "expl_fr": "La pluie de cette année en part de la normale. L'échelle culmine entre 95 et 100 % — un territoire est le mieux servi par la pluie pour laquelle il est fait, et l'excès apporte crues et érosion comme le manque apporte la sécheresse.",
+  "expl_en": "This year's rainfall as a share of normal. The scale peaks between 95 and 100 percent, a territory is best served by the rainfall it is built for, and excess brings flooding and erosion just as shortage brings drought.",
+  "expl_fr": "La pluie de cette année en part de la normale. L'échelle culmine entre 95 et 100 %, un territoire est le mieux servi par la pluie pour laquelle il est fait, et l'excès apporte crues et érosion comme le manque apporte la sécheresse.",
   "valeurs": {
    "Anse à Drick": 88.44,
    "Barbois": 92.12,
@@ -4132,7 +4132,7 @@
   "calculable": "oui",
   "note": "Source : CHIRPS v2.0 (1981-2025), résolution 5,5 km, moyenne sur le polygone de la section. Normale de référence : moyenne 1991-2020, période recommandée par l'OMM. Année évaluée : 2025. À 5,5 km de résolution, une section de quelques dizaines de km² tient dans une poignée de pixels : le chiffre est une estimation de zone, fiable pour comparer des années entre elles, beaucoup moins pour comparer deux sections voisines. Variable territoriale, non ventilable par sexe ou par âge. Calculé sur la CAMPAGNE DE PRINTEMPS (mars-avril-mai) et non sur l'année civile. Aucun barème IRLA ne fixe de période d'accumulation ; sur l'année civile la pluie du Grand Sud est à 96 % de sa normale, sur la campagne à 83 %. L'écart vient de la saison cyclonique, dont les pluies reconstituent le cumul annuel après la récolte sans rien reconstituer dans les champs. Extension du barème : celui-ci ne gradue que la sécheresse, de −2,0 à −1,0 ; au-dessus de −1,0, aucune sécheresse n'est constatée et le score 10 est attribué. Fenêtre d'évaluation : la PIRE des cinq dernières campagnes, et non leur moyenne. Le barème du SPI ne gradue que la sécheresse, de −2,0 à −1,0 ; une moyenne de cinq ans n'atteint pratiquement jamais ce domaine et attribuerait 10 aux dix sections. La résilience se mesure à la mauvaise année, pas à la moyenne.",
   "note_en": "Source: CHIRPS v2.0 (1981-2025), 5.5 km resolution, averaged over the section polygon. Reference normal: 1991-2020 mean, the WMO-recommended period. Year evaluated: 2025. At 5.5 km, a section of a few dozen km² spans a handful of pixels: the figure is a zonal estimate, reliable for comparing years, much less so for comparing neighbouring sections. Territorial variable, not disaggregable by sex or age. Computed over the SPRING CAMPAIGN (March-May) rather than the calendar year. No IRLA scale sets an accumulation period; on the calendar year the Grand Sud sits at 96 % of normal rainfall, on the campaign at 83 %. The gap comes from the hurricane season, whose rain restores the annual total after harvest without restoring anything in the fields. Scale extension: it only grades drought, from −2.0 to −1.0; above −1.0 no drought is observed and 10 is assigned. Evaluation window: the WORST of the last five campaigns, not their mean. The SPI scale only grades drought, from −2.0 to −1.0; a five-year mean practically never reaches that range and would assign 10 to all ten sections. Resilience is measured by the bad year, not the average one.",
-  "question": "Imagerie satellitaire — CHIRPS v2.0",
+  "question": "Imagerie satellitaire, CHIRPS v2.0",
   "modalites": "",
   "source": "satellite",
   "unite": "",
@@ -4246,7 +4246,7 @@
   "metrique": "Number of distinct species observed within each taxonomic group, namely odonates (Od), birds (Bi) and pollinators (Po), over a standardized sampling effort.",
   "sens": null,
   "calculable": "non",
-  "note": "Richesse spécifique — inventaires de terrain / GBIF.",
+  "note": "Richesse spécifique, inventaires de terrain / GBIF.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -4268,7 +4268,7 @@
   "metrique": "How evenly individuals are distributed among species in a community. It captures dominance, not just richness. High values mean no single species dominates.",
   "sens": null,
   "calculable": "non",
-  "note": "Indice de Simpson — inventaires écologiques.",
+  "note": "Indice de Simpson, inventaires écologiques.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -4290,7 +4290,7 @@
   "metrique": "Measures both species richness and evenness. How many species are present and how evenly individuals are distributed among them (H’ = − Σ (pᵢ × ln(pᵢ))",
   "sens": null,
   "calculable": "non",
-  "note": "Indice de Shannon — inventaires écologiques.",
+  "note": "Indice de Shannon, inventaires écologiques.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -4312,7 +4312,7 @@
   "metrique": "Evolutionary breadth and response diversity.",
   "sens": null,
   "calculable": "non",
-  "note": "Diversité phylogénétique — liste taxonomique + phylogénie de référence.",
+  "note": "Diversité phylogénétique, liste taxonomique + phylogénie de référence.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -4334,7 +4334,7 @@
   "metrique": "Proportion that each species or functional group represents within the total number of individuals observed in a community.",
   "sens": null,
   "calculable": "non",
-  "note": "Abondance relative — comptages par transect.",
+  "note": "Abondance relative, comptages par transect.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -4356,7 +4356,7 @@
   "metrique": "Diversity of ecological traits and roles represented in a community.",
   "sens": null,
   "calculable": "non",
-  "note": "Diversité fonctionnelle — traits fonctionnels par espèce observée.",
+  "note": "Diversité fonctionnelle, traits fonctionnels par espèce observée.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -4378,7 +4378,7 @@
   "metrique": "How diversified household production systems are. CDI = 1 − (p₁² + p₂² + … + pₙ²)",
   "sens": null,
   "calculable": "non",
-  "note": "Indice de diversité culturale : calculable en principe depuis Q151, mais c'est un indice de Simpson et non un pourcentage — non intégré au barème en l'état.",
+  "note": "Indice de diversité culturale : calculable en principe depuis Q151, mais c'est un indice de Simpson et non un pourcentage, non intégré au barème en l'état.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -4397,14 +4397,14 @@
   "indicateur_fr": "Taux de changement du couvert forestier",
   "dimension": "III.  ENVIRONMENTAL AND ECOLOGICAL DIMENSION",
   "ponderation": 2.33,
-  "echelle": "LN : 0 (< −3), 1 (−3 à −2), 2 (−2 à −1,5), 3 (−1,5 à −1), 4 (−1 à −0,75), 5 (−0,75 à −0,5), 6 (−0,5 à −0,25), 7 (−0,25 à 0), 8 (0 à 0,25), 9 (0,25 à 0,5), 10 (≥ 0,5) — en % par an",
+  "echelle": "LN : 0 (< −3), 1 (−3 à −2), 2 (−2 à −1,5), 3 (−1,5 à −1), 4 (−1 à −0,75), 5 (−0,75 à −0,5), 6 (−0,5 à −0,25), 7 (−0,25 à 0), 8 (0 à 0,25), 9 (0,25 à 0,5), 10 (≥ 0,5), en % par an",
   "metrique": "Annual rate of change of forest area (canopy cover ≥ 30 %) between 2000 and 2025, in percent per year.",
   "metrique_fr": "Taux annuel de variation de la surface boisée (couvert ≥ 30 %) entre 2000 et 2025, en % par an.",
   "sens": "valeur haute = score haut",
   "calculable": "oui",
   "note": "Source : Hansen / UMD Global Forest Change v1.13 (2000-2025), seuil de couvert 30 %. Taux composé annuel entre la surface boisée de 2000 et celle de 2025. Hansen mesure une perte de couvert arboré, pas une déforestation au sens juridique : coupe de plantation, cyclone et incendie y comptent. Le gain n'étant renseigné que jusqu'en 2012, le taux net est prudent. Variable territoriale, non ventilable par sexe ou par âge. ATTENTION : 70.7 % de la perte enregistrée sur vingt-cinq ans tombe en 2016-2018, c'est-à-dire l'ouragan Matthew et ses suites. Le taux hors choc, qui approche le déboisement chronique, vaut -0.146 % par an contre -0.539 % toutes causes confondues.",
   "note_en": "Source: Hansen / UMD Global Forest Change v1.13 (2000-2025), 30 % canopy threshold. Compound annual rate between 2000 and 2025 forest area. Hansen measures tree-cover loss, not deforestation in the legal sense: plantation harvest, cyclone and fire all count. Gain is only recorded to 2012, so the net rate is conservative. Territorial variable, not disaggregable by sex or age. NOTE: 70.7 % of the loss recorded over twenty-five years falls in 2016-2018, that is Hurricane Matthew and its aftermath. The rate excluding that shock, closer to chronic clearing, is -0.146 % a year against -0.539 % all causes combined.",
-  "question": "Imagerie satellitaire — Hansen Global Forest Change",
+  "question": "Imagerie satellitaire, Hansen Global Forest Change",
   "modalites": "",
   "source": "satellite",
   "unite": "%/an",
@@ -4518,7 +4518,7 @@
   "metrique": "Coastal and marine ecosystems (%) that are legally designated and managed for conservation",
   "sens": null,
   "calculable": "oui",
-  "note": "Source : WDPA — World Database on Protected Areas, tenue par le WCMC du PNUE, référence officielle des ODD 14.5 et 15.1. Seules les aires au statut Designated, Inscribed ou Established sont retenues : une aire seulement proposée ne protège rien sur le terrain. Les aires sont fusionnées avant le croisement, sinon un parc situé dans une réserve de biosphère compterait deux fois la même surface. RÉSULTAT : aucune aire protégée de la base ne touche aucune des dix sections communales — la couverture est nulle partout. Ce zéro n'est pas une incertitude de mesure mais un fait, et c'est précisément ce que le cadre demande de mesurer. Variable territoriale, non ventilable par sexe ou par âge.",
+  "note": "Source : WDPA, World Database on Protected Areas, tenue par le WCMC du PNUE, référence officielle des ODD 14.5 et 15.1. Seules les aires au statut Designated, Inscribed ou Established sont retenues : une aire seulement proposée ne protège rien sur le terrain. Les aires sont fusionnées avant le croisement, sinon un parc situé dans une réserve de biosphère compterait deux fois la même surface. RÉSULTAT : aucune aire protégée de la base ne touche aucune des dix sections communales, la couverture est nulle partout. Ce zéro n'est pas une incertitude de mesure mais un fait, et c'est précisément ce que le cadre demande de mesurer. Variable territoriale, non ventilable par sexe ou par âge.",
   "question": "Base de données WDPA (PNUE-WCMC)",
   "modalites": "",
   "valeurs": {
@@ -4624,7 +4624,7 @@
   "expl_fr": "",
   "unite": "%",
   "source": "satellite",
-  "note_en": "Source: WDPA — World Database on Protected Areas, maintained by UNEP-WCMC, the official reference for SDG 14.5 and 15.1. Only areas with status Designated, Inscribed or Established are retained: a merely proposed area protects nothing on the ground. Areas are dissolved before intersection, otherwise a park inside a biosphere reserve would count the same surface twice. RESULT: no protected area in the database touches any of the ten communal sections — coverage is nil everywhere. This zero is not a measurement uncertainty but a fact, and precisely what the framework asks to measure. Territorial variable, not disaggregable by sex or age."
+  "note_en": "Source: WDPA, World Database on Protected Areas, maintained by UNEP-WCMC, the official reference for SDG 14.5 and 15.1. Only areas with status Designated, Inscribed or Established are retained: a merely proposed area protects nothing on the ground. Areas are dissolved before intersection, otherwise a park inside a biosphere reserve would count the same surface twice. RESULT: no protected area in the database touches any of the ten communal sections, coverage is nil everywhere. This zero is not a measurement uncertainty but a fact, and precisely what the framework asks to measure. Territorial variable, not disaggregable by sex or age."
  },
  {
   "ligne": 56,
@@ -4635,7 +4635,7 @@
   "metrique": "Land and inland water ecosystems (%) that are under long term legal protection.",
   "sens": null,
   "calculable": "oui",
-  "note": "Source : WDPA — World Database on Protected Areas, tenue par le WCMC du PNUE, référence officielle des ODD 14.5 et 15.1. Seules les aires au statut Designated, Inscribed ou Established sont retenues : une aire seulement proposée ne protège rien sur le terrain. Les aires sont fusionnées avant le croisement, sinon un parc situé dans une réserve de biosphère compterait deux fois la même surface. RÉSULTAT : aucune aire protégée de la base ne touche aucune des dix sections communales — la couverture est nulle partout. Ce zéro n'est pas une incertitude de mesure mais un fait, et c'est précisément ce que le cadre demande de mesurer. Variable territoriale, non ventilable par sexe ou par âge.",
+  "note": "Source : WDPA, World Database on Protected Areas, tenue par le WCMC du PNUE, référence officielle des ODD 14.5 et 15.1. Seules les aires au statut Designated, Inscribed ou Established sont retenues : une aire seulement proposée ne protège rien sur le terrain. Les aires sont fusionnées avant le croisement, sinon un parc situé dans une réserve de biosphère compterait deux fois la même surface. RÉSULTAT : aucune aire protégée de la base ne touche aucune des dix sections communales, la couverture est nulle partout. Ce zéro n'est pas une incertitude de mesure mais un fait, et c'est précisément ce que le cadre demande de mesurer. Variable territoriale, non ventilable par sexe ou par âge.",
   "question": "Base de données WDPA (PNUE-WCMC)",
   "modalites": "",
   "valeurs": {
@@ -4741,7 +4741,7 @@
   "expl_fr": "",
   "unite": "%",
   "source": "satellite",
-  "note_en": "Source: WDPA — World Database on Protected Areas, maintained by UNEP-WCMC, the official reference for SDG 14.5 and 15.1. Only areas with status Designated, Inscribed or Established are retained: a merely proposed area protects nothing on the ground. Areas are dissolved before intersection, otherwise a park inside a biosphere reserve would count the same surface twice. RESULT: no protected area in the database touches any of the ten communal sections — coverage is nil everywhere. This zero is not a measurement uncertainty but a fact, and precisely what the framework asks to measure. Territorial variable, not disaggregable by sex or age."
+  "note_en": "Source: WDPA, World Database on Protected Areas, maintained by UNEP-WCMC, the official reference for SDG 14.5 and 15.1. Only areas with status Designated, Inscribed or Established are retained: a merely proposed area protects nothing on the ground. Areas are dissolved before intersection, otherwise a park inside a biosphere reserve would count the same surface twice. RESULT: no protected area in the database touches any of the ten communal sections, coverage is nil everywhere. This zero is not a measurement uncertainty but a fact, and precisely what the framework asks to measure. Territorial variable, not disaggregable by sex or age."
  },
  {
   "ligne": 57,
@@ -4752,7 +4752,7 @@
   "metrique": "Spatial extent of mangrove expressed as a (%) of historical surface.",
   "sens": "valeur haute = score haut",
   "calculable": "non",
-  "note": "Source : LANDSAT/MANGROVE_FORESTS (Giri et al.), distribution mondiale des mangroves à 30 m, année 2000. NON SCORÉ : le barème demande un POURCENTAGE, donc un rapport à une surface de référence, donc deux dates. La couche disponible n'en donne qu'une — on connaît la surface, pas le taux de conservation. Rapporter la mangrove à la surface de la section n'aurait pas de sens : une mangrove n'occupe jamais 20 % d'une commune, et les dix sections tomberaient dans la tranche basse quelle que soit leur richesse réelle. La surface est affichée telle quelle. Une seconde date — Global Mangrove Watch, 1996 à 2020 — permettrait de scorer la ligne.",
+  "note": "Source : LANDSAT/MANGROVE_FORESTS (Giri et al.), distribution mondiale des mangroves à 30 m, année 2000. NON SCORÉ : le barème demande un POURCENTAGE, donc un rapport à une surface de référence, donc deux dates. La couche disponible n'en donne qu'une, on connaît la surface, pas le taux de conservation. Rapporter la mangrove à la surface de la section n'aurait pas de sens : une mangrove n'occupe jamais 20 % d'une commune, et les dix sections tomberaient dans la tranche basse quelle que soit leur richesse réelle. La surface est affichée telle quelle. Une seconde date (Global Mangrove Watch, 1996 à 2020) permettrait de scorer la ligne.",
   "question": "",
   "modalites": "",
   "valeurs": {
@@ -4814,7 +4814,7 @@
   "expl_fr": "",
   "unite": "ha",
   "source": "satellite",
-  "note_en": "Source: LANDSAT/MANGROVE_FORESTS (Giri et al.), global mangrove distribution at 30 m, year 2000. NOT SCORED: the scale asks for a PERCENTAGE, hence a ratio to a reference surface, hence two dates. The available layer gives only one — we know the area, not the retention rate. Relating mangrove to section area would be meaningless: a mangrove never covers 20 % of a commune, and all ten sections would fall in the bottom band whatever their real richness. The area is shown as is. A second date — Global Mangrove Watch, 1996 to 2020 — would allow scoring."
+  "note_en": "Source: LANDSAT/MANGROVE_FORESTS (Giri et al.), global mangrove distribution at 30 m, year 2000. NOT SCORED: the scale asks for a PERCENTAGE, hence a ratio to a reference surface, hence two dates. The available layer gives only one, we know the area, not the retention rate. Relating mangrove to section area would be meaningless: a mangrove never covers 20 % of a commune, and all ten sections would fall in the bottom band whatever their real richness. The area is shown as is. A second date (Global Mangrove Watch, 1996 to 2020) would allow scoring."
  },
  {
   "ligne": 58,
@@ -4825,7 +4825,7 @@
   "metrique": "Spatial extent of seagrass meadows expressed as a (%) of historical surface.",
   "sens": "valeur haute = score haut",
   "calculable": "non",
-  "note": "Surface d'herbiers — Allen Coral Atlas / relevés subaquatiques.",
+  "note": "Surface d'herbiers, Allen Coral Atlas / relevés subaquatiques.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -4847,7 +4847,7 @@
   "metrique": "Rate at which landscapes lose productive soil using spatially explicit erosion models, typically based on the Universal Soil Loss",
   "sens": null,
   "calculable": "non",
-  "note": "Érosion des sols (t/ha/an) — modèle RUSLE.",
+  "note": "Érosion des sols (t/ha/an), modèle RUSLE.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -4869,7 +4869,7 @@
   "metrique": "Land (%) affected by degradation processes (vegetation condition, soil erosion risk, and productivity)",
   "sens": "valeur haute = score bas",
   "calculable": "non",
-  "note": "Terres dégradées (ODD 15.3.1) — Trends.Earth / MODIS NPP.",
+  "note": "Terres dégradées (ODD 15.3.1), Trends.Earth / MODIS NPP.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -4891,7 +4891,7 @@
   "metrique": "Phytoplankton biomass as a proxy for nutrient loading and trophic imbalance in aquatic systems.",
   "sens": "valeur haute = score bas",
   "calculable": "non",
-  "note": "Chlorophylle-a — Sentinel-3 OLCI / MODIS Aqua.",
+  "note": "Chlorophylle-a, Sentinel-3 OLCI / MODIS Aqua.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -5015,7 +5015,7 @@
   "bareme_absent": false,
   "bareme_inverse": false,
   "indicateur_fr": "Macroplastiques en milieu marin",
-  "expl_en": "The indicator is meant to describe how much visible plastic litter is present along the coast and at sea. No field observation was carried out, so what is counted here is the share of households that throw their waste into the sea or onto vacant land — the practice that feeds that pollution. It ties a domestic habit to what ends up in fishing nets, in the mangroves and on the beaches.",
+  "expl_en": "The indicator is meant to describe how much visible plastic litter is present along the coast and at sea. No field observation was carried out, so what is counted here is the share of households that throw their waste into the sea or onto vacant land, the practice that feeds that pollution. It ties a domestic habit to what ends up in fishing nets, in the mangroves and on the beaches.",
   "expl_fr": "L'indicateur vise la présence visible de macro-déchets plastiques sur le littoral et en mer. Aucune observation de terrain n'ayant été menée, ce qui est compté ici est la part des ménages qui jettent leurs déchets à la mer ou sur un terrain vague, c'est-à-dire la pratique qui alimente cette pollution. Il relie un geste domestique à ce qui se retrouve dans les filets, dans les mangroves et sur les plages."
  },
  {
@@ -5027,8 +5027,8 @@
   "metrique": "Sediment loads and water clarity",
   "sens": null,
   "calculable": "non",
-  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas — la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. NON SCORÉ, pour trois raisons qui se cumulent. La turbidité ne se mesure que sur des pixels d'eau, et 5 sections sur 10 seulement en ont assez. Ces 5-là donnent toutes une valeur entre −0,14 et −0,04, soit le même score : l'indicateur ne distinguerait rien. Enfin le barème publié est inversé — il attribue 10 à une turbidité supérieure à 0,7 et 0 à une eau limpide, alors qu'une eau chargée de sédiments signale une érosion en amont. Corriger un barème pour obtenir un score plat sur la moitié du territoire ne se justifie pas. La valeur est affichée, elle n'entre pas dans le score. Lecture utile malgré tout : les cinq valeurs sont NÉGATIVES, donc le vert domine le rouge — l'eau détectée est claire, elle ne charrie pas de sédiments en saison sèche. C'est cohérent avec le moment de l'année : l'érosion arrive avec les averses, pas en mars.",
-  "question": "Imagerie satellitaire — Sentinel-2 niveau 2A",
+  "note": "Source : Sentinel-2 niveau 2A (COPERNICUS/S2_SR_HARMONIZED), composite médian des saisons sèches janvier-mars 2019-2025, résolution 20 m, masque de nuages par la bande SCL. La fenêtre janvier-mars est le trimestre le plus sec de l'année, calculé sur les 45 ans de CHIRPS et non supposé : 120 mm au total, contre 500 mm pour août-octobre. Variation mesurée entre la moyenne 2019-2021 et la moyenne 2023-2025, 2022 servant de charnière. RÉSERVE : Sentinel-2 niveau 2A commence en 2017 et les premières années sont pauvres en images exploitables sous les tropiques ; la référence tient sur trois saisons là où une climatologie en demanderait trente. Cet indicateur dit un changement récent, pas une tendance longue. Second point : 2021, année de sécheresse identifiée par CHIRPS, tombe dans la fenêtre de référence et la tire vers le bas, la variation calculée est donc un peu plus favorable qu'elle ne devrait. Variable territoriale, non ventilable par sexe ou par âge. NON SCORÉ, pour trois raisons qui se cumulent. La turbidité ne se mesure que sur des pixels d'eau, et 5 sections sur 10 seulement en ont assez. Ces 5-là donnent toutes une valeur entre −0,14 et −0,04, soit le même score : l'indicateur ne distinguerait rien. Enfin le barème publié est inversé, il attribue 10 à une turbidité supérieure à 0,7 et 0 à une eau limpide, alors qu'une eau chargée de sédiments signale une érosion en amont. Corriger un barème pour obtenir un score plat sur la moitié du territoire ne se justifie pas. La valeur est affichée, elle n'entre pas dans le score. Lecture utile malgré tout : les cinq valeurs sont NÉGATIVES, donc le vert domine le rouge, l'eau détectée est claire, elle ne charrie pas de sédiments en saison sèche. C'est cohérent avec le moment de l'année : l'érosion arrive avec les averses, pas en mars.",
+  "question": "Imagerie satellitaire, Sentinel-2 niveau 2A",
   "modalites": "",
   "valeurs": {
    "Anse à Drick": null,
@@ -5113,7 +5113,7 @@
    "Littoral": 4,
    "Montagne": 4
   },
-  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down — the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. NOT SCORED, for three reasons that compound. Turbidity can only be measured over water pixels, and only 5 of 10 sections have enough. Those 5 all yield a value between −0.14 and −0.04, hence the same score: the indicator would distinguish nothing. Finally the published scale is inverted — it assigns 10 to turbidity above 0.7 and 0 to clear water, whereas sediment-laden water signals upstream erosion. Correcting a scale to obtain a flat score over half the territory is not warranted. The value is displayed; it does not enter the score. One useful reading nonetheless: all five values are NEGATIVE, so green dominates red — the detected water is clear, carrying no sediment in dry season. That is consistent with the time of year: erosion arrives with the downpours, not in March."
+  "note_en": "Source: Sentinel-2 level 2A (COPERNICUS/S2_SR_HARMONIZED), median composite of the January-March dry seasons 2019-2025, 20 m resolution, cloud mask from the SCL band. The January-March window is the driest quarter of the year, computed from the 45 CHIRPS years rather than assumed: 120 mm in total against 500 mm for August-October. Change measured between the 2019-2021 mean and the 2023-2025 mean, with 2022 as the hinge. CAVEAT: Sentinel-2 level 2A starts in 2017 and the early years are thin in usable imagery in the tropics; the reference rests on three seasons where a climatology would need thirty. This indicator states a recent change, not a long trend. Second point: 2021, the drought year identified by CHIRPS, falls inside the reference window and pulls it down, the computed change is therefore slightly more favourable than it should be. Territorial variable, not disaggregable by sex or age. NOT SCORED, for three reasons that compound. Turbidity can only be measured over water pixels, and only 5 of 10 sections have enough. Those 5 all yield a value between −0.14 and −0.04, hence the same score: the indicator would distinguish nothing. Finally the published scale is inverted, it assigns 10 to turbidity above 0.7 and 0 to clear water, whereas sediment-laden water signals upstream erosion. Correcting a scale to obtain a flat score over half the territory is not warranted. The value is displayed; it does not enter the score. One useful reading nonetheless: all five values are NEGATIVE, so green dominates red, the detected water is clear, carrying no sediment in dry season. That is consistent with the time of year: erosion arrives with the downpours, not in March."
  },
  {
   "ligne": 64,
@@ -5124,7 +5124,7 @@
   "metrique": "Probability that habitat patches are functionally connected based on species dispersal capacity. PC(d*) represents connectivity at a biologically realistic dispersal distance for target species. PC(d*/2) captures connectivity under more restrictive movement conditions for low-mobility species.",
   "sens": null,
   "calculable": "non",
-  "note": "Connectivité fonctionnelle — analyse en graphe sur carte d'habitats.",
+  "note": "Connectivité fonctionnelle, analyse en graphe sur carte d'habitats.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -5146,7 +5146,7 @@
   "metrique": "Probability that habitat patches are functionally connected based on species dispersal capacity. PC(d*) represents connectivity at a biologically realistic dispersal distance for target species. PC(d*/2) captures connectivity under more restrictive movement conditions for low-mobility species.",
   "sens": null,
   "calculable": "non",
-  "note": "Connectivité faible mobilité — analyse en graphe sur carte d'habitats.",
+  "note": "Connectivité faible mobilité, analyse en graphe sur carte d'habitats.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -5168,7 +5168,7 @@
   "metrique": "Structural connectivity of habitat patches calculated using graph-based analysis, where patches are nodes and links represent potential connections constrained by dispersal distance. IIC(d) reflects connectivity within a realistic dispersal threshold",
   "sens": null,
   "calculable": "non",
-  "note": "Connectivité structurelle (IIC) — carte d'occupation du sol.",
+  "note": "Connectivité structurelle (IIC), carte d'occupation du sol.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -5190,7 +5190,7 @@
   "metrique": "Structural connectivity of habitat patches calculated using graph-based analysis, where patches are nodes and links represent potential connections constrained by dispersal distance. IIC(d) reflects connectivity within a realistic dispersal threshold",
   "sens": null,
   "calculable": "non",
-  "note": "IIC contraint — carte d'occupation du sol.",
+  "note": "IIC contraint, carte d'occupation du sol.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -5212,7 +5212,7 @@
   "metrique": "Intensity of habitat fragmentation by quantifying how much habitat edge exists relative to landscape area",
   "sens": null,
   "calculable": "non",
-  "note": "Densité de lisière — Fragstats sur carte d'occupation du sol.",
+  "note": "Densité de lisière, Fragstats sur carte d'occupation du sol.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -5234,7 +5234,7 @@
   "metrique": "Measures how favorable habitat is functionally allocated between stable core areas that support reproduction and persistence, and movement areas that act as corridors or stepping stones. Core areas are identified by removing edge-affected zones using a fixed buffer distance",
   "sens": "valeur haute = score haut",
   "calculable": "non",
-  "note": "Ratio CORE + MOVE — segmentation morphologique (MSPA/GUIDOS).",
+  "note": "Ratio CORE + MOVE, segmentation morphologique (MSPA/GUIDOS).",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -5256,7 +5256,7 @@
   "metrique": "Total surface of high-quality interior habitat that is sufficiently large and isolated from edge effects to anchor population dynamics",
   "sens": "valeur haute = score haut",
   "calculable": "non",
-  "note": "Surface CORE totale — segmentation morphologique (MSPA/GUIDOS).",
+  "note": "Surface CORE totale, segmentation morphologique (MSPA/GUIDOS).",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -5380,7 +5380,7 @@
   "bareme_absent": false,
   "bareme_inverse": false,
   "indicateur_fr": "Population disposant d'un compte financier (ODD 8.10.2)",
-  "expl_en": "This counts adults holding an account in a formal financial institution — a commercial bank, a credit union or a mutual savings and credit group. Cash kept at home disappears with a flood, a fire or a theft, and cannot be rebuilt afterwards. An account is what lets a household save between two shocks and receive money quickly when one occurs.",
+  "expl_en": "This counts adults holding an account in a formal financial institution, a commercial bank, a credit union or a mutual savings and credit group. Cash kept at home disappears with a flood, a fire or a theft, and cannot be rebuilt afterwards. An account is what lets a household save between two shocks and receive money quickly when one occurs.",
   "expl_fr": "On compte les adultes disposant d'un compte dans une institution financière formelle : banque commerciale, caisse populaire ou mutuelle de solidarité. L'argent gardé à la maison disparaît avec une inondation, un incendie ou un vol, et ne se reconstitue pas. Un compte est ce qui permet d'épargner entre deux chocs et de recevoir des fonds rapidement lorsqu'un choc survient."
  },
  {
@@ -5392,7 +5392,7 @@
   "metrique": "Number of commercial bank branches and automated teller machines per 100,000 adults.",
   "sens": "valeur haute = score haut",
   "calculable": "non",
-  "note": "Densité d'agences et de DAB — source administrative BRH.",
+  "note": "Densité d'agences et de DAB, source administrative BRH.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -5880,8 +5880,8 @@
   "bareme_absent": false,
   "bareme_inverse": false,
   "indicateur_fr": "Population sous 50 % du revenu médian",
-  "expl_en": "The indicator is meant to identify people living on less than half the national median income. What is counted here is simpler: adults who place their monthly income in the lowest bracket offered by the questionnaire, from 0 to 2,500 gourdes. It marks out the group for whom any extra expense — a funeral, a hospital stay, a lost harvest — can only be met by giving up something else.",
-  "expl_fr": "L'indicateur vise les personnes vivant avec moins de la moitié du revenu médian national. Ce qui est compté ici est plus simple : les adultes qui situent leur revenu mensuel dans la tranche la plus basse du questionnaire, de 0 à 2 500 gourdes. Il désigne le groupe pour lequel toute dépense supplémentaire — funérailles, hospitalisation, récolte perdue — ne peut être couverte qu'en renonçant à autre chose."
+  "expl_en": "The indicator is meant to identify people living on less than half the national median income. What is counted here is simpler: adults who place their monthly income in the lowest bracket offered by the questionnaire, from 0 to 2,500 gourdes. It marks out the group for whom any extra expense (a funeral, a hospital stay, a lost harvest) can only be met by giving up something else.",
+  "expl_fr": "L'indicateur vise les personnes vivant avec moins de la moitié du revenu médian national. Ce qui est compté ici est plus simple : les adultes qui situent leur revenu mensuel dans la tranche la plus basse du questionnaire, de 0 à 2 500 gourdes. Il désigne le groupe pour lequel toute dépense supplémentaire (funérailles, hospitalisation, récolte perdue) ne peut être couverte qu'en renonçant à autre chose."
  },
  {
   "ligne": 79,
@@ -6234,7 +6234,7 @@
   "metrique": "Agricultural households (%) using at least one chemical input during the last production cycle, capturing overall dependence on external inputs (fertilizer, herbicide, insecticide, and fungicide).",
   "sens": "valeur haute = score bas",
   "calculable": "approx",
-  "note": "Proxy : usage d'engrais azotés (Q155). L'union avec herbicides, insecticides et fongicides n'est pas croisée — valeur sous-estimée. Base : ménages agricoles.",
+  "note": "Proxy : usage d'engrais azotés (Q155). L'union avec herbicides, insecticides et fongicides n'est pas croisée, valeur sous-estimée. Base : ménages agricoles.",
   "question": "Utilise des engrais azotés",
   "modalites": "Oui",
   "valeurs": {
@@ -6550,7 +6550,7 @@
   "metrique": "Fishers (%) reporting use of at least one environmentally or socially destructive fishing technique.",
   "sens": "valeur haute = score haut",
   "calculable": "approx",
-  "note": "Proxy : usage de la senne. Base de 78 pêcheurs seulement — à interpréter avec prudence. La classification officielle des engins destructeurs reste à arbitrer avec le MARNDR.",
+  "note": "Proxy : usage de la senne. Base de 78 pêcheurs seulement, à interpréter avec prudence. La classification officielle des engins destructeurs reste à arbitrer avec le MARNDR.",
   "question": "Techniques de pêche utilisées",
   "modalites": "Senne",
   "valeurs": {
@@ -7084,7 +7084,7 @@
   "bareme_absent": false,
   "bareme_inverse": false,
   "indicateur_fr": "Capital social d'entraide (famille et proches)",
-  "expl_en": "The definition calls for reciprocity: households that both gave and received help within their close family over the past year. What is counted here is one direction only — having received help or a service from the extended family. These close ties are the first thing that comes into play when a roof blows off or someone falls ill.",
+  "expl_en": "The definition calls for reciprocity: households that both gave and received help within their close family over the past year. What is counted here is one direction only, having received help or a service from the extended family. These close ties are the first thing that comes into play when a roof blows off or someone falls ill.",
   "expl_fr": "La définition suppose une réciprocité : les ménages ayant à la fois donné et reçu de l'aide au sein de leur famille proche durant l'année. Ce qui est compté ici est un seul sens, avoir reçu une aide ou un service de la part de la famille élargie. Ces liens proches sont les premiers à jouer quand une toiture s'envole ou que quelqu'un tombe malade."
  },
  {
@@ -7618,7 +7618,7 @@
   "metrique": "Probability of death during the first 28 days of life per 1,000 live births.",
   "sens": null,
   "calculable": "non",
-  "note": "Mortalité néonatale — registres sanitaires / module d'historique génésique.",
+  "note": "Mortalité néonatale, registres sanitaires / module d'historique génésique.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -7640,7 +7640,7 @@
   "metrique": "Number of maternal deaths per 100,000 live births due to pregnancy-related causes.",
   "sens": null,
   "calculable": "non",
-  "note": "Mortalité maternelle — registres sanitaires.",
+  "note": "Mortalité maternelle, registres sanitaires.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -7662,7 +7662,7 @@
   "metrique": "Probability of dying before age five per 1,000 live births.",
   "sens": null,
   "calculable": "non",
-  "note": "Mortalité des moins de 5 ans — registres sanitaires.",
+  "note": "Mortalité des moins de 5 ans, registres sanitaires.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -7900,8 +7900,8 @@
   "bareme_absent": false,
   "bareme_inverse": true,
   "indicateur_fr": "Insécurité alimentaire vécue (FIES)",
-  "expl_en": "The reference scale identifies severe food insecurity through several lived situations, from running out of food to going a whole day without eating. What is counted here is one of them: households that were left with nothing to eat. Running out of food is the moment a household starts selling what it would need to recover — tools, animals, seed — and a temporary shortage turns into a lasting decline.",
-  "expl_fr": "L'échelle de référence repère l'insécurité alimentaire sévère à travers plusieurs situations vécues, du manque total de nourriture à la journée entière sans manger. Ce qui est compté ici est l'une d'elles : les foyers s'étant retrouvés sans plus rien à manger. Se retrouver sans nourriture est le moment où l'on commence à vendre ce dont on aurait besoin pour se relever — outils, animaux, semences — et où une pénurie passagère devient un déclin durable.",
+  "expl_en": "The reference scale identifies severe food insecurity through several lived situations, from running out of food to going a whole day without eating. What is counted here is one of them: households that were left with nothing to eat. Running out of food is the moment a household starts selling what it would need to recover (tools, animals, seed) and a temporary shortage turns into a lasting decline.",
+  "expl_fr": "L'échelle de référence repère l'insécurité alimentaire sévère à travers plusieurs situations vécues, du manque total de nourriture à la journée entière sans manger. Ce qui est compté ici est l'une d'elles : les foyers s'étant retrouvés sans plus rien à manger. Se retrouver sans nourriture est le moment où l'on commence à vendre ce dont on aurait besoin pour se relever (outils, animaux, semences) et où une pénurie passagère devient un déclin durable.",
   "scores_bareme_publie": {
    "Anse à Drick": 10,
    "Barbois": 10,
@@ -8050,7 +8050,7 @@
   "metrique": "Number of suicide deaths per 100,000 inhabitants recorded over one year.",
   "sens": null,
   "calculable": "non",
-  "note": "Taux de suicide — état civil / statistiques sanitaires.",
+  "note": "Taux de suicide, état civil / statistiques sanitaires.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -8072,7 +8072,7 @@
   "metrique": "Number of intentional homicides per 100,000 inhabitants over the last year.",
   "sens": null,
   "calculable": "non",
-  "note": "Taux d'homicide — données policières et judiciaires.",
+  "note": "Taux d'homicide, données policières et judiciaires.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -8094,7 +8094,7 @@
   "metrique": "Number of medical doctors and specialists per 1,000 inhabitants.",
   "sens": "valeur haute = score haut",
   "calculable": "non",
-  "note": "Densité de médecins — recensement des personnels de santé.",
+  "note": "Densité de médecins, recensement des personnels de santé.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -8116,7 +8116,7 @@
   "metrique": "Number of nurses and midwives per 1,000 inhabitants.",
   "sens": "valeur haute = score haut",
   "calculable": "non",
-  "note": "Densité d'infirmières et sages-femmes — recensement des personnels de santé.",
+  "note": "Densité d'infirmières et sages-femmes, recensement des personnels de santé.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -8138,7 +8138,7 @@
   "metrique": "Number of traditional health workers per 1,000 inhabitants, including traditional midwives and healers.",
   "sens": "valeur haute = score haut",
   "calculable": "non",
-  "note": "Densité d'agents de santé traditionnels — recensement dédié.",
+  "note": "Densité d'agents de santé traditionnels, recensement dédié.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -8160,7 +8160,7 @@
   "metrique": "Children (%) receiving two doses of measles-containing vaccine according to the national schedule.",
   "sens": null,
   "calculable": "non",
-  "note": "Couverture vaccinale rougeole — données du PEV.",
+  "note": "Couverture vaccinale rougeole, données du PEV.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -8182,7 +8182,7 @@
   "metrique": "Children (%) receiving three doses of diphtheria, tetanus and pertussis vaccine.",
   "sens": "valeur haute = score haut",
   "calculable": "non",
-  "note": "Couverture vaccinale DTC3 — données du PEV.",
+  "note": "Couverture vaccinale DTC3, données du PEV.",
   "question": "",
   "modalites": "",
   "valeurs": {},
@@ -8648,7 +8648,7 @@
   "bareme_absent": true,
   "bareme_inverse": false,
   "indicateur_fr": "Savoirs et pratiques traditionnels",
-  "expl_en": "The indicator covers know-how handed down locally: medicinal plants, food preservation, farming and fishing practices, reading the weather, building with local materials. What is counted here is one observable example, the way households keep their soil fertile between crops — using manure or organic matter, or resting the land. These practices matter because they work without anything bought outside, and they hold when supply chains do not.",
+  "expl_en": "The indicator covers know-how handed down locally: medicinal plants, food preservation, farming and fishing practices, reading the weather, building with local materials. What is counted here is one observable example, the way households keep their soil fertile between crops, using manure or organic matter, or resting the land. These practices matter because they work without anything bought outside, and they hold when supply chains do not.",
   "expl_fr": "L'indicateur porte sur les savoir-faire transmis localement : plantes médicinales, conservation des aliments, pratiques agricoles et de pêche, lecture des signes du temps, construction en matériaux locaux. Ce qui est compté ici en est un exemple observable : la façon dont les ménages entretiennent la fertilité de leurs sols entre deux cultures, par le fumier ou la matière organique, ou par la jachère. Ces pratiques comptent parce qu'elles fonctionnent sans rien acheter à l'extérieur et tiennent quand les approvisionnements lâchent."
  },
  {
@@ -8762,7 +8762,7 @@
   "bareme_absent": true,
   "bareme_inverse": false,
   "indicateur_fr": "Adaptation plutôt que résignation",
-  "expl_en": "The indicator seeks to distinguish people who believe they can still act after a loss, a crop disease or a hazard from those who see nothing to be done. What is counted here is one telling behaviour: having understood the warning message received and acted on it. Receiving a warning changes nothing by itself — someone convinced that nothing depends on them does not move.",
+  "expl_en": "The indicator seeks to distinguish people who believe they can still act after a loss, a crop disease or a hazard from those who see nothing to be done. What is counted here is one telling behaviour: having understood the warning message received and acted on it. Receiving a warning changes nothing by itself, someone convinced that nothing depends on them does not move.",
   "expl_fr": "L'indicateur cherche à distinguer ceux qui pensent pouvoir encore agir après une perte, une maladie des cultures ou un aléa, de ceux pour qui il n'y a rien à faire. Ce qui est compté ici est un comportement révélateur : avoir compris le message d'alerte reçu et en avoir tenu compte. Recevoir une alerte ne change rien en soi : celui qui est convaincu que rien ne dépend de lui ne bouge pas."
  },
  {
@@ -9104,7 +9104,7 @@
   "bareme_absent": true,
   "bareme_inverse": false,
   "indicateur_fr": "Accueil et intégration des personnes déplacées",
-  "expl_en": "The indicator is meant to describe how newcomers and displaced people are received: whether they are welcomed, treated fairly, and given access to services and to a way of earning a living. What is counted here is the attitude that governs all the rest — the share of people who do not see new arrivals as a danger to the community. Given how many families have been displaced by violence and disasters, whether they are absorbed or rejected shapes the stability of the whole area.",
+  "expl_en": "The indicator is meant to describe how newcomers and displaced people are received: whether they are welcomed, treated fairly, and given access to services and to a way of earning a living. What is counted here is the attitude that governs all the rest, the share of people who do not see new arrivals as a danger to the community. Given how many families have been displaced by violence and disasters, whether they are absorbed or rejected shapes the stability of the whole area.",
   "expl_fr": "L'indicateur vise les conditions d'accueil des nouveaux arrivants et des personnes déplacées : accueil effectif, traitement équitable, accès aux services et à un moyen de subsistance. Ce qui est compté ici est l'attitude qui commande tout le reste : la part des habitants qui ne considèrent pas les nouveaux arrivants comme un danger pour la communauté. Vu le nombre de familles déplacées par la violence et les catastrophes, leur intégration ou leur rejet pèse sur la stabilité de tout le territoire."
  },
  {
@@ -9117,7 +9117,7 @@
   "sens": "valeur haute = score haut",
   "calculable": "approx",
   "note": "Proxy : fréquence de participation à un groupe d'église. Le rapport spirituel à la nature et la coexistence des croyances ne sont pas interrogés.",
-  "question": "Fréquence de participation — Groupe de l'église",
+  "question": "Fréquence de participation, Groupe de l'église",
   "modalites": "Plusieurs par an + 1xmois + 1xsemaine et+",
   "valeurs": {
    "Anse à Drick": 39.67,
@@ -9546,7 +9546,7 @@
   "dimension": "II. INSTITUTIONAL, TECHNOLOGICAL, AND GOVERNANCE  DIMENSION",
   "ponderation": 2.37,
   "echelle": "Échelle linéaire : 0 (0–10 %), 1 (10–20 %), 2 (20–30 %), 3 (30–40 %), 4 (40–50 %), 5 (50–60 %), 6 (60–70 %), 7 (70–80 %), 8 (80–90 %), 9 (90–100 %), 10 (100 %)",
-  "metrique": "Community-based organisations (%) submitting activity reports to another organisation or institution — a proxy for accountability practice.",
+  "metrique": "Community-based organisations (%) submitting activity reports to another organisation or institution, a proxy for accountability practice.",
   "sens": "valeur haute = score haut",
   "calculable": "oui",
   "note": "Source : enquête d'identité des Organisations Communautaires de Base (34 fiches, 8 sections sur 10). L'unité est l'organisation, non le ménage. Aucune ventilation par sexe, âge ou catégorie économique n'est possible : la valeur de la section est reportée sur chaque sous-population.",
@@ -9758,7 +9758,7 @@
   "dimension": "V. SOCIAL AND COMMUNITY DIMENSION",
   "ponderation": 2.17,
   "echelle": "Échelle linéaire : 0 (0–10 %), 1 (10–20 %), 2 (20–30 %), 3 (30–40 %), 4 (40–50 %), 5 (50–60 %), 6 (60–70 %), 7 (70–80 %), 8 (80–90 %), 9 (90–100 %), 10 (100 %)",
-  "metrique": "Community-based organisations (%) having received support from another organisation — capacity building, funding or equipment.",
+  "metrique": "Community-based organisations (%) having received support from another organisation, capacity building, funding or equipment.",
   "sens": "valeur haute = score haut",
   "calculable": "oui",
   "note": "Source : enquête d'identité des Organisations Communautaires de Base (34 fiches, 8 sections sur 10). L'unité est l'organisation, non le ménage. Aucune ventilation par sexe, âge ou catégorie économique n'est possible : la valeur de la section est reportée sur chaque sous-population.",
@@ -9767,8 +9767,8 @@
   "modalites": "",
   "source": "OCB",
   "unite": "%",
-  "expl_en": "Share of organisations having received external support — training, funding or equipment. Measures whether outside resources actually reach the local level.",
-  "expl_fr": "Part des organisations ayant reçu un appui extérieur — formation, financement ou matériel. Mesure si les ressources extérieures atteignent effectivement le niveau local.",
+  "expl_en": "Share of organisations having received external support, training, funding or equipment. Measures whether outside resources actually reach the local level.",
+  "expl_fr": "Part des organisations ayant reçu un appui extérieur, formation, financement ou matériel. Mesure si les ressources extérieures atteignent effectivement le niveau local.",
   "valeurs": {
    "Anse à Drick": 75.0,
    "Barbois": 100.0,
@@ -9864,7 +9864,7 @@
   "dimension": "II. INSTITUTIONAL, TECHNOLOGICAL, AND GOVERNANCE  DIMENSION",
   "ponderation": 2.37,
   "echelle": "Échelle linéaire : 0 (0–10 %), 1 (10–20 %), 2 (20–30 %), 3 (30–40 %), 4 (40–50 %), 5 (50–60 %), 6 (60–70 %), 7 (70–80 %), 8 (80–90 %), 9 (90–100 %), 10 (100 %)",
-  "metrique": "Community-based organisations (%) taking part in a coordination platform that brings together international NGOs — a measure of linking social capital.",
+  "metrique": "Community-based organisations (%) taking part in a coordination platform that brings together international NGOs, a measure of linking social capital.",
   "sens": "valeur haute = score haut",
   "calculable": "oui",
   "note": "Source : enquête d'identité des Organisations Communautaires de Base (34 fiches, 8 sections sur 10). L'unité est l'organisation, non le ménage. Aucune ventilation par sexe, âge ou catégorie économique n'est possible : la valeur de la section est reportée sur chaque sous-population.",
@@ -10191,8 +10191,8 @@
   "modalites": "",
   "source": "OCB",
   "unite": "organisations",
-  "expl_en": "Number of community organisations recorded in the section. Below three, there is no associative fabric to speak of — a shock leaves households facing it individually.",
-  "expl_fr": "Nombre d'organisations communautaires recensées dans la section. En dessous de trois, il n'y a pas de tissu associatif dont on puisse parler — face à un choc, les foyers restent seuls.",
+  "expl_en": "Number of community organisations recorded in the section. Below three, there is no associative fabric to speak of, a shock leaves households facing it individually.",
+  "expl_fr": "Nombre d'organisations communautaires recensées dans la section. En dessous de trois, il n'y a pas de tissu associatif dont on puisse parler, face à un choc, les foyers restent seuls.",
   "valeurs": {
    "Anse à Drick": 5,
    "Barbois": 5,

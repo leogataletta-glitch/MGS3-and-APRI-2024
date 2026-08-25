@@ -1423,8 +1423,8 @@
    "dimension": "II. INSTITUTIONAL, TECHNOLOGICAL, AND GOVERNANCE  DIMENSION",
    "indicateur": "Organisations reporting to an external institution",
    "indicateur_fr": "Organisations rendant compte à une institution extérieure",
-   "metrique": "Community-based organisations (%) submitting activity reports to another organisation or institution — a proxy for accountability practice.",
-   "metrique_fr": "Organisations communautaires de base (%) soumettant des rapports d'activité à une autre organisation ou institution — approche de la pratique de redevabilité.",
+   "metrique": "Community-based organisations (%) submitting activity reports to another organisation or institution, a proxy for accountability practice.",
+   "metrique_fr": "Organisations communautaires de base (%) soumettant des rapports d'activité à une autre organisation ou institution, approche de la pratique de redevabilité.",
    "echelle": "Échelle linéaire : 0 (0–10 %), 1 (10–20 %), 2 (20–30 %), 3 (30–40 %), 4 (40–50 %), 5 (50–60 %), 6 (60–70 %), 7 (70–80 %), 8 (80–90 %), 9 (90–100 %), 10 (100 %)",
    "unite": "%",
    "valeurs": {
@@ -1523,8 +1523,8 @@
    "dimension": "V. SOCIAL AND COMMUNITY DIMENSION",
    "indicateur": "Organisations having received external support",
    "indicateur_fr": "Organisations ayant reçu un appui extérieur",
-   "metrique": "Community-based organisations (%) having received support from another organisation — capacity building, funding or equipment.",
-   "metrique_fr": "Organisations communautaires de base (%) ayant reçu un appui d'une autre organisation — renforcement de capacités, financement ou matériel.",
+   "metrique": "Community-based organisations (%) having received support from another organisation, capacity building, funding or equipment.",
+   "metrique_fr": "Organisations communautaires de base (%) ayant reçu un appui d'une autre organisation, renforcement de capacités, financement ou matériel.",
    "echelle": "Échelle linéaire : 0 (0–10 %), 1 (10–20 %), 2 (20–30 %), 3 (30–40 %), 4 (40–50 %), 5 (50–60 %), 6 (60–70 %), 7 (70–80 %), 8 (80–90 %), 9 (90–100 %), 10 (100 %)",
    "unite": "%",
    "valeurs": {
@@ -1573,8 +1573,8 @@
    "dimension": "II. INSTITUTIONAL, TECHNOLOGICAL, AND GOVERNANCE  DIMENSION",
    "indicateur": "Organisations in a coordination platform with international NGOs",
    "indicateur_fr": "Organisations dans une plateforme de coordination avec des ONG internationales",
-   "metrique": "Community-based organisations (%) taking part in a coordination platform that brings together international NGOs — a measure of linking social capital.",
-   "metrique_fr": "Organisations communautaires de base (%) participant à une plateforme de coordination réunissant des ONG internationales — mesure du capital social d'ouverture.",
+   "metrique": "Community-based organisations (%) taking part in a coordination platform that brings together international NGOs, a measure of linking social capital.",
+   "metrique_fr": "Organisations communautaires de base (%) participant à une plateforme de coordination réunissant des ONG internationales, mesure du capital social d'ouverture.",
    "echelle": "Échelle linéaire : 0 (0–10 %), 1 (10–20 %), 2 (20–30 %), 3 (30–40 %), 4 (40–50 %), 5 (50–60 %), 6 (60–70 %), 7 (70–80 %), 8 (80–90 %), 9 (90–100 %), 10 (100 %)",
    "unite": "%",
    "valeurs": {

@@ -43,8 +43,8 @@
    "cle": "alimentation",
    "titre_en": "Food deprivation is the majority experience",
    "titre_fr": "La privation alimentaire est l'expérience majoritaire",
-   "texte_en": "Food insecurity here is not a margin: it is what most households live through. Two thirds skipped a meal over the past year, and close to half went a whole day without eating. The severe food insecurity indicator places the territory at the bottom of the IRLA scale — the worst score of the whole index.",
-   "texte_fr": "L'insécurité alimentaire n'est pas ici une marge : c'est ce que vit la majorité des ménages. Deux tiers ont sauté un repas au cours de l'année écoulée, et près de la moitié ont passé une journée entière sans manger. L'indicateur d'insécurité alimentaire sévère place le territoire au bas de l'échelle IRLA — le score le plus faible de tout l'indice.",
+   "texte_en": "Food insecurity here is not a margin: it is what most households live through. Two thirds skipped a meal over the past year, and close to half went a whole day without eating. The severe food insecurity indicator places the territory at the bottom of the IRLA scale, the worst score of the whole index.",
+   "texte_fr": "L'insécurité alimentaire n'est pas ici une marge : c'est ce que vit la majorité des ménages. Deux tiers ont sauté un repas au cours de l'année écoulée, et près de la moitié ont passé une journée entière sans manger. L'indicateur d'insécurité alimentaire sévère place le territoire au bas de l'échelle IRLA, le score le plus faible de tout l'indice.",
    "figures": [
     {
      "type": "question",
@@ -169,8 +169,8 @@
      "libelle_en": "Food Insecurity Experience (FIES)",
      "libelle_fr": "Insécurité alimentaire vécue (FIES)",
      "metrique_en": "Individuals (%) experiencing severe food insecurity over the last 12 months, identified by food exhaustion or a full day without eating.",
-     "expl_en": "The reference scale identifies severe food insecurity through several lived situations, from running out of food to going a whole day without eating. What is counted here is one of them: households that were left with nothing to eat. Running out of food is the moment a household starts selling what it would need to recover — tools, animals, seed — and a temporary shortage turns into a lasting decline.",
-     "expl_fr": "L'échelle de référence repère l'insécurité alimentaire sévère à travers plusieurs situations vécues, du manque total de nourriture à la journée entière sans manger. Ce qui est compté ici est l'une d'elles : les foyers s'étant retrouvés sans plus rien à manger. Se retrouver sans nourriture est le moment où l'on commence à vendre ce dont on aurait besoin pour se relever — outils, animaux, semences — et où une pénurie passagère devient un déclin durable.",
+     "expl_en": "The reference scale identifies severe food insecurity through several lived situations, from running out of food to going a whole day without eating. What is counted here is one of them: households that were left with nothing to eat. Running out of food is the moment a household starts selling what it would need to recover (tools, animals, seed) and a temporary shortage turns into a lasting decline.",
+     "expl_fr": "L'échelle de référence repère l'insécurité alimentaire sévère à travers plusieurs situations vécues, du manque total de nourriture à la journée entière sans manger. Ce qui est compté ici est l'une d'elles : les foyers s'étant retrouvés sans plus rien à manger. Se retrouver sans nourriture est le moment où l'on commence à vendre ce dont on aurait besoin pour se relever (outils, animaux, semences) et où une pénurie passagère devient un déclin durable.",
      "pct": 60.39,
      "n": null,
      "base": 1211,
@@ -221,8 +221,8 @@
    "cle": "energie",
    "titre_en": "Almost no household has electricity, almost all cook on wood",
    "titre_fr": "Presque aucun foyer n'a l'électricité, presque tous cuisinent au bois",
-   "texte_en": "Access to electricity and access to clean cooking fuels are two of the lowest indicators in the whole index. Cooking rests on dry wood and charcoal, which ties the daily energy of households directly to the state of the surrounding tree cover — the deforestation loop the IRLA framework describes.",
-   "texte_fr": "L'accès à l'électricité et l'accès à des combustibles de cuisson propres comptent parmi les indicateurs les plus bas de tout l'indice. La cuisson repose sur le bois sec et le charbon, ce qui lie l'énergie quotidienne des foyers à l'état du couvert arboré environnant — la boucle de déforestation que décrit le cadre IRLA.",
+   "texte_en": "Access to electricity and access to clean cooking fuels are two of the lowest indicators in the whole index. Cooking rests on dry wood and charcoal, which ties the daily energy of households directly to the state of the surrounding tree cover, the deforestation loop the IRLA framework describes.",
+   "texte_fr": "L'accès à l'électricité et l'accès à des combustibles de cuisson propres comptent parmi les indicateurs les plus bas de tout l'indice. La cuisson repose sur le bois sec et le charbon, ce qui lie l'énergie quotidienne des foyers à l'état du couvert arboré environnant, la boucle de déforestation que décrit le cadre IRLA.",
    "figures": [
     {
      "type": "indicateur",
@@ -230,8 +230,8 @@
      "libelle_en": "Access to Electricity  (SDG 7.1.1)",
      "libelle_fr": "Accès à l'électricité (ODD 7.1.1)",
      "metrique_en": "Households (%) whose main source of lighting is public grid electricity or solar systems. Alternative or temporary sources such as rechargeable bulbs, kerosene lamps, candles and generators are excluded.",
-     "expl_en": "This counts households whose main lighting comes from the public grid or from solar panels. Stopgap solutions — rechargeable bulbs, kerosene lamps, candles, private generators — are deliberately excluded, because they signal the absence of a stable supply rather than access to one. Electricity is what allows food to be kept, clinics to work at night, water to be pumped and phones to be charged when a crisis hits.",
-     "expl_fr": "On compte les ménages dont l'éclairage principal vient du réseau public (EDH) ou de panneaux solaires. Les solutions de dépannage — ampoules rechargeables, lampes à pétrole, bougies, groupes électrogènes — sont volontairement exclues : elles traduisent l'absence d'une alimentation stable plutôt qu'un accès. L'électricité conditionne la conservation des aliments, le fonctionnement des soins la nuit, le pompage de l'eau et la recharge des téléphones en cas de crise.",
+     "expl_en": "This counts households whose main lighting comes from the public grid or from solar panels. Stopgap solutions (rechargeable bulbs, kerosene lamps, candles, private generators) are deliberately excluded, because they signal the absence of a stable supply rather than access to one. Electricity is what allows food to be kept, clinics to work at night, water to be pumped and phones to be charged when a crisis hits.",
+     "expl_fr": "On compte les ménages dont l'éclairage principal vient du réseau public (EDH) ou de panneaux solaires. Les solutions de dépannage (ampoules rechargeables, lampes à pétrole, bougies, groupes électrogènes) sont volontairement exclues : elles traduisent l'absence d'une alimentation stable plutôt qu'un accès. L'électricité conditionne la conservation des aliments, le fonctionnement des soins la nuit, le pompage de l'eau et la recharge des téléphones en cas de crise.",
      "pct": 17.26,
      "n": null,
      "base": 1211,
@@ -412,7 +412,7 @@
    "cle": "preparation",
    "titre_en": "A territory exposed to cyclones, and unprepared for them",
    "titre_fr": "Un territoire exposé aux cyclones, et qui ne s'y prépare pas",
-   "texte_en": "This is the sharpest gap the survey reveals. The Greater South is hit by cyclones and floods, yet fewer than one household in twenty has taken part in any preparedness activity, nineteen in twenty have never done a drill, and more than four in five do not know where to find emergency shelter. Alerts do reach people — the weakness is not warning, it is what people are equipped to do once warned.",
+   "texte_en": "This is the sharpest gap the survey reveals. The Greater South is hit by cyclones and floods, yet fewer than one household in twenty has taken part in any preparedness activity, nineteen in twenty have never done a drill, and more than four in five do not know where to find emergency shelter. Alerts do reach people, the weakness is not warning, it is what people are equipped to do once warned.",
    "texte_fr": "C'est l'écart le plus net que révèle l'enquête. Le Grand Sud est frappé par les cyclones et les inondations, et pourtant moins d'un ménage sur vingt a participé à une action de préparation, dix-neuf sur vingt n'ont jamais fait d'exercice de simulation, et plus de quatre sur cinq ignorent où se mettre à l'abri. L'alerte, elle, parvient aux gens : la faiblesse n'est pas l'avertissement, c'est ce que les gens sont en mesure de faire une fois avertis.",
    "figures": [
     {
@@ -547,7 +547,7 @@
     },
     {
      "type": "question",
-     "question": "Sensibilisé — Où et comment trouver les abris d'urgence / se mettre à l'abri",
+     "question": "Sensibilisé, Où et comment trouver les abris d'urgence / se mettre à l'abri",
      "modalites": [
       "Non"
      ],
@@ -586,7 +586,7 @@
     },
     {
      "type": "question",
-     "question": "Sensibilisé — Comment établir un stock de contingence familiale",
+     "question": "Sensibilisé, Comment établir un stock de contingence familiale",
      "modalites": [
       "Non"
      ],
@@ -629,7 +629,7 @@
      "libelle_en": "Availability of Operational Emergency Shelters",
      "libelle_fr": "Disponibilité d'abris d'urgence opérationnels",
      "metrique_en": "Communities (%) reporting the existence of at least one operational emergency shelter",
-     "expl_en": "The indicator is meant to record whether a community has at least one emergency shelter that actually works. Shelters could not be checked on the ground, so what is counted here is the share of households saying they have been told where to go and how to take shelter. It therefore measures whether the evacuation instruction has reached people — without which even an existing shelter stays empty.",
+     "expl_en": "The indicator is meant to record whether a community has at least one emergency shelter that actually works. Shelters could not be checked on the ground, so what is counted here is the share of households saying they have been told where to go and how to take shelter. It therefore measures whether the evacuation instruction has reached people, without which even an existing shelter stays empty.",
      "expl_fr": "L'indicateur vise l'existence, dans la communauté, d'au moins un abri d'urgence réellement opérationnel. Les bâtiments n'ayant pas pu être vérifiés sur le terrain, ce qui est compté ici est la part des ménages déclarant avoir été sensibilisés sur où et comment se mettre à l'abri. On mesure donc la diffusion de la consigne d'évacuation, sans laquelle un abri, même existant, reste inutilisé.",
      "pct": 15.87,
      "n": null,
@@ -846,7 +846,7 @@
      "libelle_en": "Safely Managed Sanitation Services  (SDG 6.2.1.a)",
      "libelle_fr": "Services d'assainissement gérés en sécurité (ODD 6.2.1.a)",
      "metrique_en": "Households (%) using improved and non-shared sanitation facilities (flush toilets connected to sewer or septic systems, ventilated improved pit latrines, pit latrines with slab, and composting toilets). Open defecation, pit latrines without slab, buckets and open drains are classified as non-improved.",
-     "expl_en": "This counts households whose toilet is of a type that safely keeps people away from waste — a flush toilet connected to a sewer or septic tank, a ventilated improved pit latrine, a latrine with a slab, or a composting toilet. Households were only asked which type of toilet they usually use, so what is actually counted here is the quality of the facility, not whether it is shared with other households. Where sanitation fails, the first heavy rain turns human waste into an epidemic risk for the whole area.",
+     "expl_en": "This counts households whose toilet is of a type that safely keeps people away from waste, a flush toilet connected to a sewer or septic tank, a ventilated improved pit latrine, a latrine with a slab, or a composting toilet. Households were only asked which type of toilet they usually use, so what is actually counted here is the quality of the facility, not whether it is shared with other households. Where sanitation fails, the first heavy rain turns human waste into an epidemic risk for the whole area.",
      "expl_fr": "On compte ici les ménages dont les toilettes isolent réellement les personnes des excréments : chasse d'eau reliée à un égout ou à une fosse septique, latrine à fosse ventilée améliorée, latrine avec dalle ou toilette à compostage. La question posée portait seulement sur le type de toilettes habituellement utilisé : ce qui est compté ici est donc la qualité de l'équipement, sans savoir s'il est partagé avec d'autres ménages. Quand l'assainissement est défaillant, la première grosse pluie transforme les excréments en risque épidémique pour tout le territoire.",
      "pct": 31.87,
      "n": null,
@@ -1037,8 +1037,8 @@
    "cle": "capital_social",
    "titre_en": "Collective life is thin, and that is a resilience problem",
    "titre_fr": "La vie collective est mince, et c'est un problème de résilience",
-   "texte_en": "Four households in five belong to no community organisation, and roughly the same share has taken part in no community meeting over the year. Both bonding capital — family and close relatives — and bridging capital — ties across the village — score near the bottom of the scale. In the IRLA framework these ties are precisely what carries a household through a shock when institutions do not.",
-   "texte_fr": "Quatre ménages sur cinq n'appartiennent à aucune organisation communautaire, et une proportion voisine n'a participé à aucune réunion communautaire dans l'année. Le capital social de proximité — famille et proches — comme le capital passerelle — les liens à l'échelle du village — se situent en bas de l'échelle. Or dans le cadre IRLA, ce sont précisément ces liens qui portent un ménage à travers un choc quand les institutions ne le font pas.",
+   "texte_en": "Four households in five belong to no community organisation, and roughly the same share has taken part in no community meeting over the year. Both bonding capital (family and close relatives) and bridging capital (ties across the village) score near the bottom of the scale. In the IRLA framework these ties are precisely what carries a household through a shock when institutions do not.",
+   "texte_fr": "Quatre ménages sur cinq n'appartiennent à aucune organisation communautaire, et une proportion voisine n'a participé à aucune réunion communautaire dans l'année. Le capital social de proximité (famille et proches) comme le capital passerelle (les liens à l'échelle du village) se situent en bas de l'échelle. Or dans le cadre IRLA, ce sont précisément ces liens qui portent un ménage à travers un choc quand les institutions ne le font pas.",
    "figures": [
     {
      "type": "question",
@@ -1124,7 +1124,7 @@
      "libelle_en": "Bonding social capital (family and close relatives)",
      "libelle_fr": "Capital social d'entraide (famille et proches)",
      "metrique_en": "Households (%) that both gave and received assistance within their close family network during the last 12 months.",
-     "expl_en": "The definition calls for reciprocity: households that both gave and received help within their close family over the past year. What is counted here is one direction only — having received help or a service from the extended family. These close ties are the first thing that comes into play when a roof blows off or someone falls ill.",
+     "expl_en": "The definition calls for reciprocity: households that both gave and received help within their close family over the past year. What is counted here is one direction only, having received help or a service from the extended family. These close ties are the first thing that comes into play when a roof blows off or someone falls ill.",
      "expl_fr": "La définition suppose une réciprocité : les ménages ayant à la fois donné et reçu de l'aide au sein de leur famille proche durant l'année. Ce qui est compté ici est un seul sens, avoir reçu une aide ou un service de la part de la famille élargie. Ces liens proches sont les premiers à jouer quand une toiture s'envole ou que quelqu'un tombe malade.",
      "pct": 14.62,
      "n": null,
@@ -1228,8 +1228,8 @@
    "cle": "economie",
    "titre_en": "No savings, no account, no cushion",
    "titre_fr": "Ni épargne, ni compte, ni matelas de sécurité",
-   "texte_en": "Seven households in ten hold no savings or any other safety net outside land, and roughly the same share belongs to no savings group. Holding an account in a financial institution scores near the bottom of the index. A household in this position absorbs a shock by selling what it owns or by eating less — which is what the food figures above describe.",
-   "texte_fr": "Sept ménages sur dix n'ont ni épargne ni aucun autre filet de sécurité hors foncier, et une proportion voisine n'appartient à aucune mutuelle d'épargne. La détention d'un compte dans une institution financière se situe en bas de l'indice. Un ménage dans cette situation absorbe un choc en vendant ce qu'il possède ou en mangeant moins — ce que décrivent précisément les chiffres alimentaires ci-dessus.",
+   "texte_en": "Seven households in ten hold no savings or any other safety net outside land, and roughly the same share belongs to no savings group. Holding an account in a financial institution scores near the bottom of the index. A household in this position absorbs a shock by selling what it owns or by eating less, which is what the food figures above describe.",
+   "texte_fr": "Sept ménages sur dix n'ont ni épargne ni aucun autre filet de sécurité hors foncier, et une proportion voisine n'appartient à aucune mutuelle d'épargne. La détention d'un compte dans une institution financière se situe en bas de l'indice. Un ménage dans cette situation absorbe un choc en vendant ce qu'il possède ou en mangeant moins, ce que décrivent précisément les chiffres alimentaires ci-dessus.",
    "figures": [
     {
      "type": "question",
@@ -1315,7 +1315,7 @@
      "libelle_en": "Population holding an account (SDG 8.10.2)",
      "libelle_fr": "Population disposant d'un compte financier (ODD 8.10.2)",
      "metrique_en": "Adults (%) reporting ownership of an account in a formal financial institution, including banks, credit unions or deposit-taking microfinance institutions.",
-     "expl_en": "This counts adults holding an account in a formal financial institution — a commercial bank, a credit union or a mutual savings and credit group. Cash kept at home disappears with a flood, a fire or a theft, and cannot be rebuilt afterwards. An account is what lets a household save between two shocks and receive money quickly when one occurs.",
+     "expl_en": "This counts adults holding an account in a formal financial institution, a commercial bank, a credit union or a mutual savings and credit group. Cash kept at home disappears with a flood, a fire or a theft, and cannot be rebuilt afterwards. An account is what lets a household save between two shocks and receive money quickly when one occurs.",
      "expl_fr": "On compte les adultes disposant d'un compte dans une institution financière formelle : banque commerciale, caisse populaire ou mutuelle de solidarité. L'argent gardé à la maison disparaît avec une inondation, un incendie ou un vol, et ne se reconstitue pas. Un compte est ce qui permet d'épargner entre deux chocs et de recevoir des fonds rapidement lorsqu'un choc survient.",
      "pct": 36.0,
      "n": null,
@@ -1367,8 +1367,8 @@
      "libelle_en": "Population Below 50% of Median Income",
      "libelle_fr": "Population sous 50 % du revenu médian",
      "metrique_en": "Individuals (%) living with less than half of the national median income",
-     "expl_en": "The indicator is meant to identify people living on less than half the national median income. What is counted here is simpler: adults who place their monthly income in the lowest bracket offered by the questionnaire, from 0 to 2,500 gourdes. It marks out the group for whom any extra expense — a funeral, a hospital stay, a lost harvest — can only be met by giving up something else.",
-     "expl_fr": "L'indicateur vise les personnes vivant avec moins de la moitié du revenu médian national. Ce qui est compté ici est plus simple : les adultes qui situent leur revenu mensuel dans la tranche la plus basse du questionnaire, de 0 à 2 500 gourdes. Il désigne le groupe pour lequel toute dépense supplémentaire — funérailles, hospitalisation, récolte perdue — ne peut être couverte qu'en renonçant à autre chose.",
+     "expl_en": "The indicator is meant to identify people living on less than half the national median income. What is counted here is simpler: adults who place their monthly income in the lowest bracket offered by the questionnaire, from 0 to 2,500 gourdes. It marks out the group for whom any extra expense (a funeral, a hospital stay, a lost harvest) can only be met by giving up something else.",
+     "expl_fr": "L'indicateur vise les personnes vivant avec moins de la moitié du revenu médian national. Ce qui est compté ici est plus simple : les adultes qui situent leur revenu mensuel dans la tranche la plus basse du questionnaire, de 0 à 2 500 gourdes. Il désigne le groupe pour lequel toute dépense supplémentaire (funérailles, hospitalisation, récolte perdue) ne peut être couverte qu'en renonçant à autre chose.",
      "pct": 23.86,
      "n": null,
      "base": 1211,
@@ -1419,8 +1419,8 @@
    "cle": "foret",
    "titre_en": "Half the forest loss of a quarter-century happened in one storm",
    "titre_fr": "La moitié du recul forestier de vingt-cinq ans tient à une seule tempête",
-   "texte_en": "Satellite imagery gives a figure the survey cannot: the ten communal sections held 10,713 hectares of forest in 2000 and have lost 1,373 since — but 71 percent of that loss falls in 2016-2018, which is Hurricane Matthew and its aftermath. Excluding that shock, the chronic rate drops from −0.54 to −0.15 percent a year. The distinction matters for action: Trichet lost 99 percent of its forest to the storm and almost nothing to clearing, while Dalmette and Blactote were barely touched by Matthew and lose tree cover steadily, year after year. These two situations do not call for the same response.",
-   "texte_fr": "L'imagerie satellitaire donne un chiffre que l'enquête ne peut pas produire : les dix sections communales comptaient 10 713 hectares boisés en 2000 et en ont perdu 1 373 depuis — mais 71 % de cette perte tombe en 2016-2018, c'est-à-dire l'ouragan Matthew et ses suites. Hors ce choc, le taux chronique passe de −0,54 à −0,15 % par an. La distinction commande l'action : Trichet a perdu 99 % de sa forêt à cause de la tempête et presque rien au défrichement, tandis que Dalmette et Blactote, à peine touchées par Matthew, perdent du couvert régulièrement, année après année. Ces deux situations n'appellent pas la même réponse.",
+   "texte_en": "Satellite imagery gives a figure the survey cannot: the ten communal sections held 10,713 hectares of forest in 2000 and have lost 1,373 since, but 71 percent of that loss falls in 2016-2018, which is Hurricane Matthew and its aftermath. Excluding that shock, the chronic rate drops from −0.54 to −0.15 percent a year. The distinction matters for action: Trichet lost 99 percent of its forest to the storm and almost nothing to clearing, while Dalmette and Blactote were barely touched by Matthew and lose tree cover steadily, year after year. These two situations do not call for the same response.",
+   "texte_fr": "L'imagerie satellitaire donne un chiffre que l'enquête ne peut pas produire : les dix sections communales comptaient 10 713 hectares boisés en 2000 et en ont perdu 1 373 depuis, mais 71 % de cette perte tombe en 2016-2018, c'est-à-dire l'ouragan Matthew et ses suites. Hors ce choc, le taux chronique passe de −0,54 à −0,15 % par an. La distinction commande l'action : Trichet a perdu 99 % de sa forêt à cause de la tempête et presque rien au défrichement, tandis que Dalmette et Blactote, à peine touchées par Matthew, perdent du couvert régulièrement, année après année. Ces deux situations n'appellent pas la même réponse.",
    "figures": [
     {
      "type": "indicateur",
@@ -1570,8 +1570,8 @@
    "dimension": "I. PHYSICAL AND INFRASTRUCTURAL DIMENSION",
    "libelle_en": "Access to Electricity  (SDG 7.1.1)",
    "libelle_fr": "Accès à l'électricité (ODD 7.1.1)",
-   "expl_en": "This counts households whose main lighting comes from the public grid or from solar panels. Stopgap solutions — rechargeable bulbs, kerosene lamps, candles, private generators — are deliberately excluded, because they signal the absence of a stable supply rather than access to one. Electricity is what allows food to be kept, clinics to work at night, water to be pumped and phones to be charged when a crisis hits.",
-   "expl_fr": "On compte les ménages dont l'éclairage principal vient du réseau public (EDH) ou de panneaux solaires. Les solutions de dépannage — ampoules rechargeables, lampes à pétrole, bougies, groupes électrogènes — sont volontairement exclues : elles traduisent l'absence d'une alimentation stable plutôt qu'un accès. L'électricité conditionne la conservation des aliments, le fonctionnement des soins la nuit, le pompage de l'eau et la recharge des téléphones en cas de crise.",
+   "expl_en": "This counts households whose main lighting comes from the public grid or from solar panels. Stopgap solutions (rechargeable bulbs, kerosene lamps, candles, private generators) are deliberately excluded, because they signal the absence of a stable supply rather than access to one. Electricity is what allows food to be kept, clinics to work at night, water to be pumped and phones to be charged when a crisis hits.",
+   "expl_fr": "On compte les ménages dont l'éclairage principal vient du réseau public (EDH) ou de panneaux solaires. Les solutions de dépannage (ampoules rechargeables, lampes à pétrole, bougies, groupes électrogènes) sont volontairement exclues : elles traduisent l'absence d'une alimentation stable plutôt qu'un accès. L'électricité conditionne la conservation des aliments, le fonctionnement des soins la nuit, le pompage de l'eau et la recharge des téléphones en cas de crise.",
    "pct": 17.26,
    "score": 0,
    "source": "menage",
@@ -1616,7 +1616,7 @@
    "dimension": "III.  ENVIRONMENTAL AND ECOLOGICAL DIMENSION",
    "libelle_en": "Marine macroplastic",
    "libelle_fr": "Macroplastiques en milieu marin",
-   "expl_en": "The indicator is meant to describe how much visible plastic litter is present along the coast and at sea. No field observation was carried out, so what is counted here is the share of households that throw their waste into the sea or onto vacant land — the practice that feeds that pollution. It ties a domestic habit to what ends up in fishing nets, in the mangroves and on the beaches.",
+   "expl_en": "The indicator is meant to describe how much visible plastic litter is present along the coast and at sea. No field observation was carried out, so what is counted here is the share of households that throw their waste into the sea or onto vacant land, the practice that feeds that pollution. It ties a domestic habit to what ends up in fishing nets, in the mangroves and on the beaches.",
    "expl_fr": "L'indicateur vise la présence visible de macro-déchets plastiques sur le littoral et en mer. Aucune observation de terrain n'ayant été menée, ce qui est compté ici est la part des ménages qui jettent leurs déchets à la mer ou sur un terrain vague, c'est-à-dire la pratique qui alimente cette pollution. Il relie un geste domestique à ce qui se retrouve dans les filets, dans les mangroves et sur les plages.",
    "pct": 46.08,
    "score": 0,
@@ -1662,8 +1662,8 @@
    "dimension": "VI. HUMAN DIMENSION",
    "libelle_en": "Food Insecurity Experience (FIES)",
    "libelle_fr": "Insécurité alimentaire vécue (FIES)",
-   "expl_en": "The reference scale identifies severe food insecurity through several lived situations, from running out of food to going a whole day without eating. What is counted here is one of them: households that were left with nothing to eat. Running out of food is the moment a household starts selling what it would need to recover — tools, animals, seed — and a temporary shortage turns into a lasting decline.",
-   "expl_fr": "L'échelle de référence repère l'insécurité alimentaire sévère à travers plusieurs situations vécues, du manque total de nourriture à la journée entière sans manger. Ce qui est compté ici est l'une d'elles : les foyers s'étant retrouvés sans plus rien à manger. Se retrouver sans nourriture est le moment où l'on commence à vendre ce dont on aurait besoin pour se relever — outils, animaux, semences — et où une pénurie passagère devient un déclin durable.",
+   "expl_en": "The reference scale identifies severe food insecurity through several lived situations, from running out of food to going a whole day without eating. What is counted here is one of them: households that were left with nothing to eat. Running out of food is the moment a household starts selling what it would need to recover (tools, animals, seed) and a temporary shortage turns into a lasting decline.",
+   "expl_fr": "L'échelle de référence repère l'insécurité alimentaire sévère à travers plusieurs situations vécues, du manque total de nourriture à la journée entière sans manger. Ce qui est compté ici est l'une d'elles : les foyers s'étant retrouvés sans plus rien à manger. Se retrouver sans nourriture est le moment où l'on commence à vendre ce dont on aurait besoin pour se relever (outils, animaux, semences) et où une pénurie passagère devient un déclin durable.",
    "pct": 60.39,
    "score": 0,
    "source": "menage",
@@ -1708,7 +1708,7 @@
    "dimension": "I. PHYSICAL AND INFRASTRUCTURAL DIMENSION",
    "libelle_en": "Population Covered by a Mobile Network  (SDG 9.c.1)",
    "libelle_fr": "Couverture par un réseau mobile (ODD 9.c.1)",
-   "expl_en": "This counts households that can pick up a mobile signal at home, including a signal that comes and goes. Nothing was asked about how good or how affordable the service is — only whether a signal reaches the house. Without it a storm warning never arrives, families cannot check on each other, and no relief operation can be coordinated.",
+   "expl_en": "This counts households that can pick up a mobile signal at home, including a signal that comes and goes. Nothing was asked about how good or how affordable the service is, only whether a signal reaches the house. Without it a storm warning never arrives, families cannot check on each other, and no relief operation can be coordinated.",
    "expl_fr": "On compte les ménages qui captent un signal de téléphonie mobile à domicile, y compris lorsqu'il est intermittent. Rien n'a été demandé sur la qualité ni sur le coût du service : seule compte l'existence d'un signal jusqu'à la maison. Sans lui, une alerte cyclonique ne parvient pas, les familles ne peuvent pas prendre de nouvelles et aucun secours ne se coordonne.",
    "pct": 88.06,
    "score": 1,
@@ -1731,7 +1731,7 @@
    "dimension": "II. INSTITUTIONAL, TECHNOLOGICAL, AND GOVERNANCE  DIMENSION",
    "libelle_en": "Local Governance Membership",
    "libelle_fr": "Participation à la gouvernance locale",
-   "expl_en": "This counts households with a member sitting on a body that helps run local affairs — a management committee, a watch committee, a local association. The point is no longer attending but holding a seat where decisions are made. These bodies are the ones that organise a response in the first hours after a shock, long before outside help arrives.",
+   "expl_en": "This counts households with a member sitting on a body that helps run local affairs, a management committee, a watch committee, a local association. The point is no longer attending but holding a seat where decisions are made. These bodies are the ones that organise a response in the first hours after a shock, long before outside help arrives.",
    "expl_fr": "Sont comptés les ménages dont un membre siège dans une instance qui participe à la conduite des affaires locales : comité de gestion, comité de vigilance, association locale. Il ne s'agit plus d'assister, mais d'occuper une place où se prennent les décisions. Ce sont ces instances qui organisent la réponse dans les premières heures d'un choc, bien avant toute aide extérieure.",
    "pct": 12.66,
    "score": 1,
@@ -1777,7 +1777,7 @@
    "dimension": "IV. ECONOMIC, LIVELIHOODS, AND FOOD SECURITY DIMENSION",
    "libelle_en": "Population holding an account (SDG 8.10.2)",
    "libelle_fr": "Population disposant d'un compte financier (ODD 8.10.2)",
-   "expl_en": "This counts adults holding an account in a formal financial institution — a commercial bank, a credit union or a mutual savings and credit group. Cash kept at home disappears with a flood, a fire or a theft, and cannot be rebuilt afterwards. An account is what lets a household save between two shocks and receive money quickly when one occurs.",
+   "expl_en": "This counts adults holding an account in a formal financial institution, a commercial bank, a credit union or a mutual savings and credit group. Cash kept at home disappears with a flood, a fire or a theft, and cannot be rebuilt afterwards. An account is what lets a household save between two shocks and receive money quickly when one occurs.",
    "expl_fr": "On compte les adultes disposant d'un compte dans une institution financière formelle : banque commerciale, caisse populaire ou mutuelle de solidarité. L'argent gardé à la maison disparaît avec une inondation, un incendie ou un vol, et ne se reconstitue pas. Un compte est ce qui permet d'épargner entre deux chocs et de recevoir des fonds rapidement lorsqu'un choc survient.",
    "pct": 36.0,
    "score": 1,
@@ -1800,8 +1800,8 @@
    "dimension": "IV. ECONOMIC, LIVELIHOODS, AND FOOD SECURITY DIMENSION",
    "libelle_en": "Population Below 50% of Median Income",
    "libelle_fr": "Population sous 50 % du revenu médian",
-   "expl_en": "The indicator is meant to identify people living on less than half the national median income. What is counted here is simpler: adults who place their monthly income in the lowest bracket offered by the questionnaire, from 0 to 2,500 gourdes. It marks out the group for whom any extra expense — a funeral, a hospital stay, a lost harvest — can only be met by giving up something else.",
-   "expl_fr": "L'indicateur vise les personnes vivant avec moins de la moitié du revenu médian national. Ce qui est compté ici est plus simple : les adultes qui situent leur revenu mensuel dans la tranche la plus basse du questionnaire, de 0 à 2 500 gourdes. Il désigne le groupe pour lequel toute dépense supplémentaire — funérailles, hospitalisation, récolte perdue — ne peut être couverte qu'en renonçant à autre chose.",
+   "expl_en": "The indicator is meant to identify people living on less than half the national median income. What is counted here is simpler: adults who place their monthly income in the lowest bracket offered by the questionnaire, from 0 to 2,500 gourdes. It marks out the group for whom any extra expense (a funeral, a hospital stay, a lost harvest) can only be met by giving up something else.",
+   "expl_fr": "L'indicateur vise les personnes vivant avec moins de la moitié du revenu médian national. Ce qui est compté ici est plus simple : les adultes qui situent leur revenu mensuel dans la tranche la plus basse du questionnaire, de 0 à 2 500 gourdes. Il désigne le groupe pour lequel toute dépense supplémentaire (funérailles, hospitalisation, récolte perdue) ne peut être couverte qu'en renonçant à autre chose.",
    "pct": 23.86,
    "score": 1,
    "source": "menage",
@@ -1823,7 +1823,7 @@
    "dimension": "V. SOCIAL AND COMMUNITY DIMENSION",
    "libelle_en": "Bonding social capital (family and close relatives)",
    "libelle_fr": "Capital social d'entraide (famille et proches)",
-   "expl_en": "The definition calls for reciprocity: households that both gave and received help within their close family over the past year. What is counted here is one direction only — having received help or a service from the extended family. These close ties are the first thing that comes into play when a roof blows off or someone falls ill.",
+   "expl_en": "The definition calls for reciprocity: households that both gave and received help within their close family over the past year. What is counted here is one direction only, having received help or a service from the extended family. These close ties are the first thing that comes into play when a roof blows off or someone falls ill.",
    "expl_fr": "La définition suppose une réciprocité : les ménages ayant à la fois donné et reçu de l'aide au sein de leur famille proche durant l'année. Ce qui est compté ici est un seul sens, avoir reçu une aide ou un service de la part de la famille élargie. Ces liens proches sont les premiers à jouer quand une toiture s'envole ou que quelqu'un tombe malade.",
    "pct": 14.62,
    "score": 1,
@@ -1869,7 +1869,7 @@
    "dimension": "I. PHYSICAL AND INFRASTRUCTURAL DIMENSION",
    "libelle_en": "Safely Managed Sanitation Services  (SDG 6.2.1.a)",
    "libelle_fr": "Services d'assainissement gérés en sécurité (ODD 6.2.1.a)",
-   "expl_en": "This counts households whose toilet is of a type that safely keeps people away from waste — a flush toilet connected to a sewer or septic tank, a ventilated improved pit latrine, a latrine with a slab, or a composting toilet. Households were only asked which type of toilet they usually use, so what is actually counted here is the quality of the facility, not whether it is shared with other households. Where sanitation fails, the first heavy rain turns human waste into an epidemic risk for the whole area.",
+   "expl_en": "This counts households whose toilet is of a type that safely keeps people away from waste, a flush toilet connected to a sewer or septic tank, a ventilated improved pit latrine, a latrine with a slab, or a composting toilet. Households were only asked which type of toilet they usually use, so what is actually counted here is the quality of the facility, not whether it is shared with other households. Where sanitation fails, the first heavy rain turns human waste into an epidemic risk for the whole area.",
    "expl_fr": "On compte ici les ménages dont les toilettes isolent réellement les personnes des excréments : chasse d'eau reliée à un égout ou à une fosse septique, latrine à fosse ventilée améliorée, latrine avec dalle ou toilette à compostage. La question posée portait seulement sur le type de toilettes habituellement utilisé : ce qui est compté ici est donc la qualité de l'équipement, sans savoir s'il est partagé avec d'autres ménages. Quand l'assainissement est défaillant, la première grosse pluie transforme les excréments en risque épidémique pour tout le territoire.",
    "pct": 31.87,
    "score": 2,
@@ -1892,7 +1892,7 @@
    "dimension": "I. PHYSICAL AND INFRASTRUCTURAL DIMENSION",
    "libelle_en": "Availability of Operational Emergency Shelters",
    "libelle_fr": "Disponibilité d'abris d'urgence opérationnels",
-   "expl_en": "The indicator is meant to record whether a community has at least one emergency shelter that actually works. Shelters could not be checked on the ground, so what is counted here is the share of households saying they have been told where to go and how to take shelter. It therefore measures whether the evacuation instruction has reached people — without which even an existing shelter stays empty.",
+   "expl_en": "The indicator is meant to record whether a community has at least one emergency shelter that actually works. Shelters could not be checked on the ground, so what is counted here is the share of households saying they have been told where to go and how to take shelter. It therefore measures whether the evacuation instruction has reached people, without which even an existing shelter stays empty.",
    "expl_fr": "L'indicateur vise l'existence, dans la communauté, d'au moins un abri d'urgence réellement opérationnel. Les bâtiments n'ayant pas pu être vérifiés sur le terrain, ce qui est compté ici est la part des ménages déclarant avoir été sensibilisés sur où et comment se mettre à l'abri. On mesure donc la diffusion de la consigne d'évacuation, sans laquelle un abri, même existant, reste inutilisé.",
    "pct": 15.87,
    "score": 2,
@@ -2168,7 +2168,7 @@
    "dimension": "I. PHYSICAL AND INFRASTRUCTURAL DIMENSION",
    "libelle_en": "Access to Improved Drinking Water (SDG 6.1.1)",
    "libelle_fr": "Accès à une eau de boisson améliorée (ODD 6.1.1)",
-   "expl_en": "This counts households that drink water from a source designed to stay clean — piped water, a borehole, a protected well or spring, rainwater, a water kiosk, or packaged water. The full definition also requires the round trip to fetch water to take no more than thirty minutes, but the survey only asked about the source, so travel time is not part of what is counted here. Safe water keeps disease down and frees the hours, mostly women's and children's, that fetching water would otherwise swallow.",
+   "expl_en": "This counts households that drink water from a source designed to stay clean, piped water, a borehole, a protected well or spring, rainwater, a water kiosk, or packaged water. The full definition also requires the round trip to fetch water to take no more than thirty minutes, but the survey only asked about the source, so travel time is not part of what is counted here. Safe water keeps disease down and frees the hours, mostly women's and children's, that fetching water would otherwise swallow.",
    "expl_fr": "Sont comptés les ménages qui boivent une eau provenant d'une source conçue pour rester propre : réseau, forage, puits ou source protégés, eau de pluie, kiosque ou eau conditionnée. La définition complète exige en plus que l'aller-retour pour puiser l'eau prenne moins de trente minutes, mais l'enquête n'a interrogé que la source : le temps de trajet n'entre donc pas dans ce qui est compté ici. Une eau sûre limite les maladies et libère un temps considérable, celui des femmes et des enfants avant tout.",
    "pct": 72.83,
    "score": 4,
@@ -2536,8 +2536,8 @@
    "dimension": "V. SOCIAL AND COMMUNITY DIMENSION",
    "libelle_en": "Organisations having received external support",
    "libelle_fr": "Organisations ayant reçu un appui extérieur",
-   "expl_en": "Share of organisations having received external support — training, funding or equipment. Measures whether outside resources actually reach the local level.",
-   "expl_fr": "Part des organisations ayant reçu un appui extérieur — formation, financement ou matériel. Mesure si les ressources extérieures atteignent effectivement le niveau local.",
+   "expl_en": "Share of organisations having received external support, training, funding or equipment. Measures whether outside resources actually reach the local level.",
+   "expl_fr": "Part des organisations ayant reçu un appui extérieur, formation, financement ou matériel. Mesure si les ressources extérieures atteignent effectivement le niveau local.",
    "pct": 72.73,
    "score": 7,
    "source": "OCB",
@@ -3026,7 +3026,7 @@
    }
   },
   {
-   "question": "Sensibilisé — Comment établir un stock de contingence familiale",
+   "question": "Sensibilisé, Comment établir un stock de contingence familiale",
    "modalite": "Non",
    "pct": 83.3,
    "n": 1009,
@@ -3045,7 +3045,7 @@
    }
   },
   {
-   "question": "Sensibilisé — Où et comment trouver les abris d'urgence / se mettre à l'abri",
+   "question": "Sensibilisé, Où et comment trouver les abris d'urgence / se mettre à l'abri",
    "modalite": "Non",
    "pct": 83.2,
    "n": 1007,
@@ -3235,7 +3235,7 @@
    }
   },
   {
-   "question": "Fréquence de participation — Groupe politique",
+   "question": "Fréquence de participation, Groupe politique",
    "modalite": "Jamais",
    "pct": 74.8,
    "n": 906,
@@ -3387,7 +3387,7 @@
    }
   },
   {
-   "question": "Fréquence de participation — OCB / association liée au travail",
+   "question": "Fréquence de participation, OCB / association liée au travail",
    "modalite": "Jamais",
    "pct": 71.3,
    "n": 863,
@@ -3501,7 +3501,7 @@
    }
   },
   {
-   "question": "Sensibilisé — Comment sélectionner et protéger les papiers importants",
+   "question": "Sensibilisé, Comment sélectionner et protéger les papiers importants",
    "modalite": "Non",
    "pct": 67.4,
    "n": 816,
@@ -3596,7 +3596,7 @@
    }
   },
   {
-   "question": "Fréquence de participation — Association de quartier",
+   "question": "Fréquence de participation, Association de quartier",
    "modalite": "Jamais",
    "pct": 64.3,
    "n": 779,
@@ -3710,7 +3710,7 @@
    }
   },
   {
-   "question": "Fréquence de participation — Groupe d'amis / famille",
+   "question": "Fréquence de participation, Groupe d'amis / famille",
    "modalite": "Jamais",
    "pct": 60.1,
    "n": 728,

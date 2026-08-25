@@ -32,12 +32,12 @@
 {
 "i": 6,
 "category": "AG. SOURCES DE REVENUS DU FOYER",
-"question": "Estimation du revenu mensuel — pêche"
+"question": "Estimation du revenu mensuel, pêche"
 },
 {
 "i": 7,
 "category": "AG. SOURCES DE REVENUS DU FOYER",
-"question": "Estimation du revenu mensuel — agriculture"
+"question": "Estimation du revenu mensuel, agriculture"
 },
 {
 "i": 8,
@@ -47,12 +47,12 @@
 {
 "i": 9,
 "category": "AG. SOURCES DE REVENUS DU FOYER",
-"question": "Estimation du revenu mensuel — artisanat"
+"question": "Estimation du revenu mensuel, artisanat"
 },
 {
 "i": 10,
 "category": "AG. SOURCES DE REVENUS DU FOYER",
-"question": "Estimation du revenu mensuel — commerce"
+"question": "Estimation du revenu mensuel, commerce"
 },
 {
 "i": 11,
@@ -62,66 +62,66 @@
 {
 "i": 12,
 "category": "AG. SOURCES DE REVENUS DU FOYER",
-"question": "Estimation du revenu mensuel — salariat"
+"question": "Estimation du revenu mensuel, salariat"
 },
 {
 "i": 13,
 "category": "AG. SOURCES DE REVENUS DU FOYER",
-"question": "Estimation du revenu mensuel — transferts d'argent (d'un proche)"
+"question": "Estimation du revenu mensuel, transferts d'argent (d'un proche)"
 },
 {
 "i": 14,
 "category": "AG. SOURCES DE REVENUS DU FOYER",
-"question": "Estimation du revenu mensuel — auto-entrepreneuriat"
+"question": "Estimation du revenu mensuel, auto-entrepreneuriat"
 },
 {
 "i": 15,
 "category": "AG. SOURCES DE REVENUS DU FOYER",
-"question": "Estimation du revenu mensuel — autre activité"
+"question": "Estimation du revenu mensuel, autre activité"
 },
 {
 "i": 16,
-"category": "AH. ÉLEVAGE (PROXY DE RICHESSE — MODULE DE SCORING)",
+"category": "AH. ÉLEVAGE (PROXY DE RICHESSE, MODULE DE SCORING)",
 "question": "Taille de l'élevage de poules"
 },
 {
 "i": 17,
-"category": "AH. ÉLEVAGE (PROXY DE RICHESSE — MODULE DE SCORING)",
+"category": "AH. ÉLEVAGE (PROXY DE RICHESSE, MODULE DE SCORING)",
 "question": "Taille de l'élevage de pigeons"
 },
 {
 "i": 18,
-"category": "AH. ÉLEVAGE (PROXY DE RICHESSE — MODULE DE SCORING)",
+"category": "AH. ÉLEVAGE (PROXY DE RICHESSE, MODULE DE SCORING)",
 "question": "Taille de l'élevage de canards"
 },
 {
 "i": 19,
-"category": "AH. ÉLEVAGE (PROXY DE RICHESSE — MODULE DE SCORING)",
+"category": "AH. ÉLEVAGE (PROXY DE RICHESSE, MODULE DE SCORING)",
 "question": "Taille de l'élevage de dindes"
 },
 {
 "i": 20,
-"category": "AH. ÉLEVAGE (PROXY DE RICHESSE — MODULE DE SCORING)",
+"category": "AH. ÉLEVAGE (PROXY DE RICHESSE, MODULE DE SCORING)",
 "question": "Taille de l'élevage de pintades"
 },
 {
 "i": 21,
-"category": "AH. ÉLEVAGE (PROXY DE RICHESSE — MODULE DE SCORING)",
+"category": "AH. ÉLEVAGE (PROXY DE RICHESSE, MODULE DE SCORING)",
 "question": "Taille de l'élevage de lapins"
 },
 {
 "i": 22,
-"category": "AH. ÉLEVAGE (PROXY DE RICHESSE — MODULE DE SCORING)",
+"category": "AH. ÉLEVAGE (PROXY DE RICHESSE, MODULE DE SCORING)",
 "question": "Taille de l'élevage de caprins"
 },
 {
 "i": 23,
-"category": "AH. ÉLEVAGE (PROXY DE RICHESSE — MODULE DE SCORING)",
+"category": "AH. ÉLEVAGE (PROXY DE RICHESSE, MODULE DE SCORING)",
 "question": "Taille de l'élevage de porcins"
 },
 {
 "i": 24,
-"category": "AH. ÉLEVAGE (PROXY DE RICHESSE — MODULE DE SCORING)",
+"category": "AH. ÉLEVAGE (PROXY DE RICHESSE, MODULE DE SCORING)",
 "question": "Taille de l'élevage de bovins"
 },
 {
@@ -267,12 +267,12 @@
 {
 "i": 53,
 "category": "G. ACCÈS AUX INFRASTRUCTURES DE SANTÉ ET D'ÉDUCATION",
-"question": "Temps à pied jusqu'à l'école — section primaire (aller simple)"
+"question": "Temps à pied jusqu'à l'école, section primaire (aller simple)"
 },
 {
 "i": 54,
 "category": "G. ACCÈS AUX INFRASTRUCTURES DE SANTÉ ET D'ÉDUCATION",
-"question": "Temps à pied jusqu'à l'école — section secondaire (aller simple)"
+"question": "Temps à pied jusqu'à l'école, section secondaire (aller simple)"
 },
 {
 "i": 55,
@@ -337,17 +337,17 @@
 {
 "i": 67,
 "category": "J. GESTION DES RISQUES ET DES CATASTROPHES",
-"question": "Sensibilisé — Où et comment trouver les abris d'urgence / se mettre à l'abri"
+"question": "Sensibilisé, Où et comment trouver les abris d'urgence / se mettre à l'abri"
 },
 {
 "i": 68,
 "category": "J. GESTION DES RISQUES ET DES CATASTROPHES",
-"question": "Sensibilisé — Comment établir un stock de contingence familiale"
+"question": "Sensibilisé, Comment établir un stock de contingence familiale"
 },
 {
 "i": 69,
 "category": "J. GESTION DES RISQUES ET DES CATASTROPHES",
-"question": "Sensibilisé — Comment sélectionner et protéger les papiers importants"
+"question": "Sensibilisé, Comment sélectionner et protéger les papiers importants"
 },
 {
 "i": 70,
@@ -437,27 +437,27 @@
 {
 "i": 87,
 "category": "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE",
-"question": "Fréquence de participation — Groupe de l'église"
+"question": "Fréquence de participation, Groupe de l'église"
 },
 {
 "i": 88,
 "category": "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE",
-"question": "Fréquence de participation — Association de quartier"
+"question": "Fréquence de participation, Association de quartier"
 },
 {
 "i": 89,
 "category": "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE",
-"question": "Fréquence de participation — OCB / association liée au travail"
+"question": "Fréquence de participation, OCB / association liée au travail"
 },
 {
 "i": 90,
 "category": "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE",
-"question": "Fréquence de participation — Groupe d'amis / famille"
+"question": "Fréquence de participation, Groupe d'amis / famille"
 },
 {
 "i": 91,
 "category": "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE",
-"question": "Fréquence de participation — Groupe politique"
+"question": "Fréquence de participation, Groupe politique"
 },
 {
 "i": 92,
@@ -512,42 +512,42 @@
 {
 "i": 102,
 "category": "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE",
-"question": "Mode de résolution du conflit — Propriété de terrain"
+"question": "Mode de résolution du conflit, Propriété de terrain"
 },
 {
 "i": 103,
 "category": "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE",
-"question": "Mode de résolution du conflit — Accès à des ressources naturelles"
+"question": "Mode de résolution du conflit, Accès à des ressources naturelles"
 },
 {
 "i": 104,
 "category": "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE",
-"question": "Mode de résolution du conflit — Problèmes liés au travail"
+"question": "Mode de résolution du conflit, Problèmes liés au travail"
 },
 {
 "i": 105,
 "category": "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE",
-"question": "Mode de résolution du conflit — Problèmes liés à la politique"
+"question": "Mode de résolution du conflit, Problèmes liés à la politique"
 },
 {
 "i": 106,
 "category": "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE",
-"question": "Mode de résolution du conflit — Problèmes liés à l'argent"
+"question": "Mode de résolution du conflit, Problèmes liés à l'argent"
 },
 {
 "i": 107,
 "category": "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE",
-"question": "Mode de résolution du conflit — Problèmes de voisinage"
+"question": "Mode de résolution du conflit, Problèmes de voisinage"
 },
 {
 "i": 108,
 "category": "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE",
-"question": "Mode de résolution du conflit — Vol de produits agricoles"
+"question": "Mode de résolution du conflit, Vol de produits agricoles"
 },
 {
 "i": 109,
 "category": "L. VIE SOCIALE ET CAPITAL COMMUNAUTAIRE",
-"question": "Mode de résolution du conflit — Vol de bétail"
+"question": "Mode de résolution du conflit, Vol de bétail"
 },
 {
 "i": 110,
@@ -751,1763 +751,1763 @@
 },
 {
 "i": 150,
-"category": "T. AGRICULTURE — PRATIQUES GÉNÉRALES",
+"category": "T. AGRICULTURE, PRATIQUES GÉNÉRALES",
 "question": "Pratique personnellement l'agriculture"
 },
 {
 "i": 151,
-"category": "T. AGRICULTURE — PRATIQUES GÉNÉRALES",
+"category": "T. AGRICULTURE, PRATIQUES GÉNÉRALES",
 "question": "Cultures pratiquées"
 },
 {
 "i": 152,
-"category": "T. AGRICULTURE — PRATIQUES GÉNÉRALES",
+"category": "T. AGRICULTURE, PRATIQUES GÉNÉRALES",
 "question": "Arbres fruitiers cultivés"
 },
 {
 "i": 153,
-"category": "T. AGRICULTURE — PRATIQUES GÉNÉRALES",
+"category": "T. AGRICULTURE, PRATIQUES GÉNÉRALES",
 "question": "Nombre de rotations culturales réalisées pendant un cycle agricole"
 },
 {
 "i": 154,
-"category": "T. AGRICULTURE — PRATIQUES GÉNÉRALES",
+"category": "T. AGRICULTURE, PRATIQUES GÉNÉRALES",
 "question": "Comment la fertilité des sols est maintenue entre les cultures (réponse libre reclassée par mots-clés)"
 },
 {
 "i": 155,
-"category": "T. AGRICULTURE — PRATIQUES GÉNÉRALES",
+"category": "T. AGRICULTURE, PRATIQUES GÉNÉRALES",
 "question": "Utilise des engrais azotés"
 },
 {
 "i": 156,
-"category": "T. AGRICULTURE — PRATIQUES GÉNÉRALES",
+"category": "T. AGRICULTURE, PRATIQUES GÉNÉRALES",
 "question": "Utilise des herbicides"
 },
 {
 "i": 157,
-"category": "T. AGRICULTURE — PRATIQUES GÉNÉRALES",
+"category": "T. AGRICULTURE, PRATIQUES GÉNÉRALES",
 "question": "Utilise des insecticides"
 },
 {
 "i": 158,
-"category": "T. AGRICULTURE — PRATIQUES GÉNÉRALES",
+"category": "T. AGRICULTURE, PRATIQUES GÉNÉRALES",
 "question": "Utilise des fongicides"
 },
 {
 "i": 159,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Maïs"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Maïs"
 },
 {
 "i": 160,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Pois congo"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Pois congo"
 },
 {
 "i": 161,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Banane"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Banane"
 },
 {
 "i": 162,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Patate"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Patate"
 },
 {
 "i": 163,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Haricot"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Haricot"
 },
 {
 "i": 164,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Igname"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Igname"
 },
 {
 "i": 165,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Manioc"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Manioc"
 },
 {
 "i": 166,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Sorgho / petit mil"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Sorgho / petit mil"
 },
 {
 "i": 167,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Pistache (arachide)"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Pistache (arachide)"
 },
 {
 "i": 168,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Patate douce"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Patate douce"
 },
 {
 "i": 169,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Malanga"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Malanga"
 },
 {
 "i": 170,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Café"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Café"
 },
 {
 "i": 171,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Gombo"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Gombo"
 },
 {
 "i": 172,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Ananas"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Ananas"
 },
 {
 "i": 173,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Riz"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Riz"
 },
 {
 "i": 174,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Autre"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Autre"
 },
 {
 "i": 175,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Tomate"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Tomate"
 },
 {
 "i": 176,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Chou"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Chou"
 },
 {
 "i": 177,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Carotte"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Carotte"
 },
 {
 "i": 178,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Aubergine"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Aubergine"
 },
 {
 "i": 179,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Mazonbèl"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Mazonbèl"
 },
 {
 "i": 180,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Oignon"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Oignon"
 },
 {
 "i": 181,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Betterave"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Betterave"
 },
 {
 "i": 182,
-"category": "AL. AGRICULTURE — SUPERFICIE DÉDIÉE PAR CULTURE",
-"question": "Superficie dédiée (en carreaux) — Ne souhaite pas répondre"
+"category": "AL. AGRICULTURE, SUPERFICIE DÉDIÉE PAR CULTURE",
+"question": "Superficie dédiée (en carreaux), Ne souhaite pas répondre"
 },
 {
 "i": 183,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Maïs"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Maïs"
 },
 {
 "i": 184,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Haricot"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Haricot"
 },
 {
 "i": 185,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Pois congo"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Pois congo"
 },
 {
 "i": 186,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Igname"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Igname"
 },
 {
 "i": 187,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Patate"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Patate"
 },
 {
 "i": 188,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Banane"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Banane"
 },
 {
 "i": 189,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Riz"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Riz"
 },
 {
 "i": 190,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Sorgho / petit mil"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Sorgho / petit mil"
 },
 {
 "i": 191,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Chou"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Chou"
 },
 {
 "i": 192,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Carotte"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Carotte"
 },
 {
 "i": 193,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Aubergine"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Aubergine"
 },
 {
 "i": 194,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Manioc"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Manioc"
 },
 {
 "i": 195,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Café"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Café"
 },
 {
 "i": 196,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Gombo (kalalou)"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Gombo (kalalou)"
 },
 {
 "i": 197,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Tomate"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Tomate"
 },
 {
 "i": 198,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Betterave"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Betterave"
 },
 {
 "i": 199,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Patate douce"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Patate douce"
 },
 {
 "i": 200,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Malanga"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Malanga"
 },
 {
 "i": 201,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Mazonbèl"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Mazonbèl"
 },
 {
 "i": 202,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Pistache (arachide)"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Pistache (arachide)"
 },
 {
 "i": 203,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Ananas"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Ananas"
 },
 {
 "i": 204,
-"category": "AM. AGRICULTURE — MOMENT DE SEMIS PAR CULTURE",
-"question": "Mois de semis — Autre"
+"category": "AM. AGRICULTURE, MOMENT DE SEMIS PAR CULTURE",
+"question": "Mois de semis, Autre"
 },
 {
 "i": 205,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Manguier"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Manguier"
 },
 {
 "i": 206,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Avocatier"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Avocatier"
 },
 {
 "i": 207,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Anacardier (noix)"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Anacardier (noix)"
 },
 {
 "i": 208,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Cachiman"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Cachiman"
 },
 {
 "i": 209,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Arbre véritable (fruit à pain)"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Arbre véritable (fruit à pain)"
 },
 {
 "i": 210,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Labapen"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Labapen"
 },
 {
 "i": 211,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Corrossolier"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Corrossolier"
 },
 {
 "i": 212,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Fruit de la passion"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Fruit de la passion"
 },
 {
 "i": 213,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Grenadine"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Grenadine"
 },
 {
 "i": 214,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Grenade"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Grenade"
 },
 {
 "i": 215,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Grenadia"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Grenadia"
 },
 {
 "i": 216,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Cerisier"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Cerisier"
 },
 {
 "i": 217,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Cocotier"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Cocotier"
 },
 {
 "i": 218,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Cacao"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Cacao"
 },
 {
 "i": 219,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Papaye"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Papaye"
 },
 {
 "i": 220,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Oranger"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Oranger"
 },
 {
 "i": 221,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Citronnier"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Citronnier"
 },
 {
 "i": 222,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Ne souhaite pas répondre"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Ne souhaite pas répondre"
 },
 {
 "i": 223,
-"category": "AN. AGRICULTURE — NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
-"question": "Nombre de pieds plantés — Autre"
+"category": "AN. AGRICULTURE, NOMBRE DE PIEDS D'ARBRES FRUITIERS PLANTÉS",
+"question": "Nombre de pieds plantés, Autre"
 },
 {
 "i": 224,
-"category": "AO. AGRICULTURE — QUANTITÉ D'INTRANTS APPLIQUÉE",
+"category": "AO. AGRICULTURE, QUANTITÉ D'INTRANTS APPLIQUÉE",
 "question": "Quantité d'engrais azoté appliquée (kg)"
 },
 {
 "i": 225,
-"category": "AO. AGRICULTURE — QUANTITÉ D'INTRANTS APPLIQUÉE",
+"category": "AO. AGRICULTURE, QUANTITÉ D'INTRANTS APPLIQUÉE",
 "question": "Quantité d'herbicide appliquée (litres)"
 },
 {
 "i": 226,
-"category": "AO. AGRICULTURE — QUANTITÉ D'INTRANTS APPLIQUÉE",
+"category": "AO. AGRICULTURE, QUANTITÉ D'INTRANTS APPLIQUÉE",
 "question": "Quantité d'insecticide appliquée (litres)"
 },
 {
 "i": 227,
-"category": "AO. AGRICULTURE — QUANTITÉ D'INTRANTS APPLIQUÉE",
+"category": "AO. AGRICULTURE, QUANTITÉ D'INTRANTS APPLIQUÉE",
 "question": "Quantité de fongicides appliquée (litres)"
 },
 {
 "i": 228,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Maïs"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Maïs"
 },
 {
 "i": 229,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Haricot"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Haricot"
 },
 {
 "i": 230,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Pois congo"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Pois congo"
 },
 {
 "i": 231,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Igname"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Igname"
 },
 {
 "i": 232,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Patate"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Patate"
 },
 {
 "i": 233,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Banane"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Banane"
 },
 {
 "i": 234,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Riz"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Riz"
 },
 {
 "i": 235,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Sorgho / petit mil"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Sorgho / petit mil"
 },
 {
 "i": 236,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Chou"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Chou"
 },
 {
 "i": 237,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Carotte"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Carotte"
 },
 {
 "i": 238,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Aubergine"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Aubergine"
 },
 {
 "i": 239,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Manioc"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Manioc"
 },
 {
 "i": 240,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Café"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Café"
 },
 {
 "i": 241,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Oignon"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Oignon"
 },
 {
 "i": 242,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Gombo (kalalou)"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Gombo (kalalou)"
 },
 {
 "i": 243,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Tomate"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Tomate"
 },
 {
 "i": 244,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Betterave"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Betterave"
 },
 {
 "i": 245,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Patate douce"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Patate douce"
 },
 {
 "i": 246,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Malanga"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Malanga"
 },
 {
 "i": 247,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Mazonbèl"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Mazonbèl"
 },
 {
 "i": 248,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Pistache (arachide)"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Pistache (arachide)"
 },
 {
 "i": 249,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Ananas"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Ananas"
 },
 {
 "i": 250,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Cacao"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Cacao"
 },
 {
 "i": 251,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Papaye"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Papaye"
 },
 {
 "i": 252,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Cocotier"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Cocotier"
 },
 {
 "i": 253,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Cerisier"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Cerisier"
 },
 {
 "i": 254,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Oranger"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Oranger"
 },
 {
 "i": 255,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Banane (variante 2)"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Banane (variante 2)"
 },
 {
 "i": 256,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Citronnier"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Citronnier"
 },
 {
 "i": 257,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Grenade"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Grenade"
 },
 {
 "i": 258,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Grenadia"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Grenadia"
 },
 {
 "i": 259,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Grenadine"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Grenadine"
 },
 {
 "i": 260,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Fruit de la passion"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Fruit de la passion"
 },
 {
 "i": 261,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Corrossolier"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Corrossolier"
 },
 {
 "i": 262,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Labapen"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Labapen"
 },
 {
 "i": 263,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Arbre véritable (fruit à pain)"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Arbre véritable (fruit à pain)"
 },
 {
 "i": 264,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Cachiman"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Cachiman"
 },
 {
 "i": 265,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Avocatier"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Avocatier"
 },
 {
 "i": 266,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Anacardier (noix)"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Anacardier (noix)"
 },
 {
 "i": 267,
-"category": "U. AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE",
-"question": "Rendement annuel estimé (kg) — Autre"
+"category": "U. AGRICULTURE, RENDEMENTS ANNUELS PAR CULTURE",
+"question": "Rendement annuel estimé (kg), Autre"
 },
 {
 "i": 268,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Maïs"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Maïs"
 },
 {
 "i": 269,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Haricot"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Haricot"
 },
 {
 "i": 270,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Pois congo"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Pois congo"
 },
 {
 "i": 271,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Igname"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Igname"
 },
 {
 "i": 272,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Patate"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Patate"
 },
 {
 "i": 273,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Banane"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Banane"
 },
 {
 "i": 274,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Riz"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Riz"
 },
 {
 "i": 275,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Sorgho / petit mil"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Sorgho / petit mil"
 },
 {
 "i": 276,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Chou"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Chou"
 },
 {
 "i": 277,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Carotte"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Carotte"
 },
 {
 "i": 278,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Aubergine"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Aubergine"
 },
 {
 "i": 279,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Manioc"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Manioc"
 },
 {
 "i": 280,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Café"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Café"
 },
 {
 "i": 281,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Oignon"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Oignon"
 },
 {
 "i": 282,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Gombo (kalalou)"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Gombo (kalalou)"
 },
 {
 "i": 283,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Tomate"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Tomate"
 },
 {
 "i": 284,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Betterave"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Betterave"
 },
 {
 "i": 285,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Patate douce"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Patate douce"
 },
 {
 "i": 286,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Malanga"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Malanga"
 },
 {
 "i": 287,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Mazonbèl"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Mazonbèl"
 },
 {
 "i": 288,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Pistache (arachide)"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Pistache (arachide)"
 },
 {
 "i": 289,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Ananas"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Ananas"
 },
 {
 "i": 290,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Cacao"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Cacao"
 },
 {
 "i": 291,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Papaye"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Papaye"
 },
 {
 "i": 292,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Cocotier"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Cocotier"
 },
 {
 "i": 293,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Cerisier"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Cerisier"
 },
 {
 "i": 294,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Oranger"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Oranger"
 },
 {
 "i": 295,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Banane (variante 2)"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Banane (variante 2)"
 },
 {
 "i": 296,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Citronnier"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Citronnier"
 },
 {
 "i": 297,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Grenade"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Grenade"
 },
 {
 "i": 298,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Grenadia"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Grenadia"
 },
 {
 "i": 299,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Grenadine"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Grenadine"
 },
 {
 "i": 300,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Fruit de la passion"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Fruit de la passion"
 },
 {
 "i": 301,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Corrossolier"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Corrossolier"
 },
 {
 "i": 302,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Labapen"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Labapen"
 },
 {
 "i": 303,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Arbre véritable (fruit à pain)"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Arbre véritable (fruit à pain)"
 },
 {
 "i": 304,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Cachiman"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Cachiman"
 },
 {
 "i": 305,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Avocatier"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Avocatier"
 },
 {
 "i": 306,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Anacardier (noix)"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Anacardier (noix)"
 },
 {
 "i": 307,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Autre"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Autre"
 },
 {
 "i": 308,
-"category": "V. AGRICULTURE — ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
-"question": "Évolution du rendement sur 5 ans — Ne souhaite pas répondre"
+"category": "V. AGRICULTURE, ÉVOLUTION DES RENDEMENTS (5 ANS) PAR CULTURE",
+"question": "Évolution du rendement sur 5 ans, Ne souhaite pas répondre"
 },
 {
 "i": 309,
-"category": "AR. AGRICULTURE — FACTEURS D'ÉVOLUTION DES RENDEMENTS",
+"category": "AR. AGRICULTURE, FACTEURS D'ÉVOLUTION DES RENDEMENTS",
 "question": "Facteur principal de la diminution des rendements (si diminution)"
 },
 {
 "i": 310,
-"category": "AR. AGRICULTURE — FACTEURS D'ÉVOLUTION DES RENDEMENTS",
+"category": "AR. AGRICULTURE, FACTEURS D'ÉVOLUTION DES RENDEMENTS",
 "question": "Facteurs de l'augmentation des rendements (si augmentation)"
 },
 {
 "i": 311,
-"category": "AP. AGRICULTURE — IRRIGATION",
+"category": "AP. AGRICULTURE, IRRIGATION",
 "question": "Dispose d'une source d'eau pour irriguer les cultures"
 },
 {
 "i": 312,
-"category": "AP. AGRICULTURE — IRRIGATION",
+"category": "AP. AGRICULTURE, IRRIGATION",
 "question": "Système d'irrigation utilisé"
 },
 {
 "i": 313,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Maïs"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Maïs"
 },
 {
 "i": 314,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Haricot"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Haricot"
 },
 {
 "i": 315,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Pois congo"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Pois congo"
 },
 {
 "i": 316,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Igname"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Igname"
 },
 {
 "i": 317,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Patate"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Patate"
 },
 {
 "i": 318,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Banane"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Banane"
 },
 {
 "i": 319,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Riz"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Riz"
 },
 {
 "i": 320,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Sorgho / petit mil"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Sorgho / petit mil"
 },
 {
 "i": 321,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Chou"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Chou"
 },
 {
 "i": 322,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Carotte"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Carotte"
 },
 {
 "i": 323,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Aubergine"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Aubergine"
 },
 {
 "i": 324,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Manioc"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Manioc"
 },
 {
 "i": 325,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Café"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Café"
 },
 {
 "i": 326,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Oignon"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Oignon"
 },
 {
 "i": 327,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Gombo (kalalou)"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Gombo (kalalou)"
 },
 {
 "i": 328,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Tomate"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Tomate"
 },
 {
 "i": 329,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Betterave"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Betterave"
 },
 {
 "i": 330,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Patate douce"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Patate douce"
 },
 {
 "i": 331,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Malanga"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Malanga"
 },
 {
 "i": 332,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Mazonbèl"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Mazonbèl"
 },
 {
 "i": 333,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Pistache (arachide)"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Pistache (arachide)"
 },
 {
 "i": 334,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Ananas"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Ananas"
 },
 {
 "i": 335,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Cacao"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Cacao"
 },
 {
 "i": 336,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Papaye"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Papaye"
 },
 {
 "i": 337,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Cocotier"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Cocotier"
 },
 {
 "i": 338,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Cerisier"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Cerisier"
 },
 {
 "i": 339,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Oranger"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Oranger"
 },
 {
 "i": 340,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Banane (variante 2)"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Banane (variante 2)"
 },
 {
 "i": 341,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Citronnier"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Citronnier"
 },
 {
 "i": 342,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Grenade"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Grenade"
 },
 {
 "i": 343,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Grenadia"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Grenadia"
 },
 {
 "i": 344,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Grenadine"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Grenadine"
 },
 {
 "i": 345,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Fruit de la passion"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Fruit de la passion"
 },
 {
 "i": 346,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Corrossolier"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Corrossolier"
 },
 {
 "i": 347,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Labapen"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Labapen"
 },
 {
 "i": 348,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Arbre véritable (fruit à pain)"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Arbre véritable (fruit à pain)"
 },
 {
 "i": 349,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Cachiman"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Cachiman"
 },
 {
 "i": 350,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Avocatier"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Avocatier"
 },
 {
 "i": 351,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Anacardier (noix)"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Anacardier (noix)"
 },
 {
 "i": 352,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Autre"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Autre"
 },
 {
 "i": 353,
-"category": "W. AGRICULTURE — CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
-"question": "Circonstance de perte la plus fréquente — Ne souhaite pas répondre"
+"category": "W. AGRICULTURE, CIRCONSTANCES DE PERTE DE PRODUCTION PAR CULTURE",
+"question": "Circonstance de perte la plus fréquente, Ne souhaite pas répondre"
 },
 {
 "i": 354,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Maïs"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Maïs"
 },
 {
 "i": 355,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Haricot"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Haricot"
 },
 {
 "i": 356,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Pois congo"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Pois congo"
 },
 {
 "i": 357,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Igname"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Igname"
 },
 {
 "i": 358,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Patate"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Patate"
 },
 {
 "i": 359,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Banane"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Banane"
 },
 {
 "i": 360,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Riz"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Riz"
 },
 {
 "i": 361,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Sorgho / petit mil"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Sorgho / petit mil"
 },
 {
 "i": 362,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Chou"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Chou"
 },
 {
 "i": 363,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Carotte"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Carotte"
 },
 {
 "i": 364,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Aubergine"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Aubergine"
 },
 {
 "i": 365,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Manioc"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Manioc"
 },
 {
 "i": 366,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Café"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Café"
 },
 {
 "i": 367,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Oignon"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Oignon"
 },
 {
 "i": 368,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Gombo (kalalou)"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Gombo (kalalou)"
 },
 {
 "i": 369,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Tomate"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Tomate"
 },
 {
 "i": 370,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Betterave"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Betterave"
 },
 {
 "i": 371,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Patate douce"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Patate douce"
 },
 {
 "i": 372,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Malanga"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Malanga"
 },
 {
 "i": 373,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Mazonbèl"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Mazonbèl"
 },
 {
 "i": 374,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Pistache (arachide)"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Pistache (arachide)"
 },
 {
 "i": 375,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Ananas"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Ananas"
 },
 {
 "i": 376,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Cacao"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Cacao"
 },
 {
 "i": 377,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Papaye"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Papaye"
 },
 {
 "i": 378,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Cocotier"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Cocotier"
 },
 {
 "i": 379,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Cerisier"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Cerisier"
 },
 {
 "i": 380,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Oranger"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Oranger"
 },
 {
 "i": 381,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Banane (variante 2)"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Banane (variante 2)"
 },
 {
 "i": 382,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Citronnier"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Citronnier"
 },
 {
 "i": 383,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Grenade"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Grenade"
 },
 {
 "i": 384,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Grenadia"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Grenadia"
 },
 {
 "i": 385,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Grenadine"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Grenadine"
 },
 {
 "i": 386,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Fruit de la passion"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Fruit de la passion"
 },
 {
 "i": 387,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Corrossolier"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Corrossolier"
 },
 {
 "i": 388,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Labapen"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Labapen"
 },
 {
 "i": 389,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Arbre véritable (fruit à pain)"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Arbre véritable (fruit à pain)"
 },
 {
 "i": 390,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Cachiman"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Cachiman"
 },
 {
 "i": 391,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Avocatier"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Avocatier"
 },
 {
 "i": 392,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Anacardier (noix)"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Anacardier (noix)"
 },
 {
 "i": 393,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Autre"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Autre"
 },
 {
 "i": 394,
-"category": "X. AGRICULTURE — POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
-"question": "Part de la production perdue — Ne souhaite pas répondre"
+"category": "X. AGRICULTURE, POURCENTAGE DE PRODUCTION PERDUE PAR CULTURE",
+"question": "Part de la production perdue, Ne souhaite pas répondre"
 },
 {
 "i": 395,
-"category": "Y. PÊCHE — PRATIQUES GÉNÉRALES",
+"category": "Y. PÊCHE, PRATIQUES GÉNÉRALES",
 "question": "Pratique personnellement la pêche"
 },
 {
 "i": 396,
-"category": "Y. PÊCHE — PRATIQUES GÉNÉRALES",
+"category": "Y. PÊCHE, PRATIQUES GÉNÉRALES",
 "question": "Techniques de pêche utilisées"
 },
 {
 "i": 397,
-"category": "Y. PÊCHE — PRATIQUES GÉNÉRALES",
-"question": "Embarcation utilisée — Bois fouillé (pirogue)"
+"category": "Y. PÊCHE, PRATIQUES GÉNÉRALES",
+"question": "Embarcation utilisée, Bois fouillé (pirogue)"
 },
 {
 "i": 398,
-"category": "Y. PÊCHE — PRATIQUES GÉNÉRALES",
-"question": "Embarcation utilisée — Bateau à bois à moteur"
+"category": "Y. PÊCHE, PRATIQUES GÉNÉRALES",
+"question": "Embarcation utilisée, Bateau à bois à moteur"
 },
 {
 "i": 399,
-"category": "Y. PÊCHE — PRATIQUES GÉNÉRALES",
-"question": "Embarcation utilisée — Bateau à voile"
+"category": "Y. PÊCHE, PRATIQUES GÉNÉRALES",
+"question": "Embarcation utilisée, Bateau à voile"
 },
 {
 "i": 400,
-"category": "Y. PÊCHE — PRATIQUES GÉNÉRALES",
-"question": "Embarcation utilisée — Fibre de verre à moteur"
+"category": "Y. PÊCHE, PRATIQUES GÉNÉRALES",
+"question": "Embarcation utilisée, Fibre de verre à moteur"
 },
 {
 "i": 401,
-"category": "Y. PÊCHE — PRATIQUES GÉNÉRALES",
-"question": "Embarcation utilisée — Bateau senne"
+"category": "Y. PÊCHE, PRATIQUES GÉNÉRALES",
+"question": "Embarcation utilisée, Bateau senne"
 },
 {
 "i": 402,
-"category": "Y. PÊCHE — PRATIQUES GÉNÉRALES",
-"question": "Embarcation utilisée — Autre"
+"category": "Y. PÊCHE, PRATIQUES GÉNÉRALES",
+"question": "Embarcation utilisée, Autre"
 },
 {
 "i": 403,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Sardes rouges"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Sardes rouges"
 },
 {
 "i": 404,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Colas"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Colas"
 },
 {
 "i": 405,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Crocos jaunes"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Crocos jaunes"
 },
 {
 "i": 406,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Kaptenn"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Kaptenn"
 },
 {
 "i": 407,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Kofre"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Kofre"
 },
 {
 "i": 408,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Bécunes"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Bécunes"
 },
 {
 "i": 409,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Nèg"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Nèg"
 },
 {
 "i": 410,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Pisquette"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Pisquette"
 },
 {
 "i": 411,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Chirurgien"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Chirurgien"
 },
 {
 "i": 412,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Sardine"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Sardine"
 },
 {
 "i": 413,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Sar argenté"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Sar argenté"
 },
 {
 "i": 414,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Cardino / Cardinal pourpre"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Cardino / Cardinal pourpre"
 },
 {
 "i": 415,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Coco"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Coco"
 },
 {
 "i": 416,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Thon"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Thon"
 },
 {
 "i": 417,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Bonite"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Bonite"
 },
 {
 "i": 418,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Tazard"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Tazard"
 },
 {
 "i": 419,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Balbaren"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Balbaren"
 },
 {
 "i": 420,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Bonite (2)"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Bonite (2)"
 },
 {
 "i": 421,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Mère balaou"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Mère balaou"
 },
 {
 "i": 422,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Dorade"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Dorade"
 },
 {
 "i": 423,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Vivaneau"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Vivaneau"
 },
 {
 "i": 424,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Requin"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Requin"
 },
 {
 "i": 425,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Langouste"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Langouste"
 },
 {
 "i": 426,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Crevette"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Crevette"
 },
 {
 "i": 427,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Triton"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Triton"
 },
 {
 "i": 428,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Lambi"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Lambi"
 },
 {
 "i": 429,
-"category": "Z. PÊCHE — ESPÈCES PÊCHÉES ET ZONE",
-"question": "Zone de pêche — Autre"
+"category": "Z. PÊCHE, ESPÈCES PÊCHÉES ET ZONE",
+"question": "Zone de pêche, Autre"
 },
 {
 "i": 430,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Sardes rouges"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Sardes rouges"
 },
 {
 "i": 431,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Colas"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Colas"
 },
 {
 "i": 432,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Crocos jaunes"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Crocos jaunes"
 },
 {
 "i": 433,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Kaptenn"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Kaptenn"
 },
 {
 "i": 434,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Kofre"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Kofre"
 },
 {
 "i": 435,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Bécunes"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Bécunes"
 },
 {
 "i": 436,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Nèg"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Nèg"
 },
 {
 "i": 437,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Pisquette"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Pisquette"
 },
 {
 "i": 438,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Chirurgien"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Chirurgien"
 },
 {
 "i": 439,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Sardine"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Sardine"
 },
 {
 "i": 440,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Sar argenté"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Sar argenté"
 },
 {
 "i": 441,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Cardino / Cardinal pourpre"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Cardino / Cardinal pourpre"
 },
 {
 "i": 442,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Coco"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Coco"
 },
 {
 "i": 443,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Thon"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Thon"
 },
 {
 "i": 444,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Bonite"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Bonite"
 },
 {
 "i": 445,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Tazard"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Tazard"
 },
 {
 "i": 446,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Balbaren"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Balbaren"
 },
 {
 "i": 447,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Bonite (2)"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Bonite (2)"
 },
 {
 "i": 448,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Mère balaou"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Mère balaou"
 },
 {
 "i": 449,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Dorade"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Dorade"
 },
 {
 "i": 450,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Vivaneau"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Vivaneau"
 },
 {
 "i": 451,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Requin"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Requin"
 },
 {
 "i": 452,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Langouste"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Langouste"
 },
 {
 "i": 453,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Crevette"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Crevette"
 },
 {
 "i": 454,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Triton"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Triton"
 },
 {
 "i": 455,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Lambi"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Lambi"
 },
 {
 "i": 456,
-"category": "AA. PÊCHE — MONTANT PAR SORTIE ET PAR ESPÈCE",
-"question": "Montant rapporté par sortie — Autre"
+"category": "AA. PÊCHE, MONTANT PAR SORTIE ET PAR ESPÈCE",
+"question": "Montant rapporté par sortie, Autre"
 },
 {
 "i": 457,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Sardes rouges"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Sardes rouges"
 },
 {
 "i": 458,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Colas"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Colas"
 },
 {
 "i": 459,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Crocos jaunes"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Crocos jaunes"
 },
 {
 "i": 460,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Kaptenn"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Kaptenn"
 },
 {
 "i": 461,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Kofre"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Kofre"
 },
 {
 "i": 462,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Bécunes"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Bécunes"
 },
 {
 "i": 463,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Nèg"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Nèg"
 },
 {
 "i": 464,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Pisquette"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Pisquette"
 },
 {
 "i": 465,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Chirurgien"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Chirurgien"
 },
 {
 "i": 466,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Sardine"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Sardine"
 },
 {
 "i": 467,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Sar argenté"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Sar argenté"
 },
 {
 "i": 468,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Cardino / Cardinal pourpre"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Cardino / Cardinal pourpre"
 },
 {
 "i": 469,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Coco"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Coco"
 },
 {
 "i": 470,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Thon"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Thon"
 },
 {
 "i": 471,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Bonite"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Bonite"
 },
 {
 "i": 472,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Tazard"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Tazard"
 },
 {
 "i": 473,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Balbaren"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Balbaren"
 },
 {
 "i": 474,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Bonite (2)"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Bonite (2)"
 },
 {
 "i": 475,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Mère balaou"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Mère balaou"
 },
 {
 "i": 476,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Dorade"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Dorade"
 },
 {
 "i": 477,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Vivaneau"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Vivaneau"
 },
 {
 "i": 478,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Requin"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Requin"
 },
 {
 "i": 479,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Langouste"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Langouste"
 },
 {
 "i": 480,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Crevette"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Crevette"
 },
 {
 "i": 481,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Triton"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Triton"
 },
 {
 "i": 482,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Lambi"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Lambi"
 },
 {
 "i": 483,
-"category": "AB. PÊCHE — MOMENT LE PLUS RENTABLE PAR ESPÈCE",
-"question": "Mois le plus rentable — Autre"
+"category": "AB. PÊCHE, MOMENT LE PLUS RENTABLE PAR ESPÈCE",
+"question": "Mois le plus rentable, Autre"
 },
 {
 "i": 484,
-"category": "AC. ÉLEVAGE — GÉNÉRALITÉS",
+"category": "AC. ÉLEVAGE, GÉNÉRALITÉS",
 "question": "Possède des animaux d'élevage en son nom propre"
 },
 {
 "i": 485,
-"category": "AC. ÉLEVAGE — GÉNÉRALITÉS",
+"category": "AC. ÉLEVAGE, GÉNÉRALITÉS",
 "question": "Type d'animaux possédés personnellement"
 },
 {
 "i": 486,
-"category": "AC. ÉLEVAGE — GÉNÉRALITÉS",
+"category": "AC. ÉLEVAGE, GÉNÉRALITÉS",
 "question": "Nombre de volailles possédées personnellement"
 },
 {
 "i": 487,
-"category": "AC. ÉLEVAGE — GÉNÉRALITÉS",
+"category": "AC. ÉLEVAGE, GÉNÉRALITÉS",
 "question": "Nombre de porcins possédés personnellement"
 },
 {
 "i": 488,
-"category": "AC. ÉLEVAGE — GÉNÉRALITÉS",
+"category": "AC. ÉLEVAGE, GÉNÉRALITÉS",
 "question": "Nombre de caprins possédés personnellement"
 },
 {
 "i": 489,
-"category": "AC. ÉLEVAGE — GÉNÉRALITÉS",
+"category": "AC. ÉLEVAGE, GÉNÉRALITÉS",
 "question": "Nombre de bovins possédés personnellement"
 },
 {
 "i": 490,
-"category": "AC. ÉLEVAGE — GÉNÉRALITÉS",
+"category": "AC. ÉLEVAGE, GÉNÉRALITÉS",
 "question": "Aliments donnés aux volailles"
 },
 {
 "i": 491,
-"category": "AC. ÉLEVAGE — GÉNÉRALITÉS",
+"category": "AC. ÉLEVAGE, GÉNÉRALITÉS",
 "question": "Aliments donnés aux porcins"
 },
 {
 "i": 492,
-"category": "AC. ÉLEVAGE — GÉNÉRALITÉS",
+"category": "AC. ÉLEVAGE, GÉNÉRALITÉS",
 "question": "Aliments donnés aux caprins"
 },
 {
 "i": 493,
-"category": "AC. ÉLEVAGE — GÉNÉRALITÉS",
+"category": "AC. ÉLEVAGE, GÉNÉRALITÉS",
 "question": "Aliments donnés aux bovins"
 },
 {
 "i": 494,
-"category": "AD. ÉLEVAGE — MORTALITÉ",
+"category": "AD. ÉLEVAGE, MORTALITÉ",
 "question": "Mortalité dans l'élevage de volailles au cours des 12 derniers mois (nombre de bêtes)"
 },
 {
 "i": 495,
-"category": "AD. ÉLEVAGE — MORTALITÉ",
-"question": "Cause principale de la mortalité — volailles"
+"category": "AD. ÉLEVAGE, MORTALITÉ",
+"question": "Cause principale de la mortalité, volailles"
 },
 {
 "i": 496,
-"category": "AD. ÉLEVAGE — MORTALITÉ",
+"category": "AD. ÉLEVAGE, MORTALITÉ",
 "question": "Mortalité dans l'élevage de porcins au cours des 12 derniers mois (nombre de bêtes)"
 },
 {
 "i": 497,
-"category": "AD. ÉLEVAGE — MORTALITÉ",
-"question": "Cause principale de la mortalité — porcins"
+"category": "AD. ÉLEVAGE, MORTALITÉ",
+"question": "Cause principale de la mortalité, porcins"
 },
 {
 "i": 498,
-"category": "AD. ÉLEVAGE — MORTALITÉ",
+"category": "AD. ÉLEVAGE, MORTALITÉ",
 "question": "Mortalité dans l'élevage de caprins au cours des 12 derniers mois (nombre de bêtes)"
 },
 {
 "i": 499,
-"category": "AD. ÉLEVAGE — MORTALITÉ",
-"question": "Cause principale de la mortalité — caprins"
+"category": "AD. ÉLEVAGE, MORTALITÉ",
+"question": "Cause principale de la mortalité, caprins"
 },
 {
 "i": 500,
-"category": "AD. ÉLEVAGE — MORTALITÉ",
+"category": "AD. ÉLEVAGE, MORTALITÉ",
 "question": "Mortalité dans l'élevage de bovins au cours des 12 derniers mois (nombre de bêtes)"
 },
 {
 "i": 501,
-"category": "AD. ÉLEVAGE — MORTALITÉ",
-"question": "Cause principale de la mortalité — bovins"
+"category": "AD. ÉLEVAGE, MORTALITÉ",
+"question": "Cause principale de la mortalité, bovins"
 },
 {
 "i": 502,
