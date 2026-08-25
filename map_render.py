@@ -505,7 +505,7 @@ def styles_bulle():
         visibility:hidden;opacity:0;position:absolute;z-index:999;
         bottom:calc(100% + 9px);left:50%;transform:translateX(-50%) translateY(4px);
         width:330px;max-width:80vw;background:#101728;color:#f2f5fa;
-        font-size:13.5px;font-weight:400;line-height:1.5;letter-spacing:0;
+        font-size:12.5px;font-weight:400;line-height:1.5;letter-spacing:0;
         text-transform:none;padding:11px 14px;border-radius:10px;
         box-shadow:0 10px 30px rgba(16,23,40,.28);
         transition:opacity .16s ease, transform .16s ease, visibility .16s;
@@ -565,7 +565,7 @@ def cartouche_html(libelle, valeur, unite='%', sous_titre='',
                 f'word-break:normal;hyphens:auto">{txt}'
                 f'<span style="font-size:{max(15, int(taille * 0.42))}px;'
                 f'font-weight:400;color:{MUTED};letter-spacing:0"> {u}</span></div>'
-                f'<div style="font-size:12.5px;color:{INK2};margin-top:3px;'
+                f'<div style="font-size:11.5px;color:{INK2};margin-top:3px;'
                 f'line-height:1.4">{note}</div>')
 
     haut = _bloc(valeur, unite, sous_titre, 46 if valeur2 is None else 38)

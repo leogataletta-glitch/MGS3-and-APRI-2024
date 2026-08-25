@@ -208,7 +208,7 @@ def _bloc_grille(grille, foret, focus=ENSEMBLE):
         st.markdown(f'<div class="titre-bloc ambre">{T("e_bloc_grille")}</div>',
                     unsafe_allow_html=True)
         st.markdown(
-            f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
+            f'<p style="font-size:14.5px;line-height:1.65;color:#3c4761;'
             f'margin:4px 0 10px;max-width:92ch">'
             f'{T("e_bloc_grille_texte", n=grille["n_cellules"])}</p>',
             unsafe_allow_html=True)
@@ -227,7 +227,7 @@ def _bloc_grille(grille, foret, focus=ENSEMBLE):
         perdu = sum(c["ha"] for c in retenues)
 
         st.markdown(
-            f'<p style="font-size:15.5px;color:#3c4761;margin:0 0 8px">'
+            f'<p style="font-size:14.5px;color:#3c4761;margin:0 0 8px">'
             f'{T("e_grille_selection", n=len(retenues), h=_fmt(perdu, 0), a=bornes[0], b=bornes[1])}'
             f'</p>', unsafe_allow_html=True)
 
@@ -259,7 +259,7 @@ def _bloc_grille(grille, foret, focus=ENSEMBLE):
             f'<span style="display:inline-flex;align-items:center;gap:6px;'
             f'margin-right:15px"><span style="width:12px;height:12px;'
             f'border-radius:50%;background:{_couleur_annee(a)}"></span>'
-            f'<span style="font-size:12.5px;color:#52514e">{a}</span></span>'
+            f'<span style="font-size:11.5px;color:#52514e">{a}</span></span>'
             for a in (2001, 2006, 2011, 2016, 2021, 2025))
         components.html(
             '<div style="font-family:system-ui,-apple-system,\'Segoe UI\','
@@ -339,7 +339,7 @@ def _tableau_pluie(pluie):
     entetes = [T("e_sc_section"), T("e_pc_normale"), T("e_pc_recent"),
                T("e_sc_part"), T("e_pc_sec"), T("e_pc_humide")]
     out = ['<div style="overflow-x:auto"><table style="width:100%;'
-           'border-collapse:collapse;font-size:14.5px">']
+           'border-collapse:collapse;font-size:13.5px">']
     out.append('<tr>' + ''.join(
         f'<th style="text-align:{"left" if i == 0 else "right"};'
         f'padding:9px 10px;border-bottom:2px solid #e6ecf4;font-size:11.5px;'
@@ -393,7 +393,7 @@ def _bloc_pluie(pluie, focus=ENSEMBLE):
         st.markdown(f'<div class="titre-bloc">{T("e_bloc_pluie")}</div>',
                     unsafe_allow_html=True)
         st.markdown(
-            f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
+            f'<p style="font-size:14.5px;line-height:1.65;color:#3c4761;'
             f'margin:4px 0 10px;max-width:92ch">'
             f'{T("e_bloc_pluie_texte", a=pluie["annee_evaluee"], f=pluie["sections"][SECTIONS[0]]["fenetre_ans"])}'
             f'</p>', unsafe_allow_html=True)
@@ -446,7 +446,7 @@ def _tableau_saison(saison):
                T("e_sc_part"), T("e_sc_secs"), T("e_sc_j50"),
                T("e_sc_install"), T("e_sc_ratees")]
     out = ['<div style="overflow-x:auto"><table style="width:100%;'
-           'border-collapse:collapse;font-size:14.5px">']
+           'border-collapse:collapse;font-size:13.5px">']
     out.append('<tr>' + ''.join(
         f'<th style="text-align:{"left" if i == 0 else "right"};'
         f'padding:9px 10px;border-bottom:2px solid #e6ecf4;font-size:11.5px;'
@@ -542,7 +542,7 @@ def _bloc_saison(saison, focus=ENSEMBLE):
         st.markdown(f'<div class="titre-bloc vert">{T("e_bloc_saison")}</div>',
                     unsafe_allow_html=True)
         st.markdown(
-            f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
+            f'<p style="font-size:14.5px;line-height:1.65;color:#3c4761;'
             f'margin:4px 0 10px;max-width:92ch">{T("e_bloc_saison_texte")}</p>',
             unsafe_allow_html=True)
 
@@ -595,7 +595,7 @@ def _bloc_saison(saison, focus=ENSEMBLE):
         st.caption(T("e_s_tableau_note"))
         st.markdown(
             f'<div style="border-left:3px solid #cfe2f3;padding:2px 0 2px 14px;'
-            f'margin:14px 0 0;font-size:14px;line-height:1.6;color:#6b7590;'
+            f'margin:14px 0 0;font-size:13px;line-height:1.6;color:#6b7590;'
             f'max-width:92ch">{T("e_s_methode")}</div>',
             unsafe_allow_html=True)
 
@@ -606,7 +606,7 @@ def _tableau_sections(foret):
     entetes = [T("e_col_section"), T("e_col_foret2000"), T("e_col_perte"),
                T("e_col_taux"), T("e_col_choc"), T("e_col_chronique")]
     out = ['<div style="overflow-x:auto"><table style="width:100%;'
-           'border-collapse:collapse;font-size:14.5px">']
+           'border-collapse:collapse;font-size:13.5px">']
     out.append('<tr>' + ''.join(
         f'<th style="text-align:{"left" if i == 0 else "right"};'
         f'padding:9px 10px;border-bottom:2px solid #e6ecf4;font-size:11.5px;'
@@ -693,7 +693,7 @@ def _onglet_foret(foret, focus):
                                               couleur=coul),
                     unsafe_allow_html=True)
         st.markdown(
-            '<p style="font-size:15px;color:#3c4761;margin:10px 0 0">'
+            '<p style="font-size:14px;color:#3c4761;margin:10px 0 0">'
             + _bulle("boucle_retroaction") + " &nbsp;·&nbsp; "
             + _bulle("point_de_levier") + "</p>", unsafe_allow_html=True)
 
@@ -702,7 +702,7 @@ def _onglet_foret(foret, focus):
         st.markdown(f'<div class="titre-bloc ambre">{T("e_bloc2")}</div>',
                     unsafe_allow_html=True)
         st.markdown(
-            f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
+            f'<p style="font-size:14.5px;line-height:1.65;color:#3c4761;'
             f'margin:4px 0 10px;max-width:92ch">'
             f'{T("e_bloc2_texte", p=_fmt(d["part_choc_pct"], 0))}</p>',
             unsafe_allow_html=True)
@@ -735,7 +735,7 @@ def _onglet_foret(foret, focus):
             f'<span style="display:inline-flex;align-items:center;gap:7px;'
             f'margin-right:18px"><span style="width:22px;height:12px;'
             f'border-radius:3px;background:{c};box-shadow:inset 0 0 0 1px '
-            f'rgba(0,0,0,.12)"></span><span style="font-size:13px;'
+            f'rgba(0,0,0,.12)"></span><span style="font-size:12px;'
             f'color:#52514e">{lab}</span></span>'
             for c, lab in map_render.legend_items(seuils_ret, polarite, unite))
         components.html(
@@ -761,15 +761,15 @@ def _puce(lib, val, sous=""):
             f'<div style="font-size:11px;letter-spacing:.05em;'
             f'text-transform:uppercase;color:#8a93a5;font-weight:700">'
             f'{_e(lib)}</div>'
-            f'<div style="font-size:22px;font-weight:700;color:#101728;'
+            f'<div style="font-size:17.5px;font-weight:700;color:#101728;'
             f'font-variant-numeric:tabular-nums;margin-top:2px">{_e(val)}</div>'
-            + (f'<div style="font-size:12.5px;color:#6b7590;margin-top:1px">'
+            + (f'<div style="font-size:11.5px;color:#6b7590;margin-top:1px">'
                f'{_e(sous)}</div>' if sous else '') + '</div>')
 
 
 def _groupe(titre, puces):
     return (f'<div style="margin:0 0 16px">'
-            f'<div style="font-size:12px;letter-spacing:.06em;'
+            f'<div style="font-size:11px;letter-spacing:.06em;'
             f'text-transform:uppercase;color:#1a6bb0;font-weight:700;'
             f'margin:0 0 7px">{_e(titre)}</div>'
             f'<div style="display:flex;flex-wrap:wrap;gap:9px">'
@@ -790,7 +790,7 @@ def _fiche_section(foret, pluie, saison, grille, res, focus):
 
         if focus == ENSEMBLE:
             st.markdown(
-                f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
+                f'<p style="font-size:14.5px;line-height:1.65;color:#3c4761;'
                 f'margin:4px 0 12px;max-width:92ch">{T("e_fiche_invite")}</p>',
                 unsafe_allow_html=True)
             st.markdown(_tableau_recap(foret, pluie, saison),
@@ -799,7 +799,7 @@ def _fiche_section(foret, pluie, saison, grille, res, focus):
             return
 
         st.markdown(
-            f'<h3 style="margin:6px 0 2px;font-size:25px;color:#101728">'
+            f'<h3 style="margin:6px 0 2px;font-size:20px;color:#101728">'
             f'{_e(focus)}</h3>', unsafe_allow_html=True)
 
         blocs = []
@@ -895,11 +895,11 @@ def _tableau_scores(res, focus):
               and r.get("scores_corriges", {}).get(focus) is not None]
     if not lignes:
         return ""
-    out = [f'<div style="font-size:12px;letter-spacing:.06em;'
+    out = [f'<div style="font-size:11px;letter-spacing:.06em;'
            f'text-transform:uppercase;color:#1a6bb0;font-weight:700;'
            f'margin:16px 0 7px">{_e(T("e_fg_scores"))}</div>',
            '<div style="overflow-x:auto"><table style="width:100%;'
-           'border-collapse:collapse;font-size:14.5px">']
+           'border-collapse:collapse;font-size:13.5px">']
     entetes = [T("e_fs_ligne"), T("e_fs_indicateur"), T("e_fs_valeur"),
                T("e_fs_score")]
     out.append('<tr>' + ''.join(
@@ -941,7 +941,7 @@ def _tableau_recap(foret, pluie, saison):
                T("e_fr_taux"), T("e_fr_pluie"), T("e_fr_campagne"),
                T("e_fr_j50")]
     out = ['<div style="overflow-x:auto"><table style="width:100%;'
-           'border-collapse:collapse;font-size:14.5px">']
+           'border-collapse:collapse;font-size:13.5px">']
     out.append('<tr>' + ''.join(
         f'<th style="text-align:{"left" if i == 0 else "right"};'
         f'padding:9px 10px;border-bottom:2px solid #e6ecf4;font-size:11.5px;'
@@ -1015,10 +1015,10 @@ GROUPES = [
 def _encart(cle_titre, corps, teinte="#cfe2f3"):
     return (f'<div style="border-left:3px solid {teinte};padding:2px 0 2px 14px;'
             f'margin:0 0 14px;max-width:92ch">'
-            f'<div style="font-size:12px;letter-spacing:.06em;'
+            f'<div style="font-size:11px;letter-spacing:.06em;'
             f'text-transform:uppercase;color:#1a6bb0;font-weight:700">'
             f'{_e(T(cle_titre))}</div>'
-            f'<div style="font-size:15.5px;color:#3c4761;line-height:1.6;'
+            f'<div style="font-size:14.5px;color:#3c4761;line-height:1.6;'
             f'margin-top:3px">{corps}</div></div>')
 
 
@@ -1035,7 +1035,7 @@ def _onglet_indice(cle, ligne, champ, mode, coul, res, jeu, focus):
             f'<div class="titre-bloc vert">{T("e_i_" + cle + "_titre")}</div>',
             unsafe_allow_html=True)
         st.markdown(
-            f'<p style="font-size:12px;letter-spacing:.06em;'
+            f'<p style="font-size:11px;letter-spacing:.06em;'
             f'text-transform:uppercase;color:#8a93a5;font-weight:700;'
             f'margin:2px 0 12px">{T("e_i_ligne", n=ligne)}</p>',
             unsafe_allow_html=True)
@@ -1053,12 +1053,12 @@ def _onglet_indice(cle, ligne, champ, mode, coul, res, jeu, focus):
                 f'<div style="background:#fdf8ee;border:1px solid #f0e2c4;'
                 f'border-radius:12px;padding:14px 17px;margin:4px 0 0;'
                 f'max-width:92ch">'
-                f'<div style="font-size:12px;letter-spacing:.06em;'
+                f'<div style="font-size:11px;letter-spacing:.06em;'
                 f'text-transform:uppercase;color:#a8690a;font-weight:700">'
                 f'{_e(T("e_i_attente_titre"))}</div>'
-                f'<p style="font-size:15.5px;color:#3c4761;line-height:1.6;'
+                f'<p style="font-size:14.5px;color:#3c4761;line-height:1.6;'
                 f'margin:4px 0 8px">{T("e_i_attente")}</p>'
-                f'<p style="font-size:14px;color:#6b7590;line-height:1.7;'
+                f'<p style="font-size:13px;color:#6b7590;line-height:1.7;'
                 f'margin:0">{T("e_i_attente_etapes")}</p></div>',
                 unsafe_allow_html=True)
             if entree and entree.get("echelle"):
@@ -1222,7 +1222,7 @@ def _tableau_indice(indices, champ, ref):
     entetes = [T("e_sc_section"), T("e_i_ref"), T("e_i_recent"),
                T("e_i_variation")] + ([T("e_i_eau")] if a_de_l_eau else [])
     out = ['<div style="overflow-x:auto"><table style="width:100%;'
-           'border-collapse:collapse;font-size:14.5px">']
+           'border-collapse:collapse;font-size:13.5px">']
     out.append('<tr>' + ''.join(
         f'<th style="text-align:{"left" if i == 0 else "right"};'
         f'padding:9px 10px;border-bottom:2px solid #e6ecf4;font-size:11.5px;'
@@ -1271,7 +1271,7 @@ def _onglet_aires(aires, res, focus):
             st.info(T("e_absent"))
             return
         st.markdown(
-            f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
+            f'<p style="font-size:14.5px;line-height:1.65;color:#3c4761;'
             f'margin:4px 0 14px;max-width:92ch">{T("e_ap_texte")}</p>',
             unsafe_allow_html=True)
 
@@ -1282,7 +1282,7 @@ def _onglet_aires(aires, res, focus):
         C = ('padding:9px 10px;border-bottom:1px solid #f0f4f9;'
              'text-align:right;font-variant-numeric:tabular-nums')
         out = ['<div style="overflow-x:auto"><table style="width:100%;'
-               'border-collapse:collapse;font-size:14.5px">',
+               'border-collapse:collapse;font-size:13.5px">',
                '<tr>' + ''.join(
                    f'<th style="text-align:{"left" if i == 0 else "right"};'
                    f'padding:9px 10px;border-bottom:2px solid #e6ecf4;'
@@ -1313,10 +1313,10 @@ def _onglet_aires(aires, res, focus):
         st.markdown(
             f'<div style="border-left:3px solid #cfe2f3;padding:2px 0 2px 14px;'
             f'margin:16px 0 0;max-width:92ch">'
-            f'<div style="font-size:12px;letter-spacing:.06em;'
+            f'<div style="font-size:11px;letter-spacing:.06em;'
             f'text-transform:uppercase;color:#1a6bb0;font-weight:700">'
             f'{_e(T("e_ap_mangrove"))}</div>'
-            f'<div style="font-size:15.5px;color:#3c4761;line-height:1.6;'
+            f'<div style="font-size:14.5px;color:#3c4761;line-height:1.6;'
             f'margin-top:3px">{T("e_ap_mangrove_texte")}</div></div>',
             unsafe_allow_html=True)
         st.caption(T("e_ap_non_score"))
@@ -1330,7 +1330,7 @@ def _onglet_lacunes(res):
         st.markdown(f'<div class="titre-bloc ambre">{T("e_bloc5")}</div>',
                     unsafe_allow_html=True)
         st.markdown(
-            f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
+            f'<p style="font-size:14.5px;line-height:1.65;color:#3c4761;'
             f'margin:4px 0 12px;max-width:92ch">'
             f'{T("e_bloc5_texte", n=len(manquants))}</p>',
             unsafe_allow_html=True)
@@ -1345,10 +1345,10 @@ def _onglet_lacunes(res):
             st.markdown(
                 f'<div style="border-left:3px solid #cfe2f3;padding:2px 0 '
                 f'2px 14px;margin:0 0 14px">'
-                f'<div style="font-size:12px;letter-spacing:.06em;'
+                f'<div style="font-size:11px;letter-spacing:.06em;'
                 f'text-transform:uppercase;color:#1a6bb0;font-weight:700">'
                 f'{_e(T("e_src_" + source))} : {len(presents)}</div>'
-                f'<div style="font-size:14.5px;color:#3c4761;'
+                f'<div style="font-size:13.5px;color:#3c4761;'
                 f'line-height:1.55;margin-top:3px">{noms}</div></div>',
                 unsafe_allow_html=True)
 
@@ -1361,7 +1361,7 @@ def render(entete=True):
     if entete:
         st.title(T("e_titre"))
         st.markdown(
-            '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+            '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
             'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
             + T("e_sous_titre") + "</p>", unsafe_allow_html=True)
 
@@ -1371,7 +1371,7 @@ def render(entete=True):
 
     st.markdown(
         '<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
-        'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:16px;'
+        'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:14.5px;'
         'color:#3c4761;box-shadow:0 1px 2px rgba(16,23,40,.05),'
         '0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px">'
         + T("e_intro") + "</div>", unsafe_allow_html=True)
@@ -1389,7 +1389,7 @@ def render(entete=True):
                              key=f"env_focus_{i18n.get_lang()}")
     with col_txt:
         st.markdown(
-            f'<p style="font-size:13.5px;color:#6b7590;line-height:1.5;'
+            f'<p style="font-size:12.5px;color:#6b7590;line-height:1.5;'
             f'margin:30px 0 0">{T("e_focus_aide")}</p>',
             unsafe_allow_html=True)
 

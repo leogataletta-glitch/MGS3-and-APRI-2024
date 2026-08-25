@@ -192,13 +192,13 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
  .barre{display:flex;flex-wrap:wrap;align-items:center;gap:12px;
         border:1px solid #e3eaf3;border-radius:14px;padding:11px 14px;
         background:#fbfcfe;margin-bottom:13px}
- .bt{font-size:13px;font-weight:700;padding:7px 14px;border-radius:9px;
+ .bt{font-size:12px;font-weight:700;padding:7px 14px;border-radius:9px;
      border:1px solid #d7e0ec;background:#fff;color:#3c4761;cursor:pointer}
  .bt:hover{border-color:#b6d8c6}
  .bt.p{background:#1c6349;border-color:#1c6349;color:#fff}
  .cpt{display:flex;gap:20px;margin-left:auto;align-items:baseline}
  .cpt div{text-align:right}
- .cpt b{font-size:20px;font-variant-numeric:tabular-nums}
+ .cpt b{font-size:16px;font-variant-numeric:tabular-nums}
  .cpt span{font-size:10.5px;color:#6b7590;letter-spacing:.06em;
            text-transform:uppercase;font-weight:700;display:block}
  .cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 22px}
@@ -209,7 +209,7 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
  .grp h4 i{width:8px;height:8px;border-radius:2px;flex:none}
  .li{display:grid;grid-template-columns:1fr 96px 46px;gap:8px;
      align-items:center;padding:2px 0}
- .nm{font-size:12px;color:#3c4761;white-space:nowrap;overflow:hidden;
+ .nm{font-size:11px;color:#3c4761;white-space:nowrap;overflow:hidden;
      text-overflow:ellipsis}
  .nm.t{font-weight:700;color:#101728}
  .ba{position:relative;height:15px;border-radius:4px;background:#eef2f7;
@@ -218,10 +218,10 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
         transition:width .35s ease}
  .ba .r{position:absolute;top:-1px;bottom:-1px;width:2px;background:#9aa4b5}
  .ba.t{outline:2px solid #1c6349;outline-offset:1px}
- .vl{font-size:12px;font-variant-numeric:tabular-nums;text-align:right;
+ .vl{font-size:11px;font-variant-numeric:tabular-nums;text-align:right;
      font-weight:700}
  .dl{font-size:10.5px;font-variant-numeric:tabular-nums;color:#6b7590}
- .note{font-size:12px;color:#6b7590;margin:12px 2px 0;line-height:1.5}
+ .note{font-size:11px;color:#6b7590;margin:12px 2px 0;line-height:1.5}
  .lg{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:#6b7590;
      margin-top:10px;align-items:center}
  .lg i{display:inline-block;width:10px;height:10px;border-radius:2px;
@@ -401,15 +401,15 @@ def render(entete=True):
 
     if entete:
         st.markdown(
-            f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+            f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
             f'letter-spacing:-.02em;margin:2px 0 0">{_e(T("sy_titre"))}</h2>'
-            f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+            f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
             f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
             f'{_e(T("sy_sous"))}</p>', unsafe_allow_html=True)
 
     st.markdown(
         f'<div style="background:#fff;border:1px solid {BORD};border-left:5px '
-        f'solid #1a6b52;border-radius:14px;padding:13px 17px;font-size:15.5px;'
+        f'solid #1a6b52;border-radius:14px;padding:13px 17px;font-size:14.5px;'
         f'color:{ENCRE2};line-height:1.6;margin:10px 0 8px;max-width:96ch;'
         f'text-align:left">{T("sy_intro")}</div>', unsafe_allow_html=True)
 

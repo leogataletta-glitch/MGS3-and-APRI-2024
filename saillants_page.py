@@ -128,7 +128,7 @@ def render():
 
     st.title(T("s_titre"))
     st.markdown(
-        '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+        '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
         'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
         + T("s_sous_titre") + "</p>", unsafe_allow_html=True)
 
@@ -141,7 +141,7 @@ def render():
 
     st.markdown(
         '<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
-        'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:16px;'
+        'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:14.5px;'
         'color:#3c4761;box-shadow:0 1px 2px rgba(16,23,40,.05),'
         '0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px">'
         + T("s_intro", n=doc["base"], q=doc["n_questions"]) + "</div>",
@@ -173,7 +173,7 @@ def render():
                 f'<div class="titre-bloc {TEINTE[k % len(TEINTE)]}">'
                 f'{k + 1} · {_txt(c, "titre")}</div>', unsafe_allow_html=True)
             st.markdown(
-                f'<p style="font-size:16px;line-height:1.65;color:#3c4761;'
+                f'<p style="font-size:14.5px;line-height:1.65;color:#3c4761;'
                 f'margin:4px 0 12px;max-width:92ch">{_txt(c, "texte")}</p>',
                 unsafe_allow_html=True)
             _barres(c["figures"])
@@ -191,7 +191,7 @@ def render():
         n_profil = doc["effectifs"].get(choix, 0)
         est_section = choix in SECTIONS
         st.markdown(
-            f'<p style="font-size:15px;color:#3c4761;margin:0 0 10px">'
+            f'<p style="font-size:14px;color:#3c4761;margin:0 0 10px">'
             f'{T("s_profil_base", g=_profil_nom(choix), n=n_profil, t=doc["base"])}'
             f'</p>', unsafe_allow_html=True)
 
@@ -229,9 +229,9 @@ def render():
                 st.markdown(
                     f'<div style="border-bottom:1px solid #eef2f7;padding:7px 0">'
                     f'<span style="font-variant-numeric:tabular-nums;'
-                    f'font-weight:700;color:#101728;font-size:16px">'
+                    f'font-weight:700;color:#101728;font-size:14.5px">'
                     f'{r["pct"]:.1f} %</span> '
-                    f'<span style="color:#3c4761;font-size:15px">'
+                    f'<span style="color:#3c4761;font-size:14px">'
                     f'{r["question"]} — « {r["modalite"]} »</span></div>',
                     unsafe_allow_html=True)
 
@@ -260,15 +260,15 @@ def _tableau_ecarts(lignes):
         else:
             fleche, fond, coul = "▼", "#eef5fb", "#1a6bb0"
         out.append(
-            f'<div style="font-size:15px;color:#3c4761;padding:8px 0;'
+            f'<div style="font-size:14px;color:#3c4761;padding:8px 0;'
             f'border-bottom:1px solid #eef2f7">{lab}</div>'
-            f'<div style="font-size:16px;font-weight:700;color:#101728;'
+            f'<div style="font-size:14.5px;font-weight:700;color:#101728;'
             f'font-variant-numeric:tabular-nums;padding:8px 0;'
             f'border-bottom:1px solid #eef2f7;text-align:right">'
             f'{v:.1f} %</div>'
             f'<div style="padding:8px 0;border-bottom:1px solid #eef2f7;'
             f'text-align:right"><span style="background:{fond};color:{coul};'
-            f'border-radius:999px;padding:3px 10px;font-size:13.5px;'
+            f'border-radius:999px;padding:3px 10px;font-size:12.5px;'
             f'font-weight:600;font-variant-numeric:tabular-nums">'
             f'{fleche} {abs(ecart):.1f}</span></div>')
     out.append("</div>")

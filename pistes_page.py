@@ -81,7 +81,7 @@ def _encart(libelle, texte, couleur, fond):
             f'<div style="font-size:11.5px;letter-spacing:.06em;'
             f'text-transform:uppercase;color:{couleur};font-weight:700;'
             f'margin-bottom:3px">{_e(libelle)}</div>'
-            f'<div style="font-size:15px;color:#3c4761;line-height:1.55">'
+            f'<div style="font-size:14px;color:#3c4761;line-height:1.55">'
             f'{_e(texte)}</div></div>')
 
 
@@ -91,7 +91,7 @@ def render():
 
     st.title(T("p_titre"))
     st.markdown(
-        '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+        '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
         'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
         + T("p_sous_titre") + "</p>", unsafe_allow_html=True)
 
@@ -102,7 +102,7 @@ def render():
     # ---- le cadre, avant toute piste --------------------------------------
     st.markdown(
         '<div style="background:#fdf7ec;border:1px solid #f0dcb8;border-left:5px '
-        'solid #d99b28;border-radius:14px;padding:14px 18px;font-size:15.5px;'
+        'solid #d99b28;border-radius:14px;padding:14px 18px;font-size:14.5px;'
         'color:#5b4a2b;line-height:1.6;margin:10px 0 8px">'
         + _t(pistes, "avert") + "</div>", unsafe_allow_html=True)
 
@@ -110,11 +110,11 @@ def render():
         st.markdown(f'<div class="titre-bloc">{T("p_bloc_cadre")}</div>',
                     unsafe_allow_html=True)
         st.markdown(
-            f'<p style="font-size:16px;line-height:1.68;color:#3c4761;'
+            f'<p style="font-size:14.5px;line-height:1.68;color:#3c4761;'
             f'margin:4px 0 8px;max-width:92ch">{_t(pistes, "cadre")}</p>',
             unsafe_allow_html=True)
         st.markdown(
-            '<p style="font-size:15px;color:#3c4761;margin:6px 0 0">'
+            '<p style="font-size:14px;color:#3c4761;margin:6px 0 0">'
             + _bulle("point_de_levier") + " &nbsp;·&nbsp; "
             + _bulle("boucle_retroaction") + " &nbsp;·&nbsp; "
             + _bulle("appropriation") + "</p>", unsafe_allow_html=True)
@@ -129,7 +129,7 @@ def render():
                 f'<h3 style="margin:2px 0 8px">{_e(_t(p, "titre"))}</h3>',
                 unsafe_allow_html=True)
             st.markdown(
-                f'<p style="font-size:16px;line-height:1.68;color:#3c4761;'
+                f'<p style="font-size:14.5px;line-height:1.68;color:#3c4761;'
                 f'margin:0 0 6px;max-width:92ch">{_t(p, "corps")}</p>',
                 unsafe_allow_html=True)
 
@@ -139,9 +139,9 @@ def render():
                     f'<span style="display:inline-flex;align-items:baseline;'
                     f'gap:7px;background:#f4f8fc;border:1px solid #e2e9f2;'
                     f'border-radius:10px;padding:7px 13px;margin:0 8px 8px 0">'
-                    f'<strong style="font-size:16px;color:#101728;'
+                    f'<strong style="font-size:14.5px;color:#101728;'
                     f'font-variant-numeric:tabular-nums">{v:.1f} %</strong>'
-                    f'<span style="font-size:13.5px;color:#3c4761">'
+                    f'<span style="font-size:12.5px;color:#3c4761">'
                     f'{_e(lab)}</span></span>' for lab, v in chiffres)
                 st.markdown(
                     f'<div style="margin-top:10px"><div style="font-size:11.5px;'

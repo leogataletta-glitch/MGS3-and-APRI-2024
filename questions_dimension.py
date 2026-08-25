@@ -461,24 +461,24 @@ STYLE = """
   .q-carte { border:1px solid #e7ecf3; border-radius:13px; padding:14px 17px;
              margin:10px 0 0; background:#fff;
              box-shadow:0 1px 2px rgba(16,23,40,.04); }
-  .q-q     { font-size:15.5px; font-weight:600; color:#101728;
+  .q-q     { font-size:14.5px; font-weight:600; color:#101728;
              line-height:1.45; }
-  .q-meta  { font-size:12.5px; color:#8a93a5; margin:4px 0 11px; }
+  .q-meta  { font-size:11.5px; color:#8a93a5; margin:4px 0 11px; }
   .q-pastille { display:inline-block; font-size:11px; font-weight:700;
              border-radius:999px; padding:2px 9px; margin-left:7px;
              vertical-align:2px; color:#fff; }
   .q-ligne { display:grid; grid-template-columns:minmax(120px,2.1fr) 4fr 58px 52px;
              gap:10px; align-items:center; padding:3px 0; }
-  .q-lab   { font-size:13.5px; color:#3c4761; line-height:1.35;
+  .q-lab   { font-size:12.5px; color:#3c4761; line-height:1.35;
              overflow-wrap:break-word; }
   .q-piste { background:#f1f4f9; border-radius:5px; height:16px;
              overflow:hidden; }
   .q-barre { height:100%; border-radius:5px; }
-  .q-pct   { font-size:13.5px; font-weight:600; color:#101728;
+  .q-pct   { font-size:12.5px; font-weight:600; color:#101728;
              text-align:right; font-variant-numeric:tabular-nums; }
-  .q-n     { font-size:12.5px; color:#8a93a5; text-align:right;
+  .q-n     { font-size:11.5px; color:#8a93a5; text-align:right;
              font-variant-numeric:tabular-nums; }
-  .q-vide  { font-size:13px; color:#8a93a5; font-style:italic; }
+  .q-vide  { font-size:12px; color:#8a93a5; font-style:italic; }
 </style>
 """
 
@@ -527,7 +527,7 @@ def rendre(cle_dim):
     # laisse croire que si.
     st.warning(T("q_avert_niveau"))
     st.markdown(
-        f'<p style="font-size:15px;color:#3c4761;line-height:1.6;'
+        f'<p style="font-size:14px;color:#3c4761;line-height:1.6;'
         f'max-width:92ch;margin:2px 0 4px">'
         f'{_e(T("q_intro", n=n_q, lien=n_lien))}</p>',
         unsafe_allow_html=True)

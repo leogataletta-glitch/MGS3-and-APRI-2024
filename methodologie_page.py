@@ -94,7 +94,7 @@ def render():
 
     st.title(T("m_titre"))
     st.markdown(
-        '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+        '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
         'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
         + T("m_sous_titre") + "</p>", unsafe_allow_html=True)
 
@@ -106,7 +106,7 @@ def render():
 
     st.markdown(
         '<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
-        'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:16px;'
+        'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:14.5px;'
         'color:#3c4761;box-shadow:0 1px 2px rgba(16,23,40,.05),'
         '0 8px 20px rgba(16,23,40,.06);margin:10px 0 4px">'
         + T("m_intro") + "</div>", unsafe_allow_html=True)
@@ -115,13 +115,13 @@ def render():
     puces = "".join(
         '<span style="display:inline-flex;align-items:center;gap:8px;'
         'background:#f4f8fc;border:1px solid #e6ecf4;border-radius:999px;'
-        'padding:7px 15px;margin:0 8px 8px 0;font-size:14px;color:#3c4761">'
+        'padding:7px 15px;margin:0 8px 8px 0;font-size:13px;color:#3c4761">'
         '<span style="display:inline-flex;align-items:center;justify-content:'
         'center;width:21px;height:21px;border-radius:999px;background:#1a6bb0;'
-        f'color:#fff;font-size:12px;font-weight:700">{i}</span>{_titre(s)}</span>'
+        f'color:#fff;font-size:11px;font-weight:700">{i}</span>{_titre(s)}</span>'
         for i, s in enumerate(sections, 1))
     st.markdown(
-        '<p style="font-size:12px;color:#6b7590;letter-spacing:.07em;'
+        '<p style="font-size:11px;color:#6b7590;letter-spacing:.07em;'
         'text-transform:uppercase;font-weight:700;margin:14px 0 6px 2px">'
         + T("m_sommaire") + "</p><div>" + puces + "</div>",
         unsafe_allow_html=True)
@@ -140,10 +140,10 @@ def render():
             bulles = [b for b in bulles if b]
             if bulles:
                 st.markdown(
-                    '<p style="font-size:12px;color:#6b7590;letter-spacing:.07em;'
+                    '<p style="font-size:11px;color:#6b7590;letter-spacing:.07em;'
                     'text-transform:uppercase;font-weight:700;margin:14px 0 4px">'
                     + T("m_notions") + '</p>'
-                    '<p style="font-size:15px;color:#3c4761;margin:0">'
+                    '<p style="font-size:14px;color:#3c4761;margin:0">'
                     + " &nbsp;·&nbsp; ".join(bulles) + "</p>",
                     unsafe_allow_html=True)
 

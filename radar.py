@@ -159,5 +159,5 @@ def legende_html(series):
             f'margin-right:20px">'
             f'<span style="width:13px;height:13px;border-radius:3px;background:{col};'
             f'opacity:.9;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)"></span>'
-            f'<span style="font-size:13px;color:{INK2}">{nom}</span></span>')
+            f'<span style="font-size:12px;color:{INK2}">{nom}</span></span>')
     return ''.join(morceaux)

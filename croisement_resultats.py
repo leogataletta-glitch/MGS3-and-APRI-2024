@@ -256,22 +256,22 @@ STYLE = """
              padding:14px 16px; }
   .cx-k-l  { font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
              font-weight:700; color:#8a93a5; }
-  .cx-k-v  { font-size:30px; font-weight:700; letter-spacing:-.025em;
+  .cx-k-v  { font-size:24px; font-weight:700; letter-spacing:-.025em;
              line-height:1.05; font-variant-numeric:tabular-nums; }
-  .cx-k-s  { font-size:12px; color:#8a93a5; margin-top:3px; }
+  .cx-k-s  { font-size:11px; color:#8a93a5; margin-top:3px; }
   .cx-bar  { display:grid; grid-template-columns:minmax(140px,1.5fr) 5fr 62px 62px;
              gap:10px; align-items:center; padding:7px 0;
              border-bottom:1px solid #f0f4f9; }
   .cx-piste{ position:relative; height:26px; }
   .cx-b1, .cx-b2 { position:absolute; left:0; height:11px; border-radius:4px; }
   .cx-b1  { top:1px; } .cx-b2 { top:14px; }
-  .cx-num { font-size:13px; font-weight:700; text-align:right;
+  .cx-num { font-size:12px; font-weight:700; text-align:right;
             font-variant-numeric:tabular-nums; }
   .cx-leg { display:flex; gap:18px; align-items:center; margin:2px 0 8px;
-            font-size:12.5px; color:#3c4761; }
+            font-size:11.5px; color:#3c4761; }
   .cx-leg span.p { width:13px; height:11px; border-radius:3px;
                    display:inline-block; margin-right:6px; }
-  .cx-t   { width:100%; border-collapse:collapse; font-size:14px; }
+  .cx-t   { width:100%; border-collapse:collapse; font-size:13px; }
   .cx-t th{ text-align:right; padding:8px 10px; border-bottom:2px solid #e6ecf4;
             font-size:11px; letter-spacing:.05em; text-transform:uppercase;
             color:#6b7590; font-weight:700; }
@@ -345,7 +345,7 @@ def _constructeur(cat, cle, couleur, titre):
     clauses = _clauses(cle)
 
     st.markdown(
-        f'<div style="font-size:15px;font-weight:700;color:{couleur};'
+        f'<div style="font-size:14px;font-weight:700;color:{couleur};'
         f'margin:2px 0 6px">{_e(titre)}</div>', unsafe_allow_html=True)
 
     liaison = st.radio(
@@ -453,7 +453,7 @@ def _barres_dimensions(ag_grp, ag_ens, ag_b=None, coul_b=COUL_B):
         ref = b if b is not None else e
         ecart = (g - ref) if (g is not None and ref is not None) else None
         lignes.append(
-            f'<div class="cx-bar"><div style="font-size:13.5px;color:{ENCRE}">'
+            f'<div class="cx-bar"><div style="font-size:12.5px;color:{ENCRE}">'
             f'{_e(T(cle))}</div>'
             f'<div class="cx-piste">{barres}</div>'
             f'<div class="cx-num" style="color:{ENCRE}">{_f(g, 2)}</div>'
@@ -492,7 +492,7 @@ def _carte(cat, sections, mesure):
         f'<span style="display:inline-flex;align-items:center;gap:7px;'
         f'margin-right:16px"><span style="width:20px;height:11px;'
         f'border-radius:3px;background:{c}"></span>'
-        f'<span style="font-size:12.5px;color:#52514e">{lab}</span></span>'
+        f'<span style="font-size:11.5px;color:#52514e">{lab}</span></span>'
         for c, lab in map_render.legend_items(seuils_ret, polarite, unite))
     return ('<div style="font-family:Inter,system-ui,sans-serif;'
             f'background:#fff"><div style="margin:0 0 8px">{legende}</div>'
@@ -527,7 +527,7 @@ def _tableau_indicateurs(lignes_g, lignes_e):
             f'<tr><td>L{l["ligne"]} · {_e(_nom_ind(l))}</td>'
             f'<td style="font-weight:600">{_f(l["valeur"])} %'
             f'<span style="color:{VERT if (d or 0) > 0 else ROUGE if (d or 0) < 0 else ENCRE3};'
-            f'font-size:12px"> ({_f(d, 1, True)})</span></td>'
+            f'font-size:11px"> ({_f(d, 1, True)})</span></td>'
             f'<td style="color:{ENCRE3}">{_f(e.get("valeur"))} %</td>'
             f'<td style="font-weight:700">{_f(l["score"], 0)}</td></tr>')
     return "".join(li) + "</table>"
@@ -538,9 +538,9 @@ def render():
     cat = _catalogue()
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(
-        f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+        f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
         f'letter-spacing:-.02em;margin:2px 0 0">{T("cx_titre")}</h2>'
-        f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
         f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
         f'{T("cx_sous_titre")}</p>', unsafe_allow_html=True)
     if not cat:
@@ -602,7 +602,7 @@ def render():
             f'<div class="cx-k-s">{_e(T("cx_ensemble"))}</div></div>'
             f'<div class="cx-k"><div class="cx-k-l">{_e(T("cx_indice"))}</div>'
             f'<div class="cx-k-v" style="color:{ENCRE}">'
-            f'{_f(ag_a["global"], 2)}<span style="font-size:14px;'
+            f'{_f(ag_a["global"], 2)}<span style="font-size:13px;'
             f'color:#8a93a5"> / 10</span></div>'
             f'<div class="cx-k-s">'
             f'{_e(T("cx_couverture", p=_f(100 * couv["global"], 0)))}</div>'

@@ -234,7 +234,7 @@ def _tableau_indicateurs(lignes, cible, teinte, vent=None):
     entetes = [T("d_col_ligne"), T("d_col_indicateur"), T("d_col_source"),
                T("d_col_valeur"), T("d_col_score"), T("d_col_poids")]
     out = ['<div style="overflow-x:auto"><table style="width:100%;'
-           'border-collapse:collapse;font-size:14.5px">',
+           'border-collapse:collapse;font-size:13.5px">',
            '<tr>' + ''.join(
                f'<th style="text-align:{"left" if i < 3 else "right"};'
                f'padding:9px 10px;border-bottom:2px solid #e6ecf4;'
@@ -293,7 +293,7 @@ def _fiche_source(r):
         parts.append((T("d_bloc_question"),
                       f'<em>« {_e(q)} »</em>'
                       + (f'<div style="margin-top:5px;color:#6b7590;'
-                         f'font-size:14px">{_e(T("d_modalites"))} : '
+                         f'font-size:13px">{_e(T("d_modalites"))} : '
                          f'{_e(mod)}</div>' if mod else '')))
     elif src in ("satellite", "ocb") and q:
         parts.append((T("d_bloc_origine"), _e(q)))
@@ -312,7 +312,7 @@ def _fiche_source(r):
         f'<div style="margin:0 0 11px">'
         f'<div style="font-size:11.5px;letter-spacing:.06em;'
         f'text-transform:uppercase;color:#1a6bb0;font-weight:700">{_e(t)}</div>'
-        f'<div style="font-size:14.5px;color:#3c4761;line-height:1.6;'
+        f'<div style="font-size:13.5px;color:#3c4761;line-height:1.6;'
         f'margin-top:2px">{c}</div></div>' for t, c in parts)
 
 
@@ -335,7 +335,7 @@ def _carte_dimension(lignes, teinte, cle):
         f'<span style="display:inline-flex;align-items:center;gap:7px;'
         f'margin-right:18px"><span style="width:22px;height:12px;'
         f'border-radius:3px;background:{c};box-shadow:inset 0 0 0 1px '
-        f'rgba(0,0,0,.12)"></span><span style="font-size:13px;'
+        f'rgba(0,0,0,.12)"></span><span style="font-size:12px;'
         f'color:#52514e">{lab}</span></span>'
         for c, lab in map_render.legend_items(seuils_ret, "eleve_bon", ""))
     return (
@@ -373,9 +373,9 @@ def render(cle_dim, complement=None):
     # du haut. Un troisième exemplaire sur la même vue n'ajoute rien et pousse
     # le premier chiffre sous la ligne de flottaison.
     st.markdown(
-        f'<h2 style="font-size:27px;font-weight:700;color:#101728;'
+        f'<h2 style="font-size:21.5px;font-weight:700;color:#101728;'
         f'letter-spacing:-.02em;margin:2px 0 0">{T(cle_dim)}</h2>'
-        f'<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+        f'<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
         f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
         f'{T("dim_sous_titre")}</p>', unsafe_allow_html=True)
 
@@ -387,7 +387,7 @@ def render(cle_dim, complement=None):
     # qu'il regarde avant de choisir sur qui il le regarde.
     st.markdown(
         f'<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
-        f'solid {teinte};border-radius:14px;padding:13px 17px;font-size:16px;'
+        f'solid {teinte};border-radius:14px;padding:13px 17px;font-size:14.5px;'
         f'color:#3c4761;box-shadow:0 1px 2px rgba(16,23,40,.05),'
         f'0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px;max-width:96ch">'
         f'{T(cle_dim + "_intro")}</div>', unsafe_allow_html=True)
@@ -421,15 +421,15 @@ ACC_STYLE = """
   .ind-kpi   { display:flex; flex-direction:column; }
   .ind-kpi-l { font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
                font-weight:700; color:#8a93a5; }
-  .ind-kpi-v { font-size:20px; font-weight:700; color:#101728;
+  .ind-kpi-v { font-size:16px; font-weight:700; color:#101728;
                font-variant-numeric:tabular-nums; line-height:1.2; }
   .ind-sec   { display:grid; grid-template-columns:minmax(96px,1.3fr) 5fr 46px;
                gap:10px; align-items:center; padding:3px 0; }
-  .ind-sec-l { font-size:13px; color:#3c4761; }
+  .ind-sec-l { font-size:12px; color:#3c4761; }
   .ind-sec-p { background:#f1f4f9; border-radius:5px; height:14px;
                overflow:hidden; }
   .ind-sec-b { height:100%; border-radius:5px; }
-  .ind-sec-v { font-size:13px; font-weight:700; text-align:right;
+  .ind-sec-v { font-size:12px; font-weight:700; text-align:right;
                font-variant-numeric:tabular-nums; }
   .ind-lab   { font-size:11px; letter-spacing:.08em; text-transform:uppercase;
                font-weight:700; color:#8a93a5; margin:14px 0 4px; }
@@ -503,7 +503,7 @@ def _accordeon_indicateurs(lignes, vent, teinte, cle_dim):
                 f'{_e(T("d_col_score"))}</div><div class="ind-kpi-v" '
                 f'style="color:{_couleur_score(sc)}">'
                 f'{_fmt(sc, 1) if sc is not None else "—"}'
-                f'<span style="font-size:12px;color:#8a93a5"> / 10</span>'
+                f'<span style="font-size:11px;color:#8a93a5"> / 10</span>'
                 f'</div></div>'
                 f'<div class="ind-kpi"><div class="ind-kpi-l">'
                 f'{_e(T("d_c_valeur"))}</div>'
@@ -517,7 +517,7 @@ def _accordeon_indicateurs(lignes, vent, teinte, cle_dim):
             exp = expl_indic(r)
             if exp:
                 st.markdown(
-                    f'<p style="font-size:15px;color:#3c4761;line-height:1.6;'
+                    f'<p style="font-size:14px;color:#3c4761;line-height:1.6;'
                     f'margin:0 0 11px;max-width:92ch">{_e(exp)}</p>',
                     unsafe_allow_html=True)
             st.markdown(_fiche_source(r), unsafe_allow_html=True)
@@ -527,7 +527,7 @@ def _accordeon_indicateurs(lignes, vent, teinte, cle_dim):
             comp = _comparaison_sections(r, teinte)
             st.markdown(
                 f'<div class="ind-lab">{_e(T("d_bloc_comparaison"))}</div>'
-                + (comp or f'<div style="font-size:13px;color:#8a93a5;'
+                + (comp or f'<div style="font-size:12px;color:#8a93a5;'
                            f'font-style:italic">'
                            f'{_e(T("d_pas_de_section"))}</div>'),
                 unsafe_allow_html=True)

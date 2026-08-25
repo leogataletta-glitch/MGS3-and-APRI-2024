@@ -252,6 +252,13 @@ st.markdown(("""
      LA COLONNE DE GAUCHE N'EST PAS MISE À L'ÉCHELLE : une navigation qui
      rétrécit avec le contenu devient moins facile à viser, alors qu'elle ne
      coûte rien en hauteur. Le zoom ne porte que sur la zone de contenu. */
+  /* LA RACINE DESCEND DE 16 À 14,5 PIXELS. C'est le seul levier qui atteigne
+     le corps de texte du site : la très grande majorité des paragraphes
+     n'ont aucune taille écrite, ils héritent de la racine. Tout ce que
+     Streamlit exprime en `rem` — gouttières, hauteurs de widget, marges de
+     titre — suit dans la même proportion, ce qui évite qu'un texte plus petit
+     flotte dans des blocs restés grands. */
+  html { font-size: 14.5px; }
   :root { --z: .88; --dz: 1.1364; }
   section.stMain, div[data-testid="stMain"] { zoom: var(--z); }
   .block-container { max-width: 1240px; padding-top: 0; padding-bottom: 2.4rem; }
@@ -317,21 +324,24 @@ st.markdown(("""
     font-family: "Inter", system-ui, -apple-system, sans-serif !important;
     color: var(--encre); letter-spacing: -0.02em;
   }
-  h1 { font-weight: 700 !important; font-size: 2.6rem !important;
-       line-height: 1.12 !important; }
-  h2 { font-weight: 700 !important; font-size: 1.7rem !important;
+  /* Les trois niveaux de titre sont coupés en plus de la racine : c'est là
+     que la taille se voyait le plus, un titre de page occupant à lui seul une
+     bande de l'écran pour six mots. */
+  h1 { font-weight: 700 !important; font-size: 2rem !important;
+       line-height: 1.14 !important; }
+  h2 { font-weight: 700 !important; font-size: 1.35rem !important;
        margin-top: .2rem !important; padding-bottom: .2rem !important; }
-  h3 { font-weight: 600 !important; font-size: 1.28rem !important;
+  h3 { font-weight: 600 !important; font-size: 1.1rem !important;
        margin-top: .2rem !important; }
 
   /* --- texte : jamais minuscule, jamais délavé --- */
   [data-testid="stMarkdownContainer"] p,
   [data-testid="stMarkdownContainer"] li {
-    font-size: 16px; line-height: 1.66; color: var(--encre-2);
+    font-size: 14.5px; line-height: 1.66; color: var(--encre-2);
   }
   [data-testid="stMarkdownContainer"] strong { color: var(--encre); }
   [data-testid="stCaptionContainer"] p {
-    font-size: 15px !important; line-height: 1.62 !important;
+    font-size: 14px !important; line-height: 1.62 !important;
     color: var(--encre-2) !important; max-width: 92ch;
   }
 
@@ -374,7 +384,7 @@ st.markdown(("""
   /* --- l'entête de section, en pilule colorée --- */
   .titre-bloc {
     display: inline-flex; align-items: center; gap: 9px;
-    font-family: "Inter", system-ui, sans-serif; font-weight: 700; font-size: 13px;
+    font-family: "Inter", system-ui, sans-serif; font-weight: 700; font-size: 12px;
     letter-spacing: .06em; text-transform: uppercase;
     color: var(--accent); background: #eaf5f0;
     padding: 6px 13px; border-radius: 999px; margin: 0 0 4px;
@@ -384,12 +394,12 @@ st.markdown(("""
 
   /* --- menus : champs pleins, arrondis, réactifs --- */
   label[data-testid="stWidgetLabel"] p {
-    font-size: 13px !important; font-weight: 700 !important;
+    font-size: 12px !important; font-weight: 700 !important;
     letter-spacing: .04em; color: var(--encre-3) !important;
     text-transform: uppercase;
   }
   div[data-baseweb="select"] > div {
-    font-size: 15.5px; border-radius: 11px; border: 1.5px solid var(--bord);
+    font-size: 14.5px; border-radius: 11px; border: 1.5px solid var(--bord);
     background: #f7fafd; transition: border-color .15s ease, box-shadow .15s ease;
   }
   div[data-baseweb="select"] > div:hover { border-color: #b6d8c6; }
@@ -408,7 +418,7 @@ st.markdown(("""
     padding: 12px 14px !important;
   }
   div[data-testid="stAlert"] p {
-    font-size: 16px !important; color: var(--encre-2) !important; margin: 0;
+    font-size: 14.5px !important; color: var(--encre-2) !important; margin: 0;
   }
 
   details {
@@ -416,7 +426,7 @@ st.markdown(("""
     border-radius: 14px !important; box-shadow: var(--ombre);
   }
   details summary p {
-    font-size: 15px !important; font-weight: 600 !important;
+    font-size: 14px !important; font-weight: 600 !important;
     color: var(--encre-2);
   }
 
@@ -429,14 +439,14 @@ st.markdown(("""
   div[data-testid="stButton"] > button {
     height: 92px; border-radius: 16px; border: 1.5px solid var(--bord);
     font-family: "Inter", system-ui, sans-serif !important;
-    font-size: 18px !important; font-weight: 600 !important;
+    font-size: 16.5px !important; font-weight: 600 !important;
     line-height: 1.3; white-space: normal; padding: 12px 20px;
     background: var(--carte); box-shadow: var(--ombre);
     transition: transform .18s cubic-bezier(.2,.7,.3,1), box-shadow .18s ease,
                 background .18s ease, border-color .18s ease;
   }
   div[data-testid="stButton"] > button p {
-    font-size: 18px !important; font-weight: 600 !important;
+    font-size: 16.5px !important; font-weight: 600 !important;
   }
   div[data-testid="stButton"] > button:hover {
     transform: translateY(-3px); box-shadow: var(--ombre-haut);
@@ -473,7 +483,7 @@ st.markdown(("""
     border-color: #b6d8c6; background: #eef8f2;
   }
   .stRadio > div[role="radiogroup"] > label > div:last-child p {
-    font-size: 14.5px !important; font-weight: 600 !important;
+    font-size: 13.5px !important; font-weight: 600 !important;
     color: var(--encre-2);
   }
 
@@ -495,7 +505,7 @@ st.markdown(("""
     height: auto; padding: 9px 18px !important; border-radius: 999px;
     background: #eaf5f0 !important; border: 1.5px solid #cde4d9 !important;
     color: var(--accent) !important; font-weight: 600 !important;
-    font-size: 14.5px !important; box-shadow: none;
+    font-size: 13.5px !important; box-shadow: none;
   }
   div[data-testid="stDownloadButton"] > button:hover {
     background: #dcefe5 !important; transform: translateY(-1px);
@@ -574,7 +584,7 @@ st.markdown(("""
   }
   .apri-bloc-nom { min-width: 0; }
   .apri-nom {
-    font-family: "Inter", system-ui, sans-serif; font-size: 42px; font-weight: 700;
+    font-family: "Inter", system-ui, sans-serif; font-size: 33.5px; font-weight: 700;
     color: var(--encre); letter-spacing: .01em; line-height: 1;
   }
   .apri-filet {
@@ -586,11 +596,11 @@ st.markdown(("""
      ligne grise disait les deux d'un même souffle et on ne lisait ni l'un ni
      l'autre. */
   .apri-baseline {
-    font-size: 12px; color: #5d8c2b; line-height: 1.3;
+    font-size: 11px; color: #5d8c2b; line-height: 1.3;
     margin-top: 6px; font-weight: 500;
   }
   .apri-lieu {
-    font-size: 12.5px; color: var(--encre-2); line-height: 1.3;
+    font-size: 11.5px; color: var(--encre-2); line-height: 1.3;
     margin-top: 3px; font-weight: 600;
   }
   /* Pied de colonne : le logo du PNUE y descend, puisque les logos ne
@@ -659,7 +669,7 @@ st.markdown(("""
   }
   section[data-testid="stSidebar"] div[data-testid="stButton"] > button p {
     font-family: "Inter", system-ui, sans-serif !important;
-    font-size: 15.5px !important; font-weight: 500 !important;
+    font-size: 14.5px !important; font-weight: 500 !important;
     line-height: 1.35 !important;
     color: var(--encre-2) !important;
     text-align: left !important; width: 100%; margin: 0 !important;
@@ -724,7 +734,7 @@ st.markdown(("""
   }
   section[data-testid="stSidebar"] div[class*="st-key-f_reset_global"]
     div[data-testid="stButton"] > button p {
-    font-size: 13.5px !important; font-weight: 500 !important;
+    font-size: 12.5px !important; font-weight: 500 !important;
   }
   section[data-testid="stSidebar"] div[class*="st-key-f_reset_global"]
     div[data-testid="stButton"] > button:disabled { opacity: .5; }
@@ -765,7 +775,7 @@ st.markdown(("""
     color: var(--encre-3); font-weight: 700; white-space: nowrap;
   }
   .f-chip-val {
-    font-size: 13.5px; color: var(--encre); font-weight: 600;
+    font-size: 12.5px; color: var(--encre); font-weight: 600;
   }
   .f-vide {
     font-size: 11.5px; color: var(--encre-3); line-height: 1.5;
@@ -881,11 +891,11 @@ st.markdown(("""
   /* Sans ligne de contenu, le bandeau collerait au titre de la page. */
   .bh-vide { height: 20px; }
   .bh-page {
-    font-size: 16.5px; font-weight: 700; color: #101728;
+    font-size: 15px; font-weight: 700; color: #101728;
     letter-spacing: -.01em;
   }
   .bh-filtre {
-    font-size: 13px; color: #1f7a5a; font-weight: 600;
+    font-size: 12px; color: #1f7a5a; font-weight: 600;
     background: #eaf6f0; border: 1px solid #cfe9dd; border-radius: 999px;
     padding: 5px 14px;
   }
@@ -909,8 +919,14 @@ st.markdown(("""
      deux mots ecarte les lettres), les legendes sous les figures (deux
      lignes justifiees creusent des rivieres blanches), et les cellules de
      tableau (leur alignement porte un sens — les nombres a droite). */
-  section[data-testid="stMain"] div[data-testid="stMarkdownContainer"] p,
-  section[data-testid="stMain"] div[data-testid="stMarkdownContainer"] li {
+  /* LA JUSTIFICATION EST POSÉE SUR LE CONTENEUR, PAS SUR LES PARAGRAPHES.
+     Visée sur `p` et `li`, elle laissait de côté tout ce que les pages
+     injectent en HTML — les encadrés, les cartes, les fiches — dont le texte
+     vit dans des `div` et des `span`. Posée sur le conteneur, elle descend
+     par héritage dans tout ce qui n'a pas d'alignement à lui, et les
+     alignements explicites, un nombre calé à droite, un intitulé centré,
+     gardent le dessus sans qu'on ait à les rappeler un par un. */
+  section[data-testid="stMain"] div[data-testid="stMarkdownContainer"] {
     text-align: justify; text-justify: inter-word; hyphens: auto;
   }
   section[data-testid="stMain"] div[data-testid="stButton"] p,
@@ -945,7 +961,7 @@ st.markdown(("""
     padding: 15px 17px !important; border-radius: 14px !important;
     background: #ffffff !important; border: 1px solid #e3eaf3 !important;
     color: #101728 !important;
-    font-size: 15.5px !important; font-weight: 700 !important;
+    font-size: 14.5px !important; font-weight: 700 !important;
     line-height: 1.3 !important; letter-spacing: -.01em !important;
     box-shadow: 0 1px 2px rgba(16,23,40,.05) !important;
     transition: box-shadow .15s ease, transform .15s ease,
@@ -964,13 +980,13 @@ st.markdown(("""
      la première ligne VISUELLE, si bien que le début du sous-titre héritait
      du gras dès que le titre tenait sur une seule ligne.) */
   div[class*="st-key-carte_dim"] > div > button p {
-    font-size: 12.5px !important; font-weight: 400 !important;
+    font-size: 11.5px !important; font-weight: 400 !important;
     color: #6b7590 !important; line-height: 1.45 !important;
     text-align: left !important; margin: 0 !important;
   }
   div[class*="st-key-carte_dim"] > div > button p strong {
     display: block; margin-bottom: 7px;
-    font-size: 15.5px; font-weight: 700; color: #101728;
+    font-size: 14.5px; font-weight: 700; color: #101728;
     line-height: 1.3; letter-spacing: -.01em;
   }
   div[class*="st-key-carte_dim"] > div > button[kind="primary"] {
@@ -994,12 +1010,12 @@ st.markdown(("""
   }
   .n-icone {
     flex: 0 0 34px; width: 34px; height: 34px; border-radius: 9px;
-    background: #eaf6f0; color: #1f7a5a; font-size: 16px;
+    background: #eaf6f0; color: #1f7a5a; font-size: 14.5px;
     display: flex; align-items: center; justify-content: center;
   }
   .n-corps { flex: 1 1 auto; min-width: 0; }
   .n-titre {
-    font-size: 14.5px; font-weight: 700; color: #101728; line-height: 1.35;
+    font-size: 13.5px; font-weight: 700; color: #101728; line-height: 1.35;
   }
   .n-badge {
     display: inline-block; margin-left: 7px; vertical-align: middle;
@@ -1009,7 +1025,7 @@ st.markdown(("""
     text-transform: uppercase;
   }
   .n-texte {
-    font-size: 13px; color: #6b7590; line-height: 1.5; margin-top: 3px;
+    font-size: 12px; color: #6b7590; line-height: 1.5; margin-top: 3px;
   }
 
   /* --- sous-onglets : mêmes codes que les tuiles d'entrée, en compact ---
@@ -1029,7 +1045,7 @@ st.markdown(("""
   }
   .stTabs [data-baseweb="tab-list"] button[data-baseweb="tab"] p {
     font-family: "Inter", system-ui, sans-serif !important;
-    font-size: 15px !important; font-weight: 600 !important;
+    font-size: 14px !important; font-weight: 600 !important;
     color: var(--encre-2) !important; margin: 0;
   }
   .stTabs [data-baseweb="tab-list"] button[data-baseweb="tab"]:hover {
@@ -1625,7 +1641,7 @@ if app_mode == MODE_BOUCLES:
     # trente-huit boucles et l'animation seraient calculées ensemble, pour
     # n'en montrer qu'une. Un sélecteur ne rend que ce qu'on regarde.
     st.markdown(
-        f'<h2 style="font-size:27px;font-weight:700;color:#101728;'
+        f'<h2 style="font-size:21.5px;font-weight:700;color:#101728;'
         f'letter-spacing:-.02em;margin:2px 0 0">{T("mode_boucles")}</h2>',
         unsafe_allow_html=True)
     _VUES = {T("oc_titre"): "onde", T("sy_titre"): "systeme",

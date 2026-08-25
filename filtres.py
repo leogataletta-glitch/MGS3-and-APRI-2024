@@ -252,15 +252,15 @@ BARRE_STYLE = """
       background:#f7fafd; border:1px solid #e3eaf3; border-radius:12px;
       padding:12px 16px 4px; margin:6px 0 2px; align-items:end; }
   div[data-testid="stHorizontalBlock"]:has(.f-ancre) label p {
-      font-size:12.5px !important; letter-spacing:0; text-transform:none;
+      font-size:11.5px !important; letter-spacing:0; text-transform:none;
       font-weight:600 !important; color:#3c4761 !important; }
   /* Le bouton s'étirait sur toute la hauteur de la carte et pesait plus que
      les trois sélecteurs réunis, alors qu'il n'est qu'une sortie de secours. */
   div[data-testid="stHorizontalBlock"]:has(.f-ancre) button {
       height:40px; min-height:40px; margin-bottom:16px;
-      font-size:13px !important; }
+      font-size:12px !important; }
   .f-ancre { display:none; }
-  .f-auto  { display:flex; align-items:center; gap:7px; font-size:12.5px;
+  .f-auto  { display:flex; align-items:center; gap:7px; font-size:11.5px;
              color:#6b7590; margin:2px 0 12px 4px; }
 </style>
 """

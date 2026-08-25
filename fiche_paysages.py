@@ -256,12 +256,12 @@ STYLE = """
              align-items:center; margin:8px 0 4px; }
   .fp-cote { border:1px solid #e6ecf4; border-radius:14px; padding:16px 18px;
              background:#fff; }
-  .fp-nom  { font-size:13px; font-weight:700; letter-spacing:.06em;
+  .fp-nom  { font-size:12px; font-weight:700; letter-spacing:.06em;
              text-transform:uppercase; }
-  .fp-sc   { font-size:44px; font-weight:700; letter-spacing:-.03em;
+  .fp-sc   { font-size:35px; font-weight:700; letter-spacing:-.03em;
              line-height:1; font-variant-numeric:tabular-nums; }
-  .fp-su   { font-size:12.5px; color:#8a93a5; margin-top:4px; }
-  .fp-vs   { font-size:12px; font-weight:700; color:#8a93a5;
+  .fp-su   { font-size:11.5px; color:#8a93a5; margin-top:4px; }
+  .fp-vs   { font-size:11px; font-weight:700; color:#8a93a5;
              letter-spacing:.1em; }
   .fp-bar  { display:grid; grid-template-columns:minmax(130px,1.4fr) 5fr 58px 58px 62px;
              gap:9px; align-items:center; padding:6px 0;
@@ -269,9 +269,9 @@ STYLE = """
   .fp-p    { position:relative; height:24px; }
   .fp-b1,.fp-b2 { position:absolute; left:0; height:10px; border-radius:4px; }
   .fp-b1 { top:1px; } .fp-b2 { top:13px; }
-  .fp-n   { font-size:13px; font-weight:700; text-align:right;
+  .fp-n   { font-size:12px; font-weight:700; text-align:right;
             font-variant-numeric:tabular-nums; }
-  .fp-t   { width:100%; border-collapse:collapse; font-size:13.5px; }
+  .fp-t   { width:100%; border-collapse:collapse; font-size:12.5px; }
   .fp-t th{ text-align:right; padding:8px 10px; border-bottom:2px solid #e6ecf4;
             font-size:10.5px; letter-spacing:.05em; text-transform:uppercase;
             color:#6b7590; font-weight:700; }
@@ -398,7 +398,7 @@ def _barres_dimensions(res):
             continue
         d = (a - b) if (a is not None and b is not None) else None
         li.append(
-            f'<div class="fp-bar"><div style="font-size:13px;color:{ENCRE}">'
+            f'<div class="fp-bar"><div style="font-size:12px;color:{ENCRE}">'
             f'{_e(T(cle))}</div>'
             f'<div class="fp-p">'
             f'<div class="fp-b1" style="width:{10 * (a or 0):.1f}%;'
@@ -427,7 +427,7 @@ def _diverge(ecarts, n=12):
                  f'background:{COUL["Montagne"]}"></div>')
         li.append(
             f'<div class="fp-div">'
-            f'<div style="font-size:12.5px;color:{ENCRE}">'
+            f'<div style="font-size:11.5px;color:{ENCRE}">'
             f'L{e["r"]["ligne"]} · {_e(_nom(e["r"]))}</div>'
             f'<div class="fp-g">{barre if d < 0 else ""}</div>'
             f'<div class="fp-g">{barre if d > 0 else ""}</div>'
@@ -449,9 +449,9 @@ def render(entete=True):
     st.markdown(STYLE, unsafe_allow_html=True)
     if entete:
         st.markdown(
-            f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+            f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
             f'letter-spacing:-.02em;margin:2px 0 0">{T("fp_titre")}</h2>'
-            f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+            f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
             f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
             f'{T("fp_sous_titre")}</p>', unsafe_allow_html=True)
 
@@ -482,7 +482,7 @@ def render(entete=True):
                 f'<div class="fp-nom" style="color:{COUL[p]}">'
                 f'{_e(_lib(p))}</div>'
                 f'<div class="fp-sc" style="color:{ENCRE}">{_f(scores[p])}'
-                f'<span style="font-size:16px;color:#8a93a5"> / 10</span></div>'
+                f'<span style="font-size:14.5px;color:#8a93a5"> / 10</span></div>'
                 f'<div class="fp-su">{_e(T("fp_global"))} · '
                 f'<b style="color:{VERT if devant else AMBRE}">'
                 f'{_e(T("fp_devant") if devant else T("fp_derriere"))}</b>'
@@ -492,7 +492,7 @@ def render(entete=True):
             f'<div class="fp-duel">{cotes[0]}'
             f'<div style="text-align:center"><div class="fp-vs">'
             f'{_e(T("fp_ecart")).upper()}</div>'
-            f'<div style="font-size:22px;font-weight:700;color:{ENCRE2};'
+            f'<div style="font-size:17.5px;font-weight:700;color:{ENCRE2};'
             f'font-variant-numeric:tabular-nums">{_f(ec)}</div></div>'
             f'{cotes[1]}</div>', unsafe_allow_html=True)
         st.caption(T("fp_publie", n=n_ind))
@@ -518,7 +518,7 @@ def render(entete=True):
             li.append(
                 f'<tr><td style="color:{ENCRE3}">{k}</td>'
                 f'<td class="g">L{e["r"]["ligne"]} · {_e(_nom(e["r"]))}</td>'
-                f'<td class="g" style="color:{ENCRE3};font-size:12.5px">'
+                f'<td class="g" style="color:{ENCRE3};font-size:11.5px">'
                 f'{_e(T(CM.DIM_DE.get(e["r"]["dimension"], "")))}</td>'
                 f'<td style="color:{COUL["Littoral"]};font-weight:600">'
                 f'{_f(e["littoral"], 1)}</td>'
@@ -582,7 +582,7 @@ def render(entete=True):
                     f'</span></td>'
                     f'<td class="g">{_e(_lib(c["groupe"]))}</td>'
                     f'<td style="color:{ENCRE3}">{c["n"]}</td>'
-                    f'<td style="font-weight:700;font-size:15px">'
+                    f'<td style="font-weight:700;font-size:14px">'
                     f'{_f(c["score"])}</td>'
                     f'<td style="color:{ENCRE3}">{c.get("rang", "—")}</td>'
                     f'<td><span class="fp-pill" style="background:{cn}1a;'
@@ -608,8 +608,8 @@ def render(entete=True):
                         f'{coul}"><div class="fp-nom" style="color:{coul}">'
                         f'{_e(lab)}</div>'
                         f'<div class="fp-sc" style="color:{ENCRE};'
-                        f'font-size:34px">{_f(c["score"])}'
-                        f'<span style="font-size:15px;color:#8a93a5"> / 10'
+                        f'font-size:27px">{_f(c["score"])}'
+                        f'<span style="font-size:14px;color:#8a93a5"> / 10'
                         f'</span></div>'
                         f'<div class="fp-su">{_e(_lib(c["groupe"]))} · '
                         f'{_e(T("fp_dans", p=_lib(c["paysage"])))} · '
@@ -639,7 +639,7 @@ def render(entete=True):
                          else dedans[len(dedans) // 2])
                     cells.append(
                         f'<td><b>{_f(c["score"])}</b>'
-                        f'<span style="color:{ENCRE3};font-size:12.5px"> · '
+                        f'<span style="color:{ENCRE3};font-size:11.5px"> · '
                         f'{_e(_lib(c["groupe"]))}</span></td>')
                 li.append(f'<tr><td class="g">{_e(T(cle))}</td>'
                           + "".join(cells) + '</tr>')

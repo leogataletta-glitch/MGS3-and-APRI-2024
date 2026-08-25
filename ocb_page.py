@@ -74,7 +74,7 @@ def render(entete=True):
     if entete:
         st.title(T("o_titre"))
         st.markdown(
-            '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+            '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
             'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
             + T("o_sous_titre") + "</p>", unsafe_allow_html=True)
 
@@ -88,7 +88,7 @@ def render(entete=True):
 
     st.markdown(
         '<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
-        'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:16px;'
+        'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:14.5px;'
         'color:#3c4761;box-shadow:0 1px 2px rgba(16,23,40,.05),'
         '0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px">'
         + T("o_intro", n=d["n_fiches"], s=d["n_sections"]) + "</div>",
@@ -98,7 +98,7 @@ def render(entete=True):
         st.markdown(
             '<div style="background:#fdf7ec;border:1px solid #f0dcb8;'
             'border-left:5px solid #d99b28;border-radius:14px;padding:13px 17px;'
-            'font-size:15.5px;color:#5b4a2b;margin:0 0 12px">'
+            'font-size:14.5px;color:#5b4a2b;margin:0 0 12px">'
             + T("o_avert_absentes", s=f" {T('et')} ".join(absentes)) + "</div>",
             unsafe_allow_html=True)
 
@@ -128,7 +128,7 @@ def render(entete=True):
                                               couleur=coul),
                     unsafe_allow_html=True)
         st.markdown(
-            '<p style="font-size:15px;color:#3c4761;margin:10px 0 0">'
+            '<p style="font-size:14px;color:#3c4761;margin:10px 0 0">'
             + _bulle("capital_social_liens") + " &nbsp;·&nbsp; "
             + _bulle("attributs_aaa") + "</p>", unsafe_allow_html=True)
 
@@ -163,7 +163,7 @@ def render(entete=True):
             f'<span style="display:inline-flex;align-items:center;gap:7px;'
             f'margin-right:18px"><span style="width:22px;height:12px;'
             f'border-radius:3px;background:{c};box-shadow:inset 0 0 0 1px '
-            f'rgba(0,0,0,.12)"></span><span style="font-size:13px;color:#52514e">'
+            f'rgba(0,0,0,.12)"></span><span style="font-size:12px;color:#52514e">'
             f'{lab}</span></span>'
             for c, lab in map_render.legend_items(seuils_ret, "eleve_bon", unite))
         components.html(
@@ -286,7 +286,7 @@ def _ligne(libelle, valeur, pleine=False):
             f'<div style="font-size:11.5px;letter-spacing:.06em;'
             f'text-transform:uppercase;color:#6b7590;font-weight:700;'
             f'margin-bottom:2px">{_e(libelle)}</div>'
-            f'<div style="font-size:15.5px;color:#101728;line-height:1.5">'
+            f'<div style="font-size:14.5px;color:#101728;line-height:1.5">'
             f'{valeur}</div></div>')
 
 
@@ -296,14 +296,14 @@ def _pastille(texte, actif):
     marque = "✓" if actif else "·"
     return (f'<span style="display:inline-flex;align-items:center;gap:6px;'
             f'background:{fond};border:1px solid {bord};border-radius:999px;'
-            f'padding:5px 12px;margin:0 7px 7px 0;font-size:13.5px;'
+            f'padding:5px 12px;margin:0 7px 7px 0;font-size:12.5px;'
             f'color:{encre}"><strong>{marque}</strong>{_e(_rep(texte))}</span>')
 
 
 def _titre_partie(texte):
     return (f'<div style="display:flex;align-items:center;gap:10px;'
             f'margin:22px 0 12px"><span style="font-family:Inter,'
-            f'system-ui,sans-serif;font-size:12px;font-weight:700;'
+            f'system-ui,sans-serif;font-size:11px;font-weight:700;'
             f'letter-spacing:.08em;text-transform:uppercase;color:#1a6bb0;'
             f'background:#eaf3fb;padding:5px 12px;border-radius:999px">'
             f'{_e(texte)}</span><span style="flex:1;height:1px;'
@@ -345,7 +345,7 @@ def _fiche_html(f):
         f'text-transform:uppercase;color:#1a6bb0;font-weight:700">'
         f'{_e(T("o_f_organisation"))}</div>'
         f'<div style="font-family:Inter,system-ui,sans-serif;'
-        f'font-size:23px;font-weight:700;color:#101728;line-height:1.25;'
+        f'font-size:18.5px;font-weight:700;color:#101728;line-height:1.25;'
         f'margin-top:3px">{_e(f["nom"])}</div></div>')
 
     # -------------------------------------------------------- 2. où elle est
@@ -396,7 +396,7 @@ def _fiche_html(f):
           f'{plateforme}</div>'
         + (f'<div style="margin-top:12px">'
            f'{_ligne(T("o_f_consulte"), consulte, pleine=True)}'
-           f'<p style="font-size:12.5px;color:#8b93a3;margin:-6px 0 0">'
+           f'<p style="font-size:11.5px;color:#8b93a3;margin:-6px 0 0">'
            f'{_e(T("o_f_consulte_note"))}</p></div>' if consulte else ''))
 
     return ('<div style="background:#fff;border:1px solid #e6ecf4;'

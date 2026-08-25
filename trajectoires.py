@@ -147,18 +147,18 @@ for _c, _v in TEXTES.items():
 
 STYLE = """
 <style>
-  .tj-h   { font-size:19px; font-weight:700; color:#101728;
+  .tj-h   { font-size:17.5px; font-weight:700; color:#101728;
             letter-spacing:-.015em; margin:0 0 3px; }
-  .tj-x   { font-size:13.5px; color:#6b7590; line-height:1.55; margin:0 0 12px;
-            max-width:96ch; text-align:left !important; }
-  .tj-p   { font-size:15px; color:#3c4761; line-height:1.65; margin:12px 0 0;
-            max-width:88ch; text-align:left !important; }
+  .tj-x   { font-size:12.5px; color:#6b7590; line-height:1.55; margin:0 0 12px;
+            max-width:96ch; }
+  .tj-p   { font-size:14px; color:#3c4761; line-height:1.65; margin:12px 0 0;
+            max-width:88ch; }
   .tj-g   { display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; }
   .tj-c   { flex:1 1 170px; min-width:150px; border:1px solid #e3eaf3;
             border-radius:12px; padding:12px 14px; background:#fff; }
-  .tj-n   { font-size:24px; font-weight:700; color:#101728; line-height:1;
+  .tj-n   { font-size:19px; font-weight:700; color:#101728; line-height:1;
             letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
-  .tj-l   { font-size:12.5px; color:#3c4761; margin-top:5px;
+  .tj-l   { font-size:11.5px; color:#3c4761; margin-top:5px;
             text-align:left !important; line-height:1.4; }
 </style>
 """
@@ -499,9 +499,9 @@ def _bloc_vegetation(section):
 def render():
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(
-        f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+        f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
         f'letter-spacing:-.02em;margin:2px 0 0">{_e(T("tj_titre"))}</h2>'
-        f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
         f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
         f'{_e(T("tj_sous"))}</p>', unsafe_allow_html=True)
 

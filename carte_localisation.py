@@ -220,11 +220,11 @@ __LEAFLET__
    border-radius:7px;cursor:pointer}
  .ligne:hover{background:#f4f8f6}
  .ligne input{margin:0;accent-color:#1c6349;cursor:pointer}
- .ligne .lib{font-size:12.5px;color:#3c4761;flex:1;line-height:1.25}
+ .ligne .lib{font-size:11.5px;color:#3c4761;flex:1;line-height:1.25}
  .ligne .nb{font-size:10.5px;color:#9aa4b5;font-variant-numeric:tabular-nums}
  .sym{width:20px;height:12px;flex:0 0 20px;display:inline-block}
  .sym i{display:block;width:100%;height:100%}
- .leaflet-popup-content{margin:10px 12px;font-size:12.5px;color:#3c4761}
+ .leaflet-popup-content{margin:10px 12px;font-size:11.5px;color:#3c4761}
  .leaflet-popup-content b{color:#101728}
  .pop-t{font-size:10px;letter-spacing:.08em;text-transform:uppercase;
    color:#8a93a5;font-weight:700;display:block;margin-bottom:2px}

@@ -193,7 +193,7 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
         _n = NOTION_DIM.get(DIM_CLE.get(dim))
         if _n:
             st.markdown(
-                '<p style="font-size:15px;color:#3c4761;margin:0 0 6px">'
+                '<p style="font-size:14px;color:#3c4761;margin:0 0 6px">'
                 + map_render.bulle_notion(_n) + '</p>', unsafe_allow_html=True)
 
     # Codes stables : « __toutes__ » plutôt que le libellé traduit, sinon un
@@ -297,13 +297,13 @@ def render():
 
     st.title(T("r_titre"))
     st.markdown(
-        '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+        '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
         'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
         + T("r_sous_titre") + "</p>", unsafe_allow_html=True)
     st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
     st.caption(T("r_intro", n=len(scorables), t=len(res)))
     st.markdown(
-        '<p style="font-size:15px;color:#3c4761;margin:2px 0 0">'
+        '<p style="font-size:14px;color:#3c4761;margin:2px 0 0">'
         + map_render.bulle_notion("resilience") + " &nbsp;·&nbsp; "
         + map_render.bulle_notion("apri") + " &nbsp;·&nbsp; "
         + map_render.bulle_notion("attributs_aaa") + " &nbsp;·&nbsp; "
@@ -370,10 +370,10 @@ def render():
                     '<div style="font-size:11.5px;letter-spacing:.09em;'
                     'text-transform:uppercase;font-weight:700;color:#1a6bb0;'
                     'margin-bottom:5px">' + T("r_expl_indic") + '</div>'
-                    '<div style="font-size:15.5px;line-height:1.6;color:#2b3446">'
+                    '<div style="font-size:14.5px;line-height:1.6;color:#2b3446">'
                     + _clair + '</div></div>', unsafe_allow_html=True)
             st.markdown(
-                '<p style="font-size:15px;color:#3c4761;margin:0 0 4px">'
+                '<p style="font-size:14px;color:#3c4761;margin:0 0 4px">'
                 + T("r_ce_que_mesure")
                 + map_render.bulle("_indic", definition="<br><br>".join(_def),
                                    texte="")
@@ -408,7 +408,7 @@ def render():
                 libelle_mesure=_libelle_mesure, unite=_unite)
             if indic is not None:
                 st.markdown(
-                    '<p style="font-size:15px;color:#3c4761;margin:8px 0 0">'
+                    '<p style="font-size:14px;color:#3c4761;margin:8px 0 0">'
                     + map_render.bulle("mesure brute")
                     + T("r_deux_lectures")
                     + map_render.bulle("score APRI")
@@ -469,7 +469,7 @@ def render():
 
         if rampe is map_render.RAMP_APRI:
             st.markdown(
-                '<p style="font-size:15px;color:#3c4761;margin:2px 0 6px">'
+                '<p style="font-size:14px;color:#3c4761;margin:2px 0 6px">'
                 + map_render.bulle_notion("echelle_0_10", texte=T("r_echelle_titre"))
                 + " &nbsp;·&nbsp; "
                 + map_render.bulle_notion("bareme_comparatif")
@@ -491,7 +491,7 @@ def render():
                 f'<span style="display:inline-flex;align-items:center;gap:7px;margin-right:18px">'
                 f'<span style="width:22px;height:12px;border-radius:3px;background:{c};'
                 f'box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)"></span>'
-                f'<span style="font-size:13px;color:#52514e">{lab}</span></span>'
+                f'<span style="font-size:12px;color:#52514e">{lab}</span></span>'
                 for c, lab in map_render.legend_items(seuils_ret, polarite, unite))
 
         components.html(

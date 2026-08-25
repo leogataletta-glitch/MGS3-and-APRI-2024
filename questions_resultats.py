@@ -224,7 +224,7 @@ for _c, _v in TEXTES.items():
 
 STYLE = """
 <style>
-  .qr-t   { width:100%; border-collapse:collapse; font-size:13.5px; }
+  .qr-t   { width:100%; border-collapse:collapse; font-size:12.5px; }
   .qr-t th{ text-align:right; padding:8px 9px; border-bottom:2px solid #e6ecf4;
             font-size:10.5px; letter-spacing:.05em; text-transform:uppercase;
             color:#6b7590; font-weight:700; white-space:nowrap; }
@@ -233,12 +233,12 @@ STYLE = """
   .qr-t td{ text-align:right; padding:7px 9px; border-bottom:1px solid #f0f4f9;
             font-variant-numeric:tabular-nums; vertical-align:top; }
   .qr-q   { color:#101728; }
-  .qr-m   { color:#6b7590; font-size:12.5px; }
+  .qr-m   { color:#6b7590; font-size:11.5px; }
   .qr-lien{ display:inline-block; font-size:10.5px; font-weight:700;
             color:#1a6bb0; background:#eaf3fb; border-radius:999px;
             padding:1px 7px; margin-left:6px; white-space:nowrap; }
   .qr-nc  { color:#b6bfcd; font-weight:700; margin-left:5px; }
-  .qr-ext { font-size:12.5px; white-space:nowrap; }
+  .qr-ext { font-size:11.5px; white-space:nowrap; }
   .qr-ext b { font-variant-numeric:tabular-nums; }
   .qr-bar { display:grid; grid-template-columns:minmax(120px,1.3fr) 5fr 74px;
             gap:10px; align-items:center; padding:4px 0; }
@@ -247,7 +247,7 @@ STYLE = """
   .qr-f   { height:100%; border-radius:5px; }
   .qr-ref { position:absolute; top:-2px; bottom:-2px; width:0;
             border-left:2px dashed #6b7590; }
-  .qr-v   { font-size:13px; font-weight:700; text-align:right;
+  .qr-v   { font-size:12px; font-weight:700; text-align:right;
             font-variant-numeric:tabular-nums; }
 </style>
 """
@@ -493,7 +493,7 @@ def _barres(valeurs, reference, polarite, unite="%", dec=1):
         ref = (f'<div class="qr-ref" style="left:{100 * reference / vmax:.1f}%">'
                f'</div>') if reference else ''
         out.append(
-            f'<div class="qr-bar"><div style="font-size:13px;color:{ENCRE}">'
+            f'<div class="qr-bar"><div style="font-size:12px;color:{ENCRE}">'
             f'{_e(_lib(k))}</div>'
             f'<div class="qr-p"><div class="qr-f" style="width:'
             f'{100 * v / vmax:.1f}%;background:{c}"></div>{ref}</div>'
@@ -584,7 +584,7 @@ def _tableau_indicateurs(lignes, cible, scores_recalcules=None):
             f'<td class="g qr-m">{_e(T(DIM_CLE.get(r["dimension"], "")))}</td>'
             f'<td class="g qr-m">{_e(_source_de(r))}</td>'
             f'<td style="color:{ENCRE3}">{_f(r.get("ponderation"), 2)}</td>'
-            f'<td style="font-weight:700;font-size:15px;color:{coul}">'
+            f'<td style="font-weight:700;font-size:14px;color:{coul}">'
             f'{_f(val, 1)}</td>'
             + _cellule_score(mg, VERT) + _cellule_score(pg, ROUGE)
             + _cellule_score(ml, VERT) + _cellule_score(pl, ROUGE) + '</tr>')

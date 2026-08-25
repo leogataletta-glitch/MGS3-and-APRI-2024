@@ -519,25 +519,25 @@ def _menages():
 
 STYLE = """
 <style>
-  .cad-h    { font-size:19px; font-weight:700; color:#101728;
+  .cad-h    { font-size:17.5px; font-weight:700; color:#101728;
               letter-spacing:-.015em; margin:0 0 3px; }
-  .cad-note { font-size:13.5px; color:#6b7590; line-height:1.55;
+  .cad-note { font-size:12.5px; color:#6b7590; line-height:1.55;
               max-width:96ch; margin:0 0 14px; }
   .cad-grille { display:flex; gap:14px; flex-wrap:wrap; }
   .cad-carte  { flex:1 1 250px; min-width:230px; background:#fff;
                 border:1px solid #e3eaf3; border-radius:14px;
                 padding:15px 17px; box-shadow:0 1px 2px rgba(16,23,40,.05); }
-  .cad-carte-t{ font-size:12px; letter-spacing:.07em; text-transform:uppercase;
+  .cad-carte-t{ font-size:11px; letter-spacing:.07em; text-transform:uppercase;
                 font-weight:700; margin:0 0 6px; }
-  .cad-carte-x{ font-size:14.5px; color:#3c4761; line-height:1.55; margin:0; }
-  .cad-chiffre{ font-size:31px; font-weight:700; color:#101728;
+  .cad-carte-x{ font-size:13.5px; color:#3c4761; line-height:1.55; margin:0; }
+  .cad-chiffre{ font-size:25px; font-weight:700; color:#101728;
                 letter-spacing:-.03em; font-variant-numeric:tabular-nums;
                 line-height:1; }
-  .cad-lab    { font-size:13.5px; color:#3c4761; font-weight:600;
+  .cad-lab    { font-size:12.5px; color:#3c4761; font-weight:600;
                 margin-top:5px; }
-  .cad-sous   { font-size:12px; color:#8a93a5; margin-top:1px; }
+  .cad-sous   { font-size:11px; color:#8a93a5; margin-top:1px; }
   .cad-liste  { margin:0; padding:0; list-style:none; }
-  .cad-liste li { font-size:14px; color:#3c4761; line-height:1.5;
+  .cad-liste li { font-size:13px; color:#3c4761; line-height:1.5;
                   padding:6px 0 6px 16px; position:relative; }
   .cad-liste li::before { content:""; position:absolute; left:0; top:13px;
                   width:6px; height:6px; border-radius:50%; background:#c3ccda; }
@@ -552,21 +552,21 @@ STYLE = """
               box-shadow:0 1px 2px rgba(16,23,40,.05); }
   .cad-n-i  { width:34px; height:34px; border-radius:10px; display:flex;
               align-items:center; justify-content:center; margin-bottom:11px; }
-  .cad-n-t  { font-size:14.5px; font-weight:700; color:#101728;
+  .cad-n-t  { font-size:13.5px; font-weight:700; color:#101728;
               letter-spacing:-.01em; margin:0 0 5px; line-height:1.25; }
-  .cad-n-x  { font-size:13.5px; color:#3c4761; line-height:1.55; margin:0; }
+  .cad-n-x  { font-size:12.5px; color:#3c4761; line-height:1.55; margin:0; }
 
   /* --- le schéma d'ensemble --------------------------------------------- */
   .cad-flux { display:flex; align-items:stretch; gap:4px; flex-wrap:wrap; }
   .cad-fl   { flex:1 1 150px; min-width:132px; text-align:center;
               padding:13px 10px; border:1px solid #e3eaf3; border-radius:13px;
               background:#fff; }
-  .cad-fl-n { font-size:26px; font-weight:700; color:#101728; line-height:1;
+  .cad-fl-n { font-size:21px; font-weight:700; color:#101728; line-height:1;
               letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
-  .cad-fl-l { font-size:12.5px; font-weight:700; color:#3c4761; margin-top:5px;
+  .cad-fl-l { font-size:11.5px; font-weight:700; color:#3c4761; margin-top:5px;
               letter-spacing:.02em; }
   .cad-fl-x { font-size:11.5px; color:#8a93a5; margin-top:3px; line-height:1.4; }
-  .cad-fl-c { align-self:center; color:#c3ccda; font-size:20px; flex:0 0 auto; }
+  .cad-fl-c { align-self:center; color:#c3ccda; font-size:16px; flex:0 0 auto; }
 
   /* --- les trois sources ------------------------------------------------- */
   .cad-src  { flex:1 1 260px; min-width:230px; background:#fff;
@@ -580,7 +580,11 @@ STYLE = """
      justifie tous les paragraphes : c'est bon pour une colonne de texte, et
      cela défigure une carte de deux lignes — les mots s'écartent jusqu'à
      laisser des couloirs blancs au milieu. */
-  .cad-n-t, .cad-n-x, .cad-carte-x, .cad-liste li { text-align:left !important; }
+  /* Seuls les intitulés et le texte des cartes restent au fer à gauche :
+     ils vivent dans des cases étroites, où la justification creuserait
+     des couloirs blancs. Les descriptions et les listes, elles, courent
+     sur toute la largeur et se justifient comme le reste du site. */
+  .cad-n-t, .cad-carte-x { text-align:left !important; }
   .cad-fl-n, .cad-fl-l, .cad-fl-x { text-align:center !important; }
 </style>
 """
@@ -674,23 +678,23 @@ def _tableau_dimensions(stats):
             # pastille d'identité — jamais seule, le nom la suit
             f'<div style="width:11px;height:11px;border-radius:3px;'
             f'background:{c};{"opacity:.35" if vide else ""}"></div>'
-            f'<div style="font-size:14px;font-weight:600;color:{ENCRE};'
+            f'<div style="font-size:13px;font-weight:600;color:{ENCRE};'
             f'line-height:1.3">{_e(T(cle))}</div>'
             # poids
             f'<div style="background:{GRIS};border-radius:5px;height:15px;'
             f'overflow:hidden"><div style="height:100%;border-radius:5px;'
             f'width:{max(100 * e["part"] / pmax, 1.2):.1f}%;'
             f'background:#2166ac;{"opacity:.45" if vide else ""}"></div></div>'
-            f'<div style="font-size:13.5px;font-weight:600;color:{ENCRE};'
+            f'<div style="font-size:12.5px;font-weight:600;color:{ENCRE};'
             f'text-align:right;font-variant-numeric:tabular-nums">'
             f'{_fmt(e["part"])}&thinsp;%</div>'
             # couverture
             f'<div style="background:{GRIS};border-radius:5px;height:15px;'
             f'overflow:hidden"><div style="height:100%;border-radius:5px;'
             f'width:{max(e["couv"], 0.8):.1f}%;background:#1a8a4f"></div></div>'
-            f'<div style="font-size:13.5px;color:{ENCRE2};text-align:right;'
+            f'<div style="font-size:12.5px;color:{ENCRE2};text-align:right;'
             f'font-variant-numeric:tabular-nums">{_fmt(e["couv"], 0)}&thinsp;%</div>'
-            f'<div style="font-size:13px;color:{ENCRE3};text-align:right;'
+            f'<div style="font-size:12px;color:{ENCRE3};text-align:right;'
             f'font-variant-numeric:tabular-nums">{e["faits"]}/{e["n"]}</div>'
             f'</div>')
     entete = (
@@ -717,15 +721,15 @@ def _chaine(ptot):
     for i, (cle, kw) in enumerate(etapes):
         if i:
             blocs.append(
-                '<div style="align-self:center;color:#c3ccda;font-size:22px;'
+                '<div style="align-self:center;color:#c3ccda;font-size:17.5px;'
                 'flex:0 0 auto;padding:0 2px">›</div>')
         blocs.append(
             f'<div style="flex:1 1 190px;min-width:175px;background:#fff;'
             f'border:1px solid {BORD};border-radius:13px;padding:13px 15px">'
-            f'<div style="font-size:12px;letter-spacing:.06em;'
+            f'<div style="font-size:11px;letter-spacing:.06em;'
             f'text-transform:uppercase;font-weight:700;color:#2166ac">'
             f'{_e(T(cle + "_t"))}</div>'
-            f'<div style="font-size:13.5px;color:{ENCRE2};line-height:1.5;'
+            f'<div style="font-size:12.5px;color:{ENCRE2};line-height:1.5;'
             f'margin-top:5px">{_e(T(cle, **kw))}</div></div>')
     return ('<div style="display:flex;gap:6px;flex-wrap:wrap;'
             'align-items:stretch">' + "".join(blocs) + '</div>')
@@ -794,7 +798,7 @@ def _attributs():
     return ('<div class="cad-grille">' + "".join(
         f'<div class="cad-n" style="flex:1 1 240px;border-top:3px solid {c}">'
         + _icone(ic, c)
-        + f'<p class="cad-n-t" style="font-size:16px">{_e(T(k + "_t"))}</p>'
+        + f'<p class="cad-n-t" style="font-size:14.5px">{_e(T(k + "_t"))}</p>'
         + f'<p class="cad-n-x">{_e(T(k))}</p></div>'
         for k, ic, c in (("cad_a1", "loupe", "#2166ac"),
                          ("cad_a2", "bouclier", "#d1730c"),
@@ -853,9 +857,9 @@ def render(doc_complet=None):
     st.markdown(STYLE, unsafe_allow_html=True)
 
     st.markdown(
-        f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+        f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
         f'letter-spacing:-.02em;margin:2px 0 0">{T("cad_titre")}</h2>'
-        f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
         f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
         f'{T("cad_sous_titre")}</p>', unsafe_allow_html=True)
 
@@ -891,7 +895,7 @@ def _cadre_apri(stats, doc_complet):
         st.markdown(f'<div class="cad-h">{_e(T("cad_apercu"))}</div>'
                     f'<p class="cad-note">{_e(T("cad_ap_note"))}</p>'
                     + _apercu(stats, n_sec_avec), unsafe_allow_html=True)
-        st.markdown(f'<div class="cad-h" style="font-size:15px;'
+        st.markdown(f'<div class="cad-h" style="font-size:14px;'
                     f'margin:22px 0 4px">{_e(T("cad_aaa"))}</div>'
                     f'<p class="cad-note" style="margin-bottom:11px">'
                     f'{_e(T("cad_aaa_note"))}</p>' + _attributs(),
@@ -931,14 +935,14 @@ def _cadre_apri(stats, doc_complet):
     with st.expander(T("cad_v_pourquoi")):
         st.markdown(
             "".join(
-                f'<p style="font-size:15px;color:#3c4761;line-height:1.65;'
+                f'<p style="font-size:14px;color:#3c4761;line-height:1.65;'
                 f'max-width:92ch;margin:0 0 14px"><b style="color:#101728">'
                 f'{T("a_h_" + c + "_t")}</b> {T("a_h_" + c)}</p>'
                 for c in ("origine", "portee")), unsafe_allow_html=True)
 
     with st.expander(T("cad_v_mesure")):
         st.markdown(
-            f'<p style="font-size:15px;color:#3c4761;line-height:1.65;'
+            f'<p style="font-size:14px;color:#3c4761;line-height:1.65;'
             f'max-width:92ch;margin:0 0 16px"><b style="color:#101728">'
             f'{T("a_h_mesure_t")}</b> {T("a_h_mesure")}</p>'
             '<div class="cad-grille">'
@@ -949,10 +953,10 @@ def _cadre_apri(stats, doc_complet):
 
     with st.expander(T("cad_v_meth")):
         st.markdown(
-            f'<p style="font-size:15px;color:#3c4761;line-height:1.65;'
+            f'<p style="font-size:14px;color:#3c4761;line-height:1.65;'
             f'max-width:92ch;margin:0 0 16px"><b style="color:#101728">'
             f'{T("a_h_construction_t")}</b> {T("a_h_construction")}</p>'
-            f'<div class="cad-h" style="font-size:15px;margin-bottom:11px">'
+            f'<div class="cad-h" style="font-size:14px;margin-bottom:11px">'
             f'{_e(T("cad_sondage"))}</div>'
             '<div class="cad-grille">'
             + _chiffre(_fmt(menages, 0) if menages else "—",
@@ -961,7 +965,7 @@ def _cadre_apri(stats, doc_complet):
             + _chiffre("90 %", T("cad_s3_t"), T("cad_s3"))
             + _chiffre("120", T("cad_s4_t"), T("cad_s4"))
             + '</div>'
-            f'<div class="cad-h" style="font-size:15px;margin:18px 0 4px">'
+            f'<div class="cad-h" style="font-size:14px;margin:18px 0 4px">'
             f'{_e(T("cad_strates"))}</div>'
             '<ul class="cad-liste">'
             + "".join(f'<li>{_e(T(k))}</li>'
@@ -983,14 +987,14 @@ def _cadre_apri(stats, doc_complet):
             + "".join(
                 f'<div style="flex:1 1 220px;min-width:200px;'
                 f'border-left:3px solid {c};padding:2px 0 2px 14px">'
-                f'<div style="font-size:14.5px;font-weight:700;color:{ENCRE}">'
+                f'<div style="font-size:13.5px;font-weight:700;color:{ENCRE}">'
                 f'{_e(T(k + "_t"))}</div>'
-                f'<div style="font-size:13px;color:{ENCRE2};line-height:1.5;'
+                f'<div style="font-size:12px;color:{ENCRE2};line-height:1.5;'
                 f'margin-top:3px">{_e(T(k))}</div></div>'
                 for k, c in (("cad_dbc_1", "#c33a24"), ("cad_dbc_2", "#d1730c"),
                              ("cad_dbc_3", "#2166ac"), ("cad_dbc_4", "#1a8a4f")))
             + '</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="cad-h" style="font-size:15px;'
+        st.markdown(f'<div class="cad-h" style="font-size:14px;'
                     f'margin:20px 0 6px">{_e(T("cad_lecture"))}</div>',
                     unsafe_allow_html=True)
         g, d = st.columns([1.15, 1])

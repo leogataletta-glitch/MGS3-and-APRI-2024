@@ -505,13 +505,13 @@ def _legende():
         f'<span style="display:inline-flex;align-items:center;gap:6px;'
         f'margin-right:16px"><span style="width:13px;height:13px;'
         f'border-radius:50%;background:{c};opacity:.45;border:2px solid {c}">'
-        f'</span><span style="font-size:12px;color:{ENCRE2}">{f} {lab}</span>'
+        f'</span><span style="font-size:11px;color:{ENCRE2}">{f} {lab}</span>'
         f'</span>' for c, f, lab in items)
     return (f'<div style="margin:0 0 8px">{puces}'
             f'<span style="display:inline-flex;align-items:center;gap:6px">'
             f'<span style="width:13px;height:13px;border-radius:50%;'
             f'border:2px dashed {ENCRE3}"></span>'
-            f'<span style="font-size:12px;color:{ENCRE2}">'
+            f'<span style="font-size:11px;color:{ENCRE2}">'
             f'{_e(T("bcl_non_mesure"))}</span></span></div>')
 
 
@@ -529,9 +529,9 @@ def render(entete=True):
 
     if entete:
         st.markdown(
-            f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+            f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
             f'letter-spacing:-.02em;margin:2px 0 0">{T("bcl_titre")}</h2>'
-            f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+            f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
             f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
             f'{T("bcl_sous_titre")}</p>', unsafe_allow_html=True)
 
@@ -662,7 +662,7 @@ def render(entete=True):
                 coul = HAUSSE if d > 0 else BAISSE
                 fl = "↑" if d > 0 else "↓"
                 av = _fmt(etat.get(cle)) if etat.get(cle) is not None \
-                    else f'<span style="color:{ENCRE3};font-size:12px">' \
+                    else f'<span style="color:{ENCRE3};font-size:11px">' \
                          f'{_e(T("bcl_non_mesure"))}</span>'
                 ap = _fmt(etat_ap.get(cle)) if etat_ap.get(cle) is not None \
                     else "—"
@@ -671,17 +671,17 @@ def render(entete=True):
                     f'minmax(150px,3fr) 90px 90px 96px;gap:12px;'
                     f'align-items:center;padding:7px 0;'
                     f'border-bottom:1px solid #eef2f7">'
-                    f'<div style="font-size:13.5px;color:{ENCRE};'
+                    f'<div style="font-size:12.5px;color:{ENCRE};'
                     f'font-weight:600">{_e(_libelle(n))}'
                     + (f'<span style="color:{ENCRE3};font-weight:400"> · '
                        f'L{n["ligne"]}</span>' if n.get("ligne") else '')
                     + f'{" ◆" if cle == levier else ""}</div>'
-                    f'<div style="text-align:right;font-size:13.5px;'
+                    f'<div style="text-align:right;font-size:12.5px;'
                     f'color:{ENCRE2};font-variant-numeric:tabular-nums">{av}</div>'
-                    f'<div style="text-align:right;font-size:13.5px;'
+                    f'<div style="text-align:right;font-size:12.5px;'
                     f'font-weight:600;color:{ENCRE};'
                     f'font-variant-numeric:tabular-nums">{ap}</div>'
-                    f'<div style="text-align:right;font-size:13.5px;'
+                    f'<div style="text-align:right;font-size:12.5px;'
                     f'font-weight:700;color:{coul};'
                     f'font-variant-numeric:tabular-nums">{fl} '
                     f'{_fmt(d, 2, True)}</div></div>')
@@ -693,12 +693,12 @@ def render(entete=True):
         st.markdown(
             f'<div style="display:flex;align-items:baseline;gap:12px;'
             f'margin-top:14px;padding-top:12px;border-top:1px solid #e3eaf3">'
-            f'<div style="font-size:14px;font-weight:600;color:{ENCRE}">'
+            f'<div style="font-size:13px;font-weight:600;color:{ENCRE}">'
             f'{_e(T("bcl_indice"))}</div>'
-            f'<div style="font-size:26px;font-weight:700;color:{coul};'
+            f'<div style="font-size:21px;font-weight:700;color:{coul};'
             f'font-variant-numeric:tabular-nums">'
             f'{_fmt(ei["delta"], 3, True)}</div>'
-            f'<div style="font-size:13px;color:{ENCRE3}">/ 10</div></div>',
+            f'<div style="font-size:12px;color:{ENCRE3}">/ 10</div></div>',
             unsafe_allow_html=True)
         st.caption(T("bcl_indice_note",
                      part=f'{100 * ei["part_couverte"]:.0f}'))
@@ -729,13 +729,13 @@ def render(entete=True):
                 f'justify-content:center;width:26px;height:20px;'
                 f'border-radius:6px;background:{c};color:#fff;font-size:11.5px;'
                 f'font-weight:700">{_e(st_b)}</span>'
-                f'<span style="font-size:12px;font-weight:700;color:{c};'
+                f'<span style="font-size:11px;font-weight:700;color:{c};'
                 f'letter-spacing:.05em;text-transform:uppercase">'
                 f'{_e(T("bcl_" + b["type"]))}</span>'
-                f'<span style="font-size:12px;color:{ENCRE3}">'
+                f'<span style="font-size:11px;color:{ENCRE3}">'
                 f'{b["n"]} · {_e(T("bcl_force"))} {_fmt(b["force"], 2)}</span>'
                 f'</div>'
-                f'<div style="font-size:13.5px;color:{ENCRE2};line-height:1.55;'
+                f'<div style="font-size:12.5px;color:{ENCRE2};line-height:1.55;'
                 f'margin-top:5px">{_e(chemin)}</div></div>')
         st.markdown("".join(cartes), unsafe_allow_html=True)
 
@@ -762,11 +762,11 @@ def render(entete=True):
                 f'minmax(170px,3fr) 70px 120px 150px;gap:12px;'
                 f'align-items:center;padding:7px 0;'
                 f'border-bottom:1px solid #eef2f7">'
-                f'<div style="font-size:13.5px;font-weight:600;color:{ENCRE}">'
+                f'<div style="font-size:12.5px;font-weight:600;color:{ENCRE}">'
                 f'{_e(_libelle(n))}</div>'
-                f'<div style="text-align:right;font-size:13px;color:{ENCRE2};'
+                f'<div style="text-align:right;font-size:12px;color:{ENCRE2};'
                 f'font-variant-numeric:tabular-nums">{x["degre"]}</div>'
-                f'<div style="text-align:right;font-size:13px;color:{ENCRE2};'
+                f'<div style="text-align:right;font-size:12px;color:{ENCRE2};'
                 f'font-variant-numeric:tabular-nums">{x["boucles"]} '
                 f'<span style="color:{ENCRE3}">({x["renforcantes"]} / '
                 f'{x["equilibrantes"]})</span></div>'
@@ -784,10 +784,10 @@ def render(entete=True):
         dom = "".join(
             f'<div style="display:flex;gap:12px;align-items:baseline;'
             f'padding:7px 0;border-bottom:1px solid #eef2f7">'
-            f'<div style="font-size:13.5px;font-weight:600;color:{ENCRE};'
+            f'<div style="font-size:12.5px;font-weight:600;color:{ENCRE};'
             f'flex:1 1 auto">{_e(_libelle(par_id[d["de"]]))} → '
             f'{_e(_libelle(par_id[d["vers"]]))}</div>'
-            f'<div style="font-size:12.5px;color:{ENCRE3};white-space:nowrap">'
+            f'<div style="font-size:11.5px;color:{ENCRE3};white-space:nowrap">'
             f'{_e(T("bcl_dans", n=d["n"]))} '
             f'<span style="color:{HAUSSE}">R{d["renf"]}</span> / '
             f'<span style="color:#d1730c">B{d["equi"]}</span></div></div>'
@@ -798,7 +798,7 @@ def render(entete=True):
             f'<div class="titre-bloc" style="margin-top:18px">'
             f'{T("bcl_meadows")}</div>', unsafe_allow_html=True)
         st.markdown(
-            "".join(f'<div style="font-size:14px;color:{ENCRE2};'
+            "".join(f'<div style="font-size:13px;color:{ENCRE2};'
                     f'line-height:1.6;padding:4px 0 4px 16px;position:relative">'
                     f'<span style="position:absolute;left:0;color:#c3ccda">'
                     f'{i + 1}.</span> {T(k)}</div>'
@@ -814,7 +814,7 @@ def render(entete=True):
             f'<span style="display:inline-flex;align-items:center;gap:6px;'
             f'margin:0 16px 6px 0"><span style="width:9px;height:9px;'
             f'border-radius:2px;background:{JUST_COULEUR.get(j, "#9aa4b5")}"></span>'
-            f'<span style="font-size:12.5px;color:{ENCRE2}">'
+            f'<span style="font-size:11.5px;color:{ENCRE2}">'
             f'<b>{_e(T("bcl_j_" + j))}</b> : {_e(T("bcl_j_" + j + "_x"))}'
             f'</span></span>'
             for j in ("structurel", "documentee", "empirique", "theorique",
@@ -840,18 +840,18 @@ def render(entete=True):
                 f'padding:8px 0;border-bottom:1px solid #eef2f7">'
                 f'<div style="width:8px;height:8px;border-radius:2px;'
                 f'background:{c}"></div>'
-                f'<div style="font-size:13.5px;color:{ENCRE};font-weight:600;'
+                f'<div style="font-size:12.5px;color:{ENCRE};font-weight:600;'
                 f'line-height:1.35">{_e(_libelle(par_id[e["de"]]))} '
                 f'<span style="color:{ENCRE3};font-weight:400">'
                 f'{"→" if e["signe"] > 0 else "⊣"}</span> '
                 f'{_e(_libelle(par_id[e["vers"]]))}</div>'
-                f'<div style="font-size:12.5px;color:{ENCRE2};line-height:1.45">'
+                f'<div style="font-size:11.5px;color:{ENCRE2};line-height:1.45">'
                 f'{_e(_ref(e))}'
                 + (f'<div style="color:{BAISSE};font-weight:600;'
                    f'margin-top:2px">⚠ {_e(T("bcl_desaccord"))}</div>'
                    if contre else '')
                 + f'</div>'
-                f'<div style="text-align:right;font-size:13px;'
+                f'<div style="text-align:right;font-size:12px;'
                 f'font-variant-numeric:tabular-nums;'
                 f'color:{BAISSE if contre else ENCRE2};'
                 f'font-weight:{"700" if contre else "400"}">{obs}</div>'

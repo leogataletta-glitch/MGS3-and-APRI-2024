@@ -329,7 +329,7 @@ def render(dim=None, cle="r"):
             + cells + '</tr>')
     st.markdown(
         '<div style="overflow-x:auto"><table style="width:100%;'
-        'border-collapse:collapse;font-size:14px">'
+        'border-collapse:collapse;font-size:13px">'
         f'<tr><th style="text-align:left;padding:7px 10px;'
         f'border-bottom:2px solid #e6ecf4;font-size:11.5px;'
         f'letter-spacing:.05em;text-transform:uppercase;color:#6b7590;'

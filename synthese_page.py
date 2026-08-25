@@ -234,7 +234,7 @@ def _tableau_ecarts(res, cible, mode, sens, limite=12):
     entetes = [T("d_col_ligne"), T("d_col_indicateur"), T("s_col_cible"),
                T("s_col_ref"), T("s_col_ecart")]
     out = ['<div style="overflow-x:auto"><table style="width:100%;'
-           'border-collapse:collapse;font-size:14.5px">',
+           'border-collapse:collapse;font-size:13.5px">',
            '<tr>' + ''.join(
                f'<th style="text-align:{"left" if i < 2 else "right"};'
                f'padding:9px 10px;border-bottom:2px solid #e6ecf4;'
@@ -264,7 +264,7 @@ def render(entete=True):
     if entete:
         st.title(T("mode_synthese"))
         st.markdown(
-            '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+            '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
             'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
             + T("syn_sous_titre") + "</p>", unsafe_allow_html=True)
 
@@ -274,7 +274,7 @@ def render(entete=True):
 
     st.markdown(
         '<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
-        'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:16px;'
+        'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:14.5px;'
         'color:#3c4761;box-shadow:0 1px 2px rgba(16,23,40,.05),'
         '0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px;max-width:96ch">'
         + T("syn_intro") + "</div>", unsafe_allow_html=True)

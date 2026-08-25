@@ -364,7 +364,7 @@ def tableau(geo, effectifs, paysages):
     """Les dix sections, avec leur commune, leur département et leur effectif."""
     ent = [T("tr_c_section"), T("tr_c_commune"), T("tr_c_dep"),
            T("tr_c_pays"), T("tr_c_men")]
-    li = ['<table style="width:100%;border-collapse:collapse;font-size:14px">'
+    li = ['<table style="width:100%;border-collapse:collapse;font-size:13px">'
           '<tr>' + "".join(
               f'<th style="text-align:{"left" if i < 4 else "right"};'
               f'padding:8px 10px;border-bottom:2px solid #e6ecf4;'
@@ -420,11 +420,11 @@ STYLE_CARTES = """
             font-weight:700; color:#8a93a5; margin-bottom:6px; }
   .tr-ap  { display:grid; grid-template-columns:repeat(4, minmax(0,1fr));
             gap:4px 16px; }
-  .tr-ap div { font-size:12.5px; color:#3c4761; line-height:1.4; }
+  .tr-ap div { font-size:11.5px; color:#3c4761; line-height:1.4; }
   .tr-ap b { color:#101728; font-variant-numeric:tabular-nums;
              margin-right:5px; }
   .tr-sym { display:flex; flex-wrap:wrap; gap:6px 20px; }
-  .tr-s   { display:flex; align-items:center; gap:7px; font-size:12.5px;
+  .tr-s   { display:flex; align-items:center; gap:7px; font-size:11.5px;
             color:#3c4761; }
   .tr-s i { flex:0 0 22px; height:12px; display:inline-block; }
   .tr-deg { height:14px; border-radius:4px; margin:2px 0 4px; }
@@ -510,9 +510,9 @@ def render():
     livraisons récentes sont passées dans « Données ».
     """
     st.markdown(
-        f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+        f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
         f'letter-spacing:-.02em;margin:2px 0 0">{T("tr_titre")}</h2>'
-        f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
         f'text-transform:uppercase;margin:2px 0 14px;font-weight:600">'
         f'{T("tr_sous_titre")}</p>', unsafe_allow_html=True)
 

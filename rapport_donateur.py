@@ -1240,20 +1240,20 @@ STYLE = """
      l'implication. C'est la seule chose que la couleur code dans cette page. */
   .rd-cha  { display:flex; gap:0; margin:14px 0 4px; flex-wrap:wrap;
              border-bottom:1px solid #e6ecf4; }
-  .rd-h    { font-size:27px; font-weight:700; color:#101728;
+  .rd-h    { font-size:21.5px; font-weight:700; color:#101728;
              letter-spacing:-.025em; margin:22px 0 4px; line-height:1.15; }
-  .rd-h2   { font-size:18px; font-weight:700; color:#101728;
+  .rd-h2   { font-size:16.5px; font-weight:700; color:#101728;
              letter-spacing:-.015em; margin:26px 0 6px; }
-  .rd-x    { font-size:16px; color:#3c4761; line-height:1.7; margin:0 0 10px;
-             max-width:78ch; text-align:left !important; }
+  .rd-x    { font-size:14.5px; color:#3c4761; line-height:1.7; margin:0 0 10px;
+             max-width:78ch; }
   .rd-lab  { font-size:11px; letter-spacing:.1em; text-transform:uppercase;
              color:#8a93a5; font-weight:700; margin:26px 0 8px; }
   .rd-reg  { border-left:3px solid #c8d0dc; padding:2px 0 2px 15px;
              margin:14px 0; }
   .rd-reg .t { font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
                font-weight:700; color:#8a93a5; margin-bottom:3px; }
-  .rd-reg p  { font-size:15.5px; color:#3c4761; line-height:1.65; margin:0;
-               max-width:78ch; text-align:left !important; }
+  .rd-reg p  { font-size:14.5px; color:#3c4761; line-height:1.65; margin:0;
+               max-width:78ch; }
   .rd-obs  { border-left-color:#9aa4b5; }
   .rd-int  { border-left-color:#2166ac; }
   .rd-int .t { color:#2166ac; }
@@ -1263,32 +1263,32 @@ STYLE = """
              padding:16px 20px; margin:14px 0; }
   .rd-ex .t{ font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
              font-weight:700; color:#8a6d1f; margin-bottom:6px; }
-  .rd-ex p { font-size:15.5px; color:#3c4761; line-height:1.7; margin:0 0 9px;
-             max-width:76ch; text-align:left !important; }
+  .rd-ex p { font-size:14.5px; color:#3c4761; line-height:1.7; margin:0 0 9px;
+             max-width:76ch; }
   /* les grands chiffres du terrain */
   .rd-g    { display:grid; grid-template-columns:repeat(4,1fr); gap:0;
              border-top:1px solid #e6ecf4; margin-top:14px; }
   .rd-k    { padding:16px 18px 17px; border-bottom:1px solid #e6ecf4;
              border-left:1px solid #e6ecf4; }
   .rd-k:nth-child(4n+1) { border-left:none; padding-left:0; }
-  .rd-k b  { display:block; font-size:32px; font-weight:700; color:#101728;
+  .rd-k b  { display:block; font-size:25.5px; font-weight:700; color:#101728;
              line-height:1; letter-spacing:-.03em;
              font-variant-numeric:tabular-nums; }
-  .rd-k span { display:block; font-size:13px; color:#3c4761; margin-top:6px; }
+  .rd-k span { display:block; font-size:12px; color:#3c4761; margin-top:6px; }
   .rd-k em { display:block; font-style:normal; font-size:11.5px;
              color:#8a93a5; margin-top:2px; }
   /* la chaîne des deux approches */
   .rd-ch   { display:flex; flex-wrap:wrap; gap:6px; align-items:center;
              margin:8px 0 4px; }
-  .rd-ch i { font-style:normal; color:#c8d0dc; font-size:13px; }
-  .rd-ch b { font-weight:600; font-size:13px; padding:5px 11px;
+  .rd-ch i { font-style:normal; color:#c8d0dc; font-size:12px; }
+  .rd-ch b { font-weight:600; font-size:12px; padding:5px 11px;
              border:1px solid #e3eaf3; border-radius:999px; color:#3c4761;
              background:#fff; white-space:nowrap; }
   .rd-ch b.on { border-color:#1c6349; color:#0f4f3a; background:#f2f8f5; }
   /* les blocages */
   .rd-b    { display:grid; grid-template-columns:1fr 92px 92px 132px; gap:12px;
              align-items:center; padding:10px 0;
-             border-top:1px solid #eef2f7; font-size:14px; }
+             border-top:1px solid #eef2f7; font-size:13px; }
   .rd-b:first-child { border-top:none; }
   /* la variante resserrée, pour une rangée logée dans une demi-colonne */
   .rd-b.cp { grid-template-columns:1fr 96px 58px; }
@@ -1306,8 +1306,7 @@ STYLE = """
   .rd-t:first-child { border-left:none; padding-left:0; }
   .rd-t b  { display:block; font-size:11px; letter-spacing:.1em;
              text-transform:uppercase; color:#8a93a5; margin-bottom:7px; }
-  .rd-t p  { font-size:15px; color:#3c4761; line-height:1.6; margin:0;
-             text-align:left !important; }
+  .rd-t p  { font-size:14px; color:#3c4761; line-height:1.6; margin:0; }
   /* ------------------------------------------------------ LE TON DE LA PAGE
      Un rapport qui se lit avec plaisir, pas un formulaire. Grande typographie
      d'ouverture, une couleur par acte, des blocs qui montent doucement à
@@ -1322,39 +1321,41 @@ STYLE = """
   .rd-tete { margin:6px 0 14px; }
   .rd-kick { font-size:11px; letter-spacing:.2em; text-transform:uppercase;
              font-weight:800; margin-bottom:6px; }
-  .rd-big  { font-size:clamp(34px,4.4vw,52px); font-weight:800; color:#101728;
+  .rd-big  { font-size:clamp(27px,4.4vw,41.5px); font-weight:800; color:#101728;
              letter-spacing:-.04em; line-height:1.02; }
-  .rd-lead { font-size:19px; line-height:1.62; color:#3c4761; max-width:60ch;
-             margin:0 0 6px; text-align:left !important; }
+  /* LA MESURE S'ÉLARGIT PARCE QUE LE TEXTE EST JUSTIFIÉ. Sur soixante
+     caractères, la justification écarte les mots de façon visible ; sur
+     soixante-quinze, l'espacement se répartit sans qu'on le remarque. */
+  .rd-lead { font-size:17.5px; line-height:1.62; color:#3c4761; max-width:75ch;
+             margin:0 0 6px; }
   /* la grille des cinq cents points */
   .rd-vign { border:1px solid #eef2f7; border-radius:18px; padding:18px 18px 12px;
              background:#fcfdff; }
   .rd-pts circle { animation:rdPop .45s cubic-bezier(.2,.9,.3,1.2) both; }
-  .rd-vlab { font-size:12px; font-weight:700; letter-spacing:.06em;
+  .rd-vlab { font-size:11px; font-weight:700; letter-spacing:.06em;
              text-transform:uppercase; margin-top:12px; }
-  .rd-coup { font-size:clamp(24px,3vw,34px); font-weight:800; color:#101728;
+  .rd-coup { font-size:clamp(19px,3vw,27px); font-weight:800; color:#101728;
              letter-spacing:-.03em; margin:26px 0 14px; }
   /* les questions, en pastilles */
   .rd-qs   { display:flex; flex-wrap:wrap; gap:9px; }
-  .rd-qs b { font-weight:600; font-size:14.5px; padding:9px 15px;
+  .rd-qs b { font-weight:600; font-size:13.5px; padding:9px 15px;
              border-radius:999px; color:#5a4413; background:#fdf7e7;
              border:1px solid #efe2c2; }
   .rd-tourne { border-radius:18px; padding:20px 24px 22px; margin:22px 0 0;
                background:linear-gradient(180deg,#f4faf6,#fbfdfc);
                border:1px solid #dcece2; }
-  .rd-tourne p { font-size:17px; line-height:1.65; color:#2c4a3a; margin:0;
-                 max-width:66ch; text-align:left !important; }
-  .rd-fin  { font-size:20px; font-weight:700; color:#101728; line-height:1.5;
+  .rd-tourne p { font-size:15.5px; line-height:1.65; color:#2c4a3a; margin:0;
+                 max-width:66ch; }
+  .rd-fin  { font-size:16px; font-weight:700; color:#101728; line-height:1.5;
              border-left:4px solid #8a6d1f; padding:4px 0 4px 18px;
              margin:26px 0 6px; max-width:64ch; letter-spacing:-.01em; }
   /* LA MENTION DE BAS DE PAGE EST UNE PHRASE, PLUS UNE ÉTIQUETTE.
      En capitales espacées elle passait pour un tampon décoratif ; elle dit
      maintenant quelque chose qu'il faut pouvoir lire, donc elle se lit. */
-  .rd-note { font-size:12.5px; color:#8a93a5; margin-top:24px; line-height:1.6;
-             max-width:82ch; border-top:1px solid #eef2f7; padding-top:12px;
-             text-align:left !important; }
+  .rd-note { font-size:11.5px; color:#8a93a5; margin-top:24px; line-height:1.6;
+             max-width:82ch; border-top:1px solid #eef2f7; padding-top:12px; }
   .rd-symp { display:inline-flex; align-items:baseline; gap:9px; margin:14px 0 12px;
-             font-size:13.5px; font-weight:700; color:#5a4413;
+             font-size:12.5px; font-weight:700; color:#5a4413;
              background:#fdf7e7; border:1px solid #efe2c2;
              border-radius:999px; padding:7px 16px; }
   .rd-symp i{ font-style:normal; font-size:10px; letter-spacing:.12em;
@@ -1366,14 +1367,14 @@ STYLE = """
   .rd-mg   { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
   .rd-m    { position:relative; overflow:hidden; border:1px solid #eaeff6;
              border-radius:14px; padding:13px 15px 15px; background:#fff; }
-  .rd-m span{ display:block; font-size:12px; font-weight:700; color:var(--c);
+  .rd-m span{ display:block; font-size:11px; font-weight:700; color:var(--c);
               line-height:1.3; min-height:31px; }
-  .rd-m b  { display:block; font-size:12.5px; font-weight:500; color:#6b7590;
+  .rd-m b  { display:block; font-size:11.5px; font-weight:500; color:#6b7590;
              line-height:1.35; margin-top:5px; min-height:34px; }
-  .rd-m em { display:block; font-style:normal; font-size:27px; font-weight:800;
+  .rd-m em { display:block; font-style:normal; font-size:21.5px; font-weight:800;
              color:var(--c); letter-spacing:-.03em; margin-top:6px;
              font-variant-numeric:tabular-nums; }
-  .rd-m em i{ font-style:normal; font-size:13px; font-weight:600;
+  .rd-m em i{ font-style:normal; font-size:12px; font-weight:600;
               color:#a8b0bf; margin-left:2px; }
   .rd-m u  { position:absolute; left:0; bottom:0; height:4px; background:var(--c);
              display:block; }
@@ -1392,37 +1393,37 @@ STYLE = """
              transition:transform .18s ease, box-shadow .18s ease; }
   .rd-c:hover { transform:translateY(-3px);
                 box-shadow:0 10px 26px -18px rgba(16,23,40,.5); }
-  .rd-c-t  { font-size:14.5px; font-weight:700; color:#101728;
+  .rd-c-t  { font-size:13.5px; font-weight:700; color:#101728;
              line-height:1.35; }
-  .rd-c-v  { font-size:46px; font-weight:800; color:var(--c); line-height:1;
+  .rd-c-v  { font-size:37px; font-weight:800; color:var(--c); line-height:1;
              letter-spacing:-.04em; margin:12px 0 4px;
              font-variant-numeric:tabular-nums; }
-  .rd-c-u  { font-size:12.5px; color:#6b7590; line-height:1.45; }
-  .rd-c p  { font-size:14.5px; color:#3c4761; line-height:1.55;
+  .rd-c-u  { font-size:11.5px; color:#6b7590; line-height:1.45; }
+  .rd-c p  { font-size:13.5px; color:#3c4761; line-height:1.55;
              margin:12px 0 0; text-align:left !important; }
   .rd-eff  { display:flex; flex-wrap:wrap; gap:8px; margin:4px 0 6px; }
-  .rd-eff b{ display:inline-flex; align-items:center; gap:9px; font-size:13.5px;
+  .rd-eff b{ display:inline-flex; align-items:center; gap:9px; font-size:12.5px;
              font-weight:600; color:#3c4761; background:#f6f9fd;
              border:1px solid #e6eef8; border-radius:999px; padding:7px 8px 7px 14px; }
   .rd-eff em{ font-style:normal; font-weight:700; color:#2166ac;
               background:#fff; border-radius:999px; padding:2px 9px;
-              font-variant-numeric:tabular-nums; font-size:12.5px; }
-  .rd-jouer{ font-size:14px; color:#1a8a4f; font-weight:600; margin:2px 0 8px;
+              font-variant-numeric:tabular-nums; font-size:11.5px; }
+  .rd-jouer{ font-size:13px; color:#1a8a4f; font-weight:600; margin:2px 0 8px;
              text-align:left !important; }
-  .rd-leg  { display:flex; gap:20px; justify-content:center; font-size:13px;
+  .rd-leg  { display:flex; gap:20px; justify-content:center; font-size:12px;
              color:#3c4761; margin-top:4px; }
   .rd-leg i{ display:inline-block; width:10px; height:10px; border-radius:3px;
              margin-right:7px; }
   .rd-cmp  { display:grid; grid-template-columns:1fr 52px 52px 62px; gap:8px;
              align-items:center; padding:7px 0; border-top:1px solid #eef2f7;
-             font-size:13.5px; }
+             font-size:12.5px; }
   .rd-cmp b{ text-align:right; font-variant-numeric:tabular-nums; }
   /* LE SOMMAIRE : TROIS ACTES, TROIS BOUTONS.
      Ils ne sont plus six titres à caser mais trois étapes d'un récit, donc
      ils ont le droit d'occuper la place : haute, centrée, lisible de loin. */
   div[class*="st-key-rap_pas_"] button { min-height:56px; border-radius:14px;
              font-weight:700; }
-  div[class*="st-key-rap_pas_"] button p { font-size:15.5px; line-height:1.25;
+  div[class*="st-key-rap_pas_"] button p { font-size:14.5px; line-height:1.25;
              letter-spacing:-.01em; }
   @media (max-width:820px){
     .rd-g{grid-template-columns:repeat(2,1fr)}
@@ -1433,7 +1434,7 @@ STYLE = """
     .rd-t:first-child{border-top:none}
     .rd-b{grid-template-columns:1fr 70px 70px}
     .rd-big{letter-spacing:-.03em}
-    .rd-cmp{grid-template-columns:1fr 44px 44px 54px;font-size:12.5px}
+    .rd-cmp{grid-template-columns:1fr 44px 44px 54px;font-size:11.5px}
     .rd-mg{grid-template-columns:repeat(2,1fr)}
   }
 </style>
@@ -1635,7 +1636,7 @@ def _blocages(m):
             f'<span style="display:flex;align-items:center;gap:8px">'
             f'<span class="ba" style="flex:1"><i style="width:'
             f'{b["force"] / fmax * 100:.0f}%;background:{ROUGE}"></i></span>'
-            f'<b style="font-variant-numeric:tabular-nums;font-size:13px;'
+            f'<b style="font-variant-numeric:tabular-nums;font-size:12px;'
             f'color:{ROUGE};min-width:34px;text-align:right">'
             f'{_f(b["force"], 2)}</b></span></div>', unsafe_allow_html=True)
     st.caption(T("rap_5_leg"))
@@ -2077,7 +2078,7 @@ def _acte3(m):
                 f'</div>', unsafe_allow_html=True)
         if ecarts and b != a:
             cle, d = max(ecarts, key=lambda x: abs(x[1]))
-            st.markdown(f'<p class="rd-x" style="font-size:13.5px;'
+            st.markdown(f'<p class="rd-x" style="font-size:12.5px;'
                         f'margin-top:10px">'
                         f'{_gras(T("rap_4_ecart_x", d=T(cle), v=_f(abs(d), 2), a=_lib(a) if d < 0 else _lib(b)))}'
                         f'</p>', unsafe_allow_html=True)
@@ -2112,10 +2113,10 @@ def render(entete=True):
 
     if entete:
         st.markdown(
-            f'<h2 style="font-size:29px;font-weight:700;color:{ENCRE};'
+            f'<h2 style="font-size:23px;font-weight:700;color:{ENCRE};'
             f'letter-spacing:-.025em;margin:2px 0 0;line-height:1.15">'
             f'{_e(T("rap_titre"))}</h2>'
-            f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+            f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
             f'text-transform:uppercase;margin:4px 0 0;font-weight:600">'
             f'{_e(T("rap_sous"))}</p>', unsafe_allow_html=True)
 

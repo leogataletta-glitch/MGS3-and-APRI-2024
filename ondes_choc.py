@@ -246,15 +246,15 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
  .lb{font-size:10.5px;font-weight:700;letter-spacing:.07em;color:#6b7590;
      text-transform:uppercase}
  select,input[type=range]{font:inherit}
- select{font-size:13.5px;padding:5px 8px;border:1px solid #d7e0ec;
+ select{font-size:12.5px;padding:5px 8px;border:1px solid #d7e0ec;
         border-radius:9px;background:#fff;color:#101728;max-width:270px}
  input[type=range]{width:190px;accent-color:#1c6349}
- .bt{font-size:13px;font-weight:700;padding:7px 14px;border-radius:9px;
+ .bt{font-size:12px;font-weight:700;padding:7px 14px;border-radius:9px;
      border:1px solid #d7e0ec;background:#fff;color:#3c4761;cursor:pointer}
  .bt:hover{border-color:#b6d8c6}
  .bt.p{background:#1c6349;border-color:#1c6349;color:#fff}
  .cpt{margin-left:auto;text-align:right}
- .cpt b{font-size:22px;font-variant-numeric:tabular-nums}
+ .cpt b{font-size:17.5px;font-variant-numeric:tabular-nums}
  .cpt span{font-size:11.5px;color:#6b7590}
  .jauge{height:5px;width:170px;background:#eef2f7;border-radius:3px;
         overflow:hidden;margin-top:5px}
@@ -275,25 +275,25 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
  .bloc{border:1px solid #e3eaf3;border-radius:14px;padding:12px 14px}
  .bloc h4{margin:0 0 8px;font-size:11px;letter-spacing:.07em;color:#6b7590;
           text-transform:uppercase}
- .li{display:flex;align-items:center;gap:9px;padding:3px 0;font-size:13px}
+ .li{display:flex;align-items:center;gap:9px;padding:3px 0;font-size:12px}
  .li i{width:8px;height:8px;border-radius:50%;flex:none}
- .li b{margin-left:auto;font-variant-numeric:tabular-nums;font-size:12.5px}
- .note{font-size:12.5px;color:#6b7590;line-height:1.5;margin:9px 2px 0}
+ .li b{margin-left:auto;font-variant-numeric:tabular-nums;font-size:11.5px}
+ .note{font-size:11.5px;color:#6b7590;line-height:1.5;margin:9px 2px 0}
  .rl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;padding:8px 0;
      border-top:1px solid #eef2f7}
  .rl:first-child{border-top:none}
- .rl .p{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600}
+ .rl .p{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600}
  .rl .p i{width:8px;height:8px;border-radius:50%;flex:none}
- .rl .f{font-size:12px;color:#6b7590;font-variant-numeric:tabular-nums;
+ .rl .f{font-size:11px;color:#6b7590;font-variant-numeric:tabular-nums;
         white-space:nowrap}
  .rl .j{display:inline-block;font-size:10.5px;font-weight:700;
         letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;
         border-radius:999px;background:#eef2f7;color:#6b7590;margin-left:6px}
- .rl .s{grid-column:2;font-size:12.5px;color:#6b7590;line-height:1.45}
+ .rl .s{grid-column:2;font-size:11.5px;color:#6b7590;line-height:1.45}
  .ret{border-left:4px solid #b5451f;background:#fdf6f3;border-radius:0 10px
-      10px 0;padding:9px 13px;font-size:13.5px;color:#3c4761;margin-top:10px}
+      10px 0;padding:9px 13px;font-size:12.5px;color:#3c4761;margin-top:10px}
  .ret b{color:#b5451f}
- .leg{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:#6b7590;
+ .leg{display:flex;gap:18px;flex-wrap:wrap;font-size:11px;color:#6b7590;
       margin:9px 2px 0;align-items:center;line-height:1}
  .leg>span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
  .leg i{display:inline-block;width:11px;height:11px;border-radius:3px;
@@ -638,15 +638,15 @@ def render(entete=True):
 
     if entete:
         st.markdown(
-            f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+            f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
             f'letter-spacing:-.02em;margin:2px 0 0">{_e(T("oc_titre"))}</h2>'
-            f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+            f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
             f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
             f'{_e(T("oc_sous"))}</p>', unsafe_allow_html=True)
 
     st.markdown(
         f'<div style="background:#fff;border:1px solid {BORD};border-left:5px '
-        f'solid #1a6b52;border-radius:14px;padding:13px 17px;font-size:15.5px;'
+        f'solid #1a6b52;border-radius:14px;padding:13px 17px;font-size:14.5px;'
         f'color:{ENCRE2};line-height:1.6;margin:10px 0 8px;max-width:96ch;'
         f'text-align:left">{T("oc_intro")}</div>', unsafe_allow_html=True)
 
@@ -660,7 +660,7 @@ def render(entete=True):
     # l'onde ; il se lit quand on conteste une valeur, et ce jour-là il doit
     # être sous la main plutôt que dans une annexe.
     with st.expander(T("oc_bareme_t")):
-        st.markdown(f'<p style="font-size:15px;line-height:1.6;color:{ENCRE2};'
+        st.markdown(f'<p style="font-size:14px;line-height:1.6;color:{ENCRE2};'
                     f'text-align:left;max-width:92ch">{T("oc_bareme_x")}</p>',
                     unsafe_allow_html=True)
         lignes = "".join(
@@ -678,8 +678,8 @@ def render(entete=True):
         st.markdown(
             f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:26px">'
             f'<div><div class="titre-bloc">{_e(T("oc_bareme_ech"))}</div>'
-            f'<table style="font-size:14px;border-collapse:collapse">'
+            f'<table style="font-size:13px;border-collapse:collapse">'
             f'{lignes}</table></div>'
             f'<div><div class="titre-bloc">{_e(T("oc_bareme_pl"))}</div>'
-            f'<table style="font-size:14px;border-collapse:collapse">'
+            f'<table style="font-size:13px;border-collapse:collapse">'
             f'{plafonds}</table></div></div>', unsafe_allow_html=True)

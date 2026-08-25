@@ -195,19 +195,19 @@ STYLE = """
              box-shadow:0 1px 2px rgba(16,23,40,.05); }
   .ev-i    { width:34px; height:34px; border-radius:10px; display:flex;
              align-items:center; justify-content:center; margin-bottom:11px; }
-  .ev-t    { font-size:14.5px; font-weight:700; color:#101728; margin:0 0 5px;
+  .ev-t    { font-size:13.5px; font-weight:700; color:#101728; margin:0 0 5px;
              line-height:1.25; }
-  .ev-x    { font-size:13.5px; color:#3c4761; line-height:1.55; margin:0; }
+  .ev-x    { font-size:12.5px; color:#3c4761; line-height:1.55; margin:0; }
   .ev-flux { display:flex; align-items:stretch; gap:4px; flex-wrap:wrap; }
   .ev-fl   { flex:1 1 150px; min-width:135px; text-align:center;
              padding:13px 10px; border:1px solid #e3eaf3; border-radius:13px;
              background:#fff; }
-  .ev-fn   { font-size:26px; font-weight:700; color:#101728; line-height:1;
+  .ev-fn   { font-size:21px; font-weight:700; color:#101728; line-height:1;
              letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
-  .ev-fl-l { font-size:12.5px; font-weight:700; color:#3c4761; margin-top:5px; }
+  .ev-fl-l { font-size:11.5px; font-weight:700; color:#3c4761; margin-top:5px; }
   .ev-fl-x { font-size:11.5px; color:#8a93a5; margin-top:3px; line-height:1.4; }
-  .ev-ch   { align-self:center; color:#c3ccda; font-size:20px; flex:0 0 auto; }
-  .ev-tab  { width:100%; border-collapse:collapse; font-size:13px; }
+  .ev-ch   { align-self:center; color:#c3ccda; font-size:16px; flex:0 0 auto; }
+  .ev-tab  { width:100%; border-collapse:collapse; font-size:12px; }
   .ev-tab th { text-align:left; padding:8px 10px; border-bottom:2px solid #e6ecf4;
              font-size:10.5px; letter-spacing:.05em; text-transform:uppercase;
              color:#6b7590; font-weight:700; }
@@ -215,15 +215,15 @@ STYLE = """
              color:#3c4761; line-height:1.5; vertical-align:top; }
   .ev-tab td:first-child { font-weight:700; color:#101728; }
   .ev-seuil { font-variant-numeric:tabular-nums; white-space:nowrap;
-              font-size:12.5px; color:#101728; font-weight:600; }
+              font-size:11.5px; color:#101728; font-weight:600; }
   .ev-sc   { border:1px solid #e3eaf3; border-radius:12px; padding:12px 14px;
              height:100%; }
   .ev-sc-t { font-size:11px; letter-spacing:.08em; text-transform:uppercase;
              font-weight:700; margin-bottom:6px; }
-  .ev-sc p { font-size:13px; color:#3c4761; line-height:1.55; margin:0;
+  .ev-sc p { font-size:12px; color:#3c4761; line-height:1.55; margin:0;
              white-space:pre-line; }
   .ev-puce { margin:0; padding:0; list-style:none; }
-  .ev-puce li { font-size:13.5px; color:#3c4761; line-height:1.5;
+  .ev-puce li { font-size:12.5px; color:#3c4761; line-height:1.5;
                 padding:5px 0 5px 15px; position:relative; }
   .ev-puce li::before { content:""; position:absolute; left:0; top:12px;
                 width:5px; height:5px; border-radius:50%; background:#c3ccda; }
@@ -231,14 +231,17 @@ STYLE = """
              font-weight:700; color:#8a93a5; margin:0 0 7px; }
   .ev-etage{ font-size:11px; letter-spacing:.11em; text-transform:uppercase;
              font-weight:700; color:#a7b0be; margin:26px 0 8px; }
-  .ev-verdict { font-size:12.5px; color:#1a8a4f; font-weight:600;
+  .ev-verdict { font-size:11.5px; color:#1a8a4f; font-weight:600;
                 margin-top:7px; }
   /* LA JUSTIFICATION EST ANNULÉE DANS LES CARTES ET LES TABLEAUX. La feuille
      de style du site justifie tous les paragraphes : c'est bon pour une
      colonne de texte, et cela défigure une carte de deux lignes ou une
      cellule étroite — les mots s'écartent jusqu'à laisser des couloirs
      blancs au milieu. */
-  .ev-t, .ev-x, .ev-sc p, .ev-puce li, .ev-tab td { text-align:left !important; }
+  /* L'intitulé et les cellules de tableau gardent le fer à gauche : leur
+     alignement porte un sens, et une cellule étroite ne se justifie pas.
+     Le reste suit la justification du site. */
+  .ev-t, .ev-tab td { text-align:left !important; }
   .ev-fl-l, .ev-fl-x, .ev-fn { text-align:center !important; }
 </style>
 """
@@ -360,7 +363,7 @@ def _bloc_terrain(c):
     for e in c["terrain"]:
         with st.container(border=True):
             st.markdown(
-                f'<div style="font-size:16px;font-weight:700;color:{ENCRE}">'
+                f'<div style="font-size:14.5px;font-weight:700;color:{ENCRE}">'
                 f'{_e(e["nom"])}</div>'
                 f'<div class="ev-lab" style="margin:9px 0 4px">'
                 f'{_e(T("env_unite"))}</div>'
@@ -388,10 +391,10 @@ def _bloc_cotier(c):
             with col:
                 with st.container(border=True):
                     st.markdown(
-                        f'<div style="font-size:15px;font-weight:700;'
+                        f'<div style="font-size:14px;font-weight:700;'
                         f'color:{ENCRE}">{_e(b["nom"])}</div>'
                         + (f'<p class="ev-x" style="color:{ENCRE3};'
-                           f'font-size:12.5px;margin-top:4px">'
+                           f'font-size:11.5px;margin-top:4px">'
                            f'{_e(b["contexte"])}</p>' if b["contexte"] else "")
                         + '<ul class="ev-puce">'
                         + "".join(f'<li>{_e(p)}</li>' for p in b["points"])
@@ -405,9 +408,9 @@ def render():
     c = _contenu()
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(
-        f'<h3 style="font-size:22px;font-weight:700;color:{ENCRE};'
+        f'<h3 style="font-size:17.5px;font-weight:700;color:{ENCRE};'
         f'letter-spacing:-.02em;margin:6px 0 0">{_e(T("env_titre"))}</h3>'
-        f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
         f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
         f'{_e(T("env_sous"))}</p>', unsafe_allow_html=True)
 
@@ -423,9 +426,9 @@ def render():
 
     with st.container(border=True):
         st.markdown(
-            f'<div style="font-size:19px;font-weight:700;color:{ENCRE};'
+            f'<div style="font-size:17.5px;font-weight:700;color:{ENCRE};'
             f'margin:0 0 3px">{_e(T("env_flux"))}</div>'
-            f'<p style="font-size:13.5px;color:{ENCRE3};line-height:1.55;'
+            f'<p style="font-size:12.5px;color:{ENCRE3};line-height:1.55;'
             f'max-width:96ch;margin:0 0 14px">{_e(T("env_flux_note"))}</p>'
             + _flux(c, etat), unsafe_allow_html=True)
 
@@ -436,7 +439,7 @@ def render():
     ta = c["intro"]["taxons"]
     with st.container(border=True):
         st.markdown(
-            f'<div style="font-size:17px;font-weight:700;color:{ENCRE}">'
+            f'<div style="font-size:15.5px;font-weight:700;color:{ENCRE}">'
             f'{_e(T("env_src1_t"))}</div>'
             f'<p class="ev-x" style="margin-top:6px;max-width:96ch">'
             f'{_e(c["intro"]["terrain"])}</p>'
@@ -447,7 +450,7 @@ def render():
                 f'<div class="ev-n" style="flex:1 1 240px;'
                 f'border-top:3px solid {coul}">'
                 f'<p class="ev-t">{_e(T(cle))}</p>'
-                f'<p class="ev-x" style="font-size:13px">{_e(t)}</p></div>'
+                f'<p class="ev-x" style="font-size:12px">{_e(t)}</p></div>'
                 for cle, coul, t in zip(("env_tx_od", "env_tx_oi", "env_tx_po"),
                                         (BLEU, VERT, AMBRE), ta))
             + '</div>', unsafe_allow_html=True)
@@ -455,7 +458,7 @@ def render():
 
     with st.container(border=True):
         st.markdown(
-            f'<div style="font-size:17px;font-weight:700;color:{ENCRE}">'
+            f'<div style="font-size:15.5px;font-weight:700;color:{ENCRE}">'
             f'{_e(T("env_src2_t"))}</div>'
             f'<p class="ev-x" style="margin-top:6px;max-width:96ch">'
             f'{_e(c["intro"]["geo"])}</p>'
@@ -474,7 +477,7 @@ def render():
 
     with st.container(border=True):
         st.markdown(
-            f'<div style="font-size:17px;font-weight:700;color:{ENCRE}">'
+            f'<div style="font-size:15.5px;font-weight:700;color:{ENCRE}">'
             f'{_e(T("env_src3_t"))}</div>'
             f'<p class="ev-x" style="margin-top:6px;max-width:96ch">'
             f'{_e(c["intro"]["menages"])}</p>'
@@ -485,9 +488,9 @@ def render():
     # --------- ce qui est calculé, et ce qui ne l'est pas
     with st.container(border=True):
         st.markdown(
-            f'<div style="font-size:19px;font-weight:700;color:{ENCRE};'
+            f'<div style="font-size:17.5px;font-weight:700;color:{ENCRE};'
             f'margin:0 0 3px">{_e(T("env_etat"))}</div>'
-            f'<p style="font-size:13.5px;color:{ENCRE3};line-height:1.55;'
+            f'<p style="font-size:12.5px;color:{ENCRE3};line-height:1.55;'
             f'max-width:96ch;margin:0 0 12px">'
             f'{_e(T("env_etat_note", f=len(etat["faits"])))}</p>',
             unsafe_allow_html=True)
@@ -510,7 +513,7 @@ def render():
 
     # ===================== STRATE 3 — APPROFONDIR =========================
     st.markdown(f'<div class="ev-etage">{_e(T("env_s3"))}</div>'
-                f'<p style="font-size:13.5px;color:{ENCRE3};line-height:1.55;'
+                f'<p style="font-size:12.5px;color:{ENCRE3};line-height:1.55;'
                 f'max-width:96ch;margin:-4px 0 6px">{_e(T("env_s3_note"))}</p>',
                 unsafe_allow_html=True)
     st.caption(T("env_vf"))

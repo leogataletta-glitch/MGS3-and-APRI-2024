@@ -116,9 +116,9 @@ def render(entete=True):
     # hauteur d'écran sans rien apprendre.
     if entete:
         st.markdown(
-            f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+            f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
             f'letter-spacing:-.02em;margin:2px 0 0">{T("rda_titre")}</h2>'
-            f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+            f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
             f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
             f'{T("rda_sous_titre")}</p>', unsafe_allow_html=True)
     st.info(T("rda_intro"))
@@ -136,10 +136,10 @@ def render(entete=True):
             for col, cle in zip(st.columns(2), (gauche, droite)):
                 with col:
                     st.markdown(
-                        f'<div style="font-size:14.5px;font-weight:700;'
+                        f'<div style="font-size:13.5px;font-weight:700;'
                         f'color:{ENCRE};margin:4px 0 3px">'
                         f'{_e(T(cle + "_t"))}</div>'
-                        f'<p style="font-size:14px;color:#3c4761;'
+                        f'<p style="font-size:13px;color:#3c4761;'
                         f'line-height:1.6;margin:0 0 10px">{T(cle)}</p>',
                         unsafe_allow_html=True)
         st.caption(T("rda_ailleurs"))

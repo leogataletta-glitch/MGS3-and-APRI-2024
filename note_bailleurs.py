@@ -313,20 +313,20 @@ STYLE = """
              background:#fff; height:100%; }
   .nb-kl   { font-size:10.5px; letter-spacing:.09em; text-transform:uppercase;
              font-weight:700; color:#8a93a5; line-height:1.35; }
-  .nb-kv   { font-size:32px; font-weight:700; letter-spacing:-.03em;
+  .nb-kv   { font-size:25.5px; font-weight:700; letter-spacing:-.03em;
              line-height:1.1; margin-top:4px; font-variant-numeric:tabular-nums; }
-  .nb-kx   { font-size:12px; color:#6b7590; margin-top:3px; line-height:1.45; }
+  .nb-kx   { font-size:11px; color:#6b7590; margin-top:3px; line-height:1.45; }
   .nb-num  { display:inline-flex; align-items:center; justify-content:center;
              width:26px; height:26px; border-radius:999px; background:#101728;
-             color:#fff; font-size:13px; font-weight:700; }
+             color:#fff; font-size:12px; font-weight:700; }
   .nb-dim  { font-size:10.5px; letter-spacing:.09em; text-transform:uppercase;
              font-weight:700; color:#8a93a5; }
-  .nb-t    { font-size:17px; font-weight:700; color:#101728;
+  .nb-t    { font-size:15.5px; font-weight:700; color:#101728;
              letter-spacing:-.015em; margin:2px 0 0; line-height:1.3; }
   .nb-fig  { display:flex; gap:17px; flex-wrap:wrap; align-items:flex-end;
              margin:10px 0 2px; }
   .nb-f    { }
-  .nb-fv   { font-size:27px; font-weight:700; letter-spacing:-.03em;
+  .nb-fv   { font-size:21.5px; font-weight:700; letter-spacing:-.03em;
              line-height:1; font-variant-numeric:tabular-nums; }
   .nb-fl   { font-size:9.5px; letter-spacing:.04em; text-transform:uppercase;
              font-weight:700; color:#8a93a5; margin-top:4px;
@@ -334,13 +334,13 @@ STYLE = """
   .nb-jauge{ height:8px; background:#eef2f7; border-radius:4px; position:relative;
              margin:10px 0 2px; }
   .nb-jr   { position:absolute; left:0; top:0; height:100%; border-radius:4px; }
-  .nb-p    { font-size:13.5px; color:#3c4761; line-height:1.65; margin:8px 0 0; }
+  .nb-p    { font-size:12.5px; color:#3c4761; line-height:1.65; margin:8px 0 0; }
   .nb-chip { display:inline-block; font-size:11.5px; font-weight:700;
              border-radius:999px; padding:3px 11px; margin:0 6px 6px 0; }
-  .nb-tou  { font-size:12.5px; color:#3c4761; margin-top:8px;
+  .nb-tou  { font-size:11.5px; color:#3c4761; margin-top:8px;
              border-top:1px solid #eef2f7; padding-top:8px; }
   .nb-tou b{ color:#101728; }
-  .nb-t2   { width:100%; border-collapse:collapse; font-size:13px; }
+  .nb-t2   { width:100%; border-collapse:collapse; font-size:12px; }
   .nb-t2 th{ text-align:right; padding:7px 9px; border-bottom:2px solid #e6ecf4;
              font-size:10.5px; letter-spacing:.05em; text-transform:uppercase;
              color:#6b7590; font-weight:700; }
@@ -577,7 +577,7 @@ def _carte_constat(i, dim, r, dims):
         chiffres.append(
             f'<div class="nb-f"><div class="nb-fv" '
             f'style="color:{_couleur_score(s)}">{_f(s, 0)}<span '
-            f'style="font-size:15px;color:{GRIS}"> / 10</span></div>'
+            f'style="font-size:14px;color:{GRIS}"> / 10</span></div>'
             f'<div class="nb-fl">{_e(T("nb_score"))}</div></div>')
         # LA PONDÉRATION N'EST PAS DANS LA CARTE. Cinq chiffres passaient à la
         # ligne dans une colonne sur deux, et c'est celui-ci qui se lit le
@@ -626,7 +626,7 @@ def _tableau_ecarts(classe):
         s = float(r["scores_corriges"]["Total"])
         lignes.append(
             f'<tr><td>{_e(_nom(r))}</td>'
-            f'<td style="text-align:left;font-size:12px;color:{ENCRE3}">'
+            f'<td style="text-align:left;font-size:11px;color:{ENCRE3}">'
             f'{_e(T(d) if d in DIMS else "—")}</td>'
             f'<td>{_e(_val(r))}</td>'
             f'<td style="color:{_couleur_score(s)};font-weight:700">'
@@ -667,10 +667,10 @@ def _carte_fiche(rang, f, emax, constats):
             f'<div class="nb-f"><div class="nb-fv" style="color:{VERT}">'
             f'{_f(f["delta"], 3, signe=True)}</div>'
             f'<div class="nb-fl">{_e(T("nb_effet"))}</div></div>'
-            f'<div class="nb-f"><div class="nb-fv" style="font-size:16px;'
+            f'<div class="nb-f"><div class="nb-fv" style="font-size:14.5px;'
             f'color:{ENCRE2}">{_e(T("int_h_" + f["horizon"]))}</div>'
             f'<div class="nb-fl">{_e(T("nb_horizon"))}</div></div>'
-            f'<div class="nb-f"><div class="nb-fv" style="font-size:16px;'
+            f'<div class="nb-f"><div class="nb-fv" style="font-size:14.5px;'
             f'color:{ENCRE2}">{_e(T("int_f_" + f["faisabilite"]))}</div>'
             f'<div class="nb-fl">{_e(T("nb_fais"))}</div></div></div>',
             unsafe_allow_html=True)
@@ -697,9 +697,9 @@ def _carte_fiche(rang, f, emax, constats):
 def render():
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(
-        f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+        f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
         f'letter-spacing:-.02em;margin:2px 0 0">{_e(T("nb_titre"))}</h2>'
-        f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
         f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
         f'{_e(T("nb_sous_titre"))}</p>', unsafe_allow_html=True)
 
@@ -746,7 +746,7 @@ def render():
                 unsafe_allow_html=True)
 
     # ---- 1 · les constats
-    st.markdown(f'<h3 style="font-size:19px;font-weight:700;color:{ENCRE};'
+    st.markdown(f'<h3 style="font-size:17.5px;font-weight:700;color:{ENCRE};'
                 f'margin:26px 0 2px">{_e(T("nb_s1"))}</h3>',
                 unsafe_allow_html=True)
     st.markdown(f'<p class="nb-p">{_gras(T("nb_regle"))}</p>',
@@ -762,7 +762,7 @@ def render():
         _tableau_ecarts(classe)
 
     # ---- 2 · les réponses
-    st.markdown(f'<h3 style="font-size:19px;font-weight:700;color:{ENCRE};'
+    st.markdown(f'<h3 style="font-size:17.5px;font-weight:700;color:{ENCRE};'
                 f'margin:26px 0 2px">{_e(T("nb_s2"))}</h3>',
                 unsafe_allow_html=True)
     st.markdown(f'<p class="nb-p">{_gras(T("nb_s2_note"))}</p>',
@@ -775,7 +775,7 @@ def render():
                 _carte_fiche(i + j + 1, f, emax, constats)
 
     # ---- 3 · ce que le portefeuille déplace
-    st.markdown(f'<h3 style="font-size:19px;font-weight:700;color:{ENCRE};'
+    st.markdown(f'<h3 style="font-size:17.5px;font-weight:700;color:{ENCRE};'
                 f'margin:26px 0 2px">{_e(T("nb_s3"))}</h3>',
                 unsafe_allow_html=True)
     somme = sum(f["delta"] for f in fiches)
@@ -842,7 +842,7 @@ def render():
                 for i, d, r in orphelins), unsafe_allow_html=True)
 
     # ---- 4 · séquencement
-    st.markdown(f'<h3 style="font-size:19px;font-weight:700;color:{ENCRE};'
+    st.markdown(f'<h3 style="font-size:17.5px;font-weight:700;color:{ENCRE};'
                 f'margin:26px 0 2px">{_e(T("nb_s4"))}</h3>',
                 unsafe_allow_html=True)
     st.markdown(f'<p class="nb-p">{_gras(T("nb_s4_note"))}</p>',
@@ -869,7 +869,7 @@ def render():
             p=_f(tout["lot1"]["eff"]["delta"] / pf["delta"] * 100, 0)))
 
     # ---- 5 · les réserves
-    st.markdown(f'<h3 style="font-size:19px;font-weight:700;color:{ENCRE};'
+    st.markdown(f'<h3 style="font-size:17.5px;font-weight:700;color:{ENCRE};'
                 f'margin:26px 0 2px">{_e(T("nb_s5"))}</h3>',
                 unsafe_allow_html=True)
     with st.container(border=True):

@@ -41,7 +41,7 @@ def rendre(bascule):
         st.markdown(f'<div class="titre-bloc">{T("n_titre")}</div>',
                     unsafe_allow_html=True)
         st.markdown(
-            f'<p style="font-size:14.5px;color:#6b7590;line-height:1.55;'
+            f'<p style="font-size:13.5px;color:#6b7590;line-height:1.55;'
             f'margin:2px 0 12px">{T("n_sous_titre")}</p>',
             unsafe_allow_html=True)
 

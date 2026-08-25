@@ -1256,14 +1256,14 @@ def calculer(graphe, par_ligne, lst_boucles):
 
 STYLE = """
 <style>
-  .int-t   { font-size:17.5px; font-weight:700; color:#101728;
+  .int-t   { font-size:16px; font-weight:700; color:#101728;
              letter-spacing:-.015em; margin:0; line-height:1.3; }
   .int-lab { font-size:11px; letter-spacing:.09em; text-transform:uppercase;
              font-weight:700; color:#8a93a5; margin:14px 0 3px; }
-  .int-x   { font-size:14.5px; color:#3c4761; line-height:1.6; margin:0; }
+  .int-x   { font-size:13.5px; color:#3c4761; line-height:1.6; margin:0; }
   .int-chip{ display:inline-block; font-size:11.5px; font-weight:700;
              border-radius:999px; padding:3px 11px; margin:0 6px 6px 0; }
-  .int-eff { font-size:27px; font-weight:700; letter-spacing:-.03em;
+  .int-eff { font-size:21.5px; font-weight:700; letter-spacing:-.03em;
              font-variant-numeric:tabular-nums; line-height:1; }
   .int-num { font-variant-numeric:tabular-nums; }
   /* LES DEUX BLOCS QUE LE PROTOCOLE EXIGE, RENDUS IMPOSSIBLES À MANQUER.
@@ -1273,9 +1273,9 @@ STYLE = """
   .int-box { border:1px solid #e3e9f1; border-left:4px solid #c7d2e0;
              border-radius:8px; padding:11px 14px; height:100%;
              background:#fbfcfe; }
-  .int-box-t { font-size:12.5px; font-weight:800; letter-spacing:.02em;
+  .int-box-t { font-size:11.5px; font-weight:800; letter-spacing:.02em;
                margin:0 0 6px; }
-  .int-box p { margin:0; font-size:13.5px; color:#3c4761; line-height:1.6; }
+  .int-box p { margin:0; font-size:12.5px; color:#3c4761; line-height:1.6; }
   .int-perf { border:1px solid #cfe6da; border-radius:8px; padding:12px 14px;
               background:#f3faf6; }
 </style>
@@ -1292,14 +1292,14 @@ def _bloc_reperage(fiches, par_ligne, dims, ref):
         st.markdown(
             f'<div class="int-lab" style="margin-top:2px">1 · '
             f'{_e(T("int_rep1"))}</div>'
-            f'<p class="int-x" style="font-size:13.5px">{_gras(T("int_rep1_x"))}</p>',
+            f'<p class="int-x" style="font-size:12.5px">{_gras(T("int_rep1_x"))}</p>',
             unsafe_allow_html=True)
         rangs = sorted(fiches, key=lambda x: (not x["bascule"], -x["boucles"],
                                               -(x["sortant"] + x["entrant"])))
         st.markdown("".join(
             f'<div style="display:grid;grid-template-columns:minmax(150px,2fr) '
             f'110px 130px 1fr;gap:10px;align-items:center;padding:5px 0;'
-            f'border-bottom:1px solid #eef2f7;font-size:13px">'
+            f'border-bottom:1px solid #eef2f7;font-size:12px">'
             f'<div style="font-weight:600;color:{ENCRE}">'
             f'{_e(_libelle(f["noeud"]))}</div>'
             f'<div class="int-num" style="color:{ENCRE2}">'
@@ -1315,7 +1315,7 @@ def _bloc_reperage(fiches, par_ligne, dims, ref):
         # --- critère 2 : dimensions faibles
         st.markdown(
             f'<div class="int-lab">2 · {_e(T("int_rep2"))}</div>'
-            f'<p class="int-x" style="font-size:13.5px">{_gras(T("int_rep2_x"))}</p>',
+            f'<p class="int-x" style="font-size:12.5px">{_gras(T("int_rep2_x"))}</p>',
             unsafe_allow_html=True)
         barres = []
         for d in sorted(dims, key=lambda k: dims[k]):
@@ -1325,7 +1325,7 @@ def _bloc_reperage(fiches, par_ligne, dims, ref):
             barres.append(
                 f'<div style="display:grid;grid-template-columns:minmax(150px,'
                 f'2fr) 3fr 54px 70px;gap:10px;align-items:center;padding:5px 0;'
-                f'border-bottom:1px solid #eef2f7;font-size:13px">'
+                f'border-bottom:1px solid #eef2f7;font-size:12px">'
                 f'<div style="font-weight:600;color:{ENCRE}">'
                 f'{_e(T(d))}</div>'
                 f'<div style="background:#f1f4f9;border-radius:5px;height:12px;'
@@ -1358,7 +1358,7 @@ def _bloc_reperage(fiches, par_ligne, dims, ref):
             mob.append(
                 f'<div style="display:grid;grid-template-columns:1fr 3fr 44px;'
                 f'gap:10px;align-items:center;padding:5px 0;'
-                f'border-bottom:1px solid #eef2f7;font-size:13px">'
+                f'border-bottom:1px solid #eef2f7;font-size:12px">'
                 f'<div style="color:{ENCRE}">L{lg} · '
                 f'{_e(_nom_indic(r))}</div>'
                 f'<div style="background:#f1f4f9;border-radius:5px;height:12px;'
@@ -1383,12 +1383,12 @@ def _bloc_categories(fiches):
             with col:
                 st.markdown(
                     f'<div style="border-top:3px solid {c};padding-top:8px">'
-                    f'<div style="font-size:13.5px;font-weight:700;color:{c}">'
+                    f'<div style="font-size:12.5px;font-weight:700;color:{c}">'
                     f'{_e(T("int_cat_" + cat))}</div>'
                     f'<div style="font-size:11.5px;color:{ENCRE3};'
                     f'margin-bottom:8px">{_e(T("int_cat_" + cat + "_x"))}</div>'
                     + "".join(
-                        f'<div style="font-size:13px;color:{ENCRE};'
+                        f'<div style="font-size:12px;color:{ENCRE};'
                         f'padding:4px 0;border-top:1px solid #eef2f7">'
                         f'{_e(T("int_" + f["id"] + "_t"))}</div>'
                         for f in dedans)
@@ -1425,26 +1425,26 @@ def _bloc_tableau(fiches, par_id):
                     ch += " → …"
                 lettre = "R" if b["type"] == "renforcante" else "B"
                 cb = HAUSSE if lettre == "R" else ALERTE
-                bloc = (f'<div style="font-size:12.5px;color:{ENCRE2}">'
+                bloc = (f'<div style="font-size:11.5px;color:{ENCRE2}">'
                         f'<span style="font-weight:700;color:{cb}">{lettre}</span> '
                         f'{_e(ch)}</div>')
             else:
-                bloc = (f'<div style="font-size:12.5px;color:{ENCRE3};'
+                bloc = (f'<div style="font-size:11.5px;color:{ENCRE3};'
                         f'font-style:italic">{_e(T("int_hors_boucle"))}</div>')
             cc = CAT_COULEUR[f["cat"]]
             li.append(
                 f'<div style="display:grid;grid-template-columns:{gab};'
                 f'gap:12px;align-items:center;padding:8px 0;'
                 f'border-bottom:1px solid #eef2f7">'
-                f'<div style="font-size:13px;color:{ENCRE}">L'
+                f'<div style="font-size:12px;color:{ENCRE}">L'
                 f'{f["ligne_probleme"]} · {_e(nom)}</div>'
                 f'<div class="int-num" style="text-align:right;font-weight:700;'
-                f'font-size:14px;color:{cs}">'
+                f'font-size:13px;color:{cs}">'
                 f'{"—" if s is None else _fmt(float(s), 0) + "/10"}</div>'
                 + bloc +
-                f'<div style="font-size:13px;font-weight:600;color:{cc}">'
+                f'<div style="font-size:12px;font-weight:600;color:{cc}">'
                 f'{_e(T("int_" + f["id"] + "_t"))}</div>'
-                f'<div class="int-num" style="text-align:right;font-size:13px;'
+                f'<div class="int-num" style="text-align:right;font-size:12px;'
                 f'font-weight:700;color:{HAUSSE}">'
                 f'{_fmt(f["delta"], 3, True)}</div></div>')
         st.markdown("".join(li), unsafe_allow_html=True)
@@ -1467,13 +1467,13 @@ def _bloc_justification(f):
                 st.markdown(
                     f'<div style="font-size:10.5px;letter-spacing:.07em;'
                     f'text-transform:uppercase;color:#8a93a5;font-weight:700">'
-                    f'{_e(lab)}</div><div class="int-num" style="font-size:19px;'
+                    f'{_e(lab)}</div><div class="int-num" style="font-size:17.5px;'
                     f'font-weight:700;color:{ENCRE}">{_e(val)}</div>',
                     unsafe_allow_html=True)
 
         pd_ = 100 * d["part_directe"]
         st.markdown(
-            f'<p class="int-x" style="font-size:13.5px;margin-top:12px">'
+            f'<p class="int-x" style="font-size:12.5px;margin-top:12px">'
             f'<b class="int-num">{pd_:.0f} %</b> {_e(T("int_dou_direct"))}, '
             f'<b class="int-num">{100 - pd_:.0f} %</b> '
             f'{_e(T("int_dou_casc"))}.</p>', unsafe_allow_html=True)
@@ -1481,7 +1481,7 @@ def _bloc_justification(f):
         pc = f["part_couverte"] or 0
         if pc:
             st.markdown(
-                f'<p class="int-x" style="font-size:13.5px">'
+                f'<p class="int-x" style="font-size:12.5px">'
                 f'<b>{_e(T("int_dou_peri"))} : </b>'
                 + _e(T("int_dou_peri_x")
                      .replace("{p}", f"{100 * pc:.0f}")
@@ -1505,7 +1505,7 @@ def _bloc_justification(f):
             li.append(
                 f'<div style="display:grid;grid-template-columns:{gab};gap:8px;'
                 f'align-items:center;padding:4px 0;'
-                f'border-bottom:1px solid #f2f5f9;font-size:12.5px">'
+                f'border-bottom:1px solid #f2f5f9;font-size:11.5px">'
                 f'<div style="color:{ENCRE}">L{x["ligne"]} · '
                 f'{_e(_nom_indic(x["r"]))}</div>'
                 f'<div class="int-num" style="text-align:right;color:{ENCRE3}">'
@@ -1538,9 +1538,9 @@ def _render():
     par_id = {n["id"]: n for n in graphe["noeuds"]}
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(
-        f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+        f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
         f'letter-spacing:-.02em;margin:2px 0 0">{T("int_titre")}</h2>'
-        f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
         f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
         f'{T("int_sous_titre")}</p>', unsafe_allow_html=True)
     st.info(T("int_intro"))
@@ -1563,10 +1563,10 @@ def _render():
                     f'<div style="border-top:3px solid #d7dee9;padding-top:8px">'
                     f'<div style="font-size:11px;font-weight:700;color:#8a93a5;'
                     f'letter-spacing:.09em">{let.upper()}</div>'
-                    f'<div style="font-size:13.5px;font-weight:700;'
+                    f'<div style="font-size:12.5px;font-weight:700;'
                     f'color:{ENCRE};margin-top:2px">'
                     f'{_e(T("int_proto_" + cle))}</div>'
-                    f'<div style="font-size:12px;color:{ENCRE3};margin-top:4px;'
+                    f'<div style="font-size:11px;color:{ENCRE3};margin-top:4px;'
                     f'line-height:1.5">{_e(T("int_proto_" + cle + "_x"))}</div>'
                     f'</div>', unsafe_allow_html=True)
 
@@ -1597,19 +1597,19 @@ def _render():
                 f'<div style="display:grid;grid-template-columns:'
                 f'minmax(180px,3fr) 3fr 76px 150px;gap:12px;align-items:center;'
                 f'padding:7px 0;border-bottom:1px solid #eef2f7">'
-                f'<div style="font-size:13.5px;font-weight:600;color:{ENCRE}">'
+                f'<div style="font-size:12.5px;font-weight:600;color:{ENCRE}">'
                 f'{_e(T("int_" + f["id"] + "_t"))}</div>'
                 f'<div style="background:#f1f4f9;border-radius:5px;height:14px;'
                 f'overflow:hidden"><div style="height:100%;border-radius:5px;'
                 f'width:{max(100 * f["delta"] / emax, 1):.0f}%;'
                 f'background:{HAUSSE}"></div></div>'
-                f'<div class="int-num" style="font-size:13px;font-weight:600;'
+                f'<div class="int-num" style="font-size:12px;font-weight:600;'
                 f'color:{ENCRE};text-align:right">'
                 f'{_fmt(f["delta"], 3, True)}</div>'
                 + (f'<div><span class="int-chip" style="background:#fdf3e3;'
                    f'color:#a8560a;margin:0">{_e(T("int_bascule"))}</span>'
                    f'</div>' if f["bascule"] else
-                   f'<div style="font-size:12px;color:{ENCRE3}">'
+                   f'<div style="font-size:11px;color:{ENCRE3}">'
                    f'{f["boucles"]} {_e(T("int_boucles")).lower()}</div>')
                 + '</div>')
         st.markdown("".join(recap), unsafe_allow_html=True)
@@ -1696,13 +1696,13 @@ def _render():
                 f'{_e(T("int_perf"))}</div>'
                 f'<div style="display:flex;gap:28px;flex-wrap:wrap;'
                 f'align-items:baseline">'
-                f'<div><span class="int-num" style="font-size:30px;'
+                f'<div><span class="int-num" style="font-size:24px;'
                 f'font-weight:800;letter-spacing:-.02em;color:{HAUSSE}">'
                 f'{_fmt(f["cible"], 1, True)} pt</span>'
-                f'<span style="font-size:12.5px;color:{ENCRE2};'
+                f'<span style="font-size:11.5px;color:{ENCRE2};'
                 f'margin-left:9px">{_e(T("int_perf_cible"))} : '
                 f'{_e(_libelle(f["noeud"]))}</span></div>'
-                f'<div style="font-size:15px;color:{ENCRE2};font-weight:600" '
+                f'<div style="font-size:14px;color:{ENCRE2};font-weight:600" '
                 f'class="int-num">{_e(dep)} → <b style="color:{ENCRE}">'
                 f'{_e(vise)}</b></div></div></div>',
                 unsafe_allow_html=True)
@@ -1710,9 +1710,9 @@ def _render():
                 st.markdown("".join(
                     f'<div style="display:flex;gap:12px;align-items:baseline;'
                     f'padding:5px 0;border-bottom:1px solid #eef2f7">'
-                    f'<div style="flex:1 1 auto;font-size:13.5px;'
+                    f'<div style="flex:1 1 auto;font-size:12.5px;'
                     f'color:{ENCRE}">L{r["ligne"]} · {_e(_nom_indic(r))}</div>'
-                    f'<div class="int-num" style="font-size:13px;'
+                    f'<div class="int-num" style="font-size:12px;'
                     f'font-weight:700;color:{HAUSSE if dd > 0 else BAISSE};'
                     f'white-space:nowrap">'
                     f'{"↑" if dd > 0 else "↓"} {_fmt(dd, 2, True)}</div></div>'
@@ -1723,28 +1723,28 @@ def _render():
             with ga:
                 st.markdown(
                     f'<div class="int-lab">{_e(T("int_acteurs"))}</div>'
-                    f'<p class="int-x" style="font-size:13.5px">'
+                    f'<p class="int-x" style="font-size:12.5px">'
                     f'{_e(T("int_" + f["id"] + "_ac"))}</p>',
                     unsafe_allow_html=True)
             with dr:
                 st.markdown(
                     f'<div class="int-lab">{_e(T("int_calendrier"))} · '
                     f'{_e(T("int_h_" + f["horizon"]))}</div>'
-                    f'<p class="int-x" style="font-size:13.5px">'
+                    f'<p class="int-x" style="font-size:12.5px">'
                     f'{_e(T("int_" + f["id"] + "_cal"))}</p>',
                     unsafe_allow_html=True)
 
             st.markdown(
                 f'<div class="int-lab">{_e(T("int_risques"))}</div>'
-                f'<p class="int-x" style="font-size:13.5px">'
+                f'<p class="int-x" style="font-size:12.5px">'
                 f'<b style="color:{BAISSE}">{_e(T("int_risque"))}</b> : '
                 f'{_e(T("int_" + f["id"] + "_r"))}</p>'
-                f'<p class="int-x" style="font-size:13.5px;margin-top:6px">'
+                f'<p class="int-x" style="font-size:12.5px;margin-top:6px">'
                 f'<b style="color:{HAUSSE}">{_e(T("int_attenuation"))}</b> : '
                 f'{_e(T("int_" + f["id"] + "_m"))}</p>'
                 f'<div class="int-lab">{_e(T("int_boucle_visee"))}</div>'
                 f'<p class="int-x">{_e(T("int_" + f["id"] + "_b"))}</p>'
-                f'<p class="int-x" style="font-size:12.5px;color:{ENCRE3};'
+                f'<p class="int-x" style="font-size:11.5px;color:{ENCRE3};'
                 f'margin-top:6px">{_e(T("int_depart"))} : '
                 f'{_e(_libelle(f["noeud"]))} : <b>{_e(dep)}</b> · '
                 f'{_e(T("int_boucles"))} : {f["boucles"]} '

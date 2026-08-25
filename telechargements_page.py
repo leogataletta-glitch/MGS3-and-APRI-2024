@@ -417,7 +417,7 @@ def _bloc(cle_titre, cle_desc, teinte, nom_fichier, mime, format_txt,
         st.markdown(f'<div class="titre-bloc {teinte}">{T(cle_titre)}</div>',
                     unsafe_allow_html=True)
         st.markdown(
-            f'<p style="font-size:15.5px;line-height:1.6;color:#3c4761;'
+            f'<p style="font-size:14.5px;line-height:1.6;color:#3c4761;'
             f'margin:4px 0 10px">{T(cle_desc)}</p>', unsafe_allow_html=True)
         # Un fichier source absent du dépôt ne doit pas emporter tout l'onglet :
         # on signale le jeu manquant et les cinq autres restent téléchargeables.
@@ -425,10 +425,10 @@ def _bloc(cle_titre, cle_desc, teinte, nom_fichier, mime, format_txt,
             data = fabrique()
         except Exception as err:
             st.markdown(
-                f'<p style="font-size:14px;color:#a8690a;background:#fdf3e3;'
+                f'<p style="font-size:13px;color:#a8690a;background:#fdf3e3;'
                 f'border:1px solid #f0dcb8;border-radius:10px;padding:9px 13px;'
                 f'margin:0">{T("d_indispo", f=nom_fichier)}<br>'
-                f'<span style="font-size:12.5px;color:#8a6a3a">'
+                f'<span style="font-size:11.5px;color:#8a6a3a">'
                 f'{type(err).__name__}</span></p>', unsafe_allow_html=True)
             return
 
@@ -441,7 +441,7 @@ def _bloc(cle_titre, cle_desc, teinte, nom_fichier, mime, format_txt,
                 use_container_width=True)
         with col_b:
             st.markdown(
-                f'<p style="font-size:13px;color:#6b7590;margin:8px 0 0">'
+                f'<p style="font-size:12px;color:#6b7590;margin:8px 0 0">'
                 f'{nom_fichier} · {len(data) / 1024:.0f} Ko</p>',
                 unsafe_allow_html=True)
 
@@ -451,19 +451,19 @@ def render():
 
     st.title(T("d_titre"))
     st.markdown(
-        '<p style="font-size:12.5px;color:#6b7590;letter-spacing:.06em;'
+        '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
         'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
         + T("d_sous_titre") + "</p>", unsafe_allow_html=True)
 
     st.markdown(
         '<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
-        'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:16px;'
+        'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:14.5px;'
         'color:#3c4761;box-shadow:0 1px 2px rgba(16,23,40,.05),'
         '0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px">'
         + T("d_intro") + "</div>", unsafe_allow_html=True)
     st.markdown(
         '<div style="background:#fdf7ec;border:1px solid #f0dcb8;border-left:5px '
-        'solid #d99b28;border-radius:14px;padding:13px 17px;font-size:15.5px;'
+        'solid #d99b28;border-radius:14px;padding:13px 17px;font-size:14.5px;'
         'color:#5b4a2b;margin:0 0 14px">' + T("d_avert") + "</div>",
         unsafe_allow_html=True)
 

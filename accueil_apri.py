@@ -243,25 +243,25 @@ STYLE = """
   .po-pas  { display:flex; gap:0; align-items:stretch; margin:16px 0 6px;
              border-bottom:1px solid #e6ecf4; }
   .po-p    { flex:1 1 0; padding:9px 4px 11px; text-align:center;
-             font-size:13px; font-weight:600; color:#a7b0be;
+             font-size:12px; font-weight:600; color:#a7b0be;
              border-bottom:3px solid transparent; }
   .po-p b  { display:block; font-size:11px; letter-spacing:.09em;
              text-transform:uppercase; font-weight:700; margin-bottom:2px; }
   .po-p.on { color:#101728; border-bottom-color:#1c6349; }
   .po-p.vu { color:#3c4761; }
-  .po-h    { font-size:25px; font-weight:700; color:#101728;
+  .po-h    { font-size:20px; font-weight:700; color:#101728;
              letter-spacing:-.02em; margin:14px 0 6px; line-height:1.2; }
-  .po-x    { font-size:15.5px; color:#3c4761; line-height:1.65; margin:0;
-             max-width:82ch; text-align:left !important; }
+  .po-x    { font-size:14.5px; color:#3c4761; line-height:1.65; margin:0;
+             max-width:82ch; }
   .po-g    { display:flex; gap:14px; flex-wrap:wrap; margin-top:16px; }
   .po-c    { flex:1 1 200px; min-width:180px; background:#fff;
              border:1px solid #e3eaf3; border-radius:14px; padding:16px 18px;
              box-shadow:0 1px 2px rgba(16,23,40,.05); }
-  .po-n    { font-size:34px; font-weight:700; color:#101728; line-height:1;
+  .po-n    { font-size:27px; font-weight:700; color:#101728; line-height:1;
              letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
-  .po-l    { font-size:13.5px; font-weight:600; color:#3c4761; margin-top:6px;
+  .po-l    { font-size:12.5px; font-weight:600; color:#3c4761; margin-top:6px;
              text-align:left !important; }
-  .po-s    { font-size:12px; color:#8a93a5; margin-top:2px;
+  .po-s    { font-size:11px; color:#8a93a5; margin-top:2px;
              text-align:left !important; }
   .po-i    { width:34px; height:34px; border-radius:10px; display:flex;
              align-items:center; justify-content:center; margin-bottom:10px; }
@@ -273,19 +273,19 @@ STYLE = """
              border-top:1px solid #e6ecf4; border-bottom:1px solid #e6ecf4; }
   .e2-a    { padding:14px 20px 15px; border-left:1px solid #e6ecf4; }
   .e2-a:first-child { border-left:none; padding-left:0; }
-  .e2-a b  { display:block; font-size:15px; font-weight:700; color:#101728;
+  .e2-a b  { display:block; font-size:14px; font-weight:700; color:#101728;
              letter-spacing:-.01em; }
-  .e2-a span { display:block; font-size:13.5px; color:#6b7590; margin-top:3px;
+  .e2-a span { display:block; font-size:12.5px; color:#6b7590; margin-top:3px;
                line-height:1.5; }
   .e2-ch   { display:flex; flex-wrap:wrap; align-items:baseline; gap:0 10px;
-             margin:16px 0 2px; font-size:14px; color:#6b7590; }
+             margin:16px 0 2px; font-size:13px; color:#6b7590; }
   .e2-ch i { font-style:normal; color:#c8d0dc; }
-  .e2-ch b { font-size:17px; font-weight:700; color:#101728;
+  .e2-ch b { font-size:15.5px; font-weight:700; color:#101728;
              font-variant-numeric:tabular-nums; margin-right:4px; }
-  .e2-ch em{ font-style:normal; font-size:12.5px; color:#8a93a5; }
+  .e2-ch em{ font-style:normal; font-size:11.5px; color:#8a93a5; }
   .e2-src  { margin-top:6px; }
   .e2-s    { display:grid; grid-template-columns:230px 1fr; gap:14px;
-             padding:11px 0; border-top:1px solid #eef2f7; font-size:14px; }
+             padding:11px 0; border-top:1px solid #eef2f7; font-size:13px; }
   .e2-s:first-child { border-top:none; }
   .e2-s b  { font-weight:700; color:#101728; }
   .e2-s span { color:#6b7590; line-height:1.5; }
@@ -298,9 +298,9 @@ STYLE = """
   .po-f    { flex:1 1 140px; min-width:125px; text-align:center;
              padding:14px 10px; border:1px solid #e3eaf3; border-radius:13px;
              background:#fff; }
-  .po-f .po-n { font-size:27px; }
+  .po-f .po-n { font-size:21.5px; }
   .po-f .po-l, .po-f .po-s { text-align:center !important; }
-  .po-ch   { align-self:center; color:#c3ccda; font-size:20px; flex:0 0 auto; }
+  .po-ch   { align-self:center; color:#c3ccda; font-size:16px; flex:0 0 auto; }
   .po-j    { height:16px; background:#eef2f7; border-radius:8px;
              position:relative; margin:10px 0 4px; overflow:hidden; }
   .po-jr   { position:absolute; left:0; top:0; height:100%; border-radius:8px; }
@@ -309,9 +309,9 @@ STYLE = """
              border-bottom:1px solid #f0f4f9; }
   .po-bp   { height:13px; background:#f1f4f9; border-radius:5px; }
   .po-bf   { height:100%; border-radius:5px; }
-  .po-nom  { font-size:13.5px; font-weight:600; color:#101728;
+  .po-nom  { font-size:12.5px; font-weight:600; color:#101728;
              text-align:left !important; }
-  .po-val  { font-size:13.5px; font-weight:700; text-align:right;
+  .po-val  { font-size:12.5px; font-weight:700; text-align:right;
              font-variant-numeric:tabular-nums; }
   .po-duel { display:grid; grid-template-columns:1fr auto 1fr; gap:16px;
              align-items:center; }
@@ -320,7 +320,7 @@ STYLE = """
   /* Trois chiffres à côté d'une carte : à 200 px de base ils passaient en
      deux lignes, dont une seule carte esseulée. */
   .po-serre .po-c { flex:1 1 140px; min-width:130px; padding:14px 15px; }
-  .po-serre .po-n { font-size:27px; }
+  .po-serre .po-n { font-size:21.5px; }
 </style>
 """
 
@@ -612,8 +612,8 @@ def _ecran_3(m):
         f'<div class="po-l" style="font-size:11px;letter-spacing:.09em;'
         f'text-transform:uppercase;color:#8a93a5;margin:0">'
         f'{_e(T("po_3_idx"))}</div>'
-        f'<div class="po-n" style="font-size:46px;color:{_couleur(idx)}">'
-        f'{_f(idx)}<span style="font-size:20px;color:#8a93a5"> / 10</span></div>'
+        f'<div class="po-n" style="font-size:37px;color:{_couleur(idx)}">'
+        f'{_f(idx)}<span style="font-size:16px;color:#8a93a5"> / 10</span></div>'
         f'<div class="po-j"><div class="po-jr" style="width:{idx * 10:.1f}%;'
         f'background:{_couleur(idx)}"></div></div>'
         f'<div class="po-s">{_e(T("po_3_idx_x", n=m["n_scores"]))}</div>'
@@ -644,13 +644,13 @@ def _ecran_3(m):
             st.markdown(
                 f'<div class="po-c" style="border-top:3px solid {coul}">'
                 f'<div class="po-s" style="margin:0">{_e(lab)}</div>'
-                f'<div class="po-n" style="font-size:26px;margin-top:4px">'
+                f'<div class="po-n" style="font-size:21px;margin-top:4px">'
                 f'{_e(nom)}</div>'
-                f'<div class="po-l" style="color:{coul};font-size:19px;'
+                f'<div class="po-l" style="color:{coul};font-size:17.5px;'
                 f'font-weight:700">{_f(val)} / 10</div></div>',
                 unsafe_allow_html=True)
     with mid:
-        st.markdown(f'<div style="text-align:center;font-size:13px;'
+        st.markdown(f'<div style="text-align:center;font-size:12px;'
                     f'font-weight:700;color:{ENCRE3}">{_f(ecart)} pts</div>',
                     unsafe_allow_html=True)
     st.caption(T("po_3_base", n=m["n_commun"]))
@@ -661,9 +661,9 @@ def _ecran_3(m):
             '<div class="po-g" style="margin-top:0">' + "".join(
                 f'<div class="po-c" style="flex:1 1 200px">'
                 f'<div class="po-s" style="margin:0">{_e(lab)}</div>'
-                f'<div class="po-n" style="font-size:29px;color:'
+                f'<div class="po-n" style="font-size:23px;color:'
                 f'{_couleur(m["paysages"][cle])}">{_f(m["paysages"][cle])}'
-                f'<span style="font-size:15px;color:#8a93a5"> / 10</span>'
+                f'<span style="font-size:14px;color:#8a93a5"> / 10</span>'
                 f'</div></div>'
                 for cle, lab in (("Littoral", T("po_3_littoral")),
                                  ("Montagne", T("po_3_montagne"))))
@@ -690,10 +690,10 @@ def _ecran_3(m):
                 '<div class="po-g" style="margin-top:0">' + "".join(
                     f'<div class="po-c" style="border-left:3px solid '
                     f'{TEINTES.get(x["dim"], GRIS)}">'
-                    f'<div class="po-n" style="font-size:27px;color:'
+                    f'<div class="po-n" style="font-size:21.5px;color:'
                     f'{_couleur(x["score"])}">'
                     f'{_f(x["valeur"], 1) if isinstance(x["valeur"], (int, float)) else "—"}'
-                    f'<span style="font-size:15px;color:#8a93a5"> '
+                    f'<span style="font-size:14px;color:#8a93a5"> '
                     f'{_e(x["unite"])}</span></div>'
                     f'<div class="po-l">{_e(x["nom"])}</div>'
                     f'<div class="po-s">{_f(x["score"], 0)} / 10</div></div>'
@@ -749,9 +749,9 @@ def render():
     n = st.session_state["portail_etape"]
 
     st.markdown(
-        f'<h2 style="font-size:27px;font-weight:700;color:{ENCRE};'
+        f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
         f'letter-spacing:-.02em;margin:2px 0 0">{_e(T("po_titre"))}</h2>'
-        f'<p style="font-size:12.5px;color:{ENCRE3};letter-spacing:.06em;'
+        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
         f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
         f'{_e(T("po_sous"))}</p>', unsafe_allow_html=True)
 
