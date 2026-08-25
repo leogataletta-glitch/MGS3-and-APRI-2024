@@ -33,8 +33,8 @@ TEXTES = {
     "rda_titre": {"en": "Resilience Radar",
                   "fr": "Diagramme radar de résilience"},
     "rda_sous_titre": {
-        "en": "Compare profiles — by dimension, by communal section, by group",
-        "fr": "Comparer des profils — par dimension, par section communale, "
+        "en": "Compare profiles, by dimension, by communal section, by group",
+        "fr": "Comparer des profils, par dimension, par section communale, "
               "par groupe"},
     "rda_intro": {
         "en": "A radar shows a **shape**, not a ranking. Two territories with "
@@ -52,11 +52,11 @@ TEXTES = {
     "rda_l1": {
         "en": "A dent on one axis is a weak point; a regular polygon is a "
               "territory that is uniformly weak or uniformly strong. The area "
-              "of the polygon means nothing — it depends on the order of the "
+              "of the polygon means nothing, it depends on the order of the "
               "axes, which comes from the framework.",
         "fr": "Un creux sur un axe est un point faible ; un polygone régulier "
               "est un territoire uniformément faible ou uniformément solide. "
-              "L'aire du polygone ne veut rien dire — elle dépend de l'ordre "
+              "L'aire du polygone ne veut rien dire, elle dépend de l'ordre "
               "des axes, qui vient du cadre."},
     "rda_l2_t": {"en": "A fixed scale, always",
                  "fr": "Une échelle fixe, toujours"},
@@ -72,23 +72,23 @@ TEXTES = {
     "rda_l3": {
         "en": "Beyond three overlaid polygons nothing is legible any more. The "
               "table under the figure carries the exact figures, to the "
-              "hundredth — the eye reads a radius badly, and two close series "
+              "hundredth, the eye reads a radius badly, and two close series "
               "are indistinguishable on the drawing.",
         "fr": "Au-delà de trois polygones superposés, plus rien n'est lisible. "
               "Le tableau sous la figure porte les valeurs exactes au "
-              "centième — l'œil lit mal un rayon, et deux séries proches sont "
+              "centième, l'œil lit mal un rayon, et deux séries proches sont "
               "indiscernables sur le dessin."},
     "rda_l4_t": {"en": "What it cannot show",
                  "fr": "Ce qu'il ne peut pas montrer"},
     "rda_l4": {
         "en": "Satellite indicators have no breakdown by respondent: forest "
               "cover and rainfall do not vary with who answered. Compared by "
-              "group, those axes carry the same value for everyone — a "
+              "group, those axes carry the same value for everyone, a "
               "property of the source, not a measured equality.",
         "fr": "Les indicateurs satellitaires n'ont pas de ventilation par "
               "répondant : le couvert forestier et la pluie ne varient pas "
               "selon qui a répondu. Comparés par groupe, ces axes portent la "
-              "même valeur pour tous — propriété de la source, pas égalité "
+              "même valeur pour tous, propriété de la source, pas égalité "
               "mesurée."},
     "rda_ailleurs": {
         "en": "The same figure also appears inside **Results Analysis**, for "

@@ -38,11 +38,11 @@ def T(cle, **kw):
 DICO = {
     # ------------------------------------------------------------ ossature
     "langue": {"en": "Language", "fr": "Langue"},
-    "org": {"en": "United Nations Environment Programme — UNEP",
-            "fr": "Programme des Nations Unies pour l'environnement — PNUE"},
+    "org": {"en": "United Nations Environment Programme, UNEP",
+            "fr": "Programme des Nations Unies pour l'environnement, PNUE"},
     "titre_site": {
-        "en": "APRI — Landscape Resilience Index · Sud and Grand'Anse, Haiti",
-        "fr": "APRI — Indice de résilience des paysages · Sud et Grand'Anse, Haïti"},
+        "en": "APRI, Landscape Resilience Index · Sud and Grand'Anse, Haiti",
+        "fr": "APRI, Indice de résilience des paysages · Sud et Grand'Anse, Haïti"},
     "sous_titre_site": {
         "en": "1 211 households · 10 communal sections · 128 indicators across "
               "seven dimensions · household survey 2024, satellite imagery and "
@@ -116,25 +116,25 @@ DICO = {
         "en": "This section draws on a survey distinct from the household "
               "survey: {n} identity records for community-based organisations, "
               "collected across {s} communal sections. The unit of analysis is "
-              "the organisation, never the household — a percentage here is a "
+              "the organisation, never the household, a percentage here is a "
               "share of organisations. These figures feed the institutional and "
               "social dimensions of the resilience index.",
         "fr": "Cette section s'appuie sur une enquête distincte de l'enquête "
               "ménage : {n} fiches d'identité d'organisations communautaires de "
               "base, recueillies dans {s} sections communales. L'unité "
-              "d'analyse est l'organisation, jamais le foyer — un pourcentage "
+              "d'analyse est l'organisation, jamais le foyer, un pourcentage "
               "porte ici sur des organisations. Ces chiffres alimentent les "
               "dimensions institutionnelle et sociale de l'indice de "
               "résilience."},
     "o_avert_absentes": {
         "en": "No organisation was recorded in {s}. For those sections the "
-              "density indicator reads zero — a real measurement — while the "
+              "density indicator reads zero, a real measurement, while the "
               "nine percentage indicators stay empty, since there is no "
               "organisation to report on. Their final resilience score is "
               "therefore computed on fewer indicators than the other sections: "
               "read the comparison with that in mind.",
         "fr": "Aucune organisation n'a été recensée à {s}. Pour ces sections, "
-              "l'indicateur de densité vaut zéro — c'est une mesure réelle — "
+              "l'indicateur de densité vaut zéro : c'est une mesure réelle, "
               "tandis que les neuf indicateurs en pourcentage restent vides, "
               "faute d'organisation à interroger. Leur score final de résilience "
               "est donc calculé sur moins d'indicateurs que celui des autres "
@@ -196,8 +196,8 @@ DICO = {
     "o_f_p4": {"en": "Who it works with", "fr": "Avec qui elle travaille"},
     "o_f_localite": {"en": "Locality", "fr": "Localité"},
     "o_f_femmes_brut": {
-        "en": "Women among members — answer as recorded",
-        "fr": "Femmes parmi les membres — réponse telle que saisie"},
+        "en": "Women among members, answer as recorded",
+        "fr": "Femmes parmi les membres, réponse telle que saisie"},
     "o_f_femmes": {"en": "Share of women among members",
                    "fr": "Part de femmes parmi les membres"},
     "o_f_prive": {"en": "Contribution to private / civil-society initiatives",
@@ -304,13 +304,13 @@ DICO = {
     "s_intro": {
         "en": "What follows is drawn from {n} household interviews covering {q} "
               "survey items. The eight findings below are a grouping choice; "
-              "the figures are not — each one names the question and the answer "
+              "the figures are not, each one names the question and the answer "
               "options it comes from, and can be recomputed from the "
               "downloadable data. The automatic list at the bottom applies no "
               "editorial judgement at all.",
         "fr": "Ce qui suit est tiré de {n} entretiens ménages portant sur {q} "
               "items du questionnaire. Les huit constats ci-dessous sont un "
-              "choix de regroupement ; les chiffres n'en sont pas un — chacun "
+              "choix de regroupement ; les chiffres n'en sont pas un, chacun "
               "nomme la question et les modalités dont il est tiré, et peut "
               "être recalculé depuis les données téléchargeables. La liste "
               "automatique en bas de page n'applique aucun jugement éditorial."},
@@ -337,11 +337,11 @@ DICO = {
     "s_choisir_profil": {"en": "Group or communal section",
                          "fr": "Groupe ou section communale"},
     "s_profil_base": {
-        "en": "<strong>{g}</strong> — {n} respondents out of {t}. The chip "
+        "en": "<strong>{g}</strong>, {n} respondents out of {t}. The chip "
               "gives the gap to the overall average in percentage points: ▲ "
               "above, ▼ below, = within two points. Whether a gap is good news "
               "depends on the wording, so no colour claims to say.",
-        "fr": "<strong>{g}</strong> — {n} répondants sur {t}. La pastille donne "
+        "fr": "<strong>{g}</strong>, {n} répondants sur {t}. La pastille donne "
               "l'écart à la moyenne d'ensemble en points de pourcentage : ▲ "
               "au-dessus, ▼ en dessous, = à moins de deux points. Qu'un écart "
               "soit une bonne nouvelle dépend de l'intitulé : aucune couleur ne "
@@ -349,17 +349,17 @@ DICO = {
     "s_profil_lecture": {
         "en": "On a figure such as \"went a whole day without eating\", a higher "
               "share is worse; on \"holds a financial account\", it is better. "
-              "The direction of the gap is factual, its meaning is not — that "
+              "The direction of the gap is factual, its meaning is not, that "
               "reading belongs to you.",
         "fr": "Sur un chiffre comme « ont passé une journée entière sans "
               "manger », une part plus élevée est plus grave ; sur « dispose "
               "d'un compte financier », elle est meilleure. Le sens de l'écart "
-              "est un fait, son interprétation non — cette lecture vous "
+              "est un fait, son interprétation non, cette lecture vous "
               "revient."},
     "s_profil_vide": {"en": "No figure available for this group.",
                       "fr": "Aucun chiffre disponible pour ce groupe."},
-    "s_bloc_auto": {"en": "Automatic list — lowest scores first",
-                    "fr": "Liste automatique — les scores les plus bas d'abord"},
+    "s_bloc_auto": {"en": "Automatic list, lowest scores first",
+                    "fr": "Liste automatique, les scores les plus bas d'abord"},
     "s_bloc_auto_note": {
         "en": "Every scored indicator, sorted from the lowest APRI score up. No "
               "selection, no grouping: if the data change, this list follows.",
@@ -372,11 +372,11 @@ DICO = {
         "fr": "Les réponses qui concernent la plus grande part des ménages"},
     "s_reponses_massives_note": {
         "en": "Answers given by at least 60 % of households, all questions "
-              "combined. A high share is not automatically bad — 98 % never "
-              "paid a bribe — so read the wording.",
+              "combined. A high share is not automatically bad, 98 % never "
+              "paid a bribe, so read the wording.",
         "fr": "Réponses données par au moins 60 % des ménages, toutes questions "
-              "confondues. Une part élevée n'est pas mauvaise en soi — 98 % "
-              "n'ont jamais versé de pot-de-vin — donc lire l'intitulé."},
+              "confondues. Une part élevée n'est pas mauvaise en soi, 98 % "
+              "n'ont jamais versé de pot-de-vin, donc lire l'intitulé."},
     "s_source": {
         "en": "Source: household survey 2024, {n} respondents, {q} survey "
               "items. Every figure is recomputed from the survey cache, none is "
@@ -442,13 +442,13 @@ DICO = {
     "e_intro": {
         "en": "The household survey cannot describe the state of the landscape "
               "itself. Satellite imagery can. This tab holds what has been "
-              "computed so far — forest cover from Hansen / Global Forest "
-              "Change, 2000 to 2025, at 30 metres — and states plainly what is "
+              "computed so far, forest cover from Hansen / Global Forest "
+              "Change, 2000 to 2025, at 30 metres, and states plainly what is "
               "still missing, and from which source.",
         "fr": "L'enquête ménage ne peut pas décrire l'état du paysage lui-même. "
               "L'imagerie satellitaire, si. Cet onglet rassemble ce qui a été "
-              "calculé à ce jour — le couvert forestier d'après Hansen / Global "
-              "Forest Change, de 2000 à 2025, à 30 mètres de résolution — et "
+              "calculé à ce jour, le couvert forestier d'après Hansen / Global "
+              "Forest Change, de 2000 à 2025, à 30 mètres de résolution, et "
               "dit sans détour ce qui manque encore, et de quelle source."},
 
     "e_bloc1": {"en": "Forest cover across the ten sections",
@@ -470,13 +470,13 @@ DICO = {
                 "fr": "Année par année, de 2001 à 2025"},
     "e_bloc2_texte": {
         "en": "The shape of this series is the finding. {p} % of twenty-five "
-              "years of forest loss falls in 2016-2018 — Hurricane Matthew, "
+              "years of forest loss falls in 2016-2018, Hurricane Matthew, "
               "which struck on 4 October 2016, and its aftermath. Everything "
               "before and after is an order of magnitude smaller. A "
               "deforestation figure read without this chart would describe "
               "chronic clearing that, for most sections, did not happen.",
         "fr": "La silhouette de cette série est le résultat. {p} % de la perte "
-              "forestière de vingt-cinq ans tombe en 2016-2018 — l'ouragan "
+              "forestière de vingt-cinq ans tombe en 2016-2018, l'ouragan "
               "Matthew, qui a frappé le 4 octobre 2016, et ses suites. Tout ce "
               "qui précède et tout ce qui suit est d'un ordre de grandeur "
               "inférieur. Un chiffre de déforestation lu sans ce graphique "
@@ -516,13 +516,13 @@ DICO = {
                       "fr": "Où exactement la forêt a disparu"},
     "e_bloc_grille_texte": {
         "en": "Hansen works at 30 metres. Aggregated into 300-metre cells, the "
-              "loss becomes {n} points that a browser can draw — each one "
+              "loss becomes {n} points that a browser can draw, each one "
               "carrying the hectares lost and the year the loss concentrated "
               "there. The colour runs from pale yellow for 2001 to deep brown "
               "for 2025; the disc area, not its radius, is proportional to the "
               "surface lost.",
         "fr": "Hansen travaille à 30 mètres. Agrégée en cellules de 300 mètres, "
-              "la perte devient {n} points qu'un navigateur sait dessiner — "
+              "la perte devient {n} points qu'un navigateur sait dessiner, "
               "chacun portant les hectares perdus et l'année où la perte s'y "
               "concentre. La couleur va du jaune pâle pour 2001 au brun profond "
               "pour 2025 ; c'est l'aire du disque, et non son rayon, qui est "
@@ -585,11 +585,11 @@ DICO = {
     "e_bloc4_note": {
         "en": "Sorted from the steepest decline. The shock column is what "
               "separates two situations that the rate alone confuses: a high "
-              "share means the storm, a low share means continuous clearing — "
+              "share means the storm, a low share means continuous clearing, "
               "and they do not call for the same response.",
         "fr": "Triées de la baisse la plus forte. La colonne du choc sépare "
               "deux situations que le taux seul confond : une part élevée "
-              "signale la tempête, une part basse un défrichement continu — et "
+              "signale la tempête, une part basse un défrichement continu, et "
               "les deux n'appellent pas la même réponse."},
     "e_col_section": {"en": "Communal section", "fr": "Section communale"},
     "e_col_foret2000": {"en": "Forest 2000", "fr": "Forêt 2000"},
@@ -602,7 +602,7 @@ DICO = {
     "e_bloc_saison": {"en": "The growing season",
                       "fr": "La campagne agricole"},
     "e_bloc_saison_texte": {
-        "en": "The same satellite, the same normal, the same period — and the "
+        "en": "The same satellite, the same normal, the same period, and the "
               "opposite diagnosis. On the calendar year the Grand Sud receives "
               "96 % of its normal rainfall. On the spring campaign, March to "
               "May, it receives 83 %. The gap comes from the hurricane season: "
@@ -612,7 +612,7 @@ DICO = {
               "and not on the year. It also settles a discrepancy: 48.7 % of "
               "households name drought as the first cause of falling yields, a "
               "perception the annual figure appeared to contradict.",
-        "fr": "Le même satellite, la même normale, la même période — et le "
+        "fr": "Le même satellite, la même normale, la même période, et le "
               "diagnostic inverse. Sur l'année civile, le Grand Sud reçoit "
               "96 % de sa pluie normale. Sur la campagne de printemps, de mars "
               "à mai, il en reçoit 83 %. L'écart vient de la saison "
@@ -659,33 +659,33 @@ DICO = {
     "e_s_tableau_note": {
         "en": "Dry spell and extreme-rain columns compare 1981-2000 with "
               "2006-2025. The last column counts the campaigns in which the "
-              "season never clearly set in — no ten-day period from 1 March "
+              "season never clearly set in, no ten-day period from 1 March "
               "reaching 25 mm and followed by one reaching 20. That is not "
               "missing data: it is a campaign sown into uncertainty.",
         "fr": "Les colonnes des séquences sèches et des pluies extrêmes "
               "comparent 1981-2000 à 2006-2025. La dernière compte les "
-              "campagnes où la saison ne s'est jamais franchement installée — "
+              "campagnes où la saison ne s'est jamais franchement installée, "
               "aucune décade à partir du 1er mars n'atteignant 25 mm puis "
               "suivie d'une décade à 20 mm. Ce n'est pas une donnée "
               "manquante : c'est une campagne semée dans l'incertitude."},
     "e_s_methode": {
-        "en": "Three quantities here — dry spells, extreme-rain days and the "
-              "onset date — carry no score and do not enter the index: they "
+        "en": "Three quantities here, dry spells, extreme-rain days and the "
+              "onset date, carry no score and do not enter the index: they "
               "are absent from the IRLA table, and adding home-made indicators "
               "would make the index incomparable with other applications of "
               "the framework. They are descriptive, and that is their value: "
               "they say what the average hides. The SPI, by contrast, is "
-              "scored — on the worst of the last five campaigns rather than "
+              "scored, on the worst of the last five campaigns rather than "
               "their mean, because its published scale only grades drought, "
               "from −2.0 to −1.0, a range a five-year mean practically never "
               "reaches. Resilience is measured by the bad year.",
-        "fr": "Trois grandeurs affichées ici — séquences sèches, jours de "
-              "pluie extrême et date d'installation — ne portent aucun score "
+        "fr": "Trois grandeurs affichées ici, séquences sèches, jours de "
+              "pluie extrême et date d'installation, ne portent aucun score "
               "et n'entrent pas dans l'indice : elles sont absentes de la "
               "table IRLA, et y ajouter des indicateurs maison rendrait "
               "l'indice incomparable avec les autres applications du cadre. "
               "Elles sont descriptives, et c'est là leur valeur : elles disent "
-              "ce que la moyenne cache. Le SPI, lui, est scoré — sur la pire "
+              "ce que la moyenne cache. Le SPI, lui, est scoré, sur la pire "
               "des cinq dernières campagnes plutôt que sur leur moyenne, parce "
               "que son barème publié ne gradue que la sécheresse, de −2,0 à "
               "−1,0, domaine qu'une moyenne de cinq ans n'atteint "
@@ -698,12 +698,12 @@ DICO = {
     "e_focus_aide": {
         "en": "Choose once, and every tab below follows. Keep « all ten "
               "sections » to compare them; pick one to read it on its own. Maps "
-              "always keep the ten polygons — a patch of loss reads against "
+              "always keep the ten polygons, a patch of loss reads against "
               "what surrounds it.",
         "fr": "Choisis une fois, tous les onglets ci-dessous suivent. Garde "
               "« ensemble des 10 sections » pour les comparer ; choisis-en une "
               "pour la lire seule. Les cartes gardent toujours les dix "
-              "polygones — une tache de perte se lit par rapport à ce qui "
+              "polygones, une tache de perte se lit par rapport à ce qui "
               "l'entoure."},
     "e_o_foret": {"en": "Forest cover", "fr": "Couverture forestière"},
     "e_o_defor": {"en": "Deforestation", "fr": "Déforestation"},
@@ -733,11 +733,11 @@ DICO = {
     "e_pc_humide": {"en": "Wettest", "fr": "La plus humide"},
     "e_pc_note": {
         "en": "Sorted from the driest normal. The spread between Dumont and "
-              "Mouline — more than double — is the orographic gradient: the "
+              "Mouline, more than double, is the orographic gradient: the "
               "same storm gives very different amounts on either side of the "
               "ridge.",
         "fr": "Triées de la normale la plus sèche. L'écart entre Dumont et "
-              "Mouline — plus du double — est le gradient orographique : la "
+              "Mouline, plus du double, est le gradient orographique : la "
               "même perturbation donne des cumuls très différents de part et "
               "d'autre de la crête."},
 
@@ -751,10 +751,10 @@ DICO = {
               "Ci-dessous, les dix sections côte à côte."},
     "e_fiche_recap_note": {
         "en": "Sorted from the steepest forest decline. « Campaign » is "
-              "spring rainfall as a share of its normal — the figure the index "
+              "spring rainfall as a share of its normal, the figure the index "
               "reads.",
         "fr": "Triées de la baisse forestière la plus forte. « Campagne » est "
-              "la pluie de printemps en part de sa normale — le chiffre que "
+              "la pluie de printemps en part de sa normale, le chiffre que "
               "lit l'indice."},
     "e_fg_foret": {"en": "Forest cover", "fr": "Couvert forestier"},
     "e_fg_grille": {"en": "Where the loss fell", "fr": "Où la perte est tombée"},
@@ -802,8 +802,8 @@ DICO = {
     "e_o_ndwi": {"en": "NDWI", "fr": "NDWI"},
     "e_o_ndti": {"en": "NDTI", "fr": "NDTI"},
 
-    "e_i_ndvi_titre": {"en": "Dry-season vegetation stability — NDVI",
-                       "fr": "Stabilité de la végétation en saison sèche — NDVI"},
+    "e_i_ndvi_titre": {"en": "Dry-season vegetation stability, NDVI",
+                       "fr": "Stabilité de la végétation en saison sèche, NDVI"},
     "e_i_ndvi_quoi": {
         "en": "Normalised difference between near-infrared and red. Living "
               "vegetation reflects near-infrared strongly and absorbs red; the "
@@ -820,27 +820,27 @@ DICO = {
               "green is what holds without rain: trees, hedges, irrigated "
               "plots. A dry-season NDVI is therefore not a measure of "
               "agricultural wealth but of the territory's permanent green "
-              "infrastructure — the part that shades the soil, holds the slope "
+              "infrastructure, the part that shades the soil, holds the slope "
               "and survives a failed campaign.",
         "fr": "En janvier-mars, les cultures annuelles sont récoltées. Ce qui "
               "reste vert est ce qui tient sans pluie : arbres, haies, "
               "parcelles irriguées. Un NDVI de saison sèche ne mesure donc pas "
               "la richesse agricole mais l'infrastructure verte permanente du "
-              "territoire — celle qui ombrage le sol, tient la pente et "
+              "territoire, celle qui ombrage le sol, tient la pente et "
               "survit à une campagne ratée."},
     "e_i_ndvi_gaffe": {
         "en": "The indicator scores the CHANGE, not the level: a section that "
               "has always been dry is not penalised, one that has lost vigour "
-              "is. Careful with saturation — above about 0.8 the NDVI stops "
+              "is. Careful with saturation, above about 0.8 the NDVI stops "
               "distinguishing between a dense canopy and a very dense one.",
         "fr": "L'indicateur score la VARIATION, pas le niveau : une section "
               "sèche depuis toujours n'est pas pénalisée, une section qui a "
-              "perdu sa vigueur l'est. Attention à la saturation — au-delà de "
+              "perdu sa vigueur l'est. Attention à la saturation, au-delà de "
               "0,8 environ, le NDVI ne distingue plus un couvert dense d'un "
               "couvert très dense."},
 
-    "e_i_ndmi_titre": {"en": "Dry-season vegetation and soil moisture — NDMI",
-                       "fr": "Humidité de la végétation et des sols — NDMI"},
+    "e_i_ndmi_titre": {"en": "Dry-season vegetation and soil moisture, NDMI",
+                       "fr": "Humidité de la végétation et des sols, NDMI"},
     "e_i_ndmi_quoi": {
         "en": "Normalised difference between near-infrared and short-wave "
               "infrared. Water inside leaves absorbs short-wave infrared "
@@ -854,13 +854,13 @@ DICO = {
               "plant closes its stomata and loses water content well before it "
               "loses its leaves. An NDMI falling while the NDVI holds steady "
               "means the stress has begun and the canopy has not yet paid for "
-              "it — a warning, not yet a loss. It is the satellite equivalent "
+              "it, a warning, not yet a loss. It is the satellite equivalent "
               "of a field that still looks green and is already thirsty.",
         "fr": "C'est le plus utile des quatre, parce qu'il bouge EN PREMIER. "
               "Une plante ferme ses stomates et perd sa teneur en eau bien "
               "avant de perdre ses feuilles. Un NDMI qui baisse pendant qu'un "
               "NDVI tient signifie que le stress a commencé et que le couvert "
-              "ne l'a pas encore payé — un avertissement, pas encore une "
+              "ne l'a pas encore payé, un avertissement, pas encore une "
               "perte. C'est l'équivalent satellitaire d'un champ qui paraît "
               "encore vert et qui a déjà soif."},
     "e_i_ndmi_gaffe": {
@@ -872,8 +872,8 @@ DICO = {
               "années normales dit le sol. Seul le second est un problème de "
               "résilience."},
 
-    "e_i_ndwi_titre": {"en": "Dry-season surface water stability — NDWI",
-                       "fr": "Stabilité des eaux de surface en saison sèche — NDWI"},
+    "e_i_ndwi_titre": {"en": "Dry-season surface water stability, NDWI",
+                       "fr": "Stabilité des eaux de surface en saison sèche, NDWI"},
     "e_i_ndwi_quoi": {
         "en": "Normalised difference between green and near-infrared. Open "
               "water absorbs near-infrared almost completely, so the index "
@@ -883,29 +883,29 @@ DICO = {
               "l'indice devient donc positif sur l'eau et négatif sur la "
               "terre."},
     "e_i_ndwi_lire": {
-        "en": "In dry season it shows what water persists — springs, ponds, "
+        "en": "In dry season it shows what water persists, springs, ponds, "
               "permanent watercourses. That matters directly here: 52 % of "
               "households have no irrigation source, so what they draw on in "
               "March is exactly what this index sees.",
-        "fr": "En saison sèche, il montre l'eau qui persiste — sources, mares, "
+        "fr": "En saison sèche, il montre l'eau qui persiste, sources, mares, "
               "cours d'eau permanents. Cela compte directement ici : 52 % des "
               "ménages n'ont aucune source d'irrigation, et ce qu'ils puisent "
               "en mars est exactement ce que cet indice voit."},
     "e_i_ndwi_gaffe": {
         "en": "At 20 m resolution a stream narrower than 20 m is not detected. "
-              "An absence of water pixels does not mean an absence of water — "
+              "An absence of water pixels does not mean an absence of water, "
               "it means an absence of water wide enough to be seen. This is "
               "why the water fraction is shown alongside: without it, one "
               "cannot tell a dry section from an unresolvable one.",
         "fr": "À 20 m de résolution, un cours d'eau plus étroit que 20 m n'est "
               "pas détecté. Une absence de pixels d'eau ne signifie pas une "
-              "absence d'eau — elle signifie une absence d'eau assez large "
+              "absence d'eau, elle signifie une absence d'eau assez large "
               "pour être vue. C'est pourquoi la fraction d'eau est affichée à "
               "côté : sans elle, on ne distingue pas une section sèche d'une "
               "section trop fine pour être résolue."},
 
-    "e_i_ndti_titre": {"en": "Water turbidity — NDTI",
-                       "fr": "Turbidité de l'eau — NDTI"},
+    "e_i_ndti_titre": {"en": "Water turbidity, NDTI",
+                       "fr": "Turbidité de l'eau, NDTI"},
     "e_i_ndti_quoi": {
         "en": "Normalised difference between red and green, computed over "
               "water pixels only. Suspended sediment scatters red light, so "
@@ -929,12 +929,12 @@ DICO = {
               "pluie extrême et coût tangible."},
     "e_i_ndti_gaffe": {
         "en": "Only meaningful where there is enough water. Over bare soil "
-              "« red above green » says laterite, not turbidity — which is why "
+              "« red above green » says laterite, not turbidity, which is why "
               "the index is masked outside water pixels. A section with almost "
               "no water surface gets a figure computed on a handful of pixels: "
               "check the water fraction before reading it.",
         "fr": "Il n'a de sens que là où il y a assez d'eau. Sur un sol nu, "
-              "« rouge au-dessus du vert » dit la latérite, pas la turbidité — "
+              "« rouge au-dessus du vert » dit la latérite, pas la turbidité, "
               "d'où le masquage hors des pixels d'eau. Une section presque "
               "sans surface en eau reçoit un chiffre calculé sur une poignée "
               "de pixels : regarde la fraction d'eau avant de le lire."},
@@ -964,10 +964,10 @@ DICO = {
               "Run sur <code>IRLA_indices_vegetation</code> · renvoyer "
               "<code>indices_vegetation_sections.csv</code>."},
     "e_i_fenetre": {
-        "en": "Window: January to March, the driest quarter of the year — "
+        "en": "Window: January to March, the driest quarter of the year, "
               "computed from the 45 CHIRPS years, not assumed. 120 mm in "
               "total, against 500 mm for August-October.",
-        "fr": "Fenêtre : janvier à mars, le trimestre le plus sec de l'année — "
+        "fr": "Fenêtre : janvier à mars, le trimestre le plus sec de l'année, "
               "calculé sur les 45 ans de CHIRPS, non supposé. 120 mm au total, "
               "contre 500 mm pour août-octobre."},
 
@@ -982,10 +982,10 @@ DICO = {
     "e_i_eau": {"en": "Water surface", "fr": "Surface en eau"},
     "e_i_serie_note": {
         "en": "One dry season per bar, January to March. The dashed line is "
-              "the reference mean — the indicator scores the gap to it, not "
+              "the reference mean, the indicator scores the gap to it, not "
               "the level.",
         "fr": "Une saison sèche par barre, de janvier à mars. Le trait "
-              "pointillé est la moyenne de référence — l'indicateur score "
+              "pointillé est la moyenne de référence, l'indicateur score "
               "l'écart à cette ligne, pas le niveau."},
 
     # --- groupes de sous-onglets ----------------------------------------
@@ -1002,19 +1002,19 @@ DICO = {
     "e_i_non_score": {"en": "Not scored", "fr": "Non scoré"},
     "e_i_serie_niveau_note": {
         "en": "One dry season per bar. The dashed line is the series mean. "
-              "This indicator is scored on its LEVEL, not on its change — its "
+              "This indicator is scored on its LEVEL, not on its change, its "
               "scale is one of absolute values, which is what lets it "
               "distinguish sections from one another.",
         "fr": "Une saison sèche par barre. Le trait pointillé est la moyenne "
               "de la série. Cet indicateur se score sur son NIVEAU et non sur "
-              "sa variation — son barème est une échelle de valeurs absolues, "
+              "sa variation, son barème est une échelle de valeurs absolues, "
               "et c'est ce qui lui permet de distinguer les sections entre "
               "elles."},
 
     # --- EVI, SAVI, VARI, FVC -------------------------------------------
     "e_o_evi": {"en": "EVI", "fr": "EVI"},
-    "e_i_evi_titre": {"en": "Enhanced Vegetation Index — EVI",
-                      "fr": "Indice de végétation amélioré — EVI"},
+    "e_i_evi_titre": {"en": "Enhanced Vegetation Index, EVI",
+                      "fr": "Indice de végétation amélioré, EVI"},
     "e_i_evi_quoi": {
         "en": "A NDVI corrected for two things it cannot handle: atmospheric "
               "scattering, using the blue band, and the brightness of the soil "
@@ -1025,11 +1025,11 @@ DICO = {
     "e_i_evi_lire": {
         "en": "Its decisive advantage here is that it DOES NOT SATURATE. Above "
               "0.8 the NDVI stops separating a dense canopy from a very dense "
-              "one — and Mouline and Trichet are close to that ceiling. The "
+              "one, and Mouline and Trichet are close to that ceiling. The "
               "EVI keeps separating them.",
         "fr": "Son avantage décisif ici est qu'il NE SATURE PAS. Au-delà de "
               "0,8, le NDVI cesse de séparer un couvert dense d'un couvert "
-              "très dense — et Mouline et Trichet approchent ce plafond. "
+              "très dense, et Mouline et Trichet approchent ce plafond. "
               "L'EVI continue de les distinguer."},
     "e_i_evi_gaffe": {
         "en": "Its denominator can approach zero on a deep shadow and produce "
@@ -1044,50 +1044,50 @@ DICO = {
               "obtient un score bas même si rien ne s'y est dégradé."},
 
     "e_o_savi": {"en": "SAVI", "fr": "SAVI"},
-    "e_i_savi_titre": {"en": "Soil-Adjusted Vegetation Index — SAVI",
-                       "fr": "Indice de végétation ajusté au sol — SAVI"},
+    "e_i_savi_titre": {"en": "Soil-Adjusted Vegetation Index, SAVI",
+                       "fr": "Indice de végétation ajusté au sol, SAVI"},
     "e_i_savi_quoi": {
         "en": "The NDVI with a correction term that cancels the contribution "
               "of bare soil visible between plants.",
         "fr": "Le NDVI assorti d'un terme correctif qui annule la "
               "contribution du sol nu visible entre les plants."},
     "e_i_savi_lire": {
-        "en": "It matters precisely where the canopy is open — which is the "
+        "en": "It matters precisely where the canopy is open, which is the "
               "case across this territory in dry season, once annual crops "
               "have been harvested. Where the NDVI reads soil as weak "
               "vegetation, the SAVI reads soil as soil.",
-        "fr": "Il compte précisément là où le couvert est ouvert — ce qui est "
+        "fr": "Il compte précisément là où le couvert est ouvert, ce qui est "
               "le cas de tout ce territoire en saison sèche, une fois les "
               "cultures annuelles récoltées. Là où le NDVI lit un sol comme "
               "une végétation faible, le SAVI lit un sol comme un sol."},
     "e_i_savi_gaffe": {
         "en": "Its correction factor is fixed at 0.5, the value for a medium "
               "canopy. On very bare or very dense ground another value would "
-              "be better — the index remains an approximation, consistent "
+              "be better, the index remains an approximation, consistent "
               "across sections, which is what a comparison needs.",
         "fr": "Son facteur de correction est fixé à 0,5, valeur d'un couvert "
               "moyen. Sur un sol très nu ou très dense, une autre valeur "
-              "conviendrait mieux — l'indice reste une approximation, "
+              "conviendrait mieux, l'indice reste une approximation, "
               "identique d'une section à l'autre, ce qui est l'essentiel pour "
               "comparer."},
 
     "e_o_vari": {"en": "VARI", "fr": "VARI"},
-    "e_i_vari_titre": {"en": "Visible Atmospherically Resistant Index — VARI",
-                       "fr": "Indice de végétation résistant à l'atmosphère — VARI"},
+    "e_i_vari_titre": {"en": "Visible Atmospherically Resistant Index, VARI",
+                       "fr": "Indice de végétation résistant à l'atmosphère, VARI"},
     "e_i_vari_quoi": {
-        "en": "Built from the three visible bands alone — green, red, blue. "
+        "en": "Built from the three visible bands alone, green, red, blue. "
               "It uses no infrared at all.",
-        "fr": "Construit sur les seules bandes visibles — vert, rouge, bleu. "
+        "fr": "Construit sur les seules bandes visibles, vert, rouge, bleu. "
               "Il n'utilise aucun infrarouge."},
     "e_i_vari_lire": {
         "en": "That is its point: it remains readable when the near-infrared "
               "is degraded, and it is the most discriminating of the four "
-              "here — its values run from 0.02 at Quentin to 0.19 at Trichet, "
+              "here, its values run from 0.02 at Quentin to 0.19 at Trichet, "
               "which the published scale spreads across nine of its ten bands. "
               "No other index separates these territories so sharply.",
         "fr": "C'est tout son intérêt : il reste lisible quand le proche "
               "infrarouge est dégradé, et c'est le plus discriminant des "
-              "quatre ici — ses valeurs vont de 0,02 à Quentin à 0,19 à "
+              "quatre ici, ses valeurs vont de 0,02 à Quentin à 0,19 à "
               "Trichet, que le barème publié étale sur neuf de ses dix "
               "tranches. Aucun autre indice ne sépare aussi nettement ces "
               "territoires."},
@@ -1102,8 +1102,8 @@ DICO = {
               "chaque valeur."},
 
     "e_o_fvc": {"en": "FVC", "fr": "FVC"},
-    "e_i_fvc_titre": {"en": "Fractional Vegetation Cover — FVC",
-                      "fr": "Fraction de couverture végétale — FVC"},
+    "e_i_fvc_titre": {"en": "Fractional Vegetation Cover, FVC",
+                      "fr": "Fraction de couverture végétale, FVC"},
     "e_i_fvc_quoi": {
         "en": "The share of ground actually covered by vegetation, in percent. "
               "Derived from the NDVI by placing it between a bare-soil "
@@ -1134,8 +1134,8 @@ DICO = {
 
     # --- VHI, LST, TCI ---------------------------------------------------
     "e_o_vhi": {"en": "VHI", "fr": "VHI"},
-    "e_i_vhi_titre": {"en": "Vegetation Health Index — VHI",
-                      "fr": "Indice de santé de la végétation — VHI"},
+    "e_i_vhi_titre": {"en": "Vegetation Health Index, VHI",
+                      "fr": "Indice de santé de la végétation, VHI"},
     "e_i_vhi_quoi": {
         "en": "Half vegetation, half temperature: the mean of the vegetation "
               "condition index and the thermal condition index, as Kogan "
@@ -1150,13 +1150,13 @@ DICO = {
         "en": "It is the most robust vegetation indicator in this dashboard, "
               "because it rests on TWENTY-FIVE years where the Sentinel-2 "
               "indices rest on seven. A drought shows here as the conjunction "
-              "the field actually experiences — vegetation down and surface "
-              "hot at the same time — not as either signal alone.",
+              "the field actually experiences, vegetation down and surface "
+              "hot at the same time, not as either signal alone.",
         "fr": "C'est l'indicateur de végétation le plus solide de ce tableau "
               "de bord, parce qu'il repose sur VINGT-CINQ ans là où les "
               "indices Sentinel-2 en ont sept. Une sécheresse s'y lit comme la "
-              "conjonction que le champ subit réellement — végétation basse et "
-              "surface chaude en même temps — et non comme l'un des deux "
+              "conjonction que le champ subit réellement, végétation basse et "
+              "surface chaude en même temps, et non comme l'un des deux "
               "signaux pris seul."},
     "e_i_vhi_gaffe": {
         "en": "Being a position index, it says nothing in absolute terms: a "
@@ -1169,20 +1169,20 @@ DICO = {
               "territoire à son passé, pas à son voisin."},
 
     "e_o_lst": {"en": "LST", "fr": "LST"},
-    "e_i_lst_titre": {"en": "Seasonal land surface temperature anomaly — LST",
-                      "fr": "Anomalie saisonnière de température de surface — LST"},
+    "e_i_lst_titre": {"en": "Seasonal land surface temperature anomaly, LST",
+                      "fr": "Anomalie saisonnière de température de surface, LST"},
     "e_i_lst_quoi": {
-        "en": "The temperature of the ground itself — not of the air — "
+        "en": "The temperature of the ground itself, not of the air, "
               "measured by MODIS in the thermal infrared, averaged over the "
               "January-March dry season, and compared with the 2001-2020 "
               "normal.",
-        "fr": "La température du sol lui-même — et non de l'air — mesurée par "
+        "fr": "La température du sol lui-même, et non de l'air, mesurée par "
               "MODIS dans l'infrarouge thermique, moyennée sur la saison sèche "
               "de janvier à mars, et comparée à la normale 2001-2020."},
     "e_i_lst_lire": {
         "en": "The result is counter-intuitive and worth stating plainly: the "
               "dry-season surface has COOLED in nine sections out of ten. The "
-              "likely explanation is not climatic but biological — a greener "
+              "likely explanation is not climatic but biological, a greener "
               "surface evaporates more and heats less, and the vegetation "
               "indices do show greening over the same period. Surface "
               "temperature follows the cover; it is not a thermometer of the "
@@ -1190,7 +1190,7 @@ DICO = {
         "fr": "Le résultat est contre-intuitif et mérite d'être dit sans "
               "détour : la surface s'est REFROIDIE en saison sèche dans neuf "
               "sections sur dix. L'explication probable n'est pas climatique "
-              "mais biologique — une surface plus verte évapore davantage et "
+              "mais biologique, une surface plus verte évapore davantage et "
               "chauffe moins, et les indices de végétation montrent bien un "
               "reverdissement sur la même période. La température de surface "
               "suit le couvert ; ce n'est pas un thermomètre du climat."},
@@ -1199,18 +1199,18 @@ DICO = {
               "means something once the unit is fixed: +15 % is +4.3 °C in "
               "Celsius and +45 K in Kelvin. The computation uses Celsius, the "
               "only reading that makes the bands plausible. Do not read this "
-              "indicator as a measure of global warming — for that, air "
+              "indicator as a measure of global warming, for that, air "
               "temperature is needed, not skin temperature.",
         "fr": "Le barème publié gradue cette anomalie EN POURCENTAGE, ce qui "
               "n'a de sens qu'une fois l'unité fixée : +15 % valent +4,3 °C en "
               "Celsius et +45 K en Kelvin. Le calcul est fait en Celsius, "
               "seule lecture qui rende les tranches plausibles. Ne lis pas cet "
-              "indicateur comme une mesure du réchauffement — il y faudrait la "
+              "indicateur comme une mesure du réchauffement, il y faudrait la "
               "température de l'air, pas celle de la peau du sol."},
 
     "e_o_tci": {"en": "TCI", "fr": "TCI"},
-    "e_i_tci_titre": {"en": "Temperature Condition Index — TCI",
-                      "fr": "Indice de condition thermique — TCI"},
+    "e_i_tci_titre": {"en": "Temperature Condition Index, TCI",
+                      "fr": "Indice de condition thermique, TCI"},
     "e_i_tci_quoi": {
         "en": "Where a year sits between the hottest and the coolest the "
               "section has known since 2001. Inverted by construction: a cool "
@@ -1223,7 +1223,7 @@ DICO = {
     "e_i_tci_lire": {
         "en": "It is the thermal half of the VHI, shown on its own so the two "
               "halves can be separated. When the TCI is high and the "
-              "vegetation index low, heat is not the constraint — water is. "
+              "vegetation index low, heat is not the constraint, water is. "
               "That distinction decides whether a response is shade or "
               "irrigation.",
         "fr": "C'est la moitié thermique du VHI, montrée à part pour qu'on "
@@ -1234,11 +1234,11 @@ DICO = {
     "e_i_tci_gaffe": {
         "en": "Like the VHI, it is relative to the section's own history. A TCI "
               "of 70 at Mouline and a TCI of 70 at Dalmette do not describe "
-              "the same temperature — Dalmette runs about five degrees hotter "
+              "the same temperature, Dalmette runs about five degrees hotter "
               "in absolute terms.",
         "fr": "Comme le VHI, il est relatif à l'histoire propre de la section. "
               "Un TCI de 70 à Mouline et un TCI de 70 à Dalmette ne décrivent "
-              "pas la même température — Dalmette est environ cinq degrés plus "
+              "pas la même température, Dalmette est environ cinq degrés plus "
               "chaude dans l'absolu."},
 
     # --- aires protégées -------------------------------------------------
@@ -1246,37 +1246,37 @@ DICO = {
                    "fr": "Aires protégées et mangroves"},
     "e_ap_texte": {
         "en": "The result is a zero, and a zero is a measurement. No protected "
-              "area in the WDPA — the UNEP-WCMC database, the official "
-              "reference for SDG 14.5 and 15.1 — touches any of the ten "
+              "area in the WDPA, the UNEP-WCMC database, the official "
+              "reference for SDG 14.5 and 15.1, touches any of the ten "
               "communal sections. Coverage is nil everywhere, so lines 55 and "
               "56 score 0 across the board. A flat score usually argues for "
               "dropping an indicator, as was done for surface water where the "
               "flatness came from measurement noise. Here it is the opposite: "
-              "the zero is not an uncertainty, it is a fact — ten territories "
+              "the zero is not an uncertainty, it is a fact, ten territories "
               "with no formal protection at all, on an eroding coast.",
         "fr": "Le résultat est un zéro, et un zéro est une mesure. Aucune aire "
-              "protégée de la base WDPA — celle du PNUE-WCMC, référence "
-              "officielle des ODD 14.5 et 15.1 — ne touche aucune des dix "
+              "protégée de la base WDPA, celle du PNUE-WCMC, référence "
+              "officielle des ODD 14.5 et 15.1, ne touche aucune des dix "
               "sections communales. La couverture est nulle partout, les "
               "lignes 55 et 56 reçoivent donc 0 pour les dix. Un score plat "
               "invite d'ordinaire à renoncer à l'indicateur, comme on l'a fait "
               "pour les eaux de surface où la platitude venait du bruit de "
               "mesure. Ici c'est l'inverse : le zéro n'est pas une incertitude, "
-              "c'est un fait — dix territoires sans aucune protection "
+              "c'est un fait, dix territoires sans aucune protection "
               "formelle, sur une côte en érosion."},
     "e_ap_mangrove": {"en": "Mangrove, and what it explains",
                       "fr": "La mangrove, et ce qu'elle explique"},
     "e_ap_mangrove_texte": {
         "en": "Three sections carry mangrove, and Dalmette carries most of it. "
               "That same section is the only one whose detected water area "
-              "swings twentyfold from one year to the next — the anomaly that "
+              "swings twentyfold from one year to the next, the anomaly that "
               "led to not scoring surface water stability. The two facts fit "
               "together: a mangrove is an intertidal environment, its NDWI "
               "signature follows the tide and the season. The anomaly was not "
               "a sensor defect, it was a tidal flat.",
         "fr": "Trois sections portent de la mangrove, et Dalmette en porte "
               "l'essentiel. C'est aussi la seule section dont la surface en "
-              "eau détectée varie d'un facteur vingt d'une année sur l'autre — "
+              "eau détectée varie d'un facteur vingt d'une année sur l'autre, "
               "l'anomalie qui avait fait renoncer à scorer la stabilité des "
               "eaux de surface. Les deux faits se tiennent : une mangrove est "
               "un milieu intertidal, sa signature dans le NDWI suit la marée "
@@ -1286,12 +1286,12 @@ DICO = {
         "en": "The mangrove line is not scored: its scale asks for a "
               "percentage, hence a ratio to a reference surface, hence two "
               "dates. The layer available in the official catalogue gives only "
-              "the year 2000 — we know the area, not the retention rate. A "
+              "the year 2000, we know the area, not the retention rate. A "
               "second date would allow scoring it.",
         "fr": "La ligne mangrove n'est pas scorée : son barème demande un "
               "pourcentage, donc un rapport à une surface de référence, donc "
               "deux dates. La couche disponible dans le catalogue officiel ne "
-              "donne que l'année 2000 — on connaît la surface, pas le taux de "
+              "donne que l'année 2000, on connaît la surface, pas le taux de "
               "conservation. Une seconde date permettrait de la scorer."},
     "e_ap_col_ap": {"en": "Protected", "fr": "Protégé"},
     "e_ap_col_mang": {"en": "Mangrove 2000", "fr": "Mangrove 2000"},
@@ -1334,10 +1334,10 @@ DICO = {
     "d_bloc_carte_note": {
         "en": "Weighted mean of the dimension's scored indicators, computed "
               "separately for each section. A section with fewer computed "
-              "indicators is not penalised — hover to see how many it rests on.",
+              "indicators is not penalised, hover to see how many it rests on.",
         "fr": "Moyenne pondérée des indicateurs scorés de la dimension, "
               "calculée séparément pour chaque section. Une section qui compte "
-              "moins d'indicateurs calculés n'est pas pénalisée — survole pour "
+              "moins d'indicateurs calculés n'est pas pénalisée, survole pour "
               "voir sur combien elle repose."},
     "d_info_carte": {"en": "{n} indicators computed",
                      "fr": "{n} indicateurs calculés"},
@@ -1346,10 +1346,10 @@ DICO = {
     "d_bloc_indicateurs_note": {
         "en": "Sorted from the lowest score up: a resilience dashboard is read "
               "by what is missing, not by what is going well. The weight column "
-              "is the indicator's weight in the framework — they are not equal.",
+              "is the indicator's weight in the framework, they are not equal.",
         "fr": "Triés du score le plus bas : un tableau de bord de résilience se "
               "lit par ce qui manque, pas par ce qui va bien. La colonne de "
-              "poids est celui de l'indicateur dans le cadre — ils ne se valent "
+              "poids est celui de l'indicateur dans le cadre, ils ne se valent "
               "pas tous."},
     "d_cible": {"en": "Read for", "fr": "Lire pour"},
     "d_cible_ensemble": {"en": "All ten sections", "fr": "Ensemble des 10 sections"},
@@ -1386,21 +1386,21 @@ DICO = {
 
     # noms et introductions des six dimensions
     "dim1_intro": {
-        "en": "Roads, housing, water, sanitation, waste, energy — what a "
+        "en": "Roads, housing, water, sanitation, waste, energy, what a "
               "territory is physically made of, and what a shock destroys "
               "first. This dimension carries the heaviest weight of the "
               "framework.",
-        "fr": "Routes, logement, eau, assainissement, déchets, énergie — ce "
+        "fr": "Routes, logement, eau, assainissement, déchets, énergie, ce "
               "dont un territoire est physiquement fait, et ce qu'un choc "
               "détruit en premier. C'est la dimension la plus lourdement "
               "pondérée du cadre."},
     "dim2_intro": {
         "en": "Local authorities, schools, health facilities, warning systems, "
-              "connectivity. The best-documented dimension of the index — and "
+              "connectivity. The best-documented dimension of the index, and "
               "the one where the household survey has most to say.",
         "fr": "Collectivités, écoles, structures de santé, systèmes d'alerte, "
               "connectivité. C'est la dimension la mieux documentée de "
-              "l'indice — et celle où l'enquête ménage a le plus à dire."},
+              "l'indice, et celle où l'enquête ménage a le plus à dire."},
     "dim3_intro": {
         "en": "Forest cover, vegetation, water, rainfall, temperature, "
               "protected areas. Almost entirely measured by satellite, which "
@@ -1420,11 +1420,11 @@ DICO = {
     "dim5_intro": {
         "en": "Community organisation, mutual aid, women's autonomy, conflict, "
               "isolation. The community-based organisations surveyed "
-              "separately belong here — they are this dimension's living "
+              "separately belong here, they are this dimension's living "
               "tissue, and they have their own file.",
         "fr": "Organisation communautaire, entraide, autonomie des femmes, "
               "conflits, isolement. Les organisations de base enquêtées "
-              "séparément relèvent d'ici — elles sont le tissu vivant de cette "
+              "séparément relèvent d'ici, elles sont le tissu vivant de cette "
               "dimension, et elles ont leur propre fiche."},
     "dim6_intro": {
         "en": "Health, education, mortality, care coverage. The least "
@@ -1465,7 +1465,7 @@ DICO = {
               "question, often the real one: « what does this group, or this "
               "section, experience across all dimensions ». One overall score "
               "can cover a territory that is weak everywhere or one that has "
-              "collapsed on a single front — and those two situations do not "
+              "collapsed on a single front, and those two situations do not "
               "call for the same response.",
         "fr": "Les six onglets de dimension répondent à « que vaut ce "
               "territoire sur l'eau, sur la forêt, sur la santé ». Celui-ci "
@@ -1481,15 +1481,15 @@ DICO = {
     "s_note_groupe": {
         "en": "Read by group, only household-survey indicators are shown. "
               "Satellite indicators are identical for every group within a "
-              "section — forest, rainfall and temperature do not vary with the "
-              "respondent's sex — and showing them as a zero gap would suggest "
+              "section, forest, rainfall and temperature do not vary with the "
+              "respondent's sex, and showing them as a zero gap would suggest "
               "a measured equality where there is only an absence of "
               "disaggregation.",
         "fr": "En lecture par groupe, seuls les indicateurs issus de l'enquête "
               "ménage sont retenus. Les indicateurs satellitaires sont "
-              "identiques pour tous les groupes d'une même section — la forêt, "
+              "identiques pour tous les groupes d'une même section, la forêt, "
               "la pluie et la température ne varient pas selon le sexe du "
-              "répondant — et les afficher avec un écart nul laisserait croire "
+              "répondant, et les afficher avec un écart nul laisserait croire "
               "à une égalité mesurée là où il n'y a qu'une absence de "
               "ventilation."},
     "syn_bloc_profil": {"en": "{c} across the six dimensions",
@@ -1507,13 +1507,13 @@ DICO = {
     "s_reference": {"en": "All respondents", "fr": "Ensemble"},
     "s_haltere_note": {
         "en": "Hollow dot: the whole. Full dot: {c}. The line between them is "
-              "the gap — that is what the chart is for, and why it is not two "
+              "the gap, that is what the chart is for, and why it is not two "
               "bars side by side. The gap carries no colour of its own: on "
               "« households using charcoal » being above the mean is bad, on "
               "« access to electricity » it is good. The direction is shown, "
               "the judgement belongs to the indicator.",
         "fr": "Point creux : l'ensemble. Point plein : {c}. Le trait entre les "
-              "deux est l'écart — c'est ce que le graphique sert à montrer, et "
+              "deux est l'écart : c'est ce que le graphique sert à montrer, et "
               "pourquoi ce ne sont pas deux barres côte à côte. L'écart n'a pas "
               "de couleur propre : sur « ménages utilisant le charbon », être "
               "au-dessus de la moyenne est mauvais, sur « accès à "
@@ -1537,19 +1537,19 @@ DICO = {
     "s_bloc_haut_note": {
         "en": "The same reading in the other direction. Read together with the "
               "table above, it says whether a target is uniformly behind or "
-              "behind on one front and ahead on another — which decides "
+              "behind on one front and ahead on another, which decides "
               "whether the response is general or targeted.",
         "fr": "La même lecture en sens inverse. Lu avec le tableau précédent, "
               "il dit si une cible est uniformément en retard, ou en retard sur "
-              "un front et en avance sur un autre — ce qui décide si la réponse "
+              "un front et en avance sur un autre, ce qui décide si la réponse "
               "est générale ou ciblée."},
     "s_col_cible": {"en": "Target", "fr": "Cible"},
     "s_col_ref": {"en": "Whole", "fr": "Ensemble"},
     "s_col_ecart": {"en": "Gap", "fr": "Écart"},
 
     "m_croisement_libre": {
-        "en": "Free exploration — cross any two survey questions",
-        "fr": "Exploration libre — croiser deux questions de l'enquête"},
+        "en": "Free exploration, cross any two survey questions",
+        "fr": "Exploration libre, croiser deux questions de l'enquête"},
 
     # --- page d'accueil ---------------------------------------------------
     "mode_accueil": {"en": "Overview", "fr": "Vue d'ensemble"},
@@ -1586,9 +1586,9 @@ DICO = {
               "sans électricité et à court de nourriture n'a plus grand-chose "
               "avec quoi absorber un choc."},
     "a_bloc_saillants_note": {
-        "en": "Values read directly from the results file — nothing on this "
+        "en": "Values read directly from the results file, nothing on this "
               "page is hard-coded, so it stays true when the data is updated.",
-        "fr": "Valeurs relues directement du fichier de résultats — rien n'est "
+        "fr": "Valeurs relues directement du fichier de résultats, rien n'est "
               "écrit en dur sur cette page, elle reste donc juste quand les "
               "données changent."},
     "a_v_eau": {"en": "have access to improved drinking water",
@@ -1606,22 +1606,22 @@ DICO = {
                           "fr": "Résilience par section communale"},
     "a_bloc_classement_note": {
         "en": "Weighted mean of every scored indicator, section by section. "
-              "{h} comes first, {b} last — but the spread is barely more than "
+              "{h} comes first, {b} last, but the spread is barely more than "
               "one point on ten: no section here is doing well, and the gap "
               "between them matters less than the level they all share.",
         "fr": "Moyenne pondérée de tous les indicateurs scorés, section par "
-              "section. {h} vient en tête, {b} en dernier — mais l'écart "
+              "section. {h} vient en tête, {b} en dernier, mais l'écart "
               "dépasse à peine un point sur dix : aucune section ne va bien "
               "ici, et la distance entre elles compte moins que le niveau "
               "qu'elles partagent."},
     "a_bloc_carte": {"en": "Where they are", "fr": "Où elles se trouvent"},
     "a_bloc_carte_note": {
         "en": "Weighted mean of every scored indicator, section by section. "
-              "{h} comes first, {b} last — but the spread is barely more than "
+              "{h} comes first, {b} last, but the spread is barely more than "
               "one point on ten: no section here is doing well, and the gap "
               "between them matters less than the level they all share.",
         "fr": "Moyenne pondérée de tous les indicateurs scorés, section par "
-              "section. {h} vient en tête, {b} en dernier — mais l'écart "
+              "section. {h} vient en tête, {b} en dernier, mais l'écart "
               "dépasse à peine un point sur dix : aucune section ne va bien "
               "ici, et la distance entre elles compte moins que le niveau "
               "qu'elles partagent."},
@@ -1635,11 +1635,11 @@ DICO = {
               "indépendamment de toute déclaration : forêt, végétation, pluie, "
               "température, le tout par satellite."},
     "a_guide_synthese": {
-        "en": "Pick a section or a group — women, young people, "
-              "socio-economic categories — and see where it stands across all "
+        "en": "Pick a section or a group, women, young people, "
+              "socio-economic categories, and see where it stands across all "
               "six dimensions.",
-        "fr": "Choisir une section ou un groupe — femmes, jeunes, catégories "
-              "socio-économiques — et voir où il se situe sur les six "
+        "fr": "Choisir une section ou un groupe, femmes, jeunes, catégories "
+              "socio-économiques, et voir où il se situe sur les six "
               "dimensions."},
     "a_guide_actions": {
         "en": "What the figures suggest doing, with whom, and what could go "
@@ -1674,8 +1674,8 @@ DICO = {
     "f_toutes_sections": {"en": "All ten sections",
                           "fr": "Les dix sections"},
     "f_tous_groupes": {"en": "All respondents", "fr": "Tous les répondants"},
-    "f_aucun": {"en": "No filter — the whole territory, all respondents.",
-                "fr": "Aucun filtre — tout le territoire, tous les répondants."},
+    "f_aucun": {"en": "No filter, the whole territory, all respondents.",
+                "fr": "Aucun filtre, tout le territoire, tous les répondants."},
     "f_resume_tout": {
         "en": "Ten communal sections, all respondents.",
         "fr": "Dix sections communales, tous les répondants."},
@@ -1688,10 +1688,10 @@ DICO = {
         "fr": "Filtré sur {s} (paysage {p})."},
     "f_resume_paysage_groupe": {
         "en": "Filtered on: {p} landscape. The group filter ({g}) does not "
-              "apply here — landscape already designates a set of "
+              "apply here, landscape already designates a set of "
               "respondents.",
         "fr": "Filtré sur le paysage : {p}. Le filtre par groupe ({g}) ne "
-              "s'applique pas ici — le paysage désigne déjà un ensemble de "
+              "s'applique pas ici, le paysage désigne déjà un ensemble de "
               "répondants."},
     "f_incoherent": {
         "en": "{s} lies in the {vrai} landscape, not {p}. The section is the "
@@ -1704,12 +1704,12 @@ DICO = {
     "f_note_satellite": {
         "en": "Satellite indicators carry no breakdown by sex or age: forest, "
               "rainfall and temperature do not vary with the respondent. Under "
-              "a group filter they keep their section value — which is the "
+              "a group filter they keep their section value, which is the "
               "honest reading, not an equality.",
         "fr": "Les indicateurs satellitaires n'ont pas de ventilation par sexe "
               "ni par âge : la forêt, la pluie et la température ne varient "
               "pas selon le répondant. Sous un filtre de groupe, ils gardent "
-              "leur valeur de section — c'est la lecture honnête, pas une "
+              "leur valeur de section : c'est la lecture honnête, pas une "
               "égalité."},
 
     # --- actualités et ressources ----------------------------------------
@@ -1724,43 +1724,43 @@ DICO = {
     "n_thermique": {"en": "Temperature and vegetation health, 25 years",
                     "fr": "Température et santé de la végétation, 25 ans"},
     "n_thermique_texte": {
-        "en": "MODIS unlocks three indicators — VHI, surface temperature "
-              "anomaly, thermal condition — with twenty-five years of depth. "
+        "en": "MODIS unlocks three indicators, VHI, surface temperature "
+              "anomaly, thermal condition, with twenty-five years of depth. "
               "It also gives the true UNEP aridity index: Dumont is already "
               "semi-arid.",
-        "fr": "MODIS débloque trois indicateurs — VHI, anomalie de température "
-              "de surface, condition thermique — avec vingt-cinq ans de "
+        "fr": "MODIS débloque trois indicateurs, VHI, anomalie de température "
+              "de surface, condition thermique, avec vingt-cinq ans de "
               "profondeur. Il donne aussi le vrai indice d'aridité UNEP : "
               "Dumont est déjà semi-aride."},
     "n_vegetation": {"en": "Six vegetation indices from Sentinel-2",
                      "fr": "Six indices de végétation par Sentinel-2"},
     "n_vegetation_texte": {
         "en": "NDVI, NDMI, EVI, SAVI, VARI and fractional cover, on the "
-              "January-March dry season. Quentin comes last on four of them — "
+              "January-March dry season. Quentin comes last on four of them, "
               "four independent measures naming one territory.",
         "fr": "NDVI, NDMI, EVI, SAVI, VARI et fraction de couverture, sur la "
               "saison sèche de janvier à mars. Quentin est dernier sur quatre "
-              "d'entre eux — quatre mesures indépendantes qui désignent un "
+              "d'entre eux, quatre mesures indépendantes qui désignent un "
               "seul territoire."},
     "n_saison": {"en": "Rainfall moved to the growing season",
                  "fr": "La pluie passe à la campagne agricole"},
     "n_saison_texte": {
         "en": "On the calendar year the territory sits at 96 % of normal "
               "rainfall; on the spring campaign, at 83 %. The four rainfall "
-              "indicators now read the campaign — which confirms what "
+              "indicators now read the campaign, which confirms what "
               "households were saying.",
         "fr": "Sur l'année civile le territoire est à 96 % de sa pluie "
               "normale ; sur la campagne de printemps, à 83 %. Les quatre "
-              "indicateurs pluviométriques lisent désormais la campagne — ce "
+              "indicateurs pluviométriques lisent désormais la campagne, ce "
               "qui confirme ce que disaient les ménages."},
     "n_methodo": {"en": "Method, scales and reservations",
                   "fr": "Méthode, barèmes et réserves"},
     "n_methodo_texte": {
         "en": "How the index is built, what each scale is worth, and every "
-              "reservation recorded along the way — including the scales we "
+              "reservation recorded along the way, including the scales we "
               "found inverted or ambiguous.",
         "fr": "Comment l'indice est construit, ce que vaut chaque barème, et "
-              "toutes les réserves relevées chemin faisant — y compris les "
+              "toutes les réserves relevées chemin faisant, y compris les "
               "barèmes trouvés inversés ou ambigus."},
     "n_base": {"en": "Download the data", "fr": "Télécharger les données"},
     "n_base_texte": {
@@ -1774,7 +1774,7 @@ DICO = {
     # « IV. Économie, moyens d'existence et sécurité alimentaire ».
     "dim1_court": {"en": "I. Physical", "fr": "I. Physique"},
     # Une ligne par carte de dimension : ce qu'on y trouve, pas ce que la
-    # dimension signifie — l'intitulé le dit déjà. Douze mots au plus, sinon
+    # dimension signifie, l'intitulé le dit déjà. Douze mots au plus, sinon
     # la carte grandit et la rangée se déforme.
     "dim1_carte": {
         "en": "Housing, water, sanitation, energy, roads, schools and health "
@@ -1821,12 +1821,12 @@ DICO = {
     "f_resume_paysage": {"en": "Filtered on: {p} landscape.",
                          "fr": "Filtré sur le paysage : {p}."},
     "s_note_paysage": {
-        "en": "Landscape splits the respondents in two — coastal and mountain "
-              "— across all ten sections. Unlike sex or age, it is a property "
+        "en": "Landscape splits the respondents in two, coastal and mountain "
+              "across all ten sections. Unlike sex or age, it is a property "
               "of the place as much as of the household, so satellite "
               "indicators do carry a value for it.",
-        "fr": "Le paysage partage les répondants en deux — littoral et "
-              "montagne — à travers les dix sections. Contrairement au sexe ou "
+        "fr": "Le paysage partage les répondants en deux, littoral et "
+              "montagne, à travers les dix sections. Contrairement au sexe ou "
               "à l'âge, c'est une propriété du lieu autant que du ménage : les "
               "indicateurs satellitaires portent donc bien une valeur pour "
               "lui."},
@@ -1852,8 +1852,8 @@ DICO = {
               "{lien} d'entre elles alimentent directement un de ses "
               "indicateurs et en portent le numéro de ligne ; les autres "
               "appartiennent au même module du questionnaire."},
-    "q_base": {"en": "Percentages of {cible} — base: {n} respondents.",
-               "fr": "Pourcentages sur {cible} — base : {n} répondants."},
+    "q_base": {"en": "Percentages of {cible}, base: {n} respondents.",
+               "fr": "Pourcentages sur {cible}, base : {n} répondants."},
     "q_croise": {
         "en": "A section crossed with a group is not available at question "
               "level: the figures below are those of the section alone.",
@@ -1872,35 +1872,35 @@ DICO = {
         "en": "This dimension is measured by satellite, not by questionnaire: "
               "forest cover, rainfall, vegetation, surface temperature and "
               "aridity are observed, not declared. The few survey questions "
-              "that touch the environment — irrigation, inputs, causes of "
-              "crop loss — are listed here as soon as they are attached.",
+              "that touch the environment, irrigation, inputs, causes of "
+              "crop loss, are listed here as soon as they are attached.",
         "fr": "Cette dimension est mesurée par satellite, pas par "
               "questionnaire : couvert forestier, pluie, végétation, "
               "température de surface et aridité sont observés, non déclarés. "
               "Les quelques questions d'enquête qui touchent à "
-              "l'environnement — irrigation, intrants, causes de perte de "
-              "récolte — apparaissent ici dès qu'elles sont rattachées."},
+              "l'environnement, irrigation, intrants, causes de perte de "
+              "récolte, apparaissent ici dès qu'elles sont rattachées."},
     "q_note_rattachement": {
         "en": "Questions carrying a line number are linked to the dimension "
               "by the data itself: the indicator states which question it is "
               "drawn from. The others are attached through their "
-              "questionnaire module — that grouping is an editorial choice, "
+              "questionnaire module, that grouping is an editorial choice, "
               "and a debatable one for modules that serve several dimensions.",
         "fr": "Les questions qui portent un numéro de ligne sont rattachées à "
               "la dimension par la donnée elle-même : l'indicateur dit de "
               "quelle question il est tiré. Les autres le sont par leur "
-              "module de questionnaire — ce regroupement est un choix "
+              "module de questionnaire, ce regroupement est un choix "
               "éditorial, discutable pour les modules qui servent plusieurs "
               "dimensions."},
     "a_localisation": {
         "en": "Ten communal sections in the departments of Sud and "
-              "Grand'Anse, in Haiti's Greater South — from the coastal "
+              "Grand'Anse, in Haiti's Greater South, from the coastal "
               "plain to the mountain interior. Each section was surveyed in "
               "full, with a target of at least 120 households, so that every "
               "figure on this site can be read at the level where local "
               "action is actually decided.",
         "fr": "Dix sections communales des départements du Sud et de la "
-              "Grand'Anse, dans le Grand Sud d'Haïti — de la plaine "
+              "Grand'Anse, dans le Grand Sud d'Haïti, de la plaine "
               "littorale à l'intérieur montagneux. Chaque section a été "
               "enquêtée en entier, avec une cible d'au moins 120 ménages, "
               "pour que chaque chiffre du site se lise à l'échelle où "
@@ -1913,7 +1913,7 @@ DICO = {
               "hazards with long-standing structural vulnerability. Hurricane "
               "Melissa, in October 2025, showed what that costs: the core of "
               "the system stayed away from the country, which received only "
-              "several days of rain, and Haiti still counted 43 deaths — as "
+              "several days of rain, and Haiti still counted 43 deaths, as "
               "many as Jamaica, which took a direct hit, while the Dominican "
               "Republic, under comparable rainfall, counted one. What decides "
               "the losses is not the strength of the hazard but the state of "
@@ -1924,7 +1924,7 @@ DICO = {
               "L'ouragan Melissa, en octobre 2025, a montré ce que cela "
               "coûte : le cœur du système est resté à l'écart du pays, qui "
               "n'a reçu que plusieurs jours de pluie, et Haïti a compté 43 "
-              "décès — autant que la Jamaïque, touchée de plein fouet, quand "
+              "décès, autant que la Jamaïque, touchée de plein fouet, quand "
               "la République dominicaine, sous des pluies comparables, en "
               "comptait un seul. Ce qui décide des pertes n'est pas la force "
               "de l'aléa, mais l'état du territoire qui le reçoit. C'est cet "
@@ -1932,22 +1932,22 @@ DICO = {
     "a_h_mesure_t": {"en": "What the index measures.",
                      "fr": "Ce que mesure l'indice."},
     "a_h_mesure": {
-        "en": "APRI — the Integrated Resilient Landscape Approach, IRLA — "
+        "en": "APRI, the Integrated Resilient Landscape Approach, IRLA, "
               "treats a landscape as a socio-ecological system and assesses "
               "general resilience: the capacity to anticipate, absorb and "
               "adapt to multiple disturbances, not the response to one "
-              "hazard. It reads a territory across seven dimensions — "
+              "hazard. It reads a territory across seven dimensions, "
               "physical, institutional, environmental, economic, social, "
-              "human, cultural — each scored from 0 to 10, where 10 is the "
+              "human, cultural, each scored from 0 to 10, where 10 is the "
               "most favourable configuration. These are capacities held "
               "before the shock, not damage recorded after it.",
-        "fr": "APRI — l'approche paysagère de résilience intégrée, IRLA en "
-              "anglais — traite le paysage comme un système socio-écologique "
+        "fr": "APRI, l'approche paysagère de résilience intégrée, IRLA en "
+              "anglais, traite le paysage comme un système socio-écologique "
               "et évalue la résilience générale : la capacité d'anticiper, "
               "d'absorber et de s'adapter à des perturbations multiples, et "
               "non la réponse à un aléa unique. Elle lit un territoire sur "
-              "sept dimensions — physique, institutionnelle, "
-              "environnementale, économique, sociale, humaine, culturelle — "
+              "sept dimensions, physique, institutionnelle, "
+              "environnementale, économique, sociale, humaine, culturelle, "
               "chacune notée de 0 à 10, où 10 est la configuration la plus "
               "favorable. Ce sont des capacités détenues avant le choc, pas "
               "des dégâts constatés après."},
@@ -1959,7 +1959,7 @@ DICO = {
               "georeferenced buildings so that areas without a reliable "
               "administrative register are still covered. Twenty-five years "
               "of satellite imagery for forest cover, rainfall, vegetation, "
-              "surface temperature and aridity — measured, not declared. And "
+              "surface temperature and aridity, measured, not declared. And "
               "a survey of the community-based organisations that carry local "
               "action. Every figure on this site states which of the three it "
               "comes from.",
@@ -1969,7 +1969,7 @@ DICO = {
               "administratif fiable soient couvertes malgré tout. "
               "Vingt-cinq ans d'imagerie satellitaire pour le couvert "
               "forestier, la pluie, la végétation, la température de surface "
-              "et l'aridité — mesurés, non déclarés. Et un recensement des "
+              "et l'aridité, mesurés, non déclarés. Et un recensement des "
               "organisations communautaires de base qui portent l'action "
               "locale. Chaque chiffre du site dit de laquelle des trois il "
               "vient."},
@@ -1979,7 +1979,7 @@ DICO = {
         "en": "APRI is a framing and prioritisation tool, not a forecast. "
               "Like any composite index it defines resilience by the "
               "variables assumed to produce it, so a rising score first means "
-              "the measured dimensions have moved — not necessarily that real "
+              "the measured dimensions have moved, not necessarily that real "
               "resilience has. It describes capacities at one moment, and has "
               "not yet been confronted with trajectories observed after an "
               "actual shock. The methodology tab sets out these limits in "
@@ -1998,36 +1998,36 @@ DICO = {
     "a_projet_quoi_t": {"en": "What it measures", "fr": "Ce qu'il mesure"},
     "a_projet_quoi": {
         "en": "The resilience of a landscape and of the households living in "
-              "it, on 128 indicators spread over seven dimensions — physical, "
+              "it, on 128 indicators spread over seven dimensions, physical, "
               "institutional, environmental, economic, social, human, "
               "cultural. Each indicator is scored from 0 to 10 on a published "
               "scale, then weighted.",
         "fr": "La résilience d'un paysage et des ménages qui y vivent, sur "
-              "128 indicateurs répartis en sept dimensions — physique, "
+              "128 indicateurs répartis en sept dimensions, physique, "
               "institutionnelle, environnementale, économique, sociale, "
               "humaine, culturelle. Chaque indicateur est noté de 0 à 10 sur "
               "un barème publié, puis pondéré."},
     "a_projet_ou_t": {"en": "Where", "fr": "Où"},
     "a_projet_ou": {
         "en": "Ten communal sections of Sud and Grand'Anse, in the Greater "
-              "South of Haiti — a territory that lost 12.8 % of its forest "
+              "South of Haiti, a territory that lost 12.8 % of its forest "
               "cover since 2000, most of it to Hurricane Matthew, and where "
               "the spring growing season now receives 83 % of its normal "
               "rainfall.",
         "fr": "Dix sections communales du Sud et de la Grand'Anse, dans le "
-              "Grand Sud d'Haïti — un territoire qui a perdu 12,8 % de son "
+              "Grand Sud d'Haïti, un territoire qui a perdu 12,8 % de son "
               "couvert forestier depuis 2000, l'essentiel avec l'ouragan "
               "Matthew, et où la campagne de printemps ne reçoit plus que "
               "83 % de sa pluie normale."},
     "a_projet_comment_t": {"en": "With what data", "fr": "Avec quelles données"},
     "a_projet_comment": {
         "en": "A household survey of 1 211 respondents, a separate survey of "
-              "community-based organisations, and satellite imagery — Hansen "
+              "community-based organisations, and satellite imagery, Hansen "
               "for forest, CHIRPS for rainfall over 45 years, Sentinel-2 and "
               "MODIS for vegetation and temperature. Every indicator carries "
               "its source, question and scale, openly.",
         "fr": "Une enquête auprès de 1 211 ménages, une enquête distincte "
-              "auprès des organisations de base, et l'imagerie satellitaire — "
+              "auprès des organisations de base, et l'imagerie satellitaire, "
               "Hansen pour la forêt, CHIRPS pour la pluie sur 45 ans, "
               "Sentinel-2 et MODIS pour la végétation et la température. "
               "Chaque indicateur porte sa source, sa question et son barème, "
@@ -2036,11 +2036,11 @@ DICO = {
     "a_projet_pourquoi": {
         "en": "To decide where to act, and on what. An index that ranks "
               "without saying where its figures come from cannot be argued "
-              "with — so this one states its sources, its gaps and its "
+              "with, so this one states its sources, its gaps and its "
               "reservations, including the scales we found inverted or "
               "ambiguous.",
         "fr": "À décider où agir, et sur quoi. Un indice qui classe sans dire "
-              "d'où viennent ses chiffres ne se discute pas — celui-ci "
+              "d'où viennent ses chiffres ne se discute pas, celui-ci "
               "affiche donc ses sources, ses lacunes et ses réserves, y "
               "compris les barèmes trouvés inversés ou ambigus."},
 
@@ -2056,21 +2056,21 @@ DICO = {
               "existe et qui est public. Ils sont regroupés ici par source, "
               "pour que la liste se lise comme un plan de travail et non comme "
               "un inventaire de manques."},
-    "e_src_sentinel": {"en": "Sentinel-2 / Landsat — vegetation and water indices",
-                       "fr": "Sentinel-2 / Landsat — indices de végétation et d'eau"},
-    "e_src_modis": {"en": "MODIS — surface temperature and vegetation health",
-                    "fr": "MODIS — température de surface et santé de la végétation"},
-    "e_src_chirps": {"en": "CHIRPS — long rainfall series",
-                     "fr": "CHIRPS — série pluviométrique longue"},
-    "e_src_occupation": {"en": "Land-cover map — fragmentation and connectivity",
-                         "fr": "Carte d'occupation du sol — fragmentation et connectivité"},
-    "e_src_terrain": {"en": "Field inventories — species diversity",
-                      "fr": "Inventaires de terrain — diversité des espèces"},
-    "e_src_registres": {"en": "Registers and thematic atlases — protected areas, mangrove, water",
-                        "fr": "Registres et atlas thématiques — aires protégées, mangrove, eau"},
+    "e_src_sentinel": {"en": "Sentinel-2 / Landsat, vegetation and water indices",
+                       "fr": "Sentinel-2 / Landsat, indices de végétation et d'eau"},
+    "e_src_modis": {"en": "MODIS, surface temperature and vegetation health",
+                    "fr": "MODIS, température de surface et santé de la végétation"},
+    "e_src_chirps": {"en": "CHIRPS, long rainfall series",
+                     "fr": "CHIRPS, série pluviométrique longue"},
+    "e_src_occupation": {"en": "Land-cover map, fragmentation and connectivity",
+                         "fr": "Carte d'occupation du sol, fragmentation et connectivité"},
+    "e_src_terrain": {"en": "Field inventories, species diversity",
+                      "fr": "Inventaires de terrain, diversité des espèces"},
+    "e_src_registres": {"en": "Registers and thematic atlases, protected areas, mangrove, water",
+                        "fr": "Registres et atlas thématiques, aires protégées, mangrove, eau"},
     "e_src_enquete": {
-        "en": "Household survey — no new data needed, computable today",
-        "fr": "Enquête ménage — aucune donnée nouvelle, calculable dès maintenant"},
+        "en": "Household survey, no new data needed, computable today",
+        "fr": "Enquête ménage, aucune donnée nouvelle, calculable dès maintenant"},
     "e_source": {
         "en": "Source: Hansen / UMD Global Forest Change v1.13 (2000-2025), "
               "canopy threshold 30 %, resolution 30.92 m. Computed per communal "
@@ -2083,8 +2083,8 @@ DICO = {
     "m_titre": {"en": "Survey methodology",
                 "fr": "Méthodologie d'enquête"},
     "m_sous_titre": {
-        "en": "IRLA / APRI — Landscape Resilience Index · Greater South, Haiti",
-        "fr": "IRLA / APRI — Indice de résilience des paysages · Grand Sud, Haïti"},
+        "en": "IRLA / APRI, Landscape Resilience Index · Greater South, Haiti",
+        "fr": "IRLA / APRI, Indice de résilience des paysages · Grand Sud, Haïti"},
     "m_intro": {
         "en": "This section documents how the data behind the dashboard were "
               "produced: where the survey took place, how households were drawn, "
@@ -2126,14 +2126,14 @@ DICO = {
               "s'ouvrent directement ; le jeu de données brut est fourni en CSV "
               "encodé en UTF-8."},
     "d_avert": {
-        "en": "Personal data — respondent name, telephone number, enumerator "
-              "name, precise GPS coordinates and locality name — have been "
+        "en": "Personal data, respondent name, telephone number, enumerator "
+              "name, precise GPS coordinates and locality name, have been "
               "removed from every file distributed here. The files remain "
               "internal working documents: please do not redistribute them "
               "outside the project.",
-        "fr": "Les données personnelles — nom du répondant, numéro de téléphone, "
+        "fr": "Les données personnelles, nom du répondant, numéro de téléphone, "
               "nom de l'enquêteur, coordonnées GPS précises et nom de la "
-              "localité — ont été retirées de tous les fichiers diffusés ici. "
+              "localité, ont été retirées de tous les fichiers diffusés ici. "
               "Ces fichiers restent des documents de travail internes : merci "
               "de ne pas les rediffuser hors du projet."},
     "d_preparer": {"en": "Preparing the file…", "fr": "Préparation du fichier…"},
@@ -2147,8 +2147,8 @@ DICO = {
     "d_format": {"en": "Format", "fr": "Format"},
 
     "d1_titre": {
-        "en": "1 · Descriptive results — all 503 questions by sub-population",
-        "fr": "1 · Résultats descriptifs — les 503 questions par sous-population"},
+        "en": "1 · Descriptive results, all 503 questions by sub-population",
+        "fr": "1 · Résultats descriptifs, les 503 questions par sous-population"},
     "d1_desc": {
         "en": "One row per answer option for every question in the "
               "questionnaire, with counts (n) and percentages for the 12 "
@@ -2160,9 +2160,9 @@ DICO = {
               "économique A/B/C, quatre tranches d'âge, paysage littoral et "
               "montagne."},
     "d2_titre": {
-        "en": "2 · Resilience indicators — raw value and APRI score by "
+        "en": "2 · Resilience indicators, raw value and APRI score by "
               "communal section",
-        "fr": "2 · Indicateurs de résilience — valeur brute et score APRI par "
+        "fr": "2 · Indicateurs de résilience, valeur brute et score APRI par "
               "section communale"},
     "d2_desc": {
         "en": "The 128 indicators of the index, with their dimension, weight, "
@@ -2174,9 +2174,9 @@ DICO = {
               "ménages) et le score 0–10 qui en découle, pour chacune des 10 "
               "sections communales et chaque sous-population."},
     "d3_titre": {
-        "en": "3 · Cross-classification — indicator scores by communal section "
+        "en": "3 · Cross-classification, indicator scores by communal section "
               "and sub-population",
-        "fr": "3 · Ventilation croisée — scores des indicateurs par section "
+        "fr": "3 · Ventilation croisée, scores des indicateurs par section "
               "communale et sous-population"},
     "d3_desc": {
         "en": "The full section × sub-population crossing: for each communal "
@@ -2187,9 +2187,9 @@ DICO = {
               "catégorie économique et tranche d'âge, avec l'effectif de base "
               "de chaque case."},
     "d4_titre": {
-        "en": "4 · Weighted composite scores — synthesis by section and "
+        "en": "4 · Weighted composite scores, synthesis by section and "
               "dimension",
-        "fr": "4 · Scores composites pondérés — synthèse par section et "
+        "fr": "4 · Scores composites pondérés, synthèse par section et "
               "dimension"},
     "d4_desc": {
         "en": "The summary table: final weighted score and score for each of "
@@ -2201,8 +2201,8 @@ DICO = {
               "chaque sous-population. C'est la table qui alimente les cartes "
               "et les diagrammes radar."},
     "d5_titre": {
-        "en": "5 · Anonymised individual dataset — 1211 households",
-        "fr": "5 · Base individuelle anonymisée — 1211 ménages"},
+        "en": "5 · Anonymised individual dataset, 1211 households",
+        "fr": "5 · Base individuelle anonymisée, 1211 ménages"},
     "d5_desc": {
         "en": "The household-level raw responses, one row per respondent, with "
               "all direct identifiers removed. Intended for analysts who wish "
@@ -2213,11 +2213,11 @@ DICO = {
               "analystes souhaitant conduire leurs propres calculs plutôt que "
               "lire des tables publiées."},
     "d6_titre": {
-        "en": "6 · Questionnaire dictionary — the 503 items",
-        "fr": "6 · Dictionnaire du questionnaire — les 503 items"},
+        "en": "6 · Questionnaire dictionary, the 503 items",
+        "fr": "6 · Dictionnaire du questionnaire, les 503 items"},
     "d7_titre": {
-        "en": "7 · Community-based organisations — the 34 identity records",
-        "fr": "7 · Organisations communautaires de base — les 34 fiches"},
+        "en": "7 · Community-based organisations, the 34 identity records",
+        "fr": "7 · Organisations communautaires de base, les 34 fiches"},
     "d7_desc": {
         "en": "One row per organisation: communal section, partnership and its "
               "duration, external support received, ties with communal "
@@ -2239,10 +2239,10 @@ DICO = {
     # -- intitulés employés à l'intérieur des classeurs Excel --------------
     "x_lisezmoi": {"en": "Read me", "fr": "Lisez-moi"},
     "x_confid": {
-        "en": "Confidentiality — this file contains no direct identifier "
+        "en": "Confidentiality, this file contains no direct identifier "
               "(name, telephone, enumerator, precise GPS coordinates, "
               "locality). It remains an internal project working document.",
-        "fr": "Confidentialité — ce fichier ne contient aucun identifiant "
+        "fr": "Confidentialité, ce fichier ne contient aucun identifiant "
               "direct (nom, téléphone, enquêteur, coordonnées GPS précises, "
               "localité). Il reste un document de travail interne au projet."},
     "x_resultats": {"en": "Results", "fr": "Résultats"},
@@ -2350,9 +2350,9 @@ DICO = {
     "hommes": {"en": "Men", "fr": "Hommes"},
     "femmes": {"en": "Women", "fr": "Femmes"},
     "categorie_eco": {"en": "Economic status", "fr": "Catégorie économique"},
-    "cat_a": {"en": "Group A — extreme poverty", "fr": "Cat A — pauvreté extrême"},
-    "cat_b": {"en": "Group B — poverty", "fr": "Cat B — pauvreté"},
-    "cat_c": {"en": "Group C — not poor", "fr": "Cat C — non pauvre"},
+    "cat_a": {"en": "Group A, extreme poverty", "fr": "Cat A, pauvreté extrême"},
+    "cat_b": {"en": "Group B, poverty", "fr": "Cat B, pauvreté"},
+    "cat_c": {"en": "Group C, not poor", "fr": "Cat C, non pauvre"},
     "groupe_age": {"en": "Age group", "fr": "Groupe d'âge"},
     "age_25": {"en": "Under 25", "fr": "Moins de 25 ans"},
     "age_25_39": {"en": "25 to 39", "fr": "25 à 39 ans"},
@@ -2375,9 +2375,9 @@ DICO = {
               "critère."},
     "q_population": {
         "en": "Filtered population: <strong>{n} respondents</strong> (out of 1211) "
-              "— Men {h} · Women {f}",
+              "Men {h} · Women {f}",
         "fr": "Population filtrée : <strong>{n} répondants</strong> (sur 1211 au "
-              "total) — Hommes {h} · Femmes {f}"},
+              "total), Hommes {h} · Femmes {f}"},
     "q_vide": {"en": "No respondent matches this combination of filters.",
                "fr": "Aucun répondant ne correspond à cette combinaison de filtres."},
     "q_bloc1": {"en": "1 · Choose the question", "fr": "1 · Choisir la question"},
@@ -2448,8 +2448,8 @@ DICO = {
                     "fr": "Un pourcentage élevé est **défavorable** (vert → rouge)"},
     "pol_bon": {"en": "A high percentage is **favourable** (red → green)",
                 "fr": "Un pourcentage élevé est **favorable** (rouge → vert)"},
-    "pol_neutre": {"en": "Neither good nor bad — shades of blue",
-                   "fr": "Ni bon ni mauvais — dégradé de bleu"},
+    "pol_neutre": {"en": "Neither good nor bad, shades of blue",
+                   "fr": "Ni bon ni mauvais, dégradé de bleu"},
     "pol_aide": {
         "en": "Suggested automatically from the wording of the question. No rule "
               "is reliable across 503 questions, so check it and correct it if "
@@ -2472,22 +2472,22 @@ DICO = {
               "administratives officielles."},
 
     # ------------------------------------------------------------ résilience
-    "r_titre": {"en": "Resilience indicators — APRI",
-                "fr": "Indicateurs de résilience — APRI"},
-    "r_sous_titre": {"en": "IRLA / APRI — Landscape Resilience Index",
-                     "fr": "IRLA / APRI — Indice de résilience des paysages"},
+    "r_titre": {"en": "Resilience indicators, APRI",
+                "fr": "Indicateurs de résilience, APRI"},
+    "r_sous_titre": {"en": "IRLA / APRI, Landscape Resilience Index",
+                     "fr": "IRLA / APRI, Indice de résilience des paysages"},
     "r_intro": {
         "en": "Scores from 0 to 10, obtained by applying the theoretical "
               "framework's scales to measured values. A high score means a more "
               "favourable situation. {n} indicators out of {t} are currently "
               "scored, from the household survey, the community-organisation "
-              "survey and satellite imagery — see the note at the bottom of the "
+              "survey and satellite imagery, see the note at the bottom of the "
               "page.",
         "fr": "Scores de 0 à 10 obtenus en appliquant les barèmes du cadre "
               "théorique aux valeurs mesurées. Un score élevé = situation plus "
               "favorable. {n} indicateurs sur {t} sont aujourd'hui scorés, "
               "depuis l'enquête ménage, l'enquête organisations et l'imagerie "
-              "satellitaire — voir la note en bas de page."},
+              "satellitaire, voir la note en bas de page."},
     "r_sous_pop": {"en": "Sub-population", "fr": "Sous-population"},
     "r_sous_pop_aide": {
         "en": "The score is recomputed on this sub-population within each communal "
@@ -2495,9 +2495,9 @@ DICO = {
         "fr": "Le score est recalculé sur cette sous-population à l'intérieur de "
               "chaque section communale."},
     "r_quoi_carto": {"en": "What to map", "fr": "Quoi cartographier"},
-    "r_score_final": {"en": "Final score — all dimensions",
-                      "fr": "Score final — toutes dimensions"},
-    "r_dimension_prefix": {"en": "Dimension — ", "fr": "Dimension — "},
+    "r_score_final": {"en": "Final score, all dimensions",
+                      "fr": "Score final, toutes dimensions"},
+    "r_dimension_prefix": {"en": "Dimension, ", "fr": "Dimension, "},
     "r_bloc1": {"en": "1 · The score at a glance", "fr": "1 · Le score en bref"},
     "r_bloc2": {"en": "2 · Where, across the territory",
                 "fr": "2 · Où, sur le territoire"},
@@ -2508,8 +2508,8 @@ DICO = {
                 "fr": "5 · Comparer les sous-populations"},
     "r_moyenne": {"en": "Average of the 10 sections",
                   "fr": "Moyenne des 10 sections"},
-    "r_plus_haut": {"en": "Highest score — {s}", "fr": "Score le plus élevé — {s}"},
-    "r_plus_bas": {"en": "Lowest score — {s}", "fr": "Score le plus faible — {s}"},
+    "r_plus_haut": {"en": "Highest score, {s}", "fr": "Score le plus élevé, {s}"},
+    "r_plus_bas": {"en": "Lowest score, {s}", "fr": "Score le plus faible, {s}"},
     "r_des_menages": {"en": "of households (raw measure)",
                       "fr": "des ménages (mesure brute)"},
     "r_titre_court": {"en": "Resilience", "fr": "Résilience"},
@@ -2517,8 +2517,8 @@ DICO = {
     "r_echelle_titre": {"en": "What 0 and 10 mean", "fr": "Ce que valent 0 et 10"},
     "r_expl_indic": {"en": "What this indicator says",
                      "fr": "Ce que dit cet indicateur"},
-    "r_note_score": {"en": "resilience score — {p} % of the APRI scale",
-                     "fr": "score de résilience — {p} % de l'échelle APRI"},
+    "r_note_score": {"en": "resilience score, {p} % of the APRI scale",
+                     "fr": "score de résilience, {p} % de l'échelle APRI"},
     "r_ce_que_mesure": {"en": "What this indicator measures",
                         "fr": "Ce que mesure cet indicateur"},
     "r_definition": {"en": "<strong>Definition from the framework:</strong> ",
@@ -2535,11 +2535,11 @@ DICO = {
         "en": " answer two different questions: the first says what is measured "
               "on the ground, the second says where that places the section on "
               "the international comparison scale. The scale converts one into "
-              "the other — and it is not linear.",
+              "the other, and it is not linear.",
         "fr": " répondent à deux questions différentes : la première dit ce qui "
               "est mesuré sur le terrain, le second dit où cela place la section "
               "sur l'échelle de comparaison internationale. C'est le barème qui "
-              "fait le passage de l'un à l'autre — et il n'est pas linéaire."},
+              "fait le passage de l'un à l'autre, et il n'est pas linéaire."},
     "r_agregat": {
         "en": "Aggregate of several indicators: there is no single household "
               "percentage to show here. Pick a specific indicator under “What to "
@@ -2573,9 +2573,9 @@ DICO = {
         "fr": "Rappel : 4,0 sur 10 = 40 % de l'échelle APRI. Le tableau ci-dessous "
               "donne les deux lectures."},
     "r_niveau": {"en": "Level of detail", "fr": "Niveau de lecture"},
-    "r_niveau1": {"en": "Level 1 — the dimensions", "fr": "Niveau 1 — les dimensions"},
-    "r_niveau2": {"en": "Level 2 — the indicators of one dimension",
-                  "fr": "Niveau 2 — les indicateurs d'une dimension"},
+    "r_niveau1": {"en": "Level 1, the dimensions", "fr": "Niveau 1, les dimensions"},
+    "r_niveau2": {"en": "Level 2, the indicators of one dimension",
+                  "fr": "Niveau 2, les indicateurs d'une dimension"},
     "r_dim_detail": {"en": "Dimension to expand", "fr": "Dimension à détailler"},
     "r_trop_peu": {
         "en": "This dimension has only {n} scorable indicator(s): a radar needs at "
@@ -2611,8 +2611,8 @@ DICO = {
               "sur moins de 30 répondants sont signalées par « · »."},
     "r_telecharger_csv": {"en": "Download this table (CSV)",
                           "fr": "Télécharger ce tableau (CSV)"},
-    "r_reserves_titre": {"en": "What these scores cover — and what they do not",
-                         "fr": "Ce que ces scores couvrent — et ce qu'ils ne "
+    "r_reserves_titre": {"en": "What these scores cover, and what they do not",
+                         "fr": "Ce que ces scores couvrent, et ce qu'ils ne "
                                "couvrent pas"},
     "r_reserve_indic": {"en": "**Caveat specific to this indicator:** ",
                         "fr": "**Réserve propre à cet indicateur :** "},
@@ -2665,10 +2665,10 @@ DICO = {
               "comparative empirical scenarios », référentiel APRI."},
     "r_fichiers_absents": {
         "en": "Missing file(s) in the project: **{f}**.\n\nUpload them to GitHub "
-              "in `data/` or at the root of the repository — both locations work. "
+              "in `data/` or at the root of the repository, both locations work. "
               "The app restarts on its own afterwards.",
         "fr": "Fichier(s) de données absent(s) du projet : **{f}**.\n\nDéposez-les "
-              "sur GitHub dans `data/` ou à la racine du dépôt — les deux "
+              "sur GitHub dans `data/` ou à la racine du dépôt, les deux "
               "emplacements fonctionnent. L'application redémarre toute seule "
               "ensuite."},
     "r_autre_onglet": {
@@ -2681,20 +2681,20 @@ DICO = {
     "c_titre": {"en": "Cross questions", "fr": "Croiser des questions"},
     "c_intro": {
         "en": "Stack conditions to count the households that meet all of them at "
-              "the same time — for instance no improved sanitation, no improved "
+              "the same time, for instance no improved sanitation, no improved "
               "water and no electricity. {n} of the 503 survey questions can be "
               "crossed.",
         "fr": "Empilez des conditions pour compter les foyers qui les remplissent "
-              "toutes en même temps — par exemple sans toilettes améliorées, sans "
+              "toutes en même temps, par exemple sans toilettes améliorées, sans "
               "eau améliorée et sans électricité. {n} des 503 questions de "
               "l'enquête sont croisables."},
     "c_combiner": {"en": "How to combine the conditions",
                    "fr": "Comment combiner les conditions"},
-    "c_et": {"en": "AND — the household meets ALL conditions (cumulative)",
-             "fr": "ET — le foyer remplit TOUTES les conditions (cumul)"},
-    "c_ou": {"en": "OR — the household meets AT LEAST ONE condition",
-             "fr": "OU — le foyer remplit AU MOINS UNE condition"},
-    "c_condition_q": {"en": "Condition {k} — question", "fr": "Condition {k} — question"},
+    "c_et": {"en": "AND, the household meets ALL conditions (cumulative)",
+             "fr": "ET, le foyer remplit TOUTES les conditions (cumul)"},
+    "c_ou": {"en": "OR, the household meets AT LEAST ONE condition",
+             "fr": "OU, le foyer remplit AU MOINS UNE condition"},
+    "c_condition_q": {"en": "Condition {k}, question", "fr": "Condition {k}, question"},
     "c_le_foyer": {"en": "The household…", "fr": "Le foyer…"},
     "c_a_repondu": {"en": "answered…", "fr": "a répondu…"},
     "c_na_pas_repondu": {"en": "did NOT answer…", "fr": "n'a PAS répondu…"},
@@ -2750,11 +2750,11 @@ DICO = {
     "c_trop_peu": {
         "en": "Only {n} households match this combination. The national figure "
               "remains readable, but the breakdown by communal section and "
-              "sub-population is no longer reliable — a handful of households per "
+              "sub-population is no longer reliable, a handful of households per "
               "cell.",
         "fr": "Seulement {n} foyers correspondent à cette combinaison. Le chiffre "
               "national reste lisible, mais la répartition par section communale "
-              "et par sous-population n'est plus fiable — quelques foyers par "
+              "et par sous-population n'est plus fiable, quelques foyers par "
               "case."},
     "c_sous_population": {"en": "Sub-population", "fr": "Sous-population"},
     "c_foyers_col": {"en": "Households concerned", "fr": "Foyers concernés"},
@@ -2778,9 +2778,9 @@ DICO = {
               "des pourcentages agrégés."},
     "c_fichiers_absents": {
         "en": "Missing file(s) in the project: **{f}**.\n\nUpload them to GitHub "
-              "in `data/` or at the root of the repository — both locations work.",
+              "in `data/` or at the root of the repository, both locations work.",
         "fr": "Fichier(s) absent(s) du projet : **{f}**.\n\nDéposez-les sur GitHub "
-              "dans `data/` ou à la racine du dépôt — les deux emplacements "
+              "dans `data/` ou à la racine du dépôt, les deux emplacements "
               "fonctionnent."},
 
     # ------------------------------------------------------------ dimensions
@@ -2817,10 +2817,10 @@ DICO = {
               "la plus préoccupante (ici, un pourcentage élevé est favorable)."},
     "cap_neutre": {
         "en": "Reading the colours: from lightest to darkest by percentage. No "
-              "colour judges the situation — this indicator is neither good nor "
+              "colour judges the situation, this indicator is neither good nor "
               "bad in itself.",
         "fr": "Lecture des couleurs : du plus clair au plus foncé selon le "
-              "pourcentage. Aucune couleur ne juge la situation — cet indicateur "
+              "pourcentage. Aucune couleur ne juge la situation, cet indicateur "
               "n'est ni bon ni mauvais en soi."},
     "aria_barres": {"en": "Distribution of answers, in percent",
                     "fr": "Répartition des réponses, en pourcentage"},
@@ -2856,7 +2856,7 @@ GLOSSAIRE = {
         "en": ("Food Insecurity Experience Scale. Measured here as the share of "
                "households reporting they ran out of food during the past twelve "
                "months."),
-        "fr": ("Food Insecurity Experience Scale — échelle d'expérience de "
+        "fr": ("Food Insecurity Experience Scale, échelle d'expérience de "
                "l'insécurité alimentaire. Mesure ici la part de foyers déclarant "
                "avoir manqué de nourriture au cours des douze derniers mois.")},
     "assainissement amélioré": {
@@ -2901,10 +2901,10 @@ GLOSSAIRE = {
                "de comparaison.")},
     "indépendance": {
         "en": ("What stacking several conditions would give if they hit unrelated "
-               "households — the plain product of the rates. An observed figure "
+               "households, the plain product of the rates. An observed figure "
                "above it means the situations concentrate on the same households."),
         "fr": ("Ce que vaudrait le cumul de plusieurs conditions si elles "
-               "frappaient des foyers sans rapport entre eux — le simple produit "
+               "frappaient des foyers sans rapport entre eux, le simple produit "
                "des taux. Un cumul observé supérieur signifie que les situations "
                "se concentrent sur les mêmes foyers.")},
     "base": {

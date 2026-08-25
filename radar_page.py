@@ -82,12 +82,12 @@ TEXTES = {
     "rd_intro": {
         "en": "Fixed 0–10 scale on every axis, so two profiles overlay "
               "honestly. Compare up to three at once. **The area of the "
-              "polygon means nothing** — it depends on the order of the axes, "
+              "polygon means nothing**, it depends on the order of the axes, "
               "which comes from the framework and not from the data. Compare "
               "the radii; the exact figures are in the table below.",
         "fr": "Échelle fixe de 0 à 10 sur chaque axe, pour que deux profils se "
               "superposent honnêtement. Trois comparaisons au plus à la fois. "
-              "**L'aire du polygone ne veut rien dire** — elle dépend de "
+              "**L'aire du polygone ne veut rien dire**, elle dépend de "
               "l'ordre des axes, qui vient du cadre et non des données. On "
               "compare des rayons ; les chiffres exacts sont dans le tableau "
               "en dessous."},
@@ -137,12 +137,12 @@ TEXTES = {
     "rd_note_groupe": {
         "en": "Satellite indicators have no breakdown by respondent: forest "
               "cover and rainfall do not vary with who answered. On those "
-              "axes, the compared groups carry the same value — that is a "
+              "axes, the compared groups carry the same value, that is a "
               "property of the source, not a measured equality.",
         "fr": "Les indicateurs satellitaires n'ont pas de ventilation par "
               "répondant : le couvert forestier et la pluie ne varient pas "
               "selon qui a répondu. Sur ces axes, les groupes comparés portent "
-              "la même valeur — c'est une propriété de la source, pas une "
+              "la même valeur : c'est une propriété de la source, pas une "
               "égalité mesurée."},
     "rd_manque": {"en": "Results file missing.",
                   "fr": "Le fichier de résultats est absent."},

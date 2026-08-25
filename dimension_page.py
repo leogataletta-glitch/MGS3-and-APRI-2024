@@ -71,13 +71,13 @@ TEXTES = {
     "d_indics_note": {
         "en": "The resilience indicators of this dimension, computed from the "
               "survey, from satellite imagery or from the registers, and "
-              "scored out of ten. **Lowest score first** — a resilience "
+              "scored out of ten. **Lowest score first**, a resilience "
               "dashboard is read by what is missing. Open one to see its "
               "figures, its source and its spread across the ten communal "
               "sections.",
         "fr": "Les indicateurs de résilience de cette dimension, calculés à "
               "partir de l'enquête, de l'imagerie satellitaire ou des "
-              "registres, et notés sur dix. **Score le plus bas en tête** — un "
+              "registres, et notés sur dix. **Score le plus bas en tête**, un "
               "tableau de bord de résilience se lit par ce qui manque. Ouvrez-"
               "en un pour voir ses chiffres, sa source et sa dispersion entre "
               "les dix sections communales."},
@@ -90,8 +90,8 @@ TEXTES = {
                            "fr": "Entre les dix sections communales"},
     "d_bloc_distribution": {"en": "Answers to the survey question",
                             "fr": "Réponses à la question d'enquête"},
-    "d_bloc_tableau": {"en": "Comparative table — every indicator at once",
-                       "fr": "Tableau comparatif — tous les indicateurs d'un "
+    "d_bloc_tableau": {"en": "Comparative table, every indicator at once",
+                       "fr": "Tableau comparatif, tous les indicateurs d'un "
                              "coup"},
     "d_ferme_note": {
         "en": "Everything is closed by default: you open what you want to "

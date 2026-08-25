@@ -113,12 +113,12 @@ TEXTES = {
     "cl_source": {
         "en": "Boundaries, protected areas and sample: UNEP Haiti GIS layers "
               "(WGS 84). Roads and rivers: OpenStreetMap. Local service roads "
-              "are not a vector layer here — the street base map already "
+              "are not a vector layer here, the street base map already "
               "carries them. Relief: Esri hillshade tiles.",
         "fr": "Limites, aires protégées et échantillon : couches SIG du PNUE "
               "Haïti (WGS 84). Routes et cours d'eau : OpenStreetMap. Les "
               "routes de desserte locale ne sont pas une couche vectorielle "
-              "ici — le fond de plan les porte déjà. Relief : tuiles "
+              "ici, le fond de plan les porte déjà. Relief : tuiles "
               "d'ombrage Esri."},
 }
 for _c, _v in TEXTES.items():

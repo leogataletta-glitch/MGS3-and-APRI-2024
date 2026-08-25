@@ -55,12 +55,12 @@ TEXTES = {
     "env_intro": {
         "en": "This tab sets out the framework note for the environmental "
               "dimension: what is observed on the ground, what is read from "
-              "satellite imagery, what is asked of households — and how each "
+              "satellite imagery, what is asked of households, and how each "
               "of those becomes a score. The thresholds are shown as written "
               "in the note.",
         "fr": "Cet onglet expose la note de cadrage de la dimension "
               "environnementale : ce qui s'observe au sol, ce qui se lit sur "
-              "l'image satellitaire, ce qui se demande aux ménages — et "
+              "l'image satellitaire, ce qui se demande aux ménages, et "
               "comment chacun devient un score. Les seuils sont affichés tels "
               "qu'ils figurent dans la note."},
 
@@ -131,11 +131,11 @@ TEXTES = {
         "en": "Left: the {f} indicators of the environmental dimension with a "
               "score, read from the results file. Right: what the note "
               "describes and the platform does not yet carry. An absent "
-              "indicator is excluded from the mean — never counted as a zero.",
+              "indicator is excluded from the mean, never counted as a zero.",
         "fr": "À gauche : les {f} indicateurs de la dimension environnementale "
               "qui portent un score, lus dans le fichier de résultats. À "
               "droite : ce que la note décrit et que la plateforme ne porte "
-              "pas encore. Un indicateur absent est exclu de la moyenne — "
+              "pas encore. Un indicateur absent est exclu de la moyenne, "
               "jamais compté comme un zéro."},
     "env_etat_ok": {"en": "Computed", "fr": "Calculés"},
     "env_etat_non": {"en": "Described, not yet computed",
@@ -154,21 +154,21 @@ TEXTES = {
               "the threshold of the source note.",
         "fr": "Les seuils et les scénarios sont reproduits dans la langue du "
               "document source."},
-    "env_v_terrain": {"en": "Field records — six indicators and their scale",
-                      "fr": "Relevés de terrain — six indicateurs et leur barème"},
-    "env_v_veg": {"en": "Vegetation and productivity — {n} indicators",
-                  "fr": "Végétation et productivité — {n} indicateurs"},
-    "env_v_frag": {"en": "Landscape fragmentation — {n} indicators",
-                   "fr": "Fragmentation du paysage — {n} indicateurs"},
-    "env_v_conn": {"en": "Connectivity — {n} indicators",
-                   "fr": "Connectivité — {n} indicateurs"},
-    "env_v_cot": {"en": "Coastal resilience — six families",
-                  "fr": "Résilience côtière — six familles"},
+    "env_v_terrain": {"en": "Field records, six indicators and their scale",
+                      "fr": "Relevés de terrain, six indicateurs et leur barème"},
+    "env_v_veg": {"en": "Vegetation and productivity, {n} indicators",
+                  "fr": "Végétation et productivité, {n} indicateurs"},
+    "env_v_frag": {"en": "Landscape fragmentation, {n} indicators",
+                   "fr": "Fragmentation du paysage, {n} indicateurs"},
+    "env_v_conn": {"en": "Connectivity, {n} indicators",
+                   "fr": "Connectivité, {n} indicateurs"},
+    "env_v_cot": {"en": "Coastal resilience, six families",
+                  "fr": "Résilience côtière, six familles"},
     "env_v_hydro": {"en": "Anthropogenic pressure, hydrology and climate",
                     "fr": "Pressions anthropiques, hydrologie et climat"},
     "env_v_men": {"en": "Household proxies", "fr": "Les proxys d'enquête ménage"},
     # Les intitulés courts des quatre familles satellitaires, pour les pavés
-    # chiffrés — un titre de volet ne fait pas une étiquette de pavé.
+    # chiffrés, un titre de volet ne fait pas une étiquette de pavé.
     "env_l_veg": {"en": "vegetation", "fr": "végétation"},
     "env_l_frag": {"en": "fragmentation", "fr": "fragmentation"},
     "env_l_conn": {"en": "connectivity", "fr": "connectivité"},
@@ -177,10 +177,10 @@ TEXTES = {
     "env_c_mes": {"en": "What it measures", "fr": "Ce qu'il mesure"},
     "env_c_lien": {"en": "Link with resilience", "fr": "Lien avec la résilience"},
     "env_c_seuil": {"en": "0 and 10", "fr": "Le 0 et le 10"},
-    "env_s0": {"en": "Score 0 — degraded regime",
-               "fr": "Score 0 — régime dégradé"},
-    "env_s10": {"en": "Score 10 — reference regime",
-                "fr": "Score 10 — régime de référence"},
+    "env_s0": {"en": "Score 0, degraded regime",
+               "fr": "Score 0, régime dégradé"},
+    "env_s10": {"en": "Score 10, reference regime",
+                "fr": "Score 10, régime de référence"},
     "env_unite": {"en": "Unit of observation", "fr": "Unité d'observation"},
     "env_absent": {"en": "The framework file is missing.",
                    "fr": "Le fichier de cadrage est absent."},

@@ -79,8 +79,8 @@ TEXTES = {
               "{lien} d'entre elles alimentent directement un de ses "
               "indicateurs et en portent le numéro de ligne ; les autres "
               "appartiennent au même module du questionnaire."},
-    "q_base": {"en": "Percentages of {cible} — base: {n} respondents.",
-               "fr": "Pourcentages sur {cible} — base : {n} répondants."},
+    "q_base": {"en": "Percentages of {cible}, base: {n} respondents.",
+               "fr": "Pourcentages sur {cible}, base : {n} répondants."},
     "q_croise": {
         "en": "A section crossed with a group is not available at question "
               "level: the figures below are those of the section alone.",
@@ -100,24 +100,24 @@ TEXTES = {
         "en": "This dimension is measured by satellite, not by questionnaire: "
               "forest cover, rainfall, vegetation, surface temperature and "
               "aridity are observed, not declared. The few survey questions "
-              "that touch the environment — irrigation, inputs, causes of "
-              "crop loss — are listed here as soon as they are attached.",
+              "that touch the environment, irrigation, inputs, causes of "
+              "crop loss, are listed here as soon as they are attached.",
         "fr": "Cette dimension est mesurée par satellite, pas par "
               "questionnaire : couvert forestier, pluie, végétation, "
               "température de surface et aridité sont observés, non déclarés. "
               "Les quelques questions d'enquête qui touchent à "
-              "l'environnement — irrigation, intrants, causes de perte de "
-              "récolte — apparaissent ici dès qu'elles sont rattachées."},
+              "l'environnement, irrigation, intrants, causes de perte de "
+              "récolte, apparaissent ici dès qu'elles sont rattachées."},
     "q_titre": {"en": "Survey results", "fr": "Résultats du questionnaire"},
     "q_avert_niveau": {
         "en": "**These are raw survey answers, not resilience indicators.** A "
-              "questionnaire module is a group of questions asked together — "
+              "questionnaire module is a group of questions asked together, "
               "it is not an indicator of the framework. The indicators, "
               "computed from these answers and scored out of ten, are in the "
               "first tab.",
         "fr": "**Ce sont des réponses brutes, pas des indicateurs de "
               "résilience.** Un module de questionnaire est un groupe de "
-              "questions posées ensemble — ce n'est pas un indicateur du "
+              "questions posées ensemble, ce n'est pas un indicateur du "
               "référentiel. Les indicateurs, calculés à partir de ces réponses "
               "et notés sur dix, sont dans le premier onglet."},
     "q_chercher": {"en": "Search a topic or a question",
@@ -128,12 +128,12 @@ TEXTES = {
         "en": "Questions carrying a line number are linked to the dimension "
               "by the data itself: the indicator states which question it is "
               "drawn from. The others are attached through their "
-              "questionnaire module — that grouping is an editorial choice, "
+              "questionnaire module, that grouping is an editorial choice, "
               "and a debatable one for modules that serve several dimensions.",
         "fr": "Les questions qui portent un numéro de ligne sont rattachées à "
               "la dimension par la donnée elle-même : l'indicateur dit de "
               "quelle question il est tiré. Les autres le sont par leur "
-              "module de questionnaire — ce regroupement est un choix "
+              "module de questionnaire, ce regroupement est un choix "
               "éditorial, discutable pour les modules qui servent plusieurs "
               "dimensions."},
 }

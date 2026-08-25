@@ -84,20 +84,20 @@ DIM_CLE = {
 
 TEXTES = {
     # ---------------- section 1
-    "qr_s1": {"en": "Survey questions — absolute results",
-              "fr": "Résultats des questions — effectifs absolus"},
+    "qr_s1": {"en": "Survey questions, absolute results",
+              "fr": "Résultats des questions, effectifs absolus"},
     "qr_s1_note": {
         "en": "Every question attached to this dimension, with the count and "
               "share of its reference answer, and the group and locality at "
               "each end. **The reference answer is the one the indicator "
-              "retains** when the question feeds one — that is what makes the "
+              "retains** when the question feeds one, that is what makes the "
               "link with the table below traceable; otherwise it is the first "
               "modality, and you can change it.",
         "fr": "Chaque question rattachée à cette dimension, avec l'effectif et "
               "la part de sa réponse de référence, et le groupe comme la "
               "localité à chaque extrémité. **La réponse de référence est "
               "celle que retient l'indicateur** quand la question en alimente "
-              "un — c'est ce qui rend le lien avec le tableau du dessous "
+              "un : c'est ce qui rend le lien avec le tableau du dessous "
               "traçable ; sinon c'est la première modalité, et elle se "
               "change."},
     "qr_sens_note": {
@@ -105,13 +105,13 @@ TEXTES = {
               "of a variable is known only where the question feeds an "
               "indicator, which carries its scale. Those rows read « best » "
               "and « worst »; the others, marked ○, read « highest » and "
-              "« lowest » — guessing their direction would produce a table "
+              "« lowest », guessing their direction would produce a table "
               "that looks complete and is wrong half the time.",
         "fr": "**Un pourcentage élevé n'est pas une bonne nouvelle en soi.** "
               "Le sens d'une variable n'est connu que là où la question "
               "alimente un indicateur, qui porte son barème. Ces lignes-là "
               "disent « meilleur » et « pire » ; les autres, marquées ○, "
-              "disent « plus haut » et « plus bas » — deviner leur sens "
+              "disent « plus haut » et « plus bas », deviner leur sens "
               "produirait un tableau qui a l'air complet et se trompe une fois "
               "sur deux."},
     "qr_pop": {"en": "Population shown", "fr": "Population affichée"},
@@ -126,8 +126,8 @@ TEXTES = {
     "qr_chercher": {"en": "Search a question", "fr": "Rechercher une question"},
     "qr_rien": {"en": "No question matches this search.",
                 "fr": "Aucune question ne correspond à cette recherche."},
-    "qr_base": {"en": "Base: {n} respondents — {c}",
-                "fr": "Base : {n} répondants — {c}"},
+    "qr_base": {"en": "Base: {n} respondents, {c}",
+                "fr": "Base : {n} répondants, {c}"},
     "qr_c_question": {"en": "Question", "fr": "Question"},
     "qr_c_reponse": {"en": "Reference answer", "fr": "Réponse de référence"},
     "qr_c_n": {"en": "Count", "fr": "Effectif"},
@@ -158,18 +158,18 @@ TEXTES = {
               "connu."},
 
     # ---------------- section 2
-    "qr_s2": {"en": "Resilience indicators — weighting and scores",
-              "fr": "Indicateurs de résilience — pondération et scores"},
+    "qr_s2": {"en": "Resilience indicators, weighting and scores",
+              "fr": "Indicateurs de résilience, pondération et scores"},
     "qr_s2_note": {
         "en": "What the framework makes of those answers: which question each "
               "indicator is drawn from, the weight it carries in the "
               "dimension, the score it produces, and the two ends. Scores are "
-              "the published ones — computed for each of the twenty-two "
+              "the published ones, computed for each of the twenty-two "
               "breakdowns, not recomputed here.",
         "fr": "Ce que le référentiel fait de ces réponses : de quelle question "
               "chaque indicateur est tiré, quelle pondération il porte dans la "
               "dimension, quel score il produit, et les deux extrémités. Les "
-              "scores sont ceux publiés — calculés pour chacun des vingt-deux "
+              "scores sont ceux publiés, calculés pour chacun des vingt-deux "
               "découpages, non recalculés ici."},
     "qr_c_ind": {"en": "Indicator", "fr": "Indicateur"},
     "qr_c_dim": {"en": "Dimension", "fr": "Dimension"},
@@ -187,7 +187,7 @@ TEXTES = {
               "the score of « women × mountain × Cat C »: the framework "
               "publishes twenty-two breakdowns, not their crossings. Each "
               "indicator is therefore recalculated on the selected subgroup "
-              "and the published scale applied — which is only possible for "
+              "and the published scale applied, which is only possible for "
               "the indicators whose definition reproduces exactly from the "
               "individual answers ({k} of them, {p} % of the framework's "
               "weight). The others show no score under a combination.",
@@ -195,7 +195,7 @@ TEXTES = {
               "fichier ne porte le score de « femmes × montagne × Cat C » : le "
               "référentiel publie vingt-deux découpages, pas leurs "
               "croisements. Chaque indicateur est donc recalculé sur le "
-              "sous-groupe sélectionné et le barème publié appliqué — ce qui "
+              "sous-groupe sélectionné et le barème publié appliqué, ce qui "
               "n'est possible que pour les indicateurs dont la définition se "
               "reproduit exactement à partir des réponses individuelles ({k} "
               "d'entre eux, {p} % du poids du référentiel). Les autres "
@@ -208,10 +208,10 @@ TEXTES = {
     "qr_quel_i": {"en": "Indicator", "fr": "Indicateur"},
     "qr_bar_note2": {
         "en": "Scores out of 10, published for each breakdown. Sorted from "
-              "the highest; green is the best, red the worst — for a score, "
+              "the highest; green is the best, red the worst, for a score, "
               "the direction is never ambiguous.",
         "fr": "Scores sur 10, publiés pour chaque découpage. Classé du plus "
-              "élevé ; le vert est le meilleur, le rouge le pire — pour un "
+              "élevé ; le vert est le meilleur, le rouge le pire, pour un "
               "score, le sens n'est jamais ambigu."},
     "qr_aucun_ind": {"en": "No scored indicator in this dimension.",
                      "fr": "Aucun indicateur scoré dans cette dimension."},

@@ -1044,7 +1044,7 @@ TEXTES_NAV = {
     "mode_croisement": {"en": "Cross-tabulation of results",
                         "fr": "Croisement des résultats"},
     "mode_fiche": {"en": "Landscape synthesis sheet",
-                   "fr": "Fiche synthèse — paysages"},
+                   "fr": "Fiche synthèse, paysages"},
     # Les trois onglets de « Profils territoriaux et sociaux », qui ont
     # absorbé le radar et la fiche paysages.
     "syn_o_profils": {"en": "By territory or group",

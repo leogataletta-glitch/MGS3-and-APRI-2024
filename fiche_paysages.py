@@ -66,7 +66,7 @@ REGISTRES = [
 
 TEXTES = {
     "fp_titre": {"en": "Landscape synthesis sheet",
-                 "fr": "Fiche synthèse — résilience des paysages"},
+                 "fr": "Fiche synthèse, résilience des paysages"},
     "fp_sous_titre": {"en": "Coastal plain against mountain interior",
                       "fr": "Plaine littorale contre intérieur montagneux"},
     "fp_intro": {
@@ -144,8 +144,8 @@ TEXTES = {
         "en": "**These scores are recomputed, not published.** No file holds "
               "the score of « mountain × category A »: the framework "
               "publishes twenty-two breakdowns, not their crossings. The same "
-              "method is applied — indicator value on the subgroup, then the "
-              "published scale — but only on the {k} indicators whose "
+              "method is applied, indicator value on the subgroup, then the "
+              "published scale, but only on the {k} indicators whose "
               "definition reproduces exactly from the individual answers, "
               "**{p} % of the framework's weight**. These figures are "
               "therefore comparable with one another, and not with the "
@@ -153,8 +153,8 @@ TEXTES = {
         "fr": "**Ces scores sont recalculés, non publiés.** Aucun fichier ne "
               "porte le score de « montagne × catégorie A » : le référentiel "
               "publie vingt-deux découpages, pas leurs croisements. La même "
-              "méthode est appliquée — valeur de l'indicateur sur le "
-              "sous-groupe, puis barème publié — mais sur les seuls {k} "
+              "méthode est appliquée, valeur de l'indicateur sur le "
+              "sous-groupe, puis barème publié, mais sur les seuls {k} "
               "indicateurs dont la définition se reproduit exactement à partir "
               "des réponses individuelles, soit **{p} % du poids du "
               "référentiel**. Ces chiffres se comparent donc entre eux, et non "
@@ -177,12 +177,12 @@ TEXTES = {
     "fp_niv_note": {
         "en": "The vulnerability level is not a judgement: the cells are cut "
               "in three equal parts between the lowest and the highest score "
-              "of the table. Close scores keep their rank — no artificial "
+              "of the table. Close scores keep their rank, no artificial "
               "difference is created.",
         "fr": "Le niveau de vulnérabilité n'est pas un jugement : les cases "
               "sont découpées en trois parts égales entre le score le plus bas "
               "et le plus haut du tableau. Des scores proches gardent leur "
-              "rang — aucune différence artificielle n'est créée."},
+              "rang, aucune différence artificielle n'est créée."},
     "fp_fragile": {
         "en": "Cells under {n} respondents are shown with their count: their "
               "score is an indication, not a measurement.",
@@ -210,9 +210,9 @@ TEXTES = {
     # ---- 6
     "fp_s6": {"en": "What to remember", "fr": "Ce qu'il faut retenir"},
     "fp_e1": {
-        "en": "**{gagnant} is ahead overall** — {a} against {b} out of 10, a "
+        "en": "**{gagnant} is ahead overall**, {a} against {b} out of 10, a "
               "gap of {d} points.",
-        "fr": "**Le {gagnant} est en tête d'ensemble** — {a} contre {b} sur "
+        "fr": "**Le {gagnant} est en tête d'ensemble**, {a} contre {b} sur "
               "10, soit {d} points d'écart."},
     "fp_e2": {"en": "**What separates them most:** {liste}.",
               "fr": "**Ce qui les sépare le plus :** {liste}."},
@@ -222,9 +222,9 @@ TEXTES = {
         "fr": "**Le groupe le plus vulnérable** est {g} sur le {p}, à {s} sur "
               "10 de l'indice partiel."},
     "fp_e4": {
-        "en": "**The best placed** is {g} in the {p}, at {s} — a spread of "
+        "en": "**The best placed** is {g} in the {p}, at {s}, a spread of "
               "{d} points between the two ends.",
-        "fr": "**Le mieux placé** est {g} sur le {p}, à {s} — soit {d} points "
+        "fr": "**Le mieux placé** est {g} sur le {p}, à {s}, soit {d} points "
               "d'amplitude entre les deux extrémités."},
     "fp_e5": {
         "en": "**{g} carries a penalty specific to one landscape:** it falls "

@@ -71,26 +71,26 @@ TEXTES = {
               "is no APRI score per respondent: scores are computed indicator "
               "by indicator on a population. To score a subgroup, each "
               "indicator is recomputed on it and the published scale applied "
-              "— which is only legitimate where the definition reproduces "
+              "which is only legitimate where the definition reproduces "
               "exactly. {k} indicators out of {t} pass that test, **{p} % of "
               "the framework's weight**, across five dimensions out of six. "
               "The environmental dimension is absent by nature: forest cover "
               "and rainfall are measured by satellite and do not vary with "
               "who answered. This index therefore compares one group with "
-              "another — both sides use the same indicators — and does not "
+              "another, both sides use the same indicators, and does not "
               "compare with the published APRI score.",
         "fr": "**Le score de résilience affiché ici est un indice partiel.** "
               "Il n'existe pas de score APRI par répondant : les scores sont "
               "calculés indicateur par indicateur sur une population. Pour "
               "noter un sous-groupe, chaque indicateur est recalculé sur lui "
-              "et le barème publié appliqué — ce qui n'est légitime que là où "
+              "et le barème publié appliqué, ce qui n'est légitime que là où "
               "la définition se reproduit exactement. {k} indicateurs sur {t} "
               "passent ce test, soit **{p} % du poids du référentiel**, sur "
               "cinq dimensions sur six. La dimension environnementale est "
               "absente par nature : couvert forestier et pluie sont mesurés "
               "par satellite et ne varient pas selon le répondant. Cet indice "
-              "compare donc un groupe à un autre — les deux côtés sont "
-              "calculés sur les mêmes indicateurs — et ne se compare pas au "
+              "compare donc un groupe à un autre, les deux côtés sont "
+              "calculés sur les mêmes indicateurs, et ne se compare pas au "
               "score APRI publié."},
 
     # ---- constructeur
@@ -101,10 +101,10 @@ TEXTES = {
                     "fr": "Comparer avec un second groupe"},
     "cx_liaison": {"en": "Combine the conditions with",
                    "fr": "Combiner les conditions par"},
-    "cx_et": {"en": "AND — all of them at once",
-              "fr": "ET — toutes en même temps"},
-    "cx_ou": {"en": "OR — at least one of them",
-              "fr": "OU — au moins l'une d'elles"},
+    "cx_et": {"en": "AND, all of them at once",
+              "fr": "ET, toutes en même temps"},
+    "cx_ou": {"en": "OR, at least one of them",
+              "fr": "OU, au moins l'une d'elles"},
     "cx_variable": {"en": "Variable", "fr": "Variable"},
     "cx_sens": {"en": "Condition", "fr": "Condition"},
     "cx_est": {"en": "is / has answered", "fr": "est / a répondu"},
@@ -146,11 +146,11 @@ TEXTES = {
     "cx_sur": {"en": "out of {n}", "fr": "sur {n}"},
     "cx_attendu": {
         "en": "If the conditions were independent of one another, this profile "
-              "would concern {p} % of households. It concerns {o} % — {mot}. "
+              "would concern {p} % of households. It concerns {o} %, {mot}. "
               "A cumulation is never the product of the rates: the gap is what "
               "says the deprivations strike the same homes.",
         "fr": "Si les conditions étaient indépendantes les unes des autres, ce "
-              "profil concernerait {p} % des ménages. Il en concerne {o} % — "
+              "profil concernerait {p} % des ménages. Il en concerne {o} %, "
               "{mot}. Un cumul n'est jamais le produit des taux : c'est cet "
               "écart qui dit que les privations frappent les mêmes foyers."},
     "cx_davantage": {"en": "more", "fr": "davantage"},
@@ -166,9 +166,9 @@ TEXTES = {
                  "fr": "Aucun répondant ne correspond à ces conditions."},
 
     # ---- graphiques
-    "cx_barres": {"en": "Resilience by dimension — group against the whole "
+    "cx_barres": {"en": "Resilience by dimension, group against the whole "
                         "sample",
-                  "fr": "Résilience par dimension — le groupe contre "
+                  "fr": "Résilience par dimension, le groupe contre "
                         "l'ensemble"},
     "cx_barres_note": {
         "en": "Same scale, same indicators on both sides: the bar difference "
@@ -189,11 +189,11 @@ TEXTES = {
     "cx_m_score": {"en": "Partial resilience index",
                    "fr": "Indice partiel de résilience"},
     "cx_carte_note": {
-        "en": "Aggregated by communal section — no individual location is "
+        "en": "Aggregated by communal section, no individual location is "
               "ever shown. « Share of the section » is the reading that says "
               "where the phenomenon is intense; « share of the group » says "
               "only where people are numerous.",
-        "fr": "Agrégé par section communale — aucune localisation "
+        "fr": "Agrégé par section communale, aucune localisation "
               "individuelle n'est jamais affichée. « Part de la section » est "
               "la lecture qui dit où le phénomène est intense ; « part du "
               "groupe » ne dit que là où les gens sont nombreux."},
@@ -231,10 +231,10 @@ TEXTES = {
                 "fr": "Pousser l'analyse plus loin"},
     "cx_sugg_note": {
         "en": "Each button adds a segmentation variable to group A, already "
-              "set on its most frequent value — change it right away if "
+              "set on its most frequent value, change it right away if "
               "another interests you.",
         "fr": "Chaque bouton ajoute une variable de segmentation au groupe A, "
-              "posée d'office sur sa valeur la plus fréquente — changez-la "
+              "posée d'office sur sa valeur la plus fréquente, changez-la "
               "aussitôt si une autre vous intéresse."},
     "cx_sugg_ajouter": {"en": "Add {v}", "fr": "Ajouter {v}"},
     "cx_absent": {"en": "The cross-tabulation files are missing from the "

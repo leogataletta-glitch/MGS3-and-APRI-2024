@@ -63,12 +63,12 @@ TEXTES = {
         "en": "Six findings, eight responses, and what they move",
         "fr": "Six constats, huit réponses, et ce qu'elles déplacent"},
     "nb_intro": {
-        "en": "Everything on this page is computed — the findings, the "
+        "en": "Everything on this page is computed, the findings, the "
               "figures, the ranking of the responses and their expected "
               "effect. Nothing is written in advance: change the survey or "
               "the causal model and this page changes with them. What the "
               "model does not cover is stated too, at the end.",
-        "fr": "Tout ce qui figure sur cette page est calculé — les constats, "
+        "fr": "Tout ce qui figure sur cette page est calculé, les constats, "
               "les chiffres, le classement des réponses et leur effet "
               "attendu. Rien n'est écrit à l'avance : changez l'enquête ou le "
               "modèle causal, la page change avec eux. Ce que le modèle ne "
@@ -96,13 +96,13 @@ TEXTES = {
     "nb_regle": {
         "en": "**One finding per dimension, and it is not chosen by hand:** "
               "for each of the six measured dimensions, the indicator that "
-              "costs the index the most — its weight multiplied by the points "
+              "costs the index the most, its weight multiplied by the points "
               "it lacks out of ten. The raw ranking put four of the six "
               "findings in the same dimension, which would have suggested "
               "everything else was fine.",
         "fr": "**Un constat par dimension, et il n'est pas choisi à la main :** "
               "pour chacune des six dimensions mesurées, l'indicateur qui "
-              "coûte le plus à l'indice — sa pondération multipliée par les "
+              "coûte le plus à l'indice, sa pondération multipliée par les "
               "points qui lui manquent sur dix. Le classement brut plaçait "
               "quatre constats sur six dans la même dimension, ce qui aurait "
               "laissé croire que tout le reste allait bien."},
@@ -176,30 +176,30 @@ TEXTES = {
         "en": "The eight sheets taken together move the index by {c} points, "
               "which is exactly the sum of their isolated effects. That "
               "equality is checked, not assumed: it means the model finds no "
-              "overlap between them — each pushes indicators the others do "
+              "overlap between them, each pushes indicators the others do "
               "not reach. Were two sheets to act on the same indicator, the "
               "portfolio would move less than their sum, and this line would "
               "say so.",
         "fr": "Les huit fiches prises ensemble déplacent l'indice de {c} "
               "points, soit exactement la somme de leurs effets isolés. "
               "L'égalité est vérifiée, non supposée : elle signifie que le "
-              "modèle ne trouve aucun recouvrement entre elles — chacune "
+              "modèle ne trouve aucun recouvrement entre elles, chacune "
               "pousse des indicateurs que les autres n'atteignent pas. Si "
               "deux fiches agissaient sur le même indicateur, le portefeuille "
               "déplacerait moins que leur somme, et cette ligne le dirait."},
     "nb_orphelin": {
-        "en": "{n} · **{ind}** — {dim}, scored {s} out of 10, {p} % of the "
+        "en": "{n} · **{ind}**, {dim}, scored {s} out of 10, {p} % of the "
               "total shortfall on its own.",
-        "fr": "{n} · **{ind}** — {dim}, noté {s} sur 10, {p} % de l'écart "
+        "fr": "{n} · **{ind}**, {dim}, noté {s} sur 10, {p} % de l'écart "
               "total à lui seul."},
     "nb_manque": {
         "en": "**The honest proportion:** {g} points against the {m} points "
-              "the index lacks to reach ten — {p} % of the way. The rest sits "
+              "the index lacks to reach ten, {p} % of the way. The rest sits "
               "in indicators no household-level project moves: protected-area "
               "coverage at 0 %, forest cover change, marine pollution. Those "
               "call for public policy and enforcement, not a programme.",
         "fr": "**La proportion honnête :** {g} points contre les {m} points "
-              "qui manquent à l'indice pour atteindre dix — soit {p} % du "
+              "qui manquent à l'indice pour atteindre dix, soit {p} % du "
               "chemin. Le reste est dans des indicateurs qu'aucun projet "
               "conduit auprès des ménages ne déplace : couverture des aires "
               "protégées à 0 %, évolution du couvert forestier, pollution "
@@ -208,10 +208,10 @@ TEXTES = {
     "nb_couvert": {
         "en": "The propagation reaches indicators carrying {p} % of the "
               "framework's weight. The remaining {q} % is out of the model's "
-              "reach — not out of reach in the field.",
+              "reach, not out of reach in the field.",
         "fr": "La propagation atteint des indicateurs portant {p} % du poids "
               "du référentiel. Les {q} % restants sont hors de portée du "
-              "modèle — pas hors de portée sur le terrain."},
+              "modèle, pas hors de portée sur le terrain."},
     "nb_sans": {"en": "Findings no sheet addresses",
                 "fr": "Les constats qu'aucune fiche ne traite"},
     "nb_sans_non": {"en": "Every finding has at least one sheet acting in its "
@@ -231,9 +231,9 @@ TEXTES = {
               "fiches à la fois **de faisabilité haute** et **d'horizon "
               "court**. Le second lot est le reste. Les deux chiffres sont "
               "simulés par lot, non additionnés."},
-    "nb_lot1": {"en": "First batch — feasible and short-term",
-                "fr": "Premier lot — faisable et à court terme"},
-    "nb_lot2": {"en": "Second batch — the rest", "fr": "Second lot — le reste"},
+    "nb_lot1": {"en": "First batch, feasible and short-term",
+                "fr": "Premier lot, faisable et à court terme"},
+    "nb_lot2": {"en": "Second batch, the rest", "fr": "Second lot, le reste"},
     "nb_lot_n": {"en": "{n} sheets", "fr": "{n} fiches"},
     "nb_lot_part": {
         "en": "{n} of the {t} sheets carry {p} % of the portfolio's modelled "
@@ -275,30 +275,30 @@ TEXTES = {
               "fiche de ce portefeuille ne la déplace dans l'horizon "
               "annoncé."},
     "nb_r4": {
-        "en": "**The seventh dimension of the framework — cultural, "
-              "identity-based and psychological — has no scored indicator.** "
+        "en": "**The seventh dimension of the framework, cultural, "
+              "identity-based and psychological, has no scored indicator.** "
               "It is absent from every figure on this page. That absence is a "
               "gap in the instrument, not a finding about the territory.",
-        "fr": "**La septième dimension du référentiel — culturelle, "
-              "identitaire et psychologique — n'a aucun indicateur scoré.** "
+        "fr": "**La septième dimension du référentiel, culturelle, "
+              "identitaire et psychologique, n'a aucun indicateur scoré.** "
               "Elle est absente de tous les chiffres de cette page. Cette "
               "absence est une lacune de l'instrument, pas un constat sur le "
               "territoire."},
     "nb_r5": {
         "en": "**Horizons are labels, not commitments.** Short, medium and "
-              "long term qualify the nature of the change sought — a water "
-              "point, a committee, a land title — not a delivery schedule.",
+              "long term qualify the nature of the change sought, a water "
+              "point, a committee, a land title, not a delivery schedule.",
         "fr": "**Les horizons sont des qualifications, pas des engagements.** "
               "Court, moyen et long terme disent la nature du changement "
-              "visé — un point d'eau, un comité, un titre foncier — non un "
+              "visé, un point d'eau, un comité, un titre foncier, non un "
               "calendrier de livraison."},
     "nb_ou": {
-        "en": "The detailed sheets — activities, actors, calendar, risks — are "
+        "en": "The detailed sheets, activities, actors, calendar, risks, are "
               "in *Intervention Profiles*. The causal chains behind the "
               "figures are in *Feedback Loops*. The survey results, indicator "
               "by indicator, are in *Results Analysis*.",
-        "fr": "Les fiches détaillées — activités, acteurs, calendrier, "
-              "risques — sont dans *Fiches d'intervention*. Les chaînes "
+        "fr": "Les fiches détaillées, activités, acteurs, calendrier, "
+              "risques, sont dans *Fiches d'intervention*. Les chaînes "
               "causales derrière les chiffres sont dans *Boucles de "
               "rétroaction*. Les résultats de l'enquête, indicateur par "
               "indicateur, sont dans *Analyse des résultats*."},
@@ -861,7 +861,7 @@ def render():
                     f'<div class="nb-kv" style="color:{coul}">'
                     f'{_f(lot["eff"]["delta"], 3, signe=True)}</div>'
                     f'<div class="nb-kx">'
-                    f'{_e(T("nb_lot_n").format(n=len(lot["ids"])))} — {noms}'
+                    f'{_e(T("nb_lot_n").format(n=len(lot["ids"])))} : {noms}'
                     f'</div>', unsafe_allow_html=True)
     if pf["delta"]:
         st.caption(T("nb_lot_part").format(

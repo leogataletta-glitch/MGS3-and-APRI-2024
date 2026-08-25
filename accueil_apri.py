@@ -63,8 +63,8 @@ TEXTES = {
     "mode_portail": {"en": "Home", "fr": "Accueil"},
     "po_titre": {"en": "Landscape resilience observatory",
                  "fr": "Observatoire de la résilience des paysages"},
-    "po_sous": {"en": "Sud and Grand'Anse, Haiti — survey 2024",
-                "fr": "Sud et Grand'Anse, Haïti — enquête 2024"},
+    "po_sous": {"en": "Sud and Grand'Anse, Haiti · survey 2024",
+                "fr": "Sud et Grand'Anse, Haïti · enquête 2024"},
     "po_e1": {"en": "Where?", "fr": "Où ?"},
     "po_e2": {"en": "What was measured?", "fr": "Qu'a-t-on mesuré ?"},
     "po_e3": {"en": "What was found?", "fr": "Qu'a-t-on trouvé ?"},
@@ -77,13 +77,13 @@ TEXTES = {
     "po_1_t": {"en": "Ten communal sections in Haiti's Greater South",
                "fr": "Dix sections communales dans le Grand Sud d'Haïti"},
     "po_1_x": {
-        "en": "A mountain landscape and a coastal one, across two departments. "
-              "Households were drawn at random within strata, from a "
-              "georeferenced building base — so that areas without a reliable "
-              "administrative register are covered too.",
+        "en": "A mountain landscape and a coastal one, across two "
+              "departments. Households were drawn at random within strata, "
+              "from a georeferenced building base, so that areas without a "
+              "reliable administrative register are covered too.",
         "fr": "Un paysage de montagne et un paysage littoral, sur deux "
               "départements. Les ménages ont été tirés au sort dans des "
-              "strates, à partir d'une base de bâtiments géoréférencés — pour "
+              "strates, à partir d'une base de bâtiments géoréférencés, pour "
               "que les zones sans registre administratif fiable soient "
               "couvertes aussi."},
     "po_1_c1": {"en": "households surveyed", "fr": "ménages enquêtés"},
@@ -98,12 +98,13 @@ TEXTES = {
     "po_2_t": {"en": "Resilience, in one number between 0 and 10",
                "fr": "La résilience, en un nombre entre 0 et 10"},
     "po_2_x": {
-        "en": "APRI reads a territory as a system: its capacity to anticipate, "
-              "absorb and adapt — measured **before** a shock, not after it. "
-              "It is not a damage report and not a forecast.",
+        "en": "APRI reads a territory as a system: its capacity to "
+              "anticipate, absorb and adapt, measured **before** a shock "
+              "rather than after it. It is not a damage report and not a "
+              "forecast.",
         "fr": "APRI lit un territoire comme un système : sa capacité à "
-              "anticiper, absorber et s'adapter — mesurée **avant** le choc, "
-              "pas après. Ce n'est ni un relevé de dégâts ni une prévision."},
+              "anticiper, absorber et s'adapter, mesurée **avant** le choc et "
+              "non après. Ce n'est ni un relevé de dégâts ni une prévision."},
     "po_2_a1": {"en": "Anticipate", "fr": "Anticiper"},
     "po_2_a1x": {"en": "see it coming and prepare",
                  "fr": "le voir venir et s'y préparer"},
@@ -131,8 +132,8 @@ TEXTES = {
                  "fr": "ce qui tient le territoire"},
 
     # ---------------- écran 3
-    "po_3_t": {"en": "4.54 out of 10 — and what that hides",
-               "fr": "4,54 sur 10 — et ce que cela cache"},
+    "po_3_t": {"en": "4.54 out of 10, and what that hides",
+               "fr": "4,54 sur 10, et ce que cela cache"},
     "po_3_idx": {"en": "Overall index", "fr": "Indice global"},
     "po_3_idx_x": {"en": "weighted mean of the {n} scored indicators",
                    "fr": "moyenne pondérée des {n} indicateurs scorés"},
@@ -140,40 +141,41 @@ TEXTES = {
                    "fr": "Une moyenne, dix situations très différentes"},
     "po_3_amp": {
         "en": "Between the best-placed section and the least well placed, "
-              "**{d} points of spread** — a third of the distance already "
+              "**{d} points of spread**, a third of the distance already "
               "covered. An average alone would have hidden it.",
         "fr": "Entre la section la mieux placée et la moins bien placée, "
-              "**{d} points d'écart** — le tiers du chemin déjà parcouru. La "
-              "moyenne seule l'aurait masqué."},
+              "**{d} points d'écart**, soit le tiers du chemin déjà parcouru. "
+              "La moyenne seule l'aurait masqué."},
     "po_3_haut": {"en": "Best placed", "fr": "La mieux placée"},
     "po_3_bas": {"en": "Least well placed", "fr": "La moins bien placée"},
     "po_3_base": {
         "en": "Sections are compared on the {n} indicators available for all "
-              "ten of them — not on the full framework, which two sections do "
-              "not cover entirely. This is why these figures differ slightly "
-              "from the published index.",
-        "fr": "Les sections sont comparées sur les {n} indicateurs disponibles "
-              "pour les dix — pas sur le référentiel entier, que deux sections "
-              "ne couvrent pas complètement. C'est pourquoi ces chiffres "
-              "diffèrent un peu de l'indice publié."},
-    "po_3_rep_t": {"en": "4.54 is not a middling territory — it is a "
+              "ten of them, and not on the full framework, which two sections "
+              "do not cover entirely. This is why these figures differ "
+              "slightly from the published index.",
+        "fr": "Les sections sont comparées sur les {n} indicateurs "
+              "disponibles pour les dix, et non sur le référentiel entier, "
+              "que deux sections ne couvrent pas complètement. C'est pourquoi "
+              "ces chiffres diffèrent un peu de l'indice publié."},
+    "po_3_rep_t": {"en": "4.54 is not a middling territory, it is a "
                          "territory of extremes",
-                   "fr": "4,54 n'est pas un territoire moyen — c'est un "
+                   "fr": "4,54 n'est pas un territoire moyen, c'est un "
                          "territoire d'extrêmes"},
     "po_3_rep": {
         "en": "Spread the {n} scored indicators across the scale and the "
               "average dissolves: **{bas} % of the framework's weight sits at "
               "2 out of 10 or below**, while {haut} % sits at 9 or 10. Almost "
               "nothing is in the middle. An average of 4.54 describes no "
-              "single indicator — it is the resultant of two opposite blocks, "
-              "and that is what makes it actionable: the low block is a list "
-              "of things to build.",
+              "single indicator : it is the resultant of two opposite blocks, "
+              "and that is what makes it actionable, since the low block is a "
+              "list of things to build.",
         "fr": "Étalez les {n} indicateurs scorés sur l'échelle et la moyenne "
               "se dissout : **{bas} % du poids du référentiel est à 2 sur 10 "
-              "ou moins**, quand {haut} % est à 9 ou 10. Presque rien n'est au "
-              "milieu. Une moyenne de 4,54 ne décrit aucun indicateur — c'est "
-              "la résultante de deux blocs opposés, et c'est ce qui la rend "
-              "utile : le bloc du bas est une liste de choses à construire."},
+              "ou moins**, quand {haut} % est à 9 ou 10. Presque rien n'est "
+              "au milieu. Une moyenne de 4,54 ne décrit aucun indicateur : "
+              "c'est la résultante de deux blocs opposés, et c'est ce qui la "
+              "rend utile, puisque le bloc du bas est une liste de choses à "
+              "construire."},
     "po_3_rep_ax": {"en": "share of the framework's weight",
                     "fr": "part du poids du référentiel"},
     "po_3_pay_t": {"en": "And two landscapes that do not hold up alike",
@@ -184,42 +186,42 @@ TEXTES = {
                   "fr": "Où ça tient, et où ça ne tient pas"},
     "po_3_faits": {"en": "Three findings that carry the most weight",
                    "fr": "Trois constats qui pèsent le plus lourd"},
-    "po_3_dim7": {"en": "The seventh dimension — cultural and psychological — "
-                        "has no computed indicator yet. It is shown at zero "
-                        "coverage rather than hidden.",
-                  "fr": "La septième dimension — culturelle et psychologique — "
-                        "n'a encore aucun indicateur calculé. Elle est montrée "
-                        "à couverture nulle plutôt que masquée."},
-
-    # ---------------- écran 4
+    "po_3_dim7": {
+        "en": "The seventh dimension, cultural and psychological, has no "
+              "computed indicator yet. It is shown at zero coverage rather "
+              "than hidden.",
+        "fr": "La septième dimension, culturelle et psychologique, n'a encore "
+              "aucun indicateur calculé. Elle est montrée à couverture nulle "
+              "plutôt que masquée."},
     "po_4_t": {"en": "Eight sheets, and what they would move",
                "fr": "Huit fiches, et ce qu'elles déplaceraient"},
     "po_4_x": {
         "en": "Each sheet acts on one lever of the causal model. Simulated "
               "together, the eight move the index from {a} to {b}. It is a "
-              "modelled effect, not a promise — but it ranks what to do first.",
+              "modelled effect, not a promise, but it ranks what to do first.",
         "fr": "Chaque fiche agit sur un levier du modèle causal. Simulées "
               "ensemble, les huit portent l'indice de {a} à {b}. C'est un "
-              "effet modélisé, pas une promesse — mais il dit par quoi "
+              "effet modélisé, pas une promesse, mais il dit par quoi "
               "commencer."},
     "po_4_gain": {"en": "Modelled gain", "fr": "Gain modélisé"},
     "po_4_lot": {
-        "en": "**{n} of the {t} sheets carry {p} % of that gain** — the ones "
-              "that are both feasible and short-term. If the decision is about "
-              "sequencing rather than scope, this is the sentence to keep.",
-        "fr": "**{n} des {t} fiches portent {p} % de ce gain** — celles qui "
-              "sont à la fois faisables et à court terme. Si la décision porte "
-              "sur un séquencement plutôt qu'un périmètre, c'est la phrase à "
-              "retenir."},
+        "en": "**{n} of the {t} sheets carry {p} % of that gain**, the ones "
+              "that are both feasible and short-term. If the decision is "
+              "about sequencing rather than scope, this is the sentence to "
+              "keep.",
+        "fr": "**{n} des {t} fiches portent {p} % de ce gain**, celles qui "
+              "sont à la fois faisables et à court terme. Si la décision "
+              "porte sur un séquencement plutôt qu'un périmètre, c'est la "
+              "phrase à retenir."},
     "po_4_portes": {"en": "Where to go from here", "fr": "Par où continuer"},
-    "po_4_p1": {"en": "The donor briefing — findings and responses in full",
-                "fr": "La note aux bailleurs — constats et réponses en entier"},
-    "po_4_p2": {"en": "Intervention profiles — one sheet per lever",
-                "fr": "Les fiches d'intervention — une fiche par levier"},
-    "po_4_p3": {"en": "Results analysis — dimension by dimension",
-                "fr": "L'analyse des résultats — dimension par dimension"},
-    "po_4_p4": {"en": "The territory — where all this takes place",
-                "fr": "Le territoire — où tout cela se passe"},
+    "po_4_p1": {"en": "The donor briefing: findings and responses in full",
+                "fr": "La note aux bailleurs : constats et réponses en entier"},
+    "po_4_p2": {"en": "Intervention profiles: one sheet per lever",
+                "fr": "Les fiches d'intervention : une fiche par levier"},
+    "po_4_p3": {"en": "Results analysis, dimension by dimension",
+                "fr": "L'analyse des résultats, dimension par dimension"},
+    "po_4_p4": {"en": "The territory, where all this takes place",
+                "fr": "Le territoire, où tout cela se passe"},
     # CHAQUE ÉCRAN A SA PORTE, PAS SEULEMENT LE DERNIER. Un parcours qui ne
     # donne la main qu'à la fin oblige à traverser les quatre écrans pour
     # arriver à la carte, alors que l'écran qui parle du territoire est
@@ -263,6 +265,34 @@ STYLE = """
              text-align:left !important; }
   .po-i    { width:34px; height:34px; border-radius:10px; display:flex;
              align-items:center; justify-content:center; margin-bottom:10px; }
+  /* ÉCRAN 2 : DES FILETS, PAS DES BOÎTES. Deux rangées de grandes cartes se
+     faisaient concurrence, et les titres en 27 px écrasaient tout le reste.
+     Ici, une seule surface, des colonnes séparées par un filet, et une taille
+     de texte qui laisse le chiffre être le seul élément saillant. */
+  .e2-att  { display:grid; grid-template-columns:repeat(3,1fr); margin-top:18px;
+             border-top:1px solid #e6ecf4; border-bottom:1px solid #e6ecf4; }
+  .e2-a    { padding:14px 20px 15px; border-left:1px solid #e6ecf4; }
+  .e2-a:first-child { border-left:none; padding-left:0; }
+  .e2-a b  { display:block; font-size:15px; font-weight:700; color:#101728;
+             letter-spacing:-.01em; }
+  .e2-a span { display:block; font-size:13.5px; color:#6b7590; margin-top:3px;
+               line-height:1.5; }
+  .e2-ch   { display:flex; flex-wrap:wrap; align-items:baseline; gap:0 10px;
+             margin:16px 0 2px; font-size:14px; color:#6b7590; }
+  .e2-ch i { font-style:normal; color:#c8d0dc; }
+  .e2-ch b { font-size:17px; font-weight:700; color:#101728;
+             font-variant-numeric:tabular-nums; margin-right:4px; }
+  .e2-ch em{ font-style:normal; font-size:12.5px; color:#8a93a5; }
+  .e2-src  { margin-top:6px; }
+  .e2-s    { display:grid; grid-template-columns:230px 1fr; gap:14px;
+             padding:11px 0; border-top:1px solid #eef2f7; font-size:14px; }
+  .e2-s:first-child { border-top:none; }
+  .e2-s b  { font-weight:700; color:#101728; }
+  .e2-s span { color:#6b7590; line-height:1.5; }
+  @media (max-width:760px){ .e2-att{grid-template-columns:1fr}
+    .e2-a{border-left:none;border-top:1px solid #e6ecf4;padding-left:0}
+    .e2-a:first-child{border-top:none}
+    .e2-s{grid-template-columns:1fr;gap:2px} }
   .po-flux { display:flex; align-items:stretch; gap:4px; flex-wrap:wrap;
              margin-top:14px; }
   .po-f    { flex:1 1 140px; min-width:125px; text-align:center;
@@ -518,39 +548,50 @@ def _ecran_1(m):
 
 
 def _ecran_2(m):
+    """L'écran qui dit ce qu'on mesure. Trois blocs, une seule surface.
+
+    IL ÉTAIT FAIT DE SIX GRANDES CARTES et d'une rangée de chiffres encadrés,
+    soit trois niveaux de boîtes emboîtées sur un écran qui n'a que trois
+    choses à dire. Les titres en 27 px écrasaient les définitions qu'ils
+    surmontaient, et deux rangées identiques se répondaient sans hiérarchie.
+
+    Reste : les trois attributs séparés par un filet, la chaîne des chiffres en
+    une ligne, les trois sources en trois lignes. Rien n'est retiré.
+    """
     st.markdown(f'<div class="po-h">{_e(T("po_2_t"))}</div>'
                 f'<p class="po-x">{_gras(T("po_2_x"))}</p>',
                 unsafe_allow_html=True)
+
     st.markdown(
-        '<div class="po-g">' + "".join(
-            _carte(ic, c, T(k), T(k + "x"))
-            for k, ic, c in (("po_2_a1", "loupe", BLEU),
-                             ("po_2_a2", "bouclier", AMBRE),
-                             ("po_2_a3", "rafraichir", VERT)))
+        '<div class="e2-att">' + "".join(
+            f'<div class="e2-a"><b>{_e(T(k))}</b>'
+            f'<span>{_e(T(k + "x"))}</span></div>'
+            for k in ("po_2_a1", "po_2_a2", "po_2_a3"))
         + '</div>', unsafe_allow_html=True)
 
+    # LA CHAÎNE EN UNE LIGNE. Quatre cartouches et trois chevrons pour dire
+    # « 3, 7, 128, un score » : la ponctuation faisait tout le travail que le
+    # texte pouvait faire seul.
     n_ind = sum(e["n"] for e in m["dims"].values())
     cases = [("3", T("po_2_f1"), ""),
              (str(len(m["dims"])), T("po_2_f2"), ""),
              (str(n_ind), T("po_2_f3"), T("po_2_f3x", f=m["n_scores"])),
              ("0–10", T("po_2_f4"), "")]
-    blocs = []
+    morceaux = []
     for i, (v, lab, sous) in enumerate(cases):
         if i:
-            blocs.append('<div class="po-ch">&rsaquo;</div>')
-        blocs.append(f'<div class="po-f"><div class="po-n">{_e(v)}</div>'
-                     f'<div class="po-l">{_e(lab)}</div>'
-                     + (f'<div class="po-s">{_e(sous)}</div>' if sous else "")
-                     + '</div>')
-    st.markdown('<div class="po-flux">' + "".join(blocs) + '</div>',
+            morceaux.append('<i>·</i>')
+        morceaux.append(f'<span><b>{_e(v)}</b>{_e(lab)}'
+                        + (f' <em>{_e(sous)}</em>' if sous else "") + '</span>')
+    st.markdown('<div class="e2-ch">' + "".join(morceaux) + '</div>',
                 unsafe_allow_html=True)
 
-    st.markdown(f'<div class="po-lab">{_e(T("po_2_src"))}</div>'
-                '<div class="po-g" style="margin-top:0">' + "".join(
-                    _carte(ic, c, T(k), T(k + "x"))
-                    for k, ic, c in (("po_2_s1", "personnes", BLEU),
-                                     ("po_2_s2", "carte", VERT),
-                                     ("po_2_s3", "maison", AMBRE)))
+    st.markdown(f'<div class="po-lab" style="margin-top:22px">'
+                f'{_e(T("po_2_src"))}</div>'
+                '<div class="e2-src">' + "".join(
+                    f'<div class="e2-s"><b>{_e(T(k))}</b>'
+                    f'<span>{_e(T(k + "x"))}</span></div>'
+                    for k in ("po_2_s1", "po_2_s2", "po_2_s3"))
                 + '</div>', unsafe_allow_html=True)
     _porte("po_porte_2", "methodologie")
 
@@ -581,32 +622,15 @@ def _ecran_3(m):
     # LA DISTRIBUTION, JUSTE SOUS LA MOYENNE. C'est la contextualisation qui
     # manquait le plus : un indice composite sans distribution se lit comme un
     # niveau homogène, et celui-ci ne l'est pas du tout.
-    st.markdown(f'<div class="po-lab">{_e(T("po_3_rep_t"))}</div>',
-                unsafe_allow_html=True)
-    pmax = max((b_["part"] for b_ in m["bandes"]), default=1) or 1
-    cols = st.columns(len(m["bandes"]), gap="small")
-    for col, b_ in zip(cols, m["bandes"]):
-        with col:
-            st.markdown(
-                f'<div style="text-align:center">'
-                f'<div style="height:96px;display:flex;align-items:flex-end;'
-                f'justify-content:center">'
-                f'<div style="width:100%;height:{max(b_["part"] / pmax * 100, 3):.0f}%;'
-                f'background:{_couleur(b_["milieu"])};border-radius:5px 5px 0 0"'
-                f' title="{_e(b_["lab"])} — {_f(b_["part"], 1)} %"></div></div>'
-                f'<div style="border-top:1px solid #e6ecf4;padding-top:5px;'
-                f'font-size:13px;font-weight:700;color:{ENCRE}">'
-                f'{_f(b_["part"], 0)} %</div>'
-                f'<div style="font-size:11.5px;color:{ENCRE3}">'
-                f'{_e(b_["lab"])} / 10</div></div>', unsafe_allow_html=True)
-    st.caption(T("po_3_rep_ax"))
-    # NOMS EXPLICITES, ET C'EST UN BOGUE QUI L'A IMPOSÉ : `bas` et `haut`
-    # désignaient déjà, dix lignes plus haut, les deux sections extrêmes. Les
-    # réutiliser pour des parts de poids écrasait les tuples et la page tombait
-    # sur « cannot unpack non-iterable float ».
+    # LE GRAPHIQUE DE RÉPARTITION A ÉTÉ RETIRÉ, PAS SON CONSTAT. Cinq barres
+    # pour cinq tranches de score, sur un écran qui en portait déjà trois
+    # autres : la figure coûtait une hauteur d'écran pour dire ce que la
+    # phrase dit en deux lignes. Les parts restent calculées ici, et c'est
+    # elles que la phrase cite.
     part_bas = sum(b_["part"] for b_ in m["bandes"] if b_["milieu"] <= 2)
     part_haut = sum(b_["part"] for b_ in m["bandes"] if b_["milieu"] >= 9)
-    st.markdown(f'<p class="po-x" style="margin-top:8px">'
+    st.markdown(f'<div class="po-lab">{_e(T("po_3_rep_t"))}</div>'
+                f'<p class="po-x" style="margin-top:6px">'
                 f'{_gras(T("po_3_rep", n=m["n_scores"], bas=_f(part_bas, 0), haut=_f(part_haut, 0)))}</p>',
                 unsafe_allow_html=True)
 

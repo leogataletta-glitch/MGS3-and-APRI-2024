@@ -70,13 +70,13 @@ TEXTES = {
                 "fr": "Posez une valeur, appuyez sur lecture, regardez le "
                       "système la digérer"},
     "sy_intro": {
-        "en": "Every variable holds a level out of ten — the one measured by "
+        "en": "Every variable holds a level out of ten, the one measured by "
               "the survey where it exists. Click inside a bar to impose a "
               "different value: that variable is then held, and the gap it "
               "creates travels through the model. Press play and each "
               "variable rises or falls according to what its neighbours do to "
               "it, until everything settles.",
-        "fr": "Chaque variable porte un niveau sur dix — celui mesuré par "
+        "fr": "Chaque variable porte un niveau sur dix, celui mesuré par "
               "l'enquête là où il existe. Cliquez dans une barre pour lui "
               "imposer une autre valeur : la variable est alors tenue, et "
               "l'écart qu'elle crée circule dans le modèle. Appuyez sur "
@@ -104,17 +104,17 @@ TEXTES = {
     "sy_stable": {"en": "The system has settled: nothing moves any more.",
                   "fr": "Le système s'est stabilisé : plus rien ne bouge."},
     "sy_repos": {
-        "en": "At rest. The measured state is the model's operating point — "
+        "en": "At rest. The measured state is the model's operating point, "
               "impose a value somewhere to set it in motion.",
         "fr": "Au repos. L'état mesuré est le point de fonctionnement du "
-              "modèle — imposez une valeur quelque part pour le mettre en "
+              "modèle, imposez une valeur quelque part pour le mettre en "
               "mouvement."},
     "sy_moyenne": {"en": "Mean of the measured variables",
                    "fr": "Moyenne des variables mesurées"},
     "sy_libere": {"en": "release", "fr": "libérer"},
     "sy_tenue": {"en": "held", "fr": "tenue"},
-    "sy_non_mesure": {"en": "not measured — starts at 5",
-                      "fr": "non mesurée — part de 5"},
+    "sy_non_mesure": {"en": "not measured, starts at 5",
+                      "fr": "non mesurée, part de 5"},
     "sy_repere": {"en": "measured state (reference mark)",
                   "fr": "état mesuré (le repère)"},
     "sy_depart": {"en": "at the measured state", "fr": "au départ"},

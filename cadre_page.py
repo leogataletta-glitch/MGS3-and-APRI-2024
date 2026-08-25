@@ -77,9 +77,9 @@ TEXTES = {
     "cad_quoi_t": {"en": "General resilience", "fr": "Résilience générale"},
     "cad_quoi": {
         "en": "The capacity to anticipate, absorb and adapt to multiple "
-              "disturbances — not the response to one hazard.",
+              "disturbances, not the response to one hazard.",
         "fr": "La capacité d'anticiper, d'absorber et de s'adapter à des "
-              "perturbations multiples — pas la réponse à un aléa unique."},
+              "perturbations multiples, pas la réponse à un aléa unique."},
     "cad_quand_t": {"en": "Capacities held before the shock",
                     "fr": "Des capacités détenues avant le choc"},
     "cad_quand": {
@@ -122,22 +122,22 @@ TEXTES = {
     "cad_dims_note": {
         "en": "Weight is the share of the composite index each dimension "
               "carries. Coverage is the share of that weight actually "
-              "computed to date — an uncomputed indicator is excluded from "
+              "computed to date, an uncomputed indicator is excluded from "
               "the mean, never counted as a zero.",
         "fr": "Le poids est la part de l'indice composite que porte chaque "
               "dimension. La couverture est la part de ce poids réellement "
-              "calculée à ce jour — un indicateur non calculé est exclu de la "
+              "calculée à ce jour, un indicateur non calculé est exclu de la "
               "moyenne, jamais compté comme un zéro."},
     "cad_col_dim": {"en": "Dimension", "fr": "Dimension"},
     "cad_col_poids": {"en": "Weight in the index", "fr": "Poids dans l'indice"},
     "cad_col_couv": {"en": "Coverage", "fr": "Couverture"},
     "cad_col_ind": {"en": "Indicators", "fr": "Indicateurs"},
     "cad_dim7_note": {
-        "en": "The seventh dimension — cultural, identity-based and "
-              "psychological — has no computed indicator to date. It is shown "
+        "en": "The seventh dimension, cultural, identity-based and "
+              "psychological, has no computed indicator to date. It is shown "
               "here so that an absence is not mistaken for a non-existence.",
-        "fr": "La septième dimension — culturelle, identitaire et "
-              "psychologique — n'a aucun indicateur calculé à ce jour. Elle "
+        "fr": "La septième dimension, culturelle, identitaire et "
+              "psychologique, n'a aucun indicateur calculé à ce jour. Elle "
               "figure ici pour qu'une absence ne passe pas pour une "
               "inexistence."},
 
@@ -160,9 +160,9 @@ TEXTES = {
                "fr": "Chaque indicateur porte son poids propre ; leur somme "
                      "sur le référentiel vaut {ptot}"},
     "cad_e4_t": {"en": "4 · Aggregation", "fr": "4 · Agrégation"},
-    "cad_e4": {"en": "Weighted mean of the scored indicators — uncomputed "
+    "cad_e4": {"en": "Weighted mean of the scored indicators, uncomputed "
                      "ones are excluded from the denominator",
-               "fr": "Moyenne pondérée des indicateurs scorés — les non "
+               "fr": "Moyenne pondérée des indicateurs scorés, les non "
                      "calculés sont exclus du dénominateur"},
 
     # --- le plan de sondage
@@ -178,20 +178,20 @@ TEXTES = {
     "cad_s4": {"en": "per communal section", "fr": "par section communale"},
     "cad_strates": {"en": "Four crossed strata",
                     "fr": "Quatre critères de stratification"},
-    "cad_st1": {"en": "Landscape — coastal or mountain",
-                "fr": "Paysage — littoral ou montagne"},
-    "cad_st2": {"en": "Age — 15-30 or over 30", "fr": "Âge — 15-30 ou plus de 30"},
-    "cad_st3": {"en": "Sex — woman or man", "fr": "Sexe — femme ou homme"},
-    "cad_st4": {"en": "Economic category — extreme poverty, poverty, "
+    "cad_st1": {"en": "Landscape, coastal or mountain",
+                "fr": "Paysage, littoral ou montagne"},
+    "cad_st2": {"en": "Age, 15-30 or over 30", "fr": "Âge, 15-30 ou plus de 30"},
+    "cad_st3": {"en": "Sex, woman or man", "fr": "Sexe, femme ou homme"},
+    "cad_st4": {"en": "Economic category, extreme poverty, poverty, "
                       "non-poverty",
-                "fr": "Catégorie économique — extrême pauvreté, pauvreté, "
+                "fr": "Catégorie économique, extrême pauvreté, pauvreté, "
                       "non-pauvreté"},
     "cad_tirage": {
         "en": "Households are drawn at random within strata from a "
               "georeferenced building base (OpenStreetMap), so that areas "
               "without a reliable administrative register are still covered. "
               "The strata reproduce the population structure, which is why "
-              "simple means by profile are unbiased estimators — no "
+              "simple means by profile are unbiased estimators, no "
               "post-stratification weighting is applied.",
         "fr": "Les ménages sont tirés au sort dans chaque strate à partir "
               "d'une base de bâtiments géoréférencés (OpenStreetMap), pour "
@@ -232,28 +232,28 @@ TEXTES = {
                      "aléa donné coûtera à une section donnée."},
 
     # --- le second volet : l'analyse causale
-    "cad_dbc": {"en": "The second strand — causal loop diagrams",
-                "fr": "Le second volet — les diagrammes de boucles causales"},
+    "cad_dbc": {"en": "The second strand, causal loop diagrams",
+                "fr": "Le second volet, les diagrammes de boucles causales"},
     "cad_dbc_x": {
         "en": "In a socio-ecological system, interactions are not linear: a "
               "cause becomes a consequence, and some effects feed themselves. "
               "Where a problem tree shows the visible chain of causes and "
-              "effects, a causal loop diagram shows the internal feedbacks — "
+              "effects, a causal loop diagram shows the internal feedbacks, "
               "why a system persists, degrades, or finds its balance again. "
               "That is the heart of resilience.",
         "fr": "Dans un système socio-écologique, les interactions ne sont pas "
               "linéaires : une cause devient une conséquence, et certains "
               "effets s'auto-renforcent. Là où l'arbre à problèmes montre la "
               "chaîne visible des causes et des effets, le diagramme de "
-              "boucles causales montre les rétroactions internes — pourquoi "
+              "boucles causales montre les rétroactions internes, pourquoi "
               "un système persiste, se dégrade, ou retrouve son équilibre. "
               "C'est le cœur de la résilience."},
     "cad_dbc_1_t": {"en": "1 · The symptom", "fr": "1 · La variable symptôme"},
     "cad_dbc_1": {
-        "en": "Start from the indicator in red — falling tree cover, dropping "
+        "en": "Start from the indicator in red, falling tree cover, dropping "
               "yields, rising erosion. It is the visible malfunction, and the "
               "entry point for going back up to causes and down to effects.",
-        "fr": "Partir de l'indicateur en rouge — recul du couvert végétal, "
+        "fr": "Partir de l'indicateur en rouge, recul du couvert végétal, "
               "baisse de productivité, érosion accrue. C'est le "
               "dysfonctionnement visible, et le point d'entrée pour remonter "
               "aux causes et descendre aux conséquences."},
@@ -290,15 +290,15 @@ TEXTES = {
         "en": "Each arrow carries a polarity. **+** the two variables move "
               "the same way; **−** they move opposite ways. Multiply the "
               "signs around the loop: an even number of **−** makes it "
-              "**reinforcing (R)** — it accelerates its own dynamic; an odd "
-              "number makes it **balancing (B)** — it pulls the system back "
+              "**reinforcing (R)**, it accelerates its own dynamic; an odd "
+              "number makes it **balancing (B)**, it pulls the system back "
               "towards a resting point. Simpler still: raise A; if A ends up "
               "higher, the loop is R; if A ends up lower, it is B.",
         "fr": "Chaque flèche porte une polarité. **+** les deux variables "
               "changent dans le même sens ; **−** en sens opposé. On "
               "multiplie les signes le long de la boucle : un nombre pair de "
-              "**−** la rend **renforçante (R)** — elle accélère sa propre "
-              "dynamique ; un nombre impair la rend **équilibrante (B)** — "
+              "**−** la rend **renforçante (R)**, elle accélère sa propre "
+              "dynamique ; un nombre impair la rend **équilibrante (B)**, "
               "elle ramène le système vers un point de repos. Plus simple "
               "encore : j'augmente A ; si A finit plus haut, la boucle est "
               "R ; si A finit plus bas, elle est B."},
@@ -307,7 +307,7 @@ TEXTES = {
               "variables move together. A reinforcing loop pushed upward is a "
               "virtuous spiral (R+); the same loop pushed downward is a "
               "vicious one (R−). And a balancing loop can lock a system into "
-              "a degraded state (B−) — falling yields drive out-migration, "
+              "a degraded state (B−), falling yields drive out-migration, "
               "which eases pressure and lets the forest return, but through "
               "rural collapse.",
         "fr": "**Le piège : « positive » ne veut pas dire « bonne ».** Cela "
@@ -315,7 +315,7 @@ TEXTES = {
               "poussée à la hausse est une spirale vertueuse (R+) ; la même "
               "poussée à la baisse est vicieuse (R−). Et une boucle "
               "équilibrante peut figer le système dans un état dégradé "
-              "(B−) — la baisse des rendements pousse à la migration, ce qui "
+              "(B−), la baisse des rendements pousse à la migration, ce qui "
               "allège la pression et laisse la forêt revenir, mais par "
               "effondrement rural."},
     "cad_dbc_lien": {
@@ -323,7 +323,7 @@ TEXTES = {
               "the wave travel, isolate a loop.",
         "fr": "L'outil est dans l'onglet **Boucles de rétroaction** : "
               "poussez un levier, suivez l'onde, isolez une boucle."},
-    # ================= STRATE 1 — les quatre cartouches de tête =============
+    # ================= STRATE 1, les quatre cartouches de tête =============
     "cad_n1_t": {"en": "What APRI measures", "fr": "Ce que mesure APRI"},
     "cad_n1": {"en": "A territory's capacity to anticipate, absorb and adapt "
                      "to disturbances.",
@@ -407,8 +407,8 @@ TEXTES = {
                    "fr": "Sources de données et méthodologie"},
     "cad_v_limites": {"en": "What APRI cannot tell us",
                       "fr": "Ce qu'APRI ne peut pas dire"},
-    "cad_v_boucles": {"en": "The second strand — causal loop diagrams",
-                      "fr": "Le second volet — les diagrammes de boucles causales"},
+    "cad_v_boucles": {"en": "The second strand, causal loop diagrams",
+                      "fr": "Le second volet, les diagrammes de boucles causales"},
     "cad_strate2": {"en": "Explore", "fr": "Explorer"},
     "cad_strate3": {"en": "Go deeper", "fr": "Approfondir"},
     "cad_strate3_note": {

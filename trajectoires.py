@@ -58,11 +58,11 @@ TEXTES = {
                 "fr": "Ce qui bouge, et à quelle vitesse"},
     "tj_intro": {
         "en": "Everything else on this site is a snapshot: the survey took "
-              "place in 2024. These four series are not — they run from 1981, "
+              "place in 2024. These four series are not, they run from 1981, "
               "2001 or 2019 to today. None of them is a resilience score: they "
               "are hectares, millimetres and degrees.",
         "fr": "Tout le reste du site est un instantané : l'enquête a eu lieu "
-              "en 2024. Ces quatre séries ne le sont pas — elles courent "
+              "en 2024. Ces quatre séries ne le sont pas, elles courent "
               "depuis 1981, 2001 ou 2019 jusqu'à aujourd'hui. Aucune n'est un "
               "score de résilience : ce sont des hectares, des millimètres et "
               "des degrés."},
@@ -73,8 +73,8 @@ TEXTES = {
                   "fr": "Les séries satellitaires sont absentes."},
 
     # ---------------- forêt
-    "tj_f_t": {"en": "Forest cover — annual loss",
-               "fr": "Le couvert forestier — perte annuelle"},
+    "tj_f_t": {"en": "Forest cover, annual loss",
+               "fr": "Le couvert forestier, perte annuelle"},
     "tj_f_x": {
         "en": "Hectares of tree cover lost each year, canopy threshold 30 %. "
               "Source: University of Maryland / Hansen, 2000–2025.",
@@ -82,13 +82,13 @@ TEXTES = {
               "canopée 30 %. Source : université du Maryland / Hansen, "
               "2000-2025."},
     "tj_f_choc": {
-        "en": "**{p} % of twenty-five years of loss happened in three years — "
+        "en": "**{p} % of twenty-five years of loss happened in three years, "
               "{a}.** Hurricane Matthew struck in October 2016. Outside those "
               "three years the forest loses {hors} % a year; counting them, "
               "{avec} %. A shock does not only destroy houses: it is still "
               "legible in the canopy a decade later.",
         "fr": "**{p} % de la perte de vingt-cinq ans s'est produite en trois "
-              "ans — {a}.** L'ouragan Matthew a frappé en octobre 2016. Hors "
+              "ans, {a}.** L'ouragan Matthew a frappé en octobre 2016. Hors "
               "ces trois années, la forêt perd {hors} % par an ; en les "
               "comptant, {avec} %. Un choc ne détruit pas que des maisons : il "
               "reste lisible dans la canopée dix ans après."},
@@ -99,8 +99,8 @@ TEXTES = {
     "tj_f_ord": {"en": "hectares lost", "fr": "hectares perdus"},
 
     # ---------------- pluie
-    "tj_p_t": {"en": "Rainfall — forty-five years",
-               "fr": "La pluie — quarante-cinq ans"},
+    "tj_p_t": {"en": "Rainfall, forty-five years",
+               "fr": "La pluie, quarante-cinq ans"},
     "tj_p_x": {
         "en": "Annual total, and the 1991–2020 normal as a reference line. "
               "Source: CHIRPS, 1981–2025.",
@@ -114,8 +114,8 @@ TEXTES = {
                 "fr": "cinq dernières années / normale"},
 
     # ---------------- température
-    "tj_t_t": {"en": "Land surface temperature — dry season",
-               "fr": "La température de surface — saison sèche"},
+    "tj_t_t": {"en": "Land surface temperature, dry season",
+               "fr": "La température de surface, saison sèche"},
     "tj_t_x": {
         "en": "Daytime surface temperature over the dry season, °C. Source: "
               "MODIS, 2001–2025.",
@@ -127,16 +127,16 @@ TEXTES = {
     "tj_t_c3": {"en": "difference", "fr": "écart"},
 
     # ---------------- végétation
-    "tj_v_t": {"en": "Vegetation vigour (NDVI) — seven years",
-               "fr": "La vigueur végétale (NDVI) — sept ans"},
+    "tj_v_t": {"en": "Vegetation vigour (NDVI), seven years",
+               "fr": "La vigueur végétale (NDVI), sept ans"},
     "tj_v_x": {
         "en": "Dry-season median NDVI. **The shortest series on this page:** "
               "Sentinel-2 only covers 2019 onwards at this resolution, so "
-              "seven points cannot carry a trend — they show a level and its "
+              "seven points cannot carry a trend, they show a level and its "
               "wobble.",
         "fr": "NDVI médian de saison sèche. **La série la plus courte de cette "
               "page :** Sentinel-2 ne couvre 2019 et après à cette "
-              "résolution, sept points ne portent donc pas une tendance — ils "
+              "résolution, sept points ne portent donc pas une tendance, ils "
               "montrent un niveau et ses soubresauts."},
     "tj_v_ord": {"en": "NDVI", "fr": "NDVI"},
     "tj_lire": {"en": "Hover any mark for its year and value.",

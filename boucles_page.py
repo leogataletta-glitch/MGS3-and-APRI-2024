@@ -65,13 +65,13 @@ TEXTES = {
     "bcl_avertissement": {
         "en": "**These are exploratory scenarios, not predictions.** The "
               "relations below come from the IRLA framework and from the "
-              "literature — they are not estimated on the survey. Moving a "
+              "literature, they are not estimated on the survey. Moving a "
               "lever shows what the model implies, never what the territory "
               "will do. Observed associations between communal sections are "
               "shown separately, and four of them run against the model.",
         "fr": "**Ce sont des scénarios exploratoires, pas des prédictions.** "
               "Les relations ci-dessous viennent du cadre IRLA et de la "
-              "littérature — elles ne sont pas estimées sur l'enquête. "
+              "littérature, elles ne sont pas estimées sur l'enquête. "
               "Déplacer un levier montre ce que le modèle implique, jamais ce "
               "que le territoire fera. Les associations observées entre "
               "sections communales sont montrées à part, et quatre d'entre "
@@ -89,16 +89,16 @@ TEXTES = {
               "boucle mérite d'être suivie quand elle passe par ce qui est "
               "réellement en défaut. Cliquez-en une pour en faire le levier."},
     "bcl_alarme_hors": {
-        "en": "Alarming and **outside the model** — the graph poses no "
+        "en": "Alarming and **outside the model**, the graph poses no "
               "relation for these, so no loop can reach them. They are named "
               "here rather than left out in silence:",
-        "fr": "Alarmants et **hors du modèle** — le graphe ne pose aucune "
+        "fr": "Alarmants et **hors du modèle**, le graphe ne pose aucune "
               "relation pour eux, aucune boucle ne peut donc les atteindre. "
               "Ils sont nommés ici plutôt que passés sous silence :"},
     "bcl_alarme_actif": {"en": "current lever", "fr": "levier actuel"},
     "bcl_poids_court": {"en": "weight", "fr": "pond."},
-    "bcl_levier": {"en": "Lever — the indicator you act on",
-                   "fr": "Levier — l'indicateur sur lequel on agit"},
+    "bcl_levier": {"en": "Lever, the indicator you act on",
+                   "fr": "Levier, l'indicateur sur lequel on agit"},
     "bcl_variation": {"en": "Change applied, in points out of 10",
                       "fr": "Variation appliquée, en points sur 10"},
     "bcl_isoler": {"en": "Isolate a loop", "fr": "Isoler une boucle"},
@@ -106,13 +106,13 @@ TEXTES = {
     "bcl_reseau": {"en": "The network", "fr": "Le réseau"},
     "bcl_reseau_note": {
         "en": "One node per indicator, one arrow per relation of the model. "
-              "Dashed nodes are variables the survey does not measure — they "
+              "Dashed nodes are variables the survey does not measure, they "
               "carry the chain but have no score. Colour shows the simulated "
               "direction of change; the lever has a blue ring. Click a node to "
               "make it the lever.",
         "fr": "Un nœud par indicateur, une flèche par relation du modèle. Les "
               "nœuds en tirets sont des variables que l'enquête ne mesure "
-              "pas — elles portent la chaîne mais n'ont pas de score. La "
+              "pas, elles portent la chaîne mais n'ont pas de score. La "
               "couleur donne le sens du changement simulé ; le levier porte un "
               "anneau bleu. Cliquez un nœud pour en faire le levier."},
     "bcl_effets": {"en": "Simulated effects", "fr": "Effets simulés"},
@@ -129,10 +129,10 @@ TEXTES = {
                    "fr": "Effet sur l'indice APRI d'ensemble"},
     "bcl_indice_note": {
         "en": "The graph covers {part} % of the scored framework by weight. "
-              "The rest of the index does not move — no relation is posed for "
+              "The rest of the index does not move, no relation is posed for "
               "it, which is not the same as no relation existing.",
         "fr": "Le graphe couvre {part} % du poids du référentiel scoré. Le "
-              "reste de l'indice ne bouge pas — aucune relation n'y est "
+              "reste de l'indice ne bouge pas, aucune relation n'y est "
               "posée, ce qui n'est pas la même chose qu'une absence de "
               "relation."},
     "bcl_boucles": {"en": "The loops in the model",
@@ -140,12 +140,12 @@ TEXTES = {
     "bcl_boucles_note": {
         "en": "A loop's sign is the product of the signs of its arrows: an "
               "even number of negative links makes it reinforcing, an odd "
-              "number balancing. Strength is the product of the strengths — "
+              "number balancing. Strength is the product of the strengths, "
               "it decides how much the loop actually weighs.",
         "fr": "Le signe d'une boucle est le produit des signes de ses "
               "flèches : un nombre pair de liens négatifs la rend "
               "renforçante, un nombre impair l'équilibre. La force est le "
-              "produit des forces — c'est elle qui décide du poids réel de la "
+              "produit des forces : c'est elle qui décide du poids réel de la "
               "boucle."},
     "bcl_renforcante": {"en": "Reinforcing", "fr": "Renforçante"},
     "bcl_equilibrante": {"en": "Balancing", "fr": "Équilibrante"},
@@ -176,25 +176,25 @@ TEXTES = {
         "en": "Spearman correlation of the two indicators' scores across the "
               "ten communal sections. TEN POINTS IS ALMOST NO STATISTICAL "
               "POWER: this column neither proves nor refutes a relation of "
-              "the model. It never enters the simulation — it is there to be "
+              "the model. It never enters the simulation, it is there to be "
               "compared, and argued with.",
         "fr": "Corrélation de Spearman entre les scores des deux indicateurs "
               "sur les dix sections communales. DIX POINTS, C'EST PRESQUE "
               "AUCUNE PUISSANCE STATISTIQUE : cette colonne ne prouve ni ne "
               "réfute une relation du modèle. Elle n'entre jamais dans la "
-              "simulation — elle est là pour être comparée, et discutée."},
+              "simulation, elle est là pour être comparée, et discutée."},
     "bcl_desaccord": {
-        "en": "Runs against the model — worth putting on the workshop table",
-        "fr": "Va contre le modèle — à porter sur la table de l'atelier"},
+        "en": "Runs against the model, worth putting on the workshop table",
+        "fr": "Va contre le modèle, à porter sur la table de l'atelier"},
     "bcl_desaccords_t": {
         "en": "{n} relations are observed with the opposite sign",
         "fr": "{n} relations s'observent avec le signe contraire"},
     "bcl_diag": {
-        "en": "Model diagnostic — {noeuds} nodes, {aretes} relations, raw "
+        "en": "Model diagnostic, {noeuds} nodes, {aretes} relations, raw "
               "spectral radius {rayon}, rescaled to {cible}. Above 1 the "
               "system would run away; near 1 it is so heavily looped that a "
               "small change in one strength would tip it.",
-        "fr": "Diagnostic du modèle — {noeuds} nœuds, {aretes} relations, "
+        "fr": "Diagnostic du modèle, {noeuds} nœuds, {aretes} relations, "
               "rayon spectral brut {rayon}, ramené à {cible}. Au-dessus de 1 "
               "le système s'emballerait ; proche de 1 il est si fortement "
               "bouclé qu'une petite hausse de force le ferait basculer."},
@@ -216,8 +216,8 @@ TEXTES = {
               "renforçante est une spirale vertueuse poussée à la hausse (R+) "
               "et vicieuse poussée à la baisse (R−). Le sous-type ci-dessous "
               "suit le sens de la variation que vous avez appliquée."},
-    "bcl_leviers": {"en": "Where to act — structural levers",
-                    "fr": "Où agir — les leviers structuraux"},
+    "bcl_leviers": {"en": "Where to act, structural levers",
+                    "fr": "Où agir, les leviers structuraux"},
     "bcl_leviers_note": {
         "en": "Highly connected nodes that sit in many loops carry a "
               "multiplier effect. The decisive criterion is belonging to "
@@ -231,8 +231,8 @@ TEXTES = {
     "bcl_bascule": {"en": "tipping lever", "fr": "levier de basculement"},
     "bcl_col_degre": {"en": "Links", "fr": "Liens"},
     "bcl_col_boucles": {"en": "Loops (R / B)", "fr": "Boucles (R / B)"},
-    "bcl_dominantes": {"en": "Dominant relations — where loops cross",
-                       "fr": "Relations dominantes — là où les boucles se croisent"},
+    "bcl_dominantes": {"en": "Dominant relations, where loops cross",
+                       "fr": "Relations dominantes, là où les boucles se croisent"},
     "bcl_dominantes_note": {
         "en": "Acting on one of these relations touches several sub-systems "
               "at once. This is where to look for how to turn a degrading "
@@ -243,23 +243,23 @@ TEXTES = {
     "bcl_dans": {"en": "in {n} loops", "fr": "dans {n} boucles"},
     "bcl_meadows": {"en": "Levels of intervention, after Meadows",
                     "fr": "Niveaux de levier, d'après Meadows"},
-    "bcl_m1": {"en": "**Adjust a flow** — change a parameter directly: cut "
+    "bcl_m1": {"en": "**Adjust a flow**, change a parameter directly: cut "
                      "household fuelwood use by introducing alternatives",
-               "fr": "**Ajuster un flux** — modifier un paramètre : réduire "
+               "fr": "**Ajuster un flux**, modifier un paramètre : réduire "
                      "la consommation de bois par ménage en introduisant des "
                      "alternatives"},
-    "bcl_m2": {"en": "**Break or strengthen a loop** — microcredit for clean "
+    "bcl_m2": {"en": "**Break or strengthen a loop**, microcredit for clean "
                      "cooking equipment breaks the poverty–charcoal link",
-               "fr": "**Casser ou renforcer une boucle** — un microcrédit "
+               "fr": "**Casser ou renforcer une boucle**, un microcrédit "
                      "pour s'équiper en cuisson propre casse le lien "
                      "pauvreté–charbon"},
-    "bcl_m3": {"en": "**Change the information flows** — monitoring, "
+    "bcl_m3": {"en": "**Change the information flows**, monitoring, "
                      "participatory diagnosis, awareness campaigns",
-               "fr": "**Modifier les flux d'information** — suivi, diagnostic "
+               "fr": "**Modifier les flux d'information**, suivi, diagnostic "
                      "participatif, campagnes de sensibilisation"},
-    "bcl_m4": {"en": "**Change the rules** — ban on burning, payments for "
+    "bcl_m4": {"en": "**Change the rules**, ban on burning, payments for "
                      "ecosystem services",
-               "fr": "**Changer les règles** — interdiction du brûlis, "
+               "fr": "**Changer les règles**, interdiction du brûlis, "
                      "paiements pour services écosystémiques"},
     "bcl_boucles_top": {
         "en": "The {n} strongest loops of the {tot} the model contains, "
@@ -277,9 +277,9 @@ TEXTES = {
               "le classement des indicateurs touchés, pas le nombre de "
               "points."},
     "bcl_diverge": {
-        "en": "The model no longer converges — a relation has been made too "
+        "en": "The model no longer converges, a relation has been made too "
               "strong. The figures below are not usable.",
-        "fr": "Le modèle ne converge plus — une relation a été rendue trop "
+        "fr": "Le modèle ne converge plus, une relation a été rendue trop "
               "forte. Les chiffres ci-dessous ne sont pas exploitables."},
 }
 for _c, _v in TEXTES.items():
@@ -815,7 +815,7 @@ def render(entete=True):
             f'margin:0 16px 6px 0"><span style="width:9px;height:9px;'
             f'border-radius:2px;background:{JUST_COULEUR.get(j, "#9aa4b5")}"></span>'
             f'<span style="font-size:12.5px;color:{ENCRE2}">'
-            f'<b>{_e(T("bcl_j_" + j))}</b> — {_e(T("bcl_j_" + j + "_x"))}'
+            f'<b>{_e(T("bcl_j_" + j))}</b> : {_e(T("bcl_j_" + j + "_x"))}'
             f'</span></span>'
             for j in ("structurel", "documentee", "empirique", "theorique",
                       "hypothese"))

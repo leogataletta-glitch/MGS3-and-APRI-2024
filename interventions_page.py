@@ -167,7 +167,7 @@ TEXTES = {
     "int_intro": {
         "en": "Each sheet acts on one lever of the causal graph. Expected "
               "impact, monitoring indicators and ranking are computed by the "
-              "loop model — change a relation and the sheets reorder "
+              "loop model, change a relation and the sheets reorder "
               "themselves. **The ranking follows the simulated effect, not "
               "political priority:** a strong modelled effect on an "
               "unfeasible lever is worth less than a modest one you can "
@@ -175,7 +175,7 @@ TEXTES = {
               "decides.",
         "fr": "Chaque fiche agit sur un levier du graphe causal. L'impact "
               "attendu, les indicateurs de suivi et le classement sont "
-              "calculés par le modèle des boucles — changez une relation, les "
+              "calculés par le modèle des boucles, changez une relation, les "
               "fiches se réordonnent. **Le classement suit l'effet simulé, "
               "pas la priorité politique :** un effet modélisé fort sur un "
               "levier infaisable vaut moins qu'un effet modeste sur un levier "
@@ -210,18 +210,18 @@ TEXTES = {
               "performance, acteurs et calendrier, risques et atténuation."},
 
     # ---------------- repérage
-    "int_rep": {"en": "a) Lever identification — the three criteria",
-                "fr": "a) Repérage des leviers — les trois critères"},
+    "int_rep": {"en": "a) Lever identification, the three criteria",
+                "fr": "a) Repérage des leviers, les trois critères"},
     "int_rep1": {"en": "Acting on several causes",
                  "fr": "Agir sur plusieurs causes"},
     "int_rep1_x": {
         "en": "Computed on the graph: how many relations leave the node, and "
               "how many loops it belongs to. A node in loops of **both signs** "
-              "is a tipping lever — the only kind that can turn a degrading "
+              "is a tipping lever, the only kind that can turn a degrading "
               "dynamic into a regulating one.",
         "fr": "Calculé sur le graphe : combien de relations partent du nœud, "
               "et à combien de boucles il appartient. Un nœud présent dans des "
-              "boucles **des deux sens** est un levier de basculement — le "
+              "boucles **des deux sens** est un levier de basculement, le "
               "seul type capable de retourner une dynamique dégradante en "
               "dynamique régulatrice."},
     "int_rep2": {"en": "Belonging to a weak dimension",
@@ -229,22 +229,22 @@ TEXTES = {
     "int_rep2_x": {
         "en": "Computed on the survey: weighted score of each dimension, "
               "against the weighted mean of the framework itself. Two fall "
-              "below it — the human dimension and the physical one — and they "
+              "below it, the human dimension and the physical one, and they "
               "carry most of the sheets.",
         "fr": "Calculé sur l'enquête : score pondéré de chaque dimension, "
               "comparé à la moyenne pondérée du référentiel lui-même. Deux "
-              "passent dessous — la dimension humaine et la dimension "
-              "physique — et ce sont elles qui portent l'essentiel des "
+              "passent dessous, la dimension humaine et la dimension "
+              "physique, et ce sont elles qui portent l'essentiel des "
               "fiches."},
     "int_rep2_ref": {
         "en": "A dimension is called weak when it falls below the weighted "
-              "mean of the framework itself, {v}/10 — not below a round "
+              "mean of the framework itself, {v}/10, not below a round "
               "threshold chosen by hand. A threshold at 5 would have pulled "
               "the institutional dimension (4.83) into the weak group and "
               "diluted the criterion; a threshold at 4 would have spared it, "
               "but only because it had been adjusted to.",
         "fr": "Une dimension est dite faible quand elle passe sous la moyenne "
-              "pondérée du référentiel lui-même, {v}/10 — et non sous un seuil "
+              "pondérée du référentiel lui-même, {v}/10, et non sous un seuil "
               "rond choisi à la main. Un seuil à 5 aurait fait basculer la "
               "dimension institutionnelle (4,83) du côté faible et dilué le "
               "critère ; un seuil à 4 l'aurait épargnée, mais uniquement parce "
@@ -255,13 +255,13 @@ TEXTES = {
         "en": "**This one is not computed on the graph, and it should be "
               "said.** Distance to the community nodes is 3 for almost every "
               "lever and discriminates nothing. It is therefore judged on the "
-              "delivery channel of each sheet — and the measured state of the "
+              "delivery channel of each sheet, and the measured state of the "
               "associative fabric is shown here so the judgement can be "
               "argued with.",
         "fr": "**Celui-ci n'est pas calculé sur le graphe, et il faut le "
               "dire.** La distance aux nœuds communautaires vaut 3 pour "
               "presque tous les leviers et ne discrimine rien. Il est donc "
-              "jugé sur le canal de mise en œuvre de chaque fiche — et l'état "
+              "jugé sur le canal de mise en œuvre de chaque fiche, et l'état "
               "mesuré du tissu associatif est affiché ici pour qu'on puisse "
               "contester ce jugement."},
     "int_rep3_lect": {
@@ -269,14 +269,14 @@ TEXTES = {
               "is very weak (membership 2/10, bonding and bridging social "
               "capital 1/10), while the organisations that do exist are "
               "**well structured and already partnered** (7/10 and 9/10). "
-              "Mobilisation therefore does not mean creating a fabric — it "
+              "Mobilisation therefore does not mean creating a fabric, it "
               "means routing the sheets through the organisations already "
               "standing.",
         "fr": "La lecture est nette : le tissu associatif des **ménages** est "
               "très faible (appartenance 2/10, capital d'entraide et de "
               "passerelle 1/10), alors que les organisations qui existent sont "
               "**bien structurées et déjà partenaires** (7/10 et 9/10). "
-              "Mobiliser ne veut donc pas dire créer un tissu — cela veut dire "
+              "Mobiliser ne veut donc pas dire créer un tissu, cela veut dire "
               "faire passer les fiches par les organisations déjà debout."},
     "int_dim_faible": {"en": "weak", "fr": "faible"},
 
@@ -304,12 +304,12 @@ TEXTES = {
         "en": "The deliverable of the evaluation step. Each row reads: the "
               "problem as the framework states it, its measured score, the "
               "loop it sits in, and the lever the sheet acts on. A blank loop "
-              "is not an omission — that lever sits in no cycle, its effect is "
+              "is not an omission, that lever sits in no cycle, its effect is "
               "a chain, direct and bounded.",
         "fr": "Le livrable de l'étape d'évaluation. Chaque ligne se lit : le "
               "problème tel que le référentiel l'énonce, son score mesuré, la "
               "boucle dans laquelle il se trouve, et le levier sur lequel la "
-              "fiche agit. Une boucle vide n'est pas un oubli — ce levier "
+              "fiche agit. Une boucle vide n'est pas un oubli, ce levier "
               "n'appartient à aucun cycle, son effet est une chaîne, direct et "
               "borné."},
     "int_c_probleme": {"en": "Problem", "fr": "Problème"},
@@ -325,7 +325,7 @@ TEXTES = {
               "in the simulation, but sit in few loops or none: their effect "
               "is direct and bounded. Conservation farming and forest "
               "enforcement move it ten times less, yet they are the two "
-              "**tipping levers** — the only sheets that sit in loops of both "
+              "**tipping levers**, the only sheets that sit in loops of both "
               "signs, and so the only ones that can turn a degrading dynamic "
               "into a regulating one. A programme needs both: the first to "
               "show results within a season, the second to change what the "
@@ -336,7 +336,7 @@ TEXTES = {
               "boucles ou à aucune : leur effet est direct et borné. Les "
               "pratiques agricoles conservatrices et le contrôle forestier le "
               "déplacent dix fois moins, et ce sont pourtant les deux "
-              "**leviers de basculement** — les seules fiches présentes dans "
+              "**leviers de basculement**, les seules fiches présentes dans "
               "des boucles des deux sens, donc les seules capables de "
               "retourner une dynamique dégradante en dynamique régulatrice. Un "
               "programme a besoin des deux : les premières pour montrer des "
@@ -380,11 +380,11 @@ TEXTES = {
     "int_dou_peri_x": {
         "en": "The graph covers {p} % of the framework's weight; the rest "
               "cannot move, for want of a posed relation. Related to that "
-              "perimeter alone, the effect is {v} — which is the honest "
+              "perimeter alone, the effect is {v}, which is the honest "
               "measure of its size.",
         "fr": "Le graphe couvre {p} % du poids du référentiel ; le reste ne "
               "peut pas bouger, faute de relation posée. Rapporté à ce seul "
-              "périmètre, l'effet vaut {v} — c'est la mesure honnête de son "
+              "périmètre, l'effet vaut {v} : c'est la mesure honnête de son "
               "ampleur."},
     "int_dou_det": {"en": "Indicator by indicator",
                     "fr": "Indicateur par indicateur"},
@@ -403,8 +403,8 @@ TEXTES = {
     "int_depart": {"en": "Lever, current score", "fr": "Levier, score actuel"},
     "int_boucles": {"en": "Loops crossed", "fr": "Boucles traversées"},
     "int_bascule": {
-        "en": "Tipping lever — sits in loops of both signs",
-        "fr": "Levier de basculement — présent dans des boucles des deux sens"},
+        "en": "Tipping lever, sits in loops of both signs",
+        "fr": "Levier de basculement, présent dans des boucles des deux sens"},
     "int_objectif": {"en": "Specific objective", "fr": "Objectif spécifique"},
     "int_probleme": {"en": "Problem addressed", "fr": "Problème traité"},
     "int_act_tech": {"en": "Technical activities", "fr": "Activités techniques"},
@@ -460,17 +460,17 @@ TEXTES = {
     "int_n4": {"en": "Change the rules", "fr": "Changer les règles"},
     "int_n_note": {
         "en": "After Meadows: the higher the level, the more structural the "
-              "effect — and the harder to obtain.",
+              "effect, and the harder to obtain.",
         "fr": "D'après Meadows : plus le niveau est élevé, plus l'effet est "
-              "structurel — et plus il est difficile à obtenir."},
+              "structurel, et plus il est difficile à obtenir."},
     # ---------------- fiche : cuisson
     "int_cuisson_t": {"en": "Break the poverty–charcoal link",
                       "fr": "Casser le lien pauvreté–charbon"},
     "int_cuisson_p": {
-        "en": "Clean cooking scores 1/10 in the framework — almost every "
+        "en": "Clean cooking scores 1/10 in the framework, almost every "
               "household cooks on wood or charcoal, and that is the entry "
               "point of the pressure on wood.",
-        "fr": "La cuisson propre est notée 1/10 par le référentiel — presque "
+        "fr": "La cuisson propre est notée 1/10 par le référentiel, presque "
               "tous les ménages cuisinent au bois ou au charbon, et c'est la "
               "porte d'entrée de la pression sur le bois."},
     "int_cuisson_o": {
@@ -517,10 +517,10 @@ TEXTES = {
               "tissu associatif est le plus solide · 19–36 reconversion des "
               "producteurs de charbon, enquête de suivi au mois 30"},
     "int_cuisson_r": {
-        "en": "Equipment is bought and then abandoned — the classic failure of "
+        "en": "Equipment is bought and then abandoned, the classic failure of "
               "improved stove programmes · charcoal production is a cash "
               "income, and removing it without a replacement is refused",
-        "fr": "L'équipement est acheté puis abandonné — l'échec classique des "
+        "fr": "L'équipement est acheté puis abandonné, l'échec classique des "
               "programmes de réchauds améliorés · la production de charbon est "
               "un revenu monétaire, et la supprimer sans substitut se heurte à "
               "un refus"},
@@ -545,10 +545,10 @@ TEXTES = {
     "int_agro_t": {"en": "Fertility without fire",
                    "fr": "La fertilité sans le feu"},
     "int_agro_p": {
-        "en": "Food insecurity scores 0/10 — the worst line of the whole "
-              "framework — in the weakest dimension, the human one at 1.4/10.",
-        "fr": "L'insécurité alimentaire est notée 0/10 — la pire ligne du "
-              "référentiel — dans la dimension la plus faible, la dimension "
+        "en": "Food insecurity scores 0/10, the worst line of the whole "
+              "framework, in the weakest dimension, the human one at 1.4/10.",
+        "fr": "L'insécurité alimentaire est notée 0/10, la pire ligne du "
+              "référentiel, dans la dimension la plus faible, la dimension "
               "humaine à 1,4/10."},
     "int_agro_o": {
         "en": "Replace slash-and-burn with practices that build soil, so that "
@@ -601,12 +601,12 @@ TEXTES = {
               "irrationnel un investissement long sur une parcelle qu'on peut "
               "perdre"},
     "int_agro_m": {
-        "en": "Pair it with a quick-return activity — market gardening, small "
-              "livestock — over the first two years · sequence it behind the "
+        "en": "Pair it with a quick-return activity, market gardening, small "
+              "livestock, over the first two years · sequence it behind the "
               "tenure sheet wherever disputes are live · never a ban without "
               "a working alternative already in the field",
-        "fr": "L'associer à une activité à retour rapide — maraîchage, petit "
-              "élevage — sur les deux premières années · la séquencer derrière "
+        "fr": "L'associer à une activité à retour rapide, maraîchage, petit "
+              "élevage, sur les deux premières années · la séquencer derrière "
               "la fiche foncier là où les litiges sont vifs · jamais "
               "d'interdiction sans alternative déjà opérante au champ"},
     "int_agro_b": {
@@ -621,15 +621,15 @@ TEXTES = {
                   "fr": "L'eau, et le temps qu'elle libère"},
     "int_eau_p": {
         "en": "Access to improved drinking water scores 4/10, and it carries "
-              "the heaviest weight of the whole framework (4.6) — which is why "
+              "the heaviest weight of the whole framework (4.6), which is why "
               "it moves the index more than any other sheet.",
         "fr": "L'accès à une eau de boisson améliorée est noté 4/10, et il "
-              "porte la pondération la plus lourde du référentiel (4,6) — "
+              "porte la pondération la plus lourde du référentiel (4,6), "
               "c'est pourquoi il déplace l'indice plus que toute autre fiche."},
     "int_eau_o": {
-        "en": "Improve access to drinking water — the model's shortest path to "
+        "en": "Improve access to drinking water, the model's shortest path to "
               "health, and through it to the capacity to work.",
-        "fr": "Améliorer l'accès à l'eau de boisson — le chemin le plus court "
+        "fr": "Améliorer l'accès à l'eau de boisson, le chemin le plus court "
               "du modèle vers la santé, et par elle vers la capacité de "
               "travail."},
     "int_eau_at": {
@@ -761,15 +761,15 @@ TEXTES = {
     "int_alerte_t": {"en": "Warning that reaches, and a committee that acts",
                      "fr": "Une alerte qui arrive, un comité qui agit"},
     "int_alerte_p": {
-        "en": "Local risk management committees score 1/10 — in a territory "
+        "en": "Local risk management committees score 1/10, in a territory "
               "that takes a hurricane season every year.",
-        "fr": "Les comités locaux de gestion des risques sont notés 1/10 — "
+        "fr": "Les comités locaux de gestion des risques sont notés 1/10, "
               "sur un territoire qui prend une saison cyclonique chaque année."},
     "int_alerte_o": {
-        "en": "Turn a received message into an organised response — the "
+        "en": "Turn a received message into an organised response, the "
               "cheapest lever of the framework, and the one with the shortest "
               "delay.",
-        "fr": "Transformer un message reçu en réponse organisée — le levier le "
+        "fr": "Transformer un message reçu en réponse organisée, le levier le "
               "moins coûteux du référentiel, et celui dont le délai est le "
               "plus court."},
     "int_alerte_at": {
@@ -817,41 +817,41 @@ TEXTES = {
     "int_alerte_m": {
         "en": "Score the drill, not the committee's existence · rotate "
               "membership yearly and give the role a small allowance · "
-              "monitoring on lines 22, 23 and 28 together — access, "
-              "participation, committee — since only their combination proves "
+              "monitoring on lines 22, 23 and 28 together, access, "
+              "participation, committee, since only their combination proves "
               "the chain works",
         "fr": "Noter l'exercice et non l'existence du comité · renouveler les "
               "membres chaque année et rémunérer symboliquement la fonction · "
-              "suivre ensemble les lignes 22, 23 et 28 — accès, participation, "
-              "comité — car seule leur combinaison prouve que la chaîne "
+              "suivre ensemble les lignes 22, 23 et 28, accès, participation, "
+              "comité, car seule leur combinaison prouve que la chaîne "
               "fonctionne"},
     "int_alerte_b": {
         "en": "This one does not turn a loop: it is a flow of information, "
-              "Meadows' third level. Its effect is fast and narrow — which is "
+              "Meadows' third level. Its effect is fast and narrow, which is "
               "exactly what a season of hurricanes demands.",
         "fr": "Celle-ci ne retourne pas une boucle : c'est un flux "
               "d'information, le troisième niveau de Meadows. Son effet est "
-              "rapide et étroit — ce que réclame précisément une saison "
+              "rapide et étroit, ce que réclame précisément une saison "
               "cyclonique."},
 
     # ---------------- fiche : foncier
     "int_foncier_t": {"en": "Tenure, and the horizon it opens",
                       "fr": "Le foncier, et l'horizon qu'il ouvre"},
     "int_foncier_p": {
-        "en": "Tenure security scores 7/10 — this sheet is **not** justified by "
+        "en": "Tenure security scores 7/10, this sheet is **not** justified by "
               "a weak score. It is justified by its position: it is the "
               "upstream condition of every long agricultural investment, and "
               "the 7/10 hides sections where disputes are live.",
-        "fr": "La sécurité foncière est notée 7/10 — cette fiche n'est **pas** "
+        "fr": "La sécurité foncière est notée 7/10, cette fiche n'est **pas** "
               "justifiée par un score faible. Elle l'est par sa position : "
               "elle est la condition amont de tout investissement agricole "
               "long, et le 7/10 masque des sections où les litiges sont vifs."},
     "int_foncier_o": {
         "en": "Secure land rights so that planting a tree becomes a rational "
-              "act — nobody invests in ten years on a plot they may lose next "
+              "act, nobody invests in ten years on a plot they may lose next "
               "season.",
         "fr": "Sécuriser les droits fonciers pour que planter un arbre "
-              "redevienne un acte rationnel — personne n'investit à dix ans "
+              "redevienne un acte rationnel, personne n'investit à dix ans "
               "sur une parcelle qu'il peut perdre à la saison prochaine."},
     "int_foncier_at": {
         "en": "Participatory mapping of customary rights, plot by plot · "
@@ -894,11 +894,11 @@ TEXTES = {
               "rouverts par la cartographie elle-même · le registre n'est pas "
               "reconnu et le travail ne vaut rien"},
     "int_foncier_m": {
-        "en": "Record secondary rights — grazing, gleaning, tenancy — as "
+        "en": "Record secondary rights, grazing, gleaning, tenancy, as "
               "rights, not as gaps · mediation funded for two years beyond the "
               "mapping · start on the sections where disputes are fewest, to "
               "build a precedent rather than a conflict",
-        "fr": "Consigner les droits secondaires — pâture, glanage, métayage — "
+        "fr": "Consigner les droits secondaires, pâture, glanage, métayage, "
               "comme des droits et non comme des vides · médiation financée "
               "deux ans au-delà de la cartographie · commencer par les "
               "sections où les litiges sont les moins nombreux, pour "
@@ -916,18 +916,18 @@ TEXTES = {
                        "fr": "Des règles pour la forêt, et qui les tient"},
     "int_controle_p": {
         "en": "Forest cover change scores 5/10, but the lever sits in 10 loops "
-              "— 7 reinforcing and 3 balancing. It is one of the two tipping "
+              "7 reinforcing and 3 balancing. It is one of the two tipping "
               "levers of the whole model.",
         "fr": "Le changement du couvert forestier est noté 5/10, mais le "
-              "levier appartient à 10 boucles — 7 renforçantes et 3 "
+              "levier appartient à 10 boucles, 7 renforçantes et 3 "
               "équilibrantes. C'est l'un des deux leviers de basculement de "
               "tout le modèle."},
     "int_controle_o": {
-        "en": "Put a brake on the relation the model finds most dominant — "
+        "en": "Put a brake on the relation the model finds most dominant, "
               "pressure on fuelwood against forest cover, present in 20 of the "
               "38 loops.",
         "fr": "Poser un frein sur la relation que le modèle trouve la plus "
-              "dominante — la pression sur le bois contre le couvert "
+              "dominante, la pression sur le bois contre le couvert "
               "forestier, présente dans 20 des 38 boucles."},
     "int_controle_at": {
         "en": "Felling permits tied to replanting · protection of the "
@@ -993,23 +993,23 @@ TEXTES = {
                        "fr": "La carte, pas l'acte"},
     "int_identite_p": {
         "en": "**The calculation moved this sheet.** It targeted birth "
-              "registration — that line scores 10/10, so pushing it yields "
+              "registration, that line scores 10/10, so pushing it yields "
               "almost nothing (+0.026). The blockage is one step further on: "
               "the national identity card, at 4/10, which conditions both the "
               "account and access to public services. Retargeted on the card, "
               "the same sheet is worth +0.064.",
         "fr": "**C'est le calcul qui a déplacé cette fiche.** Elle visait "
-              "l'enregistrement des naissances — cette ligne est à 10/10, et "
+              "l'enregistrement des naissances, cette ligne est à 10/10, et "
               "la pousser ne rend donc presque rien (+0,026). Le blocage est "
               "un cran plus loin : la carte d'identité nationale, à 4/10, qui "
               "conditionne à la fois le compte et l'accès aux services "
               "publics. Recentrée sur la carte, la même fiche vaut +0,064."},
     "int_identite_o": {
         "en": "Get the identity card into the hands of adults who already have "
-              "a birth certificate — closing a chain that is blocked at its "
+              "a birth certificate, closing a chain that is blocked at its "
               "second link, not its first.",
         "fr": "Mettre la carte d'identité entre les mains des adultes qui "
-              "possèdent déjà un acte de naissance — débloquer une chaîne qui "
+              "possèdent déjà un acte de naissance, débloquer une chaîne qui "
               "coince à son deuxième maillon, pas au premier."},
     "int_identite_at": {
         "en": "Mobile ONI enrolment sessions by communal section · late birth "
@@ -1454,7 +1454,7 @@ def _bloc_tableau(fiches, par_id):
 def _bloc_justification(f):
     """D'où vient le chiffre — le calcul déplié, pas un ordre de grandeur."""
     d = f["dec"]
-    with st.expander(f'{T("int_dou")} — {_fmt(f["delta"], 3, True)}'):
+    with st.expander(f'{T("int_dou")} : {_fmt(f["delta"], 3, True)}'):
         st.caption(T("int_dou_f"))
         c1, c2, c3, c4 = st.columns(4)
         for col, lab, val in (
@@ -1482,7 +1482,7 @@ def _bloc_justification(f):
         if pc:
             st.markdown(
                 f'<p class="int-x" style="font-size:13.5px">'
-                f'<b>{_e(T("int_dou_peri"))} — </b>'
+                f'<b>{_e(T("int_dou_peri"))} : </b>'
                 + _e(T("int_dou_peri_x")
                      .replace("{p}", f"{100 * pc:.0f}")
                      .replace("{v}", _fmt(f["delta"] / pc, 3, True)))
@@ -1700,7 +1700,7 @@ def _render():
                 f'font-weight:800;letter-spacing:-.02em;color:{HAUSSE}">'
                 f'{_fmt(f["cible"], 1, True)} pt</span>'
                 f'<span style="font-size:12.5px;color:{ENCRE2};'
-                f'margin-left:9px">{_e(T("int_perf_cible"))} — '
+                f'margin-left:9px">{_e(T("int_perf_cible"))} : '
                 f'{_e(_libelle(f["noeud"]))}</span></div>'
                 f'<div style="font-size:15px;color:{ENCRE2};font-weight:600" '
                 f'class="int-num">{_e(dep)} → <b style="color:{ENCRE}">'
@@ -1737,16 +1737,16 @@ def _render():
             st.markdown(
                 f'<div class="int-lab">{_e(T("int_risques"))}</div>'
                 f'<p class="int-x" style="font-size:13.5px">'
-                f'<b style="color:{BAISSE}">{_e(T("int_risque"))}</b> — '
+                f'<b style="color:{BAISSE}">{_e(T("int_risque"))}</b> : '
                 f'{_e(T("int_" + f["id"] + "_r"))}</p>'
                 f'<p class="int-x" style="font-size:13.5px;margin-top:6px">'
-                f'<b style="color:{HAUSSE}">{_e(T("int_attenuation"))}</b> — '
+                f'<b style="color:{HAUSSE}">{_e(T("int_attenuation"))}</b> : '
                 f'{_e(T("int_" + f["id"] + "_m"))}</p>'
                 f'<div class="int-lab">{_e(T("int_boucle_visee"))}</div>'
                 f'<p class="int-x">{_e(T("int_" + f["id"] + "_b"))}</p>'
                 f'<p class="int-x" style="font-size:12.5px;color:{ENCRE3};'
                 f'margin-top:6px">{_e(T("int_depart"))} : '
-                f'{_e(_libelle(f["noeud"]))} — <b>{_e(dep)}</b> · '
+                f'{_e(_libelle(f["noeud"]))} : <b>{_e(dep)}</b> · '
                 f'{_e(T("int_boucles"))} : {f["boucles"]} '
                 f'<span style="color:{HAUSSE}">R{f["renforcantes"]}</span> / '
                 f'<span style="color:{ALERTE}">B{f["equilibrantes"]}</span>'

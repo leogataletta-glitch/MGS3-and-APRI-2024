@@ -1062,7 +1062,7 @@ def _onglet_indice(cle, ligne, champ, mode, coul, res, jeu, focus):
                 f'margin:0">{T("e_i_attente_etapes")}</p></div>',
                 unsafe_allow_html=True)
             if entree and entree.get("echelle"):
-                st.caption(f'{T("e_i_echelle")} — {entree["echelle"]}')
+                st.caption(f'{T("e_i_echelle")} : {entree["echelle"]}')
             st.caption(T("e_i_fenetre"))
             return
 
@@ -1139,7 +1139,7 @@ def _rendu_indice(cle, champ, mode, coul, entree, indices, focus):
                else T("e_i_serie_note"))
     st.markdown(_tableau_indice(indices, champ, ref), unsafe_allow_html=True)
     if entree and entree.get("echelle"):
-        st.caption(f'{T("e_i_echelle")} — {entree["echelle"]}')
+        st.caption(f'{T("e_i_echelle")} : {entree["echelle"]}')
 
 
 def _serie_indice_svg(serie, reference, couleur, largeur=1040):
@@ -1347,7 +1347,7 @@ def _onglet_lacunes(res):
                 f'2px 14px;margin:0 0 14px">'
                 f'<div style="font-size:12px;letter-spacing:.06em;'
                 f'text-transform:uppercase;color:#1a6bb0;font-weight:700">'
-                f'{_e(T("e_src_" + source))} — {len(presents)}</div>'
+                f'{_e(T("e_src_" + source))} : {len(presents)}</div>'
                 f'<div style="font-size:14.5px;color:#3c4761;'
                 f'line-height:1.55;margin-top:3px">{noms}</div></div>',
                 unsafe_allow_html=True)
