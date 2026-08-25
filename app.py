@@ -231,7 +231,33 @@ st.markdown(("""
   /* padding-top nul : la photo est le premier élément de la page d'entrée et
      doit toucher le haut de la fenêtre. Sur les autres pages, où il n'y a
      plus rien au-dessus du titre, c'est .bh-vide qui redonne l'air. */
-  .block-container { max-width: 1240px; padding-top: 0; padding-bottom: 5rem; }
+  /* ================= LA DENSITÉ DE LA PAGE ==============================
+     Le site se lisait en descendant sans arrêt : une page tenait rarement sur
+     un écran, et le lecteur passait son temps à faire défiler pour retrouver
+     ce qu'il venait de voir. La cause n'était pas seulement la taille des
+     lettres, c'était surtout l'air entre les blocs.
+
+     DEUX RÉGLAGES, ET LE SECOND FAIT L'ESSENTIEL :
+
+     1. L'espace entre deux blocs empilés descend d'un cran, et le pied de
+        page perd la moitié de son vide. Cinq rem de blanc sous le dernier
+        élément, c'était un demi-écran pour rien.
+     2. Le contenu est mis à l'échelle de `--z`, une fois pour toutes. Réduire
+        seulement la taille des lettres n'aurait presque rien donné : les
+        pages sont hautes à cause des marges, des rembourrages de carte et
+        des hauteurs de graphique, tous écrits en pixels dans une vingtaine
+        de fichiers. `zoom` les prend tous ensemble, dans la même proportion,
+        sans qu'aucune valeur ait à être retouchée et sans rien déformer.
+
+     LA COLONNE DE GAUCHE N'EST PAS MISE À L'ÉCHELLE : une navigation qui
+     rétrécit avec le contenu devient moins facile à viser, alors qu'elle ne
+     coûte rien en hauteur. Le zoom ne porte que sur la zone de contenu. */
+  :root { --z: .88; --dz: 1.1364; }
+  section.stMain, div[data-testid="stMain"] { zoom: var(--z); }
+  .block-container { max-width: 1240px; padding-top: 0; padding-bottom: 2.4rem; }
+  div[data-testid="stMainBlockContainer"] { padding-top: 1.2rem; }
+  div[data-testid="stVerticalBlock"] { gap: .65rem; }
+  div[data-testid="stElementContainer"] { margin-bottom: 0; }
 
   /* ================= la barre d'outils de Streamlit : SUPPRIMÉE ==========
      « Share », « Deploy », le menu ⋮, la barre colorée de chargement : ce sont
@@ -516,6 +542,17 @@ st.markdown(("""
     [data-testid="collapsedControl"] {
       display: none !important;
     }
+    /* CETTE BANDE VIDE EN HAUT DE LA COLONNE ÉTAIT LE LOGEMENT DU CHEVRON.
+       Streamlit lui réserve une hauteur fixe qu'il occupait seul ; le chevron
+       retiré, il ne restait qu'un rectangle de blanc au-dessus du choix de
+       langue. Il disparaît avec lui, et le contenu remonte en haut de
+       l'écran. Sous le seuil, le chevron revient : sa loge aussi. */
+    [data-testid="stSidebarHeader"] {
+      display: none !important;
+    }
+    section[data-testid="stSidebar"] > div,
+    [data-testid="stSidebarContent"] { padding-top: 0 !important; }
+    [data-testid="stSidebarUserContent"] { padding-top: 6px !important; }
   }
   /* Le bloc de marque remonte : dix-huit pixels de blanc au-dessus d'un
      logo, sur une colonne qui commence en haut de l'écran, ne servaient
@@ -746,14 +783,20 @@ st.markdown(("""
   /* La photo déborde la colonne de texte et touche les deux bords : c'est
      un en-tête, pas une illustration posée dans le contenu. */
   .bandeau-haut {
-    width: calc(100vw - 310px) !important;
-    max-width: calc(100vw - 310px) !important;
-    margin-left: calc(-50vw + 50% + 155px);
+    /* LES REPÈRES EN `vw` NE SUIVENT PAS LE ZOOM. Un `100vw` écrit dans une
+       zone mise à l'échelle vaut toujours la largeur réelle de la fenêtre,
+       si bien que la photo se retrouvait rétrécie d'autant et décollée du
+       bord droit. On divise donc chaque terme en `vw` par le facteur, ce que
+       fait `--dz`, son inverse. Les termes en pourcentage, eux, se réfèrent
+       au conteneur déjà mis à l'échelle et n'ont rien à corriger. */
+    width: calc((100vw - 310px) * var(--dz)) !important;
+    max-width: calc((100vw - 310px) * var(--dz)) !important;
+    margin-left: calc(50% - (100vw - 310px) * var(--dz) / 2);
     /* LES 32 PIXELS REPRIS. Chaque feuille de style injectée par st.markdown
        laisse un bloc vide en tête de page, et la gouttière de Streamlit
        s'ajoute par-dessus : la photo commençait 32 px sous le haut de la
        fenêtre, avec une bande blanche au-dessus d'elle. */
-    margin-top: -32px; margin-bottom: 0;
+    margin-top: calc(-32px * var(--dz)); margin-bottom: 0;
   }
   /* L'enveloppe existe pour que le logo puisse se poser DANS la photo :
      un élément en position absolue se place par rapport au premier parent
@@ -772,41 +815,59 @@ st.markdown(("""
     opacity: .95; filter: drop-shadow(0 1px 8px rgba(0,0,0,.35));
   }
 
-  /* --- les deux langues, en tête de la colonne verte ------------------- */
-  /* Elles empruntent la classe `st-key-lang_*` de leur bouton : c'est le seul
+  /* --- les deux langues, en tête de la colonne -------------------------
+     DEUX PASTILLES, ET NON DEUX MOTS POSÉS. Écrites en simple texte, elles ne
+     se donnaient pas pour cliquables, et la langue courante ne se distinguait
+     que par une nuance de gris qu'il fallait chercher. Chacune porte
+     maintenant son contour, la paire est centrée, et la langue en cours est
+     sur fond vert : on voit d'un coup d'œil ce qu'on lit et ce qu'on peut
+     demander à la place.
+
+     Elles empruntent la classe `st-key-lang_*` de leur bouton : c'est le seul
      point d'accroche stable que Streamlit offre sur un widget précis. Tout ce
-     que la colonne impose aux boutons — fond, relief, soulèvement au survol —
-     est défait ici, et il faut le défaire explicitement : ces règles-là sont
-     posées en !important. */
+     que la colonne impose aux boutons est défait ici, explicitement, en
+     !important. */
   section[data-testid="stSidebar"] div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button,
   section[data-testid="stSidebar"] div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] {
-    background: transparent !important; border: none !important;
-    box-shadow: none !important; padding: 0 !important;
-    min-height: 0 !important; height: auto !important;
-    justify-content: flex-start !important; transform: none !important;
+    background: #ffffff !important;
+    border: 1px solid var(--bord) !important;
+    border-radius: 999px !important;
+    box-shadow: none !important; padding: 6px 4px !important;
+    min-height: 0 !important; height: auto !important; width: 100% !important;
+    justify-content: center !important; transform: none !important;
+    transition: background .15s ease, border-color .15s ease;
   }
   section[data-testid="stSidebar"] div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button p {
-    font-size: 12px !important; font-weight: 700 !important;
-    letter-spacing: .1em !important; text-transform: uppercase;
-    color: var(--encre-3) !important;
+    font-size: 11.5px !important; font-weight: 700 !important;
+    letter-spacing: .09em !important; text-transform: uppercase;
+    color: var(--encre-3) !important; text-align: center !important;
     transition: color .15s ease;
+  }
+  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button:hover {
+    background: #f1f6f4 !important; border-color: #cfe0d8 !important;
   }
   section[data-testid="stSidebar"] div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button:hover p {
     color: var(--encre-2) !important;
   }
   section[data-testid="stSidebar"] div[class*="st-key-lang_"]
-  div[data-testid="stButton"] > button[kind="primary"] p {
-    color: var(--encre) !important;
+  div[data-testid="stButton"] > button[kind="primary"] {
+    background: var(--accent) !important; border-color: var(--accent) !important;
   }
-  /* La rangée de langue ouvre la colonne : un peu d'air au-dessus, un filet
-     en dessous pour la séparer de la marque sans la souligner. */
+  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button[kind="primary"] p {
+    color: #ffffff !important;
+  }
+  /* La rangée ouvre la colonne : la paire est resserrée au centre, avec un
+     filet en dessous pour la séparer de la marque sans la souligner. */
   section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:has(
       div[class*="st-key-lang_"]) {
-    padding: 14px 2px 12px; margin-bottom: 2px;
+    padding: 12px 2px 12px; margin: 0 auto 2px; max-width: 250px;
+    gap: 8px !important;
     border-bottom: 1px solid var(--bord);
   }
 
@@ -1403,8 +1464,13 @@ def _rendre_ruban():
 # voulu : un choix de langue n'est pas une page, il ne doit pas se présenter
 # comme un onglet.
 with _sb_langue_haut:
-    _cl = st.columns([1.25, 1, 0.5])
-    for _col, _code in zip(_cl[0:2], ("fr", "en")):
+    # DEUX COLONNES ÉGALES, ET PLUS DE TROISIÈME COLONNE VIDE. Le gabarit
+    # [1.25, 1, 0.5] datait du temps où les langues étaient deux mots posés à
+    # gauche : la colonne fantôme les y retenait, et la première était plus
+    # large que la seconde, donc les deux pastilles n'auraient pas eu la même
+    # taille. Deux colonnes égales, et la rangée se centre d'elle-même.
+    _cl = st.columns(2)
+    for _col, _code in zip(_cl, ("fr", "en")):
         with _col:
             st.button(i18n.LANGUES[_code], key=f"lang_{_code}",
                       on_click=_changer_langue, args=(_code,),
