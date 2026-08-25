@@ -46,6 +46,7 @@ import ocb_page
 import radar_accueil
 import resilience_page
 import saillants_page
+import systeme_page
 import synthese_page
 import telechargements_page
 import territoire_page
@@ -1529,12 +1530,15 @@ if app_mode == MODE_BOUCLES:
         f'<h2 style="font-size:27px;font-weight:700;color:#101728;'
         f'letter-spacing:-.02em;margin:2px 0 0">{T("mode_boucles")}</h2>',
         unsafe_allow_html=True)
-    _VUES = {T("oc_titre"): "onde", T("bcl_vue_analyse"): "analyse"}
+    _VUES = {T("oc_titre"): "onde", T("sy_titre"): "systeme",
+             T("bcl_vue_analyse"): "analyse"}
     _vue = st.radio("vue", list(_VUES), horizontal=True,
                     label_visibility="collapsed",
                     key=f"bcl_vue_{i18n.get_lang()}")
     if _VUES[_vue] == "onde":
         ondes_choc.render(entete=False)
+    elif _VUES[_vue] == "systeme":
+        systeme_page.render(entete=False)
     else:
         boucles_page.render(entete=False)
 

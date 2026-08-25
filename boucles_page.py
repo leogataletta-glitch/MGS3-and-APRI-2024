@@ -617,9 +617,15 @@ def render(entete=True):
     isolees = (M.aretes_de_boucle(lst_boucles[choix]) if choix >= 0 else None)
 
     # ------------------------------------------------------------ le réseau
-    with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc">{T("bcl_reseau")}</div>',
-                    unsafe_allow_html=True)
+    #
+    # LE SCHÉMA EST REPLIÉ, ET CE N'EST PAS UNE MISE AU PLACARD. Quarante-cinq
+    # boîtes et quatre-vingt-deux flèches sur une seule image : on y lit la
+    # STRUCTURE, ce qui est utile une fois, et jamais ce qui monte ou ce qui
+    # descend. C'est la vue « Le système en marche » qui répond maintenant à
+    # cette question-là, variable par variable. Le schéma reste pour qui veut
+    # voir le câblage — replié, parce qu'il n'est plus la première chose à
+    # regarder.
+    with st.expander(T("bcl_reseau")):
         st.caption(T("bcl_reseau_note"))
         st.markdown(T("bcl_polarite"))
         pos = _positions(graphe)
