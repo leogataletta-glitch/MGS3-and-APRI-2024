@@ -674,6 +674,162 @@ TEXTES = {
         "fr": "Rien de tout cela n'a été mesuré, parce que rien de tout cela "
               "n'était l'indicateur."},
     # ---- la chaîne de conditions, et ce que le cadre en mesure
+    # ---- les trois cas de l'approche extensionniste
+    "rap_a1_x": {
+        "en": "Three projects, three sectors, one way of working: a good is "
+              "delivered to beneficiaries and the deliveries are counted. "
+              "Each targets a visible symptom of underdevelopment, a poor "
+              "herd, a retreating forest, a school too far away, rather than "
+              "what holds that symptom in place. For each one, the framework "
+              "measures the conditions the project assumes are already met.",
+        "fr": "Trois projets, trois secteurs, une même façon de faire : on "
+              "livre un bien à des bénéficiaires et on compte les "
+              "livraisons. Chacun vise un symptôme visible du "
+              "sous-développement, un cheptel pauvre, un couvert forestier "
+              "qui recule, une école trop loin, plutôt que ce qui tient ce "
+              "symptôme en place. Pour chacun, le cadre mesure les "
+              "conditions que le projet suppose déjà remplies."},
+    "rap_a1_sympt": {"en": "Symptom targeted", "fr": "Symptôme visé"},
+
+    "rap_cas1": {"en": "Improved-breed livestock",
+                 "fr": "Animaux de race améliorée"},
+    "rap_cas1_s": {"en": "a poor herd", "fr": "un cheptel pauvre"},
+    "rap_cas2": {"en": "Reforestation", "fr": "Reboisement"},
+    "rap_cas2_s": {"en": "a retreating forest cover",
+                   "fr": "un couvert forestier qui recule"},
+    "rap_cas3": {"en": "Building a school", "fr": "Construire une école"},
+    "rap_cas3_s": {"en": "a school too far away", "fr": "une école trop loin"},
+
+    # -- le récit de chaque cas
+    "rap_cas2_p1": {
+        "en": "A project plants tens of thousands of young trees on degraded "
+              "plots. The result is easy to measure and easy to report. The "
+              "report is closed.",
+        "fr": "Un projet plante des dizaines de milliers de jeunes arbres sur "
+              "des parcelles dégradées. Le résultat est facile à mesurer et "
+              "facile à rapporter. Le rapport est bouclé."},
+    "rap_cas2_l1": {"en": "Seedlings in the ground, target met",
+                    "fr": "Plants mis en terre, cible atteinte"},
+    "rap_cas2_l2": {"en": "Seedlings still alive, unknown",
+                    "fr": "Plants encore vivants, inconnus"},
+    "rap_cas3_p1": {
+        "en": "A project builds and equips a school, and enrols five hundred "
+              "children. The result is easy to measure and easy to report. "
+              "The report is closed.",
+        "fr": "Un projet construit et équipe une école, et inscrit cinq cents "
+              "enfants. Le résultat est facile à mesurer et facile à "
+              "rapporter. Le rapport est bouclé."},
+    "rap_cas3_l1": {"en": "500 children enrolled, target met",
+                    "fr": "500 enfants inscrits, cible atteinte"},
+    "rap_cas3_l2": {"en": "500 school paths, unknown",
+                    "fr": "500 parcours scolaires, inconnus"},
+
+    # -- les questions sans réponse
+    "rap_cas2_q1": {"en": "Did the seedlings hold?",
+                    "fr": "Les plants ont-ils tenu ?"},
+    "rap_cas2_q2": {"en": "Who watered them the first season?",
+                    "fr": "Qui les a arrosés la première saison ?"},
+    "rap_cas2_q3": {"en": "Whose plot was it?",
+                    "fr": "À qui appartenait la parcelle ?"},
+    "rap_cas2_q4": {"en": "What do people cook with meanwhile?",
+                    "fr": "Avec quoi cuisine-t-on, en attendant ?"},
+    "rap_cas2_q5": {"en": "Who cuts, and why?", "fr": "Qui coupe, et pourquoi ?"},
+    "rap_cas2_q6": {"en": "What does a household eat the year it does not "
+                          "cut?",
+                    "fr": "Que mange le ménage l'année où il ne coupe pas ?"},
+    "rap_cas3_q1": {"en": "Did the children come?",
+                    "fr": "Les enfants sont-ils venus ?"},
+    "rap_cas3_q2": {"en": "Did they stay to the end?",
+                    "fr": "Sont-ils restés jusqu'au bout ?"},
+    "rap_cas3_q3": {"en": "Had they eaten that morning?",
+                    "fr": "Avaient-ils mangé le matin ?"},
+    "rap_cas3_q4": {"en": "Who fetched the water meanwhile?",
+                    "fr": "Qui allait chercher l'eau pendant ce temps ?"},
+    "rap_cas3_q5": {"en": "Could they study after dark?",
+                    "fr": "Pouvait-on réviser le soir ?"},
+    "rap_cas3_q6": {"en": "What paid more, school or work?",
+                    "fr": "Qu'est-ce qui rapportait plus, l'école ou le "
+                          "travail ?"},
+
+    # -- les conditions du reboisement
+    "rap_cas2_c1": {"en": "Stop cooking on wood",
+                    "fr": "Ne plus cuisiner au bois"},
+    "rap_cas2_c2": {"en": "An income that does not come from cutting",
+                    "fr": "Un revenu qui ne vient pas de la coupe"},
+    "rap_cas2_c3": {"en": "Land you are sure of",
+                    "fr": "Une terre dont on est sûr"},
+    "rap_cas2_c4": {"en": "Someone to tend it collectively",
+                    "fr": "Quelqu'un pour l'entretenir collectivement"},
+    "rap_cas2_c5": {"en": "Rain at the right time",
+                    "fr": "De la pluie au bon moment"},
+    "rap_cas2_c6": {"en": "Ground that is not already parched",
+                    "fr": "Un sol qui n'est pas déjà aride"},
+    "rap_cas2_c7": {"en": "Vegetation that comes back",
+                    "fr": "Une végétation qui repart"},
+    "rap_cas2_c8": {"en": "Pressure on fuelwood coming down",
+                    "fr": "Une pression sur le bois qui baisse"},
+
+    # -- les conditions de l'école
+    "rap_cas3_c1": {"en": "A school within reach",
+                    "fr": "Une école atteignable"},
+    "rap_cas3_c2": {"en": "A child who exists administratively",
+                    "fr": "Un enfant qui existe administrativement"},
+    "rap_cas3_c3": {"en": "A child who has eaten",
+                    "fr": "Un enfant qui a mangé"},
+    "rap_cas3_c4": {"en": "A household that can do without their labour",
+                    "fr": "Un ménage qui peut se passer de son travail"},
+    "rap_cas3_c5": {"en": "Water at the house",
+                    "fr": "De l'eau à la maison"},
+    "rap_cas3_c6": {"en": "Light to study after dark",
+                    "fr": "De la lumière pour étudier le soir"},
+    "rap_cas3_c7": {"en": "Care within reach when they fall ill",
+                    "fr": "Un soin accessible quand il tombe malade"},
+    "rap_cas3_c8": {"en": "Time not lost fetching water",
+                    "fr": "Du temps que la corvée d'eau ne prend pas"},
+
+    # -- la lecture, cas par cas
+    "rap_cas_obs": {
+        "en": "The three lowest links in this chain are {a} ({av} out of "
+              "ten), {b} ({bv}) and {c} ({cv}). The highest, {h}, stands at "
+              "{hv}.",
+        "fr": "Les trois maillons les plus bas de cette chaîne sont {a} ({av} "
+              "sur dix), {b} ({bv}) et {c} ({cv}). Le plus haut, {h}, se "
+              "tient à {hv}."},
+    "rap_cas2_pointe": {
+        "en": "Forest cover is measured at {a} out of ten, and clean cooking "
+              "fuels at {b}.",
+        "fr": "Le couvert forestier est mesuré à {a} sur dix, et les "
+              "combustibles propres de cuisson à {b}."},
+    "rap_cas2_int": {
+        "en": "You do not reforest against a fuel need. As long as wood "
+              "remains the household's cooking energy and income comes from "
+              "nowhere else, a planted tree is a store of value that can be "
+              "realised at any moment, and it will be. Forest cover is the "
+              "symptom; the fuel and the income are what holds it down.",
+        "fr": "On ne reboise pas contre un besoin de combustible. Tant que le "
+              "bois reste l'énergie de cuisson du ménage et que le revenu ne "
+              "vient pas d'ailleurs, l'arbre planté est une valeur "
+              "mobilisable à tout moment, et elle sera mobilisée. Le couvert "
+              "forestier est le symptôme ; le combustible et le revenu sont "
+              "ce qui le tient au sol."},
+    "rap_cas3_pointe": {
+        "en": "A primary school within thirty minutes scores {a} out of ten, "
+              "and primary completion is measured at {b}.",
+        "fr": "L'école primaire à moins de trente minutes est notée {a} sur "
+              "dix, et l'achèvement du primaire est mesuré à {b}."},
+    "rap_cas3_int": {
+        "en": "The building was not what was missing most. A child who has "
+              "not eaten, who spends the morning fetching water and has no "
+              "light in the evening does not finish primary school because "
+              "the building came closer. The distance is the visible "
+              "symptom; what keeps the child out is elsewhere, and it is "
+              "measured.",
+        "fr": "Le bâtiment n'était pas ce qui manquait le plus. Un enfant qui "
+              "n'a pas mangé, qui passe sa matinée à la corvée d'eau et qui "
+              "n'a pas de lumière le soir ne finit pas son primaire parce "
+              "qu'on a rapproché le bâtiment. La distance est le symptôme "
+              "visible ; ce qui retient l'enfant est ailleurs, et c'est "
+              "mesuré."},
     "rap_a1_sait_t": {"en": "We know why", "fr": "Nous, nous savons pourquoi"},
     "rap_a1_sait_x": {
         "en": "Each of those questions is a condition the delivery assumes is "
@@ -729,10 +885,11 @@ TEXTES = {
               "Delivering an asset into a system whose links sit at that "
               "level caps the benefit of the delivery in advance. Seeing it "
               "beforehand is what the survey makes possible.",
-        "fr": "Et ces conditions ne sont pas indépendantes. {n} d'entre elles "
-              "figurent parmi les contraintes que le modèle causal place au "
-              "centre du système ({v}), ce qui veut dire qu'elles se "
-              "plafonnent mutuellement. Livrer un actif dans un système dont "
+        "fr": "Et ces conditions ne sont pas indépendantes : le modèle causal "
+              "place {n} de ces maillons parmi les contraintes "
+              "centrales du système "
+              "({v}), ce qui veut dire qu'elles se plafonnent mutuellement. "
+              "Livrer un actif dans un système dont "
               "ces maillons sont à ce niveau, c'est plafonner d'avance le "
               "bénéfice de la livraison. Le voir avant, c'est ce que "
               "l'enquête permet."},
@@ -769,12 +926,12 @@ TEXTES = {
               "et de commencer à trancher, à l'échelle de deux "
               "départements."},
     "rap_a1_note": {
-        "en": "The distribution above is an illustration: no intervention "
-              "data was collected. The levels shown in the chain, on the "
+        "en": "The three projects above are illustrations: no intervention "
+              "data was collected. The levels shown in the chains, on the "
               "other hand, are measured on the {n} surveyed households.",
-        "fr": "La distribution racontée plus haut est une illustration : "
+        "fr": "Les trois projets racontés ci-dessus sont des illustrations : "
               "aucune donnée d'intervention n'a été collectée. Les niveaux "
-              "affichés dans la chaîne, eux, sont mesurés sur les {n} "
+              "affichés dans les chaînes, eux, sont mesurés sur les {n} "
               "ménages enquêtés."},
 
     # ---- acte 2
@@ -1190,8 +1347,18 @@ STYLE = """
   .rd-fin  { font-size:20px; font-weight:700; color:#101728; line-height:1.5;
              border-left:4px solid #8a6d1f; padding:4px 0 4px 18px;
              margin:26px 0 6px; max-width:64ch; letter-spacing:-.01em; }
-  .rd-note { font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
-             font-weight:700; color:#a8b0bf; margin-top:22px; }
+  /* LA MENTION DE BAS DE PAGE EST UNE PHRASE, PLUS UNE ÉTIQUETTE.
+     En capitales espacées elle passait pour un tampon décoratif ; elle dit
+     maintenant quelque chose qu'il faut pouvoir lire, donc elle se lit. */
+  .rd-note { font-size:12.5px; color:#8a93a5; margin-top:24px; line-height:1.6;
+             max-width:82ch; border-top:1px solid #eef2f7; padding-top:12px;
+             text-align:left !important; }
+  .rd-symp { display:inline-flex; align-items:baseline; gap:9px; margin:14px 0 12px;
+             font-size:13.5px; font-weight:700; color:#5a4413;
+             background:#fdf7e7; border:1px solid #efe2c2;
+             border-radius:999px; padding:7px 16px; }
+  .rd-symp i{ font-style:normal; font-size:10px; letter-spacing:.12em;
+              text-transform:uppercase; color:#a08a4a; font-weight:800; }
   /* la chaîne des conditions */
   .rd-mh   { display:flex; justify-content:space-between; font-size:10.5px;
              letter-spacing:.1em; text-transform:uppercase; font-weight:700;
@@ -1524,7 +1691,8 @@ def _blocages(m):
 
 
 # ------------------------------------------------------------------- l'image
-def _grille(n=500, plein=True, coul=None, cols=25, pas=13.0, r=3.0):
+def _grille(n=500, plein=True, coul=None, cols=25, pas=13.0,
+            r=3.0, sel=0):
     """Cinq cents points. Un par cochon, un par trajectoire.
 
     LA SEULE FIGURE DE LA PAGE QUI NE PORTE AUCUNE DONNÉE. Elle sert à faire
@@ -1539,7 +1707,10 @@ def _grille(n=500, plein=True, coul=None, cols=25, pas=13.0, r=3.0):
     for i in range(n):
         x = (i % cols) * pas + pas / 2
         y = (i // cols) * pas + pas / 2
-        d = (i % cols + i // cols) * 9
+        # LE SENS DE L'APPARITION CHANGE D'UN CAS À L'AUTRE : en diagonale,
+        # par colonnes, par lignes. Les trois grilles sont la même figure,
+        # et un balayage identique donnerait l'impression d'un copier-coller.
+        d = ((i % cols + i // cols), i % cols, i // cols)[sel % 3] * 9
         if plein:
             pts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r}" '
                        f'fill="{coul}" style="animation-delay:{d}ms"/>')
@@ -1556,30 +1727,60 @@ def _grille(n=500, plein=True, coul=None, cols=25, pas=13.0, r=3.0):
 # Chaque maillon associe une condition écrite en français ordinaire au nœud
 # du modèle qui la mesure. Le dernier n'a pas de nœud, et c'est volontaire :
 # aucun indicateur vétérinaire n'a été collecté, la case reste vide et le dit.
-CHAINE = (("rap_a1_c1", "alimentaire"),
-          ("rap_a1_c2", "reserve"),
-          ("rap_a1_c3", "revenu"),
-          ("rap_a1_c4", "mobile"),
-          ("rap_a1_c5", "compte"),
-          ("rap_a1_c6", "foncier"),
-          ("rap_a1_c7", "elec"),
-          ("rap_a1_c8", None))
+# LES TROIS CAS DE L'APPROCHE EXTENSIONNISTE.
+# Trois secteurs, une même façon de faire : livrer un bien, compter les
+# livraisons, et viser un symptôme visible plutôt que ce qui le tient en
+# place. Chaque cas porte sa chaîne de conditions, et chaque condition est
+# reliée au nœud du modèle qui la mesure. Un nœud à None n'est pas un oubli :
+# c'est une condition que l'enquête n'a pas couverte, et la case le dit.
+CAS = (
+    {"cle": "rap_cas1", "sympt": "rap_cas1_s",
+     "recit": "rap_a1_p1", "l1": "rap_a1_leg1", "l2": "rap_a1_leg2",
+     "questions": ("rap_a1_q1", "rap_a1_q2", "rap_a1_q3", "rap_a1_q4",
+                   "rap_a1_q5", "rap_a1_q6", "rap_a1_q7"),
+     "chaine": (("rap_a1_c1", "alimentaire"), ("rap_a1_c2", "reserve"),
+                ("rap_a1_c3", "revenu"), ("rap_a1_c4", "mobile"),
+                ("rap_a1_c5", "compte"), ("rap_a1_c6", "foncier"),
+                ("rap_a1_c7", "elec"), ("rap_a1_c8", None)),
+     "pointe": None, "int": "rap_a1_sait_int"},
+    {"cle": "rap_cas2", "sympt": "rap_cas2_s",
+     "recit": "rap_cas2_p1", "l1": "rap_cas2_l1", "l2": "rap_cas2_l2",
+     "questions": ("rap_cas2_q1", "rap_cas2_q2", "rap_cas2_q3",
+                   "rap_cas2_q4", "rap_cas2_q5", "rap_cas2_q6"),
+     "chaine": (("rap_cas2_c1", "cuisson"), ("rap_cas2_c2", "revenu"),
+                ("rap_cas2_c3", "foncier"), ("rap_cas2_c4", "ocb"),
+                ("rap_cas2_c5", "pluie"), ("rap_cas2_c6", "aridite"),
+                ("rap_cas2_c7", "vegetation"),
+                ("rap_cas2_c8", "pression_bois")),
+     "pointe": ("rap_cas2_pointe", ("foret", "cuisson")),
+     "int": "rap_cas2_int"},
+    {"cle": "rap_cas3", "sympt": "rap_cas3_s",
+     "recit": "rap_cas3_p1", "l1": "rap_cas3_l1", "l2": "rap_cas3_l2",
+     "questions": ("rap_cas3_q1", "rap_cas3_q2", "rap_cas3_q3",
+                   "rap_cas3_q4", "rap_cas3_q5", "rap_cas3_q6"),
+     "chaine": (("rap_cas3_c1", "ecole"), ("rap_cas3_c2", "etat_civil"),
+                ("rap_cas3_c3", "alimentaire"), ("rap_cas3_c4", "revenu"),
+                ("rap_cas3_c5", "eau"), ("rap_cas3_c6", "elec"),
+                ("rap_cas3_c7", "sante_acces"), ("rap_cas3_c8", "temps_eau")),
+     "pointe": ("rap_cas3_pointe", ("ecole", "education")),
+     "int": "rap_cas3_int"},
+)
 
 
-def _chaine(m):
-    """Les huit conditions, avec le niveau mesuré de chacune.
+def _chaine(m, cas):
+    """Les huit conditions d'un cas, avec le niveau mesuré de chacune.
 
     C'EST LE PIVOT DE LA PAGE, ET IL NE DOIT RIEN AFFIRMER QU'IL NE MESURE
-    PAS. La distribution d'animaux est une illustration : nous n'avons aucune
-    donnée d'intervention, et la page ne dira jamais que celle-ci a échoué.
-    Ce qu'elle dit, et qu'elle peut prouver ligne par ligne, c'est que cette
-    livraison suppose huit conditions, que sept d'entre elles sont mesurées
-    sur les mêmes ménages, et à quel niveau elles se trouvent. Le lecteur
-    tire la conclusion lui-même, ce qui vaut mieux que de la lui souffler.
+    PAS. Ces projets sont des illustrations : aucune donnée d'intervention
+    n'a été collectée, et la page ne dira jamais que tel projet a échoué. Ce
+    qu'elle dit, et qu'elle prouve case par case, c'est que chacun suppose
+    huit conditions, que le cadre en mesure la plupart sur les mêmes
+    ménages, et à quel niveau elles se trouvent. Le lecteur tire la
+    conclusion lui-même, ce qui vaut mieux que de la lui souffler.
     """
     par_id = {x["id"]: x for x in m["portes"]}
-    cases, vus = [], {}
-    for cle, nid in CHAINE:
+    cases, vus = [], []
+    for cle, nid in cas["chaine"]:
         x = par_id.get(nid) if nid else None
         sc = x["scores"].get("Total") if x else None
         if sc is None:
@@ -1587,7 +1788,7 @@ def _chaine(m):
                 f'<div class="rd-m rd-m0"><span>{_e(T(cle))}</span>'
                 f'<b>{_e(T("rap_absent"))}</b><em>&nbsp;</em></div>')
             continue
-        vus[nid] = float(sc)
+        vus.append((x["nom"], float(sc)))
         c = ROUGE if sc < 3.5 else (AMBRE if sc < 5 else VERT)
         cases.append(
             f'<div class="rd-m" style="--c:{c}">'
@@ -1602,22 +1803,72 @@ def _chaine(m):
         '<div class="rd-mg">' + "".join(cases) + '</div>',
         unsafe_allow_html=True)
 
-    if {"alimentaire", "reserve", "revenu", "elec", "foncier"} <= set(vus):
-        _obs(T("rap_a1_sait_obs", a=_f(vus["alimentaire"], 1),
-               b=_f(vus["reserve"], 1), c=_f(vus["revenu"], 1),
-               d=_f(vus["elec"], 1), e=_f(vus["foncier"], 1)))
-    _interp(T("rap_a1_sait_int"))
+    # LE CONSTAT SE CALCULE, IL NE S'ÉCRIT PAS. Les trois maillons les plus
+    # bas et le plus haut sortent du tri, donc la phrase reste vraie même si
+    # un score change dans les fichiers.
+    if len(vus) >= 4:
+        bas = sorted(vus, key=lambda x: x[1])[:3]
+        haut = max(vus, key=lambda x: x[1])
+        _obs(T("rap_cas_obs", a=bas[0][0], av=_f(bas[0][1], 1),
+               b=bas[1][0], bv=_f(bas[1][1], 1),
+               c=bas[2][0], cv=_f(bas[2][1], 1),
+               h=haut[0], hv=_f(haut[1], 1)))
+
+    if cas["pointe"]:
+        cle, (na, nb) = cas["pointe"]
+        va = (par_id.get(na) or {}).get("scores", {}).get("Total")
+        vb = (par_id.get(nb) or {}).get("scores", {}).get("Total")
+        if va is not None and vb is not None:
+            _obs(T(cle, a=_f(va, 1), b=_f(vb, 1)))
+
+    _interp(T(cas["int"]))
 
     # COMBIEN DE CES MAILLONS SONT AU CENTRE DU SYSTÈME : compté, jamais
     # affirmé. Si le modèle n'en désigne aucun, la phrase change plutôt que
     # de garder un chiffre qui ne veut rien dire.
     centre = [b for b in m["blocages"][:6]
-              if b["id"] in {n for _, n in CHAINE if n}]
+              if b["id"] in {n for _, n in cas["chaine"] if n}]
     if centre:
         _implic(T("rap_a1_sait_imp", n=len(centre),
                   v=", ".join(b["nom"] for b in centre)))
     else:
         _implic(T("rap_a1_sait_imp0"))
+
+
+def _cas(m, cas, rang):
+    """Un cas : le récit, les deux grilles, les questions, puis la chaîne."""
+    st.markdown(
+        f'<div class="rd-symp"><i>{_e(T("rap_a1_sympt"))}</i>'
+        f'{_e(T(cas["sympt"]))}</div>'
+        f'<p class="rd-lead">{_e(T(cas["recit"]))}</p>',
+        unsafe_allow_html=True)
+
+    g, d = st.columns(2, gap="large")
+    with g:
+        st.markdown(
+            f'<div class="rd-vign">' + _grille(500, True, OR, sel=rang) +
+            f'<div class="rd-vlab" style="color:{OR}">'
+            f'{_e(T(cas["l1"]))}</div></div>', unsafe_allow_html=True)
+    with d:
+        st.markdown(
+            f'<div class="rd-vign">' + _grille(500, False, "#b9c2d0",
+                                               sel=rang) +
+            f'<div class="rd-vlab" style="color:{ENCRE3}">'
+            f'{_e(T(cas["l2"]))}</div></div>', unsafe_allow_html=True)
+
+    st.markdown(f'<div class="rd-coup">{_e(T("rap_a1_p2"))}</div>',
+                unsafe_allow_html=True)
+    st.markdown('<div class="rd-qs">' + "".join(
+        f'<b>{_e(T(k))}</b>' for k in cas["questions"]) + '</div>',
+        unsafe_allow_html=True)
+    st.markdown(f'<p class="rd-lead" style="margin-top:18px">'
+                f'{_e(T("rap_a1_p3"))}</p>', unsafe_allow_html=True)
+
+    st.markdown(f'<div class="rd-coup" style="margin:30px 0 6px">'
+                f'{_e(T("rap_a1_sait_t"))}</div>'
+                f'<p class="rd-lead">{_e(T("rap_a1_sait_x"))}</p>',
+                unsafe_allow_html=True)
+    _chaine(m, cas)
 
 def _titre_acte(kick, titre, coul):
     st.markdown(
@@ -1629,61 +1880,35 @@ def _titre_acte(kick, titre, coul):
 
 # ---------------------------------------------------------------- premier acte
 def _acte1(m):
-    """L'histoire, et rien d'autre. Aucun chiffre d'enquête sur cette page."""
+    """L'approche extensionniste, en trois cas, et ce que le cadre en mesure.
+
+    TROIS ONGLETS PLUTÔT QUE TROIS PAGES. Le raisonnement est le même dans
+    les trois, ce qui est justement la démonstration : le secteur change, la
+    façon de faire ne change pas. Les mettre côte à côte sous un seul titre
+    le donne à voir d'un coup, là où trois pages successives auraient laissé
+    croire à trois histoires séparées.
+    """
     _titre_acte("rap_a1_kick", "rap_a1", OR)
 
     st.markdown(f'<p class="rd-lead rd-pt" style="animation-delay:.06s">'
-                f'{_e(T("rap_a1_p1"))}</p>', unsafe_allow_html=True)
+                f'{_e(T("rap_a1_x"))}</p>', unsafe_allow_html=True)
 
-    g, d = st.columns(2, gap="large")
-    with g:
-        st.markdown(
-            f'<div class="rd-vign rd-pt" style="animation-delay:.12s">'
-            + _grille(500, True, OR) +
-            f'<div class="rd-vlab" style="color:{OR}">'
-            f'{_e(T("rap_a1_leg1"))}</div></div>', unsafe_allow_html=True)
-    with d:
-        st.markdown(
-            f'<div class="rd-vign rd-pt" style="animation-delay:.2s">'
-            + _grille(500, False, "#b9c2d0") +
-            f'<div class="rd-vlab" style="color:{ENCRE3}">'
-            f'{_e(T("rap_a1_leg2"))}</div></div>', unsafe_allow_html=True)
-
-    st.markdown(f'<div class="rd-coup rd-pt" style="animation-delay:.28s">'
-                f'{_e(T("rap_a1_p2"))}</div>', unsafe_allow_html=True)
-
-    qs = ("rap_a1_q1", "rap_a1_q2", "rap_a1_q3", "rap_a1_q4", "rap_a1_q5",
-          "rap_a1_q6", "rap_a1_q7")
-    st.markdown('<div class="rd-qs">' + "".join(
-        f'<b class="rd-pt" style="animation-delay:{.34 + i * .05:.2f}s">'
-        f'{_e(T(k))}</b>' for i, k in enumerate(qs)) + '</div>',
-        unsafe_allow_html=True)
-
-    st.markdown(f'<p class="rd-lead rd-pt" style="animation-delay:.7s;'
-                f'margin-top:18px">{_e(T("rap_a1_p3"))}</p>',
-                unsafe_allow_html=True)
-
-    # LE RETOURNEMENT DE LA PAGE. Jusqu'ici le récit dit ce que l'approche
-    # traditionnelle ne sait pas. À partir d'ici il dit ce que nous savons,
-    # et il le prouve : chaque condition que la livraison suppose est un
-    # indicateur mesuré, avec son niveau.
-    st.markdown(f'<div class="rd-coup rd-pt" style="margin:30px 0 6px">'
-                f'{_e(T("rap_a1_sait_t"))}</div>'
-                f'<p class="rd-lead">{_e(T("rap_a1_sait_x"))}</p>',
-                unsafe_allow_html=True)
-    _chaine(m)
+    for rang, (onglet, cas) in enumerate(
+            zip(st.tabs([T(c["cle"]) for c in CAS]), CAS)):
+        with onglet:
+            _cas(m, cas, rang)
 
     st.markdown(
-        f'<div class="rd-tourne rd-pt" style="animation-delay:.76s">'
+        f'<div class="rd-tourne rd-pt" style="animation-delay:.1s">'
         f'<div class="rd-kick" style="color:{VERT}">'
         f'{_e(T("rap_a1_tour_t"))}</div>'
         f'<p>{_e(T("rap_a1_tour"))}</p></div>', unsafe_allow_html=True)
 
-    st.markdown(f'<div class="rd-fin rd-pt" style="animation-delay:.84s">'
+    st.markdown(f'<div class="rd-fin rd-pt" style="animation-delay:.16s">'
                 f'{_e(T("rap_a1_fin"))}</div>', unsafe_allow_html=True)
 
-    # LA MENTION DOIT DÉSORMAIS TRANCHER ENTRE DEUX CHOSES SUR LA MÊME PAGE :
-    # l'anecdote, qui est une illustration, et les niveaux de la chaîne, qui
+    # LA MENTION DOIT TRANCHER ENTRE DEUX CHOSES SUR LA MÊME PAGE : les trois
+    # projets, qui sont des illustrations, et les niveaux des chaînes, qui
     # sont mesurés. Une mention qui dirait « illustration » sans préciser
     # laquelle jetterait le doute sur les seuls chiffres qui n'en méritent pas.
     st.markdown(f'<div class="rd-note">{_e(T("rap_a1_note", n=_n(m["menages"])))}'

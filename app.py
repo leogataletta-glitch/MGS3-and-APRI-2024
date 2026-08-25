@@ -445,7 +445,7 @@ st.markdown(("""
 
   /* --- barre latérale --- */
   section[data-testid="stSidebar"] {
-    background: #fafcfe; border-right: 1px solid var(--bord);
+    background: #ffffff; border-right: 1px solid var(--bord);
   }
   section[data-testid="stSidebar"] h2 {
     font-size: 1.15rem !important; margin-top: .3rem !important;
@@ -471,17 +471,16 @@ st.markdown(("""
   iframe { border-radius: 12px; background: #ffffff; }
 
   /* ================= barre latérale : la navigation du site =============
-     Vert profond plutôt que le gris par défaut : la navigation doit se
-     détacher franchement du contenu, sinon l'œil hésite entre les deux à
-     chaque changement de page.
-     LE VERT A ÉTÉ DÉSATURÉ, PAS ÉCLAIRCI. Il montait à 54 % de saturation :
-     une couleur franche, qui tirait l'œil vers la colonne alors que la
-     colonne ne fait que porter les noms des pages. Il descend à 30 %, en
-     gardant la même teinte et la même profondeur — la colonne se détache
-     toujours du contenu blanc, mais elle ne le concurrence plus. */
+     LE VERT PROFOND EST PARTI. Une colonne pleine de couleur sombre pesait
+     sur toute la page : elle criait plus fort que le contenu qu'elle sert à
+     atteindre, et il fallait tout écrire en blanc dessus, ce qui alourdit
+     encore. La colonne est maintenant blanche, séparée du contenu par un
+     simple filet, et le seul retour visuel est un fond très clair au
+     survol. La navigation se voit quand on la cherche et se tait le reste
+     du temps, ce qui est exactement son métier. */
   section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #203c35 0%, #192e29 100%) !important;
-    border-right: none;
+    background: #ffffff !important;
+    border-right: 1px solid var(--bord) !important;
     width: 310px !important; min-width: 310px !important;
   }
   /* Le bloc de marque remonte : dix-huit pixels de blanc au-dessus d'un
@@ -497,7 +496,7 @@ st.markdown(("""
   .apri-marque {
     display: flex; align-items: center; gap: 15px;
     padding: 0 2px 14px; margin-bottom: 0;
-    border-bottom: 1px solid rgba(255,255,255,.12);
+    border-bottom: 1px solid var(--bord);
   }
   .apri-marque img {
     width: 76px; height: 76px; flex: 0 0 76px; display: block;
@@ -505,10 +504,10 @@ st.markdown(("""
   .apri-bloc-nom { min-width: 0; }
   .apri-nom {
     font-family: "Inter", system-ui, sans-serif; font-size: 42px; font-weight: 700;
-    color: #ffffff; letter-spacing: .01em; line-height: 1;
+    color: var(--encre); letter-spacing: .01em; line-height: 1;
   }
   .apri-filet {
-    width: 64px; height: 3px; border-radius: 2px; background: #7cb342;
+    width: 64px; height: 3px; border-radius: 2px; background: #6ba03a;
     margin: 5px 0 0;
   }
   /* Deux niveaux dans l'accroche, comme sur la charte : ce qu'est
@@ -516,11 +515,11 @@ st.markdown(("""
      ligne grise disait les deux d'un même souffle et on ne lisait ni l'un ni
      l'autre. */
   .apri-baseline {
-    font-size: 12px; color: #8cc63f; line-height: 1.3;
+    font-size: 12px; color: #5d8c2b; line-height: 1.3;
     margin-top: 6px; font-weight: 500;
   }
   .apri-lieu {
-    font-size: 12.5px; color: rgba(255,255,255,.92); line-height: 1.3;
+    font-size: 12.5px; color: var(--encre-2); line-height: 1.3;
     margin-top: 3px; font-weight: 600;
   }
   /* Pied de colonne : le logo du PNUE y descend, puisque les logos ne
@@ -528,28 +527,30 @@ st.markdown(("""
   .apri-org {
     display: flex; align-items: center; gap: 10px;
     margin-top: 14px; padding-top: 13px;
-    border-top: 1px solid rgba(255,255,255,.12);
+    border-top: 1px solid var(--bord);
   }
+  /* Le logo institutionnel n'a plus besoin de sa plaque blanche : la colonne
+     est blanche. Une plaque sur un fond de même couleur ne se voit pas, elle
+     se devine, et une bordure devinée est une bordure de trop. */
   .apri-org img {
     width: 34px; height: 34px; flex: 0 0 34px; object-fit: contain;
-    background: #ffffff; border-radius: 6px; padding: 2px;
   }
   .nav-groupe {
     font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
-    color: rgba(255,255,255,.40); font-weight: 700;
+    color: var(--encre-3); font-weight: 700;
     margin: 18px 0 8px 4px;
   }
   .apri-pied {
-    font-size: 10.5px; color: rgba(255,255,255,.38); line-height: 1.5;
+    font-size: 10.5px; color: var(--encre-3); line-height: 1.5;
     padding: 14px 4px 4px; margin-top: 10px;
-    border-top: 1px solid rgba(255,255,255,.12);
+    border-top: 1px solid var(--bord);
   }
   /* Dans le bloc PNUE, la mention institutionnelle est déjà séparée par le
      filet de .apri-org : lui laisser le sien dessinait deux traits l'un sur
      l'autre. */
   .apri-org .apri-pied {
     border-top: none; padding: 0; margin: 0; font-size: 11px;
-    color: rgba(255,255,255,.55);
+    color: var(--encre-3);
   }
 
   /* --- les entrées de menu ---------------------------------------------
@@ -565,17 +566,19 @@ st.markdown(("""
      TAILLE — 15,5 px et 46 px de hauteur minimale : un menu se vise au
      curseur sans regarder, il lui faut une cible franche.
 
-     SURVOL — un fond qui s'éclaircit légèrement. Sans retour au survol, rien
-     ne distingue une ligne cliquable d'un simple titre. */
+     SURVOL — un fond très clair, et rien d'autre : ni contour, ni ombre, ni
+     déplacement. Sans retour au survol, rien ne distingue une ligne
+     cliquable d'un simple titre ; avec trois retours à la fois, la colonne
+     s'agite. */
   section[data-testid="stSidebar"] div[data-testid="stButton"] > button {
     display: flex !important; align-items: center !important;
     justify-content: flex-start !important;
     width: 100% !important; min-height: 46px !important; height: auto !important;
     padding: 11px 15px !important; border-radius: 10px !important;
-    border: 1px solid transparent !important;
+    border: none !important;
     background: transparent !important; box-shadow: none !important;
-    transition: background .15s ease, border-color .15s ease;
-    margin-bottom: 3px;
+    transition: background .15s ease, color .15s ease;
+    margin-bottom: 2px;
   }
   section[data-testid="stSidebar"] div[data-testid="stButton"] > button > div,
   section[data-testid="stSidebar"] div[data-testid="stButton"] > button
@@ -587,73 +590,55 @@ st.markdown(("""
     font-family: "Inter", system-ui, sans-serif !important;
     font-size: 15.5px !important; font-weight: 500 !important;
     line-height: 1.35 !important;
-    color: rgba(255,255,255,.82) !important;
+    color: var(--encre-2) !important;
     text-align: left !important; width: 100%; margin: 0 !important;
   }
   section[data-testid="stSidebar"] div[data-testid="stButton"] > button:hover {
-    background: rgba(255,255,255,.11) !important;
-    border-color: rgba(255,255,255,.16) !important;
+    background: #f1f6f4 !important;
     transform: none !important;
   }
   section[data-testid="stSidebar"]
     div[data-testid="stButton"] > button:hover p {
-    color: #ffffff !important;
+    color: var(--encre) !important;
   }
-  /* L'ENTRÉE ACTIVE : une pastille vert clair, encre foncée.
-     Le vert profond d'avant se confondait avec le fond de la colonne dès que
-     l'écran était mal réglé — on ne voyait plus où l'on se trouvait. Un fond
-     clair sur fond sombre, c'est l'inverse du contenu, et l'œil le trouve
-     sans chercher. */
+  /* L'ENTRÉE ACTIVE : le même fond très clair que le survol, en un peu plus
+     appuyé, et le libellé en vert gras. Une pastille pleine reviendrait à
+     remettre dans la colonne la tache de couleur qu'on vient d'en retirer ;
+     ici c'est la graisse du texte qui dit où l'on se trouve, et la teinte ne
+     fait que la confirmer. */
   section[data-testid="stSidebar"]
     div[data-testid="stButton"] > button[kind="primary"] {
-    /* La pastille suit la colonne : sur un vert désaturé, l'ancien vert vif
-       de l'entrée active devenait la seule couleur franche de l'écran. */
-    background: linear-gradient(180deg,#7cc0a0 0%,#68ae8e 100%) !important;
-    border-color: transparent !important;
-    box-shadow: 0 2px 12px rgba(0,0,0,.22) !important;
+    background: #e9f2ee !important;
+    border: none !important; box-shadow: none !important;
   }
   section[data-testid="stSidebar"]
     div[data-testid="stButton"] > button[kind="primary"] p {
-    color: #0b2b22 !important; font-weight: 700 !important;
+    color: var(--accent) !important; font-weight: 700 !important;
   }
   section[data-testid="stSidebar"]
     div[data-testid="stButton"] > button[kind="primary"]:hover {
-    background: linear-gradient(180deg,#88c9ac 0%,#72b697 100%) !important;
-  }
-
-  /* La couleur du bouton lui-même sert aux icônes : elles sont peintes en
-     `currentColor`, donc elles suivent l'état — repos, survol, actif — sans
-     qu'on ait à écrire trois fois la même règle par icône. */
-  section[data-testid="stSidebar"] div[data-testid="stButton"] > button {
-    color: rgba(255,255,255,.72) !important;
-  }
-  section[data-testid="stSidebar"] div[data-testid="stButton"] > button:hover {
-    color: #ffffff !important;
-  }
-  section[data-testid="stSidebar"]
-    div[data-testid="stButton"] > button[kind="primary"] {
-    color: #0b2b22 !important;
+    background: #e2ece7 !important;
   }
 
   /* Le sélecteur de langue, seul widget non bouton de la colonne */
   section[data-testid="stSidebar"] label,
   section[data-testid="stSidebar"] .stRadio label p {
-    color: rgba(255,255,255,.72) !important;
+    color: var(--encre-2) !important;
   }
   section[data-testid="stSidebar"] div[data-baseweb="select"] > div {
-    background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.18);
-    color: #ffffff;
+    background: #fbfcfe; border-color: var(--bord);
+    color: var(--encre);
   }
   section[data-testid="stSidebar"] div[data-baseweb="select"] svg {
-    fill: rgba(255,255,255,.7);
+    fill: var(--encre-3);
   }
 
   /* --- le raccourci « filtres rapides » de la colonne ------------------ */
   .f-separateur {
-    height: 1px; background: rgba(255,255,255,.12); margin: 16px 2px 2px;
+    height: 1px; background: var(--bord); margin: 16px 2px 2px;
   }
   .nav-etat {
-    font-size: 11.5px; color: rgba(255,255,255,.46); line-height: 1.45;
+    font-size: 11.5px; color: var(--encre-3); line-height: 1.45;
     padding: 6px 6px 0;
   }
   /* Le bouton de remise à zéro ne doit pas se lire comme une entrée de menu :
@@ -662,8 +647,8 @@ st.markdown(("""
   section[data-testid="stSidebar"] div[class*="st-key-f_reset_global"]
     div[data-testid="stButton"] > button {
     min-height: 38px !important; padding: 8px 13px !important;
-    border: 1px solid rgba(255,255,255,.20) !important;
-    background: rgba(255,255,255,.05) !important;
+    border: 1px solid var(--bord) !important;
+    background: #fbfcfe !important;
     border-radius: 9px !important;
   }
   section[data-testid="stSidebar"] div[class*="st-key-f_reset_global"]
@@ -675,7 +660,7 @@ st.markdown(("""
   __ICONE_RESET__
   section[data-testid="stSidebar"] div[data-testid="stSelectbox"] label p {
     font-size: 11.5px !important; letter-spacing: .04em;
-    color: rgba(255,255,255,.55) !important; font-weight: 600 !important;
+    color: var(--encre-3) !important; font-weight: 600 !important;
     text-transform: uppercase;
   }
   /* Le bouton « Réinitialiser » ne doit pas ressembler à une entrée de menu :
@@ -686,33 +671,33 @@ st.markdown(("""
     div[data-testid="stButton"] > button {
     min-height: 0 !important; padding: 4px 9px !important;
     justify-content: center !important; margin: 0;
-    border: 1px solid rgba(255,255,255,.18) !important;
+    border: 1px solid var(--bord) !important;
   }
   section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]
     div[data-testid="stButton"] > button p {
     font-size: 11.5px !important; font-weight: 600 !important;
     text-align: center !important;
-    color: rgba(255,255,255,.70) !important;
+    color: var(--encre-2) !important;
   }
   section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]
     div[data-testid="stButton"] > button:disabled {
-    opacity: .35; border-color: rgba(255,255,255,.10) !important;
+    opacity: .45; border-color: var(--bord) !important;
   }
   .f-chips { display: flex; flex-direction: column; gap: 6px; margin-top: 11px; }
   .f-chip {
     display: flex; align-items: baseline; gap: 8px;
-    background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.14);
+    background: #f6f9fd; border: 1px solid var(--bord);
     border-radius: 9px; padding: 7px 11px;
   }
   .f-chip-cle {
     font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
-    color: rgba(255,255,255,.50); font-weight: 700; white-space: nowrap;
+    color: var(--encre-3); font-weight: 700; white-space: nowrap;
   }
   .f-chip-val {
-    font-size: 13.5px; color: #ffffff; font-weight: 600;
+    font-size: 13.5px; color: var(--encre); font-weight: 600;
   }
   .f-vide {
-    font-size: 11.5px; color: rgba(255,255,255,.42); line-height: 1.5;
+    font-size: 11.5px; color: var(--encre-3); line-height: 1.5;
     margin-top: 10px; padding: 0 3px;
   }
 
@@ -772,23 +757,23 @@ st.markdown(("""
   div[data-testid="stButton"] > button p {
     font-size: 12px !important; font-weight: 700 !important;
     letter-spacing: .1em !important; text-transform: uppercase;
-    color: rgba(255,255,255,.40) !important;
+    color: var(--encre-3) !important;
     transition: color .15s ease;
   }
   section[data-testid="stSidebar"] div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button:hover p {
-    color: rgba(255,255,255,.78) !important;
+    color: var(--encre-2) !important;
   }
   section[data-testid="stSidebar"] div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] p {
-    color: #ffffff !important;
+    color: var(--encre) !important;
   }
   /* La rangée de langue ouvre la colonne : un peu d'air au-dessus, un filet
      en dessous pour la séparer de la marque sans la souligner. */
   section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:has(
       div[class*="st-key-lang_"]) {
     padding: 14px 2px 12px; margin-bottom: 2px;
-    border-bottom: 1px solid rgba(255,255,255,.10);
+    border-bottom: 1px solid var(--bord);
   }
 
   /* La ligne de contexte, sous le ruban : la page courante à gauche, ce sur
@@ -1301,17 +1286,18 @@ _NAV = [
     (MODE_DONNEES, "telecharger"),
 ]
 
-# LES ICONES SONT PEINTES PAR LA FEUILLE DE STYLE, PAS ECRITES DANS LE LIBELLE.
-# On ne peut rien inserer dans le contenu d'un bouton Streamlit ; en revanche
-# chaque widget porte une classe `st-key-<cle>`, ce qui permet de viser un
-# bouton precis et de lui poser son icone en `::before`. Les glyphes
-# typographiques qui servaient jusqu'ici ne disaient rien, et leur graisse
-# changeait d'une police systeme a l'autre.
-_CSS_ICONES_NAV = "<style>" + "".join(
-    icones.regle_masque(
-        f'section[data-testid="stSidebar"] div[class*="st-key-nav_{_m}"] '
-        f'div[data-testid="stButton"] > button', _i)
-    for _m, _i in _NAV) + "</style>"
+# PLUS D'ICONE DEVANT LES ENTREES DE MENU.
+# Chaque ligne en portait une, posee en `::before` par la feuille de style.
+# Onze petits pictogrammes alignes en colonne ne disaient rien que le libelle
+# ne disait deja : « Donnees » a cote d'une fleche de telechargement, « Le
+# territoire » a cote d'une epingle. Ils meublaient, ils dataient, et ils
+# ajoutaient onze regles CSS a entretenir. La colonne se lit maintenant comme
+# une liste de titres, ce qu'elle est.
+#
+# Le second element du couple, dans `_NAV`, n'est plus utilise ici. Il reste
+# en place : c'est la source unique dont d'autres vues se servent, et la
+# vider par acquit de conscience casserait plus qu'elle ne nettoierait.
+_CSS_ICONES_NAV = ""
 
 
 def _entree_nav(mode, icone):
