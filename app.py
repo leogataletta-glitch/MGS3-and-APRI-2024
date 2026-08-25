@@ -164,7 +164,15 @@ def export_excel(theme, base_n):
 
 
 # ----------------------------------------------------------------------
-st.set_page_config(page_title="Household resilience survey — Sud & Grand'Anse, Haiti", layout="wide")
+# LA COLONNE DE GAUCHE EST OUVERTE, ET ELLE LE RESTE.
+# Streamlit laisse replier sa barre latérale d'un clic, et il garde ce choix
+# d'une visite à l'autre : un clic malheureux, et le site s'ouvre sans sa
+# navigation à la visite suivante, sans que rien n'explique où elle est
+# passée. Ici la colonne n'est pas un panneau d'options, c'est le seul chemin
+# vers les onze rubriques. On l'ouvre au démarrage, et la feuille de style
+# retire le bouton qui permettait de la fermer.
+st.set_page_config(page_title="Household resilience survey — Sud & Grand'Anse, Haiti",
+                   layout="wide", initial_sidebar_state="expanded")
 
 if not check_password():
     st.stop()
@@ -482,6 +490,32 @@ st.markdown(("""
     background: #ffffff !important;
     border-right: 1px solid var(--bord) !important;
     width: 310px !important; min-width: 310px !important;
+  }
+  /* LA COLONNE NE SE REPLIE PLUS, SUR ÉCRAN LARGE.
+     Repliée, Streamlit ne la cache pas : il la fait glisser hors de l'écran
+     par une translation, en passant `aria-expanded` à false. Deux règles
+     suffisent donc, et il faut les deux : annuler la translation dans cet
+     état-là, et retirer le chevron qui la déclenche. Sans la première, un
+     état replié mémorisé par le navigateur rouvrirait la page sans
+     navigation ; sans la seconde, le chevron resterait là à promettre une
+     action qui ne se passe plus.
+
+     LE SEUIL EST INDISPENSABLE. Sous mille pixels, Streamlit ne pousse plus
+     le contenu à côté de la colonne : il la pose PAR-DESSUS. Forcer
+     l'ouverture là aussi enfermerait le lecteur derrière un panneau qu'il ne
+     pourrait plus refermer, ce qui est pire que le défaut qu'on corrige. En
+     dessous du seuil, on ne touche à rien et le chevron revient. */
+  @media (min-width: 1001px) {
+    section[data-testid="stSidebar"],
+    section[data-testid="stSidebar"][aria-expanded="false"] {
+      transform: none !important; visibility: visible !important;
+      margin-left: 0 !important;
+    }
+    [data-testid="stSidebarCollapseButton"],
+    [data-testid="stSidebarCollapsedControl"],
+    [data-testid="collapsedControl"] {
+      display: none !important;
+    }
   }
   /* Le bloc de marque remonte : dix-huit pixels de blanc au-dessus d'un
      logo, sur une colonne qui commence en haut de l'écran, ne servaient
