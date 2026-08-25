@@ -47,6 +47,7 @@ import radar_accueil
 import rapport_donateur
 import resilience_page
 import saillants_page
+import si_je_change
 import systeme_page
 import synthese_page
 import telechargements_page
@@ -1154,6 +1155,8 @@ TEXTES_NAV = {
     "bcl_vue_analyse": {"en": "Loops, levers, total effect",
                         "fr": "Boucles, leviers, effet total"},
     "mode_bailleurs": {"en": "Donor briefing", "fr": "Note aux bailleurs"},
+    "mode_levier": {"en": "If I change one thing",
+                    "fr": "Si je change une chose"},
     # LE RAPPORT ET LA NOTE NE FONT PAS LE MÊME MÉTIER. La note tient sur une
     # page et se cite ; le rapport se lit en six chapitres et raconte ce que
     # l'argent a produit comme connaissance. L'un est un extrait, l'autre le
@@ -1173,7 +1176,8 @@ TEXTES_NAV = {
 # et qu'il est toujours du voyage.
 _RENOMMEES = ("mode_accueil", "mode_methodo", "mode_dimensions",
               "mode_synthese", "mode_actions", "mode_donnees",
-              "mode_boucles", "mode_croisement", "mode_rapport")
+              "mode_boucles", "mode_croisement", "mode_rapport",
+              "mode_levier")
 for _c, _v in TEXTES_NAV.items():
     if _c in _RENOMMEES:
         i18n.DICO[_c] = _v
@@ -1288,6 +1292,7 @@ MODE_BOUCLES = "boucles"
 MODE_CROISEMENT = "croisement"
 MODE_BAILLEURS = "bailleurs"
 MODE_RAPPORT = "rapport"
+MODE_LEVIER = "levier"
 # LA PAGE D'ACCUEIL, ET C'EST ELLE QUI OUVRE LE SITE. On arrivait jusqu'ici
 # sur le cadre méthodologique : avant d'apprendre quoi que ce soit du
 # territoire, on apprenait comment on le mesure. C'est l'ordre d'un rapport,
@@ -1308,6 +1313,7 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      MODE_CROISEMENT: T("mode_croisement"),
                      MODE_BAILLEURS: T("mode_bailleurs"),
                      MODE_RAPPORT: T("mode_rapport"),
+                     MODE_LEVIER: T("mode_levier"),
                      MODE_PORTAIL: T("mode_portail"),
                      MODE_TRAJECTOIRES: T("mode_trajectoires")})
 
@@ -1376,6 +1382,11 @@ _NAV = [
     (MODE_DIMENSIONS, "barres"),
     (MODE_TRAJECTOIRES, "rafraichir"),
     (MODE_BOUCLES, "boucle"),
+    # L'OUTIL D'EXPLICATION VIENT JUSTE APRÈS LES BOUCLES, ET C'EST SA PLACE.
+    # Les boucles montrent que le système propage ; celui-ci répond à la
+    # question que le lecteur se pose ensuite, et à laquelle rien ne répondait :
+    # ce chiffre-là, d'où sort-il ?
+    (MODE_LEVIER, "boucle"),
     (MODE_CROISEMENT, "loupe"),
     # TREIZE ENTRÉES, C'ÉTAIT TROP, ET DEUX D'ENTRE ELLES DISAIENT LA MÊME
     # CHOSE QUE CELLE-CI. « Diagramme radar » et « Fiche synthèse — paysages »
@@ -1661,6 +1672,11 @@ if app_mode == MODE_ACTIONS:
     # Les anciennes pistes de travail, écrites avant cette analyse, ont été
     # retirées : elles ne commandaient plus rien et brouillaient la page.
     interventions_page.render()
+
+if app_mode == MODE_LEVIER:
+    # Aucun filtre : le modèle causal est le même pour tout le territoire, et
+    # un filtre posé ailleurs ne changerait rien à ce qu'il propage.
+    si_je_change.render()
 
 if app_mode == MODE_RAPPORT:
     # Aucun filtre non plus, et pour la même raison que la note : un rapport
