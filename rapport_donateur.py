@@ -636,7 +636,8 @@ TEXTES = {
                 "fr": "comparer des stratégies d'intervention sur leur effet "
                       "modélisé avant d'engager les fonds"},
     # ------------------------------------------------------- les trois actes
-    "rap_a1": {"en": "Five hundred pigs", "fr": "Cinq cents cochons"},
+    "rap_a1": {"en": "The traditional approach",
+               "fr": "L'approche traditionnelle"},
     "rap_a2": {"en": "How we know", "fr": "Comment nous le savons"},
     "rap_a3": {"en": "What we found", "fr": "Ce que nous avons trouvé"},
 
@@ -672,6 +673,80 @@ TEXTES = {
               "indicator.",
         "fr": "Rien de tout cela n'a été mesuré, parce que rien de tout cela "
               "n'était l'indicateur."},
+    # ---- la chaîne de conditions, et ce que le cadre en mesure
+    "rap_a1_sait_t": {"en": "We know why", "fr": "Nous, nous savons pourquoi"},
+    "rap_a1_sait_x": {
+        "en": "Each of those questions is a condition the delivery assumes is "
+              "already met. The resilience framework measures those "
+              "conditions, one by one, on the same households. Here is their "
+              "level in this territory.",
+        "fr": "Chacune de ces questions correspond à une condition que la "
+              "livraison suppose déjà remplie. Le cadre de résilience mesure "
+              "ces conditions, une par une, sur les mêmes ménages. Voici leur "
+              "niveau dans ce territoire."},
+    "rap_a1_c1": {"en": "Feed the animal", "fr": "Nourrir l'animal"},
+    "rap_a1_c2": {"en": "Hold on until sale time",
+                  "fr": "Tenir jusqu'à la vente"},
+    "rap_a1_c3": {"en": "Not depend on it to live",
+                  "fr": "Ne pas dépendre de lui pour vivre"},
+    "rap_a1_c4": {"en": "Know the price, sell at the right moment",
+                  "fr": "Connaître le prix, vendre au bon moment"},
+    "rap_a1_c5": {"en": "Cash in and keep something",
+                  "fr": "Encaisser et garder quelque chose"},
+    "rap_a1_c6": {"en": "Have land to raise it on",
+                  "fr": "Avoir de la terre pour l'élever"},
+    "rap_a1_c7": {"en": "Store it, process it", "fr": "Conserver, transformer"},
+    "rap_a1_c8": {"en": "Treat it when it is sick",
+                  "fr": "Le soigner quand il est malade"},
+    "rap_a1_ch_a": {"en": "What the delivery assumes",
+                    "fr": "Ce que la livraison suppose"},
+    "rap_a1_ch_b": {"en": "What we measure", "fr": "Ce que nous mesurons"},
+    "rap_a1_sait_obs": {
+        "en": "Food security is measured at {a} out of ten, income reserve at "
+              "{b}, income above the threshold at {c}, and access to "
+              "electricity at {d}. Land tenure security, on the other hand, "
+              "stands at {e}.",
+        "fr": "La sécurité alimentaire est mesurée à {a} sur dix, la réserve "
+              "de revenu à {b}, le revenu au-dessus du seuil à {c}, et "
+              "l'accès à l'électricité à {d}. La sécurité foncière, elle, se "
+              "tient à {e}."},
+    "rap_a1_sait_int": {
+        "en": "A household whose own food security is measured at zero does "
+              "not feed an animal before itself. A household with no income "
+              "reserve sells at the first need for cash, not at the best "
+              "price. These are not beneficiary failures, they are absent "
+              "conditions, and they were absent before the delivery arrived.",
+        "fr": "Un ménage dont la sécurité alimentaire est mesurée à zéro ne "
+              "nourrit pas un animal avant lui-même. Un ménage sans réserve "
+              "de revenu vend au premier besoin de liquidités, pas au "
+              "meilleur prix. Ce ne sont pas des défaillances de "
+              "bénéficiaires, ce sont des conditions absentes, et elles "
+              "l'étaient avant que la livraison n'arrive."},
+    "rap_a1_sait_imp": {
+        "en": "And these conditions are not independent. The causal model "
+              "places {n} of them among the constraints at the centre of the "
+              "system ({v}), which means they cap one another. "
+              "Delivering an asset into a system whose links sit at that "
+              "level caps the benefit of the delivery in advance. Seeing it "
+              "beforehand is what the survey makes possible.",
+        "fr": "Et ces conditions ne sont pas indépendantes. {n} d'entre elles "
+              "figurent parmi les contraintes que le modèle causal place au "
+              "centre du système ({v}), ce qui veut dire qu'elles se "
+              "plafonnent mutuellement. Livrer un actif dans un système dont "
+              "ces maillons sont à ce niveau, c'est plafonner d'avance le "
+              "bénéfice de la livraison. Le voir avant, c'est ce que "
+              "l'enquête permet."},
+    "rap_a1_sait_imp0": {
+        "en": "And these conditions are not independent: the causal model "
+              "shows them capping one another. Delivering an asset into a "
+              "system whose links sit at that level caps the benefit of the "
+              "delivery in advance. Seeing it beforehand is what the survey "
+              "makes possible.",
+        "fr": "Et ces conditions ne sont pas indépendantes : le modèle causal "
+              "montre qu'elles se plafonnent mutuellement. Livrer un actif "
+              "dans un système dont ces maillons sont à ce niveau, c'est "
+              "plafonner d'avance le bénéfice de la livraison. Le voir "
+              "avant, c'est ce que l'enquête permet."},
     "rap_a1_tour_t": {"en": "The question changes",
                       "fr": "La question change"},
     "rap_a1_tour": {
@@ -689,9 +764,18 @@ TEXTES = {
               "autre maillon était faible."},
     "rap_a1_fin": {
         "en": "This is the question your funding made it possible to ask, "
-              "for the first time, across two departments.",
+              "and to start answering, across two departments.",
         "fr": "C'est cette question que votre financement a permis de poser, "
-              "pour la première fois, à l'échelle de deux départements."},
+              "et de commencer à trancher, à l'échelle de deux "
+              "départements."},
+    "rap_a1_note": {
+        "en": "The distribution above is an illustration: no intervention "
+              "data was collected. The levels shown in the chain, on the "
+              "other hand, are measured on the {n} surveyed households.",
+        "fr": "La distribution racontée plus haut est une illustration : "
+              "aucune donnée d'intervention n'a été collectée. Les niveaux "
+              "affichés dans la chaîne, eux, sont mesurés sur les {n} "
+              "ménages enquêtés."},
 
     # ---- acte 2
     "rap_a2_kick": {"en": "The method", "fr": "La méthode"},
@@ -1108,6 +1192,28 @@ STYLE = """
              margin:26px 0 6px; max-width:64ch; letter-spacing:-.01em; }
   .rd-note { font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
              font-weight:700; color:#a8b0bf; margin-top:22px; }
+  /* la chaîne des conditions */
+  .rd-mh   { display:flex; justify-content:space-between; font-size:10.5px;
+             letter-spacing:.1em; text-transform:uppercase; font-weight:700;
+             color:#8a93a5; margin:22px 0 8px; }
+  .rd-mg   { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .rd-m    { position:relative; overflow:hidden; border:1px solid #eaeff6;
+             border-radius:14px; padding:13px 15px 15px; background:#fff; }
+  .rd-m span{ display:block; font-size:12px; font-weight:700; color:var(--c);
+              line-height:1.3; min-height:31px; }
+  .rd-m b  { display:block; font-size:12.5px; font-weight:500; color:#6b7590;
+             line-height:1.35; margin-top:5px; min-height:34px; }
+  .rd-m em { display:block; font-style:normal; font-size:27px; font-weight:800;
+             color:var(--c); letter-spacing:-.03em; margin-top:6px;
+             font-variant-numeric:tabular-nums; }
+  .rd-m em i{ font-style:normal; font-size:13px; font-weight:600;
+              color:#a8b0bf; margin-left:2px; }
+  .rd-m u  { position:absolute; left:0; bottom:0; height:4px; background:var(--c);
+             display:block; }
+  .rd-m0   { border-style:dashed; background:#fbfcfe; }
+  .rd-m0 span{ color:#8a93a5; }
+  .rd-m0 b { font-size:11px; font-weight:700; letter-spacing:.08em;
+             text-transform:uppercase; color:#a8b0bf; margin-top:12px; }
   /* les quatre constats, en cartes */
   /* LES QUATRE CARTES ONT UN PLANCHER DE HAUTEUR, pas une hauteur.
      Les libellés n'ont pas la même longueur, donc deux cartes voisines
@@ -1161,6 +1267,7 @@ STYLE = """
     .rd-b{grid-template-columns:1fr 70px 70px}
     .rd-big{letter-spacing:-.03em}
     .rd-cmp{grid-template-columns:1fr 44px 44px 54px;font-size:12.5px}
+    .rd-mg{grid-template-columns:repeat(2,1fr)}
   }
 </style>
 """
@@ -1445,6 +1552,73 @@ def _grille(n=500, plein=True, coul=None, cols=25, pas=13.0, r=3.0):
             + "".join(pts) + '</svg>')
 
 
+# LA CHAÎNE QUE LA LIVRAISON SUPPOSE, ET CE QUE LE CADRE EN MESURE.
+# Chaque maillon associe une condition écrite en français ordinaire au nœud
+# du modèle qui la mesure. Le dernier n'a pas de nœud, et c'est volontaire :
+# aucun indicateur vétérinaire n'a été collecté, la case reste vide et le dit.
+CHAINE = (("rap_a1_c1", "alimentaire"),
+          ("rap_a1_c2", "reserve"),
+          ("rap_a1_c3", "revenu"),
+          ("rap_a1_c4", "mobile"),
+          ("rap_a1_c5", "compte"),
+          ("rap_a1_c6", "foncier"),
+          ("rap_a1_c7", "elec"),
+          ("rap_a1_c8", None))
+
+
+def _chaine(m):
+    """Les huit conditions, avec le niveau mesuré de chacune.
+
+    C'EST LE PIVOT DE LA PAGE, ET IL NE DOIT RIEN AFFIRMER QU'IL NE MESURE
+    PAS. La distribution d'animaux est une illustration : nous n'avons aucune
+    donnée d'intervention, et la page ne dira jamais que celle-ci a échoué.
+    Ce qu'elle dit, et qu'elle peut prouver ligne par ligne, c'est que cette
+    livraison suppose huit conditions, que sept d'entre elles sont mesurées
+    sur les mêmes ménages, et à quel niveau elles se trouvent. Le lecteur
+    tire la conclusion lui-même, ce qui vaut mieux que de la lui souffler.
+    """
+    par_id = {x["id"]: x for x in m["portes"]}
+    cases, vus = [], {}
+    for cle, nid in CHAINE:
+        x = par_id.get(nid) if nid else None
+        sc = x["scores"].get("Total") if x else None
+        if sc is None:
+            cases.append(
+                f'<div class="rd-m rd-m0"><span>{_e(T(cle))}</span>'
+                f'<b>{_e(T("rap_absent"))}</b><em>&nbsp;</em></div>')
+            continue
+        vus[nid] = float(sc)
+        c = ROUGE if sc < 3.5 else (AMBRE if sc < 5 else VERT)
+        cases.append(
+            f'<div class="rd-m" style="--c:{c}">'
+            f'<span>{_e(T(cle))}</span>'
+            f'<b>{_e(x["nom"])}</b>'
+            f'<em>{_f(sc, 1)}<i>/10</i></em>'
+            f'<u style="width:{float(sc) * 10:.0f}%"></u></div>')
+
+    st.markdown(
+        f'<div class="rd-mh"><span>{_e(T("rap_a1_ch_a"))}</span>'
+        f'<span>{_e(T("rap_a1_ch_b"))}</span></div>'
+        '<div class="rd-mg">' + "".join(cases) + '</div>',
+        unsafe_allow_html=True)
+
+    if {"alimentaire", "reserve", "revenu", "elec", "foncier"} <= set(vus):
+        _obs(T("rap_a1_sait_obs", a=_f(vus["alimentaire"], 1),
+               b=_f(vus["reserve"], 1), c=_f(vus["revenu"], 1),
+               d=_f(vus["elec"], 1), e=_f(vus["foncier"], 1)))
+    _interp(T("rap_a1_sait_int"))
+
+    # COMBIEN DE CES MAILLONS SONT AU CENTRE DU SYSTÈME : compté, jamais
+    # affirmé. Si le modèle n'en désigne aucun, la phrase change plutôt que
+    # de garder un chiffre qui ne veut rien dire.
+    centre = [b for b in m["blocages"][:6]
+              if b["id"] in {n for _, n in CHAINE if n}]
+    if centre:
+        _implic(T("rap_a1_sait_imp", n=len(centre),
+                  v=", ".join(b["nom"] for b in centre)))
+    else:
+        _implic(T("rap_a1_sait_imp0"))
+
 def _titre_acte(kick, titre, coul):
     st.markdown(
         f'<div class="rd-tete rd-pt">'
@@ -1489,6 +1663,16 @@ def _acte1(m):
                 f'margin-top:18px">{_e(T("rap_a1_p3"))}</p>',
                 unsafe_allow_html=True)
 
+    # LE RETOURNEMENT DE LA PAGE. Jusqu'ici le récit dit ce que l'approche
+    # traditionnelle ne sait pas. À partir d'ici il dit ce que nous savons,
+    # et il le prouve : chaque condition que la livraison suppose est un
+    # indicateur mesuré, avec son niveau.
+    st.markdown(f'<div class="rd-coup rd-pt" style="margin:30px 0 6px">'
+                f'{_e(T("rap_a1_sait_t"))}</div>'
+                f'<p class="rd-lead">{_e(T("rap_a1_sait_x"))}</p>',
+                unsafe_allow_html=True)
+    _chaine(m)
+
     st.markdown(
         f'<div class="rd-tourne rd-pt" style="animation-delay:.76s">'
         f'<div class="rd-kick" style="color:{VERT}">'
@@ -1498,8 +1682,12 @@ def _acte1(m):
     st.markdown(f'<div class="rd-fin rd-pt" style="animation-delay:.84s">'
                 f'{_e(T("rap_a1_fin"))}</div>', unsafe_allow_html=True)
 
-    st.markdown(f'<div class="rd-note">{_e(T("rap_exemple"))}</div>',
-                unsafe_allow_html=True)
+    # LA MENTION DOIT DÉSORMAIS TRANCHER ENTRE DEUX CHOSES SUR LA MÊME PAGE :
+    # l'anecdote, qui est une illustration, et les niveaux de la chaîne, qui
+    # sont mesurés. Une mention qui dirait « illustration » sans préciser
+    # laquelle jetterait le doute sur les seuls chiffres qui n'en méritent pas.
+    st.markdown(f'<div class="rd-note">{_e(T("rap_a1_note", n=_n(m["menages"])))}'
+                f'</div>', unsafe_allow_html=True)
 
 
 # --------------------------------------------------------------- deuxième acte
