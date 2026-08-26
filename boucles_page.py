@@ -14,10 +14,12 @@ et aucun n'est une note de bas de page :
   · chaque relation porte son NIVEAU DE JUSTIFICATION — documentée, théorique,
     empirique, hypothèse de modélisation — visible au survol de la flèche et
     listé en clair dans le tableau des relations ;
-  · l'ASSOCIATION RÉELLEMENT OBSERVÉE entre sections communales est affichée à
-    côté de la relation du modèle, dans un registre séparé, y compris — surtout
-    — quand elle la contredit. Quatre relations sur les dix-neuf testables
-    s'observent avec le signe contraire, et la page le dit ;
+  · chaque relation porte SA SOURCE, cherchée sur le web, ouverte et lue : son
+    auteur, son année, son titre, et la taille d'effet qu'elle rapporte. Une
+    force affichée sans ce qui la fonde est un chiffre posé d'autorité. Trois
+    relations sur quatre-vingt-deux n'ont aucune source vérifiable et le
+    disent, et huit ont leur sens CONTREDIT par la source : celles-là sont
+    signalées, pas retournées en silence ;
   · les nœuds NON MESURÉS par l'enquête — l'état de santé, la capacité de
     travail — sont dessinés en tirets et ne reçoivent jamais de valeur de
     départ inventée.
@@ -67,15 +69,16 @@ TEXTES = {
               "relations below come from the IRLA framework and from the "
               "literature, they are not estimated on the survey. Moving a "
               "lever shows what the model implies, never what the territory "
-              "will do. Observed associations between communal sections are "
-              "shown separately, and four of them run against the model.",
+              "will do. Each relation "
+              "carries its own source, and on eight of them the source "
+              "contradicts the direction of the arrow.",
         "fr": "**Ce sont des scénarios exploratoires, pas des prédictions.** "
               "Les relations ci-dessous viennent du cadre IRLA et de la "
               "littérature, elles ne sont pas estimées sur l'enquête. "
               "Déplacer un levier montre ce que le modèle implique, jamais ce "
-              "que le territoire fera. Les associations observées entre "
-              "sections communales sont montrées à part, et quatre d'entre "
-              "elles vont contre le modèle."},
+              "que le territoire fera. Chaque "
+              "relation porte sa propre source, et sur huit d'entre elles "
+              "la source contredit le sens de la flèche."},
     # ---- le point de départ : les indicateurs les plus alarmants
     "bcl_alarme": {"en": "Start from the most alarming indicators",
                    "fr": "Partir des indicateurs les plus alarmants"},
@@ -430,7 +433,9 @@ def _svg(graphe, pos, effets, variations, levier, aretes_visibles):
         larg = 1.0 + 1.6 * e["force"]
         titre = (f'{_libelle(par_id[e["de"]])} → {_libelle(par_id[e["vers"]])}'
                  f'  ·  {T("bcl_j_" + e["just"])}'
-                 f'  ·  {_ref(e)}')
+                 f'  ·  {_ref(e)}'
+                 + (f'  ·  {e.get("cite_" + i18n.get_lang()) or e.get("cite_fr")}'
+                    if e.get("cite_fr") else ''))
         parts.append(
             f'<path d="M{x1:.1f},{y1:.1f} Q{cx:.1f},{cy:.1f} {x2:.1f},{y2:.1f}" '
             f'fill="none" stroke="{coul}" stroke-width="{larg:.1f}" '
@@ -866,6 +871,12 @@ def render(entete=True):
                 f'{_e(_libelle(par_id[e["vers"]]))}</div>'
                 f'<div style="font-size:11.5px;color:{ENCRE2};line-height:1.45">'
                 f'{_e(_ref(e))}'
+                # LA CITATION SUIT LE CHIFFRE, DANS LA MÊME PHRASE. Une taille
+                # d'effet sans son auteur, son année et son titre est un
+                # nombre posé d'autorité.
+                + (f' <span style="color:{ENCRE};font-weight:500">'
+                   f'({_e(e.get("cite_" + i18n.get_lang()) or e.get("cite_fr"))})'
+                   f'</span>' if e.get("cite_fr") else '')
                 + (f'<div style="color:{BAISSE};font-weight:600;'
                    f'margin-top:2px">⚠ {_e(T("bcl_desaccord"))}</div>'
                    if contre else '')

@@ -178,9 +178,16 @@ TEXTES = {
                        "par plusieurs à la fois."},
     "sc_lien_force": {"en": "force", "fr": "force"},
     "sc_lien_sur": {"en": "Rests on", "fr": "Repose sur"},
-    "sc_geo": {"en": "Study in {g}.", "fr": "Étude portant sur {g}."},
+    "sc_geo": {"en": "Context of the study: {g}.",
+               "fr": "Contexte de l'étude : {g}."},
+    "sc_type": {"en": "Type of evidence: {t}.",
+                "fr": "Type de preuve : {t}."},
+    "sc_avec_force": {"en": "with a strength of {f}",
+                      "fr": "avec une force de {f}"},
+    "sc_classee": {"en": "and a class of evidence of {c}",
+                   "fr": "et une classe de preuve « {c} »"},
     "sc_ouvrir": {"en": "open the source", "fr": "ouvrir la source"},
-    "sc_reserve": {"en": "Caveat", "fr": "Réserve"},
+    "sc_reserve": {"en": "Caveat.", "fr": "Réserve :"},
     "sc_conteste": {
         "en": "The source contradicts the direction of this arrow. It is "
               "flagged rather than silently flipped: turning an arrow round "
@@ -331,6 +338,10 @@ STYLE = """
   .sc-src { font-size:11.5px; color:#6b7590; line-height:1.55;
             border-left:2px solid #e3eaf3; padding:1px 0 1px 11px;
             margin:4px 0 0; }
+  .sc-p    { font-size:13px; color:#3c4761; line-height:1.7; margin:0 0 11px;
+             max-width:92ch; border-left:2px solid #e3eaf3; padding-left:13px; }
+  .sc-p b  { color:#101728; font-weight:600; }
+  .sc-cit  { color:#101728; font-weight:500; }
   .sc-ref  { color:#8a93a5; font-size:11px; line-height:1.5; }
   .sc-a    { color:#2166ac; text-decoration:none;
              border-bottom:1px solid #cfdcec; }
@@ -375,7 +386,9 @@ def _modele(lang):
         aretes[(e["de"], e["vers"])] = {
             "signe": e["signe"], "force": e["force"], "just": e.get("just"),
             "ref": e.get("ref_" + lang) or e.get("ref_fr"),
-            "src": e.get("src"), "reserve": e.get("reserve_fr"),
+            "src": e.get("src"),
+            "reserve": e.get("reserve_" + lang) or e.get("reserve_fr"),
+            "cite": e.get("cite_" + lang) or e.get("cite_fr"),
             "conteste": bool(e.get("conteste"))}
     sortants = {}
     for (u, v) in aretes:
@@ -549,47 +562,65 @@ def _chaine(m, chemin, produit, delta, total_cible):
     st.markdown('<div class="sc-ch">' + "".join(morceaux) + '</div>',
                 unsafe_allow_html=True)
 
-    # LES SOURCES, SOUS LA CHAÎNE. Une force affichée sans ce qui la fonde est
-    # un chiffre posé d'autorité, et c'est exactement ce que cette page refuse.
-    # Chaque lien montre donc la source réellement ouverte : son titre, ses
-    # auteurs, son éditeur, le pays de l'étude, le type de preuve, la taille
-    # d'effet relevée, un lien cliquable, et la réserve qui va avec. Quand la
-    # littérature contredit le sens de la flèche, la page le dit en premier.
+    # LES SOURCES, SOUS LA CHAÎNE, ET EN TEXTE SUIVI.
+    #
+    # UN CHIFFRE SANS SA RÉFÉRENCE EST UN CHIFFRE POSÉ D'AUTORITÉ. Chaque
+    # taille d'effet est donc suivie, dans la même phrase, du nom de l'auteur,
+    # de l'année et du titre de la publication. La référence n'est pas reléguée
+    # dans une ligne de métadonnées en petits caractères sous le paragraphe :
+    # elle est à l'endroit exact où le lecteur lit le nombre, parce que c'est
+    # là qu'il se demande d'où il sort.
+    #
+    # Le bloc se lit comme un paragraphe, pas comme une fiche. Ce que le lien
+    # affirme, sur quoi cela repose, dans quel contexte l'étude a été faite,
+    # et ce qui limite la portée du résultat : quatre choses qui s'enchaînent,
+    # dans l'ordre où l'on se pose les questions.
     st.markdown(f'<div class="sc-lab">{_e(T("sc_lien_sur"))}</div>',
                 unsafe_allow_html=True)
     for a, b in zip(chemin, chemin[1:]):
         e = m["aretes"][(a, b)]
-        cls = T("bcl_j_" + str(e["just"])) if e.get("just") else ""
-        verbe = T("sc_renforce") if e["signe"] > 0 else T("sc_diminue")
         src = e.get("src") or {}
-        bloc = [f'<p class="sc-src"><b>{_e(m["noms"][a])}</b> {_e(verbe)} '
-                f'<b>{_e(m["noms"][b])}</b>'
-                + (f' · {_e(cls)}' if cls else "")]
+        verbe = T("sc_renforce") if e["signe"] > 0 else T("sc_diminue")
+        cls = T("bcl_j_" + str(e["just"])) if e.get("just") else ""
+
+        t = [f'<p class="sc-p"><b>{_e(m["noms"][a])}</b> {_e(verbe)} '
+             f'<b>{_e(m["noms"][b])}</b>, '
+             f'{_e(T("sc_avec_force", f=_f(e["force"], 2)))}']
+        if cls:
+            t.append(f' {_e(T("sc_classee", c=cls.lower()))}')
+        t.append('.')
+
         if e.get("conteste"):
-            bloc.append(f'<br><span class="sc-att">{_e(T("sc_conteste"))}</span>')
+            t.append(f' <span class="sc-att">{_e(T("sc_conteste"))}</span>')
+
         if e.get("ref"):
-            bloc.append(f'<br>{_e(e["ref"])}')
-        if src.get("titre"):
-            ligne = ", ".join(x for x in (src.get("auteurs"),
-                                          str(src.get("annee") or ""),
-                                          src.get("editeur")) if x)
-            bloc.append(f'<br><span class="sc-ref">{_e(src["titre"])}. '
-                        f'{_e(ligne)}.')
-            if src.get("geo"):
-                bloc.append(f' {_e(T("sc_geo", g=src["geo"]))}')
-            if src.get("type"):
-                bloc.append(f' · {_e(src["type"])}')
-            if src.get("url"):
-                bloc.append(f' <a href="{src["url"]}" target="_blank" '
-                            f'class="sc-a">{_e(T("sc_ouvrir"))}</a>')
-            bloc.append('</span>')
-        else:
-            bloc.append(f'<br><span class="sc-att">{_e(T("sc_sans_src"))}</span>')
+            t.append(f' {_e(e["ref"])}')
+        if e.get("cite"):
+            t.append(f' <span class="sc-cit">({_e(e["cite"])}'
+                     + (f', <a href="{src["url"]}" target="_blank" class="sc-a">'
+                        f'{_e(T("sc_ouvrir"))}</a>' if src.get("url") else "")
+                     + ')</span>')
+        elif not src:
+            t.append(f' <span class="sc-att">{_e(T("sc_sans_src"))}</span>')
+
+        # Le contexte et le type de preuve existent dans les deux langues :
+        # en anglais, servir la version française laisserait une phrase
+        # bilingue au milieu du paragraphe.
+        lg = i18n.get_lang()
+        geo = (src.get("geo_en") if lg == "en" else None) or src.get("geo")
+        typ = (src.get("type_en") if lg == "en" else None) or src.get("type")
+        detail = []
+        if geo:
+            detail.append(T("sc_geo", g=geo))
+        if typ:
+            detail.append(T("sc_type", t=typ))
+        if detail:
+            t.append(' ' + _e(" ".join(detail)))
         if e.get("reserve"):
-            bloc.append(f'<br><span class="sc-res">{_e(T("sc_reserve"))} : '
-                        f'{_e(e["reserve"])}</span>')
-        bloc.append('</p>')
-        st.markdown("".join(bloc), unsafe_allow_html=True)
+            t.append(f' <span class="sc-res">{_e(T("sc_reserve"))} '
+                     f'{_e(e["reserve"])}</span>')
+        t.append('</p>')
+        st.markdown("".join(t), unsafe_allow_html=True)
 
     # LE CALCUL, ÉCRIT. La mise à l'échelle est rappelée à sa place dans la
     # multiplication : sans elle, le produit affiché ne tomberait pas sur le

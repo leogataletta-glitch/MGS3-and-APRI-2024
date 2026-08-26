@@ -1,81 +1,146 @@
-# « Le système en marche » — le schéma encombré remplacé
+# Mise à jour — les sources du modèle causal
 
-## Trois fichiers — TOUS À LA RACINE
+26 août 2026
 
-| Fichier | Où le déposer |
-|---|---|
-| `systeme_page.py` | **racine** — **nouveau** |
-| `app.py` | **racine** — modifié |
-| `boucles_page.py` | **racine** — modifié |
+Cette livraison répond à une seule demande : **citer la source à chaque fois
+qu'un facteur chiffré est donné**, avec le nom de l'auteur, l'année et le titre
+de la publication, et le dire en texte suivi plutôt qu'en fiche technique.
 
 ---
 
-## Ce qui remplace le schéma
+## Où va chaque fichier
 
-Quarante-cinq boîtes et quatre-vingt-deux flèches sur une seule image : on y
-lisait la **structure** — utile une fois — et jamais ce qui monte ni ce qui
-descend. Une carte du câblage, là où vous vouliez voir la machine tourner.
+| Fichier | Destination dans le dépôt |
+|---|---|
+| `graphe_causal.json` | **dans `data/`** — remplace `data/graphe_causal.json` |
+| `si_je_change.py` | **à la racine** |
+| `boucles_page.py` | **à la racine** |
+| `boucles_moteur.py` | **à la racine** |
+| `SOURCES_MODELE_CAUSAL.md` | **à la racine** (document de référence, l'application ne le lit pas) |
 
-« Boucles de rétroaction » a donc maintenant **trois vues** :
+Les quatre premiers vont ensemble : `si_je_change.py` et `boucles_page.py`
+lisent des champs que seul le nouveau `graphe_causal.json` contient. Il faut
+donc les pousser **dans le même commit**, sinon l'application affiche une page
+vide le temps que le second arrive.
 
-1. **Ondes de choc** — un choc, vague par vague ;
-2. **Le système en marche** — *nouveau* ;
-3. **Boucles, leviers, effet total** — l'analyse, inchangée. Le schéma de
-   réseau y reste, mais **replié** : il n'est plus la première chose à
-   regarder.
+Attention à `graphe_causal.json` : la page d'ajout de fichier de GitHub est liée
+au dossier où l'on se trouve. Pour qu'il atterrisse dans `data/` et non à la
+racine, il faut ouvrir `.../upload/main/data` et non `.../upload/main`.
 
-## Comment la nouvelle vue fonctionne
+---
 
-Les quarante-cinq variables sont là, groupées par dimension, chacune avec son
-niveau sur dix — celui mesuré par l'enquête là où il existe, un repère gris
-marquant ce point de départ sur chaque barre.
+## Ce qui a changé
 
-**Vous cliquez dans une barre** pour imposer une valeur : la variable est alors
-*tenue* (son nom passe en gras, sa barre s'encadre). Un deuxième clic au même
-endroit la libère.
+### Les 82 liens portent maintenant une source réellement ouverte
 
-**Vous appuyez sur lecture.** Chaque variable monte ou descend selon ce que ses
-voisines lui font, tour après tour, jusqu'à ce que le système se stabilise —
-et il le dit quand c'est fait. En haut : le tour courant, le nombre de
-variables tenues, combien montent, combien baissent, et la moyenne des
-variables mesurées avec son écart au départ.
+Chacun des 82 liens du modèle a été cherché sur le web, sa source ouverte et
+lue, sa taille d'effet relevée. **79 portent une source vérifiée. 3 n'en portent
+aucune, et le disent** plutôt que d'en inventer une.
 
-Exemple, l'électricité portée de 0 à 8 : au sixième tour, 23 variables en
-hausse, une en baisse, et la moyenne du modèle passe de 3,96 à 4,25. Ce qui
-bouge le plus, dans l'ordre : le revenu (+2,96), l'accès aux messages d'alerte
-et le sentiment de sécurité (+2,46 chacun), l'achèvement du primaire (+1,73),
-la sécurité alimentaire (+1,17).
+Cinq d'entre elles ont été rouvertes au hasard après coup pour contrôle : les
+cinq correspondaient exactement à ce qui est écrit.
 
-## Pourquoi l'état mesuré est un point d'équilibre
+### Chaque chiffre est suivi de sa référence, dans la phrase
 
-Le graphe ne dit rien des niveaux : il dit ce qu'un **écart** produit ailleurs.
-L'état mesuré est donc la référence, et le modèle est au repos tant qu'on n'y
-touche pas. C'est la seule lecture honnête : le territoire observé est, par
-construction, le point de fonctionnement du modèle.
+Le bloc « Repose sur » de l'onglet *Si je change une chose* n'est plus une fiche
+de métadonnées mais un paragraphe qui se lit. La citation vient juste après le
+chiffre qu'elle justifie, sous la forme demandée :
 
-Dès qu'une valeur est imposée :
+> **Accès à l'électricité** renforce **Revenu au-dessus du seuil**, avec une
+> force de 0,50 et une classe de preuve « documentée ». La revue de la BID
+> trouve une hausse moyenne du revenu des ménages électrifiés d'environ 30 %,
+> médiane 18 %, mais huit études sur vingt-quatre ne trouvent aucun effet.
+> (JIMENEZ MORI (2017), « Development Effects of Rural Electrification »,
+> Banque interaméricaine de développement (note de politique), ouvrir la
+> source) Contexte de l'étude : … Type de preuve : rapport institutionnel.
+> *Réserve : …*
 
-```
-écart₀     = ce que vous imposez
-écart_{t+1} = écart₀ + A · écart_t
-```
+Le lien « ouvrir la source » ouvre l'URL réelle dans un nouvel onglet.
 
-La suite converge vers `(I − A)⁻¹ · écart₀`, c'est-à-dire **exactement l'effet
-total** que calcule le moteur des boucles. Les trois vues ne peuvent donc pas
-diverger : la première montre le chemin d'un choc, la deuxième l'état du
-système entier, la troisième le point d'arrivée.
+### Les forces ne sont plus les miennes
 
-**Un pas n'est pas une année.** C'est un tour de propagation. Le modèle connaît
-l'ordre des relais, pas leur durée — une coupe de forêt met des années à se
-voir sur les sols, un choc de revenu se voit en semaines — et la page le dit
-sous le tableau plutôt que de laisser croire à un calendrier.
+39 forces sur 82 ont changé, ajustées sur ce que la source mesure vraiment. Le
+barème est publié dans la page, à cinq échelons :
 
-## Vérifié
+| Force | Ce qu'elle veut dire |
+|---|---|
+| 0,20 | lien plausible, mécanisme indirect, aucune mesure |
+| 0,35 | mécanisme direct, mais effet faible ou très dépendant du contexte |
+| 0,50 | effet régulièrement observé, d'ampleur moyenne, dans plusieurs contextes |
+| 0,65 | mécanisme direct, sources convergentes, effet de premier ordre |
+| 0,80 | relation structurelle : l'un est une condition ou une composante de l'autre |
 
-- **88 rendus** — 11 pages × 4 combinaisons × 2 langues, les quatre écrans de
-  l'accueil et **les trois vues des boucles** — zéro exception ;
-- ouvert au navigateur dans les deux langues : lecture, pas à pas, retour à
-  l'état mesuré, clic dans une barre, libération d'une variable tenue ; aucune
-  erreur au journal ;
-- recoupé avec le moteur : après stabilisation, les écarts obtenus sont ceux
-  que `boucles_moteur.propager` calcule par inversion.
+Répartition obtenue : 4 liens à 0,20 · 16 à 0,35 · 32 à 0,50 · 26 à 0,65 ·
+4 à 0,80.
+
+La classe de preuve plafonne la force qu'on a le droit de donner : un lien que
+personne n'a mesuré ne peut pas recevoir le poids d'un lien mesuré. Classes
+obtenues : 55 empiriques · 20 documentées · 3 structurelles · 2 théoriques ·
+2 hypothèses.
+
+Les colonnes `rho` et `p` ont été retirées. Elles étaient calculées sur les
+moyennes de dix sections communales, soit dix points : deux seulement étaient
+significatives, plusieurs avaient le signe contraire à la flèche, et le seul
+lien classé « empirique » affichait rho = −0,01 avec p = 0,98. Elles donnaient
+une apparence de mesure là où il n'y en avait pas.
+
+### 8 liens dont la source contredit la flèche
+
+Ils sont signalés en rouge là où ils apparaissent, pas retournés en douce.
+Retourner une flèche est une décision de modélisation, elle t'appartient.
+
+| Lien | Ce que trouve la source |
+|---|---|
+| Compte financier → Revenu | DUPAS et al. (2016) : ouvrir un compte n'augmente pas le revenu du travail |
+| Sentiment de sécurité → Capital de passerelle | BAUER et al. (2016) : la violence renforce le lien interne, pas celui vers l'extérieur |
+| Productivité agricole → Pratiques conservatrices | GOULART et al. (2023) : plus de rendement, plus de déforestation |
+| Productivité agricole → Couvert forestier | GOULART et al. (2023) : effet Jevons, signe inverse |
+| Productivité agricole → Maintien sur place | SADIDDIN et al. (2019) : l'insécurité alimentaire fait vouloir partir |
+| Accès à l'électricité → Sentiment de sécurité | AEVARSDOTTIR et al. (2017) : effet nul mesuré |
+| Couverture mobile → Revenu | AKER et FAFCHAMPS (2014) : pas d'effet sur les prix reçus |
+| Sécurité foncière → Maintien sur place | DE JANVRY et al. (2015) : la certification fait PARTIR davantage |
+
+Le détail complet, réserve par réserve, est dans `SOURCES_MODELE_CAUSAL.md`.
+
+### Le modèle est maintenant bilingue jusqu'au bout
+
+Le contexte de l'étude, le type de preuve et la réserve méthodologique
+existaient seulement en français : en anglais, le paragraphe basculait au milieu
+d'une phrase. Les trois champs ont une version anglaise (`geo_en`, `type_en`,
+`reserve_en`), et les noms d'éditeurs institutionnels sont donnés dans la langue
+de lecture — « Banque mondiale » en français, « World Bank » en anglais.
+
+### Un avertissement devenu honnête
+
+Écrites telles quelles, les nouvelles forces donnent au graphe un rayon spectral
+de 1,10 : le système se tiendrait au bord de l'emballement, ce qui est absurde
+sur une échelle qui s'arrête à dix. Les forces sont donc mises à l'échelle de
+0,55 avant de propager. Le classement de ce qui bouge ne change pas, les
+montants deviennent lisibles, et la page le dit à voix haute.
+
+Le message correspondant est passé d'une erreur rouge (« chiffres non
+exploitables ») à un avertissement : c'est une propriété du modèle, pas une
+panne.
+
+---
+
+## Ce qui reste ouvert, et qui demande ta décision
+
+1. **Les 8 flèches contredites.** Faut-il en retourner certaines ? Elles sont
+   laissées en place avec leur drapeau rouge.
+2. **Le `graphe_causal.json` traîné à la racine du dépôt.** Rien ne le lit —
+   l'application lit `data/graphe_causal.json` — mais il contredit désormais le
+   modèle en service. Dis un mot et je le supprime.
+
+---
+
+## Vérifications passées avant livraison
+
+- 104 rendus (13 pages × 4 combinaisons de filtres × 2 langues) : 0 problème.
+- Les 395 champs de source réaccentués : après suppression des accents, chacun
+  est strictement identique à l'original — donc rien d'autre que les accents n'a
+  bougé.
+- Les 82 réserves traduites : tous les chiffres, intervalles de confiance et
+  tailles d'échantillon conservés à l'identique.
+- Les 79 contextes d'étude traduits : idem, contrôle chiffre par chiffre.
+- Copies d'écran des deux langues sur la page *Si je change une chose*.
