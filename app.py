@@ -46,6 +46,7 @@ import ocb_page
 import radar_accueil
 import rapport_donateur
 import resilience_page
+import feuilleter
 import saillants_page
 import si_je_change
 import systeme_page
@@ -1719,3 +1720,11 @@ if app_mode == MODE_DONNEES:
     # qu'on vient voir ce qui est disponible, et donc ce qui vient
     # d'arriver.
     actualites.rendre(_bascule)
+
+
+# ---------------------------------------------------------------- FEUILLETER
+# LA RÉPARTITION EN ÉCRANS SE FAIT ICI, EN DERNIER. Elle mesure la hauteur
+# réelle des blocs déjà rendus : l'appeler plus haut reviendrait à mesurer une
+# page à moitié écrite. La clé est le mode courant, pour que chaque page
+# retienne son propre numéro d'écran.
+feuilleter.activer(app_mode)

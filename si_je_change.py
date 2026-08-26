@@ -717,50 +717,16 @@ def _bareme(m):
 
 
 # ------------------------------------------------------------------ la page
-def _pied(page, titres, cle):
-    """Le pied de page : où l'on est, et les deux flèches pour tourner.
-
-    LE NUMÉRO D'ÉCRAN VIT DANS session_state, PAS DANS UNE VARIABLE. Streamlit
-    réexécute le module entier à chaque clic ; une variable locale serait
-    remise à zéro avant même d'avoir servi. La clé porte la langue, sans quoi
-    passer du français à l'anglais ramènerait le lecteur au premier écran.
-    """
-    n = len(titres)
-    st.markdown(
-        f'<div class="sc-pied"><span class="ti">{_e(titres[page])}</span>'
-        '<span class="sc-puces">'
-        + "".join(f'<i class="{"on" if k == page else ""}"></i>'
-                  for k in range(n))
-        + '</span>'
-        f'<span class="nb">{_e(T("sc_pg_de", a=page + 1, b=n))}</span>'
-        '</div>', unsafe_allow_html=True)
-
-    with st.container(key=f"sc_nav_{cle}"):
-        g, d, _ = st.columns([1, 1, 7], gap="small")
-        with g:
-            if st.button(f'← {T("sc_pg_prec")}', key=f"sc_prec_{cle}",
-                         disabled=page == 0, use_container_width=True):
-                st.session_state[cle] = page - 1
-                st.rerun()
-        with d:
-            if st.button(f'{T("sc_pg_suiv")} →', key=f"sc_suiv_{cle}",
-                         disabled=page >= n - 1, use_container_width=True):
-                st.session_state[cle] = page + 1
-                st.rerun()
-
-
 def render(entete=True):
-    """La page, tournée écran par écran plutôt que déroulée.
+    """La page, dans l'ordre : ce qui bouge, les degrés, d'où vient un
+    chiffre, sur quoi reposent les forces.
 
-    POURQUOI PAGINER PLUTÔT QUE DÉROULER. La page dit quatre choses de nature
-    différente : ce qui bouge, ce que valent les degrés, d'où vient un chiffre
-    donné, et sur quoi tout cela repose. Déroulées à la file, elles obligeaient
-    le lecteur à descendre pour retrouver le tableau qu'il venait de quitter.
-    Tournées, chacune tient sur un écran et se lit pour elle-même.
-
-    LES COMMANDES RESTENT SUR LE PREMIER ÉCRAN. Les remettre sur chaque écran
-    aurait chargé la page de ce qu'elle cherche justement à alléger : on choisit
-    sa variable, puis on lit ce qui suit.
+    LA RÉPARTITION EN ÉCRANS N'EST PLUS FAITE ICI. Elle l'a été un temps, à la
+    main, avec ses propres boutons ; puis la même demande a porté sur tout le
+    site, et deux mécaniques concurrentes auraient donné deux barres de
+    navigation sur la même page. Le module `feuilleter` s'en charge désormais
+    pour toutes les pages, en mesurant la hauteur réelle à l'écran. Ce qui
+    reste ici, ce sont les quatre sections dans leur ordre de lecture.
     """
     st.markdown(STYLE, unsafe_allow_html=True)
     lang = i18n.get_lang()
@@ -772,10 +738,6 @@ def render(entete=True):
     if entete:
         st.title(T("mode_levier"))
 
-    cle = f"sc_ecran_{lang}"
-    page = int(st.session_state.get(cle, 0))
-
-    # --- les commandes, une fois pour toutes, au-dessus de la pagination
     choix = sorted(m["ids"], key=lambda i_: m["noms"][i_])
     g, d = st.columns([1.4, 1], gap="large")
     with g:
@@ -797,26 +759,11 @@ def render(entete=True):
     total, tours, reste = _propager(m, source, delta)
     lignes = _tableau(m, total, tours, source, calcule_seulement=True)
 
-    # LE SOMMAIRE DES ÉCRANS. Quand rien ne bouge assez pour être listé, les
-    # deux écrans qui expliquent un chiffre n'ont plus d'objet : on les retire
-    # plutôt que d'afficher deux pages vides que le lecteur devra tourner.
-    titres = [T("sc_liste_t"), T("sc_deg_t")]
+    _ecran_liste(m, total, tours, source, delta, lignes)
+    _ecran_degres()
     if lignes:
-        titres += [T("sc_pourquoi_t"), T("sc_bareme_t")]
-    page = max(0, min(page, len(titres) - 1))
-
-    with st.container(key=f"sc_ecran_{lang}_{page}"):
-        if page == 0:
-            _ecran_liste(m, total, tours, source, delta, lignes)
-        elif page == 1:
-            _ecran_degres()
-        elif page == 2:
-            _ecran_pourquoi(m, total, tours, reste, source, delta, lignes,
-                            lang)
-        else:
-            _ecran_forces(m)
-
-    _pied(page, titres, cle)
+        _ecran_pourquoi(m, total, tours, reste, source, delta, lignes, lang)
+    _ecran_forces(m)
 
 
 def _ecran_liste(m, total, tours, source, delta, lignes):
