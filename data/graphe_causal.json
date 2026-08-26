@@ -322,11 +322,20 @@
    "vers": "sante",
    "signe": 1,
    "force": 0.65,
-   "just": "documentee",
-   "ref_fr": "OMS : l'eau non améliorée est le premier facteur des maladies diarrhéiques",
-   "ref_en": "WHO: unimproved water is the leading driver of diarrhoeal disease",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Meta-analyse en reseau de 26 etudes en pays a faible revenu : les interventions d'approvisionnement en eau reduisent la mortalite infantile, rapport de cotes 0,62 (IC95% 0,43-0,90).",
+   "ref_en": "Network meta-analysis of 26 low- and middle-income country studies: water supply interventions cut child mortality, odds ratio 0.62 (95% CI 0.43-0.90).",
+   "src": {
+    "titre": "Effectiveness of stand-alone and multi-component water, sanitation and hygiene interventions to reduce mortality in childhood: a network meta-analysis",
+    "auteurs": "Masset, Edoardo et al.",
+    "annee": 2025,
+    "editeur": "Nature Water",
+    "url": "https://www.nature.com/articles/s44221-025-00484-x",
+    "geo": "Pays a revenu faible et intermediaire (26 etudes, 37 comparaisons)",
+    "effet": "Interventions d'approvisionnement en eau seules : rapport de cotes 0,62 sur la mortalite infantile (IC95% 0,43-0,90)",
+    "type": "meta-analyse"
+   },
+   "reserve_fr": "La mesure porte sur la mortalite infantile, pas sur l'etat de sante general ; le rapport OMS 2019 sur la charge de morbidite, ouvert egalement (505 000 deces annuels attribues a l'eau de boisson non sure), converge et rend le lien solide pour un contexte type Haiti."
   },
   {
    "de": "assain",
@@ -334,54 +343,99 @@
    "signe": 1,
    "force": 0.65,
    "just": "documentee",
-   "ref_fr": "ODD 6.2 : l'assainissement géré en sécurité réduit la charge de morbidité",
-   "ref_en": "SDG 6.2: safely managed sanitation lowers disease burden",
-   "rho": null,
-   "p": null
+   "ref_fr": "L'OMS attribue à l'assainissement non géré en sécurité 564 000 décès annuels, principalement diarrhéiques, dont 395 000 enfants de moins de cinq ans.",
+   "ref_en": "WHO attributes 564,000 deaths per year to unsafe sanitation, mostly diarrhoeal, including 395,000 deaths among children under five years old.",
+   "src": {
+    "titre": "Sanitation (fact sheet)",
+    "auteurs": "Organisation mondiale de la Santé",
+    "annee": 2024,
+    "editeur": "Organisation mondiale de la Santé (OMS)",
+    "url": "https://www.who.int/news-room/fact-sheets/detail/sanitation",
+    "geo": "Monde, avec une charge concentrée dans les pays à faible revenu",
+    "effet": "564 000 décès par an attribués à l'assainissement non sûr, dont 395 000 décès d'enfants de moins de 5 ans par diarrhée ; 5,50 USD de retour par dollar investi",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "Chiffre de charge attribuable global et non un effet mesuré sur une cohorte haïtienne ; les méta-analyses correspondantes (Wolf 2018, Lancet 2022) sont derrière un péage et n'ont pas pu être ouvertes."
   },
   {
    "de": "cuisson",
    "vers": "sante",
    "signe": 1,
-   "force": 0.5,
+   "force": 0.65,
    "just": "documentee",
-   "ref_fr": "OMS : la combustion de biomasse en intérieur cause des infections respiratoires",
-   "ref_en": "WHO: indoor biomass burning causes respiratory infection",
-   "rho": null,
-   "p": null
+   "ref_fr": "L'OMS attribue 2,9 millions de deces annuels a la pollution de l'air domestique issue des combustibles de cuisson polluants, dont 21 % d'infections respiratoires basses.",
+   "ref_en": "WHO attributes 2.9 million deaths a year to household air pollution from polluting cooking fuels, of which 21% are lower respiratory infections.",
+   "src": {
+    "titre": "Household air pollution (fact sheet)",
+    "auteurs": "Organisation mondiale de la Santé (OMS)",
+    "annee": 2025,
+    "editeur": "Organisation mondiale de la Santé",
+    "url": "https://www.who.int/news-room/fact-sheets/detail/household-air-pollution-and-health",
+    "geo": "Monde, avec forte concentration dans les pays a faible revenu (49 % de la population rurale mondiale utilise des combustibles polluants)",
+    "effet": "2,9 millions de deces par an (2021) ; 21 % d'infections respiratoires basses, 32 % de cardiopathies ischemiques, 19 % de BPCO ; 44 % des deces par pneumonie chez les moins de 5 ans ; 95 millions d'annees de vie ajustees perdues",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "Chiffres mondiaux de charge de morbidite, pas une evaluation d'impact d'un passage aux combustibles propres : les essais de fourneaux ameliores montrent des gains sanitaires plus modestes que ne le laisse esperer cette attribution."
   },
   {
    "de": "sante_acces",
    "vers": "sante",
    "signe": 1,
    "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "Distance au soin et recours effectif : relation établie en milieu rural",
-   "ref_en": "Distance to care and effective use: established in rural settings",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Au Malawi rural, chaque kilometre supplementaire jusqu'au centre de sante le plus proche est associe a une hausse de 1,1 % du risque de deces avant cinq ans.",
+   "ref_en": "In rural Malawi, each additional kilometre to the nearest health facility was associated with a 1.1 percent higher hazard of death before age five.",
+   "src": {
+    "titre": "The effects of changes in distance to nearest health facility on under-5 mortality and health care utilization in rural Malawi, 1980-1998",
+    "auteurs": "Quattrochi et al.",
+    "annee": 2020,
+    "editeur": "BMC Health Services Research",
+    "url": "https://link.springer.com/article/10.1186/s12913-020-05738-w",
+    "geo": "Malawi rural (pays a faible revenu)",
+    "effet": "Chaque kilometre supplementaire : risque de deces avant 5 ans x1,007 (IC95% 1,001-1,014), soit +1,1 % ; +1,2 point d'accouchements a domicile ; -1,2 point d'assistance qualifiee ; 18 714 naissances",
+    "type": "quasi-experimental"
+   },
+   "reserve_fr": "Reserve importante : le volet causal de la meme etude (ouverture effective de nouvelles structures) ne trouve aucun effet significatif sur la mortalite des moins de 5 ans, ce qui suggere que la seule proximite ne suffit pas sans qualite de service - point tres pertinent pour le Sud et la Grand'Anse."
   },
   {
    "de": "sante",
    "vers": "travail",
    "signe": 1,
-   "force": 0.65,
-   "just": "documentee",
-   "ref_fr": "La morbidité réduit directement le nombre de jours travaillés ; relation constante dans la littérature santé-travail.",
-   "ref_en": "Illness directly reduces days worked; a constant finding in the health-and-labour literature.",
-   "rho": null,
-   "p": null
+   "force": 0.5,
+   "just": "empirique",
+   "ref_fr": "Une meta-analyse de huit etudes (117 656 participants) trouve que la maladie reduit l'offre de travail, avec un r partiel de -0,09 dans les pays en developpement.",
+   "ref_en": "A meta-analysis of eight studies (117,656 participants) finds that illness reduces labour supply, with a partial r of -0.09 in developing countries.",
+   "src": {
+    "titre": "A systematic review and meta-analysis on the effects of ill health and health shocks on labour supply",
+    "auteurs": "Ken Chamuva Shawa et al.",
+    "annee": 2024,
+    "editeur": "Systematic Reviews (BMC / Springer Nature)",
+    "url": "https://link.springer.com/article/10.1186/s13643-024-02454-y",
+    "geo": "8 etudes, 117 656 participants ; sous-groupe pays en developpement : Chine, Tanzanie, Sri Lanka, Egypte",
+    "effet": "r partiel groupe = -0,05 (p<0,001) ; pays en developpement r partiel = -0,09 (IC95% -0,15 a -0,04) ; methodes quasi-experimentales -0,09",
+    "type": "meta-analyse"
+   },
+   "reserve_fr": "Le sens est robuste mais l'ampleur est faible (r partiel -0,09) et aucune etude ne porte sur les Caraibes ni sur le travail agricole informel, dominant en Haiti."
   },
   {
    "de": "travail",
    "vers": "emploi",
    "signe": 1,
-   "force": 0.5,
-   "just": "theorique",
-   "ref_fr": "Cadre IRLA : capacité de travail et participation à l'emploi",
-   "ref_en": "IRLA framework: capacity to work and labour participation",
-   "rho": null,
-   "p": null
+   "force": 0.65,
+   "just": "empirique",
+   "ref_fr": "Sur 65 pays, l'OIT mesure un ecart de participation au marche du travail de 26,2 points de pourcentage entre personnes handicapees et non handicapees dans les pays a faible revenu.",
+   "ref_en": "Across 65 countries, the ILO measures a 26.2 percentage-point labour force participation gap between persons with and without disabilities in low-income countries.",
+   "src": {
+    "titre": "A study on the employment and wage outcomes of people with disabilities",
+    "auteurs": "Sevane Ananian et Giulia Dellaferrera (OIT)",
+    "annee": 2024,
+    "editeur": "Organisation internationale du Travail, ILO Working Paper 124",
+    "url": "https://www.ilo.org/sites/default/files/2024-08/WP124_web.pdf",
+    "geo": "65 pays, dont des pays a faible revenu et a revenu intermediaire inferieur",
+    "effet": "Ecart de taux d'activite de -26,2 points de pourcentage dans les pays a faible revenu (-24,9 points tous pays, -27,0 en revenu intermediaire inferieur)",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Le handicap n'est qu'un proxy imparfait de la capacite de travail, Haiti n'est pas dans l'echantillon, et l'ecart d'emploi salarie y est bien plus faible (-2,4 points) car l'emploi informel absorbe une partie des personnes a capacite reduite."
   },
   {
    "de": "emploi",
@@ -389,109 +443,200 @@
    "signe": 1,
    "force": 0.8,
    "just": "structurel",
-   "ref_fr": "Le revenu d'activité est le produit de l'emploi : la relation est de construction, son ampleur dépend du salaire.",
-   "ref_en": "Earned income is the product of employment: the relation holds by construction, its size depends on the wage.",
-   "rho": 0.49,
-   "p": 0.15
+   "ref_fr": "Selon la Banque mondiale, les revenus du travail expliquent plus de la moitie de la baisse de la pauvrete dans dix des dix-huit pays etudies entre 2000 et 2010.",
+   "ref_en": "The World Bank reports that labour income explained more than half of the fall in poverty in ten of the eighteen countries studied between 2000 and 2010.",
+   "src": {
+    "titre": "Chart: Jobs account for much of the decline in extreme poverty",
+    "auteurs": "Banque mondiale, d'apres les decompositions d'Azevedo et al. et d'Inchauste et al.",
+    "annee": 2012,
+    "editeur": "Banque mondiale (blog Let's Talk Development), decomposition du Rapport sur le developpement dans le monde 2013",
+    "url": "https://blogs.worldbank.org/en/developmenttalk/chart-jobs-account-for-much-of-the-decline-in-extreme-poverty",
+    "geo": "18 pays d'Amerique latine, d'Asie, d'Afrique et d'Europe de l'Est, 2000-2010",
+    "effet": "Les revenus du travail expliquent plus de la moitie de la baisse de la pauvrete dans 10 pays sur 18, et plus d'un tiers dans 5 autres",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "Source ouverte mais il s'agit d'un billet institutionnel relayant une decomposition du RDM 2013 ; aucun pays caribeen a faible revenu comparable a Haiti n'est isole, et l'ampleur depend entierement du niveau de salaire."
   },
   {
    "de": "revenu",
    "vers": "alimentaire",
    "signe": 1,
-   "force": 0.65,
-   "just": "documentee",
-   "ref_fr": "FAO : le revenu est le premier déterminant de l'accès économique aux aliments",
-   "ref_en": "FAO: income is the primary determinant of economic access to food",
-   "rho": null,
-   "p": null
+   "force": 0.5,
+   "just": "empirique",
+   "ref_fr": "En Haiti apres le seisme de 2010, les menages les plus demunis avaient huit a dix fois plus de risque de faim et de repas sautes que les menages mieux equipes.",
+   "ref_en": "In post-earthquake Haiti, the poorest households faced eight to ten times higher odds of hunger and skipped meals than better-equipped households.",
+   "src": {
+    "titre": "Features of Child Food Insecurity after the 2010 Haiti Earthquake: Results from Longitudinal Random Survey of Households",
+    "auteurs": "Hutson et al.",
+    "annee": 2014,
+    "editeur": "PLOS ONE",
+    "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0104497",
+    "geo": "Haiti (Port-au-Prince et zones touchees par le seisme de 2010)",
+    "effet": "Menages sans aucun equipement de base vs deux ou plus : OR 8,19 (IC95% 3,56-18,82) pour la faim, 10,25 (4,90-21,41) pour les repas sautes ; le revenu gagne lui-meme n'etait associe qu'a une seule des trois mesures d'insecurite alimentaire (n=1 732 menages)",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Nuance importante : le revenu monetaire declare n'etait significatif que pour une des trois mesures, l'effet fort passant par les indicateurs de richesse du menage ; contexte post-catastrophe urbain, transferabilite partielle au Sud rural."
   },
   {
    "de": "alimentaire",
    "vers": "sante",
    "signe": 1,
-   "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "L'insécurité alimentaire dégrade l'état nutritionnel et sanitaire",
-   "ref_en": "Food insecurity degrades nutritional and health status",
-   "rho": null,
-   "p": null
+   "force": 0.65,
+   "just": "empirique",
+   "ref_fr": "Meta-analyse de 26 etudes indonesiennes : l'insecurite alimentaire des menages multiplie par 4,6 le risque de retard de croissance et par 1,9 celui d'emaciation chez les moins de cinq ans.",
+   "ref_en": "Meta-analysis of 26 Indonesian studies: household food insecurity raises the odds of child stunting 4.6-fold and wasting 1.9-fold among children under five.",
+   "src": {
+    "titre": "The role of household food insecurity in malnutrition among Indonesian children under 5 years of age: a systematic review and meta-analysis (2015-2025)",
+    "auteurs": "Sutrisno, Rahayu et al.",
+    "annee": 2026,
+    "editeur": "Public Health Nutrition (Cambridge University Press)",
+    "url": "https://www.cambridge.org/core/journals/public-health-nutrition/article/role-of-household-food-insecurity-in-malnutrition-among-indonesian-children-under-5-years-of-age-a-systematic-review-and-metaanalysis-20152025/472D7C6072DE95A27CB03CC5A96327AC",
+    "geo": "Indonesie (pays a revenu intermediaire), 32 etudes recensees, 26 en meta-analyse",
+    "effet": "Retard de croissance : RC 4,61 (IC95% 4,17-5,11) en transversal et 4,66 (3,39-6,40) en cas-temoins ; emaciation RC 1,92 (1,60-2,32) ; insuffisance ponderale RC 5,26 (2,12-13,04)",
+    "type": "meta-analyse"
+   },
+   "reserve_fr": "Reserve importante : ces etudes sont transversales ou cas-temoins, et la meta-analyse de cohortes de Patriota et al. 2024 (Maternal & Child Nutrition, 9 cohortes, 46 300 enfants), ouverte via DOAJ, ne retrouve aucun effet groupe sur le retard de croissance (RC 1,00 ; IC95% 0,87-1,14 ; I2 76%) - le lien est donc robuste en association mais fragile en causalite."
   },
   {
    "de": "eau",
    "vers": "temps_eau",
    "signe": 1,
    "force": 0.65,
-   "just": "documentee",
-   "ref_fr": "Le temps de collecte chute quand la source est proche et améliorée",
-   "ref_en": "Collection time drops when the source is nearby and improved",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Un essai randomisé en grappes au Ghana montre qu'un point d'eau amélioré et rapproché libère environ 0,6 heure par jour et par ménage.",
+   "ref_en": "A cluster randomised trial in Ghana shows that an improved, closer water point frees about 0.6 hours per household per day.",
+   "src": {
+    "titre": "Cost-benefit analysis of water source improvements through borehole drilling or rehabilitation: an empirical study based on a cluster randomized controlled trial in the Volta Region, Ghana",
+    "auteurs": "Seungman Cha et al.",
+    "annee": 2018,
+    "editeur": "Global Health Action",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7011988/",
+    "geo": "Ghana, région de la Volta (pays à faible revenu, milieu rural)",
+    "effet": "0,6 heure économisée par jour et par ménage (environ 36 minutes) après forage ou réhabilitation d'un point d'eau amélioré",
+    "type": "essai randomise"
+   },
+   "reserve_fr": "Gain mesuré en Afrique de l'Ouest rurale ; l'ampleur en Haïti dépendra de la distance initiale et du relief, plus contraignant dans le Sud et la Grand'Anse."
   },
   {
    "de": "temps_eau",
    "vers": "travail",
    "signe": 1,
-   "force": 0.2,
-   "just": "hypothese",
-   "ref_fr": "Hypothèse de modélisation : le temps libéré se reporte sur le travail",
-   "ref_en": "Modelling assumption: freed time shifts to productive work",
-   "rho": null,
-   "p": null
+   "force": 0.5,
+   "just": "empirique",
+   "ref_fr": "Au Senegal rural, l'acces a l'eau courante augmente de 7,9 points de pourcentage l'emploi agricole, via la reduction du temps consacre a la corvee d'eau.",
+   "ref_en": "In rural Senegal, piped water access raised agricultural employment by 7.9 percentage points, working through the reduction in women's water-fetching time.",
+   "src": {
+    "titre": "The Economic Impacts of Rural Water Supply Infrastructures in Developing Countries: Empirical Evidence from Senegal",
+    "auteurs": "Kadoukpe Gildas Magbonde et al.",
+    "annee": 2024,
+    "editeur": "Environmental and Resource Economics (Springer)",
+    "url": "https://link.springer.com/article/10.1007/s10640-024-00897-4",
+    "geo": "Senegal rural (pays a faible revenu, contexte pertinent pour Haiti)",
+    "effet": "+7,9 points de pourcentage d'emploi agricole (erreur-type 0,028 ; p<0,01), estimation PSM-DiD sur 1 319 menages ruraux, panel 2016-2020",
+    "type": "quasi-experimental"
+   },
+   "reserve_fr": "Le mecanisme temporel est documente de facon qualitative (moins de temps de corvee, plus de temps de jardinage et d'agriculture) : l'article ne chiffre pas les minutes economisees, donc le maillon 'temps libere' reste indirect."
   },
   {
    "de": "temps_eau",
    "vers": "education",
    "signe": 1,
-   "force": 0.35,
-   "just": "documentee",
-   "ref_fr": "La corvée d'eau pèse sur la scolarisation, en particulier des filles",
-   "ref_en": "Water collection weighs on schooling, girls in particular",
-   "rho": null,
-   "p": null
+   "force": 0.5,
+   "just": "empirique",
+   "ref_fr": "Au Ghana, diviser par deux le temps de corvee d'eau augmente la frequentation scolaire des filles de 2,4 points en moyenne et de 3,5 points en milieu rural.",
+   "ref_en": "In Ghana, halving water hauling time raises girls' school attendance by 2.4 percentage points on average and by 3.5 points in rural areas.",
+   "src": {
+    "titre": "Water Hauling and Girls' School Attendance: Some New Evidence from Ghana",
+    "auteurs": "Nauges & Strand",
+    "annee": 2013,
+    "editeur": "Banque mondiale, Policy Research Working Paper 6443",
+    "url": "https://documents1.worldbank.org/curated/en/406001468032642724/pdf/wps6443.pdf",
+    "geo": "Ghana (pays a faible revenu), 4 vagues d'EDS 1993-2008",
+    "effet": "Une reduction de 50 % du temps de corvee d'eau augmente la frequentation scolaire des filles de 2,4 points de pourcentage en moyenne, 3,5 points en milieu rural, 5 a 6 points dans les regions du Nord ; effet significatif seulement au-dela de 20 minutes de trajet (coef. -0,014, p=0,007)",
+    "type": "observationnel"
+   },
+   "reserve_fr": "L'effet n'apparait qu'au-dela d'environ vingt minutes de trajet et ne concerne que les filles : le lien ne vaut donc pas de facon uniforme pour l'achevement du primaire de tous les enfants, et il porte sur la frequentation, non sur l'achevement."
   },
   {
    "de": "revenu",
    "vers": "services",
    "signe": 1,
-   "force": 0.2,
-   "just": "hypothese",
-   "ref_fr": "Hypothèse : un revenu plus élevé permet d'accéder aux services payants",
-   "ref_en": "Assumption: higher income enables access to fee-based services",
-   "rho": -0.42,
-   "p": 0.229
+   "force": 0.35,
+   "just": "empirique",
+   "ref_fr": "Dans 22 pays des Ameriques, dont Haiti, la richesse du menage predit la satisfaction envers les services municipaux (coefficient 0,032 ; 47,9 contre 53,5 points).",
+   "ref_en": "Across 22 countries in the Americas, including Haiti, household wealth predicts satisfaction with municipal services (coefficient 0.032; 47.9 versus 53.5 points).",
+   "src": {
+    "titre": "Citizen Satisfaction with Municipal Services",
+    "auteurs": "Daniel Montalvo",
+    "annee": 2009,
+    "editeur": "Latin American Public Opinion Project (LAPOP), Vanderbilt University",
+    "url": "https://www.vanderbilt.edu/lapop/insights/I0818en.pdf",
+    "geo": "22 pays des Ameriques, Haiti inclus",
+    "effet": "Coefficient de richesse 0,032 (t=3,40 ; p<0,05) ; satisfaction moyenne 47,9 (richesse basse), 51,3 (moyenne), 53,5 (haute) sur 100",
+    "type": "observationnel"
+   },
+   "reserve_fr": "L'ecart n'est que de 5,6 points sur 100 et la source mesure la richesse en biens durables, pas le revenu ; elle est transversale et ne teste pas le mecanisme d'acces aux services payants suppose par le modele."
   },
   {
    "de": "services",
    "vers": "eau",
    "signe": 1,
-   "force": 0.5,
-   "just": "theorique",
-   "ref_fr": "Cadre IRLA : la qualité du service public conditionne l'accès à l'eau",
-   "ref_en": "IRLA framework: public service quality conditions water access",
-   "rho": 0.08,
-   "p": 0.821
+   "force": 0.35,
+   "just": "empirique",
+   "ref_fr": "Sur un panel de 135 pays entre 1990 et 2015, une gouvernance publique faible s'accompagne d'un acces a l'eau amelioree inferieur de un a trois points de pourcentage.",
+   "ref_en": "In a panel of 135 countries from 1990 to 2015, weak public governance is associated with improved-water access one to three points lower.",
+   "src": {
+    "titre": "Socioeconomic Factors Affecting Water Access in Rural Areas of Low and Middle Income Countries",
+    "auteurs": "M. Gomez, J. Perdiguero et A. Sanz",
+    "annee": 2019,
+    "editeur": "Water (MDPI)",
+    "url": "https://www.mdpi.com/2073-4441/11/2/202",
+    "geo": "135 pays a revenu faible et intermediaire, panel 1990-2015",
+    "effet": "Un etat de droit faible est associe a 1 a 3 points d'acces a l'eau en moins ; voix et redevabilite faibles, 0,6 a 2 points en moins",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Reserve forte : la source mesure la qualite objective de gouvernance et non la satisfaction declaree, et la causalite plausible va plutot de l'acces a l'eau vers la satisfaction que l'inverse, ce qui rend cette arete potentiellement inversee."
   },
   {
    "de": "compte",
    "vers": "revenu",
    "signe": 1,
-   "force": 0.35,
-   "just": "documentee",
-   "ref_fr": "ODD 8.10 : l'inclusion financière soutient l'accumulation et l'investissement",
-   "ref_en": "SDG 8.10: financial inclusion supports accumulation and investment",
-   "rho": -0.38,
-   "p": 0.277
+   "force": 0.2,
+   "just": "empirique",
+   "ref_fr": "Un essai randomise dans trois pays montre que l'ouverture gratuite d'un compte n'augmente pas significativement le revenu du travail : +0,50 dollar en Ouganda, +2,21 au Malawi.",
+   "ref_en": "A randomised trial in three countries shows that free basic account opening does not significantly raise labour income: plus 0.50 dollar in Uganda and 2.21 in Malawi.",
+   "src": {
+    "titre": "Banking the Unbanked? Evidence From Three Countries",
+    "auteurs": "Pascaline Dupas, Dean Karlan, Jonathan Robinson, Diego Ubfal",
+    "annee": 2016,
+    "editeur": "Stanford King Center on Global Development (document de travail no 585)",
+    "url": "https://kingcenter.stanford.edu/sites/g/files/sbiybj16611/files/media/file/585wp_0.pdf",
+    "geo": "Ouganda, Malawi et Chili (pays a faible et moyen revenu)",
+    "effet": "Aucun effet significatif sur le revenu du travail : +0,50 USD en Ouganda, +2,21 USD au Malawi ; epargne totale +4,98 et +1,39 USD, estimations bruitees",
+    "type": "essai randomise"
+   },
+   "conteste": true,
+   "reserve_fr": "CONTRADICTION : la litterature experimentale infirme le sens suppose par le modele, les auteurs concluant que le seul acces a un compte de base n'ameliore guere le bien-etre, ce qui justifie de descendre la force a 0,20."
   },
   {
    "de": "revenu",
    "vers": "compte",
    "signe": 1,
-   "force": 0.35,
-   "just": "theorique",
-   "ref_fr": "Un revenu régulier est la condition d'ouverture d'un compte",
-   "ref_en": "Regular income is the precondition for opening an account",
-   "rho": -0.38,
-   "p": 0.277
+   "force": 0.5,
+   "just": "documentee",
+   "ref_fr": "Selon le Global Findex 2017, 74 % des adultes des menages les plus riches detiennent un compte contre 61 % chez les 40 % les plus pauvres, un ecart de 13 points.",
+   "ref_en": "According to the 2017 Global Findex, 74% of adults in richer households hold an account versus 61% among the poorest 40%, a 13-percentage-point gap.",
+   "src": {
+    "titre": "The Global Findex Database 2017: Measuring Financial Inclusion and Opportunities to Expand Access to and Use of Financial Services",
+    "auteurs": "Demirguc-Kunt, Klapper, Singer, Ansar et Hess (Banque mondiale)",
+    "annee": 2018,
+    "editeur": "Banque mondiale / The World Bank Economic Review",
+    "url": "https://documents1.worldbank.org/curated/en/491271624538346557/pdf/The-Global-Findex-Database-2017-Measuring-Financial-Inclusion-and-Opportunities-to-Expand-Access-to-and-Use-of-Financial-Services.pdf",
+    "geo": "Mondial, avec accent sur les economies en developpement",
+    "effet": "74 % des adultes du quintile superieur (60 % les plus riches) possedent un compte contre 61 % chez les 40 % les plus pauvres, soit un ecart mondial de 13 points de pourcentage",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "L'ecart de revenu est reel mais modeste (13 points), ce qui suggere que le revenu n'est pas une condition d'ouverture mais un facteur parmi d'autres (distance, documents, cout) ; l'affirmation actuelle du modele surestime la necessite du revenu."
   },
   {
    "de": "pluie",
@@ -499,76 +644,139 @@
    "signe": 1,
    "force": 0.65,
    "just": "empirique",
-   "ref_fr": "Année sèche 2021 : creux de NDVI dans 7 sections sur 10",
-   "ref_en": "Dry year 2021: NDVI trough in 7 of 10 sections",
-   "rho": -0.01,
-   "p": 0.984
+   "ref_fr": "En Haiti, l'indice de precipitation SPI3 est correle significativement a l'indice de sante de la vegetation VHI dans 94,8 % des 987 mailles du pays.",
+   "ref_en": "In Haiti the three-month precipitation index SPI3 correlates significantly with the Vegetation Health Index in 94.8% of the country's 987 grid cells.",
+   "src": {
+    "titre": "A joint probabilistic index for objective drought identification: the case study of Haiti",
+    "auteurs": "Monteleone, Beatrice; Bonaccorso, Brunella; Martina, Mario",
+    "annee": 2020,
+    "editeur": "Natural Hazards and Earth System Sciences (Copernicus)",
+    "url": "https://nhess.copernicus.org/articles/20/471/2020/nhess-20-471-2020.pdf",
+    "geo": "Haiti (987 mailles couvrant 90 % du territoire) - source directement sur le pays du modele",
+    "effet": "Correlation SPI3-VHI significative dans 96,15 % des mailles au seuil de 5 % et 94,83 % au seuil de 1 % ; SPI2 : 96,76 % et 95,34 %",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Source haitienne, ce qui est le meilleur cas de figure, mais elle rapporte des proportions de mailles significatives et non l'intensite des correlations : la significativite quasi generale ne prouve pas a elle seule un effet de forte amplitude, d'ou 0,65 et non 0,80."
   },
   {
    "de": "aridite",
    "vers": "prod_agri",
    "signe": 1,
-   "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "L'indice d'aridité UNEP conditionne le potentiel agricole",
-   "ref_en": "The UNEP aridity index conditions agricultural potential",
-   "rho": null,
-   "p": null
+   "force": 0.65,
+   "just": "empirique",
+   "ref_fr": "Une méta-analyse mondiale de 144 études établit qu'un déficit hydrique d'environ 40 % réduit le rendement du maïs de 39,3 % et du blé de 20,6 %.",
+   "ref_en": "A global meta-analysis of 144 studies finds that a water deficit of about 40% cuts maize yield by 39.3% and wheat by 20.6%.",
+   "src": {
+    "titre": "Global Synthesis of Drought Effects on Maize and Wheat Production",
+    "auteurs": "Stefani Daryanto et al.",
+    "annee": 2016,
+    "editeur": "PLOS ONE",
+    "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0156362",
+    "geo": "Monde (synthèse de 144 études de terrain, 1980-2015, zones sèches et non sèches)",
+    "effet": "Pour une réduction d'eau d'environ 40 %, le rendement baisse de 39,3 % pour le maïs et de 20,6 % pour le blé",
+    "type": "meta-analyse"
+   },
+   "reserve_fr": "La synthèse porte sur un déficit hydrique expérimental, pas sur l'indice d'aridité PNUE cité par le modèle ; le maïs est cependant une culture centrale du Sud haïtien, ce qui rend le chiffre pertinent."
   },
   {
    "de": "vegetation",
    "vers": "prod_agri",
    "signe": 1,
    "force": 0.5,
-   "just": "theorique",
-   "ref_fr": "La santé de la végétation approche l'état des cultures",
-   "ref_en": "Vegetation health approximates the state of crops",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Au Pendjab pakistanais, l'indice de sante de la vegetation explique 49 % de la variance du rendement du pois chiche et 27 % de celle du ble.",
+   "ref_en": "In Punjab, Pakistan, the Vegetation Health Index explained 49% of gram yield variance and 27% of wheat yield variance over 2001-2020.",
+   "src": {
+    "titre": "Remote sensing-based spatiotemporal assessment of agricultural drought and its impact on crop yields in Punjab, Pakistan",
+    "auteurs": "Ghani Rahman et al.",
+    "annee": 2025,
+    "editeur": "Scientific Reports (Nature)",
+    "url": "https://www.nature.com/articles/s41598-025-06095-6",
+    "geo": "Pendjab, Pakistan (pays a revenu intermediaire inferieur), 2001-2020",
+    "effet": "VHI explique R2 = 0,49 du rendement du pois chiche (R = 0,70) et R2 = 0,27-0,28 du rendement du ble ; pour les cultures d'ete c'est le VCI qui domine (R2 = 0,56 canne, 0,29 riz)",
+    "type": "observationnel"
+   },
+   "reserve_fr": "La force du lien depend fortement de la culture et de la saison, et le VHI capte aussi la vegetation non cultivee : en Haiti, ou l'agriculture est en petites parcelles arborees, le signal pixel melange cultures et couvert ligneux."
   },
   {
    "de": "prod_agri",
    "vers": "revenu",
    "signe": 1,
    "force": 0.5,
-   "just": "theorique",
-   "ref_fr": "Cadre IRLA : la production agricole est une source de revenu dominante",
-   "ref_en": "IRLA framework: agricultural output is a dominant income source",
-   "rho": null,
-   "p": null
+   "just": "documentee",
+   "ref_fr": "Selon la Banque mondiale, une hausse de 1 % des rendements agricoles reduit la pauvrete de 0,72 % en Afrique, mais de 0,10 % seulement en Amerique latine.",
+   "ref_en": "According to the World Bank, a 1 percent rise in crop yields cuts poverty by 0.72 percent in Africa but by only 0.10 percent in Latin America.",
+   "src": {
+    "titre": "Agriculture, Rural Development, and Pro-poor Growth: Country Experiences in the Post-Reform Era (Agriculture and Rural Development Discussion Paper 21)",
+    "auteurs": "Byerlee, Diao & Jackson",
+    "annee": 2005,
+    "editeur": "Banque mondiale",
+    "url": "https://documents1.worldbank.org/curated/en/814101468019805424/pdf/370580Agricult1poor0growth01PUBLIC1.pdf",
+    "geo": "Comparaison entre regions : Afrique, Asie du Sud et de l'Est, Amerique latine",
+    "effet": "Elasticite de la reduction de pauvrete a une hausse de 1 % des rendements : 0,72 en Afrique, 0,48 en Asie de l'Est et du Sud, 0,10 en Amerique latine ; en Inde, 0,4 % a court terme et 1,9 % a long terme par 1 % de valeur ajoutee agricole par hectare",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "Le sens est confirme mais l'ampleur est tres heterogene : l'elasticite est sept fois plus faible en Amerique latine et Caraibes qu'en Afrique, ce qui invite a la prudence pour Haiti et justifie de ne pas depasser 0,50."
   },
   {
    "de": "prod_agri",
    "vers": "alimentaire",
    "signe": 1,
    "force": 0.65,
-   "just": "structurel",
-   "ref_fr": "L'autoconsommation fait de la production une part directe de l'alimentation du ménage.",
-   "ref_en": "Subsistence consumption makes production a direct part of the household's food.",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Une meta-analyse de 78 etudes africaines associe l'adoption d'une agriculture durable a +1 019 kg/ha de cereales et a 16,33 points d'insecurite alimentaire en moins.",
+   "ref_en": "A meta-analysis of 78 African studies links sustainable organic farming adoption to 1,019 kg/ha more cereal yield and a 16.33 point lower food insecurity prevalence.",
+   "src": {
+    "titre": "The impact of sustainable organic agriculture on food security in sub-Saharan Africa: a mixed methods systematic review with meta-analysis",
+    "auteurs": "Andre M. N. Renzaho et al.",
+    "annee": 2025,
+    "editeur": "Agriculture & Food Security (BMC / Springer Nature)",
+    "url": "https://link.springer.com/article/10.1186/s40066-025-00554-z",
+    "geo": "Afrique subsaharienne, 78 etudes",
+    "effet": "Rendement cerealier +1 019 kg/ha (IC95% 397,1-1 641,4 ; p<0,01 ; n=11 493) et prevalence de l'insecurite alimentaire -16,33 points (IC95% -21,62 a -11,03 ; p<0,001 ; n=25 198)",
+    "type": "meta-analyse"
+   },
+   "reserve_fr": "L'exposition mesuree est un paquet de pratiques (agriculture organique durable) et non la productivite seule, et le contexte est africain, pas caribeen ; le modele classait ce lien 'structurel' alors que la preuve disponible est associative."
   },
   {
    "de": "foncier",
    "vers": "prod_agri",
    "signe": 1,
    "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "ODD 1.4.2 : la sécurité foncière soutient l'investissement de long terme",
-   "ref_en": "SDG 1.4.2: tenure security supports long-term investment",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "En Ethiopie, apres certification fonciere, la part des menages appliquant au moins une pratique de gestion des terres passe de 70,3 a 90,1 pour cent.",
+   "ref_en": "In Ethiopia, after land certification, the share of households applying at least one land management practice rose from 70.3 to 90.1 percent.",
+   "src": {
+    "titre": "Effects of Land Certification for Rural Farm Households in Ethiopia: Evidence from Gozamin District, Ethiopia",
+    "auteurs": "Gedefaw et al.",
+    "annee": 2020,
+    "editeur": "Land (MDPI)",
+    "url": "https://www.mdpi.com/2073-445X/9/11/421",
+    "geo": "Ethiopie, district de Gozamin, 343 menages agricoles",
+    "effet": "Adoption d'au moins une pratique de gestion des terres passee de 70,3 % a 90,1 % apres certification (+19,8 points, khi2 = 40,34, p < 0,001) ; compostage +20,1 points",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Comparaison avant/apres sans groupe temoin : les hausses de rendement de 50 a 81 pour cent se confondent avec la tendance temporelle, et la revue systematique Lawry (3ie) ne trouve que des gains limites en Afrique, ce qui plafonne la transferabilite vers Haiti."
   },
   {
    "de": "mobile",
    "vers": "alerte",
    "signe": 1,
-   "force": 0.8,
+   "force": 0.65,
    "just": "structurel",
-   "ref_fr": "Le message d'alerte transite par le réseau : sans couverture, il n'arrive pas.",
-   "ref_en": "The alert travels over the network: without coverage it does not arrive.",
-   "rho": 0.3,
-   "p": 0.402
+   "ref_fr": "L'UIT rappelle que 95 % de la population mondiale vit sous couverture mobile a large bande et que trois personnes sur quatre possedent un telephone, support principal des alertes.",
+   "ref_en": "ITU reports that 95 percent of the world's population lives under mobile broadband coverage and three in four people own a phone, the main channel for alerts.",
+   "src": {
+    "titre": "Early warning systems: Saving lives through mobile connection",
+    "auteurs": "Union internationale des telecommunications (UIT)",
+    "annee": 2023,
+    "editeur": "UIT (ITU Hub)",
+    "url": "https://www.itu.int/hub/2023/01/early-warning-systems-mobile-connectivity/",
+    "geo": "Mondial",
+    "effet": "95 % de la population mondiale est couverte par un reseau mobile a large bande et trois personnes sur quatre possedent un telephone mobile",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "La couverture est une condition necessaire mais tres loin d'etre suffisante : une etude ouverte sur le Bangladesh (npj Natural Hazards 2026, https://www.nature.com/articles/s44304-026-00177-9) mesure une portee de seulement 17 a 40 % pour les canaux SMS et reseaux sociaux, d'ou une force ramenee a 0,65."
   },
   {
    "de": "alerte",
@@ -576,21 +784,30 @@
    "signe": 1,
    "force": 0.5,
    "just": "theorique",
-   "ref_fr": "Recevoir l'alerte est la condition d'une réponse préparée",
-   "ref_en": "Receiving the warning is the precondition of a prepared response",
-   "rho": -0.41,
-   "p": 0.242
+   "ref_fr": "Aucune source vérifiée n'a été trouvée pour ce lien.",
+   "ref_en": "No verified source was found for this link.",
+   "src": null,
+   "reserve_fr": "Recherches sur la reception des alertes precoces et les actions de preparation (cyclones au Bangladesh, inondations) : les sources ouvertes consultees (npj Natural Hazards 2026, Economics of Disasters and Climate Change 2024) documentent la portee des alertes et des dommages evites hypothetiques, mais aucune ne chiffre l'effet propre de la reception d'une alerte sur la participation a la preparation."
   },
   {
    "de": "comites",
    "vers": "prepa",
    "signe": 1,
    "force": 0.5,
-   "just": "theorique",
-   "ref_fr": "Un comité local organise les exercices et l'évacuation",
-   "ref_en": "A local committee organises drills and evacuation",
-   "rho": 0.65,
-   "p": 0.044
+   "just": "documentee",
+   "ref_fr": "Le programme bangladais de preparation aux cyclones mobilise 76 000 volontaires dans 3 801 unites villageoises ; la mortalite cyclonique y est tombee sous la centaine de morts.",
+   "ref_en": "Bangladesh's Cyclone Preparedness Programme runs on 76,000 community volunteers in 3,801 village units; cyclone deaths there have fallen below one hundred in the last decade.",
+   "src": {
+    "titre": "Building Resilience from the Grassroots: The Cyclone Preparedness Programme at 50",
+    "auteurs": "Haque, Ahmadul et al.",
+    "annee": 2022,
+    "editeur": "International Journal of Environmental Research and Public Health (MDPI)",
+    "url": "https://www.mdpi.com/1660-4601/19/21/14503",
+    "geo": "Bangladesh cotier (pays a faible revenu, exposition cyclonique comparable a Haiti)",
+    "effet": "Environ 76 000 volontaires communautaires dans 3 801 unites villageoises (20 volontaires par unite) ; mortalite cyclonique passee de plus d'un million de morts en 1970 a moins de cent sur la derniere decennie",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Aucune taille d'effet contrefactuelle : la baisse de mortalite est attribuee par les auteurs eux-memes a plusieurs causes simultanees, dont la construction d'abris, donc la part des comites locaux n'est pas isolee ; je n'ai trouve aucune evaluation d'impact chiffree sur la participation des menages a la preparation."
   },
   {
    "de": "prepa",
@@ -598,21 +815,30 @@
    "signe": 1,
    "force": 0.2,
    "just": "hypothese",
-   "ref_fr": "Hypothèse : la préparation entretient les abris existants",
-   "ref_en": "Assumption: preparedness maintains existing shelters",
-   "rho": 0.46,
-   "p": 0.18
+   "ref_fr": "Aucune source vérifiée n'a été trouvée pour ce lien.",
+   "ref_en": "No verified source was found for this link.",
+   "src": null,
+   "reserve_fr": "Recherches sur la participation communautaire à la préparation, les comités de gestion d'abris, les programmes de préparation cyclonique et les projets de gestion des risques en Haïti : aucune source ouverte ne chiffre l'effet de la participation sur l'état opérationnel des abris ; les études trouvées mesurent la relation inverse (qualité de l'abri vers évacuation)."
   },
   {
    "de": "ocb",
    "vers": "comites",
    "signe": 1,
    "force": 0.5,
-   "just": "theorique",
-   "ref_fr": "Les comités se recrutent dans le tissu associatif existant",
-   "ref_en": "Committees recruit from the existing associative fabric",
-   "rho": 0.28,
-   "p": 0.427
+   "just": "empirique",
+   "ref_fr": "En Thailande, participer aux activites associatives du village augmente de 5,2 points la probabilite d'adopter simultanement les trois comportements de reduction des risques etudies.",
+   "ref_en": "In Thailand, taking part in village-based association activities raised by 5.2 percentage points the probability of adopting all three disaster risk reduction behaviours.",
+   "src": {
+    "titre": "Social Participation and Disaster Risk Reduction Behaviors in Tsunami Prone Areas",
+    "auteurs": "Nopphol Witvorapong, Raya Muttarak, Wiraporn Pothisiri",
+    "annee": 2015,
+    "editeur": "PLOS ONE",
+    "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0130862",
+    "geo": "Province de Phang Nga, Thailande (pays a revenu intermediaire)",
+    "effet": "+5,2 points de pourcentage de probabilite d'adopter simultanement les trois comportements de reduction des risques ; suivi de l'information sur les catastrophes 66 % contre 40 % ; correlations tetrachoriques 0,135 a 0,418 (p<0,001) ; 557 menages",
+    "type": "observationnel"
+   },
+   "reserve_fr": "La source mesure des comportements individuels de preparation, pas la constitution ni le fonctionnement d'un comite local de gestion des risques : le transfert vers l'arete suppose que ces comportements et l'engagement en comite ont le meme substrat associatif."
   },
   {
    "de": "etat_civil",
@@ -620,120 +846,220 @@
    "signe": 1,
    "force": 0.65,
    "just": "documentee",
-   "ref_fr": "L'acte de naissance est la pièce d'entrée de l'état civil",
-   "ref_en": "The birth certificate is the entry document of civil registration",
-   "rho": 0.47,
-   "p": 0.172
+   "ref_fr": "En Amerique latine et Caraibes, 94 % des moins de cinq ans sont enregistres ; Haiti compte environ 250 000 enfants sans acte, donc sans acces aux papiers d'identite.",
+   "ref_en": "In Latin America and the Caribbean 94 percent of under-fives are registered; Haiti has some 250,000 unregistered children, hence barred from identity documents.",
+   "src": {
+    "titre": "Birth Registration in Latin America and the Caribbean: Closing the Gaps (2016 update)",
+    "auteurs": "UNICEF",
+    "annee": 2016,
+    "editeur": "UNICEF, Data and Analytics Section",
+    "url": "https://data.unicef.org/wp-content/uploads/2016/09/BR-in-LAC-brochure_English-9_21-LR.pdf",
+    "geo": "Amerique latine et Caraibes, avec Haiti nomme explicitement",
+    "effet": "94 % des moins de cinq ans enregistres dans la region, soit 3,2 millions d'enfants non enregistres ; Haiti figure parmi les cinq pays comptant le plus d'enfants non enregistres, avec environ 250 000",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "Le lien est quasi structurel puisque l'acte de naissance est la piece exigee pour la carte d'identite, mais la source ne fournit que des taux de couverture, pas une mesure du passage effectif de l'acte de naissance a la carte : c'est sa principale faiblesse."
   },
   {
    "de": "identite",
    "vers": "compte",
    "signe": 1,
-   "force": 0.5,
+   "force": 0.65,
    "just": "documentee",
-   "ref_fr": "L'identité légale conditionne l'ouverture d'un compte",
-   "ref_en": "Legal identity conditions account opening",
-   "rho": 0.3,
-   "p": 0.404
+   "ref_fr": "Selon la Banque mondiale, plus de la moitie des adultes non bancarises du Mozambique, du Niger et de Tanzanie invoquent l'absence de piece d'identite.",
+   "ref_en": "The World Bank reports that over half of unbanked adults in Mozambique, Niger and Tanzania cite missing documentation as the reason for having no account.",
+   "src": {
+    "titre": "Trends in Access to ID in Sub-Saharan Africa",
+    "auteurs": "Banque mondiale (Global Findex / ID4D)",
+    "annee": 2024,
+    "editeur": "Banque mondiale",
+    "url": "https://www.worldbank.org/en/publication/globalfindex/brief/trends-in-access-to-id-in-sub-saharan-africa",
+    "geo": "36 economies d'Afrique subsaharienne",
+    "effet": "Plus de la moitie des adultes non bancarises au Mozambique, au Niger et en Tanzanie declarent n'avoir pas de compte mobile faute de documents ; 78 % des personnes eligibles possedent une piece d'identite",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "Chiffre declaratif et africain : la couverture de la carte d'identite nationale haitienne (CIN) et les regles KYC locales different, donc la transferabilite vers le Sud et la Grand'Anse reste a verifier."
   },
   {
    "de": "identite",
    "vers": "services",
    "signe": 1,
-   "force": 0.35,
-   "just": "theorique",
-   "ref_fr": "Sans pièce d'identité, l'accès aux services publics est entravé",
-   "ref_en": "Without identity papers, access to public services is impeded",
-   "rho": 0.43,
-   "p": 0.221
+   "force": 0.5,
+   "just": "documentee",
+   "ref_fr": "Dans les pays a faible revenu, les adultes munis d'une piece d'identite ont 2,9 fois plus de chances d'avoir un compte et 1,4 fois plus d'avoir recu un transfert public.",
+   "ref_en": "In low-income countries, adults holding an ID are 2.9 times more likely to have an account and 1.4 times more likely to have received a government transfer.",
+   "src": {
+    "titre": "Global ID Coverage, Barriers, and Use by the Numbers: An In-Depth Look at the 2017 ID4D-Findex Survey",
+    "auteurs": "Anna Metz et Julia Clark (Banque mondiale, ID4D)",
+    "annee": 2019,
+    "editeur": "Banque mondiale, initiative Identification for Development",
+    "url": "https://documents1.worldbank.org/curated/en/727021583506631652/text/Global-ID-Coverage-Barriers-and-Use-by-the-Numbers-An-In-Depth-Look-at-the-2017-ID4D-Findex-Survey.txt",
+    "geo": "Pays a faible revenu, enquete mondiale ID4D-Findex 2017",
+    "effet": "Dans les pays a faible revenu, detenir une piece d'identite multiplie par 2,9 la probabilite d'avoir un compte financier et par 1,4 celle d'avoir recu un transfert public",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "La source documente l'acces aux services, pas la satisfaction a leur egard, et l'association est descriptive, sans controle du niveau de vie ni de l'education, donc partiellement confondue."
   },
   {
    "de": "ocb",
    "vers": "passerelle",
    "signe": 1,
    "force": 0.5,
-   "just": "theorique",
-   "ref_fr": "Putnam : l'appartenance associative construit le capital de passerelle",
-   "ref_en": "Putnam: associational membership builds bridging capital",
-   "rho": -0.15,
-   "p": 0.67
+   "just": "empirique",
+   "ref_fr": "Chez des membres d'associations italiennes, 83 % du surcroit de confiance et 71 % du surcroit de fiabilite s'adressent a des inconnus, donc relevent du capital de passerelle.",
+   "ref_en": "Among Italian association members, 83 percent of the extra trust and 71 percent of the extra trustworthiness are directed at strangers, and therefore count as bridging capital.",
+   "src": {
+    "titre": "Is social capital bridging or bonding? Evidence from a field experiment with association members",
+    "auteurs": "Giacomo Degli Antoni et Gianluca Grimalda",
+    "annee": 2024,
+    "editeur": "Theory and Decision (Springer)",
+    "url": "https://link.springer.com/article/10.1007/s11238-023-09971-7",
+    "geo": "Italie (Parme), 264 membres d'associations et 111 non-membres",
+    "effet": "83 % du surcroit de confiance et 71 % du surcroit de fiabilite des membres sont de type passerelle ; tailles d'effet d = 0,42 (confiance) et d = 0,54 (fiabilite)",
+    "type": "quasi-experimental"
+   },
+   "reserve_fr": "L'affirmation de Putnam est confirmee par une mesure comportementale, mais l'appartenance est auto-selectionnee (pas de causalite) et le contexte italien limite fortement la transferabilite vers les organisations communautaires de base du Sud et de la Grand'Anse."
   },
   {
    "de": "passerelle",
    "vers": "transferts",
    "signe": 1,
-   "force": 0.2,
-   "just": "hypothese",
-   "ref_fr": "Hypothèse : les réseaux étendus portent les transferts",
-   "ref_en": "Assumption: extended networks carry remittances",
-   "rho": 0.19,
-   "p": 0.593
+   "force": 0.5,
+   "just": "empirique",
+   "ref_fr": "En Haiti, les menages disposant d'un lien hors de la communaute, un membre a l'etranger, recoivent des transferts dans environ deux tiers des cas contre un quart pour l'ensemble.",
+   "ref_en": "In Haiti, households with a tie beyond the community, a member living abroad, receive remittances in about two-thirds of cases versus a quarter overall.",
+   "src": {
+    "titre": "International Migration, Remittances and Labour Supply: The Case of the Republic of Haiti",
+    "auteurs": "Evans Jadotte",
+    "annee": 2009,
+    "editeur": "UNU-WIDER, Research Paper No. 2009/28",
+    "url": "https://www.wider.unu.edu/sites/default/files/rp2009-28.pdf",
+    "geo": "Haiti (enquete nationale ECVH-2001, 7 186 menages)",
+    "effet": "Environ un tiers des menages ont un membre a l'etranger et environ deux tiers de ceux-ci recoivent des transferts, contre plus de 25 % de l'ensemble des menages ; la presence d'un migrant de retour augmente le nombre de migrants du menage (coefficient 0,897, z = 9,90)",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Le lien migratoire mesure ici est un substitut imparfait du capital social de passerelle au sens large, et les donnees datent de 2001, avant les vagues migratoires recentes."
   },
   {
    "de": "entraide",
    "vers": "alimentaire",
    "signe": 1,
    "force": 0.35,
-   "just": "documentee",
-   "ref_fr": "L'entraide de proximité amortit les chocs alimentaires courts",
-   "ref_en": "Close-knit mutual aid cushions short food shocks",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Sur 478 menages ruraux du Malawi, chaque relation d'entraide fiable supplementaire augmente de 36 % les chances d'etre en securite alimentaire (rapport de cotes 1,36).",
+   "ref_en": "Among 478 rural Malawian households, each additional reliable helping relationship raised the odds of being food secure by 36% (odds ratio 1.36).",
+   "src": {
+    "titre": "The Role of Social Capital in Rural Household Food Security: The Case Study of Dowa and Lilongwe Districts in Central Malawi",
+    "auteurs": "Dzanja, Joseph; Christie, Mike; Fazey, Ioan; Hyde, Tony",
+    "annee": 2015,
+    "editeur": "Journal of Agricultural Science (Canadian Center of Science and Education)",
+    "url": "https://discovery.dundee.ac.uk/ws/files/13107295/51699_188878_1_PB.pdf",
+    "geo": "Malawi rural (pays a faible revenu), 478 menages des districts de Dowa et Lilongwe",
+    "effet": "Chaque contact fiable supplementaire dans le reseau du menage : rapport de cotes 1,36 sur la securite alimentaire (p<0,01) ; appartenance a une organisation paysanne RC 1,65 (p<0,01)",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Etude transversale unique, sans identification causale et avec une causalite inverse plausible (un menage deja securise entretient plus de liens) ; le pouvoir explicatif reste faible (pseudo-R2 de 0,15), ce qui justifie de ne pas monter au-dessus de 0,35."
   },
   {
    "de": "transferts",
    "vers": "reserve",
    "signe": 1,
-   "force": 0.5,
-   "just": "theorique",
-   "ref_fr": "Les transferts alimentent la réserve de précaution",
-   "ref_en": "Remittances feed the precautionary reserve",
-   "rho": 0.78,
-   "p": 0.007
+   "force": 0.65,
+   "just": "empirique",
+   "ref_fr": "Par appariement sur score de propension au Viêt Nam, les ménages recevant des transferts affichent un taux d'épargne supérieur de 16,8 à 20,7 points de pourcentage.",
+   "ref_en": "Using propensity score matching in Vietnam, households receiving remittances show a saving rate 16.8 to 20.7 percentage points higher than non-receivers.",
+   "src": {
+    "titre": "The Impact of Remittances on Saving Behaviour and Expenditure Patterns in Vietnam",
+    "auteurs": "Thanh Xuan Hua et al.",
+    "annee": 2022,
+    "editeur": "Economies (MDPI)",
+    "url": "https://www.mdpi.com/2227-7099/10/9/223",
+    "geo": "Viêt Nam (pays à revenu intermédiaire de la tranche inférieure)",
+    "effet": "Taux d'épargne supérieur de 16,8 à 20,7 points chez les ménages receveurs ; épargne supplémentaire de 4,6 à 4,9 millions de dongs",
+    "type": "quasi-experimental"
+   },
+   "reserve_fr": "Le lien passe par l'épargne mesurée et non par une réserve de précaution explicite ; transférabilité à Haïti incertaine car les transferts y financent d'abord la consommation courante."
   },
   {
    "de": "reserve",
    "vers": "alimentaire",
    "signe": 1,
    "force": 0.5,
-   "just": "theorique",
-   "ref_fr": "Une réserve permet de passer une soudure sans réduire les repas",
-   "ref_en": "A reserve carries a lean season without cutting meals",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "A Addis-Abeba, les menages sans compte d'epargne bancaire ou de microfinance ont 2,62 fois plus de risque d'etre en insecurite alimentaire que les autres.",
+   "ref_en": "In Addis Ababa, households without a bank or microfinance savings account were 2.62 times more likely to be food insecure than those with one.",
+   "src": {
+    "titre": "Coping Strategies to Mitigate Food Insecurity at Household Level: Evidence From Urban Setting in Addis Ababa, Ethiopia",
+    "auteurs": "Sibhatu Biadgilign",
+    "annee": 2023,
+    "editeur": "INQUIRY: The Journal of Health Care Organization, Provision, and Financing",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10594962/",
+    "geo": "Addis-Abeba, Ethiopie (pays a faible revenu)",
+    "effet": "Rapport de cotes ajuste 2,62 (IC 95 % : 1,21-5,66 ; p = 0,014) d'insecurite alimentaire pour les menages sans compte d'epargne bancaire ou de microfinance ; 632 menages",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Etude transversale urbaine : l'association peut refleter la richesse sous-jacente plutot que la reserve elle-meme, et l'essai randomise des groupes d'epargne au Mali (Beaman, Karlan, Thuysbaert) ne trouve qu'une amelioration modeste de la securite alimentaire."
   },
   {
    "de": "securite",
    "vers": "passerelle",
    "signe": 1,
-   "force": 0.2,
-   "just": "hypothese",
-   "ref_fr": "Hypothèse : l'insécurité restreint les déplacements et les liens",
-   "ref_en": "Assumption: insecurity restricts movement and ties",
-   "rho": 0.3,
-   "p": 0.402
+   "force": 0.35,
+   "just": "documentee",
+   "ref_fr": "Une meta-analyse de seize etudes montre que la violence augmente la cooperation intra-groupe de 0,24 ecart-type mais seulement de 0,04, non significatif, envers l'exterieur.",
+   "ref_en": "A meta-analysis of sixteen studies finds violence raises in-group cooperation by 0.24 standard deviations but only by a non-significant 0.04 toward out-groups.",
+   "src": {
+    "titre": "Can War Foster Cooperation?",
+    "auteurs": "Bauer et al.",
+    "annee": 2016,
+    "editeur": "Journal of Economic Perspectives, 30(3), 249-274",
+    "url": "https://www.socialcohesion.info/fileadmin/user_upload/Bauer_etal.-2016.pdf",
+    "geo": "16 etudes : Ouganda, Sierra Leone, Burundi, Nepal, Tadjikistan, Georgie, Israel, 35 pays europeens",
+    "effet": "Exposition a la violence de guerre : +0,07 a 0,08 ecart-type de comportement prosocial global ; +0,24 a 0,25 ecart-type envers le groupe d'appartenance (p<0,01) mais seulement +0,04, non significatif, envers l'exterieur ; effet nul sur la confiance ; +6,5 points de participation aux reunions communautaires en Sierra Leone",
+    "type": "meta-analyse"
+   },
+   "conteste": true,
+   "reserve_fr": "CONTRADICTION PARTIELLE A SIGNALER : la litterature ne montre pas que l'insecurite detruit le lien social en general - elle renforce fortement le capital de liaison intra-groupe - mais elle laisse inchange le lien vers l'exterieur, si bien que l'insecurite deplace le capital social vers le bonding au detriment relatif du bridging ; le lien du modele n'est donc soutenu que sous cette lecture parochiale, et les etudes portent sur des conflits armes, pas sur la violence de gangs haitienne."
   },
   {
    "de": "entraide",
    "vers": "securite",
    "signe": 1,
-   "force": 0.2,
-   "just": "hypothese",
-   "ref_fr": "Hypothèse : la densité des liens nourrit le sentiment de sécurité",
-   "ref_en": "Assumption: density of ties feeds the sense of safety",
-   "rho": 0.33,
-   "p": 0.346
+   "force": 0.5,
+   "just": "empirique",
+   "ref_fr": "Aupres de 861 residents taiwanais, le capital social est le meilleur predicteur du sentiment de securite, avec un beta standardise de 0,436.",
+   "ref_en": "Among 861 Taiwanese residents, social capital was the strongest predictor of feelings of safety, with a standardised beta of 0.436.",
+   "src": {
+    "titre": "Community policing, social capital, and residents' feelings of safety in Taiwan",
+    "auteurs": "Lo, T.-Y. et al.",
+    "annee": 2022,
+    "editeur": "Police Practice and Research (version ouverte sur CrimRxiv)",
+    "url": "https://www.crimrxiv.com/pub/g4xzdpj6",
+    "geo": "Taiwan, 861 residents",
+    "effet": "Beta standardise = 0,436 (IC95% 0,346-0,525) du capital social sur le sentiment de securite ; effet superieur a celui du desordre percu (beta = -0,284)",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Etude transversale dans un pays a haut revenu et a faible criminalite : la causalite inverse n'est pas exclue et la transferabilite vers un contexte haitien marque par la violence armee est faible."
   },
   {
    "de": "ecole",
    "vers": "education",
    "signe": 1,
-   "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "La distance à l'école pèse sur l'achèvement du primaire",
-   "ref_en": "Distance to school weighs on primary completion",
-   "rho": null,
-   "p": null
+   "force": 0.8,
+   "just": "empirique",
+   "ref_fr": "Un essai randomise en Afghanistan montre qu'un mille de distance en plus fait chuter l'inscription au primaire de 16 points de pourcentage et les acquis de 0,19 ecart-type.",
+   "ref_en": "A randomized trial in Afghanistan shows each additional mile of distance cuts primary enrollment by 16 percentage points and test scores by 0.19 standard deviations.",
+   "src": {
+    "titre": "The Effect of Village-Based Schools in Afghanistan",
+    "auteurs": "Dana Burde et Leigh Linden",
+    "annee": 2013,
+    "editeur": "J-PAL (Abdul Latif Jameel Poverty Action Lab)",
+    "url": "https://www.povertyactionlab.org/evaluation/effect-village-based-schools-afghanistan",
+    "geo": "Afghanistan rural (pays a faible revenu)",
+    "effet": "Chaque mille de distance supplementaire reduit l'inscription de 16 points de pourcentage et les scores aux tests de 0,19 ecart-type ; une ecole de village ajoute 42 points d'inscription",
+    "type": "essai randomise"
+   },
+   "reserve_fr": "L'issue mesuree est l'inscription et les acquis apres un an, pas l'achevement du primaire, et les normes de genre afghanes amplifient l'effet distance pour les filles au-dela de ce qu'on attendrait en Haiti."
   },
   {
    "de": "education",
@@ -741,32 +1067,59 @@
    "signe": 1,
    "force": 0.5,
    "just": "documentee",
-   "ref_fr": "Le niveau d'éducation conditionne l'accès à l'emploi formel",
-   "ref_en": "Education level conditions access to formal employment",
-   "rho": null,
-   "p": null
+   "ref_fr": "Le rapport de la Banque mondiale etablit que le niveau d'instruction structure fortement le type d'emploi des jeunes africains, mais sans fournir de taille d'effet chiffree exploitable.",
+   "ref_en": "The World Bank report establishes that educational attainment strongly shapes the type of job African youth hold, but it provides no usable quantified effect size.",
+   "src": {
+    "titre": "Youth Employment in Sub-Saharan Africa",
+    "auteurs": "Deon Filmer et Louise Fox (dir.)",
+    "annee": 2014,
+    "editeur": "Banque mondiale, Africa Development Forum",
+    "url": "https://documents1.worldbank.org/curated/en/424011468192529027/pdf/Full-report.pdf",
+    "geo": "Afrique subsaharienne (pays a faible revenu)",
+    "effet": "Aucune taille d'effet chiffree n'a pu etre extraite du texte recupere : le rapport montre que les jeunes sans primaire acheve se concentrent dans l'agriculture et que les salaries plus instruits ont plus souvent un contrat",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "SOURCE FAIBLE au sens de la consigne : elle etablit une association de structure sans chiffre ; les tentatives d'ouvrir une source chiffree (UNESCO, 11 pays en developpement ; MPCE Haiti) ont echoue, et l'effet porte davantage sur la qualite de l'emploi que sur le taux d'emploi lui-meme."
   },
   {
    "de": "logement",
    "vers": "sante",
    "signe": 1,
-   "force": 0.35,
-   "just": "documentee",
-   "ref_fr": "Un logement précaire expose aux intempéries et aux vecteurs",
-   "ref_en": "Precarious housing exposes to weather and vectors",
-   "rho": null,
-   "p": null
+   "force": 0.65,
+   "just": "empirique",
+   "ref_fr": "L'amelioration structurelle du logement, remplacement des sols en terre par du ciment au Mexique, reduit de 78 % les parasitoses, de 49 % les diarrhees et de 81 % l'anemie infantile.",
+   "ref_en": "Upgrading housing structure, replacing dirt floors with cement in Mexico, cut parasitic infestation by 78%, diarrhoea by 49% and child anaemia by 81%.",
+   "src": {
+    "titre": "Housing, Health and Happiness",
+    "auteurs": "Cattaneo, Galiani, Gertler, Martinez et Titiunik (Banque mondiale)",
+    "annee": 2007,
+    "editeur": "Banque mondiale, Policy Research Working Paper 4214",
+    "url": "https://documents1.worldbank.org/curated/en/857881468288000006/pdf/wps421401update1.pdf",
+    "geo": "Mexique (programme Piso Firme, 2 755 menages : 1 390 traites, 1 393 temoins)",
+    "effet": "Le remplacement complet des sols en terre battue par du ciment reduit de 78 % les parasitoses, de 49 % les diarrhees et de 81 % l'anemie chez l'enfant",
+    "type": "quasi-experimental"
+   },
+   "reserve_fr": "L'etude porte sur un seul element structurel, le sol, dans un contexte urbain mexicain ; en Haiti la qualite du logement joue aussi via la resistance aux cyclones, dimension non mesuree ici, ce qui rend l'effet plutot sous-estime que surestime."
   },
   {
    "de": "cuisson",
    "vers": "pression_bois",
    "signe": 1,
-   "force": 0.65,
-   "just": "documentee",
-   "ref_fr": "Un ménage passé au gaz ou au solaire cesse d'acheter du charbon de bois",
-   "ref_en": "A household on gas or solar stops buying charcoal",
-   "rho": null,
-   "p": null
+   "force": 0.35,
+   "just": "empirique",
+   "ref_fr": "En Inde, l'acces subventionne au gaz augmente son usage de 2,1 points et fait reculer l'usage du bois de feu de 2,2 points seulement.",
+   "ref_en": "In India subsidised LPG access raised gas use by 2.1 percentage points and cut firewood use by only 2.2 percentage points.",
+   "src": {
+    "titre": "The Impact of Pradhan Mantri Ujjwala Yojana on Indian Households",
+    "auteurs": "Asharaf, Nabeel; Tol, Richard S. J.",
+    "annee": 2024,
+    "editeur": "arXiv (document de travail, universite du Sussex)",
+    "url": "https://arxiv.org/html/2403.17112v1",
+    "geo": "Inde rurale (menages sous le seuil de pauvrete), enquetes NFHS 2014-15 et 2019-20",
+    "effet": "Appariement par score de propension et doubles differences : +2,1 points de pourcentage d'usage du GPL et -2,2 points d'usage du bois de feu (p<0,01) ; -4,8 points chez les plus pauvres",
+    "type": "quasi-experimental"
+   },
+   "reserve_fr": "Le sens est confirme mais l'amplitude contredit l'affirmation actuelle du modele : le passage au gaz ne fait pas cesser l'achat de combustible ligneux, l'empilement de combustibles domine (Ranjan 2025, Discover Sustainability, ouvert : 45 % des beneficiaires du programme n'utilisent pas le GPL comme combustible principal), donc la force 0,65 du modele est trop elevee."
   },
   {
    "de": "pression_bois",
@@ -774,10 +1127,19 @@
    "signe": 1,
    "force": 0.65,
    "just": "documentee",
-   "ref_fr": "La coupe pour le charbon est le premier moteur du recul du couvert",
-   "ref_en": "Cutting for charcoal is the first driver of tree cover loss",
-   "rho": null,
-   "p": null
+   "ref_fr": "Une modélisation du SEI pour Haïti chiffre à 44 % la baisse de demande de bois si 90 % des urbains passaient au gaz, ce qui inverserait la dégradation du couvert.",
+   "ref_en": "SEI modelling for Haiti estimates a 44% drop in wood demand if 90% of urban residents switched to gas, which would reverse tree-cover degradation.",
+   "src": {
+    "titre": "The state of Haiti's tree-cover: A new picture is emerging",
+    "auteurs": "Rob Bailis, Stockholm Environment Institute",
+    "annee": 2018,
+    "editeur": "Stockholm Environment Institute (SEI US)",
+    "url": "https://www.sei.org/perspectives/haitis-tree-cover/",
+    "geo": "Haïti",
+    "effet": "Au fil de l'eau, le stock d'arbres baisserait d'environ 4 % entre 2017 et 2027 (environ 300 kilotonnes de bois perdues par an) ; le passage de 90 % des urbains au gaz réduirait la demande de bois de 44 % d'ici 2027 et inverserait la dégradation",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "Il s'agit d'une projection de modèle, non d'une mesure observée ; Churches et al. 2014 confirme par ailleurs 3,3 millions de m3 de bois de feu consommés par an en Haïti (https://www.gvsu.edu/cms4/asset/43276A40-0D8F-A887-4E4B2E0B509EA609/sunevaluationofforest.pdf)."
   },
   {
    "de": "foret",
@@ -785,10 +1147,19 @@
    "signe": 1,
    "force": 0.8,
    "just": "structurel",
-   "ref_fr": "La ressource ligneuse disponible est une partie du couvert : l'une ne peut pas croître sans l'autre.",
-   "ref_en": "Available woody resource is part of the canopy: one cannot grow without the other.",
-   "rho": null,
-   "p": null
+   "ref_fr": "En Haiti, arbres et arbustes couvrent environ 30 % et 47 % du territoire et soutiennent 946 500 tonnes de charbon par an, environ 80 % des besoins energetiques.",
+   "ref_en": "In Haiti trees and shrubs cover about 30% and 47% of the land and sustain 946,500 tonnes of charcoal a year, roughly 80% of national energy needs.",
+   "src": {
+    "titre": "Charcoal in Haiti: A National Assessment of Charcoal Production and Consumption Trends",
+    "auteurs": "Banque mondiale",
+    "annee": 2018,
+    "editeur": "Banque mondiale",
+    "url": "https://documents1.worldbank.org/curated/en/697221548446232632/pdf/134058-CharcoalHaitiWeb.pdf",
+    "geo": "Haiti (source nationale, directement pertinente)",
+    "effet": "Couvert arbore 29,4-32,3 % du territoire et arbustes 45,7-48,6 % (Churches et al. 2014) ; consommation nationale de charbon 946 500 tonnes/an ; bois et charbon fournissent environ 80 % des besoins energetiques nationaux ; filiere evaluee a 392 millions USD, soit 4,7 % du PIB",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "Le rapport documente le stock ligneux et le prelevement annuel mais n'estime pas d'elasticite de la ressource disponible au couvert ; il souligne surtout que le couvert reel est bien superieur au chiffre de 2 % souvent repris pour Haiti."
   },
   {
    "de": "abondance_bois",
@@ -796,43 +1167,80 @@
    "signe": 1,
    "force": 0.5,
    "just": "documentee",
-   "ref_fr": "La raréfaction fait monter le prix, rend la coupe rentable et attire des producteurs",
-   "ref_en": "Scarcity raises the price, makes cutting profitable and draws in producers",
-   "rho": null,
-   "p": null
+   "ref_fr": "En Haiti, bois et charbon couvrent environ 80 % des besoins energetiques et le stock ligneux reculerait d'environ 4 % entre 2017 et 2027 en scenario tendanciel.",
+   "ref_en": "In Haiti wood and charcoal cover about 80 percent of national energy needs, and woody biomass stocks would fall by about 4 percent between 2017 and 2027 under business as usual.",
+   "src": {
+    "titre": "Charcoal in Haiti: A National Assessment of Charcoal Production and Consumption Trends",
+    "auteurs": "Tarter et al.",
+    "annee": 2018,
+    "editeur": "Banque mondiale",
+    "url": "https://documents1.worldbank.org/curated/en/697221548446232632/pdf/134058-CharcoalHaitiWeb.pdf",
+    "geo": "Haiti (source nationale, directement pertinente)",
+    "effet": "Bois de feu et charbon couvrent environ 80 % des besoins energetiques nationaux ; 946 500 tonnes de charbon consommees par an dont environ 438 000 pour Port-au-Prince ; en scenario tendanciel le stock de biomasse ligneuse aerienne reculerait d'environ 4 % entre 2017 et 2027 ; grand sac de charbon a environ 800 gourdes (12,42 USD) en 2018",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "Le rapport documente la pression mais ne mesure pas l'elasticite de la pression a la disponibilite ligneuse, et il revise a la hausse le couvert arbore haitien en contestant le recit classique des 2 % de foret : le mecanisme rarete-prix-coupe avance par le modele reste donc plausible mais non chiffre."
   },
   {
    "de": "agro_durable",
    "vers": "fertilite",
    "signe": 1,
    "force": 0.65,
-   "just": "documentee",
-   "ref_fr": "Le brûlis répété détruit la matière organique et les racines",
-   "ref_en": "Repeated slash-and-burn destroys organic matter and roots",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Une revue systematique mondiale de 451 observations rapporte une hausse d'environ 78 % du carbone organique du sol sous agriculture de conservation.",
+   "ref_en": "A worldwide systematic review of 451 observations reports an overall increase of about 78% in soil organic carbon under conservation agriculture.",
+   "src": {
+    "titre": "Unlocking the potential of conservation agriculture for soil carbon sequestration influenced by soil texture and climate: A worldwide systematic review",
+    "auteurs": "Meryem Ibnmrhar et al.",
+    "annee": 2023,
+    "editeur": "Journal of Aridland Agriculture, vol. 9",
+    "url": "https://updatepublishing.com/journal/index.php/jaa/article/view/8484",
+    "geo": "Mondial : 35 articles, 71 essais de terrain, 451 observations",
+    "effet": "Hausse globale du carbone organique du sol d'environ 78 % ; jusqu'a 2,50 Mg/ha/an en climat tropical a hiver sec ; 20 % des observations montrent un effet defavorable et 2 % un effet neutre",
+    "type": "meta-analyse"
+   },
+   "reserve_fr": "Un cinquieme des observations rapporte pourtant un effet defavorable, et la source mesure le carbone organique sous agriculture de conservation, pas l'effet du brulis invoque par la justification actuelle du modele."
   },
   {
    "de": "fertilite",
    "vers": "prod_agri",
    "signe": 1,
    "force": 0.65,
-   "just": "documentee",
-   "ref_fr": "La fertilité commande le rendement",
-   "ref_en": "Fertility governs yield",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Une meta-analyse mondiale de 90 etudes trouve un rendement de mais 1,2 fois superieur a un pour cent de carbone organique du sol plutot qu'a un demi pour cent.",
+   "ref_en": "A global meta-analysis of 90 studies finds maize yields 1.2 times higher at one percent soil organic carbon than at half a percent.",
+   "src": {
+    "titre": "Global meta-analysis of the relationship between soil organic matter and crop yields",
+    "auteurs": "Emily E. Oldfield, Mark A. Bradford et Stephen A. Wood",
+    "annee": 2019,
+    "editeur": "SOIL (Copernicus Publications)",
+    "url": "https://soil.copernicus.org/articles/5/15/2019/",
+    "geo": "Mondial : 834 observations, 90 etudes, 29 pays",
+    "effet": "Rendement de mais 1,2 fois plus eleve a 1,0 % de carbone organique qu'a 0,5 % ; gains potentiels de 10 +/- 11 % (mais) et 23 +/- 37 % (ble), plafonnement vers 2 % de COS",
+    "type": "meta-analyse"
+   },
+   "reserve_fr": "Le carbone organique n'est qu'une dimension de la fertilite, l'effet plafonne vers deux pour cent de COS et les intervalles sont tres larges (23 +/- 37 % pour le ble), ce qui interdit une prevision fine par parcelle."
   },
   {
    "de": "prod_agri",
    "vers": "agro_durable",
    "signe": 1,
-   "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "Une productivité faible pousse à ouvrir de nouvelles parcelles par le feu",
-   "ref_en": "Low productivity pushes households to open new plots by fire",
-   "rho": null,
-   "p": null
+   "force": 0.35,
+   "just": "empirique",
+   "ref_fr": "Sur 122 pays tropicaux entre 2000 et 2015, la hausse des rendements agricoles s'accompagne de plus de deforestation en Amerique latine-Caraibes, contrairement a l'hypothese d'epargne fonciere.",
+   "ref_en": "Across 122 tropical countries between 2000 and 2015, higher agricultural yields go with more deforestation in Latin America and the Caribbean, contrary to the land-sparing hypothesis.",
+   "src": {
+    "titre": "Sparing or expanding? The effects of agricultural yields on farm expansion and deforestation in the tropics",
+    "auteurs": "Fernando F. Goulart et al.",
+    "annee": 2023,
+    "editeur": "Biodiversity and Conservation (Springer)",
+    "url": "https://link.springer.com/article/10.1007/s10531-022-02540-4",
+    "geo": "122 pays tropicaux, 2000-2015, dont l'Amerique latine et les Caraibes",
+    "effet": "Une hausse des rendements est associee a une hausse des taux de deforestation en Afrique subsaharienne et en Amerique latine-Caraibes (paradoxe de Jevons), avec des coefficients de regression tres faibles",
+    "type": "observationnel"
+   },
+   "conteste": true,
+   "reserve_fr": "CONTRADICTION PARTIELLE : au niveau national la productivite accrue pousse a l'expansion plutot qu'a la conservation, alors qu'a l'echelle des menages Leblois 2021 (Environmental Research Letters, https://iopscience.iop.org/article/10.1088/1748-9326/abdbf0) trouve bien +15 a +20 % de deforestation apres une saison des pluies ecourtee en Afrique de l'Ouest et centrale ; la litterature est divisee, d'ou une force abaissee a 0,35."
   },
   {
    "de": "prod_agri",
@@ -840,87 +1248,160 @@
    "signe": 1,
    "force": 0.35,
    "just": "documentee",
-   "ref_fr": "Une productivité faible pousse au défrichement de nouvelles terres",
-   "ref_en": "Low productivity pushes clearing of new land",
-   "rho": null,
-   "p": null
+   "ref_fr": "Sur 122 pays tropicaux entre 2000 et 2015, la hausse des rendements agricoles s'accompagne plus souvent d'une deforestation accrue que d'une epargne de terres, effet Jevons.",
+   "ref_en": "Across 122 tropical countries from 2000 to 2015, rising agricultural yields more often came with increased deforestation than with land sparing, a Jevons effect.",
+   "src": {
+    "titre": "Sparing or expanding? The effects of agricultural yields on farm expansion and deforestation in the tropics",
+    "auteurs": "Goulart et al.",
+    "annee": 2023,
+    "editeur": "Biodiversity and Conservation (Springer)",
+    "url": "https://link.springer.com/article/10.1007/s10531-022-02540-4",
+    "geo": "122 pays tropicaux, 2000-2015, dont l'Amerique latine et les Caraibes",
+    "effet": "Association positive entre hausse des rendements et deforestation en Afrique subsaharienne et en Amerique latine-Caraibes ; les auteurs signalent eux-memes des coefficients de regression tres faibles",
+    "type": "observationnel"
+   },
+   "conteste": true,
+   "reserve_fr": "CONTRADICTION DE SENS : le modele suppose qu'une productivite plus forte protege le couvert forestier, alors que cette source trouve l'inverse a l'echelle nationale ; les coefficients sont faibles et l'echelle nationale ne prejuge pas du niveau parcellaire haitien, mais le signe positif du lien doit etre revu."
   },
   {
    "de": "erosion",
    "vers": "prod_agri",
    "signe": 1,
    "force": 0.65,
-   "just": "documentee",
-   "ref_fr": "La perte de sol arable réduit les rendements",
-   "ref_en": "Loss of topsoil reduces yields",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Meta-analyse de 13 etudes : decaper 5 a 10 centimetres de sol reduit le rendement (lnRR -0,34), et 10 a 15 centimetres le reduit de moitie (lnRR -0,66).",
+   "ref_en": "Meta-analysis of 13 studies: removing 5-10 cm of topsoil lowers yield (lnRR -0.34), while 10-15 cm roughly halves it (lnRR -0.66).",
+   "src": {
+    "titre": "Effect of soil erosion depth on crop yield based on topsoil removal method: a meta-analysis",
+    "auteurs": "Zhang, Lanlan et al.",
+    "annee": 2021,
+    "editeur": "Agronomy for Sustainable Development (Springer)",
+    "url": "https://link.springer.com/article/10.1007/s13593-021-00718-8",
+    "geo": "Mondial, 13 etudes et 290 observations de rendement, essais 1995-2015",
+    "effet": "Effet cumule lnRR du rendement : -0,16 (0-5 cm de sol decape), -0,34 (5-10 cm), -0,66 (10-15 cm et 15-20 cm), -0,99 (20-30 cm) ; seuil de productivite durable a 25 cm d'horizon A restant",
+    "type": "meta-analyse"
+   },
+   "reserve_fr": "La relation est fortement non lineaire - au-dessous de 5 cm de perte l'effet n'est pas significatif - et la base est majoritairement issue de sols temperes profonds : sur les versants karstiques peu profonds du Sud et de la Grand'Anse les seuils sont probablement atteints beaucoup plus vite."
   },
   {
    "de": "foret",
    "vers": "erosion",
    "signe": 1,
    "force": 0.65,
-   "just": "documentee",
-   "ref_fr": "Le couvert arboré retient les sols sur pente : RUSLE, facteur C",
-   "ref_en": "Tree cover holds soil on slopes: RUSLE, C factor",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Sur parcelles instrumentées, le couvert arboré réduit la production de sédiments de 84,76 à 100 %, alors que les terres cultivées la réduisent de moins de 10 %.",
+   "ref_en": "On monitored plots, tree cover reduces sediment yield by 84.76 to 100 percent, whereas cultivated land reduces it by less than 10 percent.",
+   "src": {
+    "titre": "Effects of vegetation cover and slope on soil erosion in the Eastern Chinese Loess Plateau under different rainfall regimes",
+    "auteurs": "Sun et al.",
+    "annee": 2021,
+    "editeur": "PeerJ",
+    "url": "https://peerj.com/articles/11226/",
+    "geo": "Chine, plateau de Loess oriental (province du Shanxi)",
+    "effet": "Réduction de la production de sédiments de 84,76 % à 100 % sous couvert arboré et de 62,32 % à 92,45 % sous arbustes, contre moins de 10 % pour les terres cultivées",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Mesure faite sur loess tempéré, pas sur les pentes tropicales haïtiennes ; l'article MDPI consacré à Haïti que j'ai ouvert ne fournit aucun chiffre d'érosion, seulement un constat qualitatif."
   },
   {
    "de": "foret",
    "vers": "infiltration",
    "signe": 1,
    "force": 0.65,
-   "just": "documentee",
-   "ref_fr": "Sans couvert, l'eau ruisselle au lieu de s'infiltrer",
-   "ref_en": "Without cover, water runs off instead of infiltrating",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Dans les Andes peruviennes, l'infiltration quasi-stationnaire atteint 0,248 cm/min sous foret contre 0,051 sous paturage, soit environ cinq fois plus sous couvert forestier.",
+   "ref_en": "In the Peruvian Andes quasi-steady infiltration reached 0.248 cm/min under forest versus 0.051 under grazing land, roughly five times higher under tree cover.",
+   "src": {
+    "titre": "Influence of Vegetation Cover and Soil Properties on Water Infiltration: A Study in High-Andean Ecosystems of Peru",
+    "auteurs": "Chavez-Collantes et al.",
+    "annee": 2025,
+    "editeur": "Water (MDPI)",
+    "url": "https://www.mdpi.com/2073-4441/17/15/2280",
+    "geo": "Andes peruviennes (pays a revenu intermediaire, relief montagneux comparable au Sud d'Haiti)",
+    "effet": "Infiltration quasi-stationnaire 0,248 +/- 0,028 cm/min sous foret contre 0,051 +/- 0,016 sous paturage et 0,032 +/- 0,013 sous culture, soit environ 5 et 7,8 fois plus sous foret (differences significatives)",
+    "type": "observationnel"
+   },
+   "reserve_fr": "L'infiltration est bien accrue, mais la recharge nette l'est moins surement : la meta-analyse de Francois et al. (Water, 2024, ouverte) rapporte que le boisement de prairies reduit le ruissellement annuel de 44 % par evapotranspiration accrue, donc le second terme de l'arete est plus fragile que le premier."
   },
   {
    "de": "infiltration",
    "vers": "aridite",
    "signe": 1,
    "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "La perte d'humidité du sol aggrave la sécheresse",
-   "ref_en": "Loss of soil moisture deepens drought",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "En Afrique de l'Ouest, les secheresses eclair precedees d'un deficit d'eau du couvert connaissent un pic de chaleur extreme dans 27 % des cas contre 12 % sinon.",
+   "ref_en": "In West Africa, flash droughts preceded by a land water deficit reach extreme heat peaks in 27 percent of cases versus 12 percent otherwise.",
+   "src": {
+    "titre": "Global observations of land-atmosphere interactions during flash drought",
+    "auteurs": "Harris, Taylor, Dorigo, Zotta, Ghent & Noguera",
+    "annee": 2025,
+    "editeur": "Hydrology and Earth System Sciences, 29(23), 6917-6933",
+    "url": "https://hess.copernicus.org/articles/29/6917/2025/",
+    "geo": "Analyse globale, resultat chiffre cite pour l'Afrique de l'Ouest en saison humide",
+    "effet": "Les secheresses eclair precedees d'une anomalie d'epaisseur optique de la vegetation dans le quartile le plus bas presentent une probabilite de 27 % d'atteindre une anomalie de temperature de l'air superieure a 1,5 ecart-type, contre 12 % pour le quartile le plus haut ; perturbation du bilan energetique de surface pendant 4 mois avant et apres le declenchement",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Limite de transferabilite : la source mesure l'etat hydrique du couvert vegetal par teledetection, pas l'infiltration ni la recharge des nappes, et le chiffre cite porte sur l'Afrique de l'Ouest, pas sur les Caraibes ; le sens du lien est neanmoins confirme."
   },
   {
    "de": "aridite",
    "vers": "vegetation",
    "signe": 1,
-   "force": 0.5,
-   "just": "theorique",
-   "ref_fr": "L'aridité anormale dégrade l'état de la végétation",
-   "ref_en": "Abnormal aridity degrades vegetation condition",
-   "rho": -0.31,
-   "p": 0.387
+   "force": 0.65,
+   "just": "empirique",
+   "ref_fr": "Dans un bassin hyper-aride saoudien, l'indice de sante de la vegetation correle avec l'indice de secheresse SPEI a douze mois a hauteur de 0,74.",
+   "ref_en": "In a hyper-arid Saudi watershed, the Vegetation Health Index correlates with the twelve-month SPEI drought index at r = 0.74.",
+   "src": {
+    "titre": "Drought Monitoring Using Landsat Derived Indices and Google Earth Engine Platform: A Case Study from Al-Lith Watershed, Kingdom of Saudi Arabia",
+    "auteurs": "Ejaz, N. et al.",
+    "annee": 2023,
+    "editeur": "Remote Sensing (MDPI), 15(4), 984",
+    "url": "https://www.mdpi.com/2072-4292/15/4/984",
+    "geo": "Bassin versant d'Al-Lith, Arabie saoudite (zone hyper-aride)",
+    "effet": "Correlation de Pearson VHI/SPEI-12 = 0,74 ; VHI/SPEI-6 = 0,67 ; VHI/SPEI-3 = 0,57 ; VHI/SPEI-1 = 0,47",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Correlation et non causalite, obtenue en milieu hyper-aride ; la force du lien VHI-secheresse est generalement plus faible dans un contexte tropical humide comme le Sud haitien, et depend fortement du pas de temps retenu."
   },
   {
    "de": "vegetation",
    "vers": "foret",
    "signe": 1,
    "force": 0.35,
-   "just": "theorique",
-   "ref_fr": "Une végétation en mauvais état empêche la régénération du couvert",
-   "ref_en": "Vegetation in poor condition prevents cover regeneration",
-   "rho": -0.32,
-   "p": 0.372
+   "just": "empirique",
+   "ref_fr": "Le declin d'un indice de vegetation satellitaire detecte la mortalite des arbres a 90,5 pour cent, mais n'explique que 37 pour cent de la variance de son intensite.",
+   "ref_en": "A decline in a satellite vegetation index detects tree mortality with 90.5 percent accuracy but explains only 37 percent of the variance in its severity.",
+   "src": {
+    "titre": "Assessing Drought-Induced Tree Mortality in Open Mediterranean Forests Integrating Landsat Time Series, Spectral Unmixing, and UAS Validation",
+    "auteurs": "Raunak, Huesca, Nyktas et Paris",
+    "annee": 2026,
+    "editeur": "Remote Sensing (MDPI)",
+    "url": "https://www.mdpi.com/2072-4292/18/5/792",
+    "geo": "Sud-ouest de la Crete, Grece (0,55 km2)",
+    "effet": "Le declin du NDVI n'explique que 37 % de la variance du taux de mortalite des arbres (RMSE 41,8), mais detecte la presence de mortalite avec 90,5 % d'exactitude",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Nuance qui affaiblit l'arete : les auteurs concluent que l'ampleur du declin ne suit pas la severite de la mortalite ; de plus l'indice est le NDVI et non le VHI, l'issue est la mortalite et non le couvert forestier, et le site mediterraneen minuscule se transfere mal a Haiti."
   },
   {
    "de": "foret",
    "vers": "revenu",
    "signe": 1,
-   "force": 0.35,
-   "just": "documentee",
-   "ref_fr": "Le recul du couvert réduit les revenus agricoles et forestiers durables",
-   "ref_en": "Cover loss reduces sustainable farm and forest income",
-   "rho": 0.28,
-   "p": 0.427
+   "force": 0.5,
+   "just": "empirique",
+   "ref_fr": "Sur environ 8 000 menages ruraux de 24 pays en developpement, le revenu environnemental represente 27,5 % du revenu total, dont 22,2 % provenant directement des forets.",
+   "ref_en": "Across about 8,000 rural households in 24 developing countries, environmental income makes up 27.5 percent of total household income, with 22.2 percent coming directly from forests.",
+   "src": {
+    "titre": "Environmental Income and Rural Livelihoods: A Global-Comparative Analysis",
+    "auteurs": "Arild Angelsen et al.",
+    "annee": 2014,
+    "editeur": "World Development (version en acces libre sur PubMed Central)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7220182",
+    "geo": "Environ 8 000 menages ruraux dans 24 pays en developpement d'Amerique latine, d'Asie et d'Afrique subsaharienne",
+    "effet": "Le revenu environnemental represente 27,5 % du revenu total des menages, dont 22,2 % de revenu forestier et 6,4 % de revenu environnemental non forestier",
+    "type": "observationnel"
+   },
+   "reserve_fr": "La source mesure la part du revenu tiree des forets, pas l'effet causal d'une perte de couvert sur le franchissement d'un seuil de revenu ; aucun site haitien n'est dans l'echantillon et le couvert du Sud et de la Grand'Anse est deja tres degrade, ce qui plafonne la force a 0,50."
   },
   {
    "de": "revenu",
@@ -928,43 +1409,80 @@
    "signe": 1,
    "force": 0.5,
    "just": "documentee",
-   "ref_fr": "À court de liquidités, le ménage coupe davantage pour vendre",
-   "ref_en": "Short of cash, the household cuts more to sell",
-   "rho": null,
-   "p": null
+   "ref_fr": "Dans huit pays en developpement, la part des menages utilisant des combustibles non solides est correlee a 0,84 avec la depense par habitant, l'usage de bois reculant avec le revenu.",
+   "ref_en": "Across eight developing countries, the share of households using non-solid fuels correlates at 0.84 with per capita expenditure, wood use falling as income rises.",
+   "src": {
+    "titre": "Household Energy Use in Developing Countries: A Multicountry Study",
+    "auteurs": "Rasmus Heltberg (ESMAP, Banque mondiale / PNUD)",
+    "annee": 2003,
+    "editeur": "ESMAP, Banque mondiale",
+    "url": "https://www.esmap.org/sites/default/files/esmap-files/Rpt_householdenergyuseindevelopingcountriescomplete.pdf",
+    "geo": "Huit pays a revenu faible ou intermediaire : Bresil, Ghana, Guatemala, Inde, Nepal, Nicaragua, Afrique du Sud, Vietnam",
+    "effet": "Correlation transnationale de 0,84 entre la part des menages utilisant un combustible non solide et la depense moyenne par habitant ; l'usage de combustibles solides decroit avec le quintile de revenu, surtout en ville",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "Reserve majeure pour Haiti rural : le rapport montre qu'en zone rurale la quantite de bois consommee culmine au milieu de la distribution des revenus et ne baisse nettement que dans le dernier decile, donc l'effet protecteur du revenu est surtout urbain."
   },
   {
    "de": "foret",
    "vers": "biodiv",
    "signe": 1,
-   "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "La perte du couvert fait disparaître les espèces qui régénèrent",
-   "ref_en": "Cover loss removes the species that regenerate it",
-   "rho": null,
-   "p": null
+   "force": 0.8,
+   "just": "empirique",
+   "ref_fr": "En Haiti, les massifs ayant perdu toute foret primaire hebergent 88 % d'especes endemiques en moins d'amphibiens et reptiles, avec 0,32 % de foret primaire restante en 2016.",
+   "ref_en": "In Haiti, mountains that lost all primary forest hold 88% fewer endemic amphibian and reptile species; only 0.32% of primary forest remained in 2016.",
+   "src": {
+    "titre": "Haiti's biodiversity threatened by nearly complete loss of primary forest",
+    "auteurs": "Hedges, S. Blair; Cohen, Warren B.; Timyan, Joel; Yang, Zhiqiang",
+    "annee": 2018,
+    "editeur": "Proceedings of the National Academy of Sciences (PNAS)",
+    "url": "https://apply07.grants.gov/grantsws/rest/opportunity/att/download/326837",
+    "geo": "Haiti, 50 plus hauts massifs du pays - source directement sur le pays du modele",
+    "effet": "Chute de 66 a 83 % de la richesse specifique totale et de 88 % des especes endemiques d'amphibiens et reptiles entre massifs avec et sans foret primaire ; foret primaire passee de 4,4 % (1988) a 0,32 % (2016), 42 des 50 grands massifs entierement deboises",
+    "type": "observationnel"
+   },
+   "reserve_fr": "L'URL rendue est le miroir PDF que j'ai reellement pu ouvrir : le site de PNAS renvoie une erreur 403 (le DOI de l'article est 10.1073/pnas.1809753115) ; l'affirmation actuelle du modele parle de regeneration alors que la source documente une extinction locale, ce qui est un mecanisme different mais de meme sens."
   },
   {
    "de": "biodiv",
    "vers": "foret",
    "signe": 1,
-   "force": 0.35,
-   "just": "documentee",
-   "ref_fr": "Dispersion des graines et pollinisation : la faune régénère le couvert",
-   "ref_en": "Seed dispersal and pollination: wildlife regenerates cover",
-   "rho": null,
-   "p": null
+   "force": 0.5,
+   "just": "empirique",
+   "ref_fr": "En forêt atlantique brésilienne, la disparition des disséminateurs de graines fait chuter le recrutement des plantes de 70,7 à 94,9 %, compromettant le renouvellement du couvert.",
+   "ref_en": "In the Brazilian Atlantic Forest, losing all seed dispersers cuts plant recruitment by 70.7 to 94.9 percent, undermining renewal of forest cover.",
+   "src": {
+    "titre": "Synergistic effects of seed disperser and predator loss on recruitment success and long-term consequences for carbon stocks in tropical rainforests",
+    "auteurs": "Laurence Culot et al.",
+    "annee": 2017,
+    "editeur": "Scientific Reports",
+    "url": "https://www.nature.com/articles/s41598-017-08222-4",
+    "geo": "Brésil, forêt atlantique (forêt tropicale)",
+    "effet": "La perte de l'ensemble des disséminateurs de graines réduit le recrutement des plantes de 70,7 % à 94,9 % selon l'état de la communauté de prédateurs",
+    "type": "observationnel"
+   },
+   "reserve_fr": "L'effet mesuré porte sur le recrutement, pas directement sur le pourcentage de couvert, et Haïti a déjà perdu ses grands frugivores, si bien que le levier y est marginal face à la coupe humaine."
   },
   {
    "de": "prod_agri",
    "vers": "ancrage",
    "signe": 1,
-   "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "La dégradation des conditions de vie pousse à migrer vers les villes ou l'étranger",
-   "ref_en": "Deteriorating living conditions push migration to cities or abroad",
-   "rho": null,
-   "p": null
+   "force": 0.35,
+   "just": "empirique",
+   "ref_fr": "Dans 32 pays d'Afrique subsaharienne, l'insecurite alimentaire severe augmente de 5,2 points le desir de migrer mais reduit de 9,6 points les preparatifs effectifs.",
+   "ref_en": "Across 32 sub-Saharan African countries, severe food insecurity raised the desire to migrate by 5.2 points but cut actual migration preparations by 9.6 points.",
+   "src": {
+    "titre": "Food insecurity as a determinant of international migration: evidence from Sub-Saharan Africa",
+    "auteurs": "Ahmed Sadiddin, Andrea Cattaneo, Marina Cirillo, Meghan Miller",
+    "annee": 2019,
+    "editeur": "Food Security (Springer, acces ouvert)",
+    "url": "https://link.springer.com/article/10.1007/s12571-019-00927-w",
+    "geo": "32 pays d'Afrique subsaharienne, Gallup World Poll 2014, n = 29 492",
+    "effet": "Insecurite alimentaire moderee : +3,9 points de pourcentage de desir de migrer ; severe : +5,2 points. Mais sur les preparatifs effectifs de depart : -6,9 points (moderee) et -9,6 points (severe)",
+    "type": "observationnel"
+   },
+   "conteste": true,
+   "reserve_fr": "Contradiction partielle avec le sens du lien : la degradation des conditions agricoles accroit l'envie de partir mais reduit la migration reellement engagee, la migration exigeant des ressources ; l'ancrage observe en Haiti peut donc traduire un piege de pauvrete plutot qu'une agriculture qui retient."
   },
   {
    "de": "ancrage",
@@ -972,10 +1490,19 @@
    "signe": -1,
    "force": 0.35,
    "just": "documentee",
-   "ref_fr": "Le départ d'une partie de la population allège la pression locale sur la forêt",
-   "ref_en": "Out-migration of part of the population eases local pressure on the forest",
-   "rho": null,
-   "p": null
+   "ref_fr": "Sur 87 pays en developpement, le nombre de menages presents predit mieux la consommation totale de bois de feu que la taille moyenne des menages.",
+   "ref_en": "Across 87 developing countries, the number of households predicts total fuelwood consumption better than average household size does.",
+   "src": {
+    "titre": "Household dynamics and fuelwood consumption in developing countries: a cross-national analysis",
+    "auteurs": "Knight & Rosa",
+    "annee": 2012,
+    "editeur": "Population and Environment, 33(4)",
+    "url": "https://link.springer.com/article/10.1007/s11111-011-0151-3",
+    "geo": "87 pays en developpement",
+    "effet": "Le nombre de menages presents predit mieux la consommation totale de bois de feu que la taille moyenne des menages ; les pays a menages plus petits consomment davantage de bois par habitant. AUCUN coefficient ni elasticite n'est accessible dans la version consultee : la taille d'effet chiffree manque, ce qui affaiblit nettement cette preuve",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Preuve faible : la source etablit le sens sans fournir de chiffre exploitable, et la litterature sur la migration est ambivalente puisque les transferts des migrants peuvent aussi bien relacher la pression sur la foret que l'accroitre en finançant la consommation, ce qui interdit d'aller au-dela de 0,35 pour Haiti."
   },
   {
    "de": "foret",
@@ -983,54 +1510,99 @@
    "signe": -1,
    "force": 0.35,
    "just": "documentee",
-   "ref_fr": "Sécheresses et inondations sensibilisent les communautés à la valeur des forêts",
-   "ref_en": "Droughts and floods make communities aware of the value of forests",
-   "rho": null,
-   "p": null
+   "ref_fr": "En Ethiopie, sur 304 agriculteurs, percevoir l'erosion comme un probleme augmente significativement l'adoption de mesures de conservation (coefficient logistique 1,05 ; p=0,01).",
+   "ref_en": "In Ethiopia, among 304 farmers, perceiving erosion as a problem significantly raised adoption of conservation measures (logit coefficient 1.05; p = 0.01).",
+   "src": {
+    "titre": "Farmers' adoption of soil and water conservation practices: The case of Lege-Lafto Watershed, Dessie Zuria District, South Wollo, Ethiopia",
+    "auteurs": "Yifru, G.S. et Miheretu, B.A.",
+    "annee": 2022,
+    "editeur": "PLOS ONE",
+    "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0265071",
+    "geo": "Ethiopie, bassin versant de Lege-Lafto, 304 agriculteurs",
+    "effet": "Coefficient logistique de la perception de l'erosion sur l'adoption de mesures de conservation = 1,05 (Wald 5,95 ; p=0,01)",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Reserve majeure : aucune source ouverte trouvee ne relie le couvert forestier lui-meme a la sensibilisation ; la degradation percue sert ici de variable de substitution, donc le lien reste au mieux indirect et la justification actuelle (secheresses et inondations) n'est pas documentee."
   },
   {
    "de": "sensib",
    "vers": "agro_durable",
    "signe": 1,
-   "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "Agroforesterie, compostage, charbon écologique : les pratiques s'adaptent",
-   "ref_en": "Agroforestry, composting, eco-charcoal: practices adapt",
-   "rho": null,
-   "p": null
+   "force": 0.65,
+   "just": "empirique",
+   "ref_fr": "Une revue systematique de 134 etudes montre que les ecoles au champ augmentent les connaissances de 41 pour cent et reduisent l'usage de pesticides de 23 pour cent.",
+   "ref_en": "A systematic review of 134 studies shows farmer field schools raise knowledge by 41 percent and cut pesticide use by 23 percent.",
+   "src": {
+    "titre": "Farmer field schools: from agricultural extension to adult education",
+    "auteurs": "Hugh Waddington et Howard White (3ie)",
+    "annee": 2014,
+    "editeur": "International Initiative for Impact Evaluation (3ie), Systematic Review Summary 1",
+    "url": "https://www.3ieimpact.org/sites/default/files/2019-05/srs1_ffs_revise_060814_final_web_2.pdf",
+    "geo": "Pays a revenu faible et intermediaire : 134 etudes, 71 projets d'ecoles au champ",
+    "effet": "Participants : +41 % de connaissances, -23 % d'usage de pesticides, +13 % de rendement, +19 % de revenu net et -39 % de quotient d'impact environnemental",
+    "type": "meta-analyse"
+   },
+   "reserve_fr": "Limite majeure : ces effets ne tiennent que dans les programmes de petite taille, les deux evaluations de programmes nationaux ne trouvent aucun impact, et rien ne diffuse aux voisins non participants."
   },
   {
    "de": "abondance_bois",
    "vers": "cuisson",
    "signe": -1,
    "force": 0.35,
-   "just": "documentee",
-   "ref_fr": "Quand le charbon devient trop cher, les ménages se tournent vers le gaz ou le solaire",
-   "ref_en": "When charcoal gets too expensive, households turn to gas or solar",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Au Malawi urbain, le triplement du prix du charbon de bois n'a fait reculer son usage que de 85,8 % a 82,8 % des menages en deux ans.",
+   "ref_en": "In urban Malawi, a near tripling of the charcoal price cut its use only from 85.8 to 82.8 percent of households over two years.",
+   "src": {
+    "titre": "Why rising charcoal prices fail to drive clean cooking transitions: evidence from urban Malawi",
+    "auteurs": "Samuel Admore Chiumia, Betchani Tchereni et Hope Baxter Chamdimba",
+    "annee": 2026,
+    "editeur": "Frontiers in Sustainable Cities",
+    "url": "https://www.frontiersin.org/journals/sustainable-cities/articles/10.3389/frsc.2026.1850587/full",
+    "geo": "Malawi urbain (Lilongwe, Blantyre, Mzuzu, Zomba), pays a faible revenu",
+    "effet": "Prix du charbon passe de 176 a 497 MK/kg entre 2022 et 2024, mais usage du charbon seulement en recul de 85,8 % a 82,8 % des menages ; la hausse de prix pousse surtout a l'empilement energetique (beta = 0,842) plutot qu'a l'adoption propre complete (beta = 0,215)",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Le sens negatif du modele est confirme mais le mecanisme est bien plus faible qu'affirme : la rarete renchérit le charbon sans declencher de bascule, l'accessibilite financiere (beta = 0,963) et le revenu (beta = 0,785) dominant l'adoption des combustibles propres."
   },
   {
    "de": "controle",
    "vers": "pression_bois",
    "signe": 1,
    "force": 0.5,
-   "just": "theorique",
-   "ref_fr": "L'absence de contrôle forestier laisse la coupe se faire sans frein",
-   "ref_en": "Absent enforcement leaves cutting unchecked",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Au Bresil, le renforcement du controle forestier appuye sur la surveillance satellitaire a evite environ 59 500 km2 de defrichement entre 2007 et 2011.",
+   "ref_en": "In Brazil, stronger forest law enforcement backed by satellite monitoring avoided about 59,500 km2 of clearing between 2007 and 2011.",
+   "src": {
+    "titre": "DETERring Deforestation in the Brazilian Amazon: Environmental Monitoring and Law Enforcement",
+    "auteurs": "Assuncao, Gandour et Rocha",
+    "annee": 2013,
+    "editeur": "Climate Policy Initiative",
+    "url": "https://climatepolicyinitiative.org/wp-content/uploads/2013/05/DETERring-Deforestation-in-the-Brazilian-Amazon-Environmental-Monitoring-and-Law-Enforcement-Technical-Paper.pdf",
+    "geo": "Amazonie bresilienne, municipalites, 2007-2011",
+    "effet": "Environ 59 500 km2 de deforestation evites grace au renforcement du controle (2007-2011) ; sans aucune amende environnementale, 122 700 km2 supplementaires auraient ete defriches, soit une deforestation observee inferieure de 75 %",
+    "type": "quasi-experimental"
+   },
+   "reserve_fr": "Transferabilite limitee : la mesure porte sur le defrichement agricole a grande echelle sanctionne par un Etat dote de satellites et d'amendes, non sur la coupe diffuse de bois-energie par des menages, et la capacite de controle haitienne est sans commune mesure."
   },
   {
    "de": "services",
    "vers": "controle",
    "signe": 1,
    "force": 0.35,
-   "just": "theorique",
-   "ref_fr": "Le contrôle forestier est un service public parmi d'autres",
-   "ref_en": "Forest enforcement is one public service among others",
-   "rho": null,
-   "p": null
+   "just": "documentee",
+   "ref_fr": "Sur 163 pays, une meilleure redevabilite publique divise par deux les chances d'exploitation forestiere illegale (rapport de cotes 0,49), mais l'efficacite gouvernementale n'a aucun effet significatif.",
+   "ref_en": "Across 163 countries, stronger voice and accountability halves the odds of high illegal logging (odds ratio 0.49), while government effectiveness shows no significant effect.",
+   "src": {
+    "titre": "Institutional quality, economic development and illegal logging: a quantitative cross-national analysis",
+    "auteurs": "Bosch, Matthias",
+    "annee": 2021,
+    "editeur": "European Journal of Forest Research (Springer)",
+    "url": "https://www.readkong.com/page/institutional-quality-economic-development-and-illegal-4121208",
+    "geo": "163 pays (100 a faible exploitation illegale, 63 a forte exploitation illegale)",
+    "effet": "Voix et redevabilite : coefficient -0,713, rapport de cotes 0,490 (baisse de 51 % des chances d'exploitation illegale par unite) ; etat de droit RC 0,509 ; controle de la corruption RC 0,493 ; efficacite gouvernementale et qualite reglementaire non significatives",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Nuance decisive pour ce lien : la dimension la plus proche de la satisfaction des services publics - l'efficacite gouvernementale - est justement celle qui n'est PAS significative, seules la redevabilite, l'etat de droit et le controle de la corruption le sont ; la satisfaction percue des menages n'est en outre pas le meme construit qu'un indice de gouvernance, le lien reste donc un proxy faible."
   },
   {
    "de": "elec",
@@ -1038,21 +1610,40 @@
    "signe": 1,
    "force": 0.5,
    "just": "documentee",
-   "ref_fr": "Recevoir une alerte suppose un appareil alimenté — radio, téléphone chargé, télévision. La couverture réseau ne suffit pas si rien ne peut être allumé.",
-   "ref_en": "Receiving an alert requires a powered device — radio, charged phone, television. Network coverage is not enough if nothing can be switched on.",
-   "rho": null,
-   "p": null
+   "ref_fr": "La Banque mondiale mesure que posséder un téléphone accroît de 21 points la probabilité de recevoir une alerte à Dar es Salaam, contre 2,4 points au Bangladesh rural.",
+   "ref_en": "The World Bank finds that owning a phone raises the probability of receiving a warning by 21 percentage points in Dar es Salaam, versus 2.4 in rural Bangladesh.",
+   "src": {
+    "titre": "Early Warnings Coverage, Determinants of Reception, and Benefits: What Surveys Can Tell Us",
+    "auteurs": "Chloé Beaudet et al.",
+    "annee": 2025,
+    "editeur": "Banque mondiale, Policy Research Working Paper 11199",
+    "url": "https://documents1.worldbank.org/curated/en/099259309032538041/pdf/IDU-c6f56dc5-a0cb-4375-ac15-a91f1c202b09.pdf",
+    "geo": "142 pays (World Risk Poll) plus enquêtes en Tanzanie, au Bangladesh et en Indonésie",
+    "effet": "Posséder un téléphone mobile augmente de 21 points de pourcentage la probabilité de recevoir une alerte à Dar es Salaam (p<0,001) et de 2,4 points au Bangladesh rural",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "Le rapport chiffre la possession d'appareil, pas l'accès à l'électricité lui-même, et l'écart énorme entre Tanzanie et Bangladesh montre que l'effet dépend fortement du canal d'alerte local."
   },
   {
    "de": "elec",
    "vers": "securite",
    "signe": 1,
-   "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "L'éclairage du logement et de ses abords est le premier levier cité dans les évaluations de sécurité nocturne en milieu rural.",
-   "ref_en": "Lighting the home and its surroundings is the first lever cited in rural night-time safety assessments.",
-   "rho": null,
-   "p": null
+   "force": 0.2,
+   "just": "hypothese",
+   "ref_fr": "L'essai randomise tanzanien sur lampes solaires trouve 25 % de revenu supplementaire mais aucun effet significatif sur le sentiment de securite declare des menages.",
+   "ref_en": "The Tanzanian solar-lamp randomised trial found a 25% income gain but no significant effect on households' reported sense of safety and security.",
+   "src": {
+    "titre": "The impacts of rural electrification on labour supply, income and health: Experimental evidence with solar lamps in Tanzania",
+    "auteurs": "Anna Margret Aevarsdottir, Nicholas Barton, Tessa Bold",
+    "annee": 2017,
+    "editeur": "International Growth Centre (IGC)",
+    "url": "https://www.theigc.org/sites/default/files/2018/02/Aevarsdottir-et-al-2017-final-report.pdf",
+    "geo": "District de Magu, Tanzanie rurale (pays a faible revenu)",
+    "effet": "Aucun effet significatif sur le sentiment de securite des membres du menage, alors que le meme essai trouve +8 points de pourcentage de travail hors du menage, +25 % de revenu et +0,4 point de satisfaction sur 10 ; 2 067 menages, 69 ecoles",
+    "type": "essai randomise"
+   },
+   "conteste": true,
+   "reserve_fr": "Ce resultat nul contredit l'affirmation actuelle du modele : l'eclairage domestique n'est pas 'le premier levier' du sentiment de securite nocturne ; la revue systematique de Welsh et Farrington (2024, ouverte) montre bien -14 % de criminalite avec l'eclairage public, mais sur la delinquance contre les biens et surtout dans les pays riches, pas sur la perception ni sur la violence."
   },
   {
    "de": "elec",
@@ -1060,32 +1651,59 @@
    "signe": 1,
    "force": 0.5,
    "just": "documentee",
-   "ref_fr": "L'électricité prolonge l'activité après la tombée du jour, permet la conservation et l'usage de petits équipements productifs.",
-   "ref_en": "Electricity extends activity after dark and enables refrigeration and small productive equipment.",
-   "rho": null,
-   "p": null
+   "ref_fr": "La revue de la BID trouve une hausse moyenne du revenu des menages electrifies d'environ 30 %, mediane 18 %, mais huit etudes sur vingt-quatre ne trouvent aucun effet.",
+   "ref_en": "The IDB review finds rural electrification raises household income by about 30 percent on average, median 18 percent, but eight of twenty-four studies find no effect.",
+   "src": {
+    "titre": "Development Effects of Rural Electrification",
+    "auteurs": "Raul Alberto Jimenez Mori",
+    "annee": 2017,
+    "editeur": "Banque interamericaine de developpement (note de politique)",
+    "url": "https://publications.iadb.org/publications/english/document/Development-Effects-of-Rural-Electrification.pdf",
+    "geo": "Revue d'une cinquantaine d'evaluations d'impact, dont Bresil, Perou, Inde, Bangladesh, Afrique du Sud, Nepal",
+    "effet": "Hausse moyenne du revenu des menages electrifies d'environ 30 % (mediane 18 %), fourchette de -18 % a plus de 100 %, 8 etudes sur 24 ne trouvant aucun effet significatif ; emploi +25 % en moyenne (mediane 20 %), scolarisation +7 % ; Bresil : +40 % de revenu sur quatre decennies",
+    "type": "rapport institutionnel"
+   },
+   "reserve_fr": "Les resultats sont tres disperses, un tiers des etudes ne detectant aucun effet, ce qui interdit le palier 0,65 reserve aux sources convergentes ; la source couvre l'Amerique latine, ce qui la rend relativement transferable a Haiti, mais aucune etude haitienne n'y figure."
   },
   {
    "de": "elec",
    "vers": "education",
    "signe": 1,
-   "force": 0.35,
-   "just": "documentee",
-   "ref_fr": "L'éclairage domestique allonge le temps d'étude, mais l'effet sur l'achèvement reste modeste devant la distance à l'école.",
-   "ref_en": "Home lighting extends study time, but its effect on completion stays modest next to distance to school.",
-   "rho": null,
-   "p": null
+   "force": 0.5,
+   "just": "empirique",
+   "ref_fr": "Une meta-analyse bayesienne de 33 etudes dans 15 pays du Sud attribue a l'electrification rurale 55 minutes d'etude quotidienne supplementaires pour les enfants.",
+   "ref_en": "A Bayesian meta-analysis of 33 studies across 15 developing countries attributes 55 extra minutes of daily study time for children to rural electrification.",
+   "src": {
+    "titre": "Does Rural Household Electrification Improve Education in the Global South? Evidence from a Robust Bayesian Meta-Analysis",
+    "auteurs": "Davidmac O. Ekeocha et Supriya Garikipati",
+    "annee": 2025,
+    "editeur": "The Energy Journal (SAGE)",
+    "url": "https://journals.sagepub.com/doi/10.1177/01956574251340007",
+    "geo": "15 pays en developpement (Bangladesh, Bresil, Ghana, Inde, Kenya, Nepal, Perou, Rwanda, Tanzanie, Ouganda, Zambie, etc.), 33 etudes, 301 tailles d'effet",
+    "effet": "+55 minutes d'etude par jour pour les enfants ; hausse moyenne de 15,4 points de pourcentage sur l'ensemble des indicateurs educatifs (niveau atteint, scolarisation, heures d'etude) ; +42 minutes pour l'electrification solaire",
+    "type": "meta-analyse"
+   },
+   "reserve_fr": "La meta-analyse regroupe scolarisation, heures d'etude et niveau atteint sans isoler l'achevement du primaire, et aucune etude caribeenne n'y figure ; les auteurs soulignent que l'effet exige des interventions educatives complementaires."
   },
   {
    "de": "services",
    "vers": "elec",
    "signe": 1,
    "force": 0.5,
-   "just": "theorique",
-   "ref_fr": "Le raccordement et la continuité du service dépendent de la puissance publique, au même titre que l'eau.",
-   "ref_en": "Connection and continuity of supply depend on public provision, as water does.",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Sur 135 pays en developpement, une hausse d'un point de l'indice d'efficacite gouvernementale s'accompagne d'une consommation electrique par habitant superieure de 52 pour cent.",
+   "ref_en": "Across 135 developing countries, a one-point rise in the government effectiveness index is associated with 52 percent higher electricity consumption per capita.",
+   "src": {
+    "titre": "The Importance of Government Effectiveness for Transitions toward Greater Electrification in Developing Countries",
+    "auteurs": "Rohan Best et Paul J. Burke",
+    "annee": 2017,
+    "editeur": "Energies (MDPI)",
+    "url": "https://www.mdpi.com/1996-1073/10/9/1247",
+    "geo": "Jusqu'a 135 pays a revenu faible et intermediaire, donnees jusqu'en 2012",
+    "effet": "Une unite d'indice d'efficacite gouvernementale en plus est associee a +52 % de consommation electrique par habitant et a 5 % de pertes de reseau en moins",
+    "type": "observationnel"
+   },
+   "reserve_fr": "L'indicateur est l'efficacite gouvernementale mesuree et non la satisfaction declaree des usagers, et l'effet sur le taux d'acces lui-meme n'est significatif qu'en variables instrumentales, pas en moindres carres."
   },
   {
    "de": "services",
@@ -1093,131 +1711,232 @@
    "signe": 1,
    "force": 0.5,
    "just": "theorique",
-   "ref_fr": "L'assainissement géré en sécurité suppose une chaîne de service qui dépasse le ménage.",
-   "ref_en": "Safely managed sanitation requires a service chain beyond the household.",
-   "rho": null,
-   "p": null
+   "ref_fr": "Aucune source vérifiée n'a été trouvée pour ce lien.",
+   "ref_en": "No verified source was found for this link.",
+   "src": null,
+   "reserve_fr": "Recherches menees sur la qualite de la gouvernance et l'efficacite des services publics face a l'assainissement gere en securite (JMP OMS/UNICEF, indicateurs de gouvernance, analyses transnationales, determinants a Jimma en Ethiopie, analyse bayesienne WASH en Asie du Sud) : aucune source chiffree n'a pu etre ouverte et verifiee, le quota de consultation web ayant ete atteint, donc aucune reference n'est rapportee plutot qu'une reference non verifiee ; la classe theorique et la force 0,50 d'origine sont conservees en l'etat."
   },
   {
    "de": "assain",
    "vers": "eau",
    "signe": 1,
-   "force": 0.35,
-   "just": "theorique",
-   "ref_fr": "Des excreta mal gérés contaminent les points d'eau proches : la qualité de l'eau dépend en partie de l'assainissement du voisinage.",
-   "ref_en": "Poorly managed excreta contaminate nearby water points: water quality partly depends on neighbourhood sanitation.",
-   "rho": null,
-   "p": null
+   "force": 0.5,
+   "just": "empirique",
+   "ref_fr": "En Inde, la progression de l'assainissement s'accompagne d'une baisse marquee des coliformes fecaux dans les nappes, correlation de -0,96 et coefficient de panel de -0,035.",
+   "ref_en": "In India, rising sanitation coverage came with a marked drop in faecal coliforms in groundwater, a correlation of -0.96 and a panel coefficient of -0.035.",
+   "src": {
+    "titre": "Impact of sanitation and socio-economy on groundwater fecal pollution and human health towards achieving sustainable development goals across India from ground-observations and satellite-derived nightlight",
+    "auteurs": "Mukherjee et al.",
+    "annee": 2019,
+    "editeur": "Scientific Reports (Nature)",
+    "url": "https://www.nature.com/articles/s41598-019-50875-w",
+    "geo": "Inde, 7 010 blocs administratifs, 1 726 233 mesures, 2002-2017",
+    "effet": "Correlation negative de -0,96 (p < 0,01) entre couverture en assainissement et coliformes fecaux dans les eaux souterraines ; coefficient de panel -0,035 (t = -4,365) ; les coliformes baissent de 2,56 %/an quand l'assainissement progresse de 2,63 %/an",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Deux reserves : l'analyse est ecologique, agregee au bloc administratif, et elle mesure la qualite de l'eau et non l'acces, alors que l'arete du modele vise l'acces a l'eau de boisson."
   },
   {
    "de": "mobile",
    "vers": "compte",
    "signe": 1,
-   "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "L'argent mobile est le premier compte financier des ménages ruraux : l'inclusion passe par le téléphone avant la banque.",
-   "ref_en": "Mobile money is the first financial account of rural households: inclusion runs through the phone before the bank.",
-   "rho": null,
-   "p": null
+   "force": 0.35,
+   "just": "empirique",
+   "ref_fr": "Dans neuf pays d'Afrique subsaharienne, rapprocher toute la population a moins de deux kilometres d'une antenne augmenterait l'inclusion financiere d'environ 2 %, jusqu'a 6 % au Mozambique.",
+   "ref_en": "Across nine sub-Saharan African countries, bringing everyone within two kilometres of a mobile tower would raise financial inclusion by about 2%, up to 6% in Mozambique.",
+   "src": {
+    "titre": "The impact of network coverage on adoption of Fintech and financial inclusion in sub-Saharan Africa",
+    "auteurs": "Mothobi, Onkokame et al.",
+    "annee": 2024,
+    "editeur": "Journal of Economic Structures (SpringerOpen)",
+    "url": "https://link.springer.com/article/10.1186/s40008-023-00326-7",
+    "geo": "Neuf pays d'Afrique subsaharienne (Ghana, Kenya, Mozambique, Nigeria, Rwanda, Senegal, Afrique du Sud, Tanzanie, Ouganda), 12 735 individus geolocalises",
+    "effet": "Simulation contrefactuelle : amener toute la population a moins de 2 km d'une antenne augmenterait l'inclusion financiere de 2 % en moyenne, 6 % au Mozambique, 3 % au Ghana, au Rwanda et au Senegal (probit de Heckman a deux etapes)",
+    "type": "observationnel"
+   },
+   "reserve_fr": "L'effet propre de la couverture est reel mais modeste, ce qui affaiblit la force 0,50 du modele : la couverture est une condition necessaire et non suffisante, et la donnee Findex de la Banque mondiale que j'ai aussi ouverte (28 % d'adultes avec un compte d'argent mobile en Afrique subsaharienne en 2022) ne dit rien du cas haitien, ou l'ecosysteme d'argent mobile est bien moins developpe."
   },
   {
    "de": "mobile",
    "vers": "revenu",
    "signe": 1,
-   "force": 0.35,
-   "just": "documentee",
-   "ref_fr": "L'accès à l'information de prix et aux transferts améliore le produit de la vente, sans transformer le volume produit.",
-   "ref_en": "Access to price information and to transfers improves the proceeds of a sale, without changing the volume produced.",
-   "rho": null,
-   "p": null
+   "force": 0.2,
+   "just": "empirique",
+   "ref_fr": "Au Niger, la couverture mobile réduit de 6 % la dispersion des prix du niébé mais n'élève significativement ni le prix moyen au producteur ni le prix reçu par l'agriculteur.",
+   "ref_en": "In Niger, mobile coverage cuts cowpea producer price dispersion by 6 percent but does not significantly raise average producer prices or farmer prices received.",
+   "src": {
+    "titre": "Mobile Phone Coverage and Producer Markets: Evidence from West Africa",
+    "auteurs": "Jenny C. Aker et Marcel Fafchamps",
+    "annee": 2014,
+    "editeur": "The World Bank Economic Review, 29(2), 262-292",
+    "url": "https://documents1.worldbank.org/curated/en/725781488374641004/pdf/112426-JRN-PUBLIC-WBER-2015-29-2-mobile-phone-coverage-and-producer-markets-evidence-from-west-africa.pdf",
+    "geo": "Niger (pays à faible revenu, Afrique de l'Ouest)",
+    "effet": "Dispersion spatiale des prix au producteur réduite de 6 % pour le niébé (p<0,01), mais aucun effet significatif sur le niveau moyen des prix reçus, ni pour le mil ni pour le sorgho",
+    "type": "quasi-experimental"
+   },
+   "conteste": true,
+   "reserve_fr": "CONTRADICTION : le modèle suppose un gain de revenu, mais la source la plus rigoureuse trouve un effet nul sur les prix reçus et un effet limité à une seule denrée semi-périssable, ce qui justifie de descendre la force à 0,20."
   },
   {
    "de": "mobile",
    "vers": "passerelle",
    "signe": 1,
-   "force": 0.35,
-   "just": "theorique",
-   "ref_fr": "Le téléphone entretient les liens hors du voisinage immédiat, qui sont précisément le capital de passerelle.",
-   "ref_en": "The phone maintains ties beyond the immediate neighbourhood, which is what bridging capital is.",
-   "rho": null,
-   "p": null
+   "force": 0.5,
+   "just": "documentee",
+   "ref_fr": "Au Kenya, un choc reduit la consommation de 7 % chez les non-utilisateurs de monnaie mobile, effet nul chez les utilisateurs, via des envoyeurs plus nombreux et plus divers.",
+   "ref_en": "In Kenya shocks cut consumption by 7% for non-users of mobile money but not for users, through more numerous and more diverse remittance senders.",
+   "src": {
+    "titre": "Risk Sharing and Transactions Costs: Evidence from Kenya's Mobile Money Revolution",
+    "auteurs": "William Jack, Tavneet Suri",
+    "annee": 2014,
+    "editeur": "American Economic Review",
+    "url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.104.1.183",
+    "geo": "Kenya (pays a faible revenu, pertinent pour Haiti)",
+    "effet": "Un choc reduit la consommation de 7 % chez les non-utilisateurs de M-PESA, effet nul chez les utilisateurs ; mecanisme : hausse des transferts recus et de la diversite des envoyeurs, identifiee par l'expansion x4 du reseau d'agents",
+    "type": "quasi-experimental"
+   },
+   "reserve_fr": "La source mesure le partage du risque et la diversite des envoyeurs, proxy du capital de passerelle mais pas sa mesure directe, et porte sur la monnaie mobile plutot que sur la simple couverture reseau ; page d'article ouverte (resume), texte integral non consulte."
   },
   {
    "de": "foncier",
    "vers": "agro_durable",
    "signe": 1,
-   "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "On ne plante un arbre que sur une terre qu'on est sûr de garder : la sécurité foncière est la condition des pratiques de long terme.",
-   "ref_en": "Nobody plants a tree on land they may lose: tenure security is the precondition of long-horizon practices.",
-   "rho": null,
-   "p": null
+   "force": 0.65,
+   "just": "empirique",
+   "ref_fr": "Une meta-analyse mondiale estime a 0,42 (IC 95 % : 0,11-0,72) l'effet agrege de la securite fonciere sur l'adoption des pratiques de conservation des sols et de l'eau.",
+   "ref_en": "A global meta-analysis estimates the pooled effect of land tenure security on adoption of soil and water conservation practices at 0.42 (95% CI 0.11-0.72).",
+   "src": {
+    "titre": "Is the relationship between agricultural performance and land tenure security uniform across the world? Evidence from meta-analysis",
+    "auteurs": "Mannepalli et al.",
+    "annee": 2026,
+    "editeur": "Frontiers in Sustainable Food Systems",
+    "url": "https://www.frontiersin.org/journals/sustainable-food-systems/articles/10.3389/fsufs.2026.1752236/full",
+    "geo": "Meta-analyse mondiale ; volet conservation portant sur Kenya, Ouganda, Bangladesh et Etats-Unis",
+    "effet": "Effet agrege de la securite fonciere sur les pratiques de conservation des sols et de l'eau : 0,42 (IC95% 0,11-0,72) sur 4 etudes, avec I2 = 95,3 % ; investissement agricole 0,14 (IC95% 0,06-0,23) ; productivite 0,32 (IC95% 0,14-0,42)",
+    "type": "meta-analyse"
+   },
+   "reserve_fr": "L'heterogeneite est extreme (I2 = 95,3 %) et le volet conservation ne repose que sur quatre etudes, aucune dans la Caraibe ; les auteurs concluent eux-memes que la relation est dependante du contexte, et une etude vietnamienne distincte ne trouve pas d'effet dissuasif de l'insecurite fonciere sur la plantation d'arbres."
   },
   {
    "de": "foncier",
    "vers": "ancrage",
    "signe": 1,
    "force": 0.35,
-   "just": "theorique",
-   "ref_fr": "Un droit d'usage incertain est un motif de départ parmi d'autres.",
-   "ref_en": "Uncertain land rights are one reason to leave among others.",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Au Mexique, la certification fonciere PROCEDE a augmente la migration : les menages certifies etaient 28 % plus susceptibles d'avoir un membre migrant.",
+   "ref_en": "In Mexico, PROCEDE land certification increased migration: certified households were 28% more likely to have a migrant household member.",
+   "src": {
+    "titre": "Delinking Land Rights from Land Use: Certification and Migration in Mexico",
+    "auteurs": "Alain de Janvry, Kyle Emerick, Marco Gonzalez-Navarro et Elisabeth Sadoulet",
+    "annee": 2015,
+    "editeur": "American Economic Review, 105(10), 3125-3149",
+    "url": "https://dl.tufts.edu/concern/pdfs/44558r864",
+    "geo": "Mexique, ejidos, deploiement echelonne du programme PROCEDE 1993-2006",
+    "effet": "Les menages ayant recu un certificat foncier sont 28 % plus susceptibles d'avoir un membre migrant",
+    "type": "quasi-experimental"
+   },
+   "conteste": true,
+   "reserve_fr": "CONTRADICTION DE SENS : la meilleure preuve quasi-experimentale disponible montre que securiser le foncier fait PARTIR davantage de gens, en detachant le droit de propriete de l'obligation d'exploiter la terre ; le signe positif du modele devrait etre reexamine, en tenant compte du fait que le regime ejidal mexicain n'est pas le regime foncier haitien."
   },
   {
    "de": "pluie",
    "vers": "prod_agri",
    "signe": 1,
    "force": 0.65,
-   "just": "documentee",
-   "ref_fr": "L'agriculture de la zone est pluviale : le rendement suit le cumul reçu, sans irrigation pour l'amortir.",
-   "ref_en": "Farming in the area is rainfed: yields follow the rainfall received, with no irrigation to buffer them.",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "La variabilite climatique explique environ un tiers, soit 32 a 39 pour cent, de la variabilite des rendements mondiaux, la pluie dominant dans les systemes non irrigues.",
+   "ref_en": "Climate variability explains roughly one third, 32 to 39 percent, of global crop yield variability, with rainfall dominant in non-irrigated systems.",
+   "src": {
+    "titre": "Climate variation explains a third of global crop yield variability",
+    "auteurs": "Deepak K. Ray et al.",
+    "annee": 2015,
+    "editeur": "Nature Communications",
+    "url": "https://www.nature.com/articles/ncomms6989",
+    "geo": "Mondial (mais, riz, ble, soja), la pluie dominant dans les systemes pluviaux",
+    "effet": "La variabilite climatique explique environ 32 a 39 % de la variabilite observee des rendements, la precipitation etant le facteur dominant en agriculture pluviale",
+    "type": "observationnel"
+   },
+   "reserve_fr": "Etude mondiale et non haitienne : le PAM rapporte pour la recolte 2015 en Haiti des pertes allant jusqu'a 70 pour cent dans certaines zones apres trois annees deficitaires, chiffre coherent mais non controle."
   },
   {
    "de": "pluie",
    "vers": "infiltration",
    "signe": 1,
-   "force": 0.5,
-   "just": "theorique",
-   "ref_fr": "La recharge dépend d'abord de ce qui tombe, ensuite de ce que le sol peut absorber.",
-   "ref_en": "Recharge depends first on what falls, then on what the soil can take.",
-   "rho": null,
-   "p": null
+   "force": 0.65,
+   "just": "empirique",
+   "ref_fr": "Au Benin, la recharge des nappes represente environ 4 %, 13 % ou 40 % de la pluie annuelle selon l'aquifere, avec des correlations de 0,80 a 0,97.",
+   "ref_en": "In Benin, groundwater recharge amounts to roughly 4, 13 or 40 percent of annual rainfall depending on the aquifer, with correlations of 0.80 to 0.97.",
+   "src": {
+    "titre": "Relationships between rainfall and groundwater recharge in seasonally humid Benin: a comparative analysis of long-term hydrographs in sedimentary and crystalline aquifers",
+    "auteurs": "Kotchoni et al.",
+    "annee": 2019,
+    "editeur": "Hydrogeology Journal (Springer)",
+    "url": "https://link.springer.com/article/10.1007/s10040-018-1806-2",
+    "geo": "Benin, Afrique de l'Ouest, climat tropical a saisons contrastees (pays a faible revenu)",
+    "effet": "La recharge represente environ 40 % de la pluie annuelle sur sables quaternaires, 13 % sur gres mio-pliocenes et 4 % sur socle cristallin ; relations lineaires avec r = 0,80 a 0,97 et seuils de 140 a 250 mm/an",
+    "type": "observationnel"
+   },
+   "reserve_fr": "La correlation avec la pluie est tres forte, mais le facteur multiplicatif varie d'un facteur dix selon le substrat, ce qui confirme la seconde moitie de l'affirmation ; les aquiferes karstiques calcaires du Sud et de la Grand'Anse different de ceux du Benin, d'ou une transferabilite seulement partielle."
   },
   {
    "de": "pluie",
    "vers": "eau",
    "signe": 1,
-   "force": 0.35,
-   "just": "theorique",
-   "ref_fr": "Sources et citernes dépendent du cumul reçu, avec un décalage.",
-   "ref_en": "Springs and cisterns depend on the rainfall received, with a lag.",
-   "rho": null,
-   "p": null
+   "force": 0.5,
+   "just": "empirique",
+   "ref_fr": "Sur pres d'un million de menages africains, un centimetre de pluie hebdomadaire supplementaire reduit de 3,5 minutes le temps de marche necessaire pour aller chercher l'eau.",
+   "ref_en": "Across nearly a million African households, one extra centimetre of weekly rainfall cut the walking time to fetch water by 3.5 minutes.",
+   "src": {
+    "titre": "Temperature and precipitation affect the water fetching time burden in Sub-Saharan Africa",
+    "auteurs": "Paulos et al.",
+    "annee": 2025,
+    "editeur": "Nature Communications, vol. 16, article 3486",
+    "url": "https://www.nature.com/articles/s41467-025-58780-9",
+    "geo": "31 pays d'Afrique subsaharienne, 979 759 observations de menages, 1990-2017",
+    "effet": "Une hausse de 1 cm des pluies hebdomadaires sur l'annee ecoulee reduit de 3,5 minutes le temps de marche pour aller chercher l'eau ; 1 cm de pluie quotidienne reduit ce temps de 0,2 minute sur sept jours",
+    "type": "quasi-experimental"
+   },
+   "reserve_fr": "L'effet est reel mais modere et deux fois plus faible la ou existent des infrastructures d'eau amelioree ; il porte sur le temps de collecte, proxy de l'acces, et provient d'Afrique subsaharienne plutot que des Caraibes."
   },
   {
    "de": "logement",
    "vers": "securite",
    "signe": 1,
    "force": 0.35,
-   "just": "theorique",
-   "ref_fr": "Un logement fermé et solide protège des intrusions comme des intempéries.",
-   "ref_en": "A sound, lockable dwelling protects against intrusion as well as weather.",
-   "rho": null,
-   "p": null
+   "just": "empirique",
+   "ref_fr": "Au Salvador, un essai randomise de rehabilitation du logement augmente de 18 points le sentiment de securite chez soi, sans effet au Mexique ni en Uruguay.",
+   "ref_en": "In El Salvador a randomised housing upgrade raised the share feeling safe inside the home by 18 percentage points, with no effect in Mexico or Uruguay.",
+   "src": {
+    "titre": "Slum Housing Upgrading in El Salvador, Mexico, and Uruguay",
+    "auteurs": "Cooper, Ryan; Galiani, Sebastian; Gertler, Paul; Martinez, Sebastian; Undurraga, Raimundo",
+    "annee": 2012,
+    "editeur": "J-PAL (Abdul Latif Jameel Poverty Action Lab)",
+    "url": "https://www.povertyactionlab.org/evaluation/slum-housing-upgrading-el-salvador-mexico-and-uruguay",
+    "geo": "Salvador, Mexique et Uruguay (quartiers informels d'Amerique latine), travail de terrain 2010-2012",
+    "effet": "Salvador : +18 points de pourcentage de personnes se sentant en securite chez elles, +16 points pour sortir seules, +14 points pour laisser les enfants seuls ; satisfaction du logement +15 points (soit +29 %) sur les trois pays ; aucun effet sur la securite au Mexique ni en Uruguay",
+    "type": "essai randomise"
+   },
+   "reserve_fr": "Effet nul dans deux pays sur trois : le lien n'apparait que la ou l'insecurite de depart est elevee, ce qui rapproche le cas salvadorien du contexte haitien mais impose de garder une force basse ; l'intervention testee est un remplacement complet du logement, pas une amelioration structurelle marginale."
   },
   {
    "de": "etat_civil",
    "vers": "education",
    "signe": 1,
-   "force": 0.5,
-   "just": "documentee",
-   "ref_fr": "L'inscription et le passage des examens exigent l'acte de naissance : sans lui, la scolarité s'arrête avant le certificat.",
-   "ref_en": "Enrolment and sitting exams require the birth certificate: without it schooling stops before the leaving certificate.",
-   "rho": null,
-   "p": null
+   "force": 0.65,
+   "just": "empirique",
+   "ref_fr": "En République dominicaine, ne pas avoir d'acte de naissance abaisse de 20 à 40 points la probabilité d'achever le premier cycle du primaire, selon une estimation par variables instrumentales.",
+   "ref_en": "In the Dominican Republic, lacking a birth certificate lowers the probability of completing the first primary cycle by 20 to 40 percentage points, estimated with instrumental variables.",
+   "src": {
+    "titre": "Birth Registration and the Impact on Educational Attainment",
+    "auteurs": "Ana Corbacho, Steve Brito et René Osorio Rivas",
+    "annee": 2012,
+    "editeur": "Banque interaméricaine de développement, IDB Working Paper Series No. IDB-WP-345",
+    "url": "https://publications.iadb.org/publications/english/document/Birth-Registration-and-the-Impact-on-Educational-Attainment.pdf",
+    "geo": "République dominicaine (Caraïbes, pays voisin d'Haïti)",
+    "effet": "L'absence d'acte de naissance réduit de 20 à 40 points de pourcentage la probabilité d'achever le premier cycle du primaire et de 0,5 à 0,9 année le nombre de classes atteintes",
+    "type": "quasi-experimental"
+   },
+   "reserve_fr": "Source caribéenne, donc très transférable à Haïti, mais elle montre aussi que l'entrée à l'école n'est pas bloquée : le verrou porte sur l'achèvement et les examens, ce qui correspond bien à la variable cible."
   }
  ],
  "bareme": {
@@ -1258,8 +1977,8 @@
    {
     "cle": "empirique",
     "max": 0.8,
-    "fr": "Empirique — association mesurée sur les données de l'enquête ou les séries satellitaires.",
-    "en": "Empirical — association measured on the survey or satellite series."
+    "fr": "Empirique — taille d'effet mesurée dans une source ouverte et vérifiée.",
+    "en": "Empirical — effect size measured in a source that was opened and checked."
    },
    {
     "cle": "documentee",
@@ -1280,5 +1999,13 @@
     "en": "Hypothesis — posed by the model, to confirm or drop."
    }
   ]
+ },
+ "preuves": {
+  "date": "2026-08-26",
+  "methode_fr": "Chaque lien a été recherché sur le web, la source ouverte et vérifiée, et sa taille d'effet relevée. Les liens sans source vérifiable le disent.",
+  "methode_en": "Every link was searched on the web, the source opened and checked, and its effect size recorded. Links with no verifiable source say so.",
+  "n_verifiees": 79,
+  "n_sans_source": 3,
+  "n_contestees": 8
  }
 }
