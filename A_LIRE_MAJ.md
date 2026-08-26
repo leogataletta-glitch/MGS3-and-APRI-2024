@@ -124,6 +124,40 @@ panne.
 
 ---
 
+## L'ergonomie de « Si je change une chose » : on tourne les pages
+
+Le contenu ne se déroule plus, il se tourne. La page est découpée en quatre
+écrans, chacun tenant sur une hauteur d'écran :
+
+1. **Ce qui bouge, et de combien** — les commandes et le tableau.
+2. **Ce que valent les degrés** — les cinq seuils et ce qu'ils veulent dire.
+3. **D'où vient ce chiffre** — les tours, la chaîne, la source.
+4. **D'où viennent les forces** — le barème, les classes, la réserve.
+
+En bas : le titre de l'écran, quatre traits de position dont un seul est plein,
+le compteur, et deux flèches. Au changement d'écran, le contenu entre par un
+fondu de 340 ms avec un léger glissement vers le haut. Techniquement, la clé du
+conteneur Streamlit change avec le numéro d'écran, donc le nœud du DOM est neuf
+et l'animation rejoue d'elle-même ; sans ce changement de clé, React réutilise
+le même nœud et le fondu ne se voit qu'une fois.
+
+Les commandes (quelle variable, de combien) restent au-dessus de la pagination,
+visibles sur les quatre écrans : les répéter aurait chargé la page de ce qu'elle
+cherche à alléger.
+
+**Une réserve.** Les écrans 1 et 2 tiennent exactement sur une hauteur d'écran.
+Les écrans 3 et 4 dépassent d'environ 180 et 280 pixels sur un écran de
+1000 pixels de haut : le paragraphe des sources et le barème à cinq échelons
+sont longs par nature. Il faudrait les couper en deux écrans de plus pour
+supprimer tout défilement. Dis-moi si tu veux que j'y aille.
+
+**C'est un essai, sur une seule page.** Si la mécanique te plaît, elle se
+transpose aux autres pages longues (Rapport donateur, Boucles de rétroaction,
+Analyse des résultats), et le code de pagination peut monter dans `app.py` pour
+servir à tout le site.
+
+---
+
 ## Ce qui reste ouvert, et qui demande ta décision
 
 1. **Les 8 flèches contredites.** Faut-il en retourner certaines ? Elles sont

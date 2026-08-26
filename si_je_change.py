@@ -256,6 +256,12 @@ TEXTES = {
               "change pas ; les montants deviennent lisibles. Et le modèle "
               "reste une construction d'expert, pas une estimation faite sur "
               "cette enquête."},
+
+    # ---- la pagination
+    "sc_pg_prec": {"en": "Previous", "fr": "Précédent"},
+    "sc_pg_suiv": {"en": "Next", "fr": "Suivant"},
+    "sc_pg_de": {"en": "{a} of {b}", "fr": "{a} sur {b}"},
+    "sc_pg_fin": {"en": "End of the page.", "fr": "Fin de la page."},
 }
 for _c, _v in TEXTES.items():
     i18n.DICO.setdefault(_c, _v)
@@ -361,6 +367,55 @@ STYLE = """
   .sc-b b { font-variant-numeric:tabular-nums; font-weight:800;
             color:#101728; }
   .sc-b span { color:#3c4761; line-height:1.5; }
+  /* ---------------------------------------------------------- LA PAGINATION
+     Le contenu ne se déroule plus, il se tourne. Chaque écran est un
+     conteneur Streamlit dont la CLÉ change avec le numéro de page : le nœud
+     du DOM est donc neuf à chaque tour, et l'animation rejoue d'elle-même.
+     Sans ce changement de clé, React réutiliserait le même nœud et le fondu
+     ne se verrait qu'une fois. */
+  @keyframes scFondu {
+    from { opacity:0; transform:translateY(6px); }
+    to   { opacity:1; transform:none; }
+  }
+  div[class*="st-key-sc_ecran_"] { animation:scFondu .34s cubic-bezier(.22,.61,.36,1) both; }
+  /* le pied de page : titre de l'écran à gauche, les deux flèches à droite */
+  /* LE PIED TIENT SUR UNE SEULE RANGÉE. Les traits de position étaient
+     d'abord sur leur propre ligne, sous le titre ; le bloc des boutons, qui
+     est un conteneur Streamlit distinct, remontait par-dessus et les coupait
+     en deux. Rangés dans la même rangée que le titre, ils ne peuvent plus
+     être recouverts. */
+  .sc-pied { display:flex; align-items:center; gap:16px; margin:26px 0 11px;
+             padding-top:13px; border-top:1px solid #eef2f7; }
+  .sc-pied .ti { font-size:12.5px; color:#3c4761; font-weight:600; }
+  .sc-pied .nb { font-size:11.5px; color:#9aa4b5;
+                 font-variant-numeric:tabular-nums; letter-spacing:.03em; }
+  /* les traits de position, sobres : un trait plein pour l'écran courant */
+  .sc-puces { display:flex; gap:6px; margin-left:auto; }
+  .sc-puces i { display:block; width:26px; height:2px; border-radius:1px;
+                background:#e3e9f1; transition:background .25s; }
+  .sc-puces i.on { background:#1a8a4f; }
+  /* les boutons de tour de page : du texte, pas des pavés */
+  /* LES DÉCLARATIONS SONT FORCÉES. Le thème global de l'application impose
+     aux boutons une taille de police et une hauteur minimale plus fortes en
+     spécificité que ce sélecteur ; sans !important, les deux flèches se
+     dessinaient en pavés de quatre-vingts pixels de haut. */
+  div[class*="st-key-sc_nav_"] .stButton > button {
+      background:none !important; border:1px solid #e3e9f1 !important;
+      border-radius:7px !important; color:#3c4761 !important;
+      font-size:12.5px !important; font-weight:600 !important;
+      padding:6px 14px !important; min-height:0 !important;
+      height:auto !important; line-height:1.25 !important;
+      box-shadow:none !important; white-space:nowrap;
+      transition:border-color .2s, color .2s; }
+  div[class*="st-key-sc_nav_"] .stButton > button p {
+      font-size:12.5px !important; font-weight:600 !important;
+      line-height:1.25 !important; margin:0 !important; }
+  div[class*="st-key-sc_nav_"] .stButton > button:hover:not(:disabled),
+  div[class*="st-key-sc_nav_"] .stButton > button:hover:not(:disabled) p {
+      border-color:#1a8a4f !important; color:#1a8a4f !important; }
+  div[class*="st-key-sc_nav_"] .stButton > button:disabled,
+  div[class*="st-key-sc_nav_"] .stButton > button:disabled p {
+      color:#c3cad6 !important; border-color:#f1f4f8 !important; }
   @media (max-width:900px){
     .sc-dg{grid-template-columns:repeat(2,1fr)}
     .sc-r{grid-template-columns:1fr 62px 96px}
@@ -462,8 +517,14 @@ def _chemins(m, source, cible):
 
 
 # ------------------------------------------------------------------ l'affichage
-def _tableau(m, total, tours, source):
-    """Tout ce qui bouge, trié par ampleur, avec son degré et son tour."""
+def _tableau(m, total, tours, source, calcule_seulement=False):
+    """Tout ce qui bouge, trié par ampleur, avec son degré et son tour.
+
+    `calcule_seulement` sert au sommaire de la pagination : il faut savoir
+    combien de variables bougent pour décider du nombre d'écrans, et cela
+    avant d'avoir choisi lequel afficher. Sans ce drapeau, le tableau se
+    dessinerait deux fois, ou en haut d'un écran auquel il n'appartient pas.
+    """
     ids = m["ids"]
     lignes = []
     for i, nid in enumerate(ids):
@@ -477,8 +538,8 @@ def _tableau(m, total, tours, source):
         lignes.append({"id": nid, "nom": m["noms"][nid],
                        "eff": float(total[i]), "tour": tour})
     lignes.sort(key=lambda x: -abs(x["eff"]))
-    if not lignes:
-        return []
+    if not lignes or calcule_seulement:
+        return lignes
 
     maxi = max(abs(x["eff"]) for x in lignes)
     st.markdown(
@@ -656,7 +717,51 @@ def _bareme(m):
 
 
 # ------------------------------------------------------------------ la page
+def _pied(page, titres, cle):
+    """Le pied de page : où l'on est, et les deux flèches pour tourner.
+
+    LE NUMÉRO D'ÉCRAN VIT DANS session_state, PAS DANS UNE VARIABLE. Streamlit
+    réexécute le module entier à chaque clic ; une variable locale serait
+    remise à zéro avant même d'avoir servi. La clé porte la langue, sans quoi
+    passer du français à l'anglais ramènerait le lecteur au premier écran.
+    """
+    n = len(titres)
+    st.markdown(
+        f'<div class="sc-pied"><span class="ti">{_e(titres[page])}</span>'
+        '<span class="sc-puces">'
+        + "".join(f'<i class="{"on" if k == page else ""}"></i>'
+                  for k in range(n))
+        + '</span>'
+        f'<span class="nb">{_e(T("sc_pg_de", a=page + 1, b=n))}</span>'
+        '</div>', unsafe_allow_html=True)
+
+    with st.container(key=f"sc_nav_{cle}"):
+        g, d, _ = st.columns([1, 1, 7], gap="small")
+        with g:
+            if st.button(f'← {T("sc_pg_prec")}', key=f"sc_prec_{cle}",
+                         disabled=page == 0, use_container_width=True):
+                st.session_state[cle] = page - 1
+                st.rerun()
+        with d:
+            if st.button(f'{T("sc_pg_suiv")} →', key=f"sc_suiv_{cle}",
+                         disabled=page >= n - 1, use_container_width=True):
+                st.session_state[cle] = page + 1
+                st.rerun()
+
+
 def render(entete=True):
+    """La page, tournée écran par écran plutôt que déroulée.
+
+    POURQUOI PAGINER PLUTÔT QUE DÉROULER. La page dit quatre choses de nature
+    différente : ce qui bouge, ce que valent les degrés, d'où vient un chiffre
+    donné, et sur quoi tout cela repose. Déroulées à la file, elles obligeaient
+    le lecteur à descendre pour retrouver le tableau qu'il venait de quitter.
+    Tournées, chacune tient sur un écran et se lit pour elle-même.
+
+    LES COMMANDES RESTENT SUR LE PREMIER ÉCRAN. Les remettre sur chaque écran
+    aurait chargé la page de ce qu'elle cherche justement à alléger : on choisit
+    sa variable, puis on lit ce qui suit.
+    """
     st.markdown(STYLE, unsafe_allow_html=True)
     lang = i18n.get_lang()
     m = _modele(lang)
@@ -666,11 +771,11 @@ def render(entete=True):
 
     if entete:
         st.title(T("mode_levier"))
-    st.markdown(f'<div class="sc-h">{_e(T("sc_titre"))}</div>'
-                f'<p class="sc-x">{_e(T("sc_intro"))}</p>',
-                unsafe_allow_html=True)
 
-    # --- les commandes
+    cle = f"sc_ecran_{lang}"
+    page = int(st.session_state.get(cle, 0))
+
+    # --- les commandes, une fois pour toutes, au-dessus de la pagination
     choix = sorted(m["ids"], key=lambda i_: m["noms"][i_])
     g, d = st.columns([1.4, 1], gap="large")
     with g:
@@ -690,26 +795,52 @@ def render(entete=True):
         return
 
     total, tours, reste = _propager(m, source, delta)
-    st.caption(T("sc_pose", n=m["noms"][source], d=_f(delta, 1, True)))
+    lignes = _tableau(m, total, tours, source, calcule_seulement=True)
 
-    # --- ce qui bouge
-    st.markdown(f'<div class="sc-h">{_e(T("sc_liste_t"))}</div>',
+    # LE SOMMAIRE DES ÉCRANS. Quand rien ne bouge assez pour être listé, les
+    # deux écrans qui expliquent un chiffre n'ont plus d'objet : on les retire
+    # plutôt que d'afficher deux pages vides que le lecteur devra tourner.
+    titres = [T("sc_liste_t"), T("sc_deg_t")]
+    if lignes:
+        titres += [T("sc_pourquoi_t"), T("sc_bareme_t")]
+    page = max(0, min(page, len(titres) - 1))
+
+    with st.container(key=f"sc_ecran_{lang}_{page}"):
+        if page == 0:
+            _ecran_liste(m, total, tours, source, delta, lignes)
+        elif page == 1:
+            _ecran_degres()
+        elif page == 2:
+            _ecran_pourquoi(m, total, tours, reste, source, delta, lignes,
+                            lang)
+        else:
+            _ecran_forces(m)
+
+    _pied(page, titres, cle)
+
+
+def _ecran_liste(m, total, tours, source, delta, lignes):
+    """Écran 1 — ce qui bouge, et de combien."""
+    st.markdown(f'<div class="sc-h">{_e(T("sc_titre"))}</div>'
+                f'<p class="sc-x">{_e(T("sc_intro"))}</p>',
                 unsafe_allow_html=True)
-    lignes = _tableau(m, total, tours, source)
+    st.caption(T("sc_pose", n=m["noms"][source], d=_f(delta, 1, True)))
+    _tableau(m, total, tours, source)
     st.markdown(f'<p class="sc-x" style="margin-top:8px">'
                 f'{_e(T("sc_liste_x", k=len(lignes), n=len(m["ids"])))}</p>',
                 unsafe_allow_html=True)
 
-    # --- les degrés
+
+def _ecran_degres():
+    """Écran 2 — ce que valent les degrés, et pourquoi ces seuils."""
     st.markdown(f'<div class="sc-h">{_e(T("sc_deg_t"))}</div>'
                 f'<p class="sc-x">{_e(T("sc_deg_x"))}</p>',
                 unsafe_allow_html=True)
     _legende_degres()
 
-    if not lignes:
-        return
 
-    # --- l'explication d'un chiffre
+def _ecran_pourquoi(m, total, tours, reste, source, delta, lignes, lang):
+    """Écran 3 — d'où vient un chiffre : les tours, la chaîne, la source."""
     st.markdown(f'<div class="sc-h">{_e(T("sc_pourquoi_t"))}</div>',
                 unsafe_allow_html=True)
     cibles = [x["id"] for x in lignes]
@@ -733,7 +864,9 @@ def render(entete=True):
         st.markdown(f'<p class="sc-x">{_e(T("sc_aucun"))}</p>',
                     unsafe_allow_html=True)
 
-    # --- comment les liens ont été vérifiés
+
+def _ecran_forces(m):
+    """Écran 4 — comment les liens ont été vérifiés, et ce que vaut le tout."""
     pr = m["preuves"]
     if pr:
         st.markdown(
@@ -741,13 +874,11 @@ def render(entete=True):
             f'<p class="sc-x">{_e(T("sc_preuves_x", t=len(m["aretes"]), v=pr.get("n_verifiees"), s=pr.get("n_sans_source"), c=pr.get("n_contestees")))}</p>',
             unsafe_allow_html=True)
 
-    # --- d'où viennent les forces
     st.markdown(f'<div class="sc-h">{_e(T("sc_bareme_t"))}</div>'
                 f'<p class="sc-x">{_e(T("sc_bareme_x"))}</p>',
                 unsafe_allow_html=True)
     _bareme(m)
 
-    # --- la réserve
     st.markdown(f'<div class="sc-h">{_e(T("sc_mise_t"))}</div>'
                 f'<p class="sc-x">{_e(T("sc_mise_x", r=_f(m["diag"]["rayon"], 2), f=_f(m["diag"]["facteur"], 2)))}</p>',
                 unsafe_allow_html=True)
