@@ -163,15 +163,16 @@ TEXTES = {
     "bcl_j_theorique_x": {"en": "Derived from the IRLA framework",
                           "fr": "Dérivée du cadre IRLA"},
     "bcl_j_empirique": {"en": "Empirical", "fr": "Empirique"},
-    "bcl_j_empirique_x": {"en": "Supported by an observation in this survey",
-                          "fr": "Appuyée par une observation de cette enquête"},
+    "bcl_j_empirique_x": {"en": "Effect size measured in a source that was "
+                                "opened and checked",
+                          "fr": "Taille d'effet mesurée dans une source "
+                                "ouverte et vérifiée"},
     "bcl_j_hypothese": {"en": "Modelling assumption",
                         "fr": "Hypothèse de modélisation"},
     "bcl_j_hypothese_x": {"en": "Posed by the model, to be discussed in "
                                 "workshop",
                           "fr": "Posée par le modèle, à discuter en atelier"},
-    "bcl_obs": {"en": "Observed between sections",
-                "fr": "Observé entre sections"},
+    "bcl_obs": {"en": "Source", "fr": "Source"},
     "bcl_obs_note": {
         "en": "Spearman correlation of the two indicators' scores across the "
               "ten communal sections. TEN POINTS IS ALMOST NO STATISTICAL "
@@ -277,10 +278,17 @@ TEXTES = {
               "le classement des indicateurs touchés, pas le nombre de "
               "points."},
     "bcl_diverge": {
-        "en": "The model no longer converges, a relation has been made too "
-              "strong. The figures below are not usable.",
-        "fr": "Le modèle ne converge plus, une relation a été rendue trop "
-              "forte. Les chiffres ci-dessous ne sont pas exploitables."},
+        "en": "Written as they stand, the strengths give the graph a spectral "
+              "radius above 1: the raw system would run away. This is a "
+              "property of the model, not a display fault, and it is exactly "
+              "why every strength is rescaled before propagating. Read the "
+              "direction and the ranking, not the number of points.",
+        "fr": "Écrites telles quelles, les forces donnent au graphe un rayon "
+              "spectral supérieur à 1 : le système brut s'emballerait. C'est "
+              "une propriété du modèle, pas un défaut d'affichage, et c'est "
+              "précisément pourquoi chaque force est mise à l'échelle avant "
+              "de propager. Lisez le sens et le classement, pas le nombre de "
+              "points."},
 }
 for _c, _v in TEXTES.items():
     i18n.DICO.setdefault(_c, _v)
@@ -539,7 +547,10 @@ def render(entete=True):
     # tout ce qui suit.
     st.info(T("bcl_avertissement"))
     if not diag["converge"]:
-        st.error(T("bcl_diverge"))
+        # UN AVERTISSEMENT, PAS UNE ERREUR. Le graphe brut dépasse 1 depuis que
+        # les forces sont sourcées, et la mise à l'échelle le ramène à 0,60 :
+        # les chiffres affichés restent ceux du système amorti, donc lisibles.
+        st.warning(T("bcl_diverge"))
 
     # ---- le clic sur un nœud arrive par l'URL
     ids = [n["id"] for n in graphe["noeuds"]]
@@ -831,9 +842,17 @@ def render(entete=True):
         for e in sorted(graphe["aretes"],
                         key=lambda x: (x["just"], -x["force"])):
             c = JUST_COULEUR.get(e["just"], "#9aa4b5")
-            rho = e.get("rho")
-            contre = rho is not None and rho * e["signe"] < -0.3
-            obs = ("—" if rho is None else _fmt(rho, 2, True))
+            # LA COLONNE DIT MAINTENANT LA SOURCE, PAS UNE CORRÉLATION.
+            # Elle affichait un rho calculé sur dix moyennes de section, sans
+            # puissance et sans signification ; elle affiche désormais l'année
+            # et l'éditeur de la source ouverte, avec son lien.
+            src = e.get("src") or {}
+            contre = bool(e.get("conteste"))
+            obs = (f'<a href="{src["url"]}" target="_blank" '
+                   f'style="color:{ENCRE2};text-decoration:none;'
+                   f'border-bottom:1px solid #dbe3ee">'
+                   f'{_e(str(src.get("annee") or ""))}</a>'
+                   if src.get("url") else "—")
             lignes.append(
                 f'<div style="display:grid;grid-template-columns:'
                 f'9px minmax(210px,2.4fr) 3fr 74px;gap:11px;align-items:center;'

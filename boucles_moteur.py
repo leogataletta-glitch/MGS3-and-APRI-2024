@@ -437,20 +437,23 @@ def effet_indice(graphe, effets, variations, scores_par_ligne):
 
 
 def desaccords(graphe):
-    """Relations où l'association observée contredit le signe du modèle.
+    """Relations dont la littérature vérifiée contredit le sens du modèle.
 
-    Ce n'est pas une anomalie à cacher : c'est le meilleur rappel qu'une
-    relation posée par un cadre théorique n'est pas une relation démontrée sur
-    ce territoire. Sur dix sections communales, une corrélation n'a de toute
-    façon presque aucune puissance — elle ne réfute pas le modèle, elle invite
-    à en discuter en atelier.
+    CE N'EST PAS UNE ANOMALIE À CACHER, c'est le résultat le plus utile de la
+    vérification des sources. Ces relations ont été posées dans un sens par le
+    cadre, et la meilleure source trouvée dit l'inverse : la certification
+    foncière au Mexique a fait PARTIR davantage de monde, la hausse des
+    rendements agricoles s'accompagne de PLUS de déforestation sous les
+    tropiques. Le modèle n'est pas corrigé en silence, parce que retourner une
+    flèche est une décision de modélisation qui appartient à l'équipe : la
+    contradiction est signalée, et le lecteur en juge.
+
+    L'ancienne version de cette fonction comparait le signe du modèle à une
+    corrélation calculée sur les dix moyennes de section. À n = 10, une
+    corrélation n'a presque aucune puissance, et ces coefficients ont été
+    retirés du fichier plutôt que d'être présentés comme des preuves.
     """
-    out = []
-    for e in graphe["aretes"]:
-        rho = e.get("rho")
-        if rho is not None and rho * e["signe"] < -0.3:
-            out.append(e)
-    return sorted(out, key=lambda e: e["rho"] * e["signe"])
+    return [e for e in graphe["aretes"] if e.get("conteste")]
 
 def sous_type(boucle, sens):
     """R+ / R− / B+ / B−, selon la typologie du complément méthodologique.

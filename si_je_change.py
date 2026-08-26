@@ -178,6 +178,36 @@ TEXTES = {
                        "par plusieurs à la fois."},
     "sc_lien_force": {"en": "force", "fr": "force"},
     "sc_lien_sur": {"en": "Rests on", "fr": "Repose sur"},
+    "sc_geo": {"en": "Study in {g}.", "fr": "Étude portant sur {g}."},
+    "sc_ouvrir": {"en": "open the source", "fr": "ouvrir la source"},
+    "sc_reserve": {"en": "Caveat", "fr": "Réserve"},
+    "sc_conteste": {
+        "en": "The source contradicts the direction of this arrow. It is "
+              "flagged rather than silently flipped: turning an arrow round "
+              "is a modelling decision, not a correction.",
+        "fr": "La source contredit le sens de cette flèche. Elle est signalée "
+              "plutôt que retournée en silence : retourner une flèche est une "
+              "décision de modélisation, pas une correction."},
+    "sc_sans_src": {
+        "en": "No verifiable source was found for this link. It is kept, "
+              "capped, and says so.",
+        "fr": "Aucune source vérifiable n'a été trouvée pour ce lien. Il est "
+              "conservé, plafonné, et le dit."},
+    "sc_preuves_t": {"en": "How these links were checked",
+                     "fr": "Comment ces liens ont été vérifiés"},
+    "sc_preuves_x": {
+        "en": "Each of the {t} links in the model was searched on the web, "
+              "its source opened and read, and its effect size recorded. "
+              "{v} carry a source that was actually opened. {s} carry none, "
+              "and say so. And on {c} of them the source contradicts the "
+              "direction of the arrow: those are flagged where they appear, "
+              "not quietly turned round.",
+        "fr": "Chacun des {t} liens du modèle a été cherché sur le web, sa "
+              "source ouverte et lue, et sa taille d'effet relevée. {v} "
+              "portent une source réellement ouverte. {s} n'en portent "
+              "aucune, et le disent. Et sur {c} d'entre eux la source "
+              "contredit le sens de la flèche : ceux-là sont signalés là où "
+              "ils apparaissent, pas retournés en douce."},
     "sc_renforce": {"en": "raises", "fr": "renforce"},
     "sc_diminue": {"en": "lowers", "fr": "diminue"},
 
@@ -301,6 +331,12 @@ STYLE = """
   .sc-src { font-size:11.5px; color:#6b7590; line-height:1.55;
             border-left:2px solid #e3eaf3; padding:1px 0 1px 11px;
             margin:4px 0 0; }
+  .sc-ref  { color:#8a93a5; font-size:11px; line-height:1.5; }
+  .sc-a    { color:#2166ac; text-decoration:none;
+             border-bottom:1px solid #cfdcec; }
+  .sc-res  { color:#8a93a5; font-size:11px; font-style:italic;
+             line-height:1.5; }
+  .sc-att  { color:#c33a24; font-weight:700; font-size:11.5px; }
   .sc-cal { max-width:880px; font-size:13px; color:#101728; background:#f7f9fc;
             border:1px solid #eef2f7; border-radius:11px;
             padding:11px 14px; margin-top:9px;
@@ -338,13 +374,16 @@ def _modele(lang):
     for e in g["aretes"]:
         aretes[(e["de"], e["vers"])] = {
             "signe": e["signe"], "force": e["force"], "just": e.get("just"),
-            "ref": e.get("ref_" + lang) or e.get("ref_fr")}
+            "ref": e.get("ref_" + lang) or e.get("ref_fr"),
+            "src": e.get("src"), "reserve": e.get("reserve_fr"),
+            "conteste": bool(e.get("conteste"))}
     sortants = {}
     for (u, v) in aretes:
         sortants.setdefault(u, []).append(v)
     return {"g": g, "A": A, "ids": ids, "idx": idx, "noms": noms,
             "aretes": aretes, "sortants": sortants,
-            "diag": M.diagnostic(g), "bareme": g.get("bareme") or {}}
+            "diag": M.diagnostic(g), "bareme": g.get("bareme") or {},
+            "preuves": g.get("preuves") or {}}
 
 
 def _propager(m, source, delta):
@@ -512,18 +551,45 @@ def _chaine(m, chemin, produit, delta, total_cible):
 
     # LES SOURCES, SOUS LA CHAÎNE. Une force affichée sans ce qui la fonde est
     # un chiffre posé d'autorité, et c'est exactement ce que cette page refuse.
+    # Chaque lien montre donc la source réellement ouverte : son titre, ses
+    # auteurs, son éditeur, le pays de l'étude, le type de preuve, la taille
+    # d'effet relevée, un lien cliquable, et la réserve qui va avec. Quand la
+    # littérature contredit le sens de la flèche, la page le dit en premier.
     st.markdown(f'<div class="sc-lab">{_e(T("sc_lien_sur"))}</div>',
                 unsafe_allow_html=True)
     for a, b in zip(chemin, chemin[1:]):
         e = m["aretes"][(a, b)]
         cls = T("bcl_j_" + str(e["just"])) if e.get("just") else ""
         verbe = T("sc_renforce") if e["signe"] > 0 else T("sc_diminue")
-        st.markdown(
-            f'<p class="sc-src"><b>{_e(m["noms"][a])}</b> {_e(verbe)} '
-            f'<b>{_e(m["noms"][b])}</b>'
-            + (f' · {_e(cls)}' if cls else "")
-            + (f'<br>{_e(e["ref"])}' if e.get("ref") else "")
-            + '</p>', unsafe_allow_html=True)
+        src = e.get("src") or {}
+        bloc = [f'<p class="sc-src"><b>{_e(m["noms"][a])}</b> {_e(verbe)} '
+                f'<b>{_e(m["noms"][b])}</b>'
+                + (f' · {_e(cls)}' if cls else "")]
+        if e.get("conteste"):
+            bloc.append(f'<br><span class="sc-att">{_e(T("sc_conteste"))}</span>')
+        if e.get("ref"):
+            bloc.append(f'<br>{_e(e["ref"])}')
+        if src.get("titre"):
+            ligne = ", ".join(x for x in (src.get("auteurs"),
+                                          str(src.get("annee") or ""),
+                                          src.get("editeur")) if x)
+            bloc.append(f'<br><span class="sc-ref">{_e(src["titre"])}. '
+                        f'{_e(ligne)}.')
+            if src.get("geo"):
+                bloc.append(f' {_e(T("sc_geo", g=src["geo"]))}')
+            if src.get("type"):
+                bloc.append(f' · {_e(src["type"])}')
+            if src.get("url"):
+                bloc.append(f' <a href="{src["url"]}" target="_blank" '
+                            f'class="sc-a">{_e(T("sc_ouvrir"))}</a>')
+            bloc.append('</span>')
+        else:
+            bloc.append(f'<br><span class="sc-att">{_e(T("sc_sans_src"))}</span>')
+        if e.get("reserve"):
+            bloc.append(f'<br><span class="sc-res">{_e(T("sc_reserve"))} : '
+                        f'{_e(e["reserve"])}</span>')
+        bloc.append('</p>')
+        st.markdown("".join(bloc), unsafe_allow_html=True)
 
     # LE CALCUL, ÉCRIT. La mise à l'échelle est rappelée à sa place dans la
     # multiplication : sans elle, le produit affiché ne tomberait pas sur le
@@ -635,6 +701,14 @@ def render(entete=True):
     else:
         st.markdown(f'<p class="sc-x">{_e(T("sc_aucun"))}</p>',
                     unsafe_allow_html=True)
+
+    # --- comment les liens ont été vérifiés
+    pr = m["preuves"]
+    if pr:
+        st.markdown(
+            f'<div class="sc-h">{_e(T("sc_preuves_t"))}</div>'
+            f'<p class="sc-x">{_e(T("sc_preuves_x", t=len(m["aretes"]), v=pr.get("n_verifiees"), s=pr.get("n_sans_source"), c=pr.get("n_contestees")))}</p>',
+            unsafe_allow_html=True)
 
     # --- d'où viennent les forces
     st.markdown(f'<div class="sc-h">{_e(T("sc_bareme_t"))}</div>'
