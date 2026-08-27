@@ -58,6 +58,7 @@ TEINTES = {"dim1": "#d1730c", "dim2": "#2166ac", "dim3": "#1a8a4f",
            "dim7": "#7048b6"}
 
 ETAPES = ("po_e1", "po_e2", "po_e3", "po_e4")
+SOUS_ETAPES = ("po_s1", "po_s2", "po_s3", "po_s4")
 
 TEXTES = {
     "mode_portail": {"en": "Home", "fr": "Accueil"},
@@ -69,6 +70,22 @@ TEXTES = {
     "po_e2": {"en": "What was measured?", "fr": "Qu'a-t-on mesuré ?"},
     "po_e3": {"en": "What was found?", "fr": "Qu'a-t-on trouvé ?"},
     "po_e4": {"en": "What can be done?", "fr": "Que faire ?"},
+    # LE SOUS-TITRE DE CHAQUE ÉTAPE. La question dit ce qu'on cherche, le
+    # sous-titre dit ce qu'on va voir : « Où ? » seul laisse le lecteur
+    # deviner s'il aura une carte, une liste ou un tableau.
+    "po_s1": {"en": "The territory", "fr": "Le territoire"},
+    "po_s2": {"en": "The indicators", "fr": "Les indicateurs"},
+    "po_s3": {"en": "Key results", "fr": "Résultats clés"},
+    "po_s4": {"en": "Action pathways", "fr": "Pistes d'action"},
+
+    # les trois faits de l'écran 1, en puces plutôt qu'en tuiles chiffrées
+    "po_1_b1": {"en": "Two pilot areas: Grand'Anse and Sud",
+                "fr": "Deux zones pilotes : Grand'Anse et Sud"},
+    "po_1_b2": {"en": "{n} communal sections selected within them",
+                "fr": "{n} sections communales sélectionnées en leur sein"},
+    "po_1_b3": {"en": "{n} households surveyed",
+                "fr": "{n} ménages enquêtés"},
+
     "po_suivant": {"en": "Next", "fr": "Suivant"},
     "po_precedent": {"en": "Back", "fr": "Précédent"},
     "po_etape": {"en": "Step {n} of 4", "fr": "Étape {n} sur 4"},
@@ -240,6 +257,34 @@ for _c, _v in TEXTES.items():
 
 STYLE = """
 <style>
+  /* ------------------------------------------------ l'écran « Où ? »
+     LE TITRE DE SECTION EST EN SERIF, ET LUI SEUL. Le reste du site est en
+     linéale ; poser une serif sur le titre de l'écran suffit à dire « ceci
+     est un document qu'on lit », sans changer la nature du tableau de bord.
+     Le filet vert dessous remplace un soulignement : il tient le titre sans
+     le barrer. */
+  .po-titre-s { font-family:Georgia, 'Times New Roman', serif;
+                font-size:26px; font-weight:400; color:#101728;
+                letter-spacing:-.01em; margin:4px 0 0; }
+  .po-filet   { width:44px; height:2px; background:#2f6b4f;
+                margin:11px 0 20px; border-radius:1px; }
+
+  /* LES PUCES SONT DE PETITS CARRÉS, PAS DES DISQUES. Un disque se confond
+     avec les pastilles numérotées des étapes, juste au-dessus ; le carré s'en
+     distingue et ne prétend pas être cliquable. */
+  .po-puces { list-style:none; margin:0; padding:0; max-width:46ch; }
+  .po-puces li { position:relative; padding:0 0 0 20px; margin:0 0 20px;
+                 font-size:14.5px; line-height:1.55; color:#2b3444; }
+  .po-puces li::before { content:""; position:absolute; left:0; top:.52em;
+                         width:6px; height:6px; background:#4a8b68;
+                         border-radius:1px; }
+
+  /* la carte, encadrée comme une planche, avec sa légende dessous */
+  .po-carte-cadre { border:1px solid #e8edf3; border-radius:12px;
+                    padding:14px; background:#fbfcfd; }
+  .po-carte-leg   { font-size:12.5px; color:#6b7a88; margin:9px 2px 0;
+                    line-height:1.5; }
+
   .po-pas  { display:flex; gap:0; align-items:stretch; margin:16px 0 6px;
              border-bottom:1px solid #e6ecf4; }
   .po-p    { flex:1 1 0; padding:9px 4px 11px; text-align:center;
@@ -519,32 +564,43 @@ def _poser(n):
 
 # --------------------------------------------------------------- les écrans
 def _ecran_1(m):
-    st.markdown(f'<div class="po-h">{_e(T("po_1_t"))}</div>'
-                f'<p class="po-x">{_e(T("po_1_x"))}</p>',
-                unsafe_allow_html=True)
-    g, d = st.columns([1.45, 1], gap="large")
+    """Où : le territoire, en trois faits et une carte.
+
+    POURQUOI DES PUCES ET NON DES TUILES CHIFFRÉES. Les trois nombres — deux
+    zones, dix sections, mille deux cent onze ménages — étaient présentés en
+    tuiles colorées, chacune avec son icône. Trois tuiles côte à côte se lisent
+    comme trois indicateurs de même rang, alors qu'il s'agit d'une seule phrase
+    emboîtée : deux zones, dans lesquelles on a choisi dix sections, dans
+    lesquelles on a enquêté mille deux cents ménages. Les puces rendent cet
+    emboîtement, les tuiles le cassaient.
+    """
+    st.markdown(f'<div class="po-titre-s">{_e(T("po_s1"))}</div>'
+                f'<div class="po-filet"></div>', unsafe_allow_html=True)
+
+    g, d = st.columns([1, 1.15], gap="large")
     with g:
+        men = f'{m["menages"]:,}'.replace(",", " ") if m["menages"] else "—"
         st.markdown(
-            '<div class="po-g po-serre">'
-            + _carte("personnes", BLEU,
-                     f'{m["menages"]:,}'.replace(",", " ") if m["menages"] else "—",
-                     T("po_1_c1"))
-            + _carte("carte", VERT, str(len(SECTIONS)), T("po_1_c2"))
-            + _carte("epingle", AMBRE, "2", T("po_1_c3"), T("po_1_c3x"))
-            + '</div>', unsafe_allow_html=True)
+            '<ul class="po-puces">'
+            f'<li>{_e(T("po_1_b1"))}</li>'
+            f'<li>{_e(T("po_1_b2", n=len(SECTIONS)))}</li>'
+            f'<li>{_e(T("po_1_b3", n=men))}</li>'
+            '</ul>', unsafe_allow_html=True)
+        # PAS DE BOUTON VERS « LE TERRITOIRE » ICI. Il se cassait en trois
+        # lignes dans cette colonne étroite, et la page de destination est
+        # déjà la troisième entrée du menu de gauche : un raccourci qui
+        # encombre plus qu'il ne raccourcit.
+
     with d:
         try:
             import territoire_page
-            v = territoire_page._vignette(territoire_page._geo(), 300, 300)
-            if v:
-                st.markdown(v, unsafe_allow_html=True)
-                st.caption(T("po_1_carte"))
+            v = territoire_page._vignette(territoire_page._geo(), 470, 360)
         except Exception:
-            pass
-    # La vignette montre OÙ, pas QUOI : le détail — les dix sections, les
-    # paysages pilotes, les points d'entretien, les routes — est dans « Le
-    # territoire ». C'est ici qu'on veut y aller, pas trois écrans plus loin.
-    _porte("po_porte_1", "accueil")
+            v = None
+        if v:
+            st.markdown(f'<div class="po-carte-cadre">{v}</div>'
+                        f'<p class="po-carte-leg">{_e(T("po_1_carte"))}</p>',
+                        unsafe_allow_html=True)
 
 
 def _ecran_2(m):
@@ -743,6 +799,78 @@ def _ecran_4(m):
 
 
 # ----------------------------------------------------------------- la page
+def _css_txt(t):
+    """Un texte prêt pour `content:` — les guillemets et les barres obliques
+    inverses y sont des délimiteurs, pas des caractères."""
+    return t.replace("\\", "\\\\").replace('"', '\\"')
+
+
+def _css_etapes(n):
+    """La feuille des quatre cartes d'étape, avec l'étape courante marquée."""
+    r = ["<style>"]
+    for i, (cle, sous) in enumerate(zip(ETAPES, SOUS_ETAPES), 1):
+        b = (f'div[class*="st-key-po_pas_{i}"] button,'
+             f' div[class*="st-key-po_pas_{i}"] button[kind="primary"]')
+        b1 = f'div[class*="st-key-po_pas_{i}"] button'
+        actif = (i == n)
+        r.append(f"""
+        {b} {{
+          display:grid !important;
+          grid-template-columns:36px 1fr; grid-template-rows:auto auto;
+          column-gap:13px; row-gap:1px;
+          align-items:center; justify-items:start;
+          text-align:left !important;
+          padding:13px 15px 12px !important;
+          min-height:0 !important; height:auto !important;
+          background:{'#f2f8f4' if actif else '#ffffff'} !important;
+          border:1px solid {'#cfe3d7' if actif else '#e8edf3'} !important;
+          border-bottom:{'3px' if actif else '1px'} solid
+                        {'#2f6b4f' if actif else '#e8edf3'} !important;
+          border-radius:10px !important;
+          box-shadow:none !important; transform:none !important;
+          transition:background .15s ease, border-color .15s ease;
+        }}
+        {b1}:hover {{
+          background:{'#f2f8f4' if actif else '#f8fbf9'} !important;
+          border-color:#cfe3d7 !important;
+        }}
+        {b1}::before, {b1}[kind="primary"]::before {{
+          content:"{i}";
+          grid-column:1; grid-row:1 / span 2;
+          width:30px; height:30px; border-radius:50%;
+          display:flex; align-items:center; justify-content:center;
+          background:{'#dcebe2' if actif else '#f1f4f8'};
+          color:{'#2f6b4f' if actif else '#7b8794'};
+          font-size:13px; font-weight:700; font-variant-numeric:tabular-nums;
+        }}
+        /* LE VRAI ENFANT DE LA GRILLE EST UN DIV SANS NOM.
+           Streamlit enveloppe le libellé d'un bouton dans un div dont la
+           seule classe est un identifiant d'émotion, régénéré à chaque
+           version : ni data-testid, ni nom stable. Placer le <p> dans la
+           grille ne servait donc à rien — c'est ce div qui occupe la cellule,
+           et il s'étalait sur toute la largeur en centrant son contenu. On le
+           vise par sa position, `> div`, qui elle ne changera pas. */
+        {b1} > div, {b1}[kind="primary"] > div {{
+          grid-column:2; grid-row:1;
+          justify-self:start !important; width:auto !important;
+          text-align:left !important;
+        }}
+        {b1} p, {b1}[kind="primary"] p {{
+          font-size:14.5px !important; font-weight:600 !important;
+          color:#101728 !important; margin:0 !important;
+          text-align:left !important; line-height:1.25 !important;
+        }}
+        {b1}::after, {b1}[kind="primary"]::after {{
+          content:"{_css_txt(T(sous))}";
+          grid-column:2; grid-row:2;
+          font-size:12.5px; font-weight:500;
+          color:{'#2f6b4f' if actif else '#6b7a88'};
+          line-height:1.3; justify-self:start;
+        }}""")
+    r.append("</style>")
+    return "".join(r)
+
+
 def render():
     st.markdown(STYLE, unsafe_allow_html=True)
     st.session_state.setdefault("portail_etape", 1)
@@ -759,10 +887,19 @@ def render():
     # à l'un d'eux : un parcours qui ne se parcourt que dans l'ordre est une
     # prison, pas un guide. Le numéro est dans le libellé — un bandeau
     # décoratif au-dessus des mêmes quatre mots faisait doublon.
+    # CHAQUE ÉTAPE EST UNE CARTE À DEUX LIGNES, PAS UN ONGLET.
+    # Le numéro vit dans une pastille, la question sur la première ligne, et
+    # ce qu'on va voir sur la seconde. Streamlit ne sait poser qu'un seul
+    # libellé sur un bouton : la pastille et le sous-titre sont donc écrits en
+    # CSS, dans les pseudo-éléments ::before et ::after, à partir de textes
+    # injectés depuis Python. C'est le seul moyen d'obtenir trois niveaux de
+    # typographie dans un widget qui n'en accepte qu'un — et comme la feuille
+    # est régénérée à chaque rendu, le sous-titre suit la langue.
+    st.markdown(_css_etapes(n), unsafe_allow_html=True)
     cols = st.columns(4)
     for i, (col, cle) in enumerate(zip(cols, ETAPES), 1):
         with col:
-            st.button(f"{i} · {T(cle)}", key=f"po_pas_{i}",
+            st.button(T(cle), key=f"po_pas_{i}",
                       on_click=_poser, args=(i,), use_container_width=True,
                       type="primary" if i == n else "secondary")
 
