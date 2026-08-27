@@ -807,76 +807,76 @@ st.markdown(("""
 
   /* La photo déborde la colonne de texte et touche les deux bords : c'est
      un en-tête, pas une illustration posée dans le contenu. */
-  .bandeau-haut {
-    /* LES REPÈRES EN `vw` NE SUIVENT PAS LE ZOOM. Un `100vw` écrit dans une
-       zone mise à l'échelle vaut toujours la largeur réelle de la fenêtre,
-       si bien que la photo se retrouvait rétrécie d'autant et décollée du
-       bord droit. On divise donc chaque terme en `vw` par le facteur, ce que
-       fait `--dz`, son inverse. Les termes en pourcentage, eux, se réfèrent
-       au conteneur déjà mis à l'échelle et n'ont rien à corriger. */
-    width: calc((100vw - 310px) * var(--dz)) !important;
-    max-width: calc((100vw - 310px) * var(--dz)) !important;
-    margin-left: calc(50% - (100vw - 310px) * var(--dz) / 2);
-    /* LES 32 PIXELS REPRIS. Chaque feuille de style injectée par st.markdown
-       laisse un bloc vide en tête de page, et la gouttière de Streamlit
-       s'ajoute par-dessus : la photo commençait 32 px sous le haut de la
-       fenêtre, avec une bande blanche au-dessus d'elle. */
-    margin-top: calc(-32px * var(--dz)); margin-bottom: 0;
-  }
   /* L'enveloppe existe pour que le logo puisse se poser DANS la photo :
      un élément en position absolue se place par rapport au premier parent
      positionné, et l'image seule n'en est pas un. */
   .bandeau-enveloppe { position: relative; display: block; line-height: 0; }
-  /* LE VOILE EST DEVENU CLAIR, ET IL A CHANGÉ DE RÔLE. Il servait à foncer
-     l'angle gauche pour qu'un logo blanc s'y détache. Le titre du site vient
-     maintenant s'écrire là, et un titre se lit mieux en sombre sur clair que
-     l'inverse : le dégradé part donc du blanc et s'éteint vers la droite, en
-     laissant l'illustration intacte sur les deux tiers restants. */
-  .bandeau-voile {
-    position: absolute; top: 0; left: 0; bottom: 0;
-    width: min(62%, 720px); pointer-events: none;
-    background: linear-gradient(95deg, rgba(255,255,255,.97) 0%,
-                rgba(255,255,255,.90) 34%, rgba(255,255,255,.55) 62%,
-                rgba(255,255,255,0) 100%);
+  /* L'ILLUSTRATION OCCUPE TOUTE LA LARGEUR, ET SON VOILE EST DANS LE FICHIER.
+     Le dégradé blanc qui éclaircit le tiers gauche a été composé dans l'image
+     elle-même plutôt qu'en CSS : il devait effacer une marque déjà incrustée
+     dans l'illustration fournie, ce qu'un dégradé posé par-dessus n'aurait pas
+     fait proprement aux jointures. */
+  /* LES TROIS DÉCLARATIONS SONT FORCÉES. Streamlit impose à toute image un
+     `object-fit: scale-down` : l'illustration se réduisait alors pour tenir
+     entière dans le bandeau, et se retrouvait posée en petit au milieu d'une
+     bande blanche au lieu de la remplir. */
+  .bandeau-fond {
+    width: 100% !important; height: 246px !important;
+    object-fit: cover !important; object-position: 50% 56% !important;
+    display: block !important; max-width: none !important;
   }
-  /* Le logo passe à droite, en bleu : sur un fond devenu clair, la version
-     blanche disparaîtrait purement et simplement. */
-  /* UN CARTOUCHE BLANC SOUS LE LOGO. Le bleu du PNUE posé directement sur le
-     ciel du dessin, lui-même clair et texturé, perdait tout contraste et
-     paraissait délavé. Le cartouche lui rend un fond franc sans l'encadrer. */
+  /* LA MARQUE VIT DANS L'IMAGE. Elle occupait la tête de la colonne de
+     gauche ; la colonne ayant disparu, elle serait devenue orpheline. Posée
+     sur le tiers clair de l'illustration, elle redevient ce qu'elle est :
+     l'enseigne du site, au même endroit sur toutes les pages. */
+  .bandeau-marque {
+    position: absolute; top: 50%; left: 42px; transform: translateY(-46%);
+    display: flex; align-items: center; gap: 20px; pointer-events: none;
+  }
+  .bandeau-marque .bm-embleme { height: 92px; width: 92px; display: block; }
+  .bandeau-marque .bm-nom {
+    font-size: 40px; font-weight: 800; color: #16324a;
+    letter-spacing: -.015em; line-height: 1;
+  }
+  .bandeau-marque .bm-filet {
+    height: 3px; width: 100%; background: #2f6b4f; margin: 7px 0 8px;
+    border-radius: 2px;
+  }
+  .bandeau-marque .bm-base {
+    font-size: 15.5px; font-weight: 700; color: #2f6b4f; line-height: 1.25;
+  }
+  .bandeau-marque .bm-lieu {
+    font-size: 15px; font-weight: 700; color: #16324a; margin-top: 4px;
+  }
+  /* Le cartouche recouvre le logo incrusté dans l'illustration et porte le
+     vrai à sa place. Sa taille est donc dictée par ce qu'il doit cacher. */
   .bandeau-logo {
-    position: absolute; top: 20px; right: 26px; height: 56px;
-    padding: 9px 13px; border-radius: 9px;
-    background: rgba(255,255,255,.88);
-    box-sizing: content-box;
+    position: absolute; top: 12px; right: 18px; height: 58px;
+    padding: 12px 18px; border-radius: 10px;
+    background: rgba(255,255,255,.94); box-sizing: content-box;
   }
-  /* LE TITRE DU SITE VIT DANS L'IMAGE, PLUS AU-DESSUS DU CONTENU. Posé sous
-     le bandeau, il faisait un troisième niveau de titre entre la photo et la
-     page, et repoussait le contenu d'autant. Dans l'image, il devient ce
-     qu'il est : l'enseigne. */
-  .bandeau-titre {
-    position: absolute; top: 50%; left: 40px; transform: translateY(-50%);
-    max-width: min(46%, 520px); pointer-events: none; line-height: 1.14;
+
+  /* LES DEUX LANGUES SE POSENT SUR L'IMAGE, EN HAUT À GAUCHE.
+     Ce sont de vrais boutons, donc ils ne peuvent pas vivre dans le HTML de
+     l'illustration : on les sort du flux et on les place par-dessus. Le
+     conteneur du bloc principal sert de repère, d'où sa position relative. */
+  div[data-testid="stMainBlockContainer"] { position: relative; }
+  /* LA COLONNE DE GAUCHE EST RETIRÉE, PAS SEULEMENT REPLIÉE. Streamlit garde
+     sinon sa poignée d'ouverture en haut à gauche, posée en plein sur la
+     marque. */
+  section[data-testid="stSidebar"],
+  div[data-testid="stSidebarCollapseButton"],
+  button[data-testid="stBaseButton-headerNoPadding"] { display: none !important; }
+  /* l'illustration reprend la largeur libérée par la colonne */
+  .bandeau-haut {
+    width: calc(100vw * var(--dz)) !important;
+    max-width: calc(100vw * var(--dz)) !important;
+    margin-left: calc(50% - 100vw * var(--dz) / 2);
   }
-  /* LE TITRE NE SE JUSTIFIE PAS. La justification est demandée partout dans
-     le site, et elle est juste pour un paragraphe ; sur un titre de deux
-     lignes elle écarte les mots jusqu'à laisser des couloirs blancs entre
-     eux. On la défait ici, et ici seulement. */
-  .bandeau-titre .bt-t {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 34px; font-weight: 400; color: #16211c;
-    letter-spacing: -.012em; margin: 0;
-    line-height: 1.16 !important;
-    text-align: left !important; text-wrap: balance;
-  }
-  .bandeau-titre .bt-s {
-    font-size: 12px; font-weight: 700; letter-spacing: .1em;
-    text-transform: uppercase; color: #2f6b4f; margin: 13px 0 0;
-    text-align: left !important;
-  }
-  @media (max-width: 1100px) {
-    .bandeau-titre .bt-t { font-size: 26px; }
-    .bandeau-titre { max-width: 60%; }
+  .f-etiquette { height: 22px; }
+  div[class*="st-key-zone_langue"] {
+    position: absolute; top: 20px; left: 42px; z-index: 6;
+    width: 232px !important;
   }
 
   /* --- les deux langues, en tête de la colonne -------------------------
@@ -891,9 +891,9 @@ st.markdown(("""
      point d'accroche stable que Streamlit offre sur un widget précis. Tout ce
      que la colonne impose aux boutons est défait ici, explicitement, en
      !important. */
-  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button,
-  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] {
     background: #ffffff !important;
     border: 1px solid var(--bord) !important;
@@ -903,36 +903,33 @@ st.markdown(("""
     justify-content: center !important; transform: none !important;
     transition: background .15s ease, border-color .15s ease;
   }
-  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button p {
     font-size: 9.5px !important; font-weight: 700 !important;
     letter-spacing: .06em !important; text-transform: uppercase;
     color: var(--encre-3) !important; text-align: center !important;
     transition: color .15s ease;
   }
-  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button:hover {
     background: #f1f6f4 !important; border-color: #cfe0d8 !important;
   }
-  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button:hover p {
     color: var(--encre-2) !important;
   }
-  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] {
     background: var(--accent) !important; border-color: var(--accent) !important;
   }
-  section[data-testid="stSidebar"] div[class*="st-key-lang_"]
+  div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] p {
     color: #ffffff !important;
   }
   /* La rangée ouvre la colonne : la paire est resserrée au centre, avec un
      filet en dessous pour la séparer de la marque sans la souligner. */
-  section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:has(
-      div[class*="st-key-lang_"]) {
-    padding: 6px 2px 7px; margin: 0 auto 2px; max-width: 168px;
-    gap: 6px !important;
-    border-bottom: 1px solid var(--bord);
+  div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-lang_"]) {
+    padding: 0; margin: 0; max-width: 232px; gap: 7px !important;
   }
 
   /* La ligne de contexte, sous le ruban : la page courante à gauche, ce sur
@@ -944,6 +941,15 @@ st.markdown(("""
   }
   /* Sans ligne de contenu, le bandeau collerait au titre de la page. */
   .bh-vide { height: 20px; }
+  /* la rangée sous le bandeau : menu, remise à zéro, état courant */
+  div[class*="st-key-nav_menu"] label p,
+  div[class*="st-key-f_reset_global"] label p {
+    font-size: 10.5px !important; letter-spacing: .09em !important;
+    text-transform: uppercase; font-weight: 700 !important;
+    color: var(--encre-3) !important;
+  }
+  .nav-etat { font-size: 12.5px; color: var(--encre-3); line-height: 1.5;
+              padding-top: 9px; }
   .bh-page {
     font-size: 15px; font-weight: 700; color: #101728;
     letter-spacing: -.01em;
@@ -1309,10 +1315,20 @@ st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
 # Elle occupait le ruban blanc du haut, qui n'existait que pour elle et pour
 # le logo ; les deux étant partis — la langue ici, le logo sur la photo — le
 # ruban a disparu et chaque page commence par son titre.
-_sb_langue_haut = st.sidebar.container()
-_sb_marque = st.sidebar.container()
-_sb_nav = st.sidebar.container()
-_sb_langue = st.sidebar.container()
+# LA COLONNE DE GAUCHE A DISPARU, ET AVEC ELLE LA MOITIÉ DE SON CONTENU.
+# Elle portait quatre choses : la langue, la marque, la navigation et le
+# rappel des filtres. Les deux premières sont montées dans le bandeau, où
+# elles identifient le site au lieu de border le contenu. La navigation
+# devient un menu déroulant sous le bandeau : douze entrées empilées le long
+# d'une page pleine largeur, c'était une colonne de trois cents pixels
+# occupée à répéter ce qu'un seul champ suffit à dire. Les filtres restent
+# à côté du menu, puisque c'est la seule commande qu'on cherche depuis
+# n'importe quelle page.
+# L'ORDRE DE CRÉATION EST L'ORDRE D'AFFICHAGE. Le bandeau doit être
+# réservé en premier : créé plus bas, il se dessinait sous le menu.
+_ruban = st.container()
+_zone_langue = st.container(key="zone_langue")
+_zone_barre = st.container()
 
 # LA LANGUE EST LUE ICI, AVANT TOUT APPEL À T(), ET CHANGÉE DANS LE BANDEAU.
 # Le menu déroulant de la colonne de gauche a disparu : deux mots côte à côte
@@ -1397,7 +1413,6 @@ def _bascule(mode):
 # APRI en tête, le PNUE en pied — et le contenu des pages n'en porte aucun : un
 # logo répété à chaque en-tête mange la place du titre sans rien apprendre à
 # personne, puisqu'il est déjà à l'écran en permanence.
-_ruban = st.container()
 
 # Les deux entrées sont mises au même niveau, en haut de page : ce sont deux
 # lectures différentes de la même enquête, pas un mode principal et une option.
@@ -1489,55 +1504,56 @@ def _entree_nav(mode, icone):
 # \u00e0 ligne quand on cherche, le ruban se parcourt du regard quand on sait d\u00e9j\u00e0
 # o\u00f9 l'on va. Ce qu'il ne faut surtout pas, c'est que les deux listes
 # divergent \u2014 d'o\u00f9 la source unique `_NAV`, dont les deux se servent.
-def _rendre_ruban():
-    """L'en-tête de page : la photo, et rien d'autre.
+@st.cache_data(show_spinner=False)
+def _bandeau_b64():
+    """L'illustration du bandeau, encodée une fois pour toutes.
 
-    IL N'Y A PLUS DE RUBAN. Cette barre blanche a porté successivement des
-    onglets (retirés : la colonne de gauche les affichait déjà), la langue
-    (montée en tête de cette colonne) et le logo du PNUE (posé sur la photo).
-    Vidée de ses trois contenus, elle n'était plus qu'une bande de blanc en
-    haut de chaque page ; la fonction ne s'en va pas, c'est le contenant qui
-    disparaît. Reste ici la photo — sur la seule page d'entrée — et le rappel
-    du filtre posé, quand il y en a un.
+    Le fichier fait deux cent quarante kilo-octets : l'encoder à chaque
+    réexécution de la page coûterait plus cher que de le garder en mémoire.
+    """
+    import base64 as _b64
+    chemin = os.path.join(APP_DIR, "data", "bandeau_apri.jpg")
+    if not os.path.exists(chemin):
+        return None
+    with open(chemin, "rb") as f:
+        return _b64.b64encode(f.read()).decode()
+
+
+def _rendre_ruban():
+    """L'en-tête : l'illustration, la marque APRI, le logo du PNUE.
+
+    LE BANDEAU EST DEVENU L'EN-TÊTE DU SITE, PAS UNE IMAGE D'ACCUEIL.
+    Il ne s'affichait que sur deux pages, parce qu'il ne portait qu'une photo.
+    Il porte maintenant tout ce qui identifie le site — la marque, la langue,
+    l'institution — donc il est partout : ce sont ces trois choses-là qu'on
+    doit retrouver sans réfléchir, quelle que soit la page ouverte.
+
+    LE LOGO DU PNUE EST POSÉ SUR UN CARTOUCHE BLANC, ET CE N'EST PAS QU'UNE
+    QUESTION DE CONTRASTE. L'illustration fournie porte déjà un logo incrusté
+    au même endroit. Le reconstruire à coups de ciel synthétique abîmait les
+    arbres alentour pour un gain nul : le cartouche recouvre l'ancien et pose
+    le vrai, net et à la bonne charte.
     """
     with _ruban:
-        # LA PHOTO NE SERT QUE SUR DEUX PAGES, ET C'EST UN CHOIX DE FONCTION,
-        # PAS DE GOÛT. Un bandeau de 300 px répété en tête de chaque page
-        # repoussait chaque fois le premier chiffre sous la ligne de
-        # flottaison, et une image qu'on revoit à chaque clic cesse d'être
-        # regardée. Elle reste là où elle dit quelque chose : l'accueil, qui
-        # est la porte d'entrée et doit porter la marque du PNUE dès la
-        # première seconde, et le cadre de résilience, qui présente le paysage
-        # qu'on mesure.
-        photo = st.session_state.get("app_mode") in (MODE_PORTAIL, MODE_METHODO)
-        # LE LOGO DU PNUE EST POSÉ SUR LA PHOTO, EN BLANC, ET IL LUI FAUT UN
-        # VOILE. La photo est un dessin clair : un logo blanc posé dessus
-        # disparaîtrait purement et simplement. Le voile est un dégradé sombre
-        # qui s'éteint vers la droite — il fonce l'angle où se pose la marque
-        # et laisse l'image intacte partout ailleurs. Sans lui, la seule autre
-        # option aurait été de reprendre le logo bleu, c'est-à-dire de revenir
-        # à ce qu'on cherchait à quitter.
+        img = _bandeau_b64()
+        if not img:
+            return
         st.markdown(
-            (f'<div class="bandeau-haut bandeau-enveloppe">'
-             f'<img src="data:image/jpeg;base64,{assets.PAYSAGE_CAMP_PERRIN}" '
-             f'style="width:100%;height:300px;object-fit:cover;'
-             f'object-position:50% 62%;display:block">'
-             f'<div class="bandeau-voile"></div>'
-             f'<div class="bandeau-titre">'
-             f'<p class="bt-t">{T("po_titre")}</p>'
-             f'<p class="bt-s">{T("po_sous")}</p></div>'
-             f'<img class="bandeau-logo" alt="UNEP" '
-             f'src="data:image/png;base64,{assets.LOGO_UNEP_BLEU}">'
-             f'</div>' if photo else "")
-            # RIEN D'ÉCRIT SOUS LE BANDEAU QUAND AUCUN FILTRE N'EST POSÉ.
-            # Chaque page porte déjà son titre. Le rappel du filtre, lui, ne
-            # disait rien tant qu'aucun filtre n'était choisi. Il n'apparaît
-            # donc que lorsqu'un filtre est effectivement posé — le seul cas
-            # où l'oublier fait mal lire un chiffre.
-            + (f'<div class="bh-contexte">'
-               f'<div class="bh-filtre">{filtres.resume()}</div></div>'
-               if filtres.actif() else '<div class="bh-vide"></div>'),
-            unsafe_allow_html=True)
+            f'<div class="bandeau-haut bandeau-enveloppe">'
+            f'<img class="bandeau-fond" '
+            f'src="data:image/jpeg;base64,{img}">'
+            f'<div class="bandeau-marque">'
+            f'<img class="bm-embleme" alt="APRI" '
+            f'src="data:image/png;base64,{assets.EMBLEME_APRI}">'
+            f'<div class="bm-texte">'
+            f'<div class="bm-nom">APRI</div>'
+            f'<div class="bm-filet"></div>'
+            f'<div class="bm-base">{T("a_titre_court")}</div>'
+            f'<div class="bm-lieu">{T("a_lieu")}</div>'
+            f'</div></div>'
+            f'<img class="bandeau-logo" alt="UNEP" '
+            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLEU}">'
+            f'</div>', unsafe_allow_html=True)
 
 
 # LES DEUX LANGUES, EN TÊTE DE LA COLONNE, FONDUES DANS LE VERT.
@@ -1546,7 +1562,7 @@ def _rendre_ruban():
 # état se lit à la valeur du texte et non à sa couleur de fond — et c'est
 # voulu : un choix de langue n'est pas une page, il ne doit pas se présenter
 # comme un onglet.
-with _sb_langue_haut:
+with _zone_langue:
     # DEUX COLONNES ÉGALES, ET PLUS DE TROISIÈME COLONNE VIDE. Le gabarit
     # [1.25, 1, 0.5] datait du temps où les langues étaient deux mots posés à
     # gauche : la colonne fantôme les y retenait, et la première était plus
@@ -1566,50 +1582,44 @@ with _sb_langue_haut:
                             if st.session_state["choix_langue"] == _code
                             else "secondary"))
 
-with _sb_marque:
-    st.markdown(
-        f'<div class="apri-marque">'
-        f'<img src="data:image/png;base64,{assets.EMBLEME_APRI}" alt="APRI">'
-        f'<div class="apri-bloc-nom"><div class="apri-nom">APRI</div>'
-        f'<div class="apri-filet"></div>'
-        f'<div class="apri-baseline">{T("a_titre_court")}</div>'
-        f'<div class="apri-lieu">{T("a_lieu")}</div></div></div>',
-        unsafe_allow_html=True)
+def _choisir_nav():
+    """Le menu déroulant écrit dans l'état, comme le faisaient les boutons."""
+    m = st.session_state.get("nav_menu")
+    if m in LIBELLE_MODE:
+        _bascule(m)
 
-with _sb_nav:
-    st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
-    st.markdown(f'<div class="nav-groupe">{T("nav_titre")}</div>',
-                unsafe_allow_html=True)
-    # LA COLONNE DE GAUCHE NE SERT PLUS QU'À NAVIGUER. Les filtres d'analyse
-    # en ont été retirés : posés à côté du contenu, ils obligeaient l'œil à
-    # faire l'aller-retour entre la marge et le tableau, et rien ne disait
-    # qu'ils s'appliquaient à ce qu'on lisait. Ils sont maintenant dans la page
-    # elle-même, sous le titre de la rubrique, là où le résultat est affiché.
-    for mode, icone in _NAV:
-        _entree_nav(mode, icone)
 
-    # UN RACCOURCI, PAS UN PANNEAU. Les trois sélecteurs sont dans la page,
-    # sous le titre de la rubrique — c'est là qu'ils doivent être. Reste ici
-    # la seule commande qu'on cherche depuis n'importe où : tout remettre à
-    # zéro, avec l'état courant écrit dessous pour qu'on sache s'il y a
-    # quelque chose à remettre à zéro.
-    st.markdown(f'<div class="f-separateur"></div>'
-                f'<div class="nav-groupe">{T("nav_filtres_rapides")}</div>',
-                unsafe_allow_html=True)
+# LE MENU À GAUCHE, LA PAGE À SA DROITE.
+# La colonne de gauche d'origine était une liste de douze entrées ; réduite à
+# un menu déroulant, elle ne pèse plus rien et laisse au contenu presque toute
+# la largeur. Les deux colonnes sont ouvertes ici, avant l'aiguillage, parce
+# que la page doit se dessiner DANS la colonne de droite : ouvertes après,
+# elles se seraient retrouvées sous le contenu au lieu de le contenir.
+_c_menu, _c_contenu = st.columns([1, 5.4], gap="large")
+
+with _zone_barre:
+    pass
+
+with _c_menu:
+    _modes = [m for m, _i in _NAV]
+    _cour = st.session_state.get("app_mode", _modes[0])
+    st.selectbox(T("nav_titre"), _modes,
+                 index=_modes.index(_cour) if _cour in _modes else 0,
+                 format_func=lambda m: LIBELLE_MODE.get(m, m),
+                 key="nav_menu", on_change=_choisir_nav)
+    # LA REMISE À ZÉRO RESTE SOUS LE MENU. C'est la seule commande de filtre
+    # qu'on cherche depuis n'importe quelle page ; les trois sélecteurs, eux,
+    # vivent dans la page, sous le titre de la rubrique, là où le résultat
+    # qu'ils modifient est affiché.
     st.button(T("f_reinit_long"), key="f_reset_global",
               on_click=filtres.reinitialiser, use_container_width=True,
               disabled=not filtres.actif())
     st.markdown(
-        f'<div class="nav-etat">{T("f_aucun") if not filtres.actif() else filtres.resume()}</div>',
-        unsafe_allow_html=True)
-
-with _sb_langue:
-    # Le logo du PNUE est remonté dans le ruban, en haut à droite. Le
-    # répéter ici n'ajouterait rien : la mention institutionnelle en toutes
-    # lettres suffit en pied de colonne.
-    st.markdown(
-        f'<div class="apri-pied">{T("org")}<br><br>'
-        f'{T("sous_titre_site")}</div>', unsafe_allow_html=True)
+        f'<div class="nav-etat">'
+        f'{T("f_aucun") if not filtres.actif() else filtres.resume()}'
+        f'</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="apri-pied">{T("org")}</div>',
+                unsafe_allow_html=True)
 
 # Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par
@@ -1622,162 +1632,166 @@ app_mode = st.session_state["app_mode"]
 # eux prolongent leur page avec un détail qui existait déjà, plutôt que d'en
 # dupliquer la logique — l'environnement avec ses onze indicateurs
 # satellitaires, le social avec les fiches d'organisations de base.
-if app_mode == MODE_PORTAIL:
-    # Quatre écrans : où, ce qu'on a mesuré, ce qu'on a trouvé, quoi faire.
-    accueil_apri.render()
+# TOUT L'AIGUILLAGE SE DESSINE DANS LA COLONNE DE DROITE.
+# Chaque page reste écrite comme avant ; c'est le contexte qui change, en un
+# seul endroit, plutôt que quarante modules qui devraient savoir où ils sont.
+with _c_contenu:
+    if app_mode == MODE_PORTAIL:
+        # Quatre écrans : où, ce qu'on a mesuré, ce qu'on a trouvé, quoi faire.
+        accueil_apri.render()
 
-if app_mode == MODE_TRAJECTOIRES:
-    # Quatre séries physiques — hectares, millimètres, degrés. Aucun score :
-    # les scores vivent dans les autres rubriques.
-    trajectoires.render()
+    if app_mode == MODE_TRAJECTOIRES:
+        # Quatre séries physiques — hectares, millimètres, degrés. Aucun score :
+        # les scores vivent dans les autres rubriques.
+        trajectoires.render()
 
-if app_mode == MODE_ACCUEIL:
-    territoire_page.render()
+    if app_mode == MODE_ACCUEIL:
+        territoire_page.render()
 
-if app_mode == MODE_DIMENSIONS:
-    # Deux dimensions prolongent leur page avec un détail qui existait déjà,
-    # plutôt que d'en dupliquer la logique. Ce détail est passé à la page de
-    # dimension, qui le place dans le bon sous-onglet — celui des indicateurs.
-    _COMPLEMENT = {
-        "dim3": lambda: environnement_page.render(entete=False),
-        "dim5": lambda: ocb_page.render(entete=False),
-    }
+    if app_mode == MODE_DIMENSIONS:
+        # Deux dimensions prolongent leur page avec un détail qui existait déjà,
+        # plutôt que d'en dupliquer la logique. Ce détail est passé à la page de
+        # dimension, qui le place dans le bon sous-onglet — celui des indicateurs.
+        _COMPLEMENT = {
+            "dim3": lambda: environnement_page.render(entete=False),
+            "dim5": lambda: ocb_page.render(entete=False),
+        }
 
-    # DES CARTES, PAS DES ONGLETS DE STREAMLIT.
-    #
-    # `st.tabs` donnait six intitulés en petit, soulignés, qu'il fallait
-    # chercher — et surtout il RENDAIT LES SIX PAGES à chaque affichage, y
-    # compris les trois cents questions de la dimension économique. Sept
-    # secondes pour en montrer une.
-    #
-    # Une rangée de cartes rectangulaires règle les deux : la cible est
-    # franche, l'onglet courant se distingue par un aplat de couleur, et seule
-    # la dimension demandée est calculée.
-    st.markdown('<div class="cartes-ancre"></div>', unsafe_allow_html=True)
-    st.session_state.setdefault("dim_active", MODES_DIM[0])
-    if st.session_state["dim_active"] not in MODES_DIM:
-        st.session_state["dim_active"] = MODES_DIM[0]
+        # DES CARTES, PAS DES ONGLETS DE STREAMLIT.
+        #
+        # `st.tabs` donnait six intitulés en petit, soulignés, qu'il fallait
+        # chercher — et surtout il RENDAIT LES SIX PAGES à chaque affichage, y
+        # compris les trois cents questions de la dimension économique. Sept
+        # secondes pour en montrer une.
+        #
+        # Une rangée de cartes rectangulaires règle les deux : la cible est
+        # franche, l'onglet courant se distingue par un aplat de couleur, et seule
+        # la dimension demandée est calculée.
+        st.markdown('<div class="cartes-ancre"></div>', unsafe_allow_html=True)
+        st.session_state.setdefault("dim_active", MODES_DIM[0])
+        if st.session_state["dim_active"] not in MODES_DIM:
+            st.session_state["dim_active"] = MODES_DIM[0]
 
-    def _choisir_dim(m):
-        st.session_state["dim_active"] = m
+        def _choisir_dim(m):
+            st.session_state["dim_active"] = m
 
-    _rangees = [MODES_DIM[:3], MODES_DIM[3:]]
-    for _rangee in _rangees:
-        for _col, _m in zip(st.columns(len(_rangee)), _rangee):
-            with _col:
-                _actif = st.session_state["dim_active"] == _m
-                st.button(f'**{T(_m)}**\n\n{T(_m + "_carte")}',
-                          key=f"carte_{_m}",
-                          on_click=_choisir_dim, args=(_m,),
-                          type="primary" if _actif else "secondary",
-                          use_container_width=True)
+        _rangees = [MODES_DIM[:3], MODES_DIM[3:]]
+        for _rangee in _rangees:
+            for _col, _m in zip(st.columns(len(_rangee)), _rangee):
+                with _col:
+                    _actif = st.session_state["dim_active"] == _m
+                    st.button(f'**{T(_m)}**\n\n{T(_m + "_carte")}',
+                              key=f"carte_{_m}",
+                              on_click=_choisir_dim, args=(_m,),
+                              type="primary" if _actif else "secondary",
+                              use_container_width=True)
 
-    st.markdown('<div class="cartes-trait"></div>', unsafe_allow_html=True)
+        st.markdown('<div class="cartes-trait"></div>', unsafe_allow_html=True)
 
-    _m = st.session_state["dim_active"]
-    dimension_page.render(_m, complement=_COMPLEMENT.get(_m))
+        _m = st.session_state["dim_active"]
+        dimension_page.render(_m, complement=_COMPLEMENT.get(_m))
 
-if app_mode == MODE_METHODO:
-    # « Cadre de résilience » a remplacé la page de méthodologie : des schémas
-    # à la place de sept blocs de texte. Le document complet n'est pas perdu —
-    # il est rendu dans le volet replié du bas. Une fonction qui marchait ne se
-    # supprime pas au motif qu'on a réorganisé la façade ; on la range.
-    #
-    # L'OUTIL DE « CROISEMENT LIBRE » A ÉTÉ RETIRÉ D'ICI, ET SUPPRIMÉ DU DÉPÔT.
-    # Il empilait des conditions sur les mêmes 483 questions, avec la même
-    # carte par section et la même ventilation par sexe, catégorie et âge que
-    # « Croisement des résultats » — qui fait tout cela et davantage : profil
-    # de résilience du sous-groupe, comparaison de deux groupes, effectif
-    # attendu sous indépendance. Deux outils qui font la même chose divergent
-    # tôt ou tard, et le lecteur ne sait jamais lequel fait autorité.
-    def _document_methodologique():
-        methodologie_page.render()
+    if app_mode == MODE_METHODO:
+        # « Cadre de résilience » a remplacé la page de méthodologie : des schémas
+        # à la place de sept blocs de texte. Le document complet n'est pas perdu —
+        # il est rendu dans le volet replié du bas. Une fonction qui marchait ne se
+        # supprime pas au motif qu'on a réorganisé la façade ; on la range.
+        #
+        # L'OUTIL DE « CROISEMENT LIBRE » A ÉTÉ RETIRÉ D'ICI, ET SUPPRIMÉ DU DÉPÔT.
+        # Il empilait des conditions sur les mêmes 483 questions, avec la même
+        # carte par section et la même ventilation par sexe, catégorie et âge que
+        # « Croisement des résultats » — qui fait tout cela et davantage : profil
+        # de résilience du sous-groupe, comparaison de deux groupes, effectif
+        # attendu sous indépendance. Deux outils qui font la même chose divergent
+        # tôt ou tard, et le lecteur ne sait jamais lequel fait autorité.
+        def _document_methodologique():
+            methodologie_page.render()
 
-    cadre_page.render(doc_complet=_document_methodologique)
+        cadre_page.render(doc_complet=_document_methodologique)
 
-if app_mode == MODE_CROISEMENT:
-    # L'outil d'exploration des reponses individuelles. Il ne lit pas les
-    # filtres de la colonne : ses conditions SONT son filtre, et deux
-    # mecanismes de selection sur la meme page se contrediraient.
-    croisement_resultats.render()
+    if app_mode == MODE_CROISEMENT:
+        # L'outil d'exploration des reponses individuelles. Il ne lit pas les
+        # filtres de la colonne : ses conditions SONT son filtre, et deux
+        # mecanismes de selection sur la meme page se contrediraient.
+        croisement_resultats.render()
 
-if app_mode == MODE_BOUCLES:
-    # DEUX LECTURES DU MÊME MODÈLE, ET UN SEUL RENDU À LA FOIS.
-    #
-    #   · l'onde — où passe le choc, vague après vague, et quand il revient
-    #     sur ses pas ;
-    #   · l'analyse — l'effet total une fois tout distribué, les boucles
-    #     énumérées, les leviers classés.
-    #
-    # `st.tabs` rendrait les deux à chaque affichage : l'énumération des
-    # trente-huit boucles et l'animation seraient calculées ensemble, pour
-    # n'en montrer qu'une. Un sélecteur ne rend que ce qu'on regarde.
-    st.markdown(
-        f'<h2 style="font-size:21.5px;font-weight:700;color:#101728;'
-        f'letter-spacing:-.02em;margin:2px 0 0">{T("mode_boucles")}</h2>',
-        unsafe_allow_html=True)
-    _VUES = {T("oc_titre"): "onde", T("sy_titre"): "systeme",
-             T("bcl_vue_analyse"): "analyse"}
-    _vue = st.radio("vue", list(_VUES), horizontal=True,
-                    label_visibility="collapsed",
-                    key=f"bcl_vue_{i18n.get_lang()}")
-    if _VUES[_vue] == "onde":
-        ondes_choc.render(entete=False)
-    elif _VUES[_vue] == "systeme":
-        systeme_page.render(entete=False)
-    else:
-        boucles_page.render(entete=False)
+    if app_mode == MODE_BOUCLES:
+        # DEUX LECTURES DU MÊME MODÈLE, ET UN SEUL RENDU À LA FOIS.
+        #
+        #   · l'onde — où passe le choc, vague après vague, et quand il revient
+        #     sur ses pas ;
+        #   · l'analyse — l'effet total une fois tout distribué, les boucles
+        #     énumérées, les leviers classés.
+        #
+        # `st.tabs` rendrait les deux à chaque affichage : l'énumération des
+        # trente-huit boucles et l'animation seraient calculées ensemble, pour
+        # n'en montrer qu'une. Un sélecteur ne rend que ce qu'on regarde.
+        st.markdown(
+            f'<h2 style="font-size:21.5px;font-weight:700;color:#101728;'
+            f'letter-spacing:-.02em;margin:2px 0 0">{T("mode_boucles")}</h2>',
+            unsafe_allow_html=True)
+        _VUES = {T("oc_titre"): "onde", T("sy_titre"): "systeme",
+                 T("bcl_vue_analyse"): "analyse"}
+        _vue = st.radio("vue", list(_VUES), horizontal=True,
+                        label_visibility="collapsed",
+                        key=f"bcl_vue_{i18n.get_lang()}")
+        if _VUES[_vue] == "onde":
+            ondes_choc.render(entete=False)
+        elif _VUES[_vue] == "systeme":
+            systeme_page.render(entete=False)
+        else:
+            boucles_page.render(entete=False)
 
-if app_mode == MODE_ACTIONS:
-    # Les fiches descendent des leviers calculés par l'analyse des boucles.
-    # Les anciennes pistes de travail, écrites avant cette analyse, ont été
-    # retirées : elles ne commandaient plus rien et brouillaient la page.
-    interventions_page.render()
+    if app_mode == MODE_ACTIONS:
+        # Les fiches descendent des leviers calculés par l'analyse des boucles.
+        # Les anciennes pistes de travail, écrites avant cette analyse, ont été
+        # retirées : elles ne commandaient plus rien et brouillaient la page.
+        interventions_page.render()
 
-if app_mode == MODE_LEVIER:
-    # Aucun filtre : le modèle causal est le même pour tout le territoire, et
-    # un filtre posé ailleurs ne changerait rien à ce qu'il propage.
-    si_je_change.render()
+    if app_mode == MODE_LEVIER:
+        # Aucun filtre : le modèle causal est le même pour tout le territoire, et
+        # un filtre posé ailleurs ne changerait rien à ce qu'il propage.
+        si_je_change.render()
 
-if app_mode == MODE_RAPPORT:
-    # Aucun filtre non plus, et pour la même raison que la note : un rapport
-    # se cite. Les chiffres y sont ceux de l'enquête entière, et chacun porte
-    # son registre — donnée observée, interprétation, implication.
-    rapport_donateur.render()
+    if app_mode == MODE_RAPPORT:
+        # Aucun filtre non plus, et pour la même raison que la note : un rapport
+        # se cite. Les chiffres y sont ceux de l'enquête entière, et chacun porte
+        # son registre — donnée observée, interprétation, implication.
+        rapport_donateur.render()
 
-if app_mode == MODE_BAILLEURS:
-    # La page de restitution : constats calculés, réponses classées par le
-    # modèle, et ce que le modèle ne couvre pas. Aucun filtre — une note se
-    # cite, et une note dont les chiffres dépendent d'un filtre posé ailleurs
-    # ne se cite pas.
-    note_bailleurs.render()
+    if app_mode == MODE_BAILLEURS:
+        # La page de restitution : constats calculés, réponses classées par le
+        # modèle, et ce que le modèle ne couvre pas. Aucun filtre — une note se
+        # cite, et une note dont les chiffres dépendent d'un filtre posé ailleurs
+        # ne se cite pas.
+        note_bailleurs.render()
 
-if app_mode == MODE_SYNTHESE:
-    # TROIS FAÇONS DE COMPARER DES PROFILS, SOUS UNE SEULE ENTRÉE.
-    #
-    #   · par territoire ou par groupe — une section contre les neuf autres,
-    #     les femmes contre l'ensemble ;
-    #   · par paysage — la fiche littoral contre montagne, qui se lit d'une
-    #     traite sans rien demander ;
-    #   · par la figure elle-même — le radar, avec son mode d'emploi.
-    #
-    # C'étaient trois entrées de menu. Ce sont trois onglets, et le lecteur
-    # qui cherche « comparer » n'a plus à deviner laquelle des trois portes
-    # mène à ce qu'il veut.
-    st.title(T("mode_synthese"))
-    _o_prof, _o_pays, _o_radar = st.tabs(
-        [T("syn_o_profils"), T("syn_o_paysages"), T("syn_o_radar")])
-    with _o_prof:
-        synthese_page.render(entete=False)
-    with _o_pays:
-        fiche_paysages.render(entete=False)
-    with _o_radar:
-        radar_accueil.render(entete=False)
+    if app_mode == MODE_SYNTHESE:
+        # TROIS FAÇONS DE COMPARER DES PROFILS, SOUS UNE SEULE ENTRÉE.
+        #
+        #   · par territoire ou par groupe — une section contre les neuf autres,
+        #     les femmes contre l'ensemble ;
+        #   · par paysage — la fiche littoral contre montagne, qui se lit d'une
+        #     traite sans rien demander ;
+        #   · par la figure elle-même — le radar, avec son mode d'emploi.
+        #
+        # C'étaient trois entrées de menu. Ce sont trois onglets, et le lecteur
+        # qui cherche « comparer » n'a plus à deviner laquelle des trois portes
+        # mène à ce qu'il veut.
+        st.title(T("mode_synthese"))
+        _o_prof, _o_pays, _o_radar = st.tabs(
+            [T("syn_o_profils"), T("syn_o_paysages"), T("syn_o_radar")])
+        with _o_prof:
+            synthese_page.render(entete=False)
+        with _o_pays:
+            fiche_paysages.render(entete=False)
+        with _o_radar:
+            radar_accueil.render(entete=False)
 
-if app_mode == MODE_DONNEES:
-    telechargements_page.render()
-    # Les livraisons récentes ont suivi les jeux de données : c'est ici
-    # qu'on vient voir ce qui est disponible, et donc ce qui vient
-    # d'arriver.
-    actualites.rendre(_bascule)
+    if app_mode == MODE_DONNEES:
+        telechargements_page.render()
+        # Les livraisons récentes ont suivi les jeux de données : c'est ici
+        # qu'on vient voir ce qui est disponible, et donc ce qui vient
+        # d'arriver.
+        actualites.rendre(_bascule)
 
