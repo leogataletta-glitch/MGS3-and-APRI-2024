@@ -259,8 +259,17 @@ st.markdown(("""
      Streamlit exprime en `rem` — gouttières, hauteurs de widget, marges de
      titre — suit dans la même proportion, ce qui évite qu'un texte plus petit
      flotte dans des blocs restés grands. */
-  html { font-size: 14.5px; }
-  :root { --z: .88; --dz: 1.1364; }
+  /* LA TAILLE REMONTE, MAINTENANT QUE LA PAGE EST PLEINE LARGEUR. Le corps
+     avait été descendu à 14,5 px et le zoom à 0,88 pour faire tenir plus de
+     contenu sur un écran, à une époque où la colonne était bornée à 1240 px.
+     La borne ayant sauté, la largeur ne manque plus : c'est la lisibilité qui
+     manquait. Le zoom porte l'essentiel de la reprise, parce qu'il agit sur
+     tout — y compris les dizaines de composants dont la taille est écrite en
+     pixels fixes — et conserve donc exactement les proportions entre les
+     éléments. La racine suit d'un cran, pour le texte courant qui en hérite.
+     Total : environ 12 % de plus qu'avant. */
+  html { font-size: 15.2px; }
+  :root { --z: .95; --dz: 1.0526; }
   section.stMain, div[data-testid="stMain"] { zoom: var(--z); }
   /* PLEINE LARGEUR. La colonne était bornée à 1240 px : sur un grand écran,
      un tiers de la page restait blanc à droite pendant que les tableaux se
