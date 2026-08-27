@@ -845,15 +845,15 @@ st.markdown(("""
     background: #ffffff !important;
     border: 1px solid var(--bord) !important;
     border-radius: 999px !important;
-    box-shadow: none !important; padding: 6px 4px !important;
+    box-shadow: none !important; padding: 3px 4px !important;
     min-height: 0 !important; height: auto !important; width: 100% !important;
     justify-content: center !important; transform: none !important;
     transition: background .15s ease, border-color .15s ease;
   }
   section[data-testid="stSidebar"] div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button p {
-    font-size: 11.5px !important; font-weight: 700 !important;
-    letter-spacing: .09em !important; text-transform: uppercase;
+    font-size: 9.5px !important; font-weight: 700 !important;
+    letter-spacing: .06em !important; text-transform: uppercase;
     color: var(--encre-3) !important; text-align: center !important;
     transition: color .15s ease;
   }
@@ -877,8 +877,8 @@ st.markdown(("""
      filet en dessous pour la séparer de la marque sans la souligner. */
   section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:has(
       div[class*="st-key-lang_"]) {
-    padding: 12px 2px 12px; margin: 0 auto 2px; max-width: 250px;
-    gap: 8px !important;
+    padding: 6px 2px 7px; margin: 0 auto 2px; max-width: 168px;
+    gap: 6px !important;
     border-bottom: 1px solid var(--bord);
   }
 
@@ -1496,8 +1496,13 @@ with _sb_langue_haut:
     # gauche : la colonne fantôme les y retenait, et la première était plus
     # large que la seconde, donc les deux pastilles n'auraient pas eu la même
     # taille. Deux colonnes égales, et la rangée se centre d'elle-même.
+    # L'ORDRE SUIT LA LANGUE PAR DÉFAUT. Le site s'ouvre en anglais
+    # (i18n.DEFAUT), et l'anglais était pourtant proposé en second : le
+    # lecteur voyait « FRANÇAIS » en premier alors qu'il lisait déjà de
+    # l'anglais. La langue servie vient donc en tête, l'autre à côté.
     _cl = st.columns(2)
-    for _col, _code in zip(_cl, ("fr", "en")):
+    _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
+    for _col, _code in zip(_cl, _ordre):
         with _col:
             st.button(i18n.LANGUES[_code], key=f"lang_{_code}",
                       on_click=_changer_langue, args=(_code,),
