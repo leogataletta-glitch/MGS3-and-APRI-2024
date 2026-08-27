@@ -666,7 +666,7 @@ st.markdown(("""
      déplacement. Sans retour au survol, rien ne distingue une ligne
      cliquable d'un simple titre ; avec trois retours à la fois, la colonne
      s'agite. */
-  section[data-testid="stSidebar"] div[data-testid="stButton"] > button {
+  div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button {
     display: flex !important; align-items: center !important;
     justify-content: flex-start !important;
     width: 100% !important; min-height: 46px !important; height: auto !important;
@@ -676,24 +676,24 @@ st.markdown(("""
     transition: background .15s ease, color .15s ease;
     margin-bottom: 2px;
   }
-  section[data-testid="stSidebar"] div[data-testid="stButton"] > button > div,
-  section[data-testid="stSidebar"] div[data-testid="stButton"] > button
+  div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button > div,
+  div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button
     div[data-testid="stMarkdownContainer"] {
     width: 100% !important; text-align: left !important;
     display: block !important;
   }
-  section[data-testid="stSidebar"] div[data-testid="stButton"] > button p {
+  div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button p {
     font-family: "Inter", system-ui, sans-serif !important;
     font-size: 14.5px !important; font-weight: 500 !important;
     line-height: 1.35 !important;
     color: var(--encre-2) !important;
     text-align: left !important; width: 100%; margin: 0 !important;
   }
-  section[data-testid="stSidebar"] div[data-testid="stButton"] > button:hover {
+  div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button:hover {
     background: #f1f6f4 !important;
     transform: none !important;
   }
-  section[data-testid="stSidebar"]
+  div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button:hover p {
     color: var(--encre) !important;
   }
@@ -702,16 +702,16 @@ st.markdown(("""
      remettre dans la colonne la tache de couleur qu'on vient d'en retirer ;
      ici c'est la graisse du texte qui dit où l'on se trouve, et la teinte ne
      fait que la confirmer. */
-  section[data-testid="stSidebar"]
+  div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"] {
     background: #e9f2ee !important;
     border: none !important; box-shadow: none !important;
   }
-  section[data-testid="stSidebar"]
+  div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"] p {
     color: var(--accent) !important; font-weight: 700 !important;
   }
-  section[data-testid="stSidebar"]
+  div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"]:hover {
     background: #e2ece7 !important;
   }
@@ -848,12 +848,16 @@ st.markdown(("""
   .bandeau-marque .bm-lieu {
     font-size: 15px; font-weight: 700; color: #16324a; margin-top: 4px;
   }
-  /* Le cartouche recouvre le logo incrusté dans l'illustration et porte le
-     vrai à sa place. Sa taille est donc dictée par ce qu'il doit cacher. */
+  /* LE LOGO EST BLANC ET POSÉ À MÊME L'IMAGE, SANS PLAQUE.
+     Le cartouche blanc qu'il portait découpait un rectangle net dans le
+     paysage. L'angle de l'illustration a été légèrement assombri à la place
+     — un vignetage, pas une plaque — ce qui ramène la clarté du fond autour
+     de 119 sur 255 : assez sombre pour qu'un logo blanc s'y détache, assez
+     clair pour qu'on ne voie pas une tache. L'ombre portée finit le travail
+     là où un nuage passe plus clair. */
   .bandeau-logo {
-    position: absolute; top: 12px; right: 18px; height: 58px;
-    padding: 12px 18px; border-radius: 10px;
-    background: rgba(255,255,255,.94); box-sizing: content-box;
+    position: absolute; top: 22px; right: 30px; height: 62px;
+    filter: drop-shadow(0 1px 7px rgba(0,0,0,.45));
   }
 
   /* LES DEUX LANGUES SE POSENT SUR L'IMAGE, EN HAUT À GAUCHE.
@@ -941,15 +945,6 @@ st.markdown(("""
   }
   /* Sans ligne de contenu, le bandeau collerait au titre de la page. */
   .bh-vide { height: 20px; }
-  /* la rangée sous le bandeau : menu, remise à zéro, état courant */
-  div[class*="st-key-nav_menu"] label p,
-  div[class*="st-key-f_reset_global"] label p {
-    font-size: 10.5px !important; letter-spacing: .09em !important;
-    text-transform: uppercase; font-weight: 700 !important;
-    color: var(--encre-3) !important;
-  }
-  .nav-etat { font-size: 12.5px; color: var(--encre-3); line-height: 1.5;
-              padding-top: 9px; }
   .bh-page {
     font-size: 15px; font-weight: 700; color: #101728;
     letter-spacing: -.01em;
@@ -1552,7 +1547,7 @@ def _rendre_ruban():
             f'<div class="bm-lieu">{T("a_lieu")}</div>'
             f'</div></div>'
             f'<img class="bandeau-logo" alt="UNEP" '
-            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLEU}">'
+            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
             f'</div>', unsafe_allow_html=True)
 
 
@@ -1582,44 +1577,23 @@ with _zone_langue:
                             if st.session_state["choix_langue"] == _code
                             else "secondary"))
 
-def _choisir_nav():
-    """Le menu déroulant écrit dans l'état, comme le faisaient les boutons."""
-    m = st.session_state.get("nav_menu")
-    if m in LIBELLE_MODE:
-        _bascule(m)
-
-
 # LE MENU À GAUCHE, LA PAGE À SA DROITE.
-# La colonne de gauche d'origine était une liste de douze entrées ; réduite à
-# un menu déroulant, elle ne pèse plus rien et laisse au contenu presque toute
-# la largeur. Les deux colonnes sont ouvertes ici, avant l'aiguillage, parce
-# que la page doit se dessiner DANS la colonne de droite : ouvertes après,
-# elles se seraient retrouvées sous le contenu au lieu de le contenir.
+# Les deux colonnes sont ouvertes ici, avant l'aiguillage, parce que la page
+# doit se dessiner DANS celle de droite : ouvertes après, elles se seraient
+# retrouvées sous le contenu au lieu de le contenir.
 _c_menu, _c_contenu = st.columns([1, 5.4], gap="large")
 
-with _zone_barre:
-    pass
-
-with _c_menu:
-    _modes = [m for m, _i in _NAV]
-    _cour = st.session_state.get("app_mode", _modes[0])
-    st.selectbox(T("nav_titre"), _modes,
-                 index=_modes.index(_cour) if _cour in _modes else 0,
-                 format_func=lambda m: LIBELLE_MODE.get(m, m),
-                 key="nav_menu", on_change=_choisir_nav)
-    # LA REMISE À ZÉRO RESTE SOUS LE MENU. C'est la seule commande de filtre
-    # qu'on cherche depuis n'importe quelle page ; les trois sélecteurs, eux,
-    # vivent dans la page, sous le titre de la rubrique, là où le résultat
-    # qu'ils modifient est affiché.
-    st.button(T("f_reinit_long"), key="f_reset_global",
-              on_click=filtres.reinitialiser, use_container_width=True,
-              disabled=not filtres.actif())
-    st.markdown(
-        f'<div class="nav-etat">'
-        f'{T("f_aucun") if not filtres.actif() else filtres.resume()}'
-        f'</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="apri-pied">{T("org")}</div>',
+with _c_menu, st.container(key="zone_nav"):
+    # LES CHAPITRES REDEVIENNENT UNE LISTE, PAS UN MENU DÉROULANT.
+    # Le déroulant tenait moins de place, mais il cachait la carte du site :
+    # on ne voyait plus ce qui existait sans l'ouvrir, et la page courante ne
+    # se lisait plus d'un coup d'œil parmi les autres. Une liste montre les
+    # douze entrées en même temps et marque celle où l'on est.
+    st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
+    st.markdown(f'<div class="nav-groupe">{T("nav_titre")}</div>',
                 unsafe_allow_html=True)
+    for _mode, _icone in _NAV:
+        _entree_nav(_mode, _icone)
 
 # Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par
