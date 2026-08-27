@@ -193,6 +193,15 @@ _GABARIT = """
   /* ------------------------------------------------------- la répartition */
   var groupes = [];
 
+  /* LA LISTE DES ÉLÉMENTS TOUCHÉS EST PARTAGÉE ENTRE LES INSTANCES.
+     Une nouvelle instance du script démarre à chaque réexécution de la page.
+     Si chacune tenait sa propre liste, elle serait incapable de réafficher ce
+     que la précédente avait masqué : les blocs cachés par l'instance d'avant
+     restaient invisibles pour toujours, et le récit du premier chapitre du
+     rapport s'arrêtait au bout de deux lignes. La liste vit donc sur la page,
+     pas dans l'instance. */
+  if (!P.__feuilletTouches) P.__feuilletTouches = [];
+
   /* LE REMBOURRAGE BAS DE STREAMLIT EST RENDU INUTILE PAR LA BARRE. Le
      conteneur principal réserve cent soixante pixels sous le contenu pour
      que le dernier élément ne colle pas au bord. Avec une barre fixe posée
@@ -287,7 +296,8 @@ _GABARIT = """
      découpé — qui déborde de trois cents pixels sur chaque écran. On ne
      retient donc que le panneau qui occupe vraiment de la place. */
   function panneauOuvert(el) {
-    var tous = el.querySelectorAll('[data-baseweb="tab-panel"]');
+    var tous = el.querySelectorAll(':scope > [data-baseweb="tab-panel"], '
+             + ':scope > * > [data-baseweb="tab-panel"]');
     for (var i = 0; i < tous.length; i++) {
       if (tous[i].offsetParent !== null && tous[i].offsetHeight > 2) {
         return tous[i];
@@ -296,12 +306,28 @@ _GABARIT = """
     return null;
   }
 
+  /* LA DESCENTE SE FAIT ENFANT PAR ENFANT, JAMAIS PAR RECHERCHE PROFONDE.
+     La première version cherchait le premier `stVerticalBlock` du sous-arbre.
+     Sur le rapport aux bailleurs, elle atterrissait quatre niveaux plus bas,
+     et tout ce qui se trouvait au-dessus dans la même branche n'appartenait
+     alors à aucun écran : ces blocs-là n'étaient jamais masqués, restaient
+     affichés en permanence, et la page débordait de deux mille pixels quel
+     que soit le feuillet. On ne traverse donc plus que des enveloppes à
+     enfant unique, et on s'arrête à la première fratrie rencontrée : rien ne
+     peut être sauté. */
   function pileInterne(el) {
-    var pan = panneauOuvert(el);
-    var cible = pan || el;
-    var vb = cible.querySelector('[data-testid="stVerticalBlock"]');
-    if (vb && vb.children.length > 1) return [].slice.call(vb.children);
-    if (pan && pan.children.length > 1) return [].slice.call(pan.children);
+    var cur = el, garde = 0;
+    while (cur && garde++ < 8) {
+      var pan = panneauOuvert(cur);
+      if (pan && pan !== cur) { cur = pan; continue; }
+      var enf = [].slice.call(cur.children).filter(function (c) {
+        return c.nodeType === 1 && c.tagName !== 'STYLE' &&
+               c.tagName !== 'SCRIPT';
+      });
+      if (enf.length > 1) return enf;
+      if (enf.length === 1) { cur = enf[0]; continue; }
+      return null;
+    }
     return null;
   }
 
@@ -312,7 +338,14 @@ _GABARIT = """
     for (var i = 0; i < kids.length; i++) {
       var el = kids[i];
       var h = mesurer(el);
-      if (h <= dispo || prof >= 3) { sortie.push(el); continue; }
+      /* LA PROFONDEUR MONTE JUSQU'À SIX. Le rapport aux bailleurs empile un
+         conteneur encadré, puis des colonnes, puis des blocs internes : à
+         trois niveaux on s'arrêtait avant d'avoir atteint le contenu, et la
+         page débordait de deux mille pixels alors qu'elle était découpable.
+         Six niveaux couvrent les imbrications réellement présentes ; au-delà,
+         on tombe sur des éléments de mise en forme qu'il ne sert à rien de
+         séparer. */
+      if (h <= dispo || prof >= 6) { sortie.push(el); continue; }
       var bo = barreOnglets(el);
       var dedans = pileInterne(el);
       if (!dedans) { sortie.push(el); continue; }
@@ -417,6 +450,24 @@ _GABARIT = """
     perpetuels = [];
     var kids = eclater(vb, dispo);
 
+    /* GARDE-FOU : AUCUN CONTENU NE DOIT DISPARAÎTRE.
+       Le découpage descend dans les conteneurs pour trouver des morceaux de
+       la taille d'un écran. S'il se trompe de branche — un panneau d'onglets
+       mal identifié, une enveloppe inattendue — les blocs qu'il n'a pas
+       ramassés ne figurent dans aucun écran : ils sont masqués au premier
+       affichage et plus rien ne permet d'y accéder. C'est arrivé sur le
+       premier chapitre du rapport aux bailleurs, dont le récit s'arrêtait au
+       bout de deux lignes. On vérifie donc que les morceaux retenus couvrent
+       bien la hauteur de la page ; sinon on renonce au découpage fin et on
+       revient aux blocs de premier niveau, quitte à ce que la page défile.
+       Une page qui défile se lit ; une page amputée, non. */
+    var hAtomes = 0, hPile = mesurer(vb);
+    for (var t = 0; t < kids.length; t++) hAtomes += mesurer(kids[t]);
+    if (hPile > 40 && hAtomes < hPile * 0.85) {
+      perpetuels = [];
+      kids = [].slice.call(vb.children);
+    }
+
     /* La place prise par les barres d'onglets est retirée une fois pour
        toutes : elles restent à l'écran quel que soit le feuillet, donc elles
        ne sont pas disponibles pour le contenu. */
@@ -449,6 +500,7 @@ _GABARIT = """
     for (var g = 0; g < groupes.length; g++) {
       for (var j = 0; j < groupes[g].length; j++) {
         var el = groupes[g][j];
+        if (P.__feuilletTouches.indexOf(el) < 0) P.__feuilletTouches.push(el);
         if (g === k) {
           el.style.display = '';
           el.classList.remove('feuillet-entre');
@@ -511,10 +563,25 @@ _GABARIT = """
       var vb = pile();
       if (!vb) return;
       degarnir();
-      /* on remet tout à plat avant de mesurer : une hauteur mesurée sur un
-         bloc masqué vaut zéro, et la répartition suivante serait fausse */
+      /* ON REMET À PLAT TOUT CE QU'ON A TOUCHÉ, PAS SEULEMENT LE PREMIER
+         NIVEAU. Le découpage descend dans les conteneurs : les blocs qu'il
+         masque sont souvent profonds. Ne réinitialiser que les enfants
+         directs de la pile laissait ces blocs-là masqués pour de bon — si la
+         répartition suivante ne les retenait pas comme morceaux, plus rien ne
+         les réaffichait, et le récit du premier chapitre s'arrêtait au bout
+         de deux lignes sans que rien ne permette d'atteindre la suite. On
+         garde donc la trace de chaque élément touché. */
+      var touches = P.__feuilletTouches;
+      for (var i = 0; i < touches.length; i++) {
+        var e0 = touches[i];
+        e0.style.display = '';
+        e0.style.zoom = '';
+        e0.style.maxHeight = '';
+        e0.style.overflowY = '';
+      }
+      P.__feuilletTouches = [];
       var kids = [].slice.call(vb.children);
-      for (var i = 0; i < kids.length; i++) {
+      for (i = 0; i < kids.length; i++) {
         kids[i].style.display = '';
         kids[i].style.zoom = '';
         kids[i].style.maxHeight = '';
@@ -533,19 +600,46 @@ _GABARIT = """
      seconde passe, une fois la mise en page stabilisée, corrige d'elle-même.
      Le compteur borne le nombre de reprises : sans lui, un contenu dont la
      hauteur oscille ferait boucler la vérification indéfiniment. */
-  var reprises = 0;
+  var reprises = 0, calmes = 0;
   function verifier() {
     setTimeout(function () {
       var sc = D.querySelector('section.stMain');
       if (!sc) return;
-      if (sc.scrollHeight - sc.clientHeight > 2 && reprises < 6) {
-        reprises++;
-        P.__feuilletRefaire();
-      } else {
-        reprises = 0;
+      var trop = sc.scrollHeight - sc.clientHeight;
+      if (trop > 2) {
+        /* ça déborde : on refait, et on remet le compteur de calme à zéro */
+        calmes = 0;
+        if (reprises < 10) { reprises++; P.__feuilletRefaire(); }
+        else { reprises = 0; calmes = 0; }
+        return;
       }
-    }, reprises < 2 ? 550 : 1400);
+      /* DEUX CONSTATS CALMES AVANT DE LÂCHER, PAS UN SEUL. Pendant une
+         réexécution, la page traverse un instant où tout tient parce que le
+         contenu n'est pas encore revenu. Un seul contrôle rassurant suffisait
+         à interrompre la surveillance, et ce qui finissait de charger juste
+         après débordait sans que personne ne regarde plus. */
+      calmes++;
+      if (calmes < 2 && reprises < 10) { reprises++; verifier(); }
+      else { reprises = 0; calmes = 0; }
+      return;
+    /* LES REPRISES S'ESPACENT AU LIEU DE SE RÉPÉTER. Six vérifications à
+       cadence trop lente mettent vingt secondes à converger, et le lecteur
+       voit la page se réajuster sous ses yeux. Les premières reprises sont
+       donc rapprochées — c'est là que presque tout se joue — puis la cadence
+       se stabilise pour laisser aux pages lourdes, comme le rapport aux
+       bailleurs et ses radars, le temps de finir de se poser. Dix reprises
+       au plus : passé ce point, la hauteur oscille et refaire n'aide plus. */
+    }, [250, 350, 500, 700, 1000, 1400, 1400, 1400, 1400, 1400][Math.min(reprises, 9)]);
   }
+
+  /* LE COMPTEUR DE REPRISES SE REMET À ZÉRO À CHAQUE VRAI CHANGEMENT.
+     Sans cela, une page qui épuisait ses dix reprises laissait le compteur au
+     plafond : toutes les vérifications suivantes échouaient sur la même
+     condition, et plus rien ne se réajustait jamais — c'est ce qui laissait
+     le rapport aux bailleurs déborder de deux mille pixels dès qu'on changeait
+     de chapitre. Le changement de contenu, lui, est un événement neuf : il a
+     droit à son propre budget de reprises. */
+  P.__feuilletReset = function () { reprises = 0; calmes = 0; };
 
   /* l'instance qui vient de démarrer devient l'instance de référence */
   P.__feuilletAller = aller;
@@ -555,12 +649,25 @@ _GABARIT = """
   if (!P.__feuilletInstalle) {
     P.__feuilletInstalle = true;
 
-    var obs = new P.MutationObserver(function () { P.__feuilletRefaire(); });
+    var obs = new P.MutationObserver(function () {
+      P.__feuilletReset();
+      P.__feuilletRefaire();
+    });
+    /* ON SURVEILLE LA RACINE, PAS LE CONTENEUR DE CONTENU.
+       React ne se contente pas de modifier les enfants du conteneur
+       principal : il lui arrive de remplacer le conteneur lui-même. Un
+       observateur attaché à ce nœud se retrouve alors branché sur un élément
+       détaché du document, ne reçoit plus rien, et cesse silencieusement de
+       faire son travail — la page débordait dès qu'on changeait de chapitre,
+       sans la moindre erreur pour le signaler. Le <body>, lui, ne change
+       jamais. Le coût est nul : la répartition est de toute façon différée
+       de cent vingt millisecondes, donc une rafale de mutations ne déclenche
+       qu'un seul recalcul. */
     var att = setInterval(function () {
       var c = conteneur();
       if (c) {
         clearInterval(att);
-        obs.observe(c, { childList: true, subtree: true });
+        obs.observe(D.body, { childList: true, subtree: true });
         P.__feuilletRefaire();
       }
     }, 200);
@@ -578,6 +685,19 @@ _GABARIT = """
   } else {
     refaire();
   }
+
+  /* UNE RELANCE DIFFÉRÉE, À CHAQUE PASSAGE DU SCRIPT.
+     Le MutationObserver voit bien les réexécutions, mais sur les pages qui
+     rechargent beaucoup de contenu d'un coup — le rapport aux bailleurs quand
+     on change de chapitre — la répartition qu'il déclenche tombe pendant que
+     la page bouge encore, et la chaîne de vérifications n'a pas toujours
+     suffi à rattraper le décalage. Une relance franche une seconde après,
+     compteurs remis à zéro, met fin au problème pour de bon. Elle coûte un
+     recalcul par changement de page ; c'est le prix d'une page qui ne déborde
+     jamais. */
+  setTimeout(function () {
+    try { P.__feuilletReset(); P.__feuilletRefaire(); } catch (e) {}
+  }, 1000);
 })();
 </script>
 """
@@ -600,8 +720,17 @@ def activer(cle):
     # suffisait à faire échouer le formatage `%`, et le script n'était alors
     # jamais injecté — panne silencieuse, page qui redéfile, aucune erreur
     # visible. Des jetons explicites ne peuvent pas se faire piéger.
+    # UN JETON QUI CHANGE À CHAQUE RÉEXÉCUTION. Streamlit ne recrée l'iframe
+    # d'un composant que si son contenu a changé ; avec un script identique
+    # d'une exécution à l'autre, aucune nouvelle instance ne démarrait, et la
+    # relance différée ci-dessous n'avait jamais lieu au moment où elle est
+    # justement utile. Le compteur rend chaque rendu unique d'un caractère.
+    n = st.session_state.get("_feuillet_tour", 0) + 1
+    st.session_state["_feuillet_tour"] = n
+
     html = (_GABARIT
             .replace("@@CLE@@", json.dumps(f"{cle}:{lang}"))
             .replace("@@MOTS@@", json.dumps(mots, ensure_ascii=False))
-            .replace("@@COUSSIN@@", str(COUSSIN)))
+            .replace("@@COUSSIN@@", str(COUSSIN))
+            + f"\n<!-- {n} -->")
     components.html(html, height=0, width=0)

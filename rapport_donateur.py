@@ -935,6 +935,179 @@ TEXTES = {
               "ménages enquêtés."},
 
     # ---- acte 2
+    # ------------------------------------------------- DÉZOOMER : POURQUOI APRI
+    # L'acte 1 montre trois projets qui échouent. Celui-ci doit répondre à la
+    # seule question que le bailleur se pose ensuite : et vous, vous auriez
+    # fait quoi ? Chaque bloc oppose donc ce que le silo a livré à ce que la
+    # mesure dit, puis nomme la proposition. Sans le troisième temps, la
+    # critique reste gratuite.
+    "rap_z_t": {"en": "Zooming out: what we would have proposed instead",
+                "fr": "Dézoomer : ce que nous aurions proposé à la place"},
+    "rap_z_x": {
+        "en": "Each of the three projects failed the same way: it treated a "
+              "symptom as if it were the problem, inside a single sector, "
+              "without ever asking what was actually holding the household "
+              "back. That question is answerable — it is what this survey "
+              "measures. For each case, here is what the silo delivered, what "
+              "the measurement says, and what we would have put on the table.",
+        "fr": "Les trois projets échouent de la même manière : ils traitent un "
+              "symptôme comme s'il était le problème, à l'intérieur d'un seul "
+              "secteur, sans jamais demander ce qui retenait réellement le "
+              "ménage. Cette question a une réponse — c'est ce que l'enquête "
+              "mesure. Pour chaque cas : ce que le silo a livré, ce que la "
+              "mesure dit, et ce que nous aurions mis sur la table."},
+    "rap_z_silo": {"en": "What the silo delivered", "fr": "Ce que le silo a livré"},
+    "rap_z_mes": {"en": "What the measurement says", "fr": "Ce que la mesure dit"},
+    "rap_z_prop": {"en": "What we would have proposed",
+                   "fr": "Ce que nous aurions proposé"},
+
+    "rap_z1_t": {"en": "Improved-breed livestock",
+                 "fr": "Les animaux de race améliorée"},
+    "rap_z1_silo": {
+        "en": "An animal per household, a vaccination round, a training day. "
+              "The sector is livestock, the indicator is heads distributed, "
+              "and the project closes on that indicator.",
+        "fr": "Un animal par ménage, une campagne de vaccination, une journée "
+              "de formation. Le secteur est l'élevage, l'indicateur est le "
+              "nombre de têtes distribuées, et le projet se clôt sur cet "
+              "indicateur."},
+    "rap_z1_mes": {
+        "en": "The binding constraint is not the animal. It is that the "
+              "household has no cash buffer, so the animal is sold at the "
+              "first shock, and no reliable feed, so it loses weight before "
+              "it can be sold well. Both are measured here, and both sit "
+              "outside the livestock sector.",
+        "fr": "La contrainte n'est pas l'animal. C'est que le ménage n'a "
+              "aucune réserve de trésorerie, donc l'animal part au premier "
+              "choc, et pas de fourrage fiable, donc il maigrit avant de "
+              "pouvoir être bien vendu. Les deux sont mesurés ici, et les "
+              "deux sont hors du secteur élevage."},
+    "rap_z1_prop": {
+        "en": "Sequence it: a savings or reserve mechanism first, feed "
+              "security second, the animal last — and give the animal only to "
+              "households where the first two now hold. Fewer animals, more "
+              "animals still alive two years later.",
+        "fr": "Séquencer : d'abord un mécanisme d'épargne ou de réserve, "
+              "ensuite la sécurité du fourrage, l'animal en dernier — et ne "
+              "donner l'animal qu'aux ménages chez qui les deux premières "
+              "conditions tiennent. Moins d'animaux, davantage d'animaux "
+              "encore vivants deux ans plus tard."},
+
+    "rap_z2_t": {"en": "Reforestation on its own",
+                 "fr": "Le reboisement seul"},
+    "rap_z2_silo": {
+        "en": "Seedlings planted, hectares counted, photographs taken at "
+              "handover. The sector is forestry, and the indicator is "
+              "seedlings in the ground.",
+        "fr": "Des plants mis en terre, des hectares comptés, des "
+              "photographies à la remise. Le secteur est la forêt, et "
+              "l'indicateur est le plant en terre."},
+    "rap_z2_mes": {
+        "en": "The trees are cut again because cooking fuel has no "
+              "substitute, and replanting on land the household does not "
+              "securely hold protects nothing. Cooking fuel and land tenure "
+              "are measured here — neither belongs to forestry.",
+        "fr": "Les arbres sont recoupés parce que le combustible de cuisson "
+              "n'a pas de substitut, et replanter sur une terre que le ménage "
+              "ne tient pas sûrement ne protège rien. Le combustible de "
+              "cuisson et la sécurité foncière sont mesurés ici — ni l'un ni "
+              "l'autre n'appartient au secteur forestier."},
+    "rap_z2_prop": {
+        "en": "Tie the planting to a cooking-fuel alternative and to a tenure "
+              "arrangement negotiated before the first seedling. Plant less, "
+              "on secured ground, next to a household that no longer needs "
+              "that wood.",
+        "fr": "Lier la plantation à une alternative de cuisson et à un accord "
+              "foncier négocié avant le premier plant. Planter moins, sur une "
+              "terre sécurisée, à côté d'un ménage qui n'a plus besoin de ce "
+              "bois."},
+
+    "rap_z3_t": {"en": "Building a school",
+                 "fr": "La construction d'une école"},
+    "rap_z3_silo": {
+        "en": "A building, benches, a handover ceremony. The sector is "
+              "education, and the indicator is the classroom delivered.",
+        "fr": "Un bâtiment, des bancs, une cérémonie de remise. Le secteur "
+              "est l'éducation, et l'indicateur est la salle de classe livrée."},
+    "rap_z3_mes": {
+        "en": "Attendance is held down by things the building does not touch: "
+              "the distance walked, the hours spent fetching water, whether "
+              "the child is registered at birth, and whether the household "
+              "eats. All four are measured here.",
+        "fr": "La fréquentation est retenue par des choses que le bâtiment ne "
+              "touche pas : la distance à parcourir, les heures passées à "
+              "chercher l'eau, l'enregistrement de l'enfant à la naissance, et "
+              "le fait que le ménage mange. Les quatre sont mesurés ici."},
+    "rap_z3_prop": {
+        "en": "Put the water point and the civil-registration drive in the "
+              "same package as the classroom, and site the classroom by "
+              "walking distance rather than by land availability. The building "
+              "then fills.",
+        "fr": "Mettre le point d'eau et la campagne d'état civil dans le même "
+              "paquet que la salle de classe, et implanter la salle selon la "
+              "distance à pied plutôt que selon le terrain disponible. Le "
+              "bâtiment se remplit alors."},
+
+    "rap_z_concl": {
+        "en": "None of these three proposals requires more money. They "
+              "require the sectors to be sequenced against one measured "
+              "constraint instead of being delivered side by side. That is "
+              "what a landscape is for.",
+        "fr": "Aucune de ces trois propositions ne demande plus d'argent. "
+              "Elles demandent que les secteurs soient séquencés contre une "
+              "contrainte mesurée, au lieu d'être livrés côte à côte. C'est à "
+              "cela que sert un paysage."},
+
+    # ------------------------------------------------------ POURQUOI LE PAYSAGE
+    "rap_p_t": {"en": "Why the landscape is the right unit",
+                "fr": "Pourquoi le paysage est la bonne unité"},
+    "rap_p_x": {
+        "en": "A national figure, or even a departmental one, averages two "
+              "territories that behave in opposite ways. Split the same "
+              "households between the coastal landscape and the mountain "
+              "landscape, and the averages come apart — dimension by "
+              "dimension, on the same 0–10 scale.",
+        "fr": "Un chiffre national, et même départemental, fait la moyenne de "
+              "deux territoires qui se comportent en sens inverse. Séparez "
+              "les mêmes ménages entre le paysage littoral et le paysage de "
+              "montagne, et les moyennes se décollent — dimension par "
+              "dimension, sur la même échelle de 0 à 10."},
+    "rap_p_litt": {"en": "Coastal", "fr": "Littoral"},
+    "rap_p_mont": {"en": "Mountain", "fr": "Montagne"},
+    "rap_p_ecart": {"en": "Gap", "fr": "Écart"},
+    "rap_p_renv": {
+        "en": "Read the signs, not only the sizes. The coast is ahead on "
+              "infrastructure and on livelihoods; the mountain is ahead on "
+              "the social and institutional dimensions. A single programme "
+              "applied to both over-serves one and misses the other, and a "
+              "departmental average would have shown neither.",
+        "fr": "Lisez les signes, pas seulement les amplitudes. Le littoral est "
+              "devant sur l'infrastructure et sur les moyens d'existence ; la "
+              "montagne est devant sur les dimensions sociale et "
+              "institutionnelle. Un programme unique appliqué aux deux sur-sert "
+              "l'un et manque l'autre, et une moyenne départementale n'aurait "
+              "montré ni l'un ni l'autre."},
+    "rap_p_env": {
+        "en": "The environmental dimension is the trap: both landscapes score "
+              "the same. The number is identical, the mechanism is not — "
+              "coastal erosion and mangrove loss on one side, slope "
+              "degradation and fuelwood pressure on the other. Same score, "
+              "opposite remedies.",
+        "fr": "La dimension environnementale est le piège : les deux paysages "
+              "obtiennent le même score. Le chiffre est identique, le "
+              "mécanisme ne l'est pas — érosion côtière et recul de la "
+              "mangrove d'un côté, dégradation des versants et pression sur le "
+              "bois-énergie de l'autre. Même score, remèdes opposés."},
+    "rap_p_concl": {
+        "en": "The landscape is not a prettier word for zone. It is the "
+              "smallest unit at which a constraint and its remedy still sit "
+              "in the same picture — the slope and the field below it, the "
+              "watershed and the town at its mouth.",
+        "fr": "Le paysage n'est pas un mot plus élégant pour zone. C'est la "
+              "plus petite unité à laquelle une contrainte et son remède "
+              "tiennent encore dans la même image — le versant et le champ "
+              "qu'il domine, le bassin et le bourg à son exutoire."},
+
     "rap_a2_kick": {"en": "The method", "fr": "La méthode"},
     "rap_a2_x": {
         "en": "Before any figure, what stands behind it. Every number on the "
@@ -960,6 +1133,88 @@ TEXTES = {
                      "fr": "Ce que nous ne pouvons pas dire, nous l'écrivons"},
 
     # ---- acte 3
+    # ------------------------------- LES PLANS ÉCRITS PAR CEUX QUI Y VIVENT
+    # LE BOTTOM-UP SE PROUVE OU NE SE DIT PAS. « Partir des communautés » est
+    # une phrase que tout le monde écrit. Ce qui l'établit, c'est l'asymétrie
+    # mesurée : la moitié des organisations envoie des rapports vers le haut,
+    # une sur sept en reçoit. Le tissu existe, l'information ne redescend pas.
+    "rap_b_t": {"en": "Resilience plans written by the people who live there",
+                "fr": "Des plans de résilience écrits par ceux qui y vivent"},
+    "rap_b_x": {
+        "en": "The last step is not a deliverable we hand over. The community "
+              "organisations exist, they are led locally, and they already "
+              "carry what a plan needs. What is missing is not willingness — "
+              "it is that information travels one way.",
+        "fr": "La dernière étape n'est pas un livrable qu'on remet. Les "
+              "organisations communautaires existent, elles sont dirigées "
+              "localement, et elles portent déjà ce qu'il faut à un plan. Ce "
+              "qui manque n'est pas la volonté — c'est que l'information ne "
+              "circule que dans un sens."},
+    "rap_b_tissu": {"en": "The fabric that is already there",
+                    "fr": "Le tissu déjà présent"},
+    "rap_b_ocb": {"en": "organisations profiled",
+                  "fr": "organisations rencontrées"},
+    "rap_b_sec": {"en": "communal sections covered",
+                  "fr": "sections communales couvertes"},
+    "rap_b_femme": {"en": "have a woman in the leadership",
+                    "fr": "ont une femme dans la direction"},
+    "rap_b_jeune": {"en": "have a young person in the leadership",
+                    "fr": "ont un jeune dans la direction"},
+    "rap_b_part": {"en": "hold at least one partnership",
+                   "fr": "ont au moins un partenariat"},
+    "rap_b_monte": {"en": "Reports they send upward",
+                    "fr": "Rapports qu'elles envoient vers le haut"},
+    "rap_b_descend": {"en": "Reports they receive back",
+                      "fr": "Rapports qu'elles reçoivent en retour"},
+    "rap_b_asym_t": {"en": "Information goes up, and does not come back down",
+                     "fr": "L'information monte, et ne redescend pas"},
+    "rap_b_asym": {
+        "en": "Half of the organisations send reports upward to an authority "
+              "or a partner ({a} %, n = {na}). Barely one in seven receives "
+              "anything back ({b} %, n = {nb}). They are consulted — {c} % say "
+              "an authority consults them — but consultation that produces no "
+              "return is extraction, not planning. A plan they are consulted "
+              "on is not a plan they wrote.",
+        "fr": "La moitié des organisations envoie des rapports vers une "
+              "autorité ou un partenaire ({a} %, n = {na}). À peine une sur "
+              "sept reçoit quelque chose en retour ({b} %, n = {nb}). Elles "
+              "sont consultées — {c} % déclarent qu'une autorité les consulte "
+              "— mais une consultation sans retour est un prélèvement, pas une "
+              "planification. Un plan sur lequel on les consulte n'est pas un "
+              "plan qu'elles ont écrit."},
+    "rap_b_carto_t": {"en": "And almost none of them maps its own ground",
+                      "fr": "Et presque aucune ne cartographie son propre terrain"},
+    "rap_b_carto": {
+        "en": "Only {v} % carry out any mapping of their territory (n = {n}). "
+              "That is the gap this survey is built to close: a plan needs a "
+              "picture of the ground, and the people who know the ground do "
+              "not currently hold that picture. Handing them the measurement, "
+              "section by section, is what turns consultation into authorship.",
+        "fr": "Seules {v} % réalisent une cartographie de leur territoire "
+              "(n = {n}). C'est l'écart que cette enquête est faite pour "
+              "combler : un plan demande une image du terrain, et ceux qui "
+              "connaissent le terrain ne détiennent pas cette image. Leur "
+              "remettre la mesure, section par section, est ce qui transforme "
+              "la consultation en écriture."},
+    "rap_b_fragile": {
+        "en": "The fabric is also young and thin: {j} of the {n} "
+              "organisations are less than a year old, and they rate their "
+              "own partnerships {q} out of 10 on average (n = {qn}). A plan "
+              "written from here needs accompaniment, not a template.",
+        "fr": "Le tissu est aussi jeune et mince : {j} des {n} organisations "
+              "ont moins d'un an, et elles notent leurs propres partenariats "
+              "{q} sur 10 en moyenne (n = {qn}). Un plan écrit d'ici demande "
+              "un accompagnement, pas un gabarit."},
+    "rap_b_concl": {
+        "en": "This is what your funding leaves behind: not a report about "
+              "these ten sections, but the measurement placed in the hands of "
+              "the organisations that live in them, at the scale of the "
+              "landscape they can actually act on.",
+        "fr": "C'est ce que votre financement laisse derrière lui : non pas un "
+              "rapport sur ces dix sections, mais la mesure remise aux "
+              "organisations qui y vivent, à l'échelle du paysage sur lequel "
+              "elles peuvent réellement agir."},
+
     "rap_a3_kick": {"en": "The findings", "fr": "Les constats"},
     "rap_a3_x": {
         "en": "Four sentences, each with its figure and the basis it rests "
@@ -1114,6 +1369,7 @@ def _mesures(lang):
 
     # --- les organisations communautaires
     ocb_n, ocb_sections, ocb_absentes = None, None, []
+    ocb_part, ocb_note, ocb_note_n, ocb_jeunes = {}, None, None, None
     po = os.path.join(DATA, "ocb.json")
     if os.path.exists(po):
         with open(po, encoding="utf-8") as f:
@@ -1122,6 +1378,28 @@ def _mesures(lang):
         ocb_n = len(fiches)
         ocb_sections = len({x.get("section") for x in fiches if x.get("section")})
         ocb_absentes = o.get("sections_sans_donnee") or []
+
+        # LE TISSU ASSOCIATIF, MESURÉ PLUTÔT QU'INVOQUÉ. Dire « il faut partir
+        # des communautés » ne coûte rien ; montrer que l'information ne
+        # remonte que dans un sens, chiffres à l'appui, engage. Chaque taux
+        # est calculé sur les fiches qui ont répondu à la question, et son
+        # effectif est reporté : une part calculée sur vingt-sept fiches ne
+        # doit pas être lue comme une part calculée sur trente-quatre.
+        def _part(cle):
+            v = [x.get(cle) for x in fiches if x.get(cle) is not None]
+            if not v:
+                return None, 0
+            return sum(1 for x in v if x) / len(v) * 100.0, len(v)
+
+        ocb_part = {c: _part(c) for c in
+                    ("partenariat", "autorites", "soumet_rapports",
+                     "recoit_rapports", "cartographie", "jeune_direction",
+                     "femme_direction", "soutien")}
+        desc = o.get("descriptif") or {}
+        ocb_note = desc.get("note_moyenne")
+        ocb_note_n = desc.get("note_n")
+        ocb_jeunes = next((d.get("n") for d in (desc.get("duree") or [])
+                           if d.get("libelle", "").startswith("0-1")), None)
 
     # --- par dimension, pour chaque découpage
     par_dim = {}
@@ -1219,7 +1497,9 @@ def _mesures(lang):
         "sections_n": {s: n.get(s) for s in SECTIONS},
         "questions": q_total,
         "ocb_n": ocb_n, "ocb_sections": ocb_sections,
-        "ocb_absentes": ocb_absentes,
+        "ocb_absentes": ocb_absentes, "ocb_part": ocb_part,
+        "ocb_note": ocb_note, "ocb_note_n": ocb_note_n,
+        "ocb_jeunes": ocb_jeunes,
         "decoupages": 1 + len(PAYSAGES) + len(SECTIONS) + len(GROUPES_SOC),
         "par_dim": par_dim,
         "base_grp": len(base_grp), "groupes": groupes,
@@ -1242,6 +1522,61 @@ STYLE = """
              border-bottom:1px solid #e6ecf4; }
   .rd-h    { font-size:21.5px; font-weight:700; color:#101728;
              letter-spacing:-.025em; margin:22px 0 4px; line-height:1.15; }
+  /* --------------------------------- les trois propositions, en vis-à-vis
+     TROIS COLONNES, PAS TROIS PARAGRAPHES. Mises l'une sous l'autre, les
+     trois étapes se lisent comme un récit et le lecteur oublie la première
+     en arrivant à la troisième. Côte à côte, l'opposition entre ce qui a été
+     livré et ce qu'on aurait proposé se voit sans être expliquée. */
+  .rd-prop { border:1px solid #e6ecf4; border-radius:11px; padding:14px 16px 6px;
+             margin:0 0 12px; background:#fff; }
+  .rd-prop .pt { font-size:14px; font-weight:700; color:#101728;
+                 margin:0 0 10px; }
+  .rd-prop .pg { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .rd-prop .pc { border-top:2px solid #e6ecf4; padding-top:8px; }
+  .rd-prop .pc span { display:block; font-size:9.5px; letter-spacing:.09em;
+                      text-transform:uppercase; font-weight:700;
+                      color:#8a93a5; margin-bottom:5px; }
+  .rd-prop .pc p { font-size:12.5px; line-height:1.62; color:#3c4761;
+                   margin:0 0 10px; }
+  .rd-prop .pc-s { border-top-color:#d8b26a; }
+  .rd-prop .pc-m { border-top-color:#2166ac; }
+  .rd-prop .pc-p { border-top-color:#1a8a4f; }
+  .rd-prop .pc-p p { color:#101728; font-weight:600; }
+  @media (max-width:900px){ .rd-prop .pg{grid-template-columns:1fr} }
+
+  /* ----------------------------------- littoral contre montagne, dimension
+     par dimension : deux barres sur la même échelle et l'écart signé */
+  .rd-pay { max-width:860px; margin:4px 0 12px; }
+  /* LES COLONNES CHIFFRÉES SONT ASSEZ LARGES POUR LEUR EN-TÊTE. À
+     quarante-six pixels, « LITTORAL » et « MONTAGNE » se cassaient en deux
+     lignes au milieu d'un mot. */
+  .rd-pay .pr { display:grid;
+                grid-template-columns:1.35fr 62px 66px 62px 66px 58px;
+                gap:9px; align-items:center; padding:6px 0;
+                border-top:1px solid #eef2f7; font-size:12.5px; }
+  .rd-pay .pth { border-top:none; font-size:9.5px; letter-spacing:.09em;
+                 text-transform:uppercase; color:#8a93a5; font-weight:700; }
+  .rd-pay .pth .vv, .rd-pay .pth .ec { text-align:center; }
+  .rd-pay .nm { color:#101728; font-weight:600; }
+  .rd-pay .bb { height:7px; border-radius:4px; background:#eef2f7;
+                overflow:hidden; }
+  .rd-pay .bb i { display:block; height:100%; border-radius:4px; }
+  .rd-pay .vv { font-variant-numeric:tabular-nums; font-weight:700;
+                text-align:right; }
+  .rd-pay .ec { font-variant-numeric:tabular-nums; font-weight:700;
+                text-align:right; font-size:12px; }
+
+  /* ------------------------------------- ce qui monte contre ce qui redescend */
+  .rd-asym { max-width:620px; margin:2px 0 12px; }
+  .rd-asym .ar { display:grid; grid-template-columns:1fr 200px 54px; gap:12px;
+                 align-items:center; padding:7px 0; font-size:13px; }
+  .rd-asym .nm { color:#101728; font-weight:600; }
+  .rd-asym .ba { height:10px; border-radius:5px; background:#eef2f7;
+                 overflow:hidden; }
+  .rd-asym .ba i { display:block; height:100%; border-radius:5px; }
+  .rd-asym .vv { font-variant-numeric:tabular-nums; font-weight:800;
+                 text-align:right; }
+
   .rd-h2   { font-size:16.5px; font-weight:700; color:#101728;
              letter-spacing:-.015em; margin:26px 0 6px; }
   .rd-x    { font-size:14.5px; color:#3c4761; line-height:1.7; margin:0 0 10px;
@@ -1917,11 +2252,98 @@ def _acte1(m):
 
 
 # --------------------------------------------------------------- deuxième acte
+def _propositions():
+    """Les trois cas de l'acte 1, repris pour dire ce qu'on aurait proposé.
+
+    LA CRITIQUE SANS PROPOSITION NE VAUT RIEN. L'acte 1 démonte trois projets ;
+    laissé là, il donne au bailleur le sentiment qu'on lui reproche d'avoir
+    financé, sans lui dire quoi financer ensuite. Chaque bloc tient donc en
+    trois temps — ce que le silo a livré, ce que la mesure dit, ce que nous
+    aurions proposé — et le troisième est le seul qui compte.
+    """
+    st.markdown(f'<div class="rd-h2">{_e(T("rap_z_t"))}</div>'
+                f'<p class="rd-x">{_e(T("rap_z_x"))}</p>',
+                unsafe_allow_html=True)
+
+    for i, cle in enumerate(("rap_z1", "rap_z2", "rap_z3")):
+        st.markdown(
+            f'<div class="rd-prop rd-pt" style="animation-delay:{.06 * i:.2f}s">'
+            f'<div class="pt">{_e(T(cle + "_t"))}</div>'
+            f'<div class="pg">'
+            f'<div class="pc pc-s"><span>{_e(T("rap_z_silo"))}</span>'
+            f'<p>{_e(T(cle + "_silo"))}</p></div>'
+            f'<div class="pc pc-m"><span>{_e(T("rap_z_mes"))}</span>'
+            f'<p>{_e(T(cle + "_mes"))}</p></div>'
+            f'<div class="pc pc-p"><span>{_e(T("rap_z_prop"))}</span>'
+            f'<p>{_e(T(cle + "_prop"))}</p></div>'
+            f'</div></div>', unsafe_allow_html=True)
+
+    _implic(T("rap_z_concl"))
+
+
+def _paysages_pourquoi(m):
+    """Le paysage, démontré par le renversement des signes.
+
+    LE RENVERSEMENT EST L'ARGUMENT, PAS L'ÉCART. Qu'un territoire soit plus
+    pauvre qu'un autre ne prouve rien sur l'unité d'analyse : il suffirait de
+    donner plus au plus pauvre. Ce qui prouve qu'un paysage n'est pas une
+    zone, c'est que le classement s'inverse d'une dimension à l'autre — le
+    littoral devant sur l'infrastructure, la montagne devant sur le social.
+    Aucune moyenne départementale ne peut porter cette information.
+    """
+    par = m.get("par_dim") or {}
+    lignes = []
+    for cle, _nom in DIMS:
+        d = par.get(cle) or {}
+        if not d.get("n"):
+            continue
+        a = (d.get("scores") or {}).get("Littoral")
+        b = (d.get("scores") or {}).get("Montagne")
+        if a is None or b is None:
+            continue
+        lignes.append((COURT[cle][0 if i18n.get_lang() == "en" else 1], a, b))
+    if not lignes:
+        return
+
+    st.markdown(f'<div class="rd-h2">{_e(T("rap_p_t"))}</div>'
+                f'<p class="rd-x">{_e(T("rap_p_x"))}</p>',
+                unsafe_allow_html=True)
+
+    maxi = max(max(a, b) for _n, a, b in lignes) or 10.0
+    corps = "".join(
+        f'<div class="pr">'
+        f'<span class="nm">{_e(nom)}</span>'
+        f'<span class="bb"><i style="width:{a / maxi * 100:.0f}%;'
+        f'background:{BLEU}"></i></span>'
+        f'<span class="vv" style="color:{BLEU}">{_f(a)}</span>'
+        f'<span class="bb"><i style="width:{b / maxi * 100:.0f}%;'
+        f'background:{AMBRE}"></i></span>'
+        f'<span class="vv" style="color:{AMBRE}">{_f(b)}</span>'
+        f'<span class="ec" style="color:{"#9aa4b5" if abs(a - b) < .3 else ROUGE}">'
+        f'{_f(a - b, 2, True)}</span></div>'
+        for nom, a, b in lignes)
+
+    st.markdown(
+        f'<div class="rd-pay">'
+        f'<div class="pr pth"><span class="nm"></span>'
+        f'<span class="bb"></span><span class="vv">{_e(T("rap_p_litt"))}</span>'
+        f'<span class="bb"></span><span class="vv">{_e(T("rap_p_mont"))}</span>'
+        f'<span class="ec">{_e(T("rap_p_ecart"))}</span></div>'
+        f'{corps}</div>', unsafe_allow_html=True)
+
+    _interp(T("rap_p_renv"))
+    _obs(T("rap_p_env"))
+    _implic(T("rap_p_concl"))
+
+
 def _acte2(m):
-    """La méthode, racontée comme une descente sur le terrain."""
+    """Dézoomer : ce qu'on aurait proposé, pourquoi le paysage, puis la méthode."""
     _titre_acte("rap_a2_kick", "rap_a2", BLEU)
     st.markdown(f'<p class="rd-lead rd-pt" style="animation-delay:.06s">'
                 f'{_e(T("rap_a2_x"))}</p>', unsafe_allow_html=True)
+
+    _propositions()
+    _paysages_pourquoi(m)
 
     q = m["questions"]
     _chiffres([
@@ -1979,6 +2401,84 @@ def _carte(coul, valeur, titre, unite, phrase, retard=0.0):
         f'<div class="rd-c-v">{_e(valeur)}</div>'
         f'<div class="rd-c-u">{_e(unite)}</div>'
         f'<p>{_e(phrase)}</p></div>', unsafe_allow_html=True)
+
+
+def _bottom_up(m):
+    """Le bottom-up, établi par une asymétrie mesurée plutôt que proclamé.
+
+    POURQUOI CETTE SECTION EXISTE. « Partir des communautés » est une phrase
+    que tous les rapports écrivent et qu'aucun ne prouve. Ce qui l'établit
+    ici, c'est un rapport de un à trois et demi entre ce qui monte et ce qui
+    redescend : la moitié des organisations envoie des rapports vers le haut,
+    une sur sept en reçoit. Le tissu associatif n'est donc pas absent, il est
+    tenu à l'écart de sa propre information — et c'est précisément ce qu'un
+    plan écrit sur place corrige.
+
+    RIEN N'EST AFFICHÉ SANS SON EFFECTIF. Les taux ne portent pas tous sur le
+    même nombre de fiches : la cartographie est renseignée par vingt-sept
+    organisations, le partenariat par trente-quatre. Afficher « 26 % » sans
+    dire sur combien laisserait croire à une précision qui n'existe pas.
+    """
+    part = m.get("ocb_part") or {}
+    if not part or not m.get("ocb_n"):
+        return
+
+    def taux(cle):
+        v, n = part.get(cle, (None, 0))
+        return (None, 0) if v is None else (round(v), n)
+
+    soum, n_soum = taux("soumet_rapports")
+    recu, n_recu = taux("recoit_rapports")
+    cons, _ = taux("autorites")
+    carto, n_carto = taux("cartographie")
+    femme, _ = taux("femme_direction")
+    jeune, _ = taux("jeune_direction")
+    pa, _ = taux("partenariat")
+    if soum is None or recu is None:
+        return
+
+    st.markdown(f'<div class="rd-h2">{_e(T("rap_b_t"))}</div>'
+                f'<p class="rd-x">{_e(T("rap_b_x"))}</p>',
+                unsafe_allow_html=True)
+
+    st.markdown(f'<div class="rd-lab">{_e(T("rap_b_tissu"))}</div>',
+                unsafe_allow_html=True)
+    cases = [(str(m["ocb_n"]), T("rap_b_ocb"), None),
+             (str(m.get("ocb_sections") or "—"), T("rap_b_sec"), None)]
+    if femme is not None:
+        cases.append((f"{femme} %", T("rap_b_femme"), None))
+    if jeune is not None:
+        cases.append((f"{jeune} %", T("rap_b_jeune"), None))
+    if pa is not None:
+        cases.append((f"{pa} %", T("rap_b_part"), None))
+    _chiffres(cases)
+
+    # L'ASYMÉTRIE, MONTRÉE AVANT D'ÊTRE DITE. Deux barres sur la même échelle
+    # font le raisonnement à la place du lecteur : il voit le rapport avant de
+    # lire la phrase qui l'explique.
+    st.markdown(f'<div class="rd-h2">{_e(T("rap_b_asym_t"))}</div>',
+                unsafe_allow_html=True)
+    st.markdown(
+        '<div class="rd-asym">' + "".join(
+            f'<div class="ar"><span class="nm">{_e(lib)}</span>'
+            f'<span class="ba"><i style="width:{v}%;background:{c}"></i></span>'
+            f'<span class="vv" style="color:{c}">{v} %</span></div>'
+            for lib, v, c in ((T("rap_b_monte"), soum, AMBRE),
+                              (T("rap_b_descend"), recu, ROUGE)))
+        + '</div>', unsafe_allow_html=True)
+    _obs(T("rap_b_asym", a=soum, na=n_soum, b=recu, nb=n_recu,
+           c=cons if cons is not None else "—"))
+
+    if carto is not None:
+        st.markdown(f'<div class="rd-h2">{_e(T("rap_b_carto_t"))}</div>',
+                    unsafe_allow_html=True)
+        _interp(T("rap_b_carto", v=carto, n=n_carto))
+
+    if m.get("ocb_jeunes") and m.get("ocb_note"):
+        _obs(T("rap_b_fragile", j=m["ocb_jeunes"], n=m["ocb_n"],
+               q=_f(m["ocb_note"], 1), qn=m.get("ocb_note_n") or "—"))
+
+    _implic(T("rap_b_concl"))
 
 
 def _acte3(m):
@@ -2086,6 +2586,9 @@ def _acte3(m):
 
     # ---- l'outil : où est-ce que ça bloque, et pour qui
     _blocages(m)
+
+    # ---- ce qui reste : les plans écrits sur place
+    _bottom_up(m)
 
     # ---- la clôture
     st.markdown(f'<div class="rd-h2">{_e(T("rap_a3_fin_t"))}</div>',
