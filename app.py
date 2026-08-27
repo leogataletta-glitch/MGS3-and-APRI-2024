@@ -262,7 +262,12 @@ st.markdown(("""
   html { font-size: 14.5px; }
   :root { --z: .88; --dz: 1.1364; }
   section.stMain, div[data-testid="stMain"] { zoom: var(--z); }
-  .block-container { max-width: 1240px; padding-top: 0; padding-bottom: 2.4rem; }
+  /* PLEINE LARGEUR. La colonne était bornée à 1240 px : sur un grand écran,
+     un tiers de la page restait blanc à droite pendant que les tableaux se
+     serraient. La borne saute, deux gouttières suffisent à empêcher le texte
+     de toucher les bords. */
+  .block-container { max-width: none; padding-top: 0; padding-bottom: 2.4rem;
+                     padding-left: 2.6rem; padding-right: 2.6rem; }
   div[data-testid="stMainBlockContainer"] { padding-top: 1.2rem; }
   div[data-testid="stVerticalBlock"] { gap: .65rem; }
   div[data-testid="stElementContainer"] { margin-bottom: 0; }
@@ -813,17 +818,56 @@ st.markdown(("""
      un élément en position absolue se place par rapport au premier parent
      positionné, et l'image seule n'en est pas un. */
   .bandeau-enveloppe { position: relative; display: block; line-height: 0; }
-  /* Le voile : sombre à gauche, éteint aux deux tiers. Il ne couvre pas
-     l'image, il lui donne un coin lisible. */
+  /* LE VOILE EST DEVENU CLAIR, ET IL A CHANGÉ DE RÔLE. Il servait à foncer
+     l'angle gauche pour qu'un logo blanc s'y détache. Le titre du site vient
+     maintenant s'écrire là, et un titre se lit mieux en sombre sur clair que
+     l'inverse : le dégradé part donc du blanc et s'éteint vers la droite, en
+     laissant l'illustration intacte sur les deux tiers restants. */
   .bandeau-voile {
     position: absolute; top: 0; left: 0; bottom: 0;
-    width: min(58%, 640px); pointer-events: none;
-    background: linear-gradient(100deg, rgba(10,24,18,.66) 0%,
-                rgba(10,24,18,.42) 38%, rgba(10,24,18,0) 100%);
+    width: min(62%, 720px); pointer-events: none;
+    background: linear-gradient(95deg, rgba(255,255,255,.97) 0%,
+                rgba(255,255,255,.90) 34%, rgba(255,255,255,.55) 62%,
+                rgba(255,255,255,0) 100%);
   }
+  /* Le logo passe à droite, en bleu : sur un fond devenu clair, la version
+     blanche disparaîtrait purement et simplement. */
+  /* UN CARTOUCHE BLANC SOUS LE LOGO. Le bleu du PNUE posé directement sur le
+     ciel du dessin, lui-même clair et texturé, perdait tout contraste et
+     paraissait délavé. Le cartouche lui rend un fond franc sans l'encadrer. */
   .bandeau-logo {
-    position: absolute; top: 24px; left: 34px; height: 62px;
-    opacity: .95; filter: drop-shadow(0 1px 8px rgba(0,0,0,.35));
+    position: absolute; top: 20px; right: 26px; height: 56px;
+    padding: 9px 13px; border-radius: 9px;
+    background: rgba(255,255,255,.88);
+    box-sizing: content-box;
+  }
+  /* LE TITRE DU SITE VIT DANS L'IMAGE, PLUS AU-DESSUS DU CONTENU. Posé sous
+     le bandeau, il faisait un troisième niveau de titre entre la photo et la
+     page, et repoussait le contenu d'autant. Dans l'image, il devient ce
+     qu'il est : l'enseigne. */
+  .bandeau-titre {
+    position: absolute; top: 50%; left: 40px; transform: translateY(-50%);
+    max-width: min(46%, 520px); pointer-events: none; line-height: 1.14;
+  }
+  /* LE TITRE NE SE JUSTIFIE PAS. La justification est demandée partout dans
+     le site, et elle est juste pour un paragraphe ; sur un titre de deux
+     lignes elle écarte les mots jusqu'à laisser des couloirs blancs entre
+     eux. On la défait ici, et ici seulement. */
+  .bandeau-titre .bt-t {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 34px; font-weight: 400; color: #16211c;
+    letter-spacing: -.012em; margin: 0;
+    line-height: 1.16 !important;
+    text-align: left !important; text-wrap: balance;
+  }
+  .bandeau-titre .bt-s {
+    font-size: 12px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: #2f6b4f; margin: 13px 0 0;
+    text-align: left !important;
+  }
+  @media (max-width: 1100px) {
+    .bandeau-titre .bt-t { font-size: 26px; }
+    .bandeau-titre { max-width: 60%; }
   }
 
   /* --- les deux langues, en tête de la colonne -------------------------
@@ -1470,8 +1514,11 @@ def _rendre_ruban():
              f'style="width:100%;height:300px;object-fit:cover;'
              f'object-position:50% 62%;display:block">'
              f'<div class="bandeau-voile"></div>'
+             f'<div class="bandeau-titre">'
+             f'<p class="bt-t">{T("po_titre")}</p>'
+             f'<p class="bt-s">{T("po_sous")}</p></div>'
              f'<img class="bandeau-logo" alt="UNEP" '
-             f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
+             f'src="data:image/png;base64,{assets.LOGO_UNEP_BLEU}">'
              f'</div>' if photo else "")
             # RIEN D'ÉCRIT SOUS LE BANDEAU QUAND AUCUN FILTRE N'EST POSÉ.
             # Chaque page porte déjà son titre. Le rappel du filtre, lui, ne

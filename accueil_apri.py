@@ -66,17 +66,23 @@ TEXTES = {
                  "fr": "Observatoire de la résilience des paysages"},
     "po_sous": {"en": "Sud and Grand'Anse, Haiti · survey 2024",
                 "fr": "Sud et Grand'Anse, Haïti · enquête 2024"},
-    "po_e1": {"en": "Where?", "fr": "Où ?"},
-    "po_e2": {"en": "What was measured?", "fr": "Qu'a-t-on mesuré ?"},
-    "po_e3": {"en": "What was found?", "fr": "Qu'a-t-on trouvé ?"},
-    "po_e4": {"en": "What can be done?", "fr": "Que faire ?"},
+    # LES QUATRE ÉTAPES SE NOMMENT, ET LA QUESTION PASSE EN DESSOUS.
+    # « Où ? » et « Qu'a-t-on mesuré ? » disaient l'intention sans dire le
+    # contenu. Le nom vient donc en tête — le territoire, la méthodologie —
+    # et la question reste en sous-titre, où elle garde son rôle : rappeler à
+    # quoi cette étape répond. Les quatre sont construites pareil, sans quoi
+    # la rangée aurait mélangé deux noms et deux questions.
+    "po_e1": {"en": "The study area", "fr": "Le territoire d'étude"},
+    "po_e2": {"en": "Methodology", "fr": "La méthodologie"},
+    "po_e3": {"en": "Key results", "fr": "Les résultats clés"},
+    "po_e4": {"en": "Action pathways", "fr": "Les pistes d'action"},
     # LE SOUS-TITRE DE CHAQUE ÉTAPE. La question dit ce qu'on cherche, le
     # sous-titre dit ce qu'on va voir : « Où ? » seul laisse le lecteur
     # deviner s'il aura une carte, une liste ou un tableau.
-    "po_s1": {"en": "The territory", "fr": "Le territoire"},
-    "po_s2": {"en": "The indicators", "fr": "Les indicateurs"},
-    "po_s3": {"en": "Key results", "fr": "Résultats clés"},
-    "po_s4": {"en": "Action pathways", "fr": "Pistes d'action"},
+    "po_s1": {"en": "Where?", "fr": "Où ?"},
+    "po_s2": {"en": "What was measured?", "fr": "Qu'a-t-on mesuré ?"},
+    "po_s3": {"en": "What was found?", "fr": "Qu'a-t-on trouvé ?"},
+    "po_s4": {"en": "What can be done?", "fr": "Que faire ?"},
 
     # les trois faits de l'écran 1, en puces plutôt qu'en tuiles chiffrées
     "po_1_b1": {"en": "Two pilot areas: Grand'Anse and Sud",
@@ -574,7 +580,7 @@ def _ecran_1(m):
     lesquelles on a enquêté mille deux cents ménages. Les puces rendent cet
     emboîtement, les tuiles le cassaient.
     """
-    st.markdown(f'<div class="po-titre-s">{_e(T("po_s1"))}</div>'
+    st.markdown(f'<div class="po-titre-s">{_e(T("po_e1"))}</div>'
                 f'<div class="po-filet"></div>', unsafe_allow_html=True)
 
     g, d = st.columns([1, 1.15], gap="large")
@@ -867,6 +873,40 @@ def _css_etapes(n):
           color:{'#2f6b4f' if actif else '#6b7a88'};
           line-height:1.3; justify-self:start;
         }}""")
+    # LES DEUX BOUTONS DE PARCOURS PORTENT LE MÊME HABIT QUE LES ÉTAPES.
+    # « Suivant » était un pavé vert plein, seul élément de la page à crier
+    # ainsi ; il attirait l'œil plus que le contenu qu'il sert à quitter. Il
+    # devient une carte comme les autres, et ne se colore qu'au survol : un
+    # filet vert dessous et le mot en gras vert, exactement comme l'étape en
+    # cours au-dessus. La cohérence se voit, et la page se calme.
+    for cle in ("po_suiv", "po_prec"):
+        c = f'div[class*="st-key-{cle}"] button'
+        r.append(f"""
+        {c}, {c}[kind="primary"] {{
+          background:#ffffff !important;
+          border:1px solid #e8edf3 !important;
+          border-bottom:1px solid #e8edf3 !important;
+          border-radius:10px !important;
+          box-shadow:none !important; transform:none !important;
+          padding:11px 18px !important; min-height:0 !important;
+          transition:border-color .15s ease, background .15s ease;
+        }}
+        {c} p, {c}[kind="primary"] p {{
+          font-size:14px !important; font-weight:600 !important;
+          color:#3c4761 !important; margin:0 !important;
+          transition:color .15s ease;
+        }}
+        {c}:hover, {c}[kind="primary"]:hover,
+        {c}:focus, {c}[kind="primary"]:focus {{
+          background:#f2f8f4 !important;
+          border-color:#cfe3d7 !important;
+          border-bottom:3px solid #2f6b4f !important;
+        }}
+        {c}:hover p, {c}[kind="primary"]:hover p,
+        {c}:focus p, {c}[kind="primary"]:focus p {{
+          color:#2f6b4f !important; font-weight:700 !important;
+        }}""")
+
     r.append("</style>")
     return "".join(r)
 
@@ -876,12 +916,9 @@ def render():
     st.session_state.setdefault("portail_etape", 1)
     n = st.session_state["portail_etape"]
 
-    st.markdown(
-        f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
-        f'letter-spacing:-.02em;margin:2px 0 0">{_e(T("po_titre"))}</h2>'
-        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
-        f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
-        f'{_e(T("po_sous"))}</p>', unsafe_allow_html=True)
+    # LE TITRE DU SITE N'EST PLUS ÉCRIT ICI. Il est passé dans le bandeau,
+    # sur l'illustration : le répéter juste en dessous aurait fait deux fois
+    # la même enseigne à trois centimètres d'intervalle.
 
     # LES QUATRE BOUTONS SONT LA BARRE D'ÉTAPES, et on peut sauter directement
     # à l'un d'eux : un parcours qui ne se parcourt que dans l'ordre est une
