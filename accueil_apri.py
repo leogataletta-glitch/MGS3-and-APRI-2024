@@ -46,16 +46,91 @@ for key, value in TEXTES.items():
 
 STYLE = """
 <style>
-.apri-panel{border:1px solid #e1e7ee;border-radius:10px;background:#fff;padding:24px 26px 22px;box-sizing:border-box}
-.apri-title{font-family:Georgia,"Times New Roman",serif;font-size:29px;font-weight:400;color:#101728;margin:0}
-.apri-rule{width:42px;height:2px;background:#2f6b4f;margin:12px 0 20px}
-.apri-columns{display:grid;grid-template-columns:repeat(3,1fr)}
-.apri-column{padding:0 30px;border-left:1px solid #e2e8ef}
-.apri-column:first-child{padding-left:0;border-left:none}
-.apri-column:last-child{padding-right:0}
-.apri-column h3{color:#155c37;font-size:19px;margin:0 0 18px}
-.apri-column p{color:#182132;font-family:Georgia,"Times New Roman",serif;font-size:16px;line-height:1.55;text-align:justify;margin:0 0 18px}
-@media(max-width:900px){.apri-columns{grid-template-columns:1fr}.apri-column{border-left:none;border-top:1px solid #e2e8ef;padding:20px 0}.apri-column:first-child{border-top:none}}
+/* Clean two-step navigation */
+div[data-testid="stHorizontalBlock"] button[kind="primary"],
+div[data-testid="stHorizontalBlock"] button[kind="secondary"] {
+    width:100%;
+    min-height:72px;
+    border:1px solid #e1e7ee;
+    border-radius:10px 10px 0 0;
+    background:#ffffff;
+    color:#101728;
+    font-family:Arial,sans-serif;
+    font-size:16px;
+    font-weight:600;
+    box-shadow:none;
+    transition:none;
+}
+div[data-testid="stHorizontalBlock"] button[kind="primary"] {
+    border-bottom:3px solid #1c6349;
+    color:#155c37;
+    background:#ffffff;
+}
+div[data-testid="stHorizontalBlock"] button:hover {
+    border-color:#d7e2dc;
+    color:#155c37;
+    background:#ffffff;
+}
+div[data-testid="stHorizontalBlock"] button p {
+    margin:0;
+}
+.apri-panel {
+    border:1px solid #e1e7ee;
+    border-radius:10px;
+    background:#fff;
+    padding:24px 26px 22px;
+    box-sizing:border-box;
+}
+.apri-title {
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:29px;
+    font-weight:400;
+    color:#101728;
+    margin:0;
+}
+.apri-rule {
+    width:42px;
+    height:2px;
+    background:#2f6b4f;
+    margin:12px 0 20px;
+}
+.apri-columns {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+}
+.apri-column {
+    padding:0 30px;
+    border-left:1px solid #e2e8ef;
+}
+.apri-column:first-child {
+    padding-left:0;
+    border-left:none;
+}
+.apri-column:last-child {
+    padding-right:0;
+}
+.apri-column h3 {
+    color:#155c37;
+    font-size:19px;
+    margin:0 0 18px;
+}
+.apri-column p {
+    color:#182132;
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:16px;
+    line-height:1.55;
+    text-align:justify;
+    margin:0 0 18px;
+}
+@media(max-width:900px) {
+    .apri-columns {grid-template-columns:1fr}
+    .apri-column {
+        border-left:none;
+        border-top:1px solid #e2e8ef;
+        padding:20px 0;
+    }
+    .apri-column:first-child {border-top:none}
+}
 </style>
 """
 
@@ -95,7 +170,7 @@ def _step_buttons():
 
     with cols[0]:
         st.button(
-            f"**1  {T('e1')}**\\n\\n{T('e1s')}",
+            T("e1"),
             key="apri_step_1",
             on_click=_set_step,
             args=(1,),
@@ -105,7 +180,7 @@ def _step_buttons():
 
     with cols[1]:
         st.button(
-            f"**2  {T('e2')}**\\n\\n{T('e2s')}",
+            T("e2"),
             key="apri_step_2",
             on_click=_set_step,
             args=(2,),
@@ -177,7 +252,7 @@ def _methodology():
         st.image(img,use_container_width=True)
 
 def _footer(current):
-    c1, c2 = st.columns(2)
+    c1, c2 = st.columns(2, gap="small")
     with c1:
         if current == 2:
             st.button(
@@ -185,6 +260,7 @@ def _footer(current):
                 key="apri_previous",
                 on_click=_set_step,
                 args=(1,),
+                use_container_width=False,
             )
     with c2:
         if current == 1:
@@ -193,6 +269,7 @@ def _footer(current):
                 key="apri_next",
                 on_click=_set_step,
                 args=(2,),
+                use_container_width=False,
             )
 
 def render():
