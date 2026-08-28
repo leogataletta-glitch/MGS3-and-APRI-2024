@@ -45,9 +45,35 @@ st.markdown("""
 <style>
 .block-container{padding-top:.8rem;padding-bottom:2rem;max-width:1450px}
 .apri-tabs{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin:8px 0 26px}
-.apri-tab{display:block;text-decoration:none!important;text-align:center;color:#111827!important;font-family:Arial,sans-serif;font-size:15px;font-weight:600;padding:13px 10px 15px;border-bottom:1px solid #dfe5e2;background:transparent}
-.apri-tab:hover{color:#155c37!important}
-.apri-tab-active{color:#155c37!important;border-bottom:3px solid #1c6349}
+div[class*="st-key-apri_tab_"] button{
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+    color:#111827 !important;
+    font-family:Arial,sans-serif !important;
+    font-size:15px !important;
+    font-weight:600 !important;
+    padding:10px 4px 8px !important;
+    min-height:0 !important;
+}
+div[class*="st-key-apri_tab_"] button:hover{
+    background:transparent !important;
+    border:none !important;
+    color:#155c37 !important;
+}
+.apri-active-line{
+    height:3px;
+    width:100%;
+    background:#1c6349;
+    margin-top:-5px;
+}
+.apri-inactive-line{
+    height:1px;
+    width:100%;
+    background:#dfe5e2;
+    margin-top:-5px;
+}
+
 .apri-panel{background:transparent;border:none;padding:0;margin:0}
 .apri-title{font-family:Georgia,"Times New Roman",serif;font-size:30px;font-weight:400;line-height:1.15;color:#101728;margin:0}
 .apri-rule{width:42px;height:2px;background:#2f6b4f;margin:12px 0 22px}
@@ -83,18 +109,157 @@ def _find_file(name):
     return None
 
 def _current_step():
-    try:
-        return 2 if str(st.query_params.get("portail_etape","1")) == "2" else 1
-    except Exception:
-        return 1
+    """Keep both tabs inside the same Streamlit page."""
+    return 2 if st.session_state.get("portail_etape", 1) == 2 else 1
+
+
+def _set_step(n):
+    st.session_state["portail_etape"] = n
+
 
 def _tabs(current):
-    st.markdown(f"""
-    <div class="apri-tabs">
-      <a class="apri-tab {'apri-tab-active' if current==1 else ''}" href="?portail_etape=1">{_e(T("e1"))}</a>
-      <a class="apri-tab {'apri-tab-active' if current==2 else ''}" href="?portail_etape=2">{_e(T("e2"))}</a>
-    </div>
-    """, unsafe_allow_html=True)
+    c1, c2 = st.columns(2, gap="large")
+
+    with c1:
+        st.button(
+            T("e1"),
+            key="apri_tab_1",
+            on_click=_set_step,
+            args=(1,),
+            use_container_width=True,
+        )
+        if current == 1:
+            st.markdown('<div class="apri-active-line"></div>', unsafe_allow_html=True)
+        else:
+            st.markdown('<div class="apri-inactive-line"></div>', unsafe_allow_html=True)
+
+    with c2:
+        st.button(
+            T("e2"),
+            key="apri_tab_2",
+            on_click=_set_step,
+            args=(2,),
+            use_container_width=True,
+        )
+        if current == 2:
+            st.markdown('<div class="apri-active-line"></div>', unsafe_allow_html=True)
+        else:
+            st.markdown('<div class="apri-inactive-line"></div>', unsafe_allow_html=True)
+
+
+def _hispaniola_map():
+    """
+    Same study-area map, but with the Dominican Republic visible.
+    The existing Haiti geometry is kept; the Dominican Republic is drawn
+    from a simplified outline of the eastern half of Hispaniola.
+    """
+    try:
+        import territoire_page
+
+        geo = territoire_page._geo()
+        if not geo.get("pays") or not geo.get("sections"):
+            return None
+
+        # Simplified Dominican Republic outline (lon, lat), sufficient for
+        # the small locator map and intentionally without administrative data.
+        dr = [
+            (-71.7083,18.0450), (-71.6877,18.3167), (-71.9451,18.6169),
+            (-71.7013,18.7854), (-71.6249,19.1698), (-71.7124,19.7145),
+            (-71.5873,19.8849), (-70.8067,19.8803), (-70.2144,19.6229),
+            (-69.9508,19.6480), (-69.7693,19.2933), (-69.2221,19.3132),
+            (-69.2543,19.0152), (-68.8094,18.9791), (-68.3179,18.6122),
+            (-68.6893,18.2051), (-69.1649,18.4226), (-69.6240,18.3807),
+            (-69.9529,18.4283), (-70.1332,18.2459), (-70.5171,18.1843),
+            (-70.6693,18.4269), (-70.9999,18.2833), (-71.4002,17.5986),
+            (-71.6577,17.7576), (-71.7083,18.0450),
+        ]
+
+        # Build a combined projection covering both countries.
+        haiti_pts = [p for ring in geo["pays"] for p in ring]
+        all_pts = haiti_pts + dr
+
+        lat_mean = sum(p[1] for p in all_pts) / len(all_pts)
+        k = __import__("math").cos(__import__("math").radians(lat_mean))
+
+        xs = [p[0] * k for p in all_pts]
+        ys = [p[1] for p in all_pts]
+        x0, x1 = min(xs), max(xs)
+        y0, y1 = min(ys), max(ys)
+
+        width, height = 620, 430
+        margin = 12
+        dx = x1 - x0
+        dy = y1 - y0
+        scale = min((width - 2*margin)/dx, (height - 2*margin)/dy)
+        ox = (width - dx*scale)/2
+        oy = (height - dy*scale)/2
+
+        def xy(lon, lat):
+            return (
+                ox + (lon*k - x0)*scale,
+                oy + (y1-lat)*scale,
+            )
+
+        def path(ring):
+            parts = []
+            for i,(lon,lat) in enumerate(ring):
+                x,y = xy(lon,lat)
+                parts.append(("M" if i == 0 else "L") + f"{x:.1f} {y:.1f}")
+            return "".join(parts) + "Z"
+
+        parts = [
+            f'<rect width="{width}" height="{height}" fill="#edf4fb"/>',
+            f'<path d="{path(dr)}" fill="#f3f4f0" stroke="#cfd7df" stroke-width="1"/>',
+        ]
+
+        for ring in geo["pays"]:
+            parts.append(
+                f'<path d="{path(ring)}" fill="#f3f4f0" stroke="#cfd7df" stroke-width="1"/>'
+            )
+
+        # Existing survey sections in green.
+        section_x, section_y = [], []
+        for section in geo["sections"]:
+            for ring in section["anneaux"]:
+                parts.append(
+                    f'<path d="{path(ring)}" fill="#28734f" stroke="#28734f" stroke-width="1"/>'
+                )
+                for lon,lat in ring:
+                    x,y = xy(lon,lat)
+                    section_x.append(x)
+                    section_y.append(y)
+
+        if section_x:
+            cx = (min(section_x)+max(section_x))/2
+            cy = (min(section_y)+max(section_y))/2
+            radius = max(max(section_x)-min(section_x), max(section_y)-min(section_y))/2 + 12
+            parts.append(
+                f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{radius:.1f}" '
+                f'fill="none" stroke="#28734f" stroke-width="1.5" stroke-dasharray="4 3"/>'
+            )
+
+        # Country labels.
+        hx,hy = xy(-72.35,19.05)
+        dxl,dyl = xy(-69.0,19.15)
+        parts.append(
+            f'<text x="{hx:.1f}" y="{hy:.1f}" font-size="12" font-weight="700" '
+            f'fill="#8a93a5" letter-spacing="2">HAÏTI</text>'
+        )
+        parts.append(
+            f'<text x="{dxl:.1f}" y="{dyl:.1f}" font-size="11" font-weight="700" '
+            f'fill="#8a93a5" letter-spacing="1.2">RÉP. DOMINICAINE</text>'
+        )
+
+        return (
+            f'<svg viewBox="0 0 {width} {height}" width="100%" '
+            f'style="max-width:{width}px;display:block;border-radius:10px" '
+            f'font-family="Inter,system-ui,sans-serif">'
+            + "".join(parts)
+            + "</svg>"
+        )
+    except Exception:
+        return None
+
 
 def _study_area():
     counts={"Anse à Drick":121,"Barbois":121,"Beaulieu":121,"Blactote":120,"Dalmette":125,
@@ -122,8 +287,7 @@ def _study_area():
         """,unsafe_allow_html=True)
     with c2:
         try:
-            import territoire_page
-            vignette=territoire_page._vignette(territoire_page._geo(),620,430)
+            vignette = _hispaniola_map()
             st.markdown(f'<div class="apri-map-wrap">{vignette or ""}<div class="apri-note">{_e(T("map_caption"))}</div></div>',unsafe_allow_html=True)
         except Exception:
             st.markdown(f'<div class="apri-map-wrap"><div class="apri-note">{_e(T("map_caption"))}</div></div>',unsafe_allow_html=True)
@@ -155,13 +319,27 @@ def _methodology():
     """,unsafe_allow_html=True)
 
 def _bottom(current):
-    if current==1:
-        st.markdown('<div class="apri-bottom-nav"><span></span><a class="apri-bottom-link" href="?portail_etape=2">Next →</a></div>',unsafe_allow_html=True)
-    else:
-        st.markdown('<div class="apri-bottom-nav"><a class="apri-bottom-link" href="?portail_etape=1">← Previous</a><span></span></div>',unsafe_allow_html=True)
+    c1, c2 = st.columns(2)
+    with c1:
+        if current == 2:
+            st.button(
+                "← " + T("previous"),
+                key="apri_previous",
+                on_click=_set_step,
+                args=(1,),
+            )
+    with c2:
+        if current == 1:
+            st.button(
+                T("next") + " →",
+                key="apri_next",
+                on_click=_set_step,
+                args=(2,),
+            )
 
 def render():
-    current=_current_step()
+    st.session_state.setdefault("portail_etape", 1)
+    current = _current_step()
     _tabs(current)
     if current==1:
         _study_area()
