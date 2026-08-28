@@ -1,17 +1,15 @@
+"""
+APRI — Home / Accueil
+Two-step landing page: Study area + Methodology.
+"""
 
 import os
-import json
 import streamlit as st
 import i18n
 from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(APP_DIR, "data")
-
-SECTIONS = [
-    "Anse à Drick", "Barbois", "Dumont", "Débouchette", "Mouline",
-    "Quentin", "Beaulieu", "Blactote", "Dalmette", "Trichet"
-]
 
 TEXTES = {
     "mode_portail": {"en": "Home", "fr": "Accueil"},
@@ -21,8 +19,8 @@ TEXTES = {
     "e2s": {"en": "What was measured?", "fr": "Qu'a-t-on mesuré ?"},
     "study_title": {"en": "The study area", "fr": "Le territoire d'étude"},
     "study_b1": {"en": "Two pilot areas: Grand'Anse and Sud", "fr": "Deux zones pilotes : Grand'Anse et Sud"},
-    "study_b2": {"en": "{n} communal sections selected within them", "fr": "{n} sections communales sélectionnées en leur sein"},
-    "study_b3": {"en": "{n} households surveyed", "fr": "{n} ménages enquêtés"},
+    "study_b2": {"en": "10 communal sections selected within them", "fr": "10 sections communales sélectionnées en leur sein"},
+    "study_b3": {"en": "1 211 households surveyed", "fr": "1 211 ménages enquêtés"},
     "sections": {"en": "THE TEN COMMUNAL SECTIONS", "fr": "LES DIX SECTIONS COMMUNALES"},
     "section_note": {"en": "The figure beside each name is the number of households surveyed there.", "fr": "Le chiffre indiqué à côté de chaque nom correspond au nombre de ménages enquêtés."},
     "map_caption": {"en": "The surveyed area, in the far south-west of the country.", "fr": "La zone enquêtée, à l'extrême sud-ouest du pays."},
@@ -40,102 +38,43 @@ TEXTES = {
     "previous": {"en": "Previous", "fr": "Précédent"},
     "next": {"en": "Next", "fr": "Suivant"},
 }
-
 for key, value in TEXTES.items():
     i18n.DICO.setdefault(key, value)
 
-STYLE = """
+st.markdown("""
 <style>
-/* Clean two-step navigation */
-div[data-testid="stHorizontalBlock"] button[kind="primary"],
-div[data-testid="stHorizontalBlock"] button[kind="secondary"] {
-    width:100%;
-    min-height:72px;
-    border:1px solid #e1e7ee;
-    border-radius:10px 10px 0 0;
-    background:#ffffff;
-    color:#101728;
-    font-family:Arial,sans-serif;
-    font-size:16px;
-    font-weight:600;
-    box-shadow:none;
-    transition:none;
-}
-div[data-testid="stHorizontalBlock"] button[kind="primary"] {
-    border-bottom:3px solid #1c6349;
-    color:#155c37;
-    background:#ffffff;
-}
-div[data-testid="stHorizontalBlock"] button:hover {
-    border-color:#d7e2dc;
-    color:#155c37;
-    background:#ffffff;
-}
-div[data-testid="stHorizontalBlock"] button p {
-    margin:0;
-}
-.apri-panel {
-    border:1px solid #e1e7ee;
-    border-radius:10px;
-    background:#fff;
-    padding:24px 26px 22px;
-    box-sizing:border-box;
-}
-.apri-title {
-    font-family:Georgia,"Times New Roman",serif;
-    font-size:29px;
-    font-weight:400;
-    color:#101728;
-    margin:0;
-}
-.apri-rule {
-    width:42px;
-    height:2px;
-    background:#2f6b4f;
-    margin:12px 0 20px;
-}
-.apri-columns {
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-}
-.apri-column {
-    padding:0 30px;
-    border-left:1px solid #e2e8ef;
-}
-.apri-column:first-child {
-    padding-left:0;
-    border-left:none;
-}
-.apri-column:last-child {
-    padding-right:0;
-}
-.apri-column h3 {
-    color:#155c37;
-    font-size:19px;
-    margin:0 0 18px;
-}
-.apri-column p {
-    color:#182132;
-    font-family:Georgia,"Times New Roman",serif;
-    font-size:16px;
-    line-height:1.55;
-    text-align:justify;
-    margin:0 0 18px;
-}
-@media(max-width:900px) {
-    .apri-columns {grid-template-columns:1fr}
-    .apri-column {
-        border-left:none;
-        border-top:1px solid #e2e8ef;
-        padding:20px 0;
-    }
-    .apri-column:first-child {border-top:none}
-}
+.block-container{padding-top:.8rem;padding-bottom:2rem;max-width:1450px}
+.apri-tabs{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin:8px 0 26px}
+.apri-tab{display:block;text-decoration:none!important;text-align:center;color:#111827!important;font-family:Arial,sans-serif;font-size:15px;font-weight:600;padding:13px 10px 15px;border-bottom:1px solid #dfe5e2;background:transparent}
+.apri-tab:hover{color:#155c37!important}
+.apri-tab-active{color:#155c37!important;border-bottom:3px solid #1c6349}
+.apri-panel{background:transparent;border:none;padding:0;margin:0}
+.apri-title{font-family:Georgia,"Times New Roman",serif;font-size:30px;font-weight:400;line-height:1.15;color:#101728;margin:0}
+.apri-rule{width:42px;height:2px;background:#2f6b4f;margin:12px 0 22px}
+.apri-bullets{list-style:none;padding:0;margin:0 0 28px}
+.apri-bullets li{position:relative;padding-left:18px;margin-bottom:18px;color:#263244;font-size:14px;line-height:1.5}
+.apri-bullets li:before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;background:#2f6b4f}
+.apri-section-label{font-size:10px;font-weight:700;letter-spacing:.12em;color:#718096;margin-bottom:8px}
+.apri-table{width:100%;border-top:1px solid #dfe5e2}
+.apri-row{display:grid;grid-template-columns:1fr 48px 1fr 48px;min-height:31px;align-items:center;border-bottom:1px solid #edf0f2;font-size:12.5px;color:#263244}
+.apri-n{text-align:right;color:#526174}
+.apri-name-right{padding-left:20px}
+.apri-note{margin-top:8px;color:#718096;font-size:11.5px}
+.apri-map-wrap{padding:0;margin:0;border:none;background:transparent}
+.apri-method-columns{display:grid;grid-template-columns:repeat(3,1fr)}
+.apri-method-column{padding:0 28px;border-left:1px solid #e3e8ec}
+.apri-method-column:first-child{padding-left:0;border-left:none}
+.apri-method-column:last-child{padding-right:0}
+.apri-method-column h3{color:#155c37;font-family:Arial,sans-serif;font-size:18px;line-height:1.25;margin:0 0 18px}
+.apri-method-column p{color:#182132;font-family:Georgia,"Times New Roman",serif;font-size:16px;line-height:1.55;text-align:justify;margin:0 0 18px}
+.apri-bottom-nav{display:flex;justify-content:space-between;margin-top:28px}
+.apri-bottom-link{color:#155c37!important;text-decoration:none!important;font-size:15px;font-weight:600;border-bottom:2px solid #1c6349;padding:5px 2px 7px}
+@media(max-width:900px){.apri-method-columns{grid-template-columns:1fr}.apri-method-column{border-left:none;border-top:1px solid #e3e8ec;padding:22px 0}.apri-method-column:first-child{border-top:none;padding-top:0}.apri-tabs{gap:12px}}
 </style>
-"""
+""", unsafe_allow_html=True)
 
 def _e(value):
-    return str(value).replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
+    return str(value).replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace('"',"&quot;")
 
 def _find_file(name):
     for path in (os.path.join(DATA,name), os.path.join(APP_DIR,name)):
@@ -143,148 +82,89 @@ def _find_file(name):
             return path
     return None
 
-@st.cache_data(show_spinner=False)
-def _households():
-    path = _find_file("croisement_index.json")
-    if path:
-        try:
-            with open(path, encoding="utf-8") as f:
-                data = json.load(f)
-            if data.get("n"):
-                return int(data["n"])
-        except Exception:
-            pass
-    return 1211
+def _current_step():
+    try:
+        return 2 if str(st.query_params.get("portail_etape","1")) == "2" else 1
+    except Exception:
+        return 1
 
-@st.cache_data(show_spinner=False)
-def _section_counts():
-    return {"Anse à Drick":121,"Barbois":121,"Beaulieu":121,"Blactote":120,"Dalmette":125,
-            "Dumont":122,"Débouchette":120,"Mouline":120,"Quentin":116,"Trichet":120}
-
-def _set_step(n):
-    st.session_state["portail_etape"] = n
-
-def _step_buttons():
-    current = int(st.session_state.get("portail_etape", 1))
-    cols = st.columns(2, gap="small")
-
-    with cols[0]:
-        st.button(
-            T("e1"),
-            key="apri_step_1",
-            on_click=_set_step,
-            args=(1,),
-            type="primary" if current == 1 else "secondary",
-            use_container_width=True,
-        )
-
-    with cols[1]:
-        st.button(
-            T("e2"),
-            key="apri_step_2",
-            on_click=_set_step,
-            args=(2,),
-            type="primary" if current == 2 else "secondary",
-            use_container_width=True,
-        )
+def _tabs(current):
+    st.markdown(f"""
+    <div class="apri-tabs">
+      <a class="apri-tab {'apri-tab-active' if current==1 else ''}" href="?portail_etape=1">{_e(T("e1"))}</a>
+      <a class="apri-tab {'apri-tab-active' if current==2 else ''}" href="?portail_etape=2">{_e(T("e2"))}</a>
+    </div>
+    """, unsafe_allow_html=True)
 
 def _study_area():
-    households=_households()
-    counts=_section_counts()
-    left,right=st.columns([1.05,1.25],gap="large")
-    with left:
-        rows=[]
-        a=["Anse à Drick","Barbois","Beaulieu","Blactote","Dalmette"]
-        b=["Dumont","Débouchette","Quentin","Trichet","Mouline"]
-        for x,y in zip(a,b):
-            rows.append(f"<div style='display:grid;grid-template-columns:1fr 45px 1fr 45px;min-height:31px;align-items:center;border-top:1px solid #eef2f6;font-size:12.5px'><span>{_e(x)}</span><span style='text-align:right'>{counts[x]}</span><span style='padding-left:18px'>{_e(y)}</span><span style='text-align:right'>{counts[y]}</span></div>")
-        html=f"""
+    counts={"Anse à Drick":121,"Barbois":121,"Beaulieu":121,"Blactote":120,"Dalmette":125,
+            "Dumont":122,"Débouchette":120,"Quentin":116,"Trichet":120,"Mouline":120}
+    left=["Anse à Drick","Barbois","Beaulieu","Blactote","Dalmette"]
+    right=["Dumont","Débouchette","Quentin","Trichet","Mouline"]
+    rows=[]
+    for a,b in zip(left,right):
+        rows.append(f"<div class='apri-row'><span>{_e(a)}</span><span class='apri-n'>{counts[a]}</span><span class='apri-name-right'>{_e(b)}</span><span class='apri-n'>{counts[b]}</span></div>")
+    c1,c2=st.columns([1,1.18],gap="large")
+    with c1:
+        st.markdown(f"""
         <div class="apri-panel">
-        <div class="apri-title">{_e(T("study_title"))}</div><div class="apri-rule"></div>
-        <ul style="list-style:none;padding:0;margin:0 0 24px">
-        <li style="margin-bottom:18px;color:#2b3444;font-size:14px">■ &nbsp;{_e(T("study_b1"))}</li>
-        <li style="margin-bottom:18px;color:#2b3444;font-size:14px">■ &nbsp;{_e(T("study_b2",n=10))}</li>
-        <li style="color:#2b3444;font-size:14px">■ &nbsp;{_e(T("study_b3",n=f"{households:,}".replace(","," ")))}</li>
-        </ul>
-        <div style="font-size:10px;font-weight:700;letter-spacing:.12em;color:#8a93a5;margin-bottom:8px">{_e(T("sections"))}</div>
-        {''.join(rows)}
-        <div style="font-size:11.5px;color:#6b7590;margin-top:8px">{_e(T("section_note"))}</div>
+          <div class="apri-title">{_e(T("study_title"))}</div>
+          <div class="apri-rule"></div>
+          <ul class="apri-bullets">
+            <li>{_e(T("study_b1"))}</li>
+            <li>{_e(T("study_b2"))}</li>
+            <li>{_e(T("study_b3"))}</li>
+          </ul>
+          <div class="apri-section-label">{_e(T("sections"))}</div>
+          <div class="apri-table">{''.join(rows)}</div>
+          <div class="apri-note">{_e(T("section_note"))}</div>
         </div>
-        """
-        st.markdown(html,unsafe_allow_html=True)
-    with right:
+        """,unsafe_allow_html=True)
+    with c2:
         try:
             import territoire_page
-            vignette=territoire_page._vignette(territoire_page._geo(),520,370)
-            st.markdown('<div class="apri-panel" style="padding:10px">'+(vignette or "")+
-                        f'<div style="font-size:12px;color:#6b7590;margin-top:8px">{_e(T("map_caption"))}</div></div>',
-                        unsafe_allow_html=True)
+            vignette=territoire_page._vignette(territoire_page._geo(),620,430)
+            st.markdown(f'<div class="apri-map-wrap">{vignette or ""}<div class="apri-note">{_e(T("map_caption"))}</div></div>',unsafe_allow_html=True)
         except Exception:
-            st.info(T("map_caption"))
+            st.markdown(f'<div class="apri-map-wrap"><div class="apri-note">{_e(T("map_caption"))}</div></div>',unsafe_allow_html=True)
 
 def _methodology():
     st.markdown(f"""
     <div class="apri-panel">
-    <div class="apri-title">{_e(T("method_title"))}</div>
-    <div class="apri-rule"></div>
-    <div class="apri-columns">
-      <div class="apri-column">
-        <h3>{_e(T("method_house_title"))}</h3>
-        <p>{_e(T("method_house_p1"))}</p>
-        <p>{_e(T("method_house_p2"))}</p>
-        <p>{_e(T("method_house_p3"))}</p>
+      <div class="apri-title">{_e(T("method_title"))}</div>
+      <div class="apri-rule"></div>
+      <div class="apri-method-columns">
+        <div class="apri-method-column">
+          <h3>{_e(T("method_house_title"))}</h3>
+          <p>{_e(T("method_house_p1"))}</p>
+          <p>{_e(T("method_house_p2"))}</p>
+          <p>{_e(T("method_house_p3"))}</p>
+        </div>
+        <div class="apri-method-column">
+          <h3>{_e(T("method_sat_title"))}</h3>
+          <p>{_e(T("method_sat_p1"))}</p>
+          <p>{_e(T("method_sat_p2"))}</p>
+        </div>
+        <div class="apri-method-column">
+          <h3>{_e(T("method_bio_title"))}</h3>
+          <p>{_e(T("method_bio_p1"))}</p>
+          <p>{_e(T("method_bio_p2"))}</p>
+        </div>
       </div>
-      <div class="apri-column">
-        <h3>{_e(T("method_sat_title"))}</h3>
-        <p>{_e(T("method_sat_p1"))}</p>
-        <p>{_e(T("method_sat_p2"))}</p>
-      </div>
-      <div class="apri-column">
-        <h3>{_e(T("method_bio_title"))}</h3>
-        <p>{_e(T("method_bio_p1"))}</p>
-        <p>{_e(T("method_bio_p2"))}</p>
-      </div>
-    </div>
     </div>
     """,unsafe_allow_html=True)
-    img=_find_file("carte_entretiens.jpg")
-    if img:
-        st.image(img,use_container_width=True)
 
-def _footer(current):
-    c1, c2 = st.columns(2, gap="small")
-    with c1:
-        if current == 2:
-            st.button(
-                "← " + T("previous"),
-                key="apri_previous",
-                on_click=_set_step,
-                args=(1,),
-                use_container_width=False,
-            )
-    with c2:
-        if current == 1:
-            st.button(
-                T("next") + " →",
-                key="apri_next",
-                on_click=_set_step,
-                args=(2,),
-                use_container_width=False,
-            )
+def _bottom(current):
+    if current==1:
+        st.markdown('<div class="apri-bottom-nav"><span></span><a class="apri-bottom-link" href="?portail_etape=2">Next →</a></div>',unsafe_allow_html=True)
+    else:
+        st.markdown('<div class="apri-bottom-nav"><a class="apri-bottom-link" href="?portail_etape=1">← Previous</a><span></span></div>',unsafe_allow_html=True)
 
 def render():
-    st.markdown(STYLE,unsafe_allow_html=True)
-    st.session_state.setdefault("portail_etape",1)
-    current=int(st.session_state["portail_etape"])
-    if current not in (1,2):
-        current=1
-        st.session_state["portail_etape"]=1
-
-    _step_buttons()
-
-    if current == 1:
+    current=_current_step()
+    _tabs(current)
+    if current==1:
         _study_area()
     else:
         _methodology()
-
-    _footer(current)
+    _bottom(current)
