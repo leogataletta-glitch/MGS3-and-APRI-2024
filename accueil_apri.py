@@ -1,5 +1,5 @@
 """
-APRI — Accueil (Full width strict, Onglets collés 50/50 & Bandeau monochrome vert)
+APRI — Accueil (Boutons style cartes arrondies avec surlignage actif bas)
 """
 
 import os
@@ -41,79 +41,64 @@ for k, v in TEXTES.items():
 def _inject_css():
     st.markdown("""
     <style>
-    /* 1. Forcer la zone principale à coller à la sidebar sans marges indésirables */
+    /* 1. Zone principale pleine largeur */
     .appview-container .main .block-container {
         max-width: 100% !important;
         padding-left: 1.5rem !important;
         padding-right: 1.5rem !important;
         padding-top: 0.5rem !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
     }
 
-    /* 2. Filtre Vert Monochrome / Soft pour le bandeau d'image */
+    /* 2. Bandeau supérieur aux nuances de vert adoucies */
     [data-testid="stHeader"], header, .banner-img {
-        filter: sepia(0.35) hue-rotate(85deg) saturate(0.65) brightness(0.95) !important;
+        filter: sepia(0.3) hue-rotate(90deg) saturate(0.5) brightness(0.98) !important;
         opacity: 0.9 !important;
     }
 
-    /* 3. Onglets 50/50 Collés d'un bord à l'autre */
-    .tabs-container {
-        display: flex !important;
+    /* 3. Style exact des 2 Onglets d'après l'image */
+    .tab-card {
+        width: 100%;
+        margin-bottom: 25px;
+    }
+
+    .tab-card .stButton {
         width: 100% !important;
-        margin-bottom: 25px !important;
-        border-bottom: 2px solid #e2e8f0;
     }
 
-    .tab-btn-wrapper {
-        flex: 1 1 50% !important;
-        width: 50% !important;
-    }
-
-    .tab-btn-wrapper .stButton {
-        width: 100% !important;
-        margin: 0 !important;
-    }
-
-    .tab-btn-wrapper .stButton > button {
+    .tab-card .stButton > button {
         width: 100% !important;
         height: 60px !important;
-        font-size: 18px !important;
+        border-radius: 12px !important;
+        font-size: 16px !important;
         font-weight: 700 !important;
-        border: none !important;
-        border-radius: 0px !important;
-        margin: 0 !important;
-        box-shadow: none !important;
         transition: all 0.2s ease-in-out !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
     }
 
-    /* Bords arrondis sur les coins extérieurs uniquement */
-    .tab-left .stButton > button {
-        border-top-left-radius: 10px !important;
-    }
-    .tab-right .stButton > button {
-        border-top-right-radius: 10px !important;
+    /* Onglet INACTIF (Carte blanche avec bordure fine claire) */
+    .tab-card-inactive .stButton > button {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #334155 !important;
     }
 
-    /* État Inactif */
-    .tab-inactive .stButton > button {
-        background-color: #f8fafc !important;
-        color: #64748b !important;
-        border-bottom: 3px solid #e2e8f0 !important;
+    .tab-card-inactive .stButton > button:hover {
+        border-color: #cbd5e1 !important;
+        background: #f8fafc !important;
     }
-    .tab-inactive .stButton > button:hover {
-        background-color: #f1f5f9 !important;
+
+    /* Onglet ACTIF (Fond vert très pastel + Barre verte marquée en bas) */
+    .tab-card-active .stButton > button {
+        background: linear-gradient(180deg, #f1f7f4 0%, #e3efe8 100%) !important;
+        border: 1px solid #c2e0d1 !important;
+        border-bottom: 5px solid #1c6349 !important; /* Barre verte en bas */
         color: #1c6349 !important;
     }
 
-    /* État Actif avec Ligne Verte sous le texte */
-    .tab-active .stButton > button {
-        background-color: #eaf4ee !important;
-        color: #1c6349 !important;
-        border-bottom: 4px solid #1c6349 !important;
-    }
-
-    /* Typographies et éléments internes */
+    /* Grille & Typographie */
     .apri-bullet {
         margin: 0 0 14px 0;
         font-size: 15px;
@@ -230,11 +215,9 @@ def _hispaniola_map():
         
         parts = [f'<rect width="{w}" height="{h}" rx="14" fill="#edf4fb"/>']
         
-        # Contour Haïti
         for ring in geo["pays"]:
             parts.append(f'<path d="{_path(ring, xy)}" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>')
         
-        # Sections communales
         sx, sy = [], []
         for sec in geo.get("sections", []):
             for ring in sec.get("anneaux", []):
@@ -243,7 +226,6 @@ def _hispaniola_map():
                     x, y = xy(lon, lat)
                     sx.append(x); sy.append(y)
                     
-        # Cercle pointillé vert
         if sx:
             cx = (min(sx) + max(sx)) / 2
             cy = (min(sy) + max(sy)) / 2
@@ -311,27 +293,26 @@ def render():
     if "current_tab" not in st.session_state:
         st.session_state.current_tab = "study"
 
-    # Construction des boutons d'onglets collés 50/50
-    st.markdown('<div class="tabs-container">', unsafe_allow_html=True)
-    col_t1, col_t2 = st.columns(2)
+    # Deux colonnes séparées par un léger gap (comme sur l'image)
+    col_t1, col_t2 = st.columns(2, gap="small")
     
     with col_t1:
-        state_class = "tab-active" if st.session_state.current_tab == "study" else "tab-inactive"
-        st.markdown(f'<div class="tab-btn-wrapper tab-left {state_class}">', unsafe_allow_html=True)
+        cls1 = "tab-card-active" if st.session_state.current_tab == "study" else "tab-card-inactive"
+        st.markdown(f'<div class="tab-card {cls1}">', unsafe_allow_html=True)
         if st.button(T("e1"), key="btn_tab_study"):
             st.session_state.current_tab = "study"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
     with col_t2:
-        state_class = "tab-active" if st.session_state.current_tab == "method" else "tab-inactive"
-        st.markdown(f'<div class="tab-btn-wrapper tab-right {state_class}">', unsafe_allow_html=True)
+        cls2 = "tab-card-active" if st.session_state.current_tab == "method" else "tab-card-inactive"
+        st.markdown(f'<div class="tab-card {cls2}">', unsafe_allow_html=True)
         if st.button(T("e2"), key="btn_tab_method"):
             st.session_state.current_tab = "method"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
 
     if st.session_state.current_tab == "study":
         _study_area()
