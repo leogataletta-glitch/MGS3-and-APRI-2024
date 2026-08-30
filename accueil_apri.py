@@ -1,5 +1,5 @@
 """
-APRI — Accueil (Onglets collés avec ligne active & Bandeau aux couleurs adoucies)
+APRI — Accueil (Full width strict, Onglets collés 50/50 & Bandeau monochrome vert)
 """
 
 import os
@@ -41,77 +41,79 @@ for k, v in TEXTES.items():
 def _inject_css():
     st.markdown("""
     <style>
-    /* 1. Full-width réaligné avec la sidebar */
-    .main .block-container {
+    /* 1. Forcer la zone principale à coller à la sidebar sans marges indésirables */
+    .appview-container .main .block-container {
         max-width: 100% !important;
-        padding-left: 2rem !important;
-        padding-right: 2rem !important;
-        padding-top: 1rem !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+        padding-top: 0.5rem !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
     }
 
-    /* 2. Adoucissement du bandeau header (Couleurs éteintes / Mat / Soft) */
-    [data-testid="stHeader"], .header-banner, .banner-image img {
-        filter: saturate(0.50) contrast(0.90) brightness(1.05) !important;
-        opacity: 0.88 !important;
+    /* 2. Filtre Vert Monochrome / Soft pour le bandeau d'image */
+    [data-testid="stHeader"], header, .banner-img {
+        filter: sepia(0.35) hue-rotate(85deg) saturate(0.65) brightness(0.95) !important;
+        opacity: 0.9 !important;
     }
 
-    /* 3. Conteneur des 2 onglets collés qui occupent toute la largeur */
-    div[data-testid="stHorizontalBlock"]:has(.tab-left, .tab-right) {
-        gap: 0px !important;
+    /* 3. Onglets 50/50 Collés d'un bord à l'autre */
+    .tabs-container {
+        display: flex !important;
+        width: 100% !important;
         margin-bottom: 25px !important;
         border-bottom: 2px solid #e2e8f0;
     }
 
-    div[data-testid="stHorizontalBlock"]:has(.tab-left, .tab-right) > div {
+    .tab-btn-wrapper {
         flex: 1 1 50% !important;
         width: 50% !important;
-        padding: 0 !important;
     }
 
-    /* Style commun des boutons rectangulaires larges */
-    .tab-left .stButton > button, 
-    .tab-right .stButton > button {
+    .tab-btn-wrapper .stButton {
         width: 100% !important;
-        height: 65px !important;
+        margin: 0 !important;
+    }
+
+    .tab-btn-wrapper .stButton > button {
+        width: 100% !important;
+        height: 60px !important;
         font-size: 18px !important;
         font-weight: 700 !important;
         border: none !important;
-        position: relative !important;
         border-radius: 0px !important;
+        margin: 0 !important;
         box-shadow: none !important;
-        transition: all 0.2s ease !important;
+        transition: all 0.2s ease-in-out !important;
     }
 
+    /* Bords arrondis sur les coins extérieurs uniquement */
     .tab-left .stButton > button {
-        border-top-left-radius: 12px !important;
-        border-bottom-left-radius: 0px !important;
+        border-top-left-radius: 10px !important;
     }
-
     .tab-right .stButton > button {
-        border-top-right-radius: 12px !important;
-        border-bottom-right-radius: 0px !important;
+        border-top-right-radius: 10px !important;
     }
 
     /* État Inactif */
     .tab-inactive .stButton > button {
         background-color: #f8fafc !important;
         color: #64748b !important;
-        border-bottom: 3px solid transparent !important;
+        border-bottom: 3px solid #e2e8f0 !important;
     }
-
     .tab-inactive .stButton > button:hover {
         background-color: #f1f5f9 !important;
         color: #1c6349 !important;
     }
 
-    /* État Actif : Ligne verte marquée en dessous */
+    /* État Actif avec Ligne Verte sous le texte */
     .tab-active .stButton > button {
         background-color: #eaf4ee !important;
         color: #1c6349 !important;
         border-bottom: 4px solid #1c6349 !important;
     }
 
-    /* Alignement et typographie interne */
+    /* Typographies et éléments internes */
     .apri-bullet {
         margin: 0 0 14px 0;
         font-size: 15px;
@@ -263,7 +265,7 @@ def _study_area():
     left = ["Anse à Drick", "Barbois", "Beaulieu", "Blactote", "Dalmette"]
     right = ["Dumont", "Débouchette", "Quentin", "Trichet", "Mouline"]
     
-    c1, c2 = st.columns([1, 1], gap="large")
+    c1, c2 = st.columns(2, gap="large")
     with c1:
         st.markdown("<div style='height: 5px;'></div>", unsafe_allow_html=True)
         for k in ("b1", "b2", "b3"):
@@ -309,12 +311,13 @@ def render():
     if "current_tab" not in st.session_state:
         st.session_state.current_tab = "study"
 
-    # Onglets 50/50 collés l'un à l'autre avec surlignage vert actif
+    # Construction des boutons d'onglets collés 50/50
+    st.markdown('<div class="tabs-container">', unsafe_allow_html=True)
     col_t1, col_t2 = st.columns(2)
     
     with col_t1:
         state_class = "tab-active" if st.session_state.current_tab == "study" else "tab-inactive"
-        st.markdown(f'<div class="tab-left {state_class}">', unsafe_allow_html=True)
+        st.markdown(f'<div class="tab-btn-wrapper tab-left {state_class}">', unsafe_allow_html=True)
         if st.button(T("e1"), key="btn_tab_study"):
             st.session_state.current_tab = "study"
             st.rerun()
@@ -322,13 +325,13 @@ def render():
 
     with col_t2:
         state_class = "tab-active" if st.session_state.current_tab == "method" else "tab-inactive"
-        st.markdown(f'<div class="tab-right {state_class}">', unsafe_allow_html=True)
+        st.markdown(f'<div class="tab-btn-wrapper tab-right {state_class}">', unsafe_allow_html=True)
         if st.button(T("e2"), key="btn_tab_method"):
             st.session_state.current_tab = "method"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
 
     if st.session_state.current_tab == "study":
         _study_area()
