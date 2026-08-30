@@ -1,5 +1,5 @@
 """
-APRI — Accueil (Correction stricte : Onglets HTML/CSS 50-50 & Bandeau Vert Mat)
+APRI — Accueil (Rendu garanti via st.radio restylisé)
 """
 
 import os
@@ -15,16 +15,14 @@ TEXTES = {
     "mode_portail": {"en": "Home", "fr": "Accueil"},
     "e1": {"en": "The study area", "fr": "Le territoire"},
     "e2": {"en": "Methodology", "fr": "Méthodologie"},
-    "study_title": {"en": "The study area", "fr": "Le territoire d'étude"},
-    "b1": {"en": "Two pilot areas: Grand'Anse and Sud", "fr": "Deux zones pilotes : Grand'Anse et Sud"},
-    "b2": {"en": "10 communal sections selected within them", "fr": "10 sections communales sélectionnées en leur sein"},
-    "b3": {"en": "1 211 households surveyed", "fr": "1 211 ménages enquêtés"},
     "sections": {"en": "THE TEN COMMUNAL SECTIONS", "fr": "LES DIX SECTIONS COMMUNALES"},
     "note": {"en": "The figure beside each name is the number of households surveyed there.", "fr": "Le chiffre indiqué à côté de chaque nom correspond au nombre de ménages enquêtés."},
     "map_note": {"en": "The surveyed area, in the far south-west of the country.", "fr": "La zone enquêtée, à l'extrême sud-ouest du pays."},
-    "method_title": {"en": "Methodology of the survey", "fr": "Méthodologie de l'enquête"},
+    "b1": {"en": "Two pilot areas: Grand'Anse and Sud", "fr": "Deux zones pilotes : Grand'Anse et Sud"},
+    "b2": {"en": "10 communal sections selected within them", "fr": "10 sections communales sélectionnées en leur sein"},
+    "b3": {"en": "1 211 households surveyed", "fr": "1 211 ménages enquêtés"},
     "house": {"en": "Household survey", "fr": "Enquête ménage"},
-    "house1": {"en": "The household survey is the main source of information on living conditions, livelihoods, risk perception and families' capacity to anticipate shocks.", "fr": "L'enquête ménage constitue la principale source d'information sur les conditions de vie, les moyens d'existence, la perception des risques et la capacité d'anticipation des familles."},
+    "house1": {"en": "The household survey is the main source of information on living conditions, livelihoods, risk perception and families' capacity to anticipate shocks.", "fr": "L'enquête ménage constitue la principale source d'information sur les conditions de vie, les moyens d'existence, la perception des risques et la capacité d’anticipation des familles."},
     "house2": {"en": "A stratified sampling plan was established to ensure balanced representation of different areas, landscape types and socio-economic contexts.", "fr": "Un plan d'échantillonnage stratifié a été mis en place pour assurer une représentation équilibrée des différentes zones, des types de paysage et des contextes socio-économiques."},
     "house3": {"en": "Within each stratum, households were selected through random geolocation from a georeferenced building database, ensuring objectivity and representativeness.", "fr": "À l'intérieur de chaque strate, la sélection des ménages a été réalisée par localisation aléatoire à partir d'une base de bâtiments géoréférencés, garantissant l'objectivité et la représentativité de l'échantillon."},
     "sat": {"en": "Satellite imagery", "fr": "Imagerie satellitaire"},
@@ -32,7 +30,7 @@ TEXTES = {
     "sat2": {"en": "Spatial analysis produced objective environmental indicators at the scale of communal sections and landscapes.", "fr": "L'analyse spatiale a permis de produire des indicateurs environnementaux objectifs à l'échelle des sections communales et des paysages."},
     "bio": {"en": "In-situ biodiversity measurements", "fr": "Mesures in situ de la biodiversité"},
     "bio1": {"en": "Field surveys were conducted to document biodiversity through flora and fauna inventories, habitat observations and key ecological measurements.", "fr": "Des relevés de terrain ont été réalisés pour documenter la biodiversité à travers des inventaires de flore et de faune, des observations d'habitats et des mesures écologiques clés."},
-    "bio2": {"en": "These in-situ data complement information from other sources and make it possible to assess the condition and dynamics of biodiversity in the study territories.", "fr": "Ces données in situ viennent compléter les informations issues des autres sources et permettent d'évaluer l'état et la dynamique de la biodiversité dans les territoires étudiés."},
+    "bio2": {"en": "These in-situ data complement information from other sources and make it possible to assess the condition and dynamics of biodiversity in the study territories.", "fr": "Ces données in situ viennent compléter les informations issues des autres sources et permettent d'évaluer l’état et la dynamique de la biodiversité dans les territoires étudiés."},
 }
 
 for k, v in TEXTES.items():
@@ -41,76 +39,72 @@ for k, v in TEXTES.items():
 def _inject_css():
     st.markdown("""
     <style>
-    /* Force l'occupation totale de l'écran principal */
-    div[data-testid="stAppViewContainer"] > section.main {
+    /* 1. Transformation complète du st.radio en 2 cartes/onglets identiques à l'image */
+    div[data-testid="stRadio"] {
         width: 100% !important;
     }
     
-    div[data-testid="stAppViewContainer"] > section.main .block-container {
-        max-width: 100% !important;
-        width: 100% !important;
-        padding-left: 1.5rem !important;
-        padding-right: 1.5rem !important;
-        padding-top: 0.5rem !important;
+    div[data-testid="stRadio"] > label {
+        display: none !important; /* Cache le label "Select tab" */
     }
 
-    /* Adoucissement / Nuance de vert mat sur le bandeau supérieur */
-    [data-testid="stHeader"], header, img {
-        filter: sepia(0.25) hue-rotate(85deg) saturate(0.55) brightness(0.96);
-    }
-
-    /* Structure des Onglets 50% / 50% collés/espacés proprement */
-    .apri-tabs-nav {
+    div[data-testid="stRadio"] > div {
         display: flex !important;
+        flex-direction: row !important;
         width: 100% !important;
-        gap: 16px !important;
-        margin-bottom: 25px !important;
+        gap: 20px !important;
     }
 
-    .apri-tab-item {
+    div[data-testid="stRadio"] > div > label {
         flex: 1 1 50% !important;
         width: 50% !important;
-    }
-
-    /* Style des boutons identiques au modèle */
-    .apri-tab-item button {
-        width: 100% !important;
-        height: 56px !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
         border-radius: 12px !important;
-        font-size: 16px !important;
-        font-weight: 700 !important;
+        padding: 16px 20px !important;
+        margin: 0 !important;
         cursor: pointer !important;
         transition: all 0.2s ease !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
         display: flex !important;
-        align-items: center !important;
         justify-content: center !important;
+        align-items: center !important;
         box-sizing: border-box !important;
     }
 
-    /* Bouton Inactif (Carte blanche propre) */
-    .tab-inactive button {
-        background-color: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
+    /* Masque le cercle radio natif */
+    div[data-testid="stRadio"] > div > label > div:first-child {
+        display: none !important;
+    }
+
+    /* Style du texte à l'intérieur des onglets */
+    div[data-testid="stRadio"] > div > label div[data-testid="stMarkdownContainer"] p {
+        font-size: 16px !important;
+        font-weight: 700 !important;
         color: #334155 !important;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.03) !important;
+        margin: 0 !important;
+        text-align: center !important;
     }
 
-    .tab-inactive button:hover {
-        background-color: #f8fafc !important;
-        border-color: #cbd5e1 !important;
-        color: #1c6349 !important;
-    }
-
-    /* Bouton Actif (Vert pastel + Barre verte sous le bouton) */
-    .tab-active button {
+    /* Style du bouton sélectionné (fond vert pastel + barre verte épaisse en bas) */
+    div[data-testid="stRadio"] > div > label:has(input:checked) {
         background: linear-gradient(180deg, #f2f8f5 0%, #e3efe8 100%) !important;
         border: 1px solid #c2e0d1 !important;
-        border-bottom: 5px solid #1c6349 !important;
-        color: #1c6349 !important;
-        box-shadow: 0 2px 5px rgba(28, 99, 73, 0.1) !important;
+        border-bottom: 5px solid #1c6349 !important; /* Barre d'activation verte */
+        box-shadow: 0 3px 6px rgba(28, 99, 73, 0.08) !important;
     }
 
-    /* Contenu & Typographie */
+    div[data-testid="stRadio"] > div > label:has(input:checked) div[data-testid="stMarkdownContainer"] p {
+        color: #1c6349 !important;
+    }
+
+    /* Survol */
+    div[data-testid="stRadio"] > div > label:hover {
+        border-color: #cbd5e1 !important;
+        background-color: #f8fafc !important;
+    }
+
+    /* 2. Style des contenus sous les boutons */
     .apri-bullet {
         margin: 0 0 14px 0;
         font-size: 15px;
@@ -302,31 +296,20 @@ def _methodology():
 def render():
     _inject_css()
 
-    if "current_tab" not in st.session_state:
-        st.session_state.current_tab = "study"
+    tab_study_label = T("e1")
+    tab_method_label = T("e2")
 
-    # Navigation à 2 boutons occupant exactement 50% de la largeur chacun
-    c1, c2 = st.columns(2)
-    
-    with c1:
-        cls1 = "tab-active" if st.session_state.current_tab == "study" else "tab-inactive"
-        st.markdown(f'<div class="apri-tab-item {cls1}">', unsafe_allow_html=True)
-        if st.button(T("e1"), key="nav_btn_study"):
-            st.session_state.current_tab = "study"
-            st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
+    # st.radio forcé à l'horizontale (50% / 50%) via le CSS
+    selected_tab = st.radio(
+        label="Navigation Onglets",
+        options=[tab_study_label, tab_method_label],
+        horizontal=True,
+        label_visibility="collapsed"
+    )
 
-    with c2:
-        cls2 = "tab-active" if st.session_state.current_tab == "method" else "tab-inactive"
-        st.markdown(f'<div class="apri-tab-item {cls2}">', unsafe_allow_html=True)
-        if st.button(T("e2"), key="nav_btn_method"):
-            st.session_state.current_tab = "method"
-            st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
 
-    st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
-
-    if st.session_state.current_tab == "study":
+    if selected_tab == tab_study_label:
         _study_area()
     else:
         _methodology()
