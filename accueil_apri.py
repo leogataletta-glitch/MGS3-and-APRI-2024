@@ -1,5 +1,5 @@
 """
-APRI — Accueil (Clean Layout, Onglets 50/50 & Carte Haïti uniquement)
+APRI — Accueil (Pleine largeur, Onglets 50/50, Alignement Sidebar & Bandeau Pastel)
 """
 
 import os
@@ -24,7 +24,7 @@ TEXTES = {
     "map_note": {"en": "The surveyed area, in the far south-west of the country.", "fr": "La zone enquêtée, à l'extrême sud-ouest du pays."},
     "method_title": {"en": "Methodology of the survey", "fr": "Méthodologie de l'enquête"},
     "house": {"en": "Household survey", "fr": "Enquête ménage"},
-    "house1": {"en": "The household survey is the main source of information on living conditions, livelihoods, risk perception and families' capacity to anticipate shocks.", "fr": "L'enquête ménage constitue la principale source d'information sur les conditions de vie, les moyens d'existence, la perception des risques et la capacity d'anticipation des familles."},
+    "house1": {"en": "The household survey is the main source of information on living conditions, livelihoods, risk perception and families' capacity to anticipate shocks.", "fr": "L'enquête ménage constitue la principale source d'information sur les conditions de vie, les moyens d'existence, la perception des risques et la capacité d'anticipation des familles."},
     "house2": {"en": "A stratified sampling plan was established to ensure balanced representation of different areas, landscape types and socio-economic contexts.", "fr": "Un plan d'échantillonnage stratifié a été mis en place pour assurer une représentation équilibrée des différentes zones, des types de paysage et des contextes socio-économiques."},
     "house3": {"en": "Within each stratum, households were selected through random geolocation from a georeferenced building database, ensuring objectivity and representativeness.", "fr": "À l'intérieur de chaque strate, la sélection des ménages a été réalisée par localisation aléatoire à partir d'une base de bâtiments géoréférencés, garantissant l'objectivité et la représentativité de l'échantillon."},
     "sat": {"en": "Satellite imagery", "fr": "Imagerie satellitaire"},
@@ -41,27 +41,42 @@ for k, v in TEXTES.items():
 def _inject_css():
     st.markdown("""
     <style>
-    .block-container {
-        max-width: 1400px;
-        padding-top: 1rem;
-        padding-bottom: 2rem;
+    /* 1. Expansion pleine largeur propre & réalignée */
+    .main .block-container {
+        max-width: 100% !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+        padding-top: 1rem !important;
     }
 
-    /* Force columns to split 50/50 exactly and buttons to fill them */
-    div[data-testid="stHorizontalBlock"] > div {
-        flex: 1 1 0% !important;
+    /* 2. Adoucissement du bandeau header (Effet Pastel) */
+    .apri-header-banner, [data-testid="stHeader"] {
+        filter: saturate(0.65) brightness(1.08) !important;
+        opacity: 0.92 !important;
+    }
+
+    /* 3. Conteneur des 2 onglets principaux (occupent 100% du conteneur) */
+    .apri-tabs-wrapper {
+        display: flex;
+        width: 100%;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .apri-tab-col {
+        flex: 1 1 50%;
+        width: 50%;
+    }
+
+    .apri-tab-col .stButton {
         width: 100% !important;
     }
 
-    div[data-testid="stHorizontalBlock"] .stButton {
+    .apri-tab-col .stButton > button {
         width: 100% !important;
-    }
-
-    div[data-testid="stHorizontalBlock"] .stButton > button {
-        width: 100% !important;
-        height: 65px !important;
+        height: 58px !important;
         border-radius: 12px !important;
-        font-size: 18px !important;
+        font-size: 17px !important;
         font-weight: 700 !important;
         display: flex !important;
         justify-content: center !important;
@@ -86,7 +101,7 @@ def _inject_css():
         color: #1c6349 !important;
     }
 
-    /* Bullets */
+    /* Clean Content Styling */
     .apri-bullet {
         margin: 0 0 14px 0;
         font-size: 15px;
@@ -108,7 +123,7 @@ def _inject_css():
         color: #1c6349;
     }
 
-    /* Grid Table Cards */
+    /* Table Grid */
     .grid-table {
         display: grid;
         grid-template-columns: 1fr 60px 1fr 60px;
@@ -116,6 +131,7 @@ def _inject_css():
         border-radius: 10px;
         overflow: hidden;
         background-color: #ffffff;
+        width: 100%;
     }
 
     .grid-cell {
@@ -205,11 +221,11 @@ def _hispaniola_map():
         
         parts = [f'<rect width="{w}" height="{h}" rx="14" fill="#edf4fb"/>']
         
-        # Haïti Uniquement
+        # Contour Haïti
         for ring in geo["pays"]:
             parts.append(f'<path d="{_path(ring, xy)}" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>')
         
-        # Sections communales en vert
+        # Sections communales
         sx, sy = [], []
         for sec in geo.get("sections", []):
             for ring in sec.get("anneaux", []):
@@ -218,7 +234,7 @@ def _hispaniola_map():
                     x, y = xy(lon, lat)
                     sx.append(x); sy.append(y)
                     
-        # Cercle pointillé vert sur la zone d'étude
+        # Cercle englobant
         if sx:
             cx = (min(sx) + max(sx)) / 2
             cy = (min(sy) + max(sy)) / 2
@@ -240,9 +256,9 @@ def _study_area():
     left = ["Anse à Drick", "Barbois", "Beaulieu", "Blactote", "Dalmette"]
     right = ["Dumont", "Débouchette", "Quentin", "Trichet", "Mouline"]
     
-    c1, c2 = st.columns([1.05, 1.15], gap="large")
+    c1, c2 = st.columns([1, 1], gap="large")
     with c1:
-        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 5px;'></div>", unsafe_allow_html=True)
         for k in ("b1", "b2", "b3"):
             st.markdown(f'<div class="apri-bullet"><span class="apri-square">■</span>{_e(T(k))}</div>', unsafe_allow_html=True)
             
@@ -286,11 +302,12 @@ def render():
     if "current_tab" not in st.session_state:
         st.session_state.current_tab = "study"
 
+    # Affichage des onglets 50/50 pleine largeur
     col_t1, col_t2 = st.columns(2, gap="medium")
     
     with col_t1:
         t1_class = "tab-active" if st.session_state.current_tab == "study" else "tab-inactive"
-        st.markdown(f'<div class="{t1_class}">', unsafe_allow_html=True)
+        st.markdown(f'<div class="apri-tab-col {t1_class}">', unsafe_allow_html=True)
         if st.button(T("e1"), key="btn_tab_study"):
             st.session_state.current_tab = "study"
             st.rerun()
@@ -298,13 +315,13 @@ def render():
 
     with col_t2:
         t2_class = "tab-active" if st.session_state.current_tab == "method" else "tab-inactive"
-        st.markdown(f'<div class="{t2_class}">', unsafe_allow_html=True)
+        st.markdown(f'<div class="apri-tab-col {t2_class}">', unsafe_allow_html=True)
         if st.button(T("e2"), key="btn_tab_method"):
             st.session_state.current_tab = "method"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
     if st.session_state.current_tab == "study":
         _study_area()
