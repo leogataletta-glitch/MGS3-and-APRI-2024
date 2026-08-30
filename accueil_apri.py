@@ -1,5 +1,5 @@
 """
-APRI — Accueil (Correction UI & Carte SVG)
+APRI — Accueil (Clean Layout, Onglets 50/50 & Carte Haïti uniquement)
 """
 
 import os
@@ -24,7 +24,7 @@ TEXTES = {
     "map_note": {"en": "The surveyed area, in the far south-west of the country.", "fr": "La zone enquêtée, à l'extrême sud-ouest du pays."},
     "method_title": {"en": "Methodology of the survey", "fr": "Méthodologie de l'enquête"},
     "house": {"en": "Household survey", "fr": "Enquête ménage"},
-    "house1": {"en": "The household survey is the main source of information on living conditions, livelihoods, risk perception and families' capacity to anticipate shocks.", "fr": "L'enquête ménage constitue la principale source d'information sur les conditions de vie, les moyens d'existence, la perception des risques et la capacité d'anticipation des familles."},
+    "house1": {"en": "The household survey is the main source of information on living conditions, livelihoods, risk perception and families' capacity to anticipate shocks.", "fr": "L'enquête ménage constitue la principale source d'information sur les conditions de vie, les moyens d'existence, la perception des risques et la capacity d'anticipation des familles."},
     "house2": {"en": "A stratified sampling plan was established to ensure balanced representation of different areas, landscape types and socio-economic contexts.", "fr": "Un plan d'échantillonnage stratifié a été mis en place pour assurer une représentation équilibrée des différentes zones, des types de paysage et des contextes socio-économiques."},
     "house3": {"en": "Within each stratum, households were selected through random geolocation from a georeferenced building database, ensuring objectivity and representativeness.", "fr": "À l'intérieur de chaque strate, la sélection des ménages a été réalisée par localisation aléatoire à partir d'une base de bâtiments géoréférencés, garantissant l'objectivité et la représentativité de l'échantillon."},
     "sat": {"en": "Satellite imagery", "fr": "Imagerie satellitaire"},
@@ -33,8 +33,6 @@ TEXTES = {
     "bio": {"en": "In-situ biodiversity measurements", "fr": "Mesures in situ de la biodiversité"},
     "bio1": {"en": "Field surveys were conducted to document biodiversity through flora and fauna inventories, habitat observations and key ecological measurements.", "fr": "Des relevés de terrain ont été réalisés pour documenter la biodiversité à travers des inventaires de flore et de faune, des observations d'habitats et des mesures écologiques clés."},
     "bio2": {"en": "These in-situ data complement information from other sources and make it possible to assess the condition and dynamics of biodiversity in the study territories.", "fr": "Ces données in situ viennent compléter les informations issues des autres sources et permettent d'évaluer l'état et la dynamique de la biodiversité dans les territoires étudiés."},
-    "previous": {"en": "Previous", "fr": "Précédent"},
-    "next": {"en": "Next", "fr": "Suivant"},
 }
 
 for k, v in TEXTES.items():
@@ -43,21 +41,32 @@ for k, v in TEXTES.items():
 def _inject_css():
     st.markdown("""
     <style>
-    /* Global Layout */
     .block-container {
         max-width: 1400px;
         padding-top: 1rem;
         padding-bottom: 2rem;
     }
 
-    /* Force Large Rectangular Tab-Button Custom Styling */
+    /* Force columns to split 50/50 exactly and buttons to fill them */
+    div[data-testid="stHorizontalBlock"] > div {
+        flex: 1 1 0% !important;
+        width: 100% !important;
+    }
+
+    div[data-testid="stHorizontalBlock"] .stButton {
+        width: 100% !important;
+    }
+
     div[data-testid="stHorizontalBlock"] .stButton > button {
         width: 100% !important;
-        height: 62px !important;
+        height: 65px !important;
         border-radius: 12px !important;
         font-size: 18px !important;
         font-weight: 700 !important;
-        transition: all 0.2s ease !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
     }
 
     .tab-active > button {
@@ -71,12 +80,13 @@ def _inject_css():
         border: 1px solid #e2e8f0 !important;
         color: #475569 !important;
     }
+
     .tab-inactive > button:hover {
         border-color: #1c6349 !important;
         color: #1c6349 !important;
     }
 
-    /* Bullet Points */
+    /* Bullets */
     .apri-bullet {
         margin: 0 0 14px 0;
         font-size: 15px;
@@ -98,7 +108,7 @@ def _inject_css():
         color: #1c6349;
     }
 
-    /* Table with Rounded Individual Border Boxes */
+    /* Grid Table Cards */
     .grid-table {
         display: grid;
         grid-template-columns: 1fr 60px 1fr 60px;
@@ -135,7 +145,7 @@ def _inject_css():
         line-height: 1.4;
     }
 
-    /* Map styling */
+    /* Map SVG */
     .apri-map svg {
         display: block;
         width: 100%;
@@ -163,18 +173,7 @@ def _inject_css():
 def _e(x):
     return str(x).replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
 
-# Contour exact ajusté pour la frontière RD / Haïti (fermeture continue de l'île)
-DR = [
-    (-71.71, 19.71), (-71.59, 19.88), (-70.81, 19.88), (-70.21, 19.62),
-    (-69.95, 19.65), (-69.77, 19.29), (-69.22, 19.31), (-69.25, 19.02),
-    (-68.81, 18.98), (-68.32, 18.61), (-68.69, 18.21), (-69.16, 18.42),
-    (-69.62, 18.38), (-69.95, 18.43), (-70.13, 18.25), (-70.52, 18.18),
-    (-70.67, 18.43), (-71.00, 18.28), (-71.40, 17.60), (-71.66, 17.76),
-    (-71.71, 18.04), (-71.69, 18.32), (-71.95, 18.62), (-71.70, 18.79),
-    (-71.62, 19.17), (-71.71, 19.71)
-]
-
-def _project(rings, width=760, height=420, margin=20):
+def _project(rings, width=760, height=420, margin=25):
     pts = [p for r in rings for p in r]
     if not pts:
         return lambda lon, lat: (0, 0)
@@ -202,17 +201,13 @@ def _hispaniola_map():
         if not geo.get("pays"):
             return None
         w, h = 760, 420
-        all_rings = list(geo["pays"]) + [DR]
-        xy = _project(all_rings, w, h)
+        xy = _project(geo["pays"], w, h)
         
         parts = [f'<rect width="{w}" height="{h}" rx="14" fill="#edf4fb"/>']
         
-        # Haïti (Polygones)
+        # Haïti Uniquement
         for ring in geo["pays"]:
             parts.append(f'<path d="{_path(ring, xy)}" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>')
-            
-        # République Dominicaine (Raccordée directement sur la frontière)
-        parts.append(f'<path d="{_path(DR, xy)}" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>')
         
         # Sections communales en vert
         sx, sy = [], []
@@ -223,15 +218,15 @@ def _hispaniola_map():
                     x, y = xy(lon, lat)
                     sx.append(x); sy.append(y)
                     
-        # Cercle pointillé vert autour des zones d'étude
+        # Cercle pointillé vert sur la zone d'étude
         if sx:
             cx = (min(sx) + max(sx)) / 2
             cy = (min(sy) + max(sy)) / 2
             r = max(max(sx) - min(sx), max(sy) - min(sy)) / 2 + 18
             parts.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="none" stroke="#1c6349" stroke-width="1.5" stroke-dasharray="5 4"/>')
             
-        hx, hy = xy(-72.25, 19.10)
-        parts.append(f'<text x="{hx:.1f}" y="{hy:.1f}" font-size="14" font-weight="800" fill="#1c6349" letter-spacing="2">HAÏTI</text>')
+        hx, hy = xy(-72.30, 19.10)
+        parts.append(f'<text x="{hx:.1f}" y="{hy:.1f}" font-size="15" font-weight="800" fill="#1c6349" letter-spacing="2">HAÏTI</text>')
         return f'<div class="apri-map"><svg viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg">{"".join(parts)}</svg></div>'
     except Exception:
         return None
@@ -253,7 +248,6 @@ def _study_area():
             
         st.markdown(f'<div class="apri-label">{_e(T("sections"))}</div>', unsafe_allow_html=True)
         
-        # Grille personnalisée identique à la maquette
         grid_html = '<div class="grid-table">'
         for a, b in zip(left, right):
             grid_html += f'<div class="grid-cell">{_e(a)}</div>'
@@ -289,11 +283,10 @@ def _methodology():
 def render():
     _inject_css()
 
-    # Gestion des 2 grands boutons/onglets rectangulaires
     if "current_tab" not in st.session_state:
         st.session_state.current_tab = "study"
 
-    col_t1, col_t2 = st.columns(2)
+    col_t1, col_t2 = st.columns(2, gap="medium")
     
     with col_t1:
         t1_class = "tab-active" if st.session_state.current_tab == "study" else "tab-inactive"
@@ -311,15 +304,9 @@ def render():
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
 
     if st.session_state.current_tab == "study":
         _study_area()
     else:
         _methodology()
-
-    # Bouton Next centré en bas
-    st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
-    col_l, col_btn, col_r = st.columns([4, 1.5, 4])
-    with col_btn:
-        st.button(f"{T('next')} →", key="btn_next")
