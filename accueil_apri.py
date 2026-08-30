@@ -1,5 +1,5 @@
 """
-APRI — Accueil (Design exact basé sur la maquette)
+APRI — Accueil (Correction UI & Carte SVG)
 """
 
 import os
@@ -43,108 +43,49 @@ for k, v in TEXTES.items():
 def _inject_css():
     st.markdown("""
     <style>
-    /* Global Container */
+    /* Global Layout */
     .block-container {
         max-width: 1400px;
         padding-top: 1rem;
         padding-bottom: 2rem;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* Top Banner Header */
-    .header-banner {
-        background: linear-gradient(90deg, rgba(255,255,255,1) 35%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%), 
-                    url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80');
-        background-size: cover;
-        background-position: center;
-        border-radius: 12px;
-        padding: 24px 32px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-    }
-
-    .header-title-box {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-    }
-
-    .header-logo {
-        width: 60px;
-        height: 60px;
-        background-color: #1b4d3e;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    .header-text h1 {
-        margin: 0;
-        font-size: 32px;
-        font-weight: 800;
-        color: #0f172a;
-        letter-spacing: -0.5px;
-    }
-
-    .header-text p {
-        margin: 2px 0 0 0;
-        font-size: 13px;
-        color: #475569;
-        font-weight: 500;
-    }
-
-    /* Styled Tabs like Cards */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 20px;
-        border-bottom: none !important;
-        margin-bottom: 25px;
-    }
-
-    .stTabs [data-baseweb="tab"] {
-        height: 60px;
-        background: #f8fafc !important;
-        border: 1.5px solid #e2e8f0 !important;
+    /* Force Large Rectangular Tab-Button Custom Styling */
+    div[data-testid="stHorizontalBlock"] .stButton > button {
+        width: 100% !important;
+        height: 62px !important;
         border-radius: 12px !important;
-        box-shadow: none !important;
-        color: #334155 !important;
+        font-size: 18px !important;
         font-weight: 700 !important;
-        font-size: 16px !important;
-        flex: 1;
-        justify-content: center;
-        transition: all 0.2s ease;
+        transition: all 0.2s ease !important;
     }
 
-    .stTabs [data-baseweb="tab"]:hover {
-        border-color: #1b4d3e !important;
-        color: #1b4d3e !important;
+    .tab-active > button {
+        background-color: #eaf4ee !important;
+        border: 2px solid #1c6349 !important;
+        color: #1c6349 !important;
     }
 
-    .stTabs [data-baseweb="tab"][aria-selected="true"] {
-        background: #e6f2ed !important;
-        border: 2px solid #1b4d3e !important;
-        color: #0f172a !important;
+    .tab-inactive > button {
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #475569 !important;
+    }
+    .tab-inactive > button:hover {
+        border-color: #1c6349 !important;
+        color: #1c6349 !important;
     }
 
-    .stTabs [data-baseweb="tab-highlight"] {
-        display: none !important;
-    }
-
-    /* Bullet points */
+    /* Bullet Points */
     .apri-bullet {
-        margin: 0 0 12px 0;
-        font-size: 14.5px;
-        color: #334155;
+        margin: 0 0 14px 0;
+        font-size: 15px;
+        color: #1e293b;
         font-weight: 600;
     }
 
     .apri-square {
-        color: #1b4d3e;
+        color: #1c6349;
         margin-right: 10px;
         font-size: 12px;
     }
@@ -154,15 +95,14 @@ def _inject_css():
         font-size: 11px;
         font-weight: 800;
         letter-spacing: 0.08em;
-        color: #1b4d3e;
+        color: #1c6349;
     }
 
-    /* Table Grid Cards */
+    /* Table with Rounded Individual Border Boxes */
     .grid-table {
         display: grid;
         grid-template-columns: 1fr 60px 1fr 60px;
-        gap: 6px 0px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #cbd5e1;
         border-radius: 10px;
         overflow: hidden;
         background-color: #ffffff;
@@ -172,8 +112,8 @@ def _inject_css():
         padding: 10px 14px;
         font-size: 13.5px;
         color: #1e293b;
-        border-bottom: 1px solid #f1f5f9;
-        border-right: 1px solid #f1f5f9;
+        border-bottom: 1px solid #edf2f7;
+        border-right: 1px solid #edf2f7;
         display: flex;
         align-items: center;
     }
@@ -189,56 +129,33 @@ def _inject_css():
     }
 
     .apri-note {
-        margin-top: 12px;
+        margin-top: 10px;
         color: #64748b;
         font-size: 12px;
         line-height: 1.4;
     }
 
-    /* Map Section */
+    /* Map styling */
     .apri-map svg {
         display: block;
         width: 100%;
         height: auto;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        border-radius: 14px;
     }
 
-    /* Methodology Styling */
+    /* Methodology Text */
     .apri-method-title {
-        color: #1b4d3e;
+        color: #1c6349;
         font-weight: 700;
-        font-size: 17px;
+        font-size: 18px;
         margin-bottom: 12px;
     }
 
     .apri-method-text {
         color: #334155;
-        font-size: 14px;
+        font-size: 14.5px;
         line-height: 1.6;
-        margin-bottom: 14px;
-    }
-
-    /* Next Button Style */
-    .next-btn-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 35px;
-    }
-    
-    .stButton > button {
-        border-radius: 20px !important;
-        padding: 8px 30px !important;
-        border: 1px solid #cbd5e1 !important;
-        background: #ffffff !important;
-        color: #1b4d3e !important;
-        font-weight: 600 !important;
-        font-size: 14px !important;
-    }
-    
-    .stButton > button:hover {
-        background: #f8fafc !important;
-        border-color: #1b4d3e !important;
+        margin-bottom: 16px;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -246,14 +163,15 @@ def _inject_css():
 def _e(x):
     return str(x).replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
 
+# Contour exact ajusté pour la frontière RD / Haïti (fermeture continue de l'île)
 DR = [
-    (-71.95,18.62),(-71.70,18.79),(-71.62,19.17),(-71.71,19.71),
-    (-71.59,19.88),(-70.81,19.88),(-70.21,19.62),(-69.95,19.65),
-    (-69.77,19.29),(-69.22,19.31),(-69.25,19.02),(-68.81,18.98),
-    (-68.32,18.61),(-68.69,18.21),(-69.16,18.42),(-69.62,18.38),
-    (-69.95,18.43),(-70.13,18.25),(-70.52,18.18),(-70.67,18.43),
-    (-71.00,18.28),(-71.40,17.60),(-71.66,17.76),(-71.71,18.04),
-    (-71.69,18.32),(-71.95,18.62)
+    (-71.71, 19.71), (-71.59, 19.88), (-70.81, 19.88), (-70.21, 19.62),
+    (-69.95, 19.65), (-69.77, 19.29), (-69.22, 19.31), (-69.25, 19.02),
+    (-68.81, 18.98), (-68.32, 18.61), (-68.69, 18.21), (-69.16, 18.42),
+    (-69.62, 18.38), (-69.95, 18.43), (-70.13, 18.25), (-70.52, 18.18),
+    (-70.67, 18.43), (-71.00, 18.28), (-71.40, 17.60), (-71.66, 17.76),
+    (-71.71, 18.04), (-71.69, 18.32), (-71.95, 18.62), (-71.70, 18.79),
+    (-71.62, 19.17), (-71.71, 19.71)
 ]
 
 def _project(rings, width=760, height=420, margin=20):
@@ -284,41 +202,39 @@ def _hispaniola_map():
         if not geo.get("pays"):
             return None
         w, h = 760, 420
-        xy = _project(list(geo["pays"]) + [DR], w, h)
-        parts = [f'<rect width="{w}" height="{h}" rx="12" fill="#edf4fb"/>']
+        all_rings = list(geo["pays"]) + [DR]
+        xy = _project(all_rings, w, h)
+        
+        parts = [f'<rect width="{w}" height="{h}" rx="14" fill="#edf4fb"/>']
+        
+        # Haïti (Polygones)
         for ring in geo["pays"]:
-            parts.append(f'<path d="{_path(ring, xy)}" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>')
-        parts.append(f'<path d="{_path(DR, xy)}" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>')
+            parts.append(f'<path d="{_path(ring, xy)}" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>')
+            
+        # République Dominicaine (Raccordée directement sur la frontière)
+        parts.append(f'<path d="{_path(DR, xy)}" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>')
+        
+        # Sections communales en vert
         sx, sy = [], []
         for sec in geo.get("sections", []):
             for ring in sec.get("anneaux", []):
-                parts.append(f'<path d="{_path(ring, xy)}" fill="#28734f" stroke="#1b4d3e" stroke-width="1"/>')
+                parts.append(f'<path d="{_path(ring, xy)}" fill="#28734f" stroke="#1c6349" stroke-width="1"/>')
                 for lon, lat in ring:
                     x, y = xy(lon, lat)
                     sx.append(x); sy.append(y)
+                    
+        # Cercle pointillé vert autour des zones d'étude
         if sx:
             cx = (min(sx) + max(sx)) / 2
             cy = (min(sy) + max(sy)) / 2
-            r = max(max(sx) - min(sx), max(sy) - min(sy)) / 2 + 16
-            parts.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="none" stroke="#1b4d3e" stroke-width="1.5" stroke-dasharray="5 4"/>')
-        hx, hy = xy(-72.15, 19.25)
-        parts.append(f'<text x="{hx:.1f}" y="{hy:.1f}" font-size="13" font-weight="800" fill="#1b4d3e" letter-spacing="2">HAÏTI</text>')
+            r = max(max(sx) - min(sx), max(sy) - min(sy)) / 2 + 18
+            parts.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="none" stroke="#1c6349" stroke-width="1.5" stroke-dasharray="5 4"/>')
+            
+        hx, hy = xy(-72.25, 19.10)
+        parts.append(f'<text x="{hx:.1f}" y="{hy:.1f}" font-size="14" font-weight="800" fill="#1c6349" letter-spacing="2">HAÏTI</text>')
         return f'<div class="apri-map"><svg viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg">{"".join(parts)}</svg></div>'
     except Exception:
         return None
-
-def _render_header():
-    st.markdown("""
-    <div class="header-banner">
-        <div class="header-title-box">
-            <div class="header-logo">🌴</div>
-            <div class="header-text">
-                <h1>APRI</h1>
-                <p>Landscape resilience observatory<br>Sud and Grand'Anse, Haiti</p>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
 
 def _study_area():
     counts = {
@@ -331,12 +247,13 @@ def _study_area():
     
     c1, c2 = st.columns([1.05, 1.15], gap="large")
     with c1:
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
         for k in ("b1", "b2", "b3"):
             st.markdown(f'<div class="apri-bullet"><span class="apri-square">■</span>{_e(T(k))}</div>', unsafe_allow_html=True)
             
         st.markdown(f'<div class="apri-label">{_e(T("sections"))}</div>', unsafe_allow_html=True)
         
-        # Grid styled like individual rounded cells
+        # Grille personnalisée identique à la maquette
         grid_html = '<div class="grid-table">'
         for a, b in zip(left, right):
             grid_html += f'<div class="grid-cell">{_e(a)}</div>'
@@ -371,17 +288,38 @@ def _methodology():
 
 def render():
     _inject_css()
-    _render_header()
 
-    tab1, tab2 = st.tabs([T("e1"), T("e2")])
-    with tab1:
+    # Gestion des 2 grands boutons/onglets rectangulaires
+    if "current_tab" not in st.session_state:
+        st.session_state.current_tab = "study"
+
+    col_t1, col_t2 = st.columns(2)
+    
+    with col_t1:
+        t1_class = "tab-active" if st.session_state.current_tab == "study" else "tab-inactive"
+        st.markdown(f'<div class="{t1_class}">', unsafe_allow_html=True)
+        if st.button(T("e1"), key="btn_tab_study"):
+            st.session_state.current_tab = "study"
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    with col_t2:
+        t2_class = "tab-active" if st.session_state.current_tab == "method" else "tab-inactive"
+        st.markdown(f'<div class="{t2_class}">', unsafe_allow_html=True)
+        if st.button(T("e2"), key="btn_tab_method"):
+            st.session_state.current_tab = "method"
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
+
+    if st.session_state.current_tab == "study":
         _study_area()
-    with tab2:
+    else:
         _methodology()
 
-    # Next button in bottom center
-    st.markdown('<div class="next-btn-container">', unsafe_allow_html=True)
-    col_l, col_btn, col_r = st.columns([4, 1, 4])
+    # Bouton Next centré en bas
+    st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
+    col_l, col_btn, col_r = st.columns([4, 1.5, 4])
     with col_btn:
-        st.button(f"{T('next')} →")
-    st.markdown('</div>', unsafe_allow_html=True)
+        st.button(f"{T('next')} →", key="btn_next")
