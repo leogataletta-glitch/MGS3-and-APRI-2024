@@ -1,10 +1,5 @@
 """
-APRI — Accueil
-Deux onglets uniquement :
-1. The study area
-2. Methodology
-
-Navigation via st.tabs(): aucun changement d'URL et aucune nouvelle page.
+APRI — Accueil (Design exact basé sur la maquette)
 """
 
 import os
@@ -41,108 +36,212 @@ TEXTES = {
     "previous": {"en": "Previous", "fr": "Précédent"},
     "next": {"en": "Next", "fr": "Suivant"},
 }
+
 for k, v in TEXTES.items():
     i18n.DICO.setdefault(k, v)
 
-st.markdown("""
-<style>
-.block-container{max-width:1450px;padding-top:.6rem;padding-bottom:2rem}
+def _inject_css():
+    st.markdown("""
+    <style>
+    /* Global Container */
+    .block-container {
+        max-width: 1400px;
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
 
-/* Native tabs: no card, no radio circles */
-.stTabs [data-baseweb="tab-list"]{
-    gap:48px;
-    border-bottom:1px solid #dfe5e2;
-}
-.stTabs [data-baseweb="tab"]{
-    height:50px;
-    padding:12px 4px 9px;
-    background:transparent !important;
-    border:0 !important;
-    border-radius:0 !important;
-    box-shadow:none !important;
-    color:#182132;
-    font:600 15px Arial,sans-serif;
-}
-.stTabs [data-baseweb="tab"]:hover{
-    background:transparent !important;
-    color:#155c37;
-}
-.stTabs [data-baseweb="tab"][aria-selected="true"]{
-    color:#155c37;
-}
-.stTabs [data-baseweb="tab-highlight"]{
-    height:3px !important;
-    background:#1c6349 !important;
-}
-.stTabs [data-baseweb="tab-border"]{display:none !important}
+    /* Top Banner Header */
+    .header-banner {
+        background: linear-gradient(90deg, rgba(255,255,255,1) 35%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%), 
+                    url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80');
+        background-size: cover;
+        background-position: center;
+        border-radius: 12px;
+        padding: 24px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
 
-/* Typography */
-.apri-title{
-    font:400 30px/1.15 Georgia,"Times New Roman",serif;
-    color:#101728;
-    margin:0;
-}
-.apri-rule{
-    width:42px;height:2px;background:#2f6b4f;margin:12px 0 22px;
-}
-.apri-bullet{
-    margin:0 0 17px;
-    font-size:14px;line-height:1.5;color:#263244;
-}
-.apri-square{color:#2f6b4f;margin-right:9px}
-.apri-label{
-    margin:26px 0 8px;
-    font:700 10px/1.2 Arial,sans-serif;
-    letter-spacing:.12em;color:#718096;
-}
-.apri-note{
-    margin-top:9px;
-    color:#718096;
-    font-size:11.5px;
-    line-height:1.4;
-}
+    .header-title-box {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
 
-/* Clean section table */
-.apri-table{
-    width:100%;
-    border-collapse:collapse;
-    font-size:12.5px;
-}
-.apri-table td{
-    padding:7px 0;
-    border-top:1px solid #edf0f2;
-    color:#263244;
-}
-.apri-table tr:first-child td{border-top:1px solid #dfe5e2}
-.apri-table .num{text-align:right;color:#526174;width:42px}
-.apri-table .name2{padding-left:28px}
+    .header-logo {
+        width: 60px;
+        height: 60px;
+        background-color: #1b4d3e;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+    }
 
-/* Map has no surrounding card */
-.apri-map svg{
-    display:block;
-    width:100%;
-    height:auto;
-    border-radius:10px;
-}
+    .header-text h1 {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -0.5px;
+    }
 
-/* Methodology */
-.apri-method-title{
-    color:#155c37;
-    font:700 18px/1.25 Arial,sans-serif;
-    margin-bottom:17px;
-}
-.apri-method-text{
-    color:#182132;
-    font:400 16px/1.55 Georgia,"Times New Roman",serif;
-    text-align:justify;
-    margin-bottom:18px;
-}
+    .header-text p {
+        margin: 2px 0 0 0;
+        font-size: 13px;
+        color: #475569;
+        font-weight: 500;
+    }
 
-/* Bottom */
-.apri-bottom-left{text-align:left}
-.apri-bottom-right{text-align:right}
-</style>
-""", unsafe_allow_html=True)
+    /* Styled Tabs like Cards */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 20px;
+        border-bottom: none !important;
+        margin-bottom: 25px;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        height: 60px;
+        background: #f8fafc !important;
+        border: 1.5px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        box-shadow: none !important;
+        color: #334155 !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+        flex: 1;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+
+    .stTabs [data-baseweb="tab"]:hover {
+        border-color: #1b4d3e !important;
+        color: #1b4d3e !important;
+    }
+
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+        background: #e6f2ed !important;
+        border: 2px solid #1b4d3e !important;
+        color: #0f172a !important;
+    }
+
+    .stTabs [data-baseweb="tab-highlight"] {
+        display: none !important;
+    }
+
+    /* Bullet points */
+    .apri-bullet {
+        margin: 0 0 12px 0;
+        font-size: 14.5px;
+        color: #334155;
+        font-weight: 600;
+    }
+
+    .apri-square {
+        color: #1b4d3e;
+        margin-right: 10px;
+        font-size: 12px;
+    }
+
+    .apri-label {
+        margin: 28px 0 12px;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        color: #1b4d3e;
+    }
+
+    /* Table Grid Cards */
+    .grid-table {
+        display: grid;
+        grid-template-columns: 1fr 60px 1fr 60px;
+        gap: 6px 0px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: #ffffff;
+    }
+
+    .grid-cell {
+        padding: 10px 14px;
+        font-size: 13.5px;
+        color: #1e293b;
+        border-bottom: 1px solid #f1f5f9;
+        border-right: 1px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+    }
+
+    .grid-cell.num {
+        font-weight: 700;
+        justify-content: flex-end;
+        color: #0f172a;
+    }
+
+    .grid-cell.last-col {
+        border-right: none;
+    }
+
+    .apri-note {
+        margin-top: 12px;
+        color: #64748b;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    /* Map Section */
+    .apri-map svg {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    /* Methodology Styling */
+    .apri-method-title {
+        color: #1b4d3e;
+        font-weight: 700;
+        font-size: 17px;
+        margin-bottom: 12px;
+    }
+
+    .apri-method-text {
+        color: #334155;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 14px;
+    }
+
+    /* Next Button Style */
+    .next-btn-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 35px;
+    }
+    
+    .stButton > button {
+        border-radius: 20px !important;
+        padding: 8px 30px !important;
+        border: 1px solid #cbd5e1 !important;
+        background: #ffffff !important;
+        color: #1b4d3e !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+    }
+    
+    .stButton > button:hover {
+        background: #f8fafc !important;
+        border-color: #1b4d3e !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 def _e(x):
     return str(x).replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
@@ -158,91 +257,131 @@ DR = [
 ]
 
 def _project(rings, width=760, height=420, margin=20):
-    pts=[p for r in rings for p in r]
-    lat=sum(p[1] for p in pts)/len(pts)
-    k=math.cos(math.radians(lat))
-    xs=[p[0]*k for p in pts]
-    ys=[p[1] for p in pts]
-    x0,x1=min(xs),max(xs); y0,y1=min(ys),max(ys)
-    dx=max(x1-x0,1e-9); dy=max(y1-y0,1e-9)
-    s=min((width-2*margin)/dx,(height-2*margin)/dy)
-    ox=(width-dx*s)/2; oy=(height-dy*s)/2
-    return lambda lon,lat:(ox+(lon*k-x0)*s, oy+(y1-lat)*s)
+    pts = [p for r in rings for p in r]
+    if not pts:
+        return lambda lon, lat: (0, 0)
+    lat = sum(p[1] for p in pts) / len(pts)
+    k = math.cos(math.radians(lat))
+    xs = [p[0] * k for p in pts]
+    ys = [p[1] for p in pts]
+    x0, x1 = min(xs), max(xs); y0, y1 = min(ys), max(ys)
+    dx = max(x1 - x0, 1e-9); dy = max(y1 - y0, 1e-9)
+    s = min((width - 2 * margin) / dx, (height - 2 * margin) / dy)
+    ox = (width - dx * s) / 2; oy = (height - dy * s) / 2
+    return lambda lon, lat: (ox + (lon * k - x0) * s, oy + (y1 - lat) * s)
 
-def _path(ring,xy):
+def _path(ring, xy):
     return "".join(
-        ("M" if i==0 else "L")+f"{xy(lon,lat)[0]:.1f} {xy(lon,lat)[1]:.1f}"
-        for i,(lon,lat) in enumerate(ring)
-    )+"Z"
+        ("M" if i == 0 else "L") + f"{xy(lon, lat)[0]:.1f} {xy(lon, lat)[1]:.1f}"
+        for i, (lon, lat) in enumerate(ring)
+    ) + "Z"
 
+@st.cache_data
 def _hispaniola_map():
     try:
         import territoire_page
-        geo=territoire_page._geo()
-        if not geo["pays"]:
+        geo = territoire_page._geo()
+        if not geo.get("pays"):
             return None
-        w,h=760,420
-        xy=_project(list(geo["pays"])+[DR],w,h)
-        parts=[f'<rect width="{w}" height="{h}" rx="10" fill="#edf4fb"/>']
+        w, h = 760, 420
+        xy = _project(list(geo["pays"]) + [DR], w, h)
+        parts = [f'<rect width="{w}" height="{h}" rx="12" fill="#edf4fb"/>']
         for ring in geo["pays"]:
-            parts.append(f'<path d="{_path(ring,xy)}" fill="#f4f5f1" stroke="#cbd4dd" stroke-width="1.1"/>')
-        parts.append(f'<path d="{_path(DR,xy)}" fill="#f4f5f1" stroke="#cbd4dd" stroke-width="1.1"/>')
-        sx=[]; sy=[]
-        for sec in geo["sections"]:
-            for ring in sec["anneaux"]:
-                parts.append(f'<path d="{_path(ring,xy)}" fill="#28734f" stroke="#28734f" stroke-width="1"/>')
-                for lon,lat in ring:
-                    x,y=xy(lon,lat); sx.append(x); sy.append(y)
+            parts.append(f'<path d="{_path(ring, xy)}" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>')
+        parts.append(f'<path d="{_path(DR, xy)}" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>')
+        sx, sy = [], []
+        for sec in geo.get("sections", []):
+            for ring in sec.get("anneaux", []):
+                parts.append(f'<path d="{_path(ring, xy)}" fill="#28734f" stroke="#1b4d3e" stroke-width="1"/>')
+                for lon, lat in ring:
+                    x, y = xy(lon, lat)
+                    sx.append(x); sy.append(y)
         if sx:
-            cx=(min(sx)+max(sx))/2; cy=(min(sy)+max(sy))/2
-            r=max(max(sx)-min(sx),max(sy)-min(sy))/2+16
-            parts.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="none" stroke="#28734f" stroke-width="1.5" stroke-dasharray="5 4"/>')
-        hx,hy=xy(-72.15,19.25); dx,dy=xy(-69.05,19.55)
-        parts.append(f'<text x="{hx:.1f}" y="{hy:.1f}" font-size="12" font-weight="700" fill="#8a93a5" letter-spacing="2">HAÏTI</text>')
-        parts.append(f'<text x="{dx:.1f}" y="{dy:.1f}" font-size="10.5" font-weight="700" fill="#8a93a5">RÉPUBLIQUE DOMINICAINE</text>')
+            cx = (min(sx) + max(sx)) / 2
+            cy = (min(sy) + max(sy)) / 2
+            r = max(max(sx) - min(sx), max(sy) - min(sy)) / 2 + 16
+            parts.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="none" stroke="#1b4d3e" stroke-width="1.5" stroke-dasharray="5 4"/>')
+        hx, hy = xy(-72.15, 19.25)
+        parts.append(f'<text x="{hx:.1f}" y="{hy:.1f}" font-size="13" font-weight="800" fill="#1b4d3e" letter-spacing="2">HAÏTI</text>')
         return f'<div class="apri-map"><svg viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg">{"".join(parts)}</svg></div>'
     except Exception:
         return None
 
+def _render_header():
+    st.markdown("""
+    <div class="header-banner">
+        <div class="header-title-box">
+            <div class="header-logo">🌴</div>
+            <div class="header-text">
+                <h1>APRI</h1>
+                <p>Landscape resilience observatory<br>Sud and Grand'Anse, Haiti</p>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
 def _study_area():
-    counts={"Anse à Drick":121,"Dumont":122,"Barbois":121,"Débouchette":120,"Beaulieu":121,"Quentin":116,"Blactote":120,"Trichet":120,"Dalmette":125,"Mouline":120}
-    left=["Anse à Drick","Barbois","Beaulieu","Blactote","Dalmette"]
-    right=["Dumont","Débouchette","Quentin","Trichet","Mouline"]
-    c1,c2=st.columns([1.02,1.18],gap="large")
+    counts = {
+        "Anse à Drick": 121, "Dumont": 122, "Barbois": 121, "Débouchette": 120,
+        "Beaulieu": 121, "Quentin": 116, "Blactote": 120, "Trichet": 120,
+        "Dalmette": 125, "Mouline": 120
+    }
+    left = ["Anse à Drick", "Barbois", "Beaulieu", "Blactote", "Dalmette"]
+    right = ["Dumont", "Débouchette", "Quentin", "Trichet", "Mouline"]
+    
+    c1, c2 = st.columns([1.05, 1.15], gap="large")
     with c1:
-        st.markdown(f'<div class="apri-title">{_e(T("study_title"))}</div><div class="apri-rule"></div>',unsafe_allow_html=True)
-        for k in ("b1","b2","b3"):
-            st.markdown(f'<div class="apri-bullet"><span class="apri-square">■</span>{_e(T(k))}</div>',unsafe_allow_html=True)
-        st.markdown(f'<div class="apri-label">{_e(T("sections"))}</div>',unsafe_allow_html=True)
-        rows=[]
-        for a,b in zip(left,right):
-            rows.append(f"<tr><td>{_e(a)}</td><td class='num'>{counts[a]}</td><td class='name2'>{_e(b)}</td><td class='num'>{counts[b]}</td></tr>")
-        st.markdown(f"<table class='apri-table'>{''.join(rows)}</table><div class='apri-note'>{_e(T('note'))}</div>",unsafe_allow_html=True)
+        for k in ("b1", "b2", "b3"):
+            st.markdown(f'<div class="apri-bullet"><span class="apri-square">■</span>{_e(T(k))}</div>', unsafe_allow_html=True)
+            
+        st.markdown(f'<div class="apri-label">{_e(T("sections"))}</div>', unsafe_allow_html=True)
+        
+        # Grid styled like individual rounded cells
+        grid_html = '<div class="grid-table">'
+        for a, b in zip(left, right):
+            grid_html += f'<div class="grid-cell">{_e(a)}</div>'
+            grid_html += f'<div class="grid-cell num">{counts[a]}</div>'
+            grid_html += f'<div class="grid-cell">{_e(b)}</div>'
+            grid_html += f'<div class="grid-cell num last-col">{counts[b]}</div>'
+        grid_html += '</div>'
+        
+        st.markdown(grid_html, unsafe_allow_html=True)
+        st.markdown(f'<div class="apri-note">{_e(T("note"))}</div>', unsafe_allow_html=True)
+
     with c2:
-        svg=_hispaniola_map()
+        svg = _hispaniola_map()
         if svg:
-            st.markdown(svg,unsafe_allow_html=True)
-            st.markdown(f'<div class="apri-note">{_e(T("map_note"))}</div>',unsafe_allow_html=True)
+            st.markdown(svg, unsafe_allow_html=True)
+            st.markdown(f'<div class="apri-note">{_e(T("map_note"))}</div>', unsafe_allow_html=True)
 
 def _methodology():
-    st.markdown(f'<div class="apri-title">{_e(T("method_title"))}</div><div class="apri-rule"></div>',unsafe_allow_html=True)
-    c1,c2,c3=st.columns(3,gap="large")
+    c1, c2, c3 = st.columns(3, gap="large")
     with c1:
-        st.markdown(f'<div class="apri-method-title">{_e(T("house"))}</div>',unsafe_allow_html=True)
-        for k in ("house1","house2","house3"):
-            st.markdown(f'<div class="apri-method-text">{_e(T(k))}</div>',unsafe_allow_html=True)
+        st.markdown(f'<div class="apri-method-title">{_e(T("house"))}</div>', unsafe_allow_html=True)
+        for k in ("house1", "house2", "house3"):
+            st.markdown(f'<div class="apri-method-text">{_e(T(k))}</div>', unsafe_allow_html=True)
     with c2:
-        st.markdown(f'<div class="apri-method-title">{_e(T("sat"))}</div>',unsafe_allow_html=True)
-        for k in ("sat1","sat2"):
-            st.markdown(f'<div class="apri-method-text">{_e(T(k))}</div>',unsafe_allow_html=True)
+        st.markdown(f'<div class="apri-method-title">{_e(T("sat"))}</div>', unsafe_allow_html=True)
+        for k in ("sat1", "sat2"):
+            st.markdown(f'<div class="apri-method-text">{_e(T(k))}</div>', unsafe_allow_html=True)
     with c3:
-        st.markdown(f'<div class="apri-method-title">{_e(T("bio"))}</div>',unsafe_allow_html=True)
-        for k in ("bio1","bio2"):
-            st.markdown(f'<div class="apri-method-text">{_e(T(k))}</div>',unsafe_allow_html=True)
+        st.markdown(f'<div class="apri-method-title">{_e(T("bio"))}</div>', unsafe_allow_html=True)
+        for k in ("bio1", "bio2"):
+            st.markdown(f'<div class="apri-method-text">{_e(T(k))}</div>', unsafe_allow_html=True)
 
 def render():
-    tab1,tab2=st.tabs([T("e1"),T("e2")])
+    _inject_css()
+    _render_header()
+
+    tab1, tab2 = st.tabs([T("e1"), T("e2")])
     with tab1:
         _study_area()
     with tab2:
         _methodology()
+
+    # Next button in bottom center
+    st.markdown('<div class="next-btn-container">', unsafe_allow_html=True)
+    col_l, col_btn, col_r = st.columns([4, 1, 4])
+    with col_btn:
+        st.button(f"{T('next')} →")
+    st.markdown('</div>', unsafe_allow_html=True)
