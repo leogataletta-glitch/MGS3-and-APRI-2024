@@ -1,5 +1,5 @@
 """
-APRI — Accueil (Pleine largeur, Onglets 50/50, Alignement Sidebar & Bandeau Pastel)
+APRI — Accueil (Onglets collés avec ligne active & Bandeau aux couleurs adoucies)
 """
 
 import os
@@ -41,7 +41,7 @@ for k, v in TEXTES.items():
 def _inject_css():
     st.markdown("""
     <style>
-    /* 1. Expansion pleine largeur propre & réalignée */
+    /* 1. Full-width réaligné avec la sidebar */
     .main .block-container {
         max-width: 100% !important;
         padding-left: 2rem !important;
@@ -49,59 +49,69 @@ def _inject_css():
         padding-top: 1rem !important;
     }
 
-    /* 2. Adoucissement du bandeau header (Effet Pastel) */
-    .apri-header-banner, [data-testid="stHeader"] {
-        filter: saturate(0.65) brightness(1.08) !important;
-        opacity: 0.92 !important;
+    /* 2. Adoucissement du bandeau header (Couleurs éteintes / Mat / Soft) */
+    [data-testid="stHeader"], .header-banner, .banner-image img {
+        filter: saturate(0.50) contrast(0.90) brightness(1.05) !important;
+        opacity: 0.88 !important;
     }
 
-    /* 3. Conteneur des 2 onglets principaux (occupent 100% du conteneur) */
-    .apri-tabs-wrapper {
-        display: flex;
-        width: 100%;
-        gap: 16px;
-        margin-bottom: 24px;
+    /* 3. Conteneur des 2 onglets collés qui occupent toute la largeur */
+    div[data-testid="stHorizontalBlock"]:has(.tab-left, .tab-right) {
+        gap: 0px !important;
+        margin-bottom: 25px !important;
+        border-bottom: 2px solid #e2e8f0;
     }
 
-    .apri-tab-col {
-        flex: 1 1 50%;
-        width: 50%;
+    div[data-testid="stHorizontalBlock"]:has(.tab-left, .tab-right) > div {
+        flex: 1 1 50% !important;
+        width: 50% !important;
+        padding: 0 !important;
     }
 
-    .apri-tab-col .stButton {
+    /* Style commun des boutons rectangulaires larges */
+    .tab-left .stButton > button, 
+    .tab-right .stButton > button {
         width: 100% !important;
-    }
-
-    .apri-tab-col .stButton > button {
-        width: 100% !important;
-        height: 58px !important;
-        border-radius: 12px !important;
-        font-size: 17px !important;
+        height: 65px !important;
+        font-size: 18px !important;
         font-weight: 700 !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        box-sizing: border-box !important;
+        border: none !important;
+        position: relative !important;
+        border-radius: 0px !important;
+        box-shadow: none !important;
+        transition: all 0.2s ease !important;
     }
 
-    .tab-active > button {
+    .tab-left .stButton > button {
+        border-top-left-radius: 12px !important;
+        border-bottom-left-radius: 0px !important;
+    }
+
+    .tab-right .stButton > button {
+        border-top-right-radius: 12px !important;
+        border-bottom-right-radius: 0px !important;
+    }
+
+    /* État Inactif */
+    .tab-inactive .stButton > button {
+        background-color: #f8fafc !important;
+        color: #64748b !important;
+        border-bottom: 3px solid transparent !important;
+    }
+
+    .tab-inactive .stButton > button:hover {
+        background-color: #f1f5f9 !important;
+        color: #1c6349 !important;
+    }
+
+    /* État Actif : Ligne verte marquée en dessous */
+    .tab-active .stButton > button {
         background-color: #eaf4ee !important;
-        border: 2px solid #1c6349 !important;
         color: #1c6349 !important;
+        border-bottom: 4px solid #1c6349 !important;
     }
 
-    .tab-inactive > button {
-        background-color: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
-        color: #475569 !important;
-    }
-
-    .tab-inactive > button:hover {
-        border-color: #1c6349 !important;
-        color: #1c6349 !important;
-    }
-
-    /* Clean Content Styling */
+    /* Alignement et typographie interne */
     .apri-bullet {
         margin: 0 0 14px 0;
         font-size: 15px;
@@ -123,7 +133,6 @@ def _inject_css():
         color: #1c6349;
     }
 
-    /* Table Grid */
     .grid-table {
         display: grid;
         grid-template-columns: 1fr 60px 1fr 60px;
@@ -161,7 +170,6 @@ def _inject_css():
         line-height: 1.4;
     }
 
-    /* Map SVG */
     .apri-map svg {
         display: block;
         width: 100%;
@@ -169,7 +177,6 @@ def _inject_css():
         border-radius: 14px;
     }
 
-    /* Methodology Text */
     .apri-method-title {
         color: #1c6349;
         font-weight: 700;
@@ -234,7 +241,7 @@ def _hispaniola_map():
                     x, y = xy(lon, lat)
                     sx.append(x); sy.append(y)
                     
-        # Cercle englobant
+        # Cercle pointillé vert
         if sx:
             cx = (min(sx) + max(sx)) / 2
             cy = (min(sy) + max(sy)) / 2
@@ -302,26 +309,26 @@ def render():
     if "current_tab" not in st.session_state:
         st.session_state.current_tab = "study"
 
-    # Affichage des onglets 50/50 pleine largeur
-    col_t1, col_t2 = st.columns(2, gap="medium")
+    # Onglets 50/50 collés l'un à l'autre avec surlignage vert actif
+    col_t1, col_t2 = st.columns(2)
     
     with col_t1:
-        t1_class = "tab-active" if st.session_state.current_tab == "study" else "tab-inactive"
-        st.markdown(f'<div class="apri-tab-col {t1_class}">', unsafe_allow_html=True)
+        state_class = "tab-active" if st.session_state.current_tab == "study" else "tab-inactive"
+        st.markdown(f'<div class="tab-left {state_class}">', unsafe_allow_html=True)
         if st.button(T("e1"), key="btn_tab_study"):
             st.session_state.current_tab = "study"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
     with col_t2:
-        t2_class = "tab-active" if st.session_state.current_tab == "method" else "tab-inactive"
-        st.markdown(f'<div class="apri-tab-col {t2_class}">', unsafe_allow_html=True)
+        state_class = "tab-active" if st.session_state.current_tab == "method" else "tab-inactive"
+        st.markdown(f'<div class="tab-right {state_class}">', unsafe_allow_html=True)
         if st.button(T("e2"), key="btn_tab_method"):
             st.session_state.current_tab = "method"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
 
     if st.session_state.current_tab == "study":
         _study_area()
