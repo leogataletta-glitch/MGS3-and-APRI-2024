@@ -1,5 +1,5 @@
 """
-APRI — Accueil (CSS ciblé sur les conteneurs natifs Streamlit)
+APRI — Accueil (Correction stricte : Onglets HTML/CSS 50-50 & Bandeau Vert Mat)
 """
 
 import os
@@ -41,56 +41,76 @@ for k, v in TEXTES.items():
 def _inject_css():
     st.markdown("""
     <style>
-    /* 1. Élargissement de la zone de contenu globale */
-    [data-testid="stMainBlockContainer"] {
-        max-width: 100% !important;
-        padding-left: 2rem !important;
-        padding-right: 2rem !important;
-        padding-top: 1rem !important;
-    }
-
-    /* 2. Nuance de vert éteinte/mat sur le bandeau supérieur */
-    header[data-testid="stHeader"] {
-        filter: sepia(0.4) hue-rotate(85deg) saturate(0.6) brightness(0.95) !important;
-    }
-
-    /* 3. Style exact des boutons selon votre capture d'écran */
-    
-    /* Conteneurs de boutons dans le bloc d'onglets */
-    .btn-tab-active button, .btn-tab-inactive button {
+    /* Force l'occupation totale de l'écran principal */
+    div[data-testid="stAppViewContainer"] > section.main {
         width: 100% !important;
-        height: 62px !important;
+    }
+    
+    div[data-testid="stAppViewContainer"] > section.main .block-container {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+        padding-top: 0.5rem !important;
+    }
+
+    /* Adoucissement / Nuance de vert mat sur le bandeau supérieur */
+    [data-testid="stHeader"], header, img {
+        filter: sepia(0.25) hue-rotate(85deg) saturate(0.55) brightness(0.96);
+    }
+
+    /* Structure des Onglets 50% / 50% collés/espacés proprement */
+    .apri-tabs-nav {
+        display: flex !important;
+        width: 100% !important;
+        gap: 16px !important;
+        margin-bottom: 25px !important;
+    }
+
+    .apri-tab-item {
+        flex: 1 1 50% !important;
+        width: 50% !important;
+    }
+
+    /* Style des boutons identiques au modèle */
+    .apri-tab-item button {
+        width: 100% !important;
+        height: 56px !important;
+        border-radius: 12px !important;
         font-size: 16px !important;
         font-weight: 700 !important;
-        border-radius: 12px !important;
-        box-sizing: border-box !important;
+        cursor: pointer !important;
         transition: all 0.2s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
     }
 
-    /* Bouton INACTIF : Carte blanche, bordure grise très fine */
-    .btn-tab-inactive button {
+    /* Bouton Inactif (Carte blanche propre) */
+    .tab-inactive button {
         background-color: #ffffff !important;
         border: 1px solid #e2e8f0 !important;
-        color: #1e293b !important;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.03) !important;
+        color: #334155 !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.03) !important;
     }
 
-    .btn-tab-inactive button:hover {
+    .tab-inactive button:hover {
         background-color: #f8fafc !important;
         border-color: #cbd5e1 !important;
         color: #1c6349 !important;
     }
 
-    /* Bouton ACTIF : Fond vert pastel doux + Barre verte épaisse en bas */
-    .btn-tab-active button {
+    /* Bouton Actif (Vert pastel + Barre verte sous le bouton) */
+    .tab-active button {
         background: linear-gradient(180deg, #f2f8f5 0%, #e3efe8 100%) !important;
         border: 1px solid #c2e0d1 !important;
-        border-bottom: 5px solid #1c6349 !important; /* Barre d'activation */
+        border-bottom: 5px solid #1c6349 !important;
         color: #1c6349 !important;
-        box-shadow: 0 2px 4px rgba(28, 99, 73, 0.08) !important;
+        box-shadow: 0 2px 5px rgba(28, 99, 73, 0.1) !important;
     }
 
-    /* Styles du contenu */
+    /* Contenu & Typographie */
     .apri-bullet {
         margin: 0 0 14px 0;
         font-size: 15px;
@@ -285,26 +305,26 @@ def render():
     if "current_tab" not in st.session_state:
         st.session_state.current_tab = "study"
 
-    # Deux colonnes d'onglets (50 / 50)
-    col1, col2 = st.columns(2, gap="small")
+    # Navigation à 2 boutons occupant exactement 50% de la largeur chacun
+    c1, c2 = st.columns(2)
     
-    with col1:
-        cls_1 = "btn-tab-active" if st.session_state.current_tab == "study" else "btn-tab-inactive"
-        st.markdown(f'<div class="{cls_1}">', unsafe_allow_html=True)
-        if st.button(T("e1"), key="btn_study"):
+    with c1:
+        cls1 = "tab-active" if st.session_state.current_tab == "study" else "tab-inactive"
+        st.markdown(f'<div class="apri-tab-item {cls1}">', unsafe_allow_html=True)
+        if st.button(T("e1"), key="nav_btn_study"):
             st.session_state.current_tab = "study"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-    with col2:
-        cls_2 = "btn-tab-active" if st.session_state.current_tab == "method" else "btn-tab-inactive"
-        st.markdown(f'<div class="{cls_2}">', unsafe_allow_html=True)
-        if st.button(T("e2"), key="btn_method"):
+    with c2:
+        cls2 = "tab-active" if st.session_state.current_tab == "method" else "tab-inactive"
+        st.markdown(f'<div class="apri-tab-item {cls2}">', unsafe_allow_html=True)
+        if st.button(T("e2"), key="nav_btn_method"):
             st.session_state.current_tab = "method"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
 
     if st.session_state.current_tab == "study":
         _study_area()
