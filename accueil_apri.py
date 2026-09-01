@@ -191,6 +191,7 @@ STYLE = """
      Le plancher de 205 px est le point où la carte cesse d'être lisible :
      en dessous, on préfère que la page défile. */
   .uma-carte svg { display:block; width:100%; height:auto;
+                   margin:0 !important;
                    max-height: max(205px, calc(100vh - 470px)); }
   .uma-carte svg .sea { fill:transparent !important; }
   /* --- L'ÉCHELLE, DRESSÉE ENTRE LE TEXTE ET LA CARTE -------------------
@@ -206,19 +207,25 @@ STYLE = """
 
      SA HAUTEUR SUIT CELLE DE LA CARTE, à la même formule : les deux
      rétrécissent ensemble quand la fenêtre est basse. */
-  .uma-ecv    { margin:2px 0 0 2px; }
+  /* TOUT EST CALÉ À DROITE DE LA COLONNE, CONTRE LA CARTE. La barre était
+     posée à gauche et les repères remplissaient le reste : l'échelle se
+     retrouvait à cent pixels de ce qu'elle légende, séparée d'elle par du
+     vide. Elle vient maintenant s'appuyer sur le bord de la carte. */
+  .uma-ecv    { margin:2px 0 0; }
   .uma-ecv-h  { font-size:11.5px; font-weight:700; color:#3c4761;
-                white-space:nowrap; margin:0 0 8px; }
+                white-space:nowrap; margin:0 0 8px; text-align:right; }
   .uma-ecv-l  { font-size:11.5px; font-weight:700; color:#3c4761;
-                white-space:nowrap; margin:8px 0 0; }
-  .uma-ecv-c  { display:flex; align-items:stretch; }
+                white-space:nowrap; margin:8px 0 0; text-align:right; }
+  .uma-ech-t  { text-align:right; }
+  .uma-ecv-c  { display:flex; align-items:stretch;
+                justify-content:flex-end; }
   .uma-ecv-bar { display:flex; flex-direction:column; width:13px;
                  flex:0 0 13px;
                  height:max(180px, calc(100vh - 545px));
                  border-radius:6px; overflow:hidden;
                  box-shadow:inset 0 0 0 1px rgba(0,0,0,.09); }
   .uma-ecv-bar i { flex:1 1 0; }
-  .uma-ecv-tk { position:relative; flex:1 1 auto; }
+  .uma-ecv-tk { position:relative; flex:0 0 30px; }
   .uma-ecv-tk span { position:absolute; left:13px; transform:translateY(-50%);
                      font-size:11px; color:#7c8698; white-space:nowrap; }
   .uma-ecv-tk span::before { content:""; position:absolute; left:-6px;
@@ -227,7 +234,7 @@ STYLE = """
   .uma-ech-t  { font-size:11px; font-weight:700; color:#8a93a5;
                 letter-spacing:.06em; text-transform:uppercase;
                 margin:0 0 11px; line-height:1.35; }
-  .uma-n   { font-size:11px; color:#a7b0bb; margin:11px 0 0 3px;
+  .uma-n   { font-size:11px; color:#a7b0bb; margin:6px 0 0 2px;
              line-height:1.5; max-width:70ch; }
 
   @media (max-width:760px){ .uma-t{font-size:25px} }
@@ -488,6 +495,15 @@ def _carte_indice(m):
     svg, seuils_ret, _ = map_render.render_map_svg(
         valeurs, {s: 1 for s in SECTIONS}, seuils, height=400,
         polarity="eleve_bon", unite="")
+    # LE DESSIN SE CALE À GAUCHE DE SA COLONNE, CONTRE L'ÉCHELLE.
+    # Le plafond de hauteur laisse la boîte plus large que le dessin ; par
+    # défaut un SVG se centre alors dans ce qui reste, et la carte se
+    # retrouvait à deux cents pixels de sa légende, séparée d'elle par du
+    # vide. `xMinYMid` la ramène contre l'échelle, qui n'est là que pour
+    # elle. La marge automatique du gabarit est défaite dans la foulée.
+    svg = svg.replace(
+        "<svg ", '<svg preserveAspectRatio="xMinYMid meet" ', 1).replace(
+        "margin:0 auto", "margin:0")
     lo, hi = min(dispo), max(dispo)
     return {"carte": f'<div class="uma-carte">{svg}</div>',
             "echelle": _echelle(seuils_ret),
@@ -552,18 +568,23 @@ def _comprendre(m):
     # revient au dessin. La mise en garde suit la définition, sous le cadre :
     # elle parle de l'échelle, qui est juste à côté.
     c = _carte_indice(m)
-    g, e, d = st.columns([1, 0.24, 1.4], gap="medium")
+    g, e, d = st.columns([1, 0.22, 1.5], gap="small")
     with g:
         st.markdown(f'<div class="uma-cadre">'
-                    f'<p class="uma-x">{_e(T("po_uma_x"))}</p></div>'
-                    + (f'<p class="uma-n">{c["note"]}</p>' if c else ""),
+                    f'<p class="uma-x">{_e(T("po_uma_x"))}</p></div>',
                     unsafe_allow_html=True)
     if not c:
         return
     with e:
         st.markdown(c["echelle"], unsafe_allow_html=True)
     with d:
-        st.markdown(c["carte"], unsafe_allow_html=True)
+        # LA MISE EN GARDE EST SOUS LA CARTE, PARCE QU'ELLE PORTE SUR ELLE.
+        # Rangée sous la définition, elle passait pour une note de bas de
+        # texte ; c'est une légende, et une légende se lit au pied de ce
+        # qu'elle légende.
+        st.markdown(c["carte"]
+                    + f'<p class="uma-n">{c["note"]}</p>',
+                    unsafe_allow_html=True)
 
 
 def render():
