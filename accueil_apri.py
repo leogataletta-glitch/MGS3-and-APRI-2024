@@ -450,6 +450,10 @@ def _carte_indice(m):
 
 
 def _comprendre(m):
+    # DE L'AIR ENTRE LES QUATRE PORTES ET CE QUI SUIT. Les cartes touchaient
+    # le texte : deux blocs collés se lisent comme un seul, et la définition
+    # semblait être la légende de la quatrième carte.
+    st.markdown('<div style="height:34px"></div>', unsafe_allow_html=True)
     """Ce qu'APRI mesure, et la carte de ce que ça donne.
 
     LE TITRE ET LE BOUTON ONT ÉTÉ RETIRÉS. « Comprendre. Mesurer. Agir. »
