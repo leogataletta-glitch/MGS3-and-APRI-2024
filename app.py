@@ -666,6 +666,21 @@ st.markdown(("""
      déplacement. Sans retour au survol, rien ne distingue une ligne
      cliquable d'un simple titre ; avec trois retours à la fois, la colonne
      s'agite. */
+  /* LE MENU SUIT LA LECTURE, IL NE RESTE PAS EN HAUT DE PAGE.
+     Il vivait dans une colonne aussi haute que son contenu : sur les pages
+     longues — Données, Rapport donateur, Analyse des résultats — on le
+     perdait de vue au troisième écran et il fallait remonter tout en haut
+     pour changer de rubrique. La colonne se colle donc au haut de la fenêtre
+     et y reste. `align-self: flex-start` est indispensable : sans lui,
+     Streamlit étire la colonne sur toute la hauteur de la ligne, et un
+     élément étiré ne peut pas coller. Si le menu dépasse la fenêtre, il
+     défile pour son propre compte. */
+  div[data-testid="stColumn"]:has(div[class*="st-key-zone_nav"]) {
+    position: sticky !important; top: 8px;
+    align-self: flex-start !important;
+    max-height: calc(100vh - 16px); overflow-y: auto; overflow-x: hidden;
+    scrollbar-width: thin;
+  }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button {
     display: flex !important; align-items: center !important;
     justify-content: flex-start !important;
