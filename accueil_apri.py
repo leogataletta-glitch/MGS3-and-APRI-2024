@@ -191,39 +191,43 @@ STYLE = """
      Le plancher de 205 px est le point où la carte cesse d'être lisible :
      en dessous, on préfère que la page défile. */
   .uma-carte svg { display:block; width:100%; height:auto;
-                   max-height: max(205px, calc(100vh - 556px)); }
+                   max-height: max(205px, calc(100vh - 470px)); }
   .uma-carte svg .sea { fill:transparent !important; }
-  /* --- L'ÉCHELLE, DESSINÉE PLUTÔT QU'ÉNUMÉRÉE --------------------------
+  /* --- L'ÉCHELLE, DRESSÉE ENTRE LE TEXTE ET LA CARTE -------------------
      QUATRE PAVÉS ALIGNÉS NE SONT PAS UNE ÉCHELLE. « moins de 4,2 · 4,2–4,5 ·
      4,5–4,6 · 4,6 et plus » se lisait comme une liste de catégories : rien
      n'y montrait que les quatre se suivent, ni dans quel sens. Les mêmes
-     couleurs mises bout à bout dans une seule barre le disent d'un coup —
-     le rouge est à une extrémité, le vert à l'autre, et les trois nombres
-     de coupure sont posés sous les jointures qu'ils marquent. Les bornes de
-     l'échelle ferment la barre de part et d'autre.
+     couleurs mises bout à bout dans une seule barre le disent d'un coup.
 
-     LES QUATRE SEGMENTS SONT DE LARGEUR ÉGALE, ET C'EST EXACT : ce sont
-     quatre classes de même effectif, pas quatre tranches de même amplitude.
-     La barre représente le rang, comme les couleurs de la carte. */
-  .uma-ech    { margin:0 0 5px 2px; max-width:540px; }
-  .uma-ech-t  { font-size:11px; font-weight:700; color:#8a93a5;
-                letter-spacing:.07em; text-transform:uppercase;
-                margin:0 0 10px; }
-  .uma-ech-r  { display:flex; align-items:flex-start; gap:12px; }
-  .uma-ech-c  { display:block; flex:1 1 auto; min-width:0; }
-  .uma-ech-bar { display:flex; height:11px; border-radius:6px;
-                 overflow:hidden;
+     ET LA BARRE EST DEBOUT. Couchée au-dessus de la carte, elle prenait de
+     la hauteur sur une page qui doit tenir dans un écran ; dressée dans la
+     bande étroite qui sépare la définition de la carte, elle n'en prend
+     plus, et le plus fort se lit en haut comme sur toute échelle graduée.
+
+     SA HAUTEUR SUIT CELLE DE LA CARTE, à la même formule : les deux
+     rétrécissent ensemble quand la fenêtre est basse. */
+  .uma-ecv    { margin:2px 0 0 2px; }
+  .uma-ecv-h  { font-size:11.5px; font-weight:700; color:#3c4761;
+                white-space:nowrap; margin:0 0 8px; }
+  .uma-ecv-l  { font-size:11.5px; font-weight:700; color:#3c4761;
+                white-space:nowrap; margin:8px 0 0; }
+  .uma-ecv-c  { display:flex; align-items:stretch; }
+  .uma-ecv-bar { display:flex; flex-direction:column; width:13px;
+                 flex:0 0 13px;
+                 height:max(180px, calc(100vh - 545px));
+                 border-radius:6px; overflow:hidden;
                  box-shadow:inset 0 0 0 1px rgba(0,0,0,.09); }
-  .uma-ech-bar i { flex:1 1 0; }
-  .uma-ech-tk { display:block; position:relative; height:14px;
-                margin-top:6px; }
-  .uma-ech-tk span { position:absolute; top:0; transform:translateX(-50%);
+  .uma-ecv-bar i { flex:1 1 0; }
+  .uma-ecv-tk { position:relative; flex:1 1 auto; }
+  .uma-ecv-tk span { position:absolute; left:13px; transform:translateY(-50%);
                      font-size:11px; color:#7c8698; white-space:nowrap; }
-  .uma-ech-tk span::before { content:""; position:absolute; left:50%; top:-6px;
-                             width:1px; height:4px; background:#ccd4de; }
-  .uma-b   { font-size:11.5px; font-weight:700; color:#3c4761;
-             white-space:nowrap; line-height:11px; }
-  .uma-n   { font-size:11px; color:#a7b0bb; margin:2px 0 3px 2px;
+  .uma-ecv-tk span::before { content:""; position:absolute; left:-6px;
+                             top:50%; width:5px; height:1px;
+                             background:#ccd4de; }
+  .uma-ech-t  { font-size:11px; font-weight:700; color:#8a93a5;
+                letter-spacing:.06em; text-transform:uppercase;
+                margin:0 0 11px; line-height:1.35; }
+  .uma-n   { font-size:11px; color:#a7b0bb; margin:11px 0 0 3px;
              line-height:1.5; max-width:70ch; }
 
   @media (max-width:760px){ .uma-t{font-size:25px} }
@@ -482,40 +486,50 @@ def _carte_indice(m):
         return None
     seuils = map_render.nice_thresholds(dispo)
     svg, seuils_ret, _ = map_render.render_map_svg(
-        valeurs, {s: 1 for s in SECTIONS}, seuils, height=352,
+        valeurs, {s: 1 for s in SECTIONS}, seuils, height=400,
         polarity="eleve_bon", unite="")
-    # L'ÉCHELLE EST UNE BARRE, PAS UNE LISTE.
-    # Les quatre couleurs de la carte se suivent dans une seule barre, du plus
-    # faible au plus fort ; les trois seuils sont posés sous les jointures
-    # qu'ils marquent, et les deux bornes de l'échelle la ferment de part et
-    # d'autre. Rien n'est dit de plus qu'avant : c'est montré au lieu d'être
-    # énuméré, et le sens de lecture se voit sans le chercher.
-    #
-    # ET LA LIGNE DE DESSOUS AVOUE QUE L'ÉCHELLE EST COUPÉE. Les dix sections
-    # tiennent entre 3,6 et 5,3 ; les seuils de couleur sont calculés dans
-    # cette fourchette, pas sur 0–10. Sans cette phrase, le rouge se lirait
-    # comme « proche de zéro » alors qu'il vaut 4,1.
-    rampe = map_render.ramp_for("eleve_bon")
-    bandes = "".join(f'<i style="background:{c}"></i>' for c, _ in rampe)
-    # Les jointures tombent aux quarts de la barre : quatre segments égaux,
-    # donc trois coupures à 25, 50 et 75 %.
-    n = len(rampe)
-    reperes = "".join(
-        f'<span style="left:{(k + 1) * 100 / n:.4g}%">'
-        f'{_e(map_render.fmt(s))}</span>'
-        for k, s in enumerate(seuils_ret[:n - 1]))
     lo, hi = min(dispo), max(dispo)
-    return (f'<div class="uma-ech">'
+    return {"carte": f'<div class="uma-carte">{svg}</div>',
+            "echelle": _echelle(seuils_ret),
+            "note": _e(T("po_uma_note",
+                         a=f"{lo:.1f}".replace(".", ","),
+                         b=f"{hi:.1f}".replace(".", ",")))}
+
+
+def _echelle(seuils):
+    """L'échelle des scores, dressée entre le texte et la carte.
+
+    ELLE EST VERTICALE PARCE QU'ELLE EST DANS UNE COLONNE. Couchée au-dessus
+    de la carte, elle coûtait deux lignes de hauteur — le titre, la barre —
+    sur une page qui doit tenir dans un écran, et cette hauteur-là est prise
+    à la carte. Debout dans une bande étroite entre la définition et la
+    carte, elle ne coûte plus rien en hauteur et occupe une colonne qui,
+    sinon, serait de la marge.
+
+    ET LE SENS DE LECTURE Y EST LE BON : le plus fort en haut, le plus
+    faible en bas, comme sur n'importe quelle échelle graduée. La rampe est
+    donc retournée, et les trois seuils avec elle.
+
+    LES QUATRE SEGMENTS SONT DE LARGEUR ÉGALE, ET C'EST EXACT : ce sont
+    quatre classes de même effectif, pas quatre tranches de même amplitude.
+    La barre représente le rang, comme les couleurs de la carte.
+    """
+    rampe = map_render.ramp_for("eleve_bon")          # du plus faible au fort
+    n = len(rampe)
+    bandes = "".join(f'<i style="background:{c}"></i>'
+                     for c, _ in reversed(rampe))     # en haut, le plus fort
+    reperes = "".join(
+        f'<span style="top:{(k + 1) * 100 / n:.4g}%">'
+        f'{_e(map_render.fmt(s))}</span>'
+        for k, s in enumerate(reversed(seuils[:n - 1])))
+    return (f'<div class="uma-ecv">'
             f'<div class="uma-ech-t">{_e(T("po_uma_leg"))}</div>'
-            f'<div class="uma-ech-r">'
-            f'<span class="uma-b">0 · {_e(T("po_uma_b0"))}</span>'
-            f'<span class="uma-ech-c">'
-            f'<span class="uma-ech-bar">{bandes}</span>'
-            f'<span class="uma-ech-tk">{reperes}</span></span>'
-            f'<span class="uma-b">10 · {_e(T("po_uma_b10"))}</span>'
-            f'</div></div>'
-            f'<p class="uma-n">{_e(T("po_uma_note", a=f"{lo:.1f}".replace(".", ","), b=f"{hi:.1f}".replace(".", ",")))}</p>'
-            f'<div class="uma-carte">{svg}</div>')
+            f'<div class="uma-ecv-h">10 · {_e(T("po_uma_b10"))}</div>'
+            f'<div class="uma-ecv-c">'
+            f'<div class="uma-ecv-bar">{bandes}</div>'
+            f'<div class="uma-ecv-tk">{reperes}</div></div>'
+            f'<div class="uma-ecv-l">0 · {_e(T("po_uma_b0"))}</div>'
+            f'</div>')
 
 
 def _comprendre(m):
@@ -532,15 +546,24 @@ def _comprendre(m):
     l'échelle et l'unité. Le bouton « En savoir plus » menait au cadre de
     résilience, où les quatre cartes du dessus mènent déjà.
     """
-    g, d = st.columns([1, 1.35], gap="large")
+    # TROIS COLONNES, ET LA DU MILIEU EST L'ÉCHELLE. La carte remonte alors
+    # tout en haut de sa colonne : la barre et la mise en garde qui la
+    # coiffaient sont parties ailleurs, et la hauteur qu'elles prenaient
+    # revient au dessin. La mise en garde suit la définition, sous le cadre :
+    # elle parle de l'échelle, qui est juste à côté.
+    c = _carte_indice(m)
+    g, e, d = st.columns([1, 0.24, 1.4], gap="medium")
     with g:
         st.markdown(f'<div class="uma-cadre">'
-                    f'<p class="uma-x">{_e(T("po_uma_x"))}</p></div>',
+                    f'<p class="uma-x">{_e(T("po_uma_x"))}</p></div>'
+                    + (f'<p class="uma-n">{c["note"]}</p>' if c else ""),
                     unsafe_allow_html=True)
+    if not c:
+        return
+    with e:
+        st.markdown(c["echelle"], unsafe_allow_html=True)
     with d:
-        c = _carte_indice(m)
-        if c:
-            st.markdown(c, unsafe_allow_html=True)
+        st.markdown(c["carte"], unsafe_allow_html=True)
 
 
 def render():
