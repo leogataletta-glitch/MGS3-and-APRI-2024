@@ -98,14 +98,7 @@ TEXTES = {
 
     "po_1_sections": {"en": "The ten communal sections",
                       "fr": "Les dix sections communales"},
-    "po_1_sections_x": {
-        "en": "The figure beside each name is the number of households "
-              "surveyed there.",
-        "fr": "Le chiffre en regard de chaque nom est le nombre de ménages "
-              "qui y ont été enquêtés."},
 
-    "po_suivant": {"en": "Next", "fr": "Suivant"},
-    "po_precedent": {"en": "Back", "fr": "Précédent"},
     "po_etape": {"en": "Step {n} of 4", "fr": "Étape {n} sur 4"},
 
     # ---------------- écran 1
@@ -125,13 +118,8 @@ TEXTES = {
     "po_1_c2": {"en": "communal sections", "fr": "sections communales"},
     "po_1_c3": {"en": "departments", "fr": "départements"},
     "po_1_c3x": {"en": "Sud and Grand'Anse", "fr": "Sud et Grand'Anse"},
-    "po_1_carte": {"en": "The surveyed area, in the far south-west of the "
-                         "country.",
-                   "fr": "La zone enquêtée, à l'extrême sud-ouest du pays."},
 
     # ---------------- écran 2
-    "po_2_t": {"en": "Resilience, in one number between 0 and 10",
-               "fr": "La résilience, en un nombre entre 0 et 10"},
     "po_2_x": {
         "en": "APRI reads a territory as a system: its capacity to "
               "anticipate, absorb and adapt, measured **before** a shock "
@@ -140,6 +128,16 @@ TEXTES = {
         "fr": "APRI lit un territoire comme un système : sa capacité à "
               "anticiper, absorber et s'adapter, mesurée **avant** le choc et "
               "non après. Ce n'est ni un relevé de dégâts ni une prévision."},
+    "po_2_cap": {"en": "Resilience is about three capacities",
+                 "fr": "La résilience tient en trois capacités"},
+    "po_cta_t": {"en": "Explore the resilience framework in detail",
+                 "fr": "Le cadre de résilience, en détail"},
+    "po_cta_x": {
+        "en": "Understand how we measure resilience and what drives it in "
+              "your territory.",
+        "fr": "Comment la résilience est mesurée, et ce qui la fait bouger "
+              "sur le territoire."},
+    "po_cta_b": {"en": "Discover the framework", "fr": "Découvrir le cadre"},
     "po_2_a1": {"en": "Anticipate", "fr": "Anticiper"},
     "po_2_a1x": {"en": "see it coming and prepare",
                  "fr": "le voir venir et s'y préparer"},
@@ -342,33 +340,54 @@ STYLE = """
              text-align:left !important; }
   .po-i    { width:34px; height:34px; border-radius:10px; display:flex;
              align-items:center; justify-content:center; margin-bottom:10px; }
-  /* ÉCRAN 2 : DES FILETS, PAS DES BOÎTES. Deux rangées de grandes cartes se
-     faisaient concurrence, et les titres en 27 px écrasaient tout le reste.
-     Ici, une seule surface, des colonnes séparées par un filet, et une taille
-     de texte qui laisse le chiffre être le seul élément saillant. */
-  .e2-att  { display:grid; grid-template-columns:repeat(3,1fr); margin-top:18px;
-             border-top:1px solid #e6ecf4; border-bottom:1px solid #e6ecf4; }
-  .e2-a    { padding:14px 20px 15px; border-left:1px solid #e6ecf4; }
+  /* ÉCRAN 2 : TROIS CAPACITÉS, UNE CHAÎNE, UNE ENTRÉE.
+     Le titre est centré et tenu par un court filet vert — la seule mise en
+     scène de la page. Les trois capacités sont des cellules séparées par un
+     filet, pas des cartes : elles se comparent, elles ne s'empilent pas. */
+  /* L'ÉCRAN 2 EST UNE COLONNE, PAS UNE NAPPE. Étalées sur 1 300 pixels, les
+     trois définitions se retrouvaient à trois mètres l'une de l'autre et la
+     phrase d'intro faisait des lignes de 160 signes. La colonne est bornée et
+     centrée : c'est un texte, il se lit à largeur de lecture. */
+  div[class*="st-key-po_e2w"] { max-width:940px; margin:0 auto; }
+  .e2-cap-t { text-align:center; font-size:17px; font-weight:700;
+              color:#101728; letter-spacing:-.01em; margin:22px 0 0; }
+  .e2-cap-f { width:44px; height:2px; background:#2f6b4f; border-radius:1px;
+              margin:10px auto 4px; }
+  .e2-pa   { display:inline-flex; align-items:center; justify-content:center;
+             border-radius:50%; flex:0 0 auto; }
+  .e2-att  { display:grid; grid-template-columns:repeat(3,1fr);
+             margin-top:14px; }
+  .e2-a    { display:flex; align-items:flex-start; gap:14px;
+             padding:14px 22px 15px; border-left:1px solid #eef2f7; }
   .e2-a:first-child { border-left:none; padding-left:0; }
-  .e2-a b  { display:block; font-size:14px; font-weight:700; color:#101728;
+  .e2-at   { padding-top:2px; }
+  .e2-a b  { display:block; font-size:14.5px; font-weight:700; color:#2f6b4f;
              letter-spacing:-.01em; }
   .e2-a span { display:block; font-size:12.5px; color:#6b7590; margin-top:3px;
-               line-height:1.5; }
-  .e2-ch   { display:flex; flex-wrap:wrap; align-items:baseline; gap:0 10px;
-             margin:16px 0 2px; font-size:13px; color:#6b7590; }
-  .e2-ch i { font-style:normal; color:#c8d0dc; }
-  .e2-ch b { font-size:15.5px; font-weight:700; color:#101728;
-             font-variant-numeric:tabular-nums; margin-right:4px; }
-  .e2-ch em{ font-style:normal; font-size:11.5px; color:#8a93a5; }
+               line-height:1.5; max-width:24ch; text-align:left !important; }
+  /* LA CHAÎNE DE MESURE : UNE CARTE, QUATRE COLONNES, DES FILETS ENTRE. */
+  .e2-ch   { display:grid; grid-template-columns:repeat(4,1fr);
+             margin:20px 0 2px; border:1px solid #e8edf3; border-radius:14px;
+             background:#fff; overflow:hidden; }
+  .e2-cc   { display:flex; align-items:center; gap:13px;
+             padding:17px 18px 18px; border-left:1px solid #eef2f7; }
+  .e2-cc:first-child { border-left:none; }
+  .e2-cn   { font-size:22px; font-weight:700; color:#101728; line-height:1;
+             letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
+  .e2-cl   { font-size:12.5px; color:#6b7590; margin-top:5px; }
+  .e2-cs   { font-size:11px; color:#a7b0bb; margin-top:2px; }
   .e2-src  { margin-top:6px; }
   .e2-s    { display:grid; grid-template-columns:230px 1fr; gap:14px;
              padding:11px 0; border-top:1px solid #eef2f7; font-size:13px; }
   .e2-s:first-child { border-top:none; }
   .e2-s b  { font-weight:700; color:#101728; }
   .e2-s span { color:#6b7590; line-height:1.5; }
+  @media (max-width:980px){ .e2-ch{grid-template-columns:repeat(2,1fr)}
+    .e2-cc:nth-child(3){border-left:none} }
   @media (max-width:760px){ .e2-att{grid-template-columns:1fr}
     .e2-a{border-left:none;border-top:1px solid #e6ecf4;padding-left:0}
     .e2-a:first-child{border-top:none}
+    .e2-ch{grid-template-columns:1fr} .e2-cc{border-left:none}
     .e2-s{grid-template-columns:1fr;gap:2px} }
   .po-flux { display:flex; align-items:stretch; gap:4px; flex-wrap:wrap;
              margin-top:14px; }
@@ -399,29 +418,35 @@ STYLE = """
   .po-serre .po-c { flex:1 1 140px; min-width:130px; padding:14px 15px; }
   .po-serre .po-n { font-size:21.5px; }
 
-  /* LA SORTIE LATÉRALE PORTE LE MÊME HABIT QUE LES ÉTAPES. C'était le
-     dernier pavé encadré de la page ; il devient un lien souligné, qui ne
-     se colore qu'au survol. */
-  div[class*="st-key-po_porte_"] button {
-    background:transparent !important; border:none !important;
-    border-bottom:1px solid #e6ecf4 !important; border-radius:0 !important;
-    box-shadow:none !important; transform:none !important;
-    padding:9px 2px 10px !important; min-height:0 !important;
-    justify-content:flex-start !important;
-    transition:border-color .15s ease; }
-  div[class*="st-key-po_porte_"] button > div {
-    justify-self:start !important; width:auto !important; }
-  div[class*="st-key-po_porte_"] button p {
-    font-size:14px !important; font-weight:600 !important;
-    color:#3c4761 !important; margin:0 !important;
-    text-align:left !important; transition:color .15s ease; }
-  div[class*="st-key-po_porte_"] button:hover,
-  div[class*="st-key-po_porte_"] button:focus {
-    background:transparent !important;
-    border-bottom:3px solid #2f6b4f !important; }
-  div[class*="st-key-po_porte_"] button:hover p,
-  div[class*="st-key-po_porte_"] button:focus p {
-    color:#2f6b4f !important; font-weight:700 !important; }
+  /* LE BANDEAU VERT, SEULE SURFACE COLORÉE DE LA PAGE.
+     Le fond est peint sur le conteneur Streamlit lui-même, que sa clé rend
+     visable ; le texte et le bouton vivent dedans, dans deux colonnes. Le
+     bouton est blanc sur vert : c'est la seule action de l'écran, elle n'a
+     pas à se disputer l'attention avec autre chose. */
+  div[class*="st-key-po_cta"] {
+    background:#2f5d3f; border-radius:14px;
+    padding:20px 24px 21px; margin-top:26px; }
+  .cta-g   { display:flex; align-items:center; gap:18px; }
+  .cta-t   { font-size:16px; font-weight:700; color:#fff;
+             letter-spacing:-.01em; }
+  .cta-x   { font-size:12.5px; color:#cbdcd1; margin-top:4px;
+             line-height:1.5; max-width:46ch; text-align:left !important; }
+  .cta-t   { text-align:left !important; }
+  div[class*="st-key-po_cta_b"] button {
+    background:#ffffff !important; border:1px solid #ffffff !important;
+    border-radius:9px !important; box-shadow:none !important;
+    transform:none !important; padding:11px 14px !important;
+    min-height:0 !important; height:auto !important; align-self:center;
+    transition:background .15s ease; }
+  div[class*="st-key-po_cta_b"] button p {
+    font-size:13.5px !important; font-weight:700 !important;
+    color:#2f5d3f !important; margin:0 !important; }
+  div[class*="st-key-po_cta_b"] button:hover,
+  div[class*="st-key-po_cta_b"] button:focus {
+    background:#eaf3ed !important; border-color:#eaf3ed !important; }
+  div[class*="st-key-po_cta_b"] button:hover p,
+  div[class*="st-key-po_cta_b"] button:focus p { color:#24492f !important; }
+  @media (max-width:760px){ .cta-g{gap:13px} }
 </style>
 """
 
@@ -611,25 +636,6 @@ def _aller(mode):
     st.session_state["app_mode"] = mode
 
 
-def _porte(cle, mode):
-    """Un seul bouton, à gauche, qui mène à la rubrique correspondante.
-
-    Il n'occupe pas toute la largeur : un bouton pleine largeur se lit comme
-    l'action principale de l'écran, or l'action principale reste d'avancer
-    dans le parcours. Celui-ci est une sortie latérale, il en a la taille.
-    """
-    g, _ = st.columns([1.7, 2.3])
-    with g:
-        st.button(T(cle) + "  →", key=f"po_porte_{mode}_{cle}",
-                  on_click=_aller, args=(mode,), use_container_width=True)
-
-
-def _bouger(delta):
-    st.session_state["portail_etape"] = max(
-        1, min(len(ETAPES),
-               st.session_state.get("portail_etape", 1) + delta))
-
-
 def _poser(n):
     st.session_state["portail_etape"] = n
 
@@ -668,8 +674,10 @@ def _ecran_1(m):
         except Exception:
             v = None
         if v:
-            st.markdown(f'<div class="po-carte-cadre">{v}</div>'
-                        f'<p class="po-carte-leg">{_e(T("po_1_carte"))}</p>',
+            # LA CARTE SE PASSE DE LÉGENDE. « La zone enquêtée, à l'extrême
+            # sud-ouest du pays » redit le cercle vert et le mot HAÏTI qui
+            # sont dessinés dessus.
+            st.markdown(f'<div class="po-carte-cadre">{v}</div>',
                         unsafe_allow_html=True)
 
 
@@ -721,50 +729,69 @@ def _sections_par_departement(m):
                      f'<span class="dn">{len(lignes)}</span></div>'
                      f'<ul>{"".join(lignes)}</ul></div>')
 
+    # PAS DE NOTE SOUS LA LISTE. « Le chiffre en regard de chaque nom est le
+    # nombre de ménages enquêtés » expliquait ce que la colonne de chiffres
+    # dit d'elle-même, deux lignes plus haut.
     st.markdown(f'<div class="po-lab">{_e(T("po_1_sections"))}</div>'
-                f'<div class="po-deps">{"".join(blocs)}</div>'
-                f'<p class="po-note">{_e(T("po_1_sections_x"))}</p>',
+                f'<div class="po-deps">{"".join(blocs)}</div>',
                 unsafe_allow_html=True)
+
+
+def _pastille(nom, taille=44, fond="#eaf3ed", teinte="#2f6b4f", ic=21):
+    """Une icône dans un disque teinté — la vignette des trois capacités."""
+    return (f'<span class="e2-pa" style="width:{taille}px;height:{taille}px;'
+            f'background:{fond}">'
+            + icones.svg(nom, teinte, ic) + '</span>')
 
 
 def _ecran_2(m):
-    """L'écran qui dit ce qu'on mesure. Trois blocs, une seule surface.
+    """L'écran qui dit ce qu'on mesure : trois capacités, la chaîne, l'entrée.
 
-    IL ÉTAIT FAIT DE SIX GRANDES CARTES et d'une rangée de chiffres encadrés,
-    soit trois niveaux de boîtes emboîtées sur un écran qui n'a que trois
-    choses à dire. Les titres en 27 px écrasaient les définitions qu'ils
-    surmontaient, et deux rangées identiques se répondaient sans hiérarchie.
-
-    Reste : les trois attributs séparés par un filet, la chaîne des chiffres en
-    une ligne, les trois sources en trois lignes. Rien n'est retiré.
+    LA HIÉRARCHIE EST PORTÉE PAR TROIS OBJETS, ET UN SEUL PAR IDÉE.
+    Les trois capacités sont une rangée de trois cellules séparées par un
+    filet, chacune avec son icône : ce sont des définitions, elles se lisent
+    côte à côte. La chaîne de mesure est une carte unique — 3, 7, 128, 0–10 —
+    parce que c'est une seule phrase en quatre nombres. Et le passage vers le
+    cadre complet est un bandeau vert plein, le seul élément coloré de la
+    page : il n'y a qu'une action à faire ici, elle doit se voir.
     """
-    st.markdown(f'<div class="po-h">{_e(T("po_2_t"))}</div>'
-                f'<p class="po-x">{_gras(T("po_2_x"))}</p>',
+    with st.container(key="po_e2w"):
+        _ecran_2_corps(m)
+
+
+def _ecran_2_corps(m):
+    st.markdown(f'<p class="po-x">{_gras(T("po_2_x"))}</p>',
                 unsafe_allow_html=True)
 
+    ICO = {"po_2_a1": "oeil", "po_2_a2": "bouclier", "po_2_a3": "pousse"}
     st.markdown(
+        f'<div class="e2-cap-t">{_e(T("po_2_cap"))}</div>'
+        '<div class="e2-cap-f"></div>'
         '<div class="e2-att">' + "".join(
-            f'<div class="e2-a"><b>{_e(T(k))}</b>'
-            f'<span>{_e(T(k + "x"))}</span></div>'
+            f'<div class="e2-a">{_pastille(ICO[k])}'
+            f'<div class="e2-at"><b>{_e(T(k))}</b>'
+            f'<span>{_e(T(k + "x"))}</span></div></div>'
             for k in ("po_2_a1", "po_2_a2", "po_2_a3"))
         + '</div>', unsafe_allow_html=True)
 
-    # LA CHAÎNE EN UNE LIGNE. Quatre cartouches et trois chevrons pour dire
-    # « 3, 7, 128, un score » : la ponctuation faisait tout le travail que le
-    # texte pouvait faire seul.
+    # LA CHAÎNE DE MESURE EST UNE SEULE CARTE, PAS QUATRE.
+    # « 3 attributs, 7 dimensions, 128 indicateurs, un score de 0 à 10 » est
+    # une phrase : quatre cartouches séparés l'auraient coupée en quatre faits
+    # sans lien. Une surface, des filets entre les nombres, et la phrase se
+    # relit d'un bout à l'autre.
     n_ind = sum(e["n"] for e in m["dims"].values())
-    cases = [("3", T("po_2_f1"), ""),
-             (str(len(m["dims"])), T("po_2_f2"), ""),
-             (str(n_ind), T("po_2_f3"), T("po_2_f3x", f=m["n_scores"])),
-             ("0–10", T("po_2_f4"), "")]
-    morceaux = []
-    for i, (v, lab, sous) in enumerate(cases):
-        if i:
-            morceaux.append('<i>·</i>')
-        morceaux.append(f'<span><b>{_e(v)}</b>{_e(lab)}'
-                        + (f' <em>{_e(sous)}</em>' if sous else "") + '</span>')
-    st.markdown('<div class="e2-ch">' + "".join(morceaux) + '</div>',
-                unsafe_allow_html=True)
+    cases = [("points", "3", T("po_2_f1"), ""),
+             ("cube", str(len(m["dims"])), T("po_2_f2"), ""),
+             ("pouls", str(n_ind), T("po_2_f3"), T("po_2_f3x", f=m["n_scores"])),
+             ("jauge", "0–10", T("po_2_f4"), "")]
+    st.markdown(
+        '<div class="e2-ch">' + "".join(
+            f'<div class="e2-cc">{icones.svg(ic, "#2f6b4f", 25)}'
+            f'<div><div class="e2-cn">{_e(v)}</div>'
+            f'<div class="e2-cl">{_e(lab)}</div>'
+            + (f'<div class="e2-cs">{_e(sous)}</div>' if sous else "")
+            + '</div></div>' for ic, v, lab, sous in cases)
+        + '</div>', unsafe_allow_html=True)
 
     st.markdown(f'<div class="po-lab" style="margin-top:22px">'
                 f'{_e(T("po_2_src"))}</div>'
@@ -773,7 +800,33 @@ def _ecran_2(m):
                     f'<span>{_e(T(k + "x"))}</span></div>'
                     for k in ("po_2_s1", "po_2_s2", "po_2_s3"))
                 + '</div>', unsafe_allow_html=True)
-    _porte("po_porte_2", "methodologie")
+    _bandeau_cadre()
+
+
+def _bandeau_cadre():
+    """Le bandeau vert qui mène au cadre de résilience.
+
+    LE BOUTON EST UN VRAI BOUTON STREAMLIT, POSÉ DANS LE BANDEAU.
+    Un lien écrit en HTML aurait rechargé la page et perdu la langue et
+    l'étape ; le changement de rubrique passe par l'état de session, donc par
+    un widget. On dessine donc le fond vert sur le conteneur — Streamlit lui
+    donne une classe `st-key-…` qu'on peut viser — et on pose le texte et le
+    bouton dans deux colonnes à l'intérieur.
+    """
+    with st.container(key="po_cta"):
+        g, d = st.columns([3.1, 1.25], gap="small",
+                          vertical_alignment="center")
+        with g:
+            st.markdown(
+                '<div class="cta-g">'
+                + _pastille("reseau", 52, "#e8f0ea", "#2f6b4f", 24)
+                + f'<div><div class="cta-t">{_e(T("po_cta_t"))}</div>'
+                  f'<div class="cta-x">{_e(T("po_cta_x"))}</div></div></div>',
+                unsafe_allow_html=True)
+        with d:
+            st.button(T("po_cta_b") + "  →", key="po_cta_b",
+                      on_click=_aller, args=("methodologie",),
+                      use_container_width=True)
 
 
 def _couleur(v):
@@ -837,39 +890,6 @@ def _css_etapes(n):
           margin:0 !important;
           text-align:left !important; line-height:1.25 !important;
         }}""")
-    # LES DEUX BOUTONS DE PARCOURS PORTENT LE MÊME HABIT QUE LES ÉTAPES.
-    # « Suivant » était un pavé vert plein, seul élément de la page à crier
-    # ainsi ; il attirait l'œil plus que le contenu qu'il sert à quitter. Il
-    # devient une carte comme les autres, et ne se colore qu'au survol : un
-    # filet vert dessous et le mot en gras vert, exactement comme l'étape en
-    # cours au-dessus. La cohérence se voit, et la page se calme.
-    for cle in ("po_suiv", "po_prec"):
-        c = f'div[class*="st-key-{cle}"] button'
-        r.append(f"""
-        {c}, {c}[kind="primary"] {{
-          background:transparent !important;
-          border:none !important;
-          border-bottom:1px solid #e6ecf4 !important;
-          border-radius:0 !important;
-          box-shadow:none !important; transform:none !important;
-          padding:9px 2px 10px !important; min-height:0 !important;
-          transition:border-color .15s ease;
-        }}
-        {c} p, {c}[kind="primary"] p {{
-          font-size:14px !important; font-weight:600 !important;
-          color:#3c4761 !important; margin:0 !important;
-          transition:color .15s ease;
-        }}
-        {c}:hover, {c}[kind="primary"]:hover,
-        {c}:focus, {c}[kind="primary"]:focus {{
-          background:transparent !important;
-          border-bottom:3px solid #2f6b4f !important;
-        }}
-        {c}:hover p, {c}[kind="primary"]:hover p,
-        {c}:focus p, {c}[kind="primary"]:focus p {{
-          color:#2f6b4f !important; font-weight:700 !important;
-        }}""")
-
     r.append("</style>")
     return "".join(r)
 
@@ -920,13 +940,8 @@ def render():
     with st.container():
         (_ecran_1, _ecran_2)[n - 1](m)
 
-    g, _milieu, d = st.columns([1.6, 4, 1.6])
-    with g:
-        if n > 1:
-            st.button("← " + T("po_precedent"), key="po_prec",
-                      on_click=_bouger, args=(-1,), use_container_width=True)
-    with d:
-        if n < len(ETAPES):
-            st.button(T("po_suivant") + " →", key="po_suiv",
-                      on_click=_bouger, args=(1,), use_container_width=True,
-                      type="primary")
+    # PLUS DE « SUIVANT » NI DE « PRÉCÉDENT ». Deux étapes, et la rangée
+    # d'onglets juste au-dessus les donne toutes les deux d'un clic : les
+    # flèches en bas de page faisaient un second chemin vers le même endroit,
+    # et le lecteur devait parcourir tout l'écran pour retrouver ce qui était
+    # déjà en haut.
