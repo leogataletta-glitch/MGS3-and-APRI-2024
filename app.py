@@ -675,52 +675,71 @@ st.markdown(("""
      Streamlit étire la colonne sur toute la hauteur de la ligne, et un
      élément étiré ne peut pas coller. Si le menu dépasse la fenêtre, il
      défile pour son propre compte. */
-  div[data-testid="stColumn"]:has(div[class*="st-key-zone_nav"]) {
-    position: sticky !important; top: 8px;
-    align-self: flex-start !important;
-    max-height: calc(100vh - 16px); overflow-y: auto; overflow-x: hidden;
-    scrollbar-width: thin;
+  /* LA BARRE EST UNE RANGÉE, ET ELLE RESTE EN HAUT.
+     Streamlit empile ses éléments : on met donc son bloc vertical en `flex`
+     avec `flex-wrap`, et les boutons se rangent côte à côte. Chacun prend la
+     largeur de son mot — plus de `width:100%` — et la rangée passe à la ligne
+     quand la fenêtre se rétrécit. `position: sticky` la garde à l'écran quand
+     la page défile, ce que la colonne de gauche faisait déjà. */
+  /* LE CONTENEUR À CLÉ EST LUI-MÊME LE BLOC VERTICAL. Streamlit pose la
+     classe `st-key-…` sur le `stVerticalBlock`, pas sur un parent : c'est
+     donc lui qu'on met en `flex`, et ses enfants directs — les conteneurs
+     d'élément — deviennent les cases de la rangée. */
+  div[class*="st-key-zone_nav"] {
+    display: flex !important; flex-direction: row !important;
+    flex-wrap: wrap !important; align-items: center !important;
+    gap: 0 2px !important;
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(255,255,255,.97);
+    backdrop-filter: saturate(1.4) blur(6px);
+    border-bottom: 1px solid #eef2f7;
+    margin: 0 calc(-2.6rem * var(--dz)) 0;
+    padding: 5px calc(2.6rem * var(--dz)) 4px;
+  }
+  div[class*="st-key-zone_nav"] div[data-testid="stElementContainer"],
+  div[class*="st-key-zone_nav"] div[data-testid="stButton"] {
+    width: auto !important; flex: 0 0 auto !important;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button {
     display: flex !important; align-items: center !important;
-    justify-content: flex-start !important;
-    width: 100% !important; min-height: 46px !important; height: auto !important;
-    padding: 11px 15px !important; border-radius: 10px !important;
+    justify-content: center !important;
+    width: auto !important; min-height: 38px !important; height: auto !important;
+    padding: 8px 11px !important; border-radius: 8px !important;
     border: none !important;
     background: transparent !important; box-shadow: none !important;
     transition: background .15s ease, color .15s ease;
-    margin-bottom: 2px;
+    white-space: nowrap;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button > div,
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button
     div[data-testid="stMarkdownContainer"] {
-    width: 100% !important; text-align: left !important;
+    width: auto !important; text-align: center !important;
     display: block !important;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button p {
     font-family: "Inter", system-ui, sans-serif !important;
-    font-size: 14.5px !important; font-weight: 500 !important;
-    line-height: 1.35 !important;
+    font-size: 13.5px !important; font-weight: 500 !important;
+    line-height: 1.2 !important;
     color: var(--encre-2) !important;
-    text-align: left !important; width: 100%; margin: 0 !important;
+    text-align: center !important; margin: 0 !important;
+    white-space: nowrap;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button:hover {
-    background: #f1f6f4 !important;
-    transform: none !important;
+    background: #f1f6f4 !important; transform: none !important;
   }
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button:hover p {
     color: var(--encre) !important;
   }
-  /* L'ENTRÉE ACTIVE : le même fond très clair que le survol, en un peu plus
-     appuyé, et le libellé en vert gras. Une pastille pleine reviendrait à
-     remettre dans la colonne la tache de couleur qu'on vient d'en retirer ;
-     ici c'est la graisse du texte qui dit où l'on se trouve, et la teinte ne
-     fait que la confirmer. */
+  /* L'ENTRÉE ACTIVE : un filet vert dessous et le mot en gras vert. Un fond
+     plein, sur une rangée de quatorze, aurait fait une tache ; le filet dit
+     la même chose sans peser. */
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"] {
-    background: #e9f2ee !important;
+    background: transparent !important;
     border: none !important; box-shadow: none !important;
+    border-bottom: 2px solid var(--accent) !important;
+    border-radius: 8px 8px 0 0 !important;
   }
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"] p {
@@ -728,7 +747,12 @@ st.markdown(("""
   }
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"]:hover {
-    background: #e2ece7 !important;
+    background: #f1f6f4 !important;
+  }
+  /* Les deux langues ferment la rangée, poussées à droite. */
+  div[class*="st-key-zone_langue"] {
+    margin-left: auto !important; width: 190px !important;
+    flex: 0 0 auto !important;
   }
 
   /* Le sélecteur de langue, seul widget non bouton de la colonne */
@@ -904,10 +928,6 @@ st.markdown(("""
     text-align: justify; text-justify: inter-word;
   }
   .f-etiquette { height: 22px; }
-  div[class*="st-key-zone_langue"] {
-    position: absolute; top: 20px; left: 42px; z-index: 6;
-    width: 232px !important;
-  }
 
   /* --- les deux langues, en tête de la colonne -------------------------
      DEUX PASTILLES, ET NON DEUX MOTS POSÉS. Écrites en simple texte, elles ne
@@ -1347,8 +1367,13 @@ st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
 # n'importe quelle page.
 # L'ORDRE DE CRÉATION EST L'ORDRE D'AFFICHAGE. Le bandeau doit être
 # réservé en premier : créé plus bas, il se dessinait sous le menu.
+# LA NAVIGATION EST UNE BARRE HORIZONTALE, ET ELLE OUVRE LA PAGE.
+# Elle occupait une colonne de gauche : un sixième de la largeur, sur toute la
+# hauteur, pour quatorze mots. Le contenu — cartes, tableaux, graphiques —
+# était comprimé d'autant, alors que c'est lui qu'on vient voir. En haut, sur
+# une seule ligne qui se replie si besoin, elle rend l'écran entier à la page.
+_zone_nav = st.container(key="zone_nav")
 _ruban = st.container()
-_zone_langue = st.container(key="zone_langue")
 _zone_barre = st.container()
 
 # LA LANGUE EST LUE ICI, AVANT TOUT APPEL À T(), ET CHANGÉE DANS LE BANDEAU.
@@ -1580,49 +1605,38 @@ def _rendre_ruban():
             f'</div>', unsafe_allow_html=True)
 
 
-# LES DEUX LANGUES, EN TÊTE DE LA COLONNE, FONDUES DANS LE VERT.
-# Deux mots posés sur le fond, sans cadre ni pastille : la langue courante en
-# blanc franc, l'autre en blanc estompé. C'est le seul endroit du site où un
-# état se lit à la valeur du texte et non à sa couleur de fond — et c'est
-# voulu : un choix de langue n'est pas une page, il ne doit pas se présenter
-# comme un onglet.
-with _zone_langue:
-    # DEUX COLONNES ÉGALES, ET PLUS DE TROISIÈME COLONNE VIDE. Le gabarit
-    # [1.25, 1, 0.5] datait du temps où les langues étaient deux mots posés à
-    # gauche : la colonne fantôme les y retenait, et la première était plus
-    # large que la seconde, donc les deux pastilles n'auraient pas eu la même
-    # taille. Deux colonnes égales, et la rangée se centre d'elle-même.
-    # L'ORDRE SUIT LA LANGUE PAR DÉFAUT. Le site s'ouvre en anglais
-    # (i18n.DEFAUT), et l'anglais était pourtant proposé en second : le
-    # lecteur voyait « FRANÇAIS » en premier alors qu'il lisait déjà de
-    # l'anglais. La langue servie vient donc en tête, l'autre à côté.
-    _cl = st.columns(2)
-    _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
-    for _col, _code in zip(_cl, _ordre):
-        with _col:
-            st.button(i18n.LANGUES[_code], key=f"lang_{_code}",
-                      on_click=_changer_langue, args=(_code,),
-                      type=("primary"
-                            if st.session_state["choix_langue"] == _code
-                            else "secondary"))
-
-# LE MENU À GAUCHE, LA PAGE À SA DROITE.
-# Les deux colonnes sont ouvertes ici, avant l'aiguillage, parce que la page
-# doit se dessiner DANS celle de droite : ouvertes après, elles se seraient
-# retrouvées sous le contenu au lieu de le contenir.
-_c_menu, _c_contenu = st.columns([1, 5.4], gap="large")
-
-with _c_menu, st.container(key="zone_nav"):
-    # LES CHAPITRES REDEVIENNENT UNE LISTE, PAS UN MENU DÉROULANT.
-    # Le déroulant tenait moins de place, mais il cachait la carte du site :
-    # on ne voyait plus ce qui existait sans l'ouvrir, et la page courante ne
-    # se lisait plus d'un coup d'œil parmi les autres. Une liste montre les
-    # douze entrées en même temps et marque celle où l'on est.
+with _zone_nav:
+    # LES QUATORZE ENTRÉES SONT DES ONGLETS, PAS DES LIGNES DE LISTE.
+    # La feuille de style met le bloc vertical de Streamlit en `flex` : les
+    # boutons se rangent alors côte à côte, prennent la largeur de leur mot et
+    # passent à la ligne suivante quand la fenêtre se rétrécit. Aucun n'est
+    # tronqué, aucun n'est caché derrière un déroulant.
     st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
-    st.markdown(f'<div class="nav-groupe">{T("nav_titre")}</div>',
-                unsafe_allow_html=True)
     for _mode, _icone in _NAV:
         _entree_nav(_mode, _icone)
+
+    # LES DEUX LANGUES FERMENT LA BARRE, À DROITE.
+    # Elles étaient posées sur l'illustration, en absolu, à une position fixe
+    # qui ne tenait que tant que le bandeau commençait en haut de page. Dans
+    # la barre, elles sont un élément de plus de la même rangée, poussé à
+    # droite par une marge automatique : rien à recalculer si la barre se
+    # replie.
+    with st.container(key="zone_langue"):
+        _cl = st.columns(2)
+        # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie vient en tête.
+        _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
+        for _col, _code in zip(_cl, _ordre):
+            with _col:
+                st.button(i18n.LANGUES[_code], key=f"lang_{_code}",
+                          on_click=_changer_langue, args=(_code,),
+                          type=("primary"
+                                if st.session_state["choix_langue"] == _code
+                                else "secondary"))
+
+# LA PAGE OCCUPE TOUTE LA LARGEUR. Il n'y a plus de colonne de menu à sa
+# gauche : le conteneur est ouvert ici, avant l'aiguillage, pour que chaque
+# page se dessine dedans.
+_c_contenu = st.container()
 
 # Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par
