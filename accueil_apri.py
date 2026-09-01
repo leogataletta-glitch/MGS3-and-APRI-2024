@@ -78,20 +78,6 @@ TEXTES = {
     "po_sous": {"en": "Sud and Grand'Anse, Haiti · survey 2024",
                 "fr": "Sud et Grand'Anse, Haïti · enquête 2024"},
 
-    # --- LE HÉROS. Il est écrit ici et lu par le bandeau, dans app.py :
-    # le texte d'une page appartient à la page, même quand c'est l'en-tête
-    # du site qui le dessine.
-    "po_hero_t": {"en": "Building resilient landscapes, together.",
-                  "fr": "Construire des paysages résilients, ensemble."},
-    "po_hero_x": {
-        "en": "APRI brings together survey data, satellite records and "
-              "community knowledge to measure the resilience of a territory "
-              "and support the decisions that follow.",
-        "fr": "APRI réunit les données d'enquête, les relevés satellitaires "
-              "et la connaissance des communautés pour mesurer la résilience "
-              "d'un territoire et éclairer les décisions qui en découlent."},
-    "po_hero_b": {"en": "Explore the territory",
-                  "fr": "Explorer le territoire"},
 
     # --- LES QUATRE PORTES. Chacune mène à une rubrique qui existe déjà ;
     # la description dit ce qu'on y trouve, pas ce qu'elle promet.
@@ -113,13 +99,14 @@ TEXTES = {
 
     # --- CE QU'APRI MESURE, EN UNE PHRASE
     "po_uma_x": {
-        "en": "APRI measures resilience — a territory's capacity to "
-              "anticipate, absorb and adapt — through a set of indicators "
+        "en": "APRI measures resilience, that is a territory's capacity to "
+              "anticipate, absorb and adapt, through a set of indicators "
               "grouped into seven dimensions and converted into a 0-to-10 "
               "score by the framework's scales. All of it at landscape "
               "scale, the landscape understood as a complex adaptive system.",
-        "fr": "APRI mesure la résilience — la capacité d'un territoire à "
-              "anticiper, absorber et s'adapter — au travers d'une série "
+        "fr": "APRI mesure la résilience, c'est-à-dire la capacité d'un "
+              "territoire à anticiper, absorber et s'adapter, au travers "
+              "d'une série "
               "d'indicateurs regroupés en sept dimensions et convertis en un "
               "score de 0 à 10 par les barèmes du cadre. Le tout à l'échelle "
               "du paysage, entendu comme un système complexe adaptatif."},
@@ -157,8 +144,7 @@ STYLE = """
      sur une colonne de 46 signes, elle se lit d'un trait, ce qui est la
      seule façon de faire passer une définition en une phrase. */
   .uma-x   { font-size:17px; line-height:1.62; color:#2b3444;
-             margin:6px 0 22px; max-width:46ch; font-weight:500;
-             text-align:left !important; }
+             margin:6px 0 22px; max-width:46ch; font-weight:500; }
   /* LA CARTE N'A NI CADRE NI FOND, ET LA MER EST TRANSPARENTE.
      Encadrée sur un aplat bleu, elle formait une vignette collée au milieu
      d'une page blanche — un objet rapporté. Le rectangle marin est effacé
@@ -180,7 +166,7 @@ STYLE = """
   .uma-b   { font-size:11.5px; font-weight:700; color:#3c4761;
              white-space:nowrap; }
   .uma-n   { font-size:11px; color:#a7b0bb; margin:2px 0 8px 2px;
-             line-height:1.5; max-width:70ch; text-align:left !important; }
+             line-height:1.5; max-width:70ch; }
 
   @media (max-width:760px){ .uma-t{font-size:25px} }
 </style>
