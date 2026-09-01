@@ -496,14 +496,24 @@ def _bloc_vegetation(section):
 
 
 # ------------------------------------------------------------------ la page
-def render():
+def render(entete=True):
+    """Les quatre series physiques du territoire.
+
+    ELLE N'EST PLUS UNE RUBRIQUE, ELLE EST UNE SECTION. Forets, pluies,
+    temperatures : ce sont des mesures de l'environnement dans le temps, et
+    leur place est dans la resilience environnementale, ou tout le reste de
+    l'environnement se lit deja. Une quatorzieme entree de menu pour quatre
+    courbes, c'etait une entree de trop ; `entete` permet a la page hote de
+    poser son propre titre.
+    """
     st.markdown(STYLE, unsafe_allow_html=True)
-    st.markdown(
-        f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
-        f'letter-spacing:-.02em;margin:2px 0 0">{_e(T("tj_titre"))}</h2>'
-        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
-        f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
-        f'{_e(T("tj_sous"))}</p>', unsafe_allow_html=True)
+    if entete:
+        st.markdown(
+            f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
+            f'letter-spacing:-.02em;margin:2px 0 0">{_e(T("tj_titre"))}</h2>'
+            f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
+            f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
+            f'{_e(T("tj_sous"))}</p>', unsafe_allow_html=True)
 
     if not _lire("foret.json") and not _lire("pluie.json"):
         st.info(T("tj_absent"))
