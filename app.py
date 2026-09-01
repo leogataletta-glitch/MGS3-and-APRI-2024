@@ -875,40 +875,6 @@ st.markdown(("""
     filter: drop-shadow(0 1px 7px rgba(0,0,0,.45));
   }
 
-  /* --- LE HÉROS DE LA PAGE D'ACCUEIL ---------------------------------
-     Même image, même marque, mais deux fois plus haute et porteuse d'une
-     phrase. La marque quitte le centre pour le haut : la place du milieu
-     revient au titre, qui est ce qu'on vient lire. Le tiers gauche de
-     l'illustration est déjà voilé de blanc dans le fichier, le texte sombre
-     s'y pose sans qu'on ait à ajouter un calque. */
-  .bandeau-hero .bandeau-fond { height: 470px !important;
-    object-position: 50% 54% !important; }
-  .bandeau-hero .bandeau-marque { top: 58px; transform: none; gap: 16px; }
-  .bandeau-hero .bandeau-marque .bm-embleme { height: 64px; width: 64px; }
-  .bandeau-hero .bandeau-marque .bm-nom { font-size: 29px; }
-  .bandeau-hero .bandeau-marque .bm-base { font-size: 12.5px; }
-  .bandeau-hero .bandeau-marque .bm-lieu { font-size: 12px; }
-  .bandeau-titre {
-    position: absolute; top: 166px; left: 42px; max-width: 520px;
-    pointer-events: none; line-height: normal;
-  }
-  /* LE TEXTE EST ALIGNÉ À GAUCHE, ET IL FAUT L'IMPOSER. Streamlit justifie
-     par défaut le texte de ses blocs : sur un titre de deux lignes, la
-     première s'étirait d'un bord à l'autre avec des trous entre les mots. */
-  .bandeau-titre h1 {
-    font-size: 46px; line-height: 1.06; font-weight: 800; color: #12314c;
-    letter-spacing: -.025em; margin: 0; padding: 0;
-    text-align: left !important;
-  }
-  .bandeau-titre p {
-    font-size: 15px; line-height: 1.62; color: #33465c; margin: 18px 0 0;
-    max-width: 40ch; font-weight: 500; text-align: left !important;
-  }
-  @media (max-width: 900px){
-    .bandeau-titre h1 { font-size: 34px; }
-    .bandeau-titre { top: 150px; max-width: 62vw; }
-  }
-
   /* LES DEUX LANGUES SE POSENT SUR L'IMAGE, EN HAUT À GAUCHE.
      Ce sont de vrais boutons, donc ils ne peuvent pas vivre dans le HTML de
      l'illustration : on les sort du flux et on les place par-dessus. Le
@@ -925,6 +891,17 @@ st.markdown(("""
     width: calc(100vw * var(--dz)) !important;
     max-width: calc(100vw * var(--dz)) !important;
     margin-left: calc(50% - 100vw * var(--dz) / 2);
+  }
+  /* LES TEXTES SONT JUSTIFIÉS.
+     Un paragraphe au fer à gauche laisse un bord droit en dents de scie qui,
+     sur une colonne large, fait paraître la page moins tenue qu'elle ne l'est.
+     La règle ne touche que les paragraphes et les listes du contenu : les
+     libellés, les cellules de tableau et les légendes gardent leur alignement,
+     sans quoi une ligne de deux mots s'étirerait d'un bord à l'autre. */
+  div[data-testid="stMarkdownContainer"] > p,
+  div[data-testid="stMarkdownContainer"] > ul > li,
+  div[data-testid="stMarkdownContainer"] > ol > li {
+    text-align: justify; text-justify: inter-word;
   }
   .f-etiquette { height: 22px; }
   div[class*="st-key-zone_langue"] {
@@ -1489,8 +1466,11 @@ MODE_DIMENSIONS = "dimensions"
 # le récit de la méthode, qui est passé dans le cadre.
 _NAV = [
     (MODE_PORTAIL, "maison"),
-    (MODE_METHODO, "bouclier"),
+    # LE TERRITOIRE PASSE DEVANT LE CADRE. On dit d'abord où l'on est, ensuite
+    # comment on y mesure : c'est l'ordre des quatre cartes de l'accueil, et
+    # le menu doit dire la même chose qu'elles.
     (MODE_ACCUEIL, "epingle"),
+    (MODE_METHODO, "bouclier"),
     (MODE_DIMENSIONS, "barres"),
     (MODE_TRAJECTOIRES, "rafraichir"),
     (MODE_BOUCLES, "boucle"),
@@ -1582,21 +1562,11 @@ def _rendre_ruban():
         img = _bandeau_b64()
         if not img:
             return
-        # SUR L'ACCUEIL, LE BANDEAU EST LE HÉROS DE LA PAGE.
-        # Ailleurs il identifie le site en 246 pixels ; ici il porte la
-        # phrase d'accroche et la promesse, et il monte à 470. Deux images
-        # empilées — un bandeau puis un héros — auraient dit deux fois la
-        # même chose, à la suite l'une de l'autre.
-        hero = st.session_state.get("app_mode") == MODE_PORTAIL
         st.markdown(
-            f'<div class="bandeau-haut bandeau-enveloppe'
-            f'{" bandeau-hero" if hero else ""}">'
+            f'<div class="bandeau-haut bandeau-enveloppe">'
             f'<img class="bandeau-fond" '
             f'src="data:image/jpeg;base64,{img}">'
-            + (f'<div class="bandeau-titre">'
-               f'<h1>{T("po_hero_t")}</h1>'
-               f'<p>{T("po_hero_x")}</p></div>' if hero else "")
-            + f'<div class="bandeau-marque">'
+            f'<div class="bandeau-marque">'
             f'<img class="bm-embleme" alt="APRI" '
             f'src="data:image/png;base64,{assets.EMBLEME_APRI}">'
             f'<div class="bm-texte">'
@@ -1700,26 +1670,17 @@ with _c_contenu:
         # Une rangée de cartes rectangulaires règle les deux : la cible est
         # franche, l'onglet courant se distingue par un aplat de couleur, et seule
         # la dimension demandée est calculée.
-        st.markdown('<div class="cartes-ancre"></div>', unsafe_allow_html=True)
+        # UNE LISTE DÉROULANTE, ET PLUS SIX CARTES.
+        # La rangée de cartes prenait deux tiers d'écran avant le premier
+        # chiffre, et le filtre — qui commande ce qu'on lit — se retrouvait
+        # sous la ligne de flottaison. Un menu déroulant tient sur une ligne :
+        # la dimension d'abord, les filtres juste après, le résultat ensuite.
         st.session_state.setdefault("dim_active", MODES_DIM[0])
         if st.session_state["dim_active"] not in MODES_DIM:
             st.session_state["dim_active"] = MODES_DIM[0]
 
-        def _choisir_dim(m):
-            st.session_state["dim_active"] = m
-
-        _rangees = [MODES_DIM[:3], MODES_DIM[3:]]
-        for _rangee in _rangees:
-            for _col, _m in zip(st.columns(len(_rangee)), _rangee):
-                with _col:
-                    _actif = st.session_state["dim_active"] == _m
-                    st.button(f'**{T(_m)}**\n\n{T(_m + "_carte")}',
-                              key=f"carte_{_m}",
-                              on_click=_choisir_dim, args=(_m,),
-                              type="primary" if _actif else "secondary",
-                              use_container_width=True)
-
-        st.markdown('<div class="cartes-trait"></div>', unsafe_allow_html=True)
+        st.selectbox(T("d_choix_dim"), MODES_DIM, key="dim_active",
+                     format_func=lambda m: T(m))
 
         _m = st.session_state["dim_active"]
         dimension_page.render(_m, complement=_COMPLEMENT.get(_m))
