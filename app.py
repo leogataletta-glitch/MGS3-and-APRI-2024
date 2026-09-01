@@ -1272,7 +1272,14 @@ TEXTES_NAV = {
     # Les deux lectures du graphe causal : l'onde, puis l'analyse.
     "bcl_vue_analyse": {"en": "Loops, levers, total effect",
                         "fr": "Boucles, leviers, effet total"},
-    "mode_bailleurs": {"en": "Donor briefing", "fr": "Note aux bailleurs"},
+    # « NOTE AUX BAILLEURS » EST DEVENU « ENSEIGNEMENTS CLÉS ». Le titre disait
+    # à qui la page s'adresse ; celui-ci dit ce qu'on y trouve, ce qui est le
+    # seul renseignement utile à quelqu'un qui parcourt un menu. La page
+    # elle-même n'a pas bougé d'une ligne.
+    "mode_bailleurs": {"en": "Key Lessons", "fr": "Enseignements clés"},
+    # Les quatre vues d'« Analyse des résultats ». La première est celle qui
+    # existait seule ; les trois autres étaient des entrées de menu.
+    "ra_o_dims": {"en": "By dimension", "fr": "Par dimension"},
     "mode_levier": {"en": "If I change one thing",
                     "fr": "Si je change une chose"},
     # LE RAPPORT ET LA NOTE NE FONT PAS LE MÊME MÉTIER. La note tient sur une
@@ -1295,7 +1302,7 @@ TEXTES_NAV = {
 _RENOMMEES = ("mode_accueil", "mode_methodo", "mode_dimensions",
               "mode_synthese", "mode_actions", "mode_donnees",
               "mode_boucles", "mode_croisement", "mode_rapport",
-              "mode_levier")
+              "mode_levier", "mode_bailleurs", "ra_o_dims")
 for _c, _v in TEXTES_NAV.items():
     if _c in _RENOMMEES:
         i18n.DICO[_c] = _v
@@ -1518,20 +1525,18 @@ _NAV = [
     # LES TRAJECTOIRES NE SONT PLUS UNE ENTREE : elles ont rejoint l'onglet
     # « Résilience environnementale » du cadre, dont elles disent la version
     # dans le temps. Une entrée de moins, et la barre tient sur une ligne.
+    # « SI JE CHANGE UNE CHOSE » EST DEVENU UNE VUE DES BOUCLES. Les deux
+    # lisent le même graphe causal : les boucles montrent que le système
+    # propage, l'outil répond à la question qui vient juste après — ce
+    # chiffre-là, d'où sort-il ? Deux entrées de menu pour un seul modèle
+    # obligeaient à savoir laquelle des deux portes mène à quoi.
     (MODE_BOUCLES, "boucle"),
-    # L'OUTIL D'EXPLICATION VIENT JUSTE APRÈS LES BOUCLES, ET C'EST SA PLACE.
-    # Les boucles montrent que le système propage ; celui-ci répond à la
-    # question que le lecteur se pose ensuite, et à laquelle rien ne répondait :
-    # ce chiffre-là, d'où sort-il ?
-    (MODE_LEVIER, "boucle"),
-    (MODE_CROISEMENT, "loupe"),
-    # TREIZE ENTRÉES, C'ÉTAIT TROP, ET DEUX D'ENTRE ELLES DISAIENT LA MÊME
-    # CHOSE QUE CELLE-CI. « Diagramme radar » et « Fiche synthèse — paysages »
-    # comparaient des profils, ce que fait déjà cette rubrique : elle propose
-    # les sections, les groupes ET les deux paysages comme découpages. Elles
-    # sont devenues ses deux autres onglets. Rien n'est perdu, on cesse
-    # seulement de proposer trois portes vers la même pièce.
-    (MODE_SYNTHESE, "personnes"),
+    # CROISEMENT, PROFILS ET ENSEIGNEMENTS SONT PASSÉS SOUS « ANALYSE DES
+    # RÉSULTATS ». Les quatre lisent la même enquête et répondent à la même
+    # question — que disent les résultats ? — par quatre découpages : la
+    # dimension, le croisement de deux variables, le territoire ou le groupe,
+    # et ce qu'il faut en retenir. Quatre entrées de menu pour un seul sujet,
+    # c'était au lecteur de deviner qu'elles allaient ensemble.
     (MODE_ACTIONS, "fiche"),
     # LA NOTE AUX BAILLEURS VIENT APRÈS LES FICHES, ET AVANT LES DONNÉES.
     # Elle est la sortie de tout ce qui précède : elle ne se comprend qu'après
@@ -1541,7 +1546,6 @@ _NAV = [
     # partent des volumes de terrain et finissent par ce qui reste après le
     # projet ; la note qui suit en est la page arrachée.
     (MODE_RAPPORT, "radar"),
-    (MODE_BAILLEURS, "cible"),
     (MODE_DONNEES, "telecharger"),
 ]
 
@@ -1693,38 +1697,95 @@ with _c_contenu:
         territoire_page.render()
 
     if app_mode == MODE_DIMENSIONS:
-        # Deux dimensions prolongent leur page avec un détail qui existait déjà,
-        # plutôt que d'en dupliquer la logique. Ce détail est passé à la page de
-        # dimension, qui le place dans le bon sous-onglet — celui des indicateurs.
-        _COMPLEMENT = {
-            "dim3": lambda: environnement_page.render(entete=False),
-            "dim5": lambda: ocb_page.render(entete=False),
-        }
-
-        # DES CARTES, PAS DES ONGLETS DE STREAMLIT.
+        # QUATRE VUES SOUS UNE SEULE ENTRÉE, ET C'EST LA MÊME QUESTION.
         #
-        # `st.tabs` donnait six intitulés en petit, soulignés, qu'il fallait
-        # chercher — et surtout il RENDAIT LES SIX PAGES à chaque affichage, y
-        # compris les trois cents questions de la dimension économique. Sept
-        # secondes pour en montrer une.
+        #   · par dimension — les sept familles d'indicateurs, une à la fois ;
+        #   · par croisement — deux variables l'une contre l'autre ;
+        #   · par territoire ou par groupe — les profils comparés ;
+        #   · les enseignements — ce qu'il faut retenir de tout cela.
         #
-        # Une rangée de cartes rectangulaires règle les deux : la cible est
-        # franche, l'onglet courant se distingue par un aplat de couleur, et seule
-        # la dimension demandée est calculée.
-        # UNE LISTE DÉROULANTE, ET PLUS SIX CARTES.
-        # La rangée de cartes prenait deux tiers d'écran avant le premier
-        # chiffre, et le filtre — qui commande ce qu'on lit — se retrouvait
-        # sous la ligne de flottaison. Un menu déroulant tient sur une ligne :
-        # la dimension d'abord, les filtres juste après, le résultat ensuite.
-        st.session_state.setdefault("dim_active", MODES_DIM[0])
-        if st.session_state["dim_active"] not in MODES_DIM:
-            st.session_state["dim_active"] = MODES_DIM[0]
+        # Elles étaient quatre entrées de menu voisines, ce qui laissait au
+        # lecteur le soin de deviner qu'elles répondent à la même question.
+        # Une seule entrée, quatre vues : la porte est unique, le découpage
+        # se choisit après. Comme pour les boucles, un sélecteur plutôt que
+        # `st.tabs` — seule la vue regardée est calculée.
+        # LE SÉLECTEUR RETIENT UN CODE, PAS UN LIBELLÉ. Une valeur de session
+        # égale au texte affiché change de langue avec lui : il faut alors une
+        # clé par langue, et la vue choisie se perd au premier basculement.
+        # `format_func` sépare ce qu'on stocke de ce qu'on montre.
+        _RA = {"dims": T("ra_o_dims"),
+               "croisement": T("mode_croisement"),
+               "synthese": T("mode_synthese"),
+               "bailleurs": T("mode_bailleurs")}
+        _ra = st.radio("ra", list(_RA), horizontal=True,
+                       label_visibility="collapsed", key="ra_vue",
+                       format_func=lambda c: _RA[c])
 
-        st.selectbox(T("d_choix_dim"), MODES_DIM, key="dim_active",
-                     format_func=lambda m: T(m))
+        if _ra == "dims":
+            # Deux dimensions prolongent leur page avec un détail qui existait déjà,
+            # plutôt que d'en dupliquer la logique. Ce détail est passé à la page de
+            # dimension, qui le place dans le bon sous-onglet — celui des indicateurs.
+            _COMPLEMENT = {
+                "dim3": lambda: environnement_page.render(entete=False),
+                "dim5": lambda: ocb_page.render(entete=False),
+            }
 
-        _m = st.session_state["dim_active"]
-        dimension_page.render(_m, complement=_COMPLEMENT.get(_m))
+            # DES CARTES, PAS DES ONGLETS DE STREAMLIT.
+            #
+            # `st.tabs` donnait six intitulés en petit, soulignés, qu'il fallait
+            # chercher — et surtout il RENDAIT LES SIX PAGES à chaque affichage, y
+            # compris les trois cents questions de la dimension économique. Sept
+            # secondes pour en montrer une.
+            #
+            # Une rangée de cartes rectangulaires règle les deux : la cible est
+            # franche, l'onglet courant se distingue par un aplat de couleur, et seule
+            # la dimension demandée est calculée.
+            # UNE LISTE DÉROULANTE, ET PLUS SIX CARTES.
+            # La rangée de cartes prenait deux tiers d'écran avant le premier
+            # chiffre, et le filtre — qui commande ce qu'on lit — se retrouvait
+            # sous la ligne de flottaison. Un menu déroulant tient sur une ligne :
+            # la dimension d'abord, les filtres juste après, le résultat ensuite.
+            st.session_state.setdefault("dim_active", MODES_DIM[0])
+            if st.session_state["dim_active"] not in MODES_DIM:
+                st.session_state["dim_active"] = MODES_DIM[0]
+
+            st.selectbox(T("d_choix_dim"), MODES_DIM, key="dim_active",
+                         format_func=lambda m: T(m))
+
+            _m = st.session_state["dim_active"]
+            dimension_page.render(_m, complement=_COMPLEMENT.get(_m))
+
+        elif _ra == "croisement":
+            # L'outil d'exploration des reponses individuelles. Il ne lit pas
+            # les filtres de la colonne : ses conditions SONT son filtre, et
+            # deux mecanismes de selection sur la meme page se
+            # contrediraient.
+            croisement_resultats.render()
+
+        elif _ra == "synthese":
+            # TROIS FAÇONS DE COMPARER DES PROFILS.
+            #
+            #   · par territoire ou par groupe — une section contre les neuf
+            #     autres, les femmes contre l'ensemble ;
+            #   · par paysage — la fiche littoral contre montagne, qui se lit
+            #     d'une traite sans rien demander ;
+            #   · par la figure elle-même — le radar, avec son mode d'emploi.
+            st.title(T("mode_synthese"))
+            _o_prof, _o_pays, _o_radar = st.tabs(
+                [T("syn_o_profils"), T("syn_o_paysages"), T("syn_o_radar")])
+            with _o_prof:
+                synthese_page.render(entete=False)
+            with _o_pays:
+                fiche_paysages.render(entete=False)
+            with _o_radar:
+                radar_accueil.render(entete=False)
+
+        else:
+            # La page de restitution : constats calculés, réponses classées
+            # par le modèle, et ce que le modèle ne couvre pas. Aucun filtre —
+            # une note se cite, et une note dont les chiffres dépendent d'un
+            # filtre posé ailleurs ne se cite pas.
+            note_bailleurs.render()
 
     if app_mode == MODE_METHODO:
         # « Cadre de résilience » a remplacé la page de méthodologie : des schémas
@@ -1744,12 +1805,6 @@ with _c_contenu:
 
         cadre_page.render(doc_complet=_document_methodologique)
 
-    if app_mode == MODE_CROISEMENT:
-        # L'outil d'exploration des reponses individuelles. Il ne lit pas les
-        # filtres de la colonne : ses conditions SONT son filtre, et deux
-        # mecanismes de selection sur la meme page se contrediraient.
-        croisement_resultats.render()
-
     if app_mode == MODE_BOUCLES:
         # DEUX LECTURES DU MÊME MODÈLE, ET UN SEUL RENDU À LA FOIS.
         #
@@ -1765,17 +1820,28 @@ with _c_contenu:
             f'<h2 style="font-size:21.5px;font-weight:700;color:#101728;'
             f'letter-spacing:-.02em;margin:2px 0 0">{T("mode_boucles")}</h2>',
             unsafe_allow_html=True)
-        _VUES = {T("oc_titre"): "onde", T("sy_titre"): "systeme",
-                 T("bcl_vue_analyse"): "analyse"}
+        # QUATRE VUES, ET LA QUATRIÈME EST « SI JE CHANGE UNE CHOSE ».
+        # Elle lit le même graphe causal que les trois autres : c'est la
+        # question qu'on se pose juste après les avoir vues — ce chiffre-là,
+        # d'où sort-il, et que devient-il si je le pousse ?
+        # Ici aussi la session retient un code : une clé par langue laissait
+        # la vue choisie se perdre au basculement.
+        _VUES = {"onde": T("oc_titre"), "systeme": T("sy_titre"),
+                 "analyse": T("bcl_vue_analyse"), "levier": T("mode_levier")}
         _vue = st.radio("vue", list(_VUES), horizontal=True,
-                        label_visibility="collapsed",
-                        key=f"bcl_vue_{i18n.get_lang()}")
-        if _VUES[_vue] == "onde":
+                        label_visibility="collapsed", key="bcl_vue",
+                        format_func=lambda c: _VUES[c])
+        if _vue == "onde":
             ondes_choc.render(entete=False)
-        elif _VUES[_vue] == "systeme":
+        elif _vue == "systeme":
             systeme_page.render(entete=False)
-        else:
+        elif _vue == "analyse":
             boucles_page.render(entete=False)
+        else:
+            # Aucun filtre : le modèle causal est le même pour tout le
+            # territoire, et un filtre posé ailleurs ne changerait rien à ce
+            # qu'il propage.
+            si_je_change.render(entete=False)
 
     if app_mode == MODE_ACTIONS:
         # Les fiches descendent des leviers calculés par l'analyse des boucles.
@@ -1783,45 +1849,11 @@ with _c_contenu:
         # retirées : elles ne commandaient plus rien et brouillaient la page.
         interventions_page.render()
 
-    if app_mode == MODE_LEVIER:
-        # Aucun filtre : le modèle causal est le même pour tout le territoire, et
-        # un filtre posé ailleurs ne changerait rien à ce qu'il propage.
-        si_je_change.render()
-
     if app_mode == MODE_RAPPORT:
         # Aucun filtre non plus, et pour la même raison que la note : un rapport
         # se cite. Les chiffres y sont ceux de l'enquête entière, et chacun porte
         # son registre — donnée observée, interprétation, implication.
         rapport_donateur.render()
-
-    if app_mode == MODE_BAILLEURS:
-        # La page de restitution : constats calculés, réponses classées par le
-        # modèle, et ce que le modèle ne couvre pas. Aucun filtre — une note se
-        # cite, et une note dont les chiffres dépendent d'un filtre posé ailleurs
-        # ne se cite pas.
-        note_bailleurs.render()
-
-    if app_mode == MODE_SYNTHESE:
-        # TROIS FAÇONS DE COMPARER DES PROFILS, SOUS UNE SEULE ENTRÉE.
-        #
-        #   · par territoire ou par groupe — une section contre les neuf autres,
-        #     les femmes contre l'ensemble ;
-        #   · par paysage — la fiche littoral contre montagne, qui se lit d'une
-        #     traite sans rien demander ;
-        #   · par la figure elle-même — le radar, avec son mode d'emploi.
-        #
-        # C'étaient trois entrées de menu. Ce sont trois onglets, et le lecteur
-        # qui cherche « comparer » n'a plus à deviner laquelle des trois portes
-        # mène à ce qu'il veut.
-        st.title(T("mode_synthese"))
-        _o_prof, _o_pays, _o_radar = st.tabs(
-            [T("syn_o_profils"), T("syn_o_paysages"), T("syn_o_radar")])
-        with _o_prof:
-            synthese_page.render(entete=False)
-        with _o_pays:
-            fiche_paysages.render(entete=False)
-        with _o_radar:
-            radar_accueil.render(entete=False)
 
     if app_mode == MODE_DONNEES:
         telechargements_page.render()
