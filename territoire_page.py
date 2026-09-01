@@ -217,7 +217,7 @@ class _Proj:
         return "".join(d) + "Z"
 
 
-def _vignette(geo, larg=300, haut=330):
+def _vignette(geo, larg=300, haut=330, mer=None):
     """L'île entière, la zone enquêtée en vert, le voisin nommé.
 
     HAÏTI SEULE FLOTTAIT SANS REPÈRE. Découpée sur un fond uni, la silhouette
@@ -233,7 +233,11 @@ def _vignette(geo, larg=300, haut=330):
     # LA PROJECTION EST CALÉE SUR L'ÎLE, PAS SUR HAÏTI. Cadrer sur Haïti seule
     # rejetterait le voisin hors de la vignette, et le repère disparaîtrait.
     pr = _Proj(geo["pays"] + geo.get("voisin", []), larg, haut)
-    parts = [f'<rect width="{larg}" height="{haut}" fill="{MER}"/>']
+    # LA MER PEUT ÊTRE PÂLIE PAR L'APPELANT. Sur la page d'accueil, le bleu
+    # gris de la carte du territoire formait un rectangle plein au milieu
+    # d'une page qu'on venait de débarrasser de ses boîtes : le fond y est
+    # presque blanc, et seule l'île se voit.
+    parts = [f'<rect width="{larg}" height="{haut}" fill="{mer or MER}"/>']
     for a in geo.get("voisin", []):
         parts.append(f'<path d="{pr.chemin(a)}" fill="#e9edf2" '
                      f'stroke="#dde3ea" stroke-width=".8"/>')
