@@ -132,6 +132,27 @@ for _c, _v in TEXTES.items():
 
 STYLE = """
 <style>
+  /* ================ TOUT TIENT DANS UN ÉCRAN ==========================
+     LA PAGE D'ACCUEIL NE DOIT PAS SE FAIRE DÉROULER. Elle est ce qu'on voit
+     du site avant de savoir ce qu'il contient : si la carte — la seule chose
+     qui montre un résultat — se trouve sous la ligne de flottaison, on part
+     avec l'idée d'un sommaire, pas d'un observatoire. Chaque bloc est donc
+     rétréci jusqu'à ce que l'ensemble tienne dans une fenêtre ordinaire.
+
+     LES RÈGLES NE VALENT QUE SUR CETTE PAGE, sans qu'on ait à marquer le
+     corps du document : cette feuille n'est écrite que par la page
+     d'accueil, et arrive après celle de l'application, donc elle l'emporte.
+     Les autres pages gardent le bandeau et les proportions d'origine. */
+  .bandeau-fond { height: 152px !important; }
+  .bandeau-marque { left: 34px !important; gap: 15px !important; }
+  .bandeau-marque .bm-embleme { height: 66px !important; width: 66px !important; }
+  .bandeau-marque .bm-nom { font-size: 29px !important; }
+  .bandeau-marque .bm-filet { margin: 5px 0 6px !important; }
+  .bandeau-marque .bm-base { font-size: 12.5px !important; }
+  .bandeau-marque .bm-lieu { font-size: 12px !important; margin-top: 3px !important; }
+  .bandeau-logo { top: 14px !important; right: 24px !important;
+                  height: 44px !important; }
+
   /* ================ LA PAGE D'ATTERRISSAGE ============================
      Une seule règle gouverne tout : rien n'est encadré sauf ce qui se
      clique. Les quatre portes sont des cartes parce qu'on les prend ; la
@@ -143,7 +164,7 @@ STYLE = """
      Elle n'a plus de titre au-dessus d'elle : c'est elle le titre. À 17 px
      sur une colonne de 46 signes, elle se lit d'un trait, ce qui est la
      seule façon de faire passer une définition en une phrase. */
-  .uma-x   { font-size:17px; line-height:1.62; color:#2b3444;
+  .uma-x   { font-size:15.5px; line-height:1.6; color:#2b3444;
              margin:0; font-weight:500; }
   /* LA DÉFINITION EST DANS UN CADRE, ET C'EST LE SEUL DE LA PAGE.
      Posée à même le blanc, elle se lisait comme un chapeau d'article : un
@@ -153,7 +174,7 @@ STYLE = """
      définition se déplie en entier. */
   .uma-cadre { border:1px solid #e2ebe6; border-left:3px solid #1a6b52;
                border-radius:10px; background:#f7fbf9;
-               padding:21px 24px 22px; margin:4px 0 22px; max-width:52ch; }
+               padding:18px 21px 19px; margin:2px 0 0; max-width:52ch; }
   /* LA CARTE N'A NI CADRE NI FOND, ET LA MER EST TRANSPARENTE.
      Encadrée sur un aplat bleu, elle formait une vignette collée au milieu
      d'une page blanche — un objet rapporté. Le rectangle marin est effacé
@@ -162,7 +183,15 @@ STYLE = """
      plus de fond sur lequel se poser : elle passe au-dessus de la carte, en
      une ligne de pastilles. */
   .uma-carte { position:relative; }
-  .uma-carte svg { display:block; width:100%; height:auto; }
+  /* LA CARTE PREND CE QUI RESTE DE LA FENÊTRE, ET PAS PLUS.
+     Une hauteur fixe tient sur un écran et déborde sur le suivant. Le
+     plafond est donc ce qui reste sous la barre, le bandeau et les quatre
+     portes — d'où la constante retranchée. Le dessin garde ses proportions
+     (`preserveAspectRatio` par défaut) : il rétrécit, il ne s'écrase pas.
+     Le plancher de 205 px est le point où la carte cesse d'être lisible :
+     en dessous, on préfère que la page défile. */
+  .uma-carte svg { display:block; width:100%; height:auto;
+                   max-height: max(205px, calc(100vh - 556px)); }
   .uma-carte svg .sea { fill:transparent !important; }
   /* --- L'ÉCHELLE, DESSINÉE PLUTÔT QU'ÉNUMÉRÉE --------------------------
      QUATRE PAVÉS ALIGNÉS NE SONT PAS UNE ÉCHELLE. « moins de 4,2 · 4,2–4,5 ·
@@ -194,7 +223,7 @@ STYLE = """
                              width:1px; height:4px; background:#ccd4de; }
   .uma-b   { font-size:11.5px; font-weight:700; color:#3c4761;
              white-space:nowrap; line-height:11px; }
-  .uma-n   { font-size:11px; color:#a7b0bb; margin:2px 0 8px 2px;
+  .uma-n   { font-size:11px; color:#a7b0bb; margin:2px 0 3px 2px;
              line-height:1.5; max-width:70ch; }
 
   @media (max-width:760px){ .uma-t{font-size:25px} }
@@ -386,8 +415,8 @@ def _css_entrees():
           grid-template-rows:auto auto auto; row-gap:0;
           justify-items:center; align-content:start;
           text-align:center !important;
-          padding:26px 20px 24px !important;
-          min-height:236px !important; height:100% !important;
+          padding:17px 16px 16px !important;
+          min-height:142px !important; height:100% !important;
           background:#ffffff !important;
           border:1px solid #e8edf3 !important; border-radius:12px !important;
           box-shadow:none !important; transform:none !important;
@@ -399,23 +428,23 @@ def _css_entrees():
         }}
         {b}::before, {b}[kind="primary"]::before {{
           content:""; grid-row:1;
-          width:64px; height:64px; border-radius:50%;
-          background:#eaf3ed {_fond_icone(ic)} center/26px no-repeat;
-          margin-bottom:18px;
+          width:44px; height:44px; border-radius:50%;
+          background:#eaf3ed {_fond_icone(ic, taille=21)} center/21px no-repeat;
+          margin-bottom:10px;
         }}
         {b} > div, {b}[kind="primary"] > div {{
           grid-row:2; justify-self:center !important; width:auto !important;
         }}
         {b} p, {b}[kind="primary"] p {{
-          font-size:15px !important; font-weight:700 !important;
+          font-size:14px !important; font-weight:700 !important;
           color:#12314c !important; margin:0 !important;
           text-align:center !important; line-height:1.3 !important;
         }}
         {b}::after, {b}[kind="primary"]::after {{
           content:"{_txt_css(T(cle + 'x'))}"; grid-row:3;
-          margin-top:11px; max-width:24ch;
-          font-size:12.5px; font-weight:500; color:#6b7590;
-          line-height:1.55; white-space:pre-wrap;
+          margin-top:7px; max-width:26ch;
+          font-size:12px; font-weight:500; color:#6b7590;
+          line-height:1.5; white-space:pre-wrap;
         }}""")
     r.append("</style>")
     return "".join(r)
@@ -453,7 +482,7 @@ def _carte_indice(m):
         return None
     seuils = map_render.nice_thresholds(dispo)
     svg, seuils_ret, _ = map_render.render_map_svg(
-        valeurs, {s: 1 for s in SECTIONS}, seuils, height=430,
+        valeurs, {s: 1 for s in SECTIONS}, seuils, height=352,
         polarity="eleve_bon", unite="")
     # L'ÉCHELLE EST UNE BARRE, PAS UNE LISTE.
     # Les quatre couleurs de la carte se suivent dans une seule barre, du plus
@@ -493,7 +522,7 @@ def _comprendre(m):
     # DE L'AIR ENTRE LES QUATRE PORTES ET CE QUI SUIT. Les cartes touchaient
     # le texte : deux blocs collés se lisent comme un seul, et la définition
     # semblait être la légende de la quatrième carte.
-    st.markdown('<div style="height:34px"></div>', unsafe_allow_html=True)
+    st.markdown('<div style="height:10px"></div>', unsafe_allow_html=True)
     """Ce qu'APRI mesure, et la carte de ce que ça donne.
 
     LE TITRE ET LE BOUTON ONT ÉTÉ RETIRÉS. « Comprendre. Mesurer. Agir. »
