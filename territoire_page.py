@@ -148,7 +148,15 @@ def _anneaux(geom):
 @st.cache_data(show_spinner=False)
 def _geo():
     """Contour du pays, départements, villes et sections — une seule lecture."""
-    out = {"pays": [], "deps": [], "villes": [], "sections": []}
+    out = {"pays": [], "voisin": [], "deps": [], "villes": [], "sections": []}
+    # LE VOISIN EST LU À PART, ET IL PEUT MANQUER. Le contour dominicain a été
+    # ajouté après coup ; les cartes doivent continuer de se dessiner sans lui
+    # si le fichier n'est pas là.
+    q = _trouver("dom_terre.geojson")
+    if q:
+        with open(q, encoding="utf-8") as f:
+            for feat in json.load(f).get("features", []):
+                out["voisin"] += _anneaux(feat.get("geometry"))
     p = _trouver("hti_terre.geojson")
     if p:
         with open(p, encoding="utf-8") as f:
@@ -210,11 +218,25 @@ class _Proj:
 
 
 def _vignette(geo, larg=300, haut=330):
-    """Haïti en entier, la zone enquêtée en vert. Elle ne dit que « où »."""
+    """L'île entière, la zone enquêtée en vert, le voisin nommé.
+
+    HAÏTI SEULE FLOTTAIT SANS REPÈRE. Découpée sur un fond uni, la silhouette
+    du pays ne dit pas qu'elle est la moitié d'une île : le lecteur qui ne
+    connaît pas la région voit une forme, pas un lieu. La République
+    dominicaine, dessinée en retrait et nommée, rend la frontière lisible et
+    situe le pays d'un coup d'œil. Elle est en gris clair et sans contour
+    marqué : elle sert de contexte, elle n'entre pas en concurrence avec le
+    sujet.
+    """
     if not geo["pays"] or not geo["sections"]:
         return None
-    pr = _Proj(geo["pays"], larg, haut)
+    # LA PROJECTION EST CALÉE SUR L'ÎLE, PAS SUR HAÏTI. Cadrer sur Haïti seule
+    # rejetterait le voisin hors de la vignette, et le repère disparaîtrait.
+    pr = _Proj(geo["pays"] + geo.get("voisin", []), larg, haut)
     parts = [f'<rect width="{larg}" height="{haut}" fill="{MER}"/>']
+    for a in geo.get("voisin", []):
+        parts.append(f'<path d="{pr.chemin(a)}" fill="#e9edf2" '
+                     f'stroke="#dde3ea" stroke-width=".8"/>')
     for a in geo["pays"]:
         parts.append(f'<path d="{pr.chemin(a)}" fill="{TERRE}" '
                      f'stroke="{TRAIT}" stroke-width="1"/>')
@@ -222,11 +244,9 @@ def _vignette(geo, larg=300, haut=330):
         for a in anneaux:
             parts.append(f'<path d="{pr.chemin(a)}" fill="none" '
                          f'stroke="#dfe4ea" stroke-width=".8"/>')
-    # La zone enquêtée, pleine, puis cerclée : à cette échelle les sections
-    # font quelques pixels, et sans le cercle on ne les verrait pas.
     xs, ys = [], []
-    for s in geo["sections"]:
-        for a in s["anneaux"]:
+    for s_ in geo["sections"]:
+        for a in s_["anneaux"]:
             parts.append(f'<path d="{pr.chemin(a)}" fill="{VERT_APRI}" '
                          f'stroke="{VERT_APRI}" stroke-width="1.2"/>')
             for lon, lat in a:
@@ -238,9 +258,22 @@ def _vignette(geo, larg=300, haut=330):
     parts.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" '
                  f'fill="none" stroke="{VERT_APRI}" stroke-width="1.6" '
                  f'stroke-dasharray="4 3" opacity=".9"/>')
-    parts.append(f'<text x="{larg - 10}" y="20" text-anchor="end" '
-                 f'font-size="12" font-weight="700" fill="#8a93a5" '
-                 f'letter-spacing="2">HAÏTI</text>')
+
+    # les deux noms : le sujet à gauche, le contexte à droite, en plus discret
+    parts.append(f'<text x="12" y="20" font-size="12" font-weight="700" '
+                 f'fill="#6b7a88" letter-spacing="2">HAÏTI</text>')
+    if geo.get("voisin"):
+        vx = [pr.xy(lon, lat)[0] for a in geo["voisin"] for lon, lat in a]
+        vy = [pr.xy(lon, lat)[1] for a in geo["voisin"] for lon, lat in a]
+        parts.append(
+            f'<text x="{(min(vx) + max(vx)) / 2:.0f}" '
+            f'y="{(min(vy) + max(vy)) / 2:.0f}" text-anchor="middle" '
+            f'font-size="9" font-weight="700" fill="#a7b0bb" '
+            f'letter-spacing="1.4">RÉPUBLIQUE</text>'
+            f'<text x="{(min(vx) + max(vx)) / 2:.0f}" '
+            f'y="{(min(vy) + max(vy)) / 2 + 12:.0f}" text-anchor="middle" '
+            f'font-size="9" font-weight="700" fill="#a7b0bb" '
+            f'letter-spacing="1.4">DOMINICAINE</text>')
     return (f'<svg viewBox="0 0 {larg} {haut}" width="100%" '
             f'style="max-width:{larg}px;display:block;border-radius:10px;'
             f'border:1px solid #e6ecf4" '
