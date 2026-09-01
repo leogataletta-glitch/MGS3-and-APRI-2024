@@ -65,7 +65,6 @@ TEINTES = {"dim1": "#d1730c", "dim2": "#2166ac", "dim3": "#1a8a4f",
 # d'intervention — qui sont dans le menu. Les listes commandent tout : la
 # rangée d'onglets, la borne du bouton Suivant et le sommaire des écrans.
 ETAPES = ("po_e1", "po_e2")
-SOUS_ETAPES = ("po_s1", "po_s2")
 
 TEXTES = {
     "mode_portail": {"en": "Home", "fr": "Accueil"},
@@ -86,8 +85,6 @@ TEXTES = {
     # LE SOUS-TITRE DE CHAQUE ÉTAPE. La question dit ce qu'on cherche, le
     # sous-titre dit ce qu'on va voir : « Où ? » seul laisse le lecteur
     # deviner s'il aura une carte, une liste ou un tableau.
-    "po_s1": {"en": "Where?", "fr": "Où ?"},
-    "po_s2": {"en": "What was measured?", "fr": "Qu'a-t-on mesuré ?"},
     "po_s3": {"en": "What was found?", "fr": "Qu'a-t-on trouvé ?"},
     "po_s4": {"en": "What can be done?", "fr": "Que faire ?"},
 
@@ -279,21 +276,10 @@ for _c, _v in TEXTES.items():
 STYLE = """
 <style>
   /* ------------------------------------------------ l'écran « Où ? »
-     LE TITRE DE SECTION EST EN SERIF, ET LUI SEUL. Le reste du site est en
-     linéale ; poser une serif sur le titre de l'écran suffit à dire « ceci
-     est un document qu'on lit », sans changer la nature du tableau de bord.
-     Le filet vert dessous remplace un soulignement : il tient le titre sans
-     le barrer. */
-  .po-titre-s { font-family:Georgia, 'Times New Roman', serif;
-                font-size:26px; font-weight:400; color:#101728;
-                letter-spacing:-.01em; margin:4px 0 0; }
-  .po-filet   { width:44px; height:2px; background:#2f6b4f;
-                margin:11px 0 20px; border-radius:1px; }
-
-  /* LES PUCES SONT DE PETITS CARRÉS, PAS DES DISQUES. Un disque se confond
+     LES PUCES SONT DE PETITS CARRÉS, PAS DES DISQUES. Un disque se confond
      avec les pastilles numérotées des étapes, juste au-dessus ; le carré s'en
      distingue et ne prétend pas être cliquable. */
-  .po-puces { list-style:none; margin:0; padding:0; max-width:46ch; }
+  .po-puces { list-style:none; margin:6px 0 0; padding:0; max-width:46ch; }
   .po-puces li { position:relative; padding:0 0 0 20px; margin:0 0 20px;
                  font-size:14.5px; line-height:1.55; color:#2b3444; }
   .po-puces li::before { content:""; position:absolute; left:0; top:.52em;
@@ -324,8 +310,10 @@ STYLE = """
                    color:#6b7a88; font-size:12.5px; }
   .po-note  { font-size:12px; color:#8a93a5; margin:13px 0 0; line-height:1.5; }
 
-  .po-carte-cadre { border:1px solid #e8edf3; border-radius:12px;
-                    padding:14px; background:#fbfcfd; }
+  /* LA CARTE N'EST PLUS ENCADRÉE. Un liseré et un fond gris autour d'une
+     image qui a déjà ses propres contours ne délimitaient rien : ils
+     ajoutaient une boîte de plus à une page qui en comptait trop. */
+  .po-carte-cadre { padding:2px 0 0; }
   .po-carte-leg   { font-size:12.5px; color:#6b7a88; margin:9px 2px 0;
                     line-height:1.5; }
 
@@ -410,6 +398,30 @@ STYLE = """
      deux lignes, dont une seule carte esseulée. */
   .po-serre .po-c { flex:1 1 140px; min-width:130px; padding:14px 15px; }
   .po-serre .po-n { font-size:21.5px; }
+
+  /* LA SORTIE LATÉRALE PORTE LE MÊME HABIT QUE LES ÉTAPES. C'était le
+     dernier pavé encadré de la page ; il devient un lien souligné, qui ne
+     se colore qu'au survol. */
+  div[class*="st-key-po_porte_"] button {
+    background:transparent !important; border:none !important;
+    border-bottom:1px solid #e6ecf4 !important; border-radius:0 !important;
+    box-shadow:none !important; transform:none !important;
+    padding:9px 2px 10px !important; min-height:0 !important;
+    justify-content:flex-start !important;
+    transition:border-color .15s ease; }
+  div[class*="st-key-po_porte_"] button > div {
+    justify-self:start !important; width:auto !important; }
+  div[class*="st-key-po_porte_"] button p {
+    font-size:14px !important; font-weight:600 !important;
+    color:#3c4761 !important; margin:0 !important;
+    text-align:left !important; transition:color .15s ease; }
+  div[class*="st-key-po_porte_"] button:hover,
+  div[class*="st-key-po_porte_"] button:focus {
+    background:transparent !important;
+    border-bottom:3px solid #2f6b4f !important; }
+  div[class*="st-key-po_porte_"] button:hover p,
+  div[class*="st-key-po_porte_"] button:focus p {
+    color:#2f6b4f !important; font-weight:700 !important; }
 </style>
 """
 
@@ -634,9 +646,9 @@ def _ecran_1(m):
     demandée après « où », et celle qu'on allait chercher trois pages plus
     loin. La carte remonte en haut de sa colonne et grandit d'autant.
     """
-    st.markdown(f'<div class="po-titre-s">{_e(T("po_e1"))}</div>'
-                f'<div class="po-filet"></div>', unsafe_allow_html=True)
-
+    # LE TITRE DE L'ÉCRAN N'EST PLUS ÉCRIT ICI. Il est déjà dans la carte
+    # d'étape sélectionnée, à deux centimètres au-dessus : le répéter en serif
+    # faisait lire deux fois le même mot avant d'arriver au contenu.
     g, d = st.columns([1.08, 1], gap="large")
     with g:
         men = f'{m["menages"]:,}'.replace(",", " ") if m["menages"] else "—"
@@ -651,7 +663,8 @@ def _ecran_1(m):
     with d:
         try:
             import territoire_page
-            v = territoire_page._vignette(territoire_page._geo(), 520, 400)
+            v = territoire_page._vignette(territoire_page._geo(), 520, 400,
+                                          mer="#f4f8fc")
         except Exception:
             v = None
         if v:
@@ -767,16 +780,10 @@ def _couleur(v):
     return ROUGE if v < 3.5 else (AMBRE if v < 5 else VERT)
 
 
-def _css_txt(t):
-    """Un texte prêt pour `content:` — les guillemets et les barres obliques
-    inverses y sont des délimiteurs, pas des caractères."""
-    return t.replace("\\", "\\\\").replace('"', '\\"')
-
-
 def _css_etapes(n):
-    """La feuille des quatre cartes d'étape, avec l'étape courante marquée."""
+    """La feuille des deux onglets d'étape, avec l'étape courante marquée."""
     r = ["<style>"]
-    for i, (cle, sous) in enumerate(zip(ETAPES, SOUS_ETAPES), 1):
+    for i, cle in enumerate(ETAPES, 1):
         b = (f'div[class*="st-key-po_pas_{i}"] button,'
              f' div[class*="st-key-po_pas_{i}"] button[kind="primary"]')
         b1 = f'div[class*="st-key-po_pas_{i}"] button'
@@ -784,32 +791,32 @@ def _css_etapes(n):
         r.append(f"""
         {b} {{
           display:grid !important;
-          grid-template-columns:36px 1fr; grid-template-rows:auto auto;
-          column-gap:13px; row-gap:1px;
+          grid-template-columns:30px 1fr; grid-template-rows:auto;
+          column-gap:11px;
           align-items:center; justify-items:start;
           text-align:left !important;
-          padding:13px 15px 12px !important;
+          padding:9px 2px 10px !important;
           min-height:0 !important; height:auto !important;
-          background:{'#f2f8f4' if actif else '#ffffff'} !important;
-          border:1px solid {'#cfe3d7' if actif else '#e8edf3'} !important;
+          background:transparent !important;
+          border:none !important;
           border-bottom:{'3px' if actif else '1px'} solid
-                        {'#2f6b4f' if actif else '#e8edf3'} !important;
-          border-radius:10px !important;
+                        {'#2f6b4f' if actif else '#e6ecf4'} !important;
+          border-radius:0 !important;
           box-shadow:none !important; transform:none !important;
-          transition:background .15s ease, border-color .15s ease;
+          transition:border-color .15s ease;
         }}
         {b1}:hover {{
-          background:{'#f2f8f4' if actif else '#f8fbf9'} !important;
-          border-color:#cfe3d7 !important;
+          background:transparent !important;
+          border-bottom-color:#cfe3d7 !important;
         }}
         {b1}::before, {b1}[kind="primary"]::before {{
           content:"{i}";
-          grid-column:1; grid-row:1 / span 2;
-          width:30px; height:30px; border-radius:50%;
+          grid-column:1; grid-row:1;
+          width:24px; height:24px; border-radius:50%;
           display:flex; align-items:center; justify-content:center;
           background:{'#dcebe2' if actif else '#f1f4f8'};
           color:{'#2f6b4f' if actif else '#7b8794'};
-          font-size:13px; font-weight:700; font-variant-numeric:tabular-nums;
+          font-size:12px; font-weight:700; font-variant-numeric:tabular-nums;
         }}
         /* LE VRAI ENFANT DE LA GRILLE EST UN DIV SANS NOM.
            Streamlit enveloppe le libellé d'un bouton dans un div dont la
@@ -824,16 +831,11 @@ def _css_etapes(n):
           text-align:left !important;
         }}
         {b1} p, {b1}[kind="primary"] p {{
-          font-size:14.5px !important; font-weight:600 !important;
-          color:#101728 !important; margin:0 !important;
+          font-size:14.5px !important;
+          font-weight:{'700' if actif else '600'} !important;
+          color:{'#2f6b4f' if actif else '#3c4761'} !important;
+          margin:0 !important;
           text-align:left !important; line-height:1.25 !important;
-        }}
-        {b1}::after, {b1}[kind="primary"]::after {{
-          content:"{_css_txt(T(sous))}";
-          grid-column:2; grid-row:2;
-          font-size:12.5px; font-weight:500;
-          color:{'#2f6b4f' if actif else '#6b7a88'};
-          line-height:1.3; justify-self:start;
         }}""")
     # LES DEUX BOUTONS DE PARCOURS PORTENT LE MÊME HABIT QUE LES ÉTAPES.
     # « Suivant » était un pavé vert plein, seul élément de la page à crier
@@ -845,13 +847,13 @@ def _css_etapes(n):
         c = f'div[class*="st-key-{cle}"] button'
         r.append(f"""
         {c}, {c}[kind="primary"] {{
-          background:#ffffff !important;
-          border:1px solid #e8edf3 !important;
-          border-bottom:1px solid #e8edf3 !important;
-          border-radius:10px !important;
+          background:transparent !important;
+          border:none !important;
+          border-bottom:1px solid #e6ecf4 !important;
+          border-radius:0 !important;
           box-shadow:none !important; transform:none !important;
-          padding:11px 18px !important; min-height:0 !important;
-          transition:border-color .15s ease, background .15s ease;
+          padding:9px 2px 10px !important; min-height:0 !important;
+          transition:border-color .15s ease;
         }}
         {c} p, {c}[kind="primary"] p {{
           font-size:14px !important; font-weight:600 !important;
@@ -860,8 +862,7 @@ def _css_etapes(n):
         }}
         {c}:hover, {c}[kind="primary"]:hover,
         {c}:focus, {c}[kind="primary"]:focus {{
-          background:#f2f8f4 !important;
-          border-color:#cfe3d7 !important;
+          background:transparent !important;
           border-bottom:3px solid #2f6b4f !important;
         }}
         {c}:hover p, {c}[kind="primary"]:hover p,
@@ -894,14 +895,12 @@ def render():
     # à l'un d'eux : un parcours qui ne se parcourt que dans l'ordre est une
     # prison, pas un guide. Le numéro est dans le libellé — un bandeau
     # décoratif au-dessus des mêmes quatre mots faisait doublon.
-    # CHAQUE ÉTAPE EST UNE CARTE À DEUX LIGNES, PAS UN ONGLET.
-    # Le numéro vit dans une pastille, la question sur la première ligne, et
-    # ce qu'on va voir sur la seconde. Streamlit ne sait poser qu'un seul
-    # libellé sur un bouton : la pastille et le sous-titre sont donc écrits en
-    # CSS, dans les pseudo-éléments ::before et ::after, à partir de textes
-    # injectés depuis Python. C'est le seul moyen d'obtenir trois niveaux de
-    # typographie dans un widget qui n'en accepte qu'un — et comme la feuille
-    # est régénérée à chaque rendu, le sous-titre suit la langue.
+    # CHAQUE ÉTAPE EST UN ONGLET, PLUS UNE CARTE.
+    # Le sous-titre — « Où ? », « Qu'a-t-on mesuré ? » — disait deux fois ce
+    # que le nom disait déjà, et il fallait une boîte pour le tenir. Reste le
+    # nom, une pastille numérotée écrite en CSS dans le pseudo-élément
+    # ::before (Streamlit ne pose qu'un seul libellé sur un bouton), et un
+    # filet dessous : vert et épais sur l'étape en cours, gris ailleurs.
     st.markdown(_css_etapes(n), unsafe_allow_html=True)
     cols = st.columns(len(ETAPES))
     for i, (col, cle) in enumerate(zip(cols, ETAPES), 1):
@@ -915,7 +914,10 @@ def render():
         st.info(T("po_absent"))
         return
 
-    with st.container(border=True):
+    # PLUS DE CADRE AUTOUR DE L'ÉCRAN. Le contenu occupe déjà toute la
+    # largeur : l'entourer d'un liseré gris ne le séparait de rien et donnait
+    # à la page l'air d'un formulaire compartimenté.
+    with st.container():
         (_ecran_1, _ecran_2)[n - 1](m)
 
     g, _milieu, d = st.columns([1.6, 4, 1.6])
