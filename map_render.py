@@ -1029,8 +1029,12 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
         """En mode contours, la valeur rejoint le nom si elle n'a pas tenu dedans."""
         if admin and not val_inside.get(name):
             v = values.get(name)
-            return (f'{name} — {fmt_val(v)}{unite}' if v is not None
-                    else f'{name} — n.d.')
+            # UN POINT MÉDIAN, PAS UN TIRET CADRATIN. Le tiret long entre un
+            # nom et un nombre se lisait comme une incise ; le point médian
+            # sépare sans rien annoncer, et c'est le séparateur déjà employé
+            # dans les cartouches et les légendes du site.
+            return (f'{name} · {fmt_val(v)}{unite}' if v is not None
+                    else f'{name} · n.d.')
         return name
 
     def box(cx, cy, dx, dy, anchor, text):
