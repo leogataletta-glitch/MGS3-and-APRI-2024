@@ -404,7 +404,14 @@ def _bloc_cotier(c):
                         unsafe_allow_html=True)
 
 
-def render():
+def render(complement=None):
+    """La resilience environnementale, en trois strates.
+
+    LE COMPLEMENT S'INSERE ENTRE EXPLORER ET APPROFONDIR, et cette place est
+    la bonne : les trajectoires sont des mesures de terrain dans le temps,
+    donc elles appartiennent a ce qu'on explore, pas a la methode qu'on
+    deplie ensuite.
+    """
     c = _contenu()
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(
@@ -510,6 +517,12 @@ def render():
                 '<ul class="ev-puce">' + "".join(
                     f'<li>{_e(x["nom"])}</li>' for x in etat["manquants"])
                 + '</ul>', unsafe_allow_html=True)
+
+    # LES TRAJECTOIRES FERMENT LA STRATE « EXPLORER ». Elles etaient une
+    # rubrique a elles seules, ce qui obligeait a chercher ailleurs des series
+    # qui decrivent exactement le meme objet que cette page.
+    if complement is not None:
+        complement()
 
     # ===================== STRATE 3 — APPROFONDIR =========================
     st.markdown(f'<div class="ev-etage">{_e(T("env_s3"))}</div>'
