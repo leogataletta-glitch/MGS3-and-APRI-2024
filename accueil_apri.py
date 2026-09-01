@@ -144,7 +144,16 @@ STYLE = """
      sur une colonne de 46 signes, elle se lit d'un trait, ce qui est la
      seule façon de faire passer une définition en une phrase. */
   .uma-x   { font-size:17px; line-height:1.62; color:#2b3444;
-             margin:6px 0 22px; max-width:46ch; font-weight:500; }
+             margin:0; font-weight:500; }
+  /* LA DÉFINITION EST DANS UN CADRE, ET C'EST LE SEUL DE LA PAGE.
+     Posée à même le blanc, elle se lisait comme un chapeau d'article : un
+     texte d'introduction qu'on saute. Le filet vert à gauche et le fond très
+     pâle en font ce qu'elle est — la définition de référence, celle qu'on
+     revient chercher. Le vert est celui du cadre de résilience, où la même
+     définition se déplie en entier. */
+  .uma-cadre { border:1px solid #e2ebe6; border-left:3px solid #1a6b52;
+               border-radius:10px; background:#f7fbf9;
+               padding:21px 24px 22px; margin:4px 0 22px; max-width:52ch; }
   /* LA CARTE N'A NI CADRE NI FOND, ET LA MER EST TRANSPARENTE.
      Encadrée sur un aplat bleu, elle formait une vignette collée au milieu
      d'une page blanche — un objet rapporté. Le rectangle marin est effacé
@@ -155,16 +164,36 @@ STYLE = """
   .uma-carte { position:relative; }
   .uma-carte svg { display:block; width:100%; height:auto; }
   .uma-carte svg .sea { fill:transparent !important; }
-  .uma-leg { display:flex; align-items:center; flex-wrap:wrap; gap:6px 16px;
-             margin:0 0 4px 2px; }
-  .uma-leg b { font-size:11px; font-weight:700; color:#8a93a5;
-               letter-spacing:.07em; text-transform:uppercase; }
-  .uma-lg  { display:flex; align-items:center; gap:7px; font-size:11.5px;
-             color:#6b7590; }
-  .uma-lg span { width:15px; height:11px; border-radius:2px;
-                 box-shadow:inset 0 0 0 1px rgba(0,0,0,.10); }
+  /* --- L'ÉCHELLE, DESSINÉE PLUTÔT QU'ÉNUMÉRÉE --------------------------
+     QUATRE PAVÉS ALIGNÉS NE SONT PAS UNE ÉCHELLE. « moins de 4,2 · 4,2–4,5 ·
+     4,5–4,6 · 4,6 et plus » se lisait comme une liste de catégories : rien
+     n'y montrait que les quatre se suivent, ni dans quel sens. Les mêmes
+     couleurs mises bout à bout dans une seule barre le disent d'un coup —
+     le rouge est à une extrémité, le vert à l'autre, et les trois nombres
+     de coupure sont posés sous les jointures qu'ils marquent. Les bornes de
+     l'échelle ferment la barre de part et d'autre.
+
+     LES QUATRE SEGMENTS SONT DE LARGEUR ÉGALE, ET C'EST EXACT : ce sont
+     quatre classes de même effectif, pas quatre tranches de même amplitude.
+     La barre représente le rang, comme les couleurs de la carte. */
+  .uma-ech    { margin:0 0 5px 2px; max-width:540px; }
+  .uma-ech-t  { font-size:11px; font-weight:700; color:#8a93a5;
+                letter-spacing:.07em; text-transform:uppercase;
+                margin:0 0 10px; }
+  .uma-ech-r  { display:flex; align-items:flex-start; gap:12px; }
+  .uma-ech-c  { display:block; flex:1 1 auto; min-width:0; }
+  .uma-ech-bar { display:flex; height:11px; border-radius:6px;
+                 overflow:hidden;
+                 box-shadow:inset 0 0 0 1px rgba(0,0,0,.09); }
+  .uma-ech-bar i { flex:1 1 0; }
+  .uma-ech-tk { display:block; position:relative; height:14px;
+                margin-top:6px; }
+  .uma-ech-tk span { position:absolute; top:0; transform:translateX(-50%);
+                     font-size:11px; color:#7c8698; white-space:nowrap; }
+  .uma-ech-tk span::before { content:""; position:absolute; left:50%; top:-6px;
+                             width:1px; height:4px; background:#ccd4de; }
   .uma-b   { font-size:11.5px; font-weight:700; color:#3c4761;
-             white-space:nowrap; }
+             white-space:nowrap; line-height:11px; }
   .uma-n   { font-size:11px; color:#a7b0bb; margin:2px 0 8px 2px;
              line-height:1.5; max-width:70ch; }
 
@@ -426,25 +455,36 @@ def _carte_indice(m):
     svg, seuils_ret, _ = map_render.render_map_svg(
         valeurs, {s: 1 for s in SECTIONS}, seuils, height=430,
         polarity="eleve_bon", unite="")
-    # LA LÉGENDE DIT D'ABORD LE SENS DE L'ÉCHELLE, ENSUITE SES COULEURS.
-    # Quatre pavés « moins de 4,2 · 4,2–4,5 · … » ne disent pas si un grand
-    # nombre est une bonne ou une mauvaise nouvelle. Les deux bornes de
-    # l'échelle encadrent donc les couleurs : 0 à gauche, 10 à droite, avec
-    # ce que chacune veut dire.
+    # L'ÉCHELLE EST UNE BARRE, PAS UNE LISTE.
+    # Les quatre couleurs de la carte se suivent dans une seule barre, du plus
+    # faible au plus fort ; les trois seuils sont posés sous les jointures
+    # qu'ils marquent, et les deux bornes de l'échelle la ferment de part et
+    # d'autre. Rien n'est dit de plus qu'avant : c'est montré au lieu d'être
+    # énuméré, et le sens de lecture se voit sans le chercher.
     #
     # ET LA LIGNE DE DESSOUS AVOUE QUE L'ÉCHELLE EST COUPÉE. Les dix sections
     # tiennent entre 3,6 et 5,3 ; les seuils de couleur sont calculés dans
     # cette fourchette, pas sur 0–10. Sans cette phrase, le rouge se lirait
     # comme « proche de zéro » alors qu'il vaut 4,1.
-    paves = "".join(
-        f'<div class="uma-lg"><span style="background:{c}"></span>{_e(lab)}'
-        f'</div>'
-        for c, lab in map_render.legend_items(seuils_ret, "eleve_bon", ""))
+    rampe = map_render.ramp_for("eleve_bon")
+    bandes = "".join(f'<i style="background:{c}"></i>' for c, _ in rampe)
+    # Les jointures tombent aux quarts de la barre : quatre segments égaux,
+    # donc trois coupures à 25, 50 et 75 %.
+    n = len(rampe)
+    reperes = "".join(
+        f'<span style="left:{(k + 1) * 100 / n:.4g}%">'
+        f'{_e(map_render.fmt(s))}</span>'
+        for k, s in enumerate(seuils_ret[:n - 1]))
     lo, hi = min(dispo), max(dispo)
-    return (f'<div class="uma-leg"><b>{_e(T("po_uma_leg"))}</b>'
+    return (f'<div class="uma-ech">'
+            f'<div class="uma-ech-t">{_e(T("po_uma_leg"))}</div>'
+            f'<div class="uma-ech-r">'
             f'<span class="uma-b">0 · {_e(T("po_uma_b0"))}</span>'
-            f'{paves}'
-            f'<span class="uma-b">10 · {_e(T("po_uma_b10"))}</span></div>'
+            f'<span class="uma-ech-c">'
+            f'<span class="uma-ech-bar">{bandes}</span>'
+            f'<span class="uma-ech-tk">{reperes}</span></span>'
+            f'<span class="uma-b">10 · {_e(T("po_uma_b10"))}</span>'
+            f'</div></div>'
             f'<p class="uma-n">{_e(T("po_uma_note", a=f"{lo:.1f}".replace(".", ","), b=f"{hi:.1f}".replace(".", ",")))}</p>'
             f'<div class="uma-carte">{svg}</div>')
 
@@ -465,7 +505,8 @@ def _comprendre(m):
     """
     g, d = st.columns([1, 1.35], gap="large")
     with g:
-        st.markdown(f'<p class="uma-x">{_e(T("po_uma_x"))}</p>',
+        st.markdown(f'<div class="uma-cadre">'
+                    f'<p class="uma-x">{_e(T("po_uma_x"))}</p></div>',
                     unsafe_allow_html=True)
     with d:
         c = _carte_indice(m)
