@@ -111,21 +111,28 @@ TEXTES = {
                "fr": "Les scores dimension par dimension, section par "
                      "section."},
 
-    # --- COMPRENDRE, MESURER, AGIR
-    "po_uma_t": {"en": "Understand. Measure. Act.",
-                 "fr": "Comprendre. Mesurer. Agir."},
+    # --- CE QU'APRI MESURE, EN UNE PHRASE
     "po_uma_x": {
-        "en": "APRI reads a territory as a system and measures it across "
-              "seven dimensions, before a shock rather than after it. The "
-              "result is not a ranking but a map of where a landscape holds "
-              "and where it gives way.",
-        "fr": "APRI lit un territoire comme un système et le mesure sur sept "
-              "dimensions, avant le choc et non après. Ce qui en sort n'est "
-              "pas un classement mais la carte de ce qui tient et de ce qui "
-              "cède dans un paysage."},
-    "po_uma_b": {"en": "Learn more about APRI", "fr": "En savoir plus sur APRI"},
-    "po_uma_leg": {"en": "Overall resilience score",
-                   "fr": "Indice global de résilience"},
+        "en": "APRI measures resilience — a territory's capacity to "
+              "anticipate, absorb and adapt — through a set of indicators "
+              "grouped into seven dimensions and converted into a 0-to-10 "
+              "score by the framework's scales. All of it at landscape "
+              "scale, the landscape understood as a complex adaptive system.",
+        "fr": "APRI mesure la résilience — la capacité d'un territoire à "
+              "anticiper, absorber et s'adapter — au travers d'une série "
+              "d'indicateurs regroupés en sept dimensions et convertis en un "
+              "score de 0 à 10 par les barèmes du cadre. Le tout à l'échelle "
+              "du paysage, entendu comme un système complexe adaptatif."},
+    "po_uma_leg": {"en": "Resilience score", "fr": "Score de résilience"},
+    "po_uma_b0": {"en": "weakest", "fr": "le plus faible"},
+    "po_uma_b10": {"en": "strongest", "fr": "le plus fort"},
+    "po_uma_note": {
+        "en": "The ten sections lie between {a} and {b}; the colour "
+              "thresholds are cut inside that range, not across the whole "
+              "0–10 scale.",
+        "fr": "Les dix sections tiennent entre {a} et {b} ; les seuils de "
+              "couleur sont découpés dans cette fourchette, pas sur toute "
+              "l'échelle 0–10."},
 
 
     "po_absent": {
@@ -144,11 +151,14 @@ STYLE = """
      bande de chiffres est une surface parce qu'elle se lit d'un bloc ; le
      reste est du texte posé sur du blanc. */
 
-  /* --- comprendre, mesurer, agir --- */
-  .uma-t   { font-size:31px; font-weight:800; color:#12314c;
-             letter-spacing:-.025em; line-height:1.15; margin:8px 0 0; }
-  .uma-x   { font-size:14.5px; line-height:1.68; color:#4a5b70;
-             margin:18px 0 22px; max-width:46ch; text-align:left !important; }
+  /* --- ce qu'APRI mesure --- */
+  /* LA PHRASE EST PLUS GROSSE QUE LE RESTE, ET C'EST LA SEULE.
+     Elle n'a plus de titre au-dessus d'elle : c'est elle le titre. À 17 px
+     sur une colonne de 46 signes, elle se lit d'un trait, ce qui est la
+     seule façon de faire passer une définition en une phrase. */
+  .uma-x   { font-size:17px; line-height:1.62; color:#2b3444;
+             margin:6px 0 22px; max-width:46ch; font-weight:500;
+             text-align:left !important; }
   /* LA CARTE N'A NI CADRE NI FOND, ET LA MER EST TRANSPARENTE.
      Encadrée sur un aplat bleu, elle formait une vignette collée au milieu
      d'une page blanche — un objet rapporté. Le rectangle marin est effacé
@@ -167,24 +177,10 @@ STYLE = """
              color:#6b7590; }
   .uma-lg span { width:15px; height:11px; border-radius:2px;
                  box-shadow:inset 0 0 0 1px rgba(0,0,0,.10); }
-  div[class*="st-key-po_uma_lien"] button {
-    background:transparent !important; border:none !important;
-    box-shadow:none !important; transform:none !important;
-    padding:2px 0 4px !important; min-height:0 !important;
-    border-bottom:2px solid transparent !important; border-radius:0 !important;
-  }
-  /* LA SPÉCIFICITÉ EST DOUBLÉE À DESSEIN. La règle générale des boutons,
-     dans app.py, a exactement le même poids ; à égalité c'est l'ordre qui
-     tranche, et l'ordre dépend de l'endroit où Streamlit insère le bloc.
-     Répéter l'attribut fait pencher la balance une fois pour toutes. */
-  div[class*="st-key-po_uma_lien"][class*="st-key-po_uma_lien"] button p {
-    font-size:14px !important; font-weight:700 !important;
-    color:#2f6b4f !important; margin:0 !important;
-    text-align:left !important;
-  }
-  div[class*="st-key-po_uma_lien"] button:hover {
-    border-bottom-color:#2f6b4f !important; background:transparent !important;
-  }
+  .uma-b   { font-size:11.5px; font-weight:700; color:#3c4761;
+             white-space:nowrap; }
+  .uma-n   { font-size:11px; color:#a7b0bb; margin:2px 0 8px 2px;
+             line-height:1.5; max-width:70ch; text-align:left !important; }
 
   @media (max-width:760px){ .uma-t{font-size:25px} }
 </style>
@@ -444,22 +440,43 @@ def _carte_indice(m):
     svg, seuils_ret, _ = map_render.render_map_svg(
         valeurs, {s: 1 for s in SECTIONS}, seuils, height=430,
         polarity="eleve_bon", unite="")
+    # LA LÉGENDE DIT D'ABORD LE SENS DE L'ÉCHELLE, ENSUITE SES COULEURS.
+    # Quatre pavés « moins de 4,2 · 4,2–4,5 · … » ne disent pas si un grand
+    # nombre est une bonne ou une mauvaise nouvelle. Les deux bornes de
+    # l'échelle encadrent donc les couleurs : 0 à gauche, 10 à droite, avec
+    # ce que chacune veut dire.
+    #
+    # ET LA LIGNE DE DESSOUS AVOUE QUE L'ÉCHELLE EST COUPÉE. Les dix sections
+    # tiennent entre 3,6 et 5,3 ; les seuils de couleur sont calculés dans
+    # cette fourchette, pas sur 0–10. Sans cette phrase, le rouge se lirait
+    # comme « proche de zéro » alors qu'il vaut 4,1.
     paves = "".join(
         f'<div class="uma-lg"><span style="background:{c}"></span>{_e(lab)}'
         f'</div>'
         for c, lab in map_render.legend_items(seuils_ret, "eleve_bon", ""))
-    return (f'<div class="uma-leg"><b>{_e(T("po_uma_leg"))}</b>{paves}</div>'
+    lo, hi = min(dispo), max(dispo)
+    return (f'<div class="uma-leg"><b>{_e(T("po_uma_leg"))}</b>'
+            f'<span class="uma-b">0 · {_e(T("po_uma_b0"))}</span>'
+            f'{paves}'
+            f'<span class="uma-b">10 · {_e(T("po_uma_b10"))}</span></div>'
+            f'<p class="uma-n">{_e(T("po_uma_note", a=f"{lo:.1f}".replace(".", ","), b=f"{hi:.1f}".replace(".", ",")))}</p>'
             f'<div class="uma-carte">{svg}</div>')
 
 
 def _comprendre(m):
+    """Ce qu'APRI mesure, et la carte de ce que ça donne.
+
+    LE TITRE ET LE BOUTON ONT ÉTÉ RETIRÉS. « Comprendre. Mesurer. Agir. »
+    était une devise, pas une information : trois verbes que n'importe quelle
+    institution pourrait afficher. À la place, la définition exacte de ce
+    qu'on mesure — une seule phrase, mais qui dit l'objet, la méthode,
+    l'échelle et l'unité. Le bouton « En savoir plus » menait au cadre de
+    résilience, où les quatre cartes du dessus mènent déjà.
+    """
     g, d = st.columns([1, 1.35], gap="large")
     with g:
-        st.markdown(f'<div class="uma-t">{_e(T("po_uma_t"))}</div>'
-                    f'<p class="uma-x">{_e(T("po_uma_x"))}</p>',
+        st.markdown(f'<p class="uma-x">{_e(T("po_uma_x"))}</p>',
                     unsafe_allow_html=True)
-        st.button(T("po_uma_b") + "   →", key="po_uma_lien",
-                  on_click=_aller, args=("methodologie",))
     with d:
         c = _carte_indice(m)
         if c:
