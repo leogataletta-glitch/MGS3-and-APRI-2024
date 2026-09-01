@@ -217,6 +217,50 @@ class _Proj:
         return "".join(d) + "Z"
 
 
+def _plus_large(anneaux, pr, essais=90, evite=None):
+    """Le milieu du plus long segment horizontal intérieur au contour.
+
+    On balaie la hauteur par tranches, on croise chaque tranche avec toutes
+    les arêtes, on trie les abscisses obtenues et on lit les intervalles deux
+    par deux — la règle pair-impair, qui gère seule les trous et les îles.
+    Le plus long de ces intervalles est le meilleur endroit pour poser un mot :
+    il est intérieur par construction, et c'est là qu'il y a le plus de place.
+    """
+    pts = [pr.xy(lon, lat) for a in anneaux for lon, lat in a]
+    if not pts:
+        return None, None
+    y0 = min(p[1] for p in pts)
+    y1 = max(p[1] for p in pts)
+    if y1 - y0 < 4:
+        return None, None
+    aretes = []
+    for a in anneaux:
+        proj = [pr.xy(lon, lat) for lon, lat in a]
+        for i in range(len(proj)):
+            aretes.append((proj[i - 1], proj[i]))
+    meilleur = (0, None, None)
+    for k in range(1, essais):
+        y = y0 + (y1 - y0) * k / essais
+        # ON N'ÉCRIT PAS SUR LE SUJET. La bande de hauteur occupée par la zone
+        # enquêtée est écartée du balayage : la presqu'île du sud est le plus
+        # long segment du pays, et le nom du pays serait venu se poser
+        # exactement sur le cercle qu'on cherche à montrer.
+        if evite and evite[0] <= y <= evite[1]:
+            continue
+        xs_ = []
+        for (xa, ya), (xb, yb) in aretes:
+            if (ya > y) != (yb > y) and yb != ya:
+                xs_.append(xa + (y - ya) * (xb - xa) / (yb - ya))
+        xs_.sort()
+        for i in range(0, len(xs_) - 1, 2):
+            large = xs_[i + 1] - xs_[i]
+            if large > meilleur[0]:
+                meilleur = (large, (xs_[i] + xs_[i + 1]) / 2, y)
+    if meilleur[1] is None:
+        return None, None
+    return meilleur[1], meilleur[2] + 4
+
+
 def _vignette(geo, larg=300, haut=330, mer=None):
     """L'île entière, la zone enquêtée en vert, le voisin nommé.
 
@@ -263,8 +307,21 @@ def _vignette(geo, larg=300, haut=330, mer=None):
                  f'fill="none" stroke="{VERT_APRI}" stroke-width="1.6" '
                  f'stroke-dasharray="4 3" opacity=".9"/>')
 
-    # les deux noms : le sujet à gauche, le contexte à droite, en plus discret
-    parts.append(f'<text x="12" y="20" font-size="12" font-weight="700" '
+    # LE NOM DU PAYS SE POSE SUR LE PAYS, PAS DANS L'OCÉAN. Il était écrit au
+    # coin haut-gauche de la vignette, c'est-à-dire en pleine mer, pendant que
+    # le voisin, lui, portait son nom sur ses terres. On cherche donc le plus
+    # long segment horizontal entièrement à l'intérieur du contour et on y
+    # centre le mot : sur une forme en fer à cheval comme Haïti, le centre de
+    # gravité tomberait dans le golfe de la Gonâve.
+    hx, hy = _plus_large(geo["pays"], pr,
+                         evite=(cy - r - 6, cy + r + 6))
+    if hx is None:
+        hx, hy = 12, 20
+        ancre = "start"
+    else:
+        ancre = "middle"
+    parts.append(f'<text x="{hx:.0f}" y="{hy:.0f}" text-anchor="{ancre}" '
+                 f'font-size="12" font-weight="700" '
                  f'fill="#6b7a88" letter-spacing="2">HAÏTI</text>')
     if geo.get("voisin"):
         vx = [pr.xy(lon, lat)[0] for a in geo["voisin"] for lon, lat in a]
