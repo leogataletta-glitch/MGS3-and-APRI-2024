@@ -59,6 +59,10 @@ TEINTES = {"dim1": "#d1730c", "dim2": "#2166ac", "dim3": "#1a8a4f",
 
 ENCRE, ENCRE2, ENCRE3 = "#101728", "#3c4761", "#6b7590"
 BORD, GRIS = "#e3eaf3", "#f1f4f9"
+# LE VERT DU SITE, ET LUI SEUL. La page portait quatre couleurs — bleu,
+# orange, vert, plus les sept teintes de dimension. Aucune ne disait rien :
+# c'étaient des couleurs de rangement, pas de sens. Une seule reste.
+VERT_APRI = "#2a6b3f"
 
 # ---------------------------------------------------------------------------
 # Les textes voyagent avec le module : une page nouvelle ne doit pas dépendre
@@ -419,6 +423,9 @@ TEXTES = {
 
     "cad_doc": {"en": "The full methodological document",
                 "fr": "Le document méthodologique complet"},
+    "cad_doc_tel": {
+        "en": "Download the IRLA approach (Word, 7.7 MB)",
+        "fr": "Télécharger l'approche IRLA (Word, 7,7 Mo)"},
     "cad_doc_note": {
         "en": "Everything above, in full prose, with the sources and the "
               "detail of each choice.",
@@ -652,15 +659,13 @@ def _cartouche(titre, texte, couleur):
 
 
 def _tableau_dimensions(stats):
-    """Une ligne par dimension : pastille, nom, poids, couverture, effectif.
+    """Une ligne par dimension : pastille, nom, poids, effectif.
 
-    DEUX GRANDEURS, DEUX COLONNES, JAMAIS SUPERPOSÉES. Le poids et la
-    couverture ne se comparent pas entre eux — l'un est une part de l'indice,
-    l'autre un état d'avancement. Les mettre sur la même barre laisserait
-    croire à un rapport qui n'existe pas.
-
-    Chaque barre est en teinte unique : il n'y a qu'une grandeur par colonne,
-    et la couleur de la dimension appartient à sa pastille, pas à la mesure.
+    LA COLONNE « COUVERTURE » A ÉTÉ RETIRÉE. Elle disait l'avancement du
+    calcul, pas le cadre : sur une page qui répond à « qu'est-ce qu'on
+    mesure », un état de chantier en pourcentage détourne l'attention de la
+    réponse. Le rapport « indicateurs faits sur indicateurs prévus » reste en
+    fin de ligne, où il dit la même chose sans se donner pour une mesure.
     """
     pmax = max(e["part"] for e in stats["dims"].values()) or 1
     lignes = []
@@ -672,7 +677,7 @@ def _tableau_dimensions(stats):
         vide = e["faits"] == 0
         lignes.append(
             f'<div style="display:grid;'
-            f'grid-template-columns:14px minmax(150px,2.6fr) 3fr 62px 2fr 52px 74px;'
+            f'grid-template-columns:14px minmax(150px,2.6fr) 3fr 62px 74px;'
             f'gap:11px;align-items:center;padding:9px 0;'
             f'border-bottom:1px solid #eef2f7">'
             # pastille d'identité — jamais seule, le nom la suit
@@ -684,27 +689,20 @@ def _tableau_dimensions(stats):
             f'<div style="background:{GRIS};border-radius:5px;height:15px;'
             f'overflow:hidden"><div style="height:100%;border-radius:5px;'
             f'width:{max(100 * e["part"] / pmax, 1.2):.1f}%;'
-            f'background:#2166ac;{"opacity:.45" if vide else ""}"></div></div>'
+            f'background:{VERT_APRI};{"opacity:.45" if vide else ""}"></div></div>'
             f'<div style="font-size:12.5px;font-weight:600;color:{ENCRE};'
             f'text-align:right;font-variant-numeric:tabular-nums">'
             f'{_fmt(e["part"])}&thinsp;%</div>'
-            # couverture
-            f'<div style="background:{GRIS};border-radius:5px;height:15px;'
-            f'overflow:hidden"><div style="height:100%;border-radius:5px;'
-            f'width:{max(e["couv"], 0.8):.1f}%;background:#1a8a4f"></div></div>'
-            f'<div style="font-size:12.5px;color:{ENCRE2};text-align:right;'
-            f'font-variant-numeric:tabular-nums">{_fmt(e["couv"], 0)}&thinsp;%</div>'
             f'<div style="font-size:12px;color:{ENCRE3};text-align:right;'
             f'font-variant-numeric:tabular-nums">{e["faits"]}/{e["n"]}</div>'
             f'</div>')
     entete = (
         f'<div style="display:grid;'
-        f'grid-template-columns:14px minmax(150px,2.6fr) 3fr 62px 2fr 52px 74px;'
+        f'grid-template-columns:14px minmax(150px,2.6fr) 3fr 62px 74px;'
         f'gap:11px;padding:0 0 6px;font-size:11px;letter-spacing:.09em;'
         f'text-transform:uppercase;color:#8a93a5;font-weight:700">'
         f'<div></div><div>{_e(T("cad_col_dim"))}</div>'
         f'<div style="grid-column:span 2">{_e(T("cad_col_poids"))}</div>'
-        f'<div style="grid-column:span 2">{_e(T("cad_col_couv"))}</div>'
         f'<div style="text-align:right">{_e(T("cad_col_ind"))}</div></div>')
     return entete + "".join(lignes)
 
@@ -800,18 +798,22 @@ def _attributs():
         + _icone(ic, c)
         + f'<p class="cad-n-t" style="font-size:14.5px">{_e(T(k + "_t"))}</p>'
         + f'<p class="cad-n-x">{_e(T(k))}</p></div>'
-        for k, ic, c in (("cad_a1", "loupe", "#2166ac"),
-                         ("cad_a2", "bouclier", "#d1730c"),
-                         ("cad_a3", "rafraichir", "#1a8a4f")))
+        # UNE SEULE TEINTE POUR LES TROIS. Bleu, orange et vert donnaient à
+        # croire que les trois capacités sont de natures différentes ; elles
+        # sont les trois faces d'une même définition. Le vert du site les
+        # tient ensemble, et rien d'autre sur la page ne change de couleur.
+        for k, ic, c in (("cad_a1", "loupe", VERT_APRI),
+                         ("cad_a2", "bouclier", VERT_APRI),
+                         ("cad_a3", "rafraichir", VERT_APRI)))
         + '</div>')
 
 
 def _sources(menages, n_ocb):
     """Les trois sources, en parcours : enquête → satellite → communautés."""
-    src = [("cad_src1", "personnes", "#2166ac",
+    src = [("cad_src1", "personnes", VERT_APRI,
             T("cad_src1_c", n=_fmt(menages, 0)) if menages else ""),
-           ("cad_src2", "carte", "#1a8a4f", T("cad_src2_c")),
-           ("cad_src3", "maison", "#d1730c",
+           ("cad_src2", "carte", VERT_APRI, T("cad_src2_c")),
+           ("cad_src3", "maison", VERT_APRI,
             T("cad_src3_c", n=n_ocb) if n_ocb else "")]
     blocs = []
     for i, (k, ic, c, chiffre) in enumerate(src):
@@ -912,53 +914,13 @@ def _cadre_apri(stats, doc_complet):
                 unsafe_allow_html=True)
     st.caption(T("cad_dim7_note"))
 
-    # 3 — la chaîne de calcul
-    st.markdown(f'<div class="cad-h" style="margin-top:30px">'
-                f'{_e(T("cad_chaine"))}</div>'
-                + _chaine(stats["poids_total"]), unsafe_allow_html=True)
-
-    # 4 — les trois sources
+    # 3 — les trois sources
     st.markdown(f'<div class="cad-h" style="margin-top:30px">'
                 f'{_e(T("cad_src"))}</div>' + _sources(menages, n_ocb),
                 unsafe_allow_html=True)
 
     # ---- ce qui était déplié, et qui est maintenant fermé ----------------
     st.markdown('<div style="height:26px"></div>', unsafe_allow_html=True)
-
-    with st.expander(T("cad_v_meth")):
-        st.markdown(
-            "".join(
-                f'<p style="font-size:14px;color:#3c4761;line-height:1.65;'
-                f'max-width:92ch;margin:0 0 14px"><b style="color:#101728">'
-                f'{T("a_h_" + c + "_t")}</b> {T("a_h_" + c)}</p>'
-                for c in ("origine", "portee", "mesure", "construction"))
-            + '<div class="cad-grille">'
-            + _cartouche(T("cad_quoi_t"), T("cad_quoi"), "#2166ac")
-            + _cartouche(T("cad_quand_t"), T("cad_quand"), "#1a8a4f")
-            + _cartouche(T("cad_echelle_t"), T("cad_echelle"), "#d1730c")
-            + '</div>'
-            f'<div class="cad-h" style="font-size:14px;margin:20px 0 11px">'
-            f'{_e(T("cad_sondage"))}</div>'
-            '<div class="cad-grille">'
-            + _chiffre(_fmt(menages, 0) if menages else "—",
-                       T("cad_s1_t"), T("cad_s1"))
-            + _chiffre(str(n_sections or "—"), T("cad_s2_t"), T("cad_s2"))
-            + _chiffre("90 %", T("cad_s3_t"), T("cad_s3"))
-            + _chiffre("120", T("cad_s4_t"), T("cad_s4"))
-            + '</div>'
-            f'<div class="cad-h" style="font-size:14px;margin:18px 0 4px">'
-            f'{_e(T("cad_strates"))}</div>'
-            '<ul class="cad-liste">'
-            + "".join(f'<li>{_e(T(k))}</li>'
-                      for k in ("cad_st1", "cad_st2", "cad_st3", "cad_st4"))
-            + '</ul>'
-            f'<div class="cad-h" style="font-size:14px;margin:20px 0 11px">'
-            f'{_e(T("cad_v_limites"))}</div>'
-            '<div class="cad-grille">'
-            + "".join(_cartouche(T(k + "_t"), T(k), "#8a93a5")
-                      for k in ("cad_l1", "cad_l2", "cad_l3", "cad_l4"))
-            + '</div>', unsafe_allow_html=True)
-        st.caption(T("cad_tirage"))
 
     with st.expander(T("cad_v_boucles")):
         st.markdown(
@@ -981,6 +943,20 @@ def _cadre_apri(stats, doc_complet):
         with d:
             st.markdown(_schema_boucles(), unsafe_allow_html=True)
 
-    if doc_complet is not None:
-        with st.expander(T("cad_doc")):
+    # LE DOCUMENT DE RÉFÉRENCE SE TÉLÉCHARGE, IL NE SE PARAPHRASE PLUS.
+    # La page réexpliquait en trois volets ce que le document dit en entier et
+    # mieux : sources, plan de sondage, limites. Une paraphrase vieillit à
+    # part de son original et finit par le contredire. Le fichier est servi
+    # tel quel ; le rendu HTML du document reste dessous, pour qui préfère
+    # lire à l'écran.
+    with st.expander(T("cad_doc")):
+        chemin = _trouver("IRLA_approche_complete.doc")
+        if chemin:
+            with open(chemin, "rb") as f:
+                st.download_button(
+                    T("cad_doc_tel"), f.read(),
+                    file_name="IRLA_approche_complete.doc",
+                    mime="application/msword")
+            st.caption(T("cad_doc_note"))
+        if doc_complet is not None:
             doc_complet()
