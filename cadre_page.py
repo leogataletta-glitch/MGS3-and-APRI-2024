@@ -31,6 +31,7 @@ import os
 import streamlit as st
 
 import environnement_cadre
+import trajectoires
 import i18n
 import icones
 from i18n import T
@@ -878,7 +879,13 @@ def render(doc_complet=None):
     _ong_apri, _ong_env = st.tabs(
         [T("env_onglet_apri"), T("env_onglet")])
     with _ong_env:
-        environnement_cadre.render()
+        # LES TRAJECTOIRES ONT REJOINT CET ONGLET. Couvert forestier, pluies,
+        # temperatures : quatre series physiques du meme territoire, qui
+        # avaient leur propre entree de menu alors qu'elles disent la meme
+        # chose que cette page — l'etat de l'environnement — a ceci pres
+        # qu'elles le disent dans le temps.
+        environnement_cadre.render(
+            complement=lambda: trajectoires.render(entete=False))
     with _ong_apri:
         _cadre_apri(stats, doc_complet)
 
