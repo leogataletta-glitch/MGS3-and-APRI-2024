@@ -8,20 +8,19 @@ résilience » disent déjà en entier dans le menu, et la première chose qu'un
 visiteur voyait du site était une pagination. Elle dit maintenant, de haut en
 bas, les quatre choses qu'on vient y chercher :
 
-    ce que fait le site  ›  par où entrer  ›  à quoi ça ressemble  ›  sa taille
+    ce que fait le site  ›  par où entrer  ›  à quoi ça ressemble
 
 Le titre et le bouton d'appel vivent dans l'illustration, en haut de page :
 c'est le bandeau du site qui les porte, et seulement sur cette page — deux
 images empilées, un bandeau puis un héros, auraient dit deux fois la même
 chose l'une sous l'autre.
 
-TOUS LES CHIFFRES SONT CALCULÉS. Les dimensions, les indicateurs, les
-sections, les ménages, et la couleur de chaque section sur la carte : rien
-n'est écrit en dur. La maquette annonçait « 70+ indicateurs, 40+ sources,
-20+ territoires » — des chiffres ronds d'illustration. Le site en a de vrais,
-et un « 20+ territoires » sur une enquête qui en couvre dix se voit du premier
-coup d'œil : ce qu'on perdrait alors n'est pas l'effet d'annonce, c'est la
-confiance.
+LA CARTE EST CALCULÉE, ET C'EST LA SEULE CHOSE CHIFFRÉE DE LA PAGE. La
+couleur de chaque section vient des résultats, pas d'un fichier de
+présentation. Une bande de quatre grands nombres et une rangée de logos
+institutionnels ont été essayées puis retirées : la première répétait ce que
+les rubriques disent mieux, la seconde affirmait des partenariats que rien
+dans les données ne documente.
 
 L'AMPLITUDE EST CALCULÉE SUR UNE BASE COMMUNE, ET C'EST LA SEULE FAÇON
 HONNÊTE. Comparer Trichet à Quentin sur les 66 indicateurs scorés serait
@@ -38,7 +37,6 @@ from urllib.parse import quote
 
 import streamlit as st
 
-import assets
 import i18n
 import icones
 import map_render
@@ -129,15 +127,6 @@ TEXTES = {
     "po_uma_leg": {"en": "Overall resilience score",
                    "fr": "Indice global de résilience"},
 
-    # --- LA BANDE DE CHIFFRES, tous comptés dans les fichiers
-    "po_ch1": {"en": "Resilience dimensions", "fr": "Dimensions de résilience"},
-    "po_ch2": {"en": "Indicators", "fr": "Indicateurs"},
-    "po_ch3": {"en": "Communal sections", "fr": "Sections communales"},
-    "po_ch4": {"en": "Households surveyed", "fr": "Ménages enquêtés"},
-
-    # --- LE PIED
-    "po_pied_p": {"en": "Produced by", "fr": "Réalisé par"},
-    "po_pied_c": {"en": "APRI · Survey 2024", "fr": "APRI · Enquête 2024"},
 
     "po_absent": {
         "en": "The results file is missing; the home page cannot be built.",
@@ -160,21 +149,23 @@ STYLE = """
              letter-spacing:-.025em; line-height:1.15; margin:8px 0 0; }
   .uma-x   { font-size:14.5px; line-height:1.68; color:#4a5b70;
              margin:18px 0 22px; max-width:46ch; text-align:left !important; }
-  /* LA CARTE PORTE SA LÉGENDE DANS SON COIN, pas au-dessus d'elle. Une
-     légende posée en surtitre oblige à faire l'aller-retour ; posée sur le
-     fond marin, à gauche, elle est dans le même regard que les couleurs
-     qu'elle explique. */
-  .uma-carte { position:relative; border-radius:12px; overflow:hidden;
-               border:1px solid #e8edf3; background:#f4f8fc; }
+  /* LA CARTE N'A NI CADRE NI FOND, ET LA MER EST TRANSPARENTE.
+     Encadrée sur un aplat bleu, elle formait une vignette collée au milieu
+     d'une page blanche — un objet rapporté. Le rectangle marin est effacé
+     (la règle `.sea` du SVG est neutralisée depuis ici) : il ne reste que
+     l'île et ses couleurs, posées à même la page. La légende, du coup, n'a
+     plus de fond sur lequel se poser : elle passe au-dessus de la carte, en
+     une ligne de pastilles. */
+  .uma-carte { position:relative; }
   .uma-carte svg { display:block; width:100%; height:auto; }
-  .uma-leg { position:absolute; left:16px; top:16px; background:#ffffff;
-             border:1px solid #e8edf3; border-radius:9px; padding:11px 13px;
-             box-shadow:0 2px 10px rgba(16,23,40,.06); }
-  .uma-leg b { display:block; font-size:11px; font-weight:700; color:#3c4761;
-               margin-bottom:8px; max-width:15ch; line-height:1.35; }
-  .uma-lg  { display:flex; align-items:center; gap:8px; font-size:11px;
-             color:#6b7590; margin-top:4px; }
-  .uma-lg span { width:16px; height:11px; border-radius:2px;
+  .uma-carte svg .sea { fill:transparent !important; }
+  .uma-leg { display:flex; align-items:center; flex-wrap:wrap; gap:6px 16px;
+             margin:0 0 4px 2px; }
+  .uma-leg b { font-size:11px; font-weight:700; color:#8a93a5;
+               letter-spacing:.07em; text-transform:uppercase; }
+  .uma-lg  { display:flex; align-items:center; gap:7px; font-size:11.5px;
+             color:#6b7590; }
+  .uma-lg span { width:15px; height:11px; border-radius:2px;
                  box-shadow:inset 0 0 0 1px rgba(0,0,0,.10); }
   div[class*="st-key-po_uma_lien"] button {
     background:transparent !important; border:none !important;
@@ -195,37 +186,7 @@ STYLE = """
     border-bottom-color:#2f6b4f !important; background:transparent !important;
   }
 
-  /* --- la bande de chiffres --- */
-  .po-bande { display:grid; grid-template-columns:repeat(4,1fr);
-              background:#f7faf8; border-radius:14px; margin:42px 0 0;
-              padding:6px 0; }
-  .po-bc   { display:flex; align-items:center; gap:14px;
-             padding:24px 26px; border-left:1px solid #e6eeea; }
-  .po-bc:first-child { border-left:none; }
-  .po-bn   { font-size:27px; font-weight:800; color:#12314c; line-height:1;
-             letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
-  .po-bl   { font-size:12.5px; color:#5c6b7e; margin-top:7px;
-             text-align:left !important; }
-
-  /* --- le pied --- */
-  .po-pied { display:flex; align-items:center; justify-content:space-between;
-             gap:26px; flex-wrap:wrap; margin:40px 0 6px; padding:26px 2px 0;
-             border-top:1px solid #eef2f7; }
-  .po-pm   { display:flex; align-items:center; gap:13px; }
-  .po-pm img { height:42px; width:42px; display:block; }
-  .po-pm b { display:block; font-size:19px; font-weight:800; color:#12314c;
-             letter-spacing:-.02em; line-height:1; }
-  .po-pm span { display:block; font-size:11.5px; color:#6b7590; margin-top:4px;
-                max-width:30ch; line-height:1.4; text-align:left !important; }
-  .po-pp   { display:flex; align-items:center; gap:14px; }
-  .po-pp span { font-size:11.5px; color:#8a93a5; }
-  .po-pp img { height:34px; display:block; }
-  .po-pc   { font-size:11.5px; color:#8a93a5; }
-
-  @media (max-width:1100px){ .po-bande{grid-template-columns:repeat(2,1fr)}
-    .po-bc:nth-child(3){border-left:none} }
-  @media (max-width:760px){ .po-bande{grid-template-columns:1fr}
-    .po-bc{border-left:none} .uma-t{font-size:25px} }
+  @media (max-width:760px){ .uma-t{font-size:25px} }
 </style>
 """
 
@@ -487,9 +448,8 @@ def _carte_indice(m):
         f'<div class="uma-lg"><span style="background:{c}"></span>{_e(lab)}'
         f'</div>'
         for c, lab in map_render.legend_items(seuils_ret, "eleve_bon", ""))
-    return (f'<div class="uma-carte">{svg}'
-            f'<div class="uma-leg"><b>{_e(T("po_uma_leg"))}</b>{paves}</div>'
-            f'</div>')
+    return (f'<div class="uma-leg"><b>{_e(T("po_uma_leg"))}</b>{paves}</div>'
+            f'<div class="uma-carte">{svg}</div>')
 
 
 def _comprendre(m):
@@ -504,54 +464,6 @@ def _comprendre(m):
         c = _carte_indice(m)
         if c:
             st.markdown(c, unsafe_allow_html=True)
-
-
-# ------------------------------------------------------- la bande de chiffres
-def _chiffres(m):
-    """Quatre nombres, et tous les quatre sont comptés dans les fichiers.
-
-    LA MAQUETTE ANNONÇAIT « 70+ indicateurs, 40+ sources, 20+ territoires ».
-    Ce sont des chiffres ronds d'illustration, et le site en a de vrais : 128
-    indicateurs, dix sections, 1 211 ménages. Un « 20+ territoires » sur une
-    enquête qui en couvre dix se voit du premier coup d'œil, et ce qu'on perd
-    alors n'est pas l'effet d'annonce, c'est la confiance.
-    """
-    n_ind = sum(e["n"] for e in m["dims"].values())
-    men = f'{m["menages"]:,}'.replace(",", " ") if m["menages"] else "—"
-    cases = (("couches", str(len(m["dims"])), T("po_ch1")),
-             ("points", str(n_ind), T("po_ch2")),
-             ("epingle", str(len(SECTIONS)), T("po_ch3")),
-             ("personnes", men, T("po_ch4")))
-    st.markdown(
-        '<div class="po-bande">' + "".join(
-            f'<div class="po-bc">{icones.svg(ic, "#2f6b4f", 27)}'
-            f'<div><div class="po-bn">{_e(v)}</div>'
-            f'<div class="po-bl">{_e(lab)}</div></div></div>'
-            for ic, v, lab in cases)
-        + '</div>', unsafe_allow_html=True)
-
-
-# ------------------------------------------------------------- le pied de page
-def _pied():
-    """Le pied : le commanditaire, et lui seul.
-
-    LA MAQUETTE ALIGNE QUATRE LOGOS — FEM, PNUE, FAO, PNUD. Je n'ai que celui
-    du PNUE, et surtout je n'ai aucune source disant que les trois autres
-    institutions sont partenaires de CETTE enquête. Afficher un logo est une
-    affirmation ; celle-là, il faut que tu me la confirmes avant que je
-    l'écrive. La ligne reste donc au PNUE, et la place des autres est prête.
-    """
-    st.markdown(
-        f'<div class="po-pied">'
-        f'<div class="po-pm">'
-        f'<img alt="APRI" src="data:image/png;base64,{assets.EMBLEME_APRI}">'
-        f'<div><b>APRI</b><span>{_e(T("a_titre_court"))}</span></div>'
-        f'</div>'
-        f'<div class="po-pp"><span>{_e(T("po_pied_p"))}</span>'
-        f'<img alt="UNEP" src="data:image/png;base64,'
-        f'{assets.LOGO_UNEP_BLEU}"></div>'
-        f'<div class="po-pc">{_e(T("po_pied_c"))}</div>'
-        f'</div>', unsafe_allow_html=True)
 
 
 def render():
@@ -573,5 +485,3 @@ def render():
         return
     _entrees()
     _comprendre(m)
-    _chiffres(m)
-    _pied()
