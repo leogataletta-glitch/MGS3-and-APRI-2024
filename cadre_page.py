@@ -882,81 +882,62 @@ def render(doc_complet=None):
 
 
 def _cadre_apri(stats, doc_complet):
-    """L'onglet du cadre général, en trois strates : comprendre, explorer,
-    approfondir. Détaché de `render()` pour tenir dans un onglet."""
+    """Le cadre, en quatre blocs et rien d'autre.
+
+    LA PAGE AVAIT TROIS ÉTAGES ET DOUZE BLOCS. Elle disait, dans l'ordre :
+    pourquoi APRI existe, ce qu'il mesure, les trois attributs, les sources,
+    les sept dimensions, la chaîne de calcul, puis six volets repliés. C'était
+    complet et illisible : personne ne lit douze blocs pour apprendre ce qu'est
+    un score.
+
+    Il reste ce qu'on vient chercher : les trois capacités, les sept
+    dimensions, la chaîne qui mène au score, les trois sources. Quatre objets,
+    presque pas de phrases. Tout le reste — le récit d'origine, la portée, le
+    plan de sondage, les limites, les boucles, le document complet — est
+    intact, dans deux volets fermés au bas de la page. Une information qu'on
+    doit ouvrir se lit mieux qu'une information qu'on doit sauter.
+    """
     menages, n_sections = _menages()
     n_ocb = _n_ocb()
     n_sec_avec = sum(1 for e in stats["dims"].values() if e["faits"])
 
-    # ================= STRATE 1 — COMPRENDRE ==============================
-    st.markdown(_tete(stats, n_sec_avec), unsafe_allow_html=True)
-
-    with st.container(border=True):
-        st.markdown(f'<div class="cad-h">{_e(T("cad_apercu"))}</div>'
-                    f'<p class="cad-note">{_e(T("cad_ap_note"))}</p>'
-                    + _apercu(stats, n_sec_avec), unsafe_allow_html=True)
-        st.markdown(f'<div class="cad-h" style="font-size:14px;'
-                    f'margin:22px 0 4px">{_e(T("cad_aaa"))}</div>'
-                    f'<p class="cad-note" style="margin-bottom:11px">'
-                    f'{_e(T("cad_aaa_note"))}</p>' + _attributs(),
-                    unsafe_allow_html=True)
-
-    with st.container(border=True):
-        st.markdown(f'<div class="cad-h">{_e(T("cad_src"))}</div>'
-                    f'<p class="cad-note">{_e(T("cad_src_note"))}</p>'
-                    + _sources(menages, n_ocb), unsafe_allow_html=True)
-
-    # ================= STRATE 2 — EXPLORER ================================
-    st.markdown(f'<div class="cad-etage">{_e(T("cad_strate2"))}</div>',
+    # 1 — les trois capacités : c'est la définition, elle passe en tête
+    st.markdown(f'<div class="cad-h" style="margin-top:18px">'
+                f'{_e(T("cad_aaa"))}</div>' + _attributs(),
                 unsafe_allow_html=True)
 
-    with st.container(border=True):
-        st.markdown(
-            f'<div class="cad-h">{_e(T("cad_dims"))}</div>'
-            f'<p class="cad-note">{_e(T("cad_dims_note"))}</p>'
-            + _tableau_dimensions(stats), unsafe_allow_html=True)
-        st.caption(T("cad_dim7_note"))
+    # 2 — les sept dimensions
+    st.markdown(f'<div class="cad-h" style="margin-top:30px">'
+                f'{_e(T("cad_dims"))}</div>' + _tableau_dimensions(stats),
+                unsafe_allow_html=True)
+    st.caption(T("cad_dim7_note"))
 
-    with st.container(border=True):
-        st.markdown(f'<div class="cad-h" style="margin-bottom:11px">'
-                    f'{_e(T("cad_chaine"))}</div>' + _chaine(stats["poids_total"]),
-                    unsafe_allow_html=True)
+    # 3 — la chaîne de calcul
+    st.markdown(f'<div class="cad-h" style="margin-top:30px">'
+                f'{_e(T("cad_chaine"))}</div>'
+                + _chaine(stats["poids_total"]), unsafe_allow_html=True)
 
-    # ================= STRATE 3 — APPROFONDIR =============================
-    # TOUT CE QUI SUIT ÉTAIT DÉPLIÉ, ET C'ÉTAIT LÀ LE DÉFAUT. Rien n'en a été
-    # retiré : le récit d'origine, la portée, le plan de sondage, les limites,
-    # le second volet et le document complet sont intacts, mais fermés. Une
-    # information qu'on doit ouvrir se lit mieux qu'une information qu'on doit
-    # sauter.
-    st.markdown(f'<div class="cad-etage">{_e(T("cad_strate3"))}</div>'
-                f'<p class="cad-note" style="margin-top:-4px">'
-                f'{_e(T("cad_strate3_note"))}</p>', unsafe_allow_html=True)
+    # 4 — les trois sources
+    st.markdown(f'<div class="cad-h" style="margin-top:30px">'
+                f'{_e(T("cad_src"))}</div>' + _sources(menages, n_ocb),
+                unsafe_allow_html=True)
 
-    with st.expander(T("cad_v_pourquoi")):
+    # ---- ce qui était déplié, et qui est maintenant fermé ----------------
+    st.markdown('<div style="height:26px"></div>', unsafe_allow_html=True)
+
+    with st.expander(T("cad_v_meth")):
         st.markdown(
             "".join(
                 f'<p style="font-size:14px;color:#3c4761;line-height:1.65;'
                 f'max-width:92ch;margin:0 0 14px"><b style="color:#101728">'
                 f'{T("a_h_" + c + "_t")}</b> {T("a_h_" + c)}</p>'
-                for c in ("origine", "portee")), unsafe_allow_html=True)
-
-    with st.expander(T("cad_v_mesure")):
-        st.markdown(
-            f'<p style="font-size:14px;color:#3c4761;line-height:1.65;'
-            f'max-width:92ch;margin:0 0 16px"><b style="color:#101728">'
-            f'{T("a_h_mesure_t")}</b> {T("a_h_mesure")}</p>'
-            '<div class="cad-grille">'
+                for c in ("origine", "portee", "mesure", "construction"))
+            + '<div class="cad-grille">'
             + _cartouche(T("cad_quoi_t"), T("cad_quoi"), "#2166ac")
             + _cartouche(T("cad_quand_t"), T("cad_quand"), "#1a8a4f")
             + _cartouche(T("cad_echelle_t"), T("cad_echelle"), "#d1730c")
-            + '</div>', unsafe_allow_html=True)
-
-    with st.expander(T("cad_v_meth")):
-        st.markdown(
-            f'<p style="font-size:14px;color:#3c4761;line-height:1.65;'
-            f'max-width:92ch;margin:0 0 16px"><b style="color:#101728">'
-            f'{T("a_h_construction_t")}</b> {T("a_h_construction")}</p>'
-            f'<div class="cad-h" style="font-size:14px;margin-bottom:11px">'
+            + '</div>'
+            f'<div class="cad-h" style="font-size:14px;margin:20px 0 11px">'
             f'{_e(T("cad_sondage"))}</div>'
             '<div class="cad-grille">'
             + _chiffre(_fmt(menages, 0) if menages else "—",
@@ -970,15 +951,14 @@ def _cadre_apri(stats, doc_complet):
             '<ul class="cad-liste">'
             + "".join(f'<li>{_e(T(k))}</li>'
                       for k in ("cad_st1", "cad_st2", "cad_st3", "cad_st4"))
-            + '</ul>', unsafe_allow_html=True)
-        st.caption(T("cad_tirage"))
-
-    with st.expander(T("cad_v_limites")):
-        st.markdown(
+            + '</ul>'
+            f'<div class="cad-h" style="font-size:14px;margin:20px 0 11px">'
+            f'{_e(T("cad_v_limites"))}</div>'
             '<div class="cad-grille">'
             + "".join(_cartouche(T(k + "_t"), T(k), "#8a93a5")
                       for k in ("cad_l1", "cad_l2", "cad_l3", "cad_l4"))
             + '</div>', unsafe_allow_html=True)
+        st.caption(T("cad_tirage"))
 
     with st.expander(T("cad_v_boucles")):
         st.markdown(
@@ -994,18 +974,13 @@ def _cadre_apri(stats, doc_complet):
                 for k, c in (("cad_dbc_1", "#c33a24"), ("cad_dbc_2", "#d1730c"),
                              ("cad_dbc_3", "#2166ac"), ("cad_dbc_4", "#1a8a4f")))
             + '</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="cad-h" style="font-size:14px;'
-                    f'margin:20px 0 6px">{_e(T("cad_lecture"))}</div>',
-                    unsafe_allow_html=True)
         g, d = st.columns([1.15, 1])
         with g:
             st.markdown(T("cad_lecture_x"))
             st.warning(T("cad_lecture_piege"))
         with d:
             st.markdown(_schema_boucles(), unsafe_allow_html=True)
-        st.caption(T("cad_dbc_lien"))
 
     if doc_complet is not None:
         with st.expander(T("cad_doc")):
-            st.caption(T("cad_doc_note"))
             doc_complet()
