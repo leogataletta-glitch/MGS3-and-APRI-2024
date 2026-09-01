@@ -52,7 +52,6 @@ import systeme_page
 import synthese_page
 import telechargements_page
 import territoire_page
-import trajectoires
 from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -749,12 +748,6 @@ st.markdown(("""
     div[data-testid="stButton"] > button[kind="primary"]:hover {
     background: #f1f6f4 !important;
   }
-  /* Les deux langues ferment la rangée, poussées à droite. */
-  div[class*="st-key-zone_langue"] {
-    margin-left: auto !important; width: 118px !important;
-    flex: 0 0 auto !important;
-  }
-
   /* Le sélecteur de langue, seul widget non bouton de la colonne */
   section[data-testid="stSidebar"] label,
   section[data-testid="stSidebar"] .stRadio label p {
@@ -929,26 +922,49 @@ st.markdown(("""
   }
   .f-etiquette { height: 22px; }
 
-  /* --- les deux langues, en tête de la colonne -------------------------
-     DEUX PASTILLES, ET NON DEUX MOTS POSÉS. Écrites en simple texte, elles ne
-     se donnaient pas pour cliquables, et la langue courante ne se distinguait
-     que par une nuance de gris qu'il fallait chercher. Chacune porte
-     maintenant son contour, la paire est centrée, et la langue en cours est
-     sur fond vert : on voit d'un coup d'œil ce qu'on lit et ce qu'on peut
-     demander à la place.
+  /* --- LES DEUX LANGUES, POSÉES SUR L'ILLUSTRATION ---------------------
+     DEUX PASTILLES BLANCHES, DANS L'ANGLE BAS-DROIT DE LA PHOTO. Écrites en
+     simple texte, elles ne se donnaient pas pour cliquables ; posées dans la
+     barre de menu, elles prenaient la place d'une rubrique et se lisaient
+     comme un onglet de plus. Sur le feuillage, en blanc, elles se voient
+     sans peser : contour clair et fond translucide pour la langue qu'on peut
+     demander, plein blanc et vert pour celle qu'on lit.
+
+     L'ANGLE EST CHOISI, PAS SUBI : la marque APRI occupe la gauche, le logo
+     du PNUE le haut-droit. Le bas-droit est la seule zone de l'illustration
+     qui soit à la fois libre et sombre — donc la seule où du blanc se
+     détache.
+
+     LE REPÈRE EST LE CONTENEUR DU RUBAN, qui est en position relative : les
+     pastilles retombent dans l'image quelle que soit la hauteur de la barre
+     au-dessus, qui change avec la largeur de la fenêtre.
 
      Elles empruntent la classe `st-key-lang_*` de leur bouton : c'est le seul
-     point d'accroche stable que Streamlit offre sur un widget précis. Tout ce
-     que la colonne impose aux boutons est défait ici, explicitement, en
-     !important. */
+     point d'accroche stable que Streamlit offre sur un widget précis. */
+  div[class*="st-key-zone_ruban"] { position: relative; }
+  div[class*="st-key-zone_langue"] {
+    position: absolute !important; right: 30px; bottom: 14px;
+    width: 158px !important; z-index: 6; margin: 0 !important;
+  }
+  /* Streamlit donne au conteneur du bouton la largeur de son mot : sans ces
+     deux lignes, le `width:100%` du bouton vaut 100 % de vingt-cinq pixels,
+     et la pastille se ferme en rond. La classe à clé est posée SUR le
+     conteneur d'élément, pas sur un parent : elle se sélectionne donc
+     directement. */
+  div[class*="st-key-lang_"],
+  div[class*="st-key-lang_"] div[data-testid="stButton"] {
+    width: 100% !important;
+  }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button,
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] {
-    background: #ffffff !important;
-    border: 1px solid var(--bord) !important;
+    background: rgba(12,26,20,.30) !important;
+    border: 1px solid rgba(255,255,255,.75) !important;
     border-radius: 999px !important;
-    box-shadow: none !important; padding: 4px 4px !important;
+    backdrop-filter: blur(2px);
+    box-shadow: 0 1px 6px rgba(0,0,0,.25) !important;
+    padding: 4px 4px !important;
     min-height: 0 !important; height: auto !important; width: 100% !important;
     justify-content: center !important; transform: none !important;
     transition: background .15s ease, border-color .15s ease;
@@ -957,29 +973,31 @@ st.markdown(("""
   div[data-testid="stButton"] > button p {
     font-size: 12px !important; font-weight: 700 !important;
     letter-spacing: .08em !important; text-transform: uppercase;
-    color: var(--encre-3) !important; text-align: center !important;
+    color: #ffffff !important; text-align: center !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,.45);
     transition: color .15s ease;
   }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button:hover {
-    background: #f1f6f4 !important; border-color: #cfe0d8 !important;
+    background: rgba(12,26,20,.50) !important;
+    border-color: #ffffff !important;
   }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button:hover p {
-    color: var(--encre-2) !important;
+    color: #ffffff !important;
   }
+  /* La langue en cours : plein blanc, texte vert. C'est l'inverse exact de
+     l'autre pastille, ce qui se voit d'un coup d'œil même en petit. */
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] {
-    background: var(--accent) !important; border-color: var(--accent) !important;
+    background: #ffffff !important; border-color: #ffffff !important;
   }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] p {
-    color: #ffffff !important;
+    color: #1a6b52 !important; text-shadow: none;
   }
-  /* La rangée ouvre la colonne : la paire est resserrée au centre, avec un
-     filet en dessous pour la séparer de la marque sans la souligner. */
   div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-lang_"]) {
-    padding: 0; margin: 0; max-width: 118px; gap: 7px !important;
+    padding: 0; margin: 0; max-width: 158px; gap: 8px !important;
   }
 
   /* La ligne de contexte, sous le ruban : la page courante à gauche, ce sur
@@ -1373,7 +1391,7 @@ st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
 # était comprimé d'autant, alors que c'est lui qu'on vient voir. En haut, sur
 # une seule ligne qui se replie si besoin, elle rend l'écran entier à la page.
 _zone_nav = st.container(key="zone_nav")
-_ruban = st.container()
+_ruban = st.container(key="zone_ruban")
 _zone_barre = st.container()
 
 # LA LANGUE EST LUE ICI, AVANT TOUT APPEL À T(), ET CHANGÉE DANS LE BANDEAU.
@@ -1497,7 +1515,9 @@ _NAV = [
     (MODE_ACCUEIL, "epingle"),
     (MODE_METHODO, "bouclier"),
     (MODE_DIMENSIONS, "barres"),
-    (MODE_TRAJECTOIRES, "rafraichir"),
+    # LES TRAJECTOIRES NE SONT PLUS UNE ENTREE : elles ont rejoint l'onglet
+    # « Résilience environnementale » du cadre, dont elles disent la version
+    # dans le temps. Une entrée de moins, et la barre tient sur une ligne.
     (MODE_BOUCLES, "boucle"),
     # L'OUTIL D'EXPLICATION VIENT JUSTE APRÈS LES BOUCLES, ET C'EST SA PLACE.
     # Les boucles montrent que le système propage ; celui-ci répond à la
@@ -1604,6 +1624,35 @@ def _rendre_ruban():
             f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
             f'</div>', unsafe_allow_html=True)
 
+        # LES DEUX LANGUES SONT POSÉES SUR L'ILLUSTRATION, EN BLANC.
+        # Dans la barre de menu elles occupaient une place que les rubriques
+        # réclamaient, et une pastille verte au bout d'une rangée d'onglets se
+        # lit comme un onglet de plus. Sur la photo, à l'angle opposé de la
+        # marque et sous le logo du PNUE, elles sont ce qu'elles sont : un
+        # réglage du site, pas une destination.
+        #
+        # ELLES VIVENT DANS LE RUBAN, PAS DANS LA BARRE, et c'est ce qui rend
+        # leur position sûre : posées en absolu depuis la barre, elles
+        # auraient dépendu de sa hauteur, qui change avec la largeur de la
+        # fenêtre. Ancrées au conteneur du ruban, elles retombent toujours
+        # dans l'image.
+        #
+        # DEUX CODES, ET NON DEUX NOMS. Le nom d'une langue lu dans cette
+        # langue n'apprend rien à qui la cherche ; les deux codes ISO sont la
+        # convention de tous les sites bilingues. `i18n.LANGUES` garde les
+        # noms complets, qui restent le libellé juste partout ailleurs.
+        with st.container(key="zone_langue"):
+            _cl = st.columns(2)
+            # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie est en tête.
+            _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
+            for _col, _code in zip(_cl, _ordre):
+                with _col:
+                    st.button(_code.upper(), key=f"lang_{_code}",
+                              on_click=_changer_langue, args=(_code,),
+                              type=("primary"
+                                    if st.session_state["choix_langue"] == _code
+                                    else "secondary"))
+
 
 with _zone_nav:
     # LES QUATORZE ENTRÉES SONT DES ONGLETS, PAS DES LIGNES DE LISTE.
@@ -1615,30 +1664,6 @@ with _zone_nav:
     for _mode, _icone in _NAV:
         _entree_nav(_mode, _icone)
 
-    # LES DEUX LANGUES FERMENT LA BARRE, À DROITE.
-    # Elles étaient posées sur l'illustration, en absolu, à une position fixe
-    # qui ne tenait que tant que le bandeau commençait en haut de page. Dans
-    # la barre, elles sont un élément de plus de la même rangée, poussé à
-    # droite par une marge automatique : rien à recalculer si la barre se
-    # replie.
-    #
-    # DEUX CODES, ET NON DEUX NOMS. « English » et « Français » écrits en
-    # entier demandaient des pastilles larges, et le nom d'une langue lu dans
-    # cette langue même n'apprend rien à qui la cherche : les deux codes ISO
-    # sont la convention de tous les sites bilingues, et ils tiennent dans
-    # une pastille ronde. `i18n.LANGUES` garde les noms complets, qui restent
-    # le libellé juste partout ailleurs.
-    with st.container(key="zone_langue"):
-        _cl = st.columns(2)
-        # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie vient en tête.
-        _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
-        for _col, _code in zip(_cl, _ordre):
-            with _col:
-                st.button(_code.upper(), key=f"lang_{_code}",
-                          on_click=_changer_langue, args=(_code,),
-                          type=("primary"
-                                if st.session_state["choix_langue"] == _code
-                                else "secondary"))
 
 # LA PAGE OCCUPE TOUTE LA LARGEUR. Il n'y a plus de colonne de menu à sa
 # gauche : le conteneur est ouvert ici, avant l'aiguillage, pour que chaque
@@ -1663,11 +1688,6 @@ with _c_contenu:
     if app_mode == MODE_PORTAIL:
         # Quatre écrans : où, ce qu'on a mesuré, ce qu'on a trouvé, quoi faire.
         accueil_apri.render()
-
-    if app_mode == MODE_TRAJECTOIRES:
-        # Quatre séries physiques — hectares, millimètres, degrés. Aucun score :
-        # les scores vivent dans les autres rubriques.
-        trajectoires.render()
 
     if app_mode == MODE_ACCUEIL:
         territoire_page.render()
