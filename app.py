@@ -694,7 +694,7 @@ st.markdown(("""
     backdrop-filter: saturate(1.4) blur(6px);
     border-bottom: 1px solid #eef2f7;
     margin: 0 calc(-2.6rem * var(--dz)) 0;
-    padding: 5px calc(2.6rem * var(--dz)) 4px;
+    padding: 3px calc(2.6rem * var(--dz)) 2px;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stElementContainer"],
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] {
@@ -703,8 +703,8 @@ st.markdown(("""
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button {
     display: flex !important; align-items: center !important;
     justify-content: center !important;
-    width: auto !important; min-height: 38px !important; height: auto !important;
-    padding: 8px 11px !important; border-radius: 8px !important;
+    width: auto !important; min-height: 31px !important; height: auto !important;
+    padding: 6px 9px !important; border-radius: 8px !important;
     border: none !important;
     background: transparent !important; box-shadow: none !important;
     transition: background .15s ease, color .15s ease;
@@ -718,7 +718,7 @@ st.markdown(("""
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button p {
     font-family: "Inter", system-ui, sans-serif !important;
-    font-size: 13.5px !important; font-weight: 500 !important;
+    font-size: 12.5px !important; font-weight: 500 !important;
     line-height: 1.2 !important;
     color: var(--encre-2) !important;
     text-align: center !important; margin: 0 !important;
