@@ -904,29 +904,6 @@ st.markdown(("""
     font-size: 15px; line-height: 1.62; color: #33465c; margin: 18px 0 0;
     max-width: 40ch; font-weight: 500; text-align: left !important;
   }
-  /* LE BOUTON D'APPEL EST UN VRAI WIDGET, POSÉ SUR L'IMAGE.
-     Un lien écrit en HTML rechargerait la page et perdrait la langue ; le
-     changement de rubrique passe par l'état de session, donc par un bouton.
-     On le sort du flux et on le place à l'aplomb du titre, comme la paire
-     de langues juste au-dessus. */
-  div[class*="st-key-zone_cta"] {
-    position: absolute; top: 404px; left: 42px; z-index: 6;
-    width: 236px !important;
-  }
-  div[class*="st-key-po_cta_hero"] button {
-    background: #1c5138 !important; border: 1px solid #1c5138 !important;
-    border-radius: 8px !important; box-shadow: none !important;
-    transform: none !important; padding: 0 18px !important;
-    min-height: 0 !important; height: 46px !important;
-  }
-  div[class*="st-key-po_cta_hero"] button p {
-    font-size: 14px !important; font-weight: 700 !important;
-    color: #ffffff !important; margin: 0 !important;
-  }
-  div[class*="st-key-po_cta_hero"] button:hover,
-  div[class*="st-key-po_cta_hero"] button:focus {
-    background: #14402c !important; border-color: #14402c !important;
-  }
   @media (max-width: 900px){
     .bandeau-titre h1 { font-size: 34px; }
     .bandeau-titre { top: 150px; max-width: 62vw; }
@@ -1395,7 +1372,6 @@ st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
 # réservé en premier : créé plus bas, il se dessinait sous le menu.
 _ruban = st.container()
 _zone_langue = st.container(key="zone_langue")
-_zone_cta = st.container(key="zone_cta")
 _zone_barre = st.container()
 
 # LA LANGUE EST LUE ICI, AVANT TOUT APPEL À T(), ET CHANGÉE DANS LE BANDEAU.
@@ -1659,15 +1635,6 @@ with _zone_langue:
                       type=("primary"
                             if st.session_state["choix_langue"] == _code
                             else "secondary"))
-
-# LE BOUTON D'APPEL DE L'ACCUEIL, POSÉ SUR L'ILLUSTRATION.
-# Il n'existe que sur la page d'accueil : ailleurs, le conteneur reste vide
-# et, étant hors du flux, il ne prend aucune place.
-if st.session_state["app_mode"] == MODE_PORTAIL:
-    with _zone_cta:
-        st.button(T("po_hero_b") + "   →", key="po_cta_hero",
-                  on_click=_bascule, args=(MODE_ACCUEIL,),
-                  use_container_width=True)
 
 # LE MENU À GAUCHE, LA PAGE À SA DROITE.
 # Les deux colonnes sont ouvertes ici, avant l'aiguillage, parce que la page
