@@ -595,39 +595,15 @@ def carte_entretiens():
 
 
 def render():
-    """La page entière : un titre, deux cartes, rien d'autre.
+    """La page : la carte interactive, et rien d'autre.
 
-    Ce qui a quitté cette page — les chiffres de périmètre, les quatre
-    résultats saillants, la carte des scores, les accès rapides — n'a pas
-    disparu du site : les résultats sont dans « Analyse des résultats » et
-    « Fiche synthèse », la navigation est dans la colonne de gauche, et les
-    livraisons récentes sont passées dans « Données ».
+    CE QUI EN A ÉTÉ RETIRÉ, ET POURQUOI. Trois objets se partageaient la page
+    et répondaient tous à « où ? » : la vignette d'Haïti, la carte d'atelier
+    des entretiens, et la carte interactive. La troisième fait ce que les deux
+    autres font, et davantage — on y allume et éteint chaque couche, on y
+    zoome, on y clique une section pour lire sa commune et son département.
+    Les deux autres se dessinent toujours (`_vignette`, `carte_entretiens`) :
+    l'accueil se sert de la première, et la seconde reste disponible pour un
+    rapport. Elles ne sont simplement plus posées ici.
     """
-    st.markdown(
-        f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
-        f'letter-spacing:-.02em;margin:2px 0 0">{T("tr_titre")}</h2>'
-        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
-        f'text-transform:uppercase;margin:2px 0 14px;font-weight:600">'
-        f'{T("tr_sous_titre")}</p>', unsafe_allow_html=True)
-
-    # LA CARTE INTERACTIVE PASSE DEVANT, ET LES DEUX SVG RESTENT DERRIÈRE.
-    # Elle répond mieux qu'eux à la question de la page — on y allume et
-    # éteint chaque couche, on y zoome, on y clique un point d'entretien.
-    # La vignette d'Haïti, elle, garde sa raison d'être : la carte interactive
-    # ouvre sur le Grand Sud, et rien n'y dit où le Grand Sud se trouve dans
-    # le pays.
     carte_localisation.render()
-    geo = _geo()
-    g, d = st.columns([1, 2.6], vertical_alignment="center")
-    with g:
-        v = _vignette(geo)
-        if v:
-            st.markdown(v, unsafe_allow_html=True)
-    with d:
-        st.caption(T("tr_vignette_note"))
-
-    # La carte d'atelier ferme la page : elle porte ce qu'une carte web ne
-    # donne pas — le relief en couleurs et le rendu institutionnel qu'on met
-    # dans un rapport.
-    st.markdown(STYLE_CARTES, unsafe_allow_html=True)
-    carte_entretiens()
