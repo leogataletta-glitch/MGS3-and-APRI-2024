@@ -751,7 +751,7 @@ st.markdown(("""
   }
   /* Les deux langues ferment la rangée, poussées à droite. */
   div[class*="st-key-zone_langue"] {
-    margin-left: auto !important; width: 190px !important;
+    margin-left: auto !important; width: 118px !important;
     flex: 0 0 auto !important;
   }
 
@@ -948,15 +948,15 @@ st.markdown(("""
     background: #ffffff !important;
     border: 1px solid var(--bord) !important;
     border-radius: 999px !important;
-    box-shadow: none !important; padding: 3px 4px !important;
+    box-shadow: none !important; padding: 4px 4px !important;
     min-height: 0 !important; height: auto !important; width: 100% !important;
     justify-content: center !important; transform: none !important;
     transition: background .15s ease, border-color .15s ease;
   }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button p {
-    font-size: 9.5px !important; font-weight: 700 !important;
-    letter-spacing: .06em !important; text-transform: uppercase;
+    font-size: 12px !important; font-weight: 700 !important;
+    letter-spacing: .08em !important; text-transform: uppercase;
     color: var(--encre-3) !important; text-align: center !important;
     transition: color .15s ease;
   }
@@ -979,7 +979,7 @@ st.markdown(("""
   /* La rangée ouvre la colonne : la paire est resserrée au centre, avec un
      filet en dessous pour la séparer de la marque sans la souligner. */
   div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-lang_"]) {
-    padding: 0; margin: 0; max-width: 232px; gap: 7px !important;
+    padding: 0; margin: 0; max-width: 118px; gap: 7px !important;
   }
 
   /* La ligne de contexte, sous le ruban : la page courante à gauche, ce sur
@@ -1621,13 +1621,20 @@ with _zone_nav:
     # la barre, elles sont un élément de plus de la même rangée, poussé à
     # droite par une marge automatique : rien à recalculer si la barre se
     # replie.
+    #
+    # DEUX CODES, ET NON DEUX NOMS. « English » et « Français » écrits en
+    # entier demandaient des pastilles larges, et le nom d'une langue lu dans
+    # cette langue même n'apprend rien à qui la cherche : les deux codes ISO
+    # sont la convention de tous les sites bilingues, et ils tiennent dans
+    # une pastille ronde. `i18n.LANGUES` garde les noms complets, qui restent
+    # le libellé juste partout ailleurs.
     with st.container(key="zone_langue"):
         _cl = st.columns(2)
         # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie vient en tête.
         _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
         for _col, _code in zip(_cl, _ordre):
             with _col:
-                st.button(i18n.LANGUES[_code], key=f"lang_{_code}",
+                st.button(_code.upper(), key=f"lang_{_code}",
                           on_click=_changer_langue, args=(_code,),
                           type=("primary"
                                 if st.session_state["choix_langue"] == _code
