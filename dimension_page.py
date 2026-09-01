@@ -103,6 +103,7 @@ TEXTES = {
     "d_pas_de_section": {
         "en": "This indicator is not broken down by communal section.",
         "fr": "Cet indicateur n'est pas ventilé par section communale."},
+    "d_choix_dim": {"en": "Dimension", "fr": "Dimension"},
     "d_onglet_ind2": {"en": "Indicators", "fr": "Indicateurs"},
     "d_onglet_q2": {"en": "Survey results", "fr": "Résultats du questionnaire"},
 }
@@ -369,30 +370,20 @@ def render(cle_dim, complement=None):
     dimension = dict(DIMENSIONS).get(cle_dim)
     teinte = TEINTES.get(cle_dim, "#1a6bb0")
 
-    # Pas de logo ici : il est déjà dans la colonne de gauche et dans la barre
-    # du haut. Un troisième exemplaire sur la même vue n'ajoute rien et pousse
-    # le premier chiffre sous la ligne de flottaison.
-    st.markdown(
-        f'<h2 style="font-size:21.5px;font-weight:700;color:#101728;'
-        f'letter-spacing:-.02em;margin:2px 0 0">{T(cle_dim)}</h2>'
-        f'<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
-        f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
-        f'{T("dim_sous_titre")}</p>', unsafe_allow_html=True)
-
+    # NI TITRE NI SOUS-TITRE ICI. La liste déroulante juste au-dessus porte
+    # déjà le nom de la dimension ; le répéter en 21 px poussait les filtres —
+    # qui commandent tout ce qui suit — sous la ligne de flottaison.
     if not res:
         st.info(T("e_absent"))
         st.stop()
 
-    # La description de la dimension, puis les filtres : le lecteur sait ce
-    # qu'il regarde avant de choisir sur qui il le regarde.
+    filtres.barre(cle=cle_dim)
+
     st.markdown(
         f'<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
         f'solid {teinte};border-radius:14px;padding:13px 17px;font-size:14.5px;'
-        f'color:#3c4761;box-shadow:0 1px 2px rgba(16,23,40,.05),'
-        f'0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px;max-width:96ch">'
+        f'color:#3c4761;margin:6px 0 6px;max-width:96ch">'
         f'{T(cle_dim + "_intro")}</div>', unsafe_allow_html=True)
-
-    filtres.barre(cle=cle_dim)
 
     # LA NOUVELLE ANALYSE DÉTAILLÉE VIENT EN TÊTE, AVANT L'EXISTANT.
     # Elle suit l'ordre dans lequel la donnée se construit : les réponses aux
