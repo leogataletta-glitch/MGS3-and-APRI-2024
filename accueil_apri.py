@@ -33,12 +33,11 @@ entier.
 
 import json
 import os
-from urllib.parse import quote
+import re
 
 import streamlit as st
 
 import i18n
-import icones
 import map_render
 from i18n import T
 
@@ -192,50 +191,70 @@ STYLE = """
      en dessous, on préfère que la page défile. */
   .uma-carte svg { display:block; width:100%; height:auto;
                    margin:0 !important;
-                   max-height: max(205px, calc(100vh - 470px)); }
+                   max-height: max(205px, calc(100vh - 428px)); }
   .uma-carte svg .sea { fill:transparent !important; }
-  /* --- L'ÉCHELLE, DRESSÉE ENTRE LE TEXTE ET LA CARTE -------------------
+  /* --- L'ÉCHELLE, POSÉE DANS LA CARTE ---------------------------------
      QUATRE PAVÉS ALIGNÉS NE SONT PAS UNE ÉCHELLE. « moins de 4,2 · 4,2–4,5 ·
      4,5–4,6 · 4,6 et plus » se lisait comme une liste de catégories : rien
      n'y montrait que les quatre se suivent, ni dans quel sens. Les mêmes
-     couleurs mises bout à bout dans une seule barre le disent d'un coup.
+     couleurs mises bout à bout dans une seule barre le disent d'un coup, et
+     le plus fort se lit en haut comme sur toute échelle graduée.
 
-     ET LA BARRE EST DEBOUT. Couchée au-dessus de la carte, elle prenait de
-     la hauteur sur une page qui doit tenir dans un écran ; dressée dans la
-     bande étroite qui sépare la définition de la carte, elle n'en prend
-     plus, et le plus fort se lit en haut comme sur toute échelle graduée.
+     ELLE EST DANS LA CARTE, ET NON DANS UNE COLONNE À CÔTÉ. Rangée à part,
+     elle restait à deux cents pixels du dessin — et ce n'est pas la colonne
+     qui les séparait, c'est le large vide que la carte porte elle-même à
+     l'ouest de la presqu'île, où la rose des vents et l'échelle
+     kilométrique tiennent seules. La légende vient s'y installer.
+
+     LE DÉCALAGE EST EN POURCENTAGE parce que ce vide l'est aussi : il se
+     resserre avec la carte, et la légende le suit. LE CARTOUCHE BLANC N'EST
+     PAS UN ORNEMENT : quand la fenêtre rétrécit, la place libre finit par
+     manquer et un nom de section passerait dessous. Sur un fond, la légende
+     reste lisible quoi qu'il arrive derrière elle. Elle ne prend pas les
+     clics : la carte reste entière dessous.
 
      SA HAUTEUR SUIT CELLE DE LA CARTE, à la même formule : les deux
      rétrécissent ensemble quand la fenêtre est basse. */
-  /* TOUT EST CALÉ À DROITE DE LA COLONNE, CONTRE LA CARTE. La barre était
-     posée à gauche et les repères remplissaient le reste : l'échelle se
-     retrouvait à cent pixels de ce qu'elle légende, séparée d'elle par du
-     vide. Elle vient maintenant s'appuyer sur le bord de la carte. */
-  .uma-ecv    { margin:2px 0 0; }
+  .uma-zone   { position:relative; }
+  .uma-ecv    { position:absolute; left:9.2%; top:0; width:118px;
+                z-index:2; pointer-events:none; box-sizing:border-box;
+                padding:9px 10px 10px; border-radius:9px;
+                background:rgba(255,255,255,.92);
+                border:1px solid #eaeff5;
+                box-shadow:0 1px 6px rgba(16,23,40,.05);
+                backdrop-filter:blur(1.5px); }
+  .uma-ech-t  { font-size:11px; font-weight:700; color:#8a93a5;
+                letter-spacing:.06em; text-transform:uppercase;
+                margin:0 0 9px; line-height:1.35; text-align:right; }
   .uma-ecv-h  { font-size:11.5px; font-weight:700; color:#3c4761;
                 white-space:nowrap; margin:0 0 8px; text-align:right; }
   .uma-ecv-l  { font-size:11.5px; font-weight:700; color:#3c4761;
                 white-space:nowrap; margin:8px 0 0; text-align:right; }
-  .uma-ech-t  { text-align:right; }
+  /* LES REPÈRES SONT À GAUCHE DE LA BARRE. Posés à sa droite, ils
+     s'intercalaient entre la couleur et le dessin : trente pixels de
+     chiffres entre ce qu'on compare et ce sur quoi on le lit. */
   .uma-ecv-c  { display:flex; align-items:stretch;
                 justify-content:flex-end; }
   .uma-ecv-bar { display:flex; flex-direction:column; width:13px;
-                 flex:0 0 13px;
-                 height:max(180px, calc(100vh - 545px));
+                 flex:0 0 13px; order:2;
+                 height:max(180px, calc(100vh - 500px));
                  border-radius:6px; overflow:hidden;
                  box-shadow:inset 0 0 0 1px rgba(0,0,0,.09); }
   .uma-ecv-bar i { flex:1 1 0; }
-  .uma-ecv-tk { position:relative; flex:0 0 30px; }
-  .uma-ecv-tk span { position:absolute; left:13px; transform:translateY(-50%);
+  .uma-ecv-tk { position:relative; flex:0 0 30px; order:1; }
+  .uma-ecv-tk span { position:absolute; right:5px; transform:translateY(-50%);
                      font-size:11px; color:#7c8698; white-space:nowrap; }
-  .uma-ecv-tk span::before { content:""; position:absolute; left:-6px;
+  .uma-ecv-tk span::before { content:""; position:absolute; right:-5px;
                              top:50%; width:5px; height:1px;
                              background:#ccd4de; }
-  .uma-ech-t  { font-size:11px; font-weight:700; color:#8a93a5;
-                letter-spacing:.06em; text-transform:uppercase;
-                margin:0 0 11px; line-height:1.35; }
-  .uma-n   { font-size:11px; color:#a7b0bb; margin:6px 0 0 2px;
-             line-height:1.5; max-width:70ch; }
+  /* LA MISE EN GARDE SE RANGE SOUS LE DESSIN, ET DONC À DROITE. Calée au
+     bord gauche de la colonne, elle commençait sous la légende et non sous
+     la carte : on la lisait comme une note de la légende. Le `!important`
+     est nécessaire — la règle de justification de l'application porte sur
+     tous les paragraphes du contenu et l'emporterait autrement. */
+  p.uma-n  { font-size:11px; color:#a7b0bb; margin:7px 0 0 auto;
+             line-height:1.5; max-width:58ch;
+             text-align:right !important; }
 
   @media (max-width:760px){ .uma-t{font-size:25px} }
 </style>
@@ -375,25 +394,6 @@ def _mesures(lang):
             "paysages": paysages}
 
 
-def _fond_icone(nom, couleur="#2f6b4f", taille=26):
-    """Une icône du module commun, prête à servir de `background-image`.
-
-    POURQUOI UN FOND ET NON UN MASQUE. Le masque du module `icones` colore le
-    dessin avec la couleur de fond de l'élément — parfait pour une icône seule,
-    inutilisable pour une icône POSÉE DANS une pastille : la pastille et le
-    tracé demanderaient deux couleurs de fond au même élément. En image de
-    fond, la pastille garde son vert pâle et le tracé porte la sienne.
-    """
-    # L'ESPACE DE NOMS EST OBLIGATOIRE DANS UNE URL DE DONNÉES.
-    # Un SVG écrit dans du HTML hérite de l'espace de noms du document ;
-    # chargé comme image, il est un document à lui seul, et sans
-    # `xmlns` le navigateur ne le dessine pas — sans erreur, juste un
-    # fond vide.
-    brut = icones.svg(nom, couleur, taille).replace(
-        "<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ', 1)
-    return 'url("data:image/svg+xml,%s")' % quote(brut)
-
-
 def _aller(mode):
     st.session_state["app_mode"] = mode
 
@@ -403,31 +403,42 @@ def _aller(mode):
 # à qui sait déjà ce qu'il cherche. La page d'accueil s'adresse à qui ne le
 # sait pas encore, et quatre portes se choisissent d'un coup d'œil là où
 # douze se lisent une par une.
-ENTREES = (("po_c1", "monde", "accueil"),
-           ("po_c2", "pousse", "methodologie"),
-           ("po_c3", "barres", "donnees"),
-           ("po_c4", "carte", "dimensions"))
+# L'ORDRE EST CELUI DU MENU, ET C'EST LE SEUL QUI SE DÉFENDE. Deux rangées
+# d'entrées vers les mêmes rubriques, dans deux ordres différents, obligent à
+# relire : le lecteur cherche « Analyse des résultats » en quatrième position
+# parce qu'il l'a vue là-haut, et la trouve en troisième. Elles disent
+# maintenant la même chose dans le même ordre.
+#
+# ET IL N'Y A PLUS DE PICTOGRAMME. Une pastille verte devant chaque titre
+# annonçait une différence entre les quatre portes ; les quatre dessins —
+# un globe, une pousse, des barres, une carte — ne disaient rien que le titre
+# ne dise mieux, et coûtaient cinquante pixels de hauteur sur une page qui
+# doit tenir dans un écran.
+ENTREES = (("po_c1", "accueil"),
+           ("po_c2", "methodologie"),
+           ("po_c4", "dimensions"),
+           ("po_c3", "donnees"))
 
 
 def _css_entrees():
     """La feuille des quatre cartes d'entrée, une règle par carte.
 
-    Streamlit ne pose qu'un seul libellé sur un bouton : la pastille et le
-    texte de description sont donc écrits en CSS, dans les pseudo-éléments
-    ::before et ::after, à partir de textes injectés depuis Python. La feuille
-    étant régénérée à chaque rendu, la description suit la langue.
+    Streamlit ne pose qu'un seul libellé sur un bouton : le texte de
+    description est donc écrit en CSS, dans le pseudo-élément ::after, à
+    partir d'un texte injecté depuis Python. La feuille étant régénérée à
+    chaque rendu, la description suit la langue.
     """
     r = ["<style>"]
-    for cle, ic, _mode in ENTREES:
+    for cle, _mode in ENTREES:
         b = f'div[class*="st-key-po_e_{cle}"] button'
         r.append(f"""
         {b}, {b}[kind="primary"] {{
           display:grid !important;
-          grid-template-rows:auto auto auto; row-gap:0;
-          justify-items:center; align-content:start;
+          grid-template-rows:auto auto; row-gap:0;
+          justify-items:center; align-content:center;
           text-align:center !important;
-          padding:17px 16px 16px !important;
-          min-height:142px !important; height:100% !important;
+          padding:16px 16px 17px !important;
+          min-height:96px !important; height:100% !important;
           background:#ffffff !important;
           border:1px solid #e8edf3 !important; border-radius:12px !important;
           box-shadow:none !important; transform:none !important;
@@ -437,14 +448,8 @@ def _css_entrees():
           border-color:#cfe3d7 !important;
           box-shadow:0 2px 14px rgba(16,23,40,.06) !important;
         }}
-        {b}::before, {b}[kind="primary"]::before {{
-          content:""; grid-row:1;
-          width:44px; height:44px; border-radius:50%;
-          background:#eaf3ed {_fond_icone(ic, taille=21)} center/21px no-repeat;
-          margin-bottom:10px;
-        }}
         {b} > div, {b}[kind="primary"] > div {{
-          grid-row:2; justify-self:center !important; width:auto !important;
+          grid-row:1; justify-self:center !important; width:auto !important;
         }}
         {b} p, {b}[kind="primary"] p {{
           font-size:14px !important; font-weight:700 !important;
@@ -452,7 +457,7 @@ def _css_entrees():
           text-align:center !important; line-height:1.3 !important;
         }}
         {b}::after, {b}[kind="primary"]::after {{
-          content:"{_txt_css(T(cle + 'x'))}"; grid-row:3;
+          content:"{_txt_css(T(cle + 'x'))}"; grid-row:2;
           margin-top:7px; max-width:26ch;
           font-size:12px; font-weight:500; color:#6b7590;
           line-height:1.5; white-space:pre-wrap;
@@ -470,7 +475,7 @@ def _txt_css(t):
 def _entrees():
     st.markdown(_css_entrees(), unsafe_allow_html=True)
     cols = st.columns(len(ENTREES), gap="medium")
-    for col, (cle, _ic, mode) in zip(cols, ENTREES):
+    for col, (cle, mode) in zip(cols, ENTREES):
         with col:
             st.button(T(cle), key=f"po_e_{cle}", on_click=_aller,
                       args=(mode,), use_container_width=True)
@@ -504,12 +509,42 @@ def _carte_indice(m):
     svg = svg.replace(
         "<svg ", '<svg preserveAspectRatio="xMinYMid meet" ', 1).replace(
         "margin:0 auto", "margin:0")
+    svg = _pousser_reperes(svg)
     lo, hi = min(dispo), max(dispo)
     return {"carte": f'<div class="uma-carte">{svg}</div>',
             "echelle": _echelle(seuils_ret),
             "note": _e(T("po_uma_note",
                          a=f"{lo:.1f}".replace(".", ","),
                          b=f"{hi:.1f}".replace(".", ",")))}
+
+
+# La rose des vents et l'échelle kilométrique sont dessinées entre x=46 et
+# x=76 dans un canevas de 920 : elles ouvrent la bande de mer vide où la
+# légende vient se poser, et lui prennent la vingtaine de points qui lui
+# manquent. Les décaler d'autant, vers le bord, rend la bande juste assez
+# large. Les quatre repères portent des classes qui leur sont propres — `cl`
+# pour les traits, `ca` pour la pointe de la flèche, `ct` et `ct2` pour les
+# mots — donc rien d'autre ne bouge. LA POINTE COMPTE AUTANT QUE LE TRAIT :
+# oubliée au premier essai, elle restait en arrière et la flèche se coupait
+# en deux.
+_REPERE = re.compile(r'<(line|text|path)\b[^>]*class="(?:cl|ca|ct|ct2)"[^>]*>')
+_ABSCISSE = re.compile(r'\b(x|x1|x2)="(-?[\d.]+)"')
+_TRACE = re.compile(r'\bd="([^"]*)"')
+
+
+def _pousser_reperes(svg, dx=20):
+    """Décale la rose des vents et l'échelle kilométrique vers le bord."""
+    def _chemin(m):
+        # Le tracé de la pointe est une suite « M x,y L x,y … » : seule
+        # l'abscisse, en tête de chaque couple, se décale.
+        return 'd="%s"' % re.sub(
+            r'(-?[\d.]+),(-?[\d.]+)',
+            lambda c: f'{float(c.group(1)) - dx:g},{c.group(2)}', m.group(1))
+
+    def _un(m):
+        return _TRACE.sub(_chemin, _ABSCISSE.sub(
+            lambda a: f'{a.group(1)}="{float(a.group(2)) - dx:g}"', m.group(0)))
+    return _REPERE.sub(_un, svg)
 
 
 def _echelle(seuils):
@@ -568,22 +603,29 @@ def _comprendre(m):
     # revient au dessin. La mise en garde suit la définition, sous le cadre :
     # elle parle de l'échelle, qui est juste à côté.
     c = _carte_indice(m)
-    g, e, d = st.columns([1, 0.22, 1.5], gap="small")
+    g, d = st.columns([1, 1.75], gap="small")
     with g:
         st.markdown(f'<div class="uma-cadre">'
                     f'<p class="uma-x">{_e(T("po_uma_x"))}</p></div>',
                     unsafe_allow_html=True)
     if not c:
         return
-    with e:
-        st.markdown(c["echelle"], unsafe_allow_html=True)
     with d:
-        # LA MISE EN GARDE EST SOUS LA CARTE, PARCE QU'ELLE PORTE SUR ELLE.
+        # L'ÉCHELLE EST POSÉE DANS LA CARTE, SUR LA MER.
+        # Rangée dans une colonne à part, elle restait à deux cents pixels du
+        # dessin : ce n'est pas la colonne qui les séparait, c'est le large
+        # vide que la carte porte elle-même à l'ouest de la presqu'île — la
+        # rose des vents et l'échelle kilométrique y tiennent seules. La
+        # légende vient s'y installer, et se retrouve à côté de ce qu'elle
+        # légende. Le décalage est en pourcentage : ce vide est proportionnel
+        # à la carte, donc la légende le suit quand la fenêtre change.
+        #
+        # LA MISE EN GARDE EST SOUS LE DESSIN, PARCE QU'ELLE PORTE SUR LUI.
         # Rangée sous la définition, elle passait pour une note de bas de
         # texte ; c'est une légende, et une légende se lit au pied de ce
         # qu'elle légende.
-        st.markdown(c["carte"]
-                    + f'<p class="uma-n">{c["note"]}</p>',
+        st.markdown(f'<div class="uma-zone">{c["echelle"]}{c["carte"]}'
+                    f'<p class="uma-n">{c["note"]}</p></div>',
                     unsafe_allow_html=True)
 
 
