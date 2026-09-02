@@ -119,15 +119,16 @@ TEXTES = {
     # promet un chiffre exact le dément le jour où un indicateur de plus est
     # calculé.
     "po_intro": {
-        "en": "APRI measures the capacity of landscapes and communities to "
-              "anticipate, absorb, adapt and transform. More than {n} "
-              "indicators across seven dimensions reveal where "
-              "vulnerabilities accumulate and where action is most needed.",
-        "fr": "APRI mesure la capacité des paysages et des communautés à "
-              "anticiper, absorber, s'adapter et se transformer. Plus de {n} "
-              "indicateurs répartis en sept dimensions révèlent où les "
-              "vulnérabilités s'accumulent et où l'action est la plus "
-              "nécessaire."},
+        "en": "APRI measures resilience, that is to say the capacity of "
+              "landscapes and communities to anticipate, absorb, adapt and "
+              "transform. More than {n} indicators across seven dimensions "
+              "reveal where negative resilience loops take hold and where "
+              "action is most needed.",
+        "fr": "APRI mesure la résilience, c'est-à-dire la capacité des "
+              "paysages et des communautés à anticiper, absorber, s'adapter "
+              "et se transformer. Plus de {n} indicateurs répartis en sept "
+              "dimensions révèlent où s'installent des boucles de résilience "
+              "négative et où l'action est la plus nécessaire."},
 
     # --- LE SOCLE DE PREUVES
     # LES SEGMENTS ENTRE ** SONT MIS EN GRAS À L'AFFICHAGE. Écrire le gras
@@ -767,8 +768,14 @@ def render():
     # intérêt : on lit ce que fait l'observatoire avant de choisir où aller.
     # Placée sous les cartes, elle aurait été lue par les seuls visiteurs qui
     # n'ont pas cliqué — c'est-à-dire par personne.
-    n_ind = _rond(m.get("n_scores"), 10)
-    st.markdown(f'<p class="uma-i">{_e(T("po_intro", n=n_ind or 50))}</p>',
+    # LE COMPTE EST CELUI DU RÉFÉRENTIEL, PAS CELUI DES SCORES CALCULÉS.
+    # La phrase parle de l'étendue du cadre — ce qu'APRI regarde — et non de
+    # l'avancement du chantier, qui a sa place dans le cadre de résilience où
+    # il est dit dimension par dimension. Le nombre reste compté dans le
+    # fichier et arrondi à la centaine inférieure : « plus de » doit rester
+    # vrai quel que soit le référentiel.
+    n_ind = _rond(sum(e["n"] for e in (m.get("dims") or {}).values()), 100)
+    st.markdown(f'<p class="uma-i">{_e(T("po_intro", n=n_ind or 100))}</p>',
                 unsafe_allow_html=True)
     _entrees()
     _comprendre(m)
