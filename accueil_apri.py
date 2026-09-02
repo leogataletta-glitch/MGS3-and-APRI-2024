@@ -130,24 +130,27 @@ TEXTES = {
               "dimensions révèlent où s'installent des boucles de résilience "
               "négative et où l'action est la plus nécessaire."},
 
-    # --- LE SOCLE DE PREUVES
-    # LES SEGMENTS ENTRE ** SONT MIS EN GRAS À L'AFFICHAGE. Écrire le gras
-    # dans le texte plutôt que de découper la phrase en morceaux dans le code
-    # est ce qui permet aux deux langues de ne pas mettre l'accent aux mêmes
-    # endroits — l'anglais insiste sur la source, le français sur l'ampleur.
+    # --- LE SOCLE DE PREUVES, EN QUATRE MARCHES
+    # CHAQUE MARCHE SE LIT « MOT D'AVANT · NOMBRE · MOT D'APRÈS ». Découper
+    # ainsi plutôt que d'écrire une phrase entière est ce qui permet aux deux
+    # langues de placer le nombre où leur syntaxe le veut : l'anglais dit
+    # « across 10 communal sections », le français « dans 10 sections
+    # communales », et le mot d'avant est vide sur la première marche.
     "po_socle_sur": {"en": "An unprecedented evidence base",
                      "fr": "Une base de preuves sans précédent"},
-    "po_socle_x": {
-        "en": "APRI draws on more than **{m} household surveys** across "
-              "**{s} communal sections**, together with biodiversity "
-              "measurements and spatial analysis conducted over **several "
-              "months** by biologists, sociologists and economists in **two "
-              "pilot territories**.",
-        "fr": "APRI s'appuie sur plus de **{m} enquêtes ménage** réparties "
-              "sur **{s} sections communales**, ainsi que sur des mesures de "
-              "biodiversité et des analyses spatiales conduites pendant "
-              "**plusieurs mois** par des biologistes, des sociologues et "
-              "des économistes, dans **deux territoires pilotes**."},
+    "po_s1_z": {"en": "household surveys", "fr": "enquêtes ménage"},
+    "po_s2_a": {"en": "across", "fr": "dans"},
+    "po_s2_z": {"en": "communal sections", "fr": "sections communales"},
+    "po_s3_a": {"en": "over several", "fr": "plusieurs"},
+    "po_s3_n": {"en": "months", "fr": "mois"},
+    "po_s3_z": {"en": "of biodiversity measurements and spatial analysis",
+                "fr": "de mesures de biodiversité et d'analyses spatiales"},
+    "po_s4_a": {"en": "with biologists, sociologists and economists "
+                      "working across",
+                "fr": "des biologistes, sociologues et économistes "
+                      "mobilisés dans"},
+    "po_s4_n": {"en": "two", "fr": "deux"},
+    "po_s4_z": {"en": "pilot territories", "fr": "territoires pilotes"},
     # LA CARTE NE PORTE PLUS DE SCORE : son titre dit donc ce qu'elle
     # montre, c'est-à-dire l'emprise de l'enquête et rien d'autre.
     "po_carte_cap": {
@@ -205,49 +208,71 @@ STYLE = """
      LE `!important` N'EST PAS UN CAPRICE : la feuille de l'application fixe
      14,5 px et la justification à tous les paragraphes du contenu, avec une
      spécificité supérieure à celle d'une classe. */
+  /* LE MÊME FILET VERT QUE LE SOCLE, en haut et en bas de la page : les deux
+     blocs de texte se répondent, et la marge gauche tient debout. Le texte
+     est justifié, avec la césure — sur quatre-vingts signes, les blancs
+     restent réguliers, et `lang` porté par le paragraphe dit au navigateur
+     quel dictionnaire de coupure appliquer. */
   p.uma-i  { font-size:15.5px !important; line-height:1.62 !important;
              font-family:Georgia,"Times New Roman",serif; font-style:italic;
              font-weight:400; color:#26364a !important;
-             margin:16px 0 6px !important; max-width:74ch;
-             text-align:left !important; }
+             margin:16px 0 6px !important; max-width:84ch;
+             border-left:3px solid #1a6b52; padding-left:24px;
+             text-align:justify !important;
+             hyphens:auto; -webkit-hyphens:auto; }
 
-  /* --- LE SOCLE DE PREUVES ----------------------------------------------
-     UN CADRE, ET UN SEUL SUR LA PAGE. Les portes sont des cartes parce
-     qu'on les prend ; la carte du territoire n'a ni fond ni bord. Le socle
-     est le troisième objet, et l'encadrer le pose comme un bloc qui se lit
-     d'un tenant plutôt que comme un paragraphe qui traîne à côté du dessin.
-     Le filet vert du bord gauche reste : c'est lui qui le rattache à la
-     marge et qui reprend le vert du cadre de résilience.
+  /* --- LE SOCLE DE PREUVES, EN ESCALIER ---------------------------------
+     LE PARAGRAPHE EST DEVENU QUATRE CHIFFRES. Justifié dans son cadre, il
+     disait la même chose, mais il fallait le lire en entier pour retrouver
+     l'ampleur — mille deux cents, dix, plusieurs mois, deux. Ce sont ces
+     quatre nombres qu'on doit emporter ; ils passent donc devant, en grand,
+     et la phrase se réduit aux mots qui les relient.
 
-     LE TEXTE EST JUSTIFIÉ, ET LA CÉSURE EST INDISPENSABLE. Une colonne de
-     quarante-huit signes justifiée sans césure creuse des couloirs blancs
-     au milieu des lignes — le défaut exact qui avait fait annuler la
-     justification dans les cartes. `hyphens:auto` coupe les mots longs et
-     rend les blancs réguliers ; le préfixe `-webkit-` n'est pas décoratif,
-     c'est la seule forme que reconnaissent encore certains navigateurs.
+     LE DÉCROCHEMENT EST CE QUI FAIT LIRE DANS L'ORDRE. Quatre lignes alignées
+     à gauche se lisent comme une liste, où rien ne vient avant rien. Décalées
+     l'une sous l'autre, elles se lisent comme un parcours : l'enquête, le
+     territoire, la durée, les deux paysages. Le pointillé ne fait que suivre
+     ce parcours ; c'est un décor, il ne porte aucune information.
 
-     LA MESURE EN `ch` SE CALCULE SUR LA POLICE DU CADRE, PAS SUR CELLE DU
-     TEXTE. Le cadre porte donc lui aussi la taille, sans quoi une boîte
-     annoncée à quarante-huit signes n'en tiendrait que trente-cinq.
-
-     LES CHIFFRES SONT EN GRAS PARCE QU'ILS SONT LA PREUVE. Le reste de la
-     phrase est du liant ; ce qu'on doit retenir, c'est l'ampleur — le nombre
-     d'enquêtes, le nombre de sections, le nombre de territoires. */
+     LE POINTILLÉ EST ÉTIRÉ, LE TRAIT NE L'EST PAS. Le tracé est posé en
+     `preserveAspectRatio="none"` pour épouser le bloc quelle que soit la
+     langue — le français prend une ligne de plus que l'anglais. Sans
+     `vector-effect:non-scaling-stroke`, les pointillés seraient étirés avec
+     lui et deviendraient des tirets inégaux. */
   .uma-sur { font-size:11px; font-weight:700; color:#8a93a5;
              letter-spacing:.09em; text-transform:uppercase;
              margin:0 0 10px; }
-  .uma-socle { border:1px solid #dde9e3; border-left:4px solid #1a6b52;
-               border-radius:12px; background:#f7faf8;
-               font-size:16px;
-               padding:20px 24px 22px; margin:4px 0 0; max-width:58ch;
-               box-shadow:0 1px 2px rgba(16,23,40,.04); }
-  .uma-socle .uma-sur { color:#12314c; font-size:11.5px;
-                        letter-spacing:.105em; margin:0 0 12px; }
-  p.uma-s  { font-size:16px !important; line-height:1.8 !important;
-             color:#33455c !important; margin:0 !important; font-weight:400;
-             text-align:justify !important;
-             hyphens:auto; -webkit-hyphens:auto; }
-  p.uma-s b { font-weight:700; color:#12314c; }
+  .uma-socle { border-left:3px solid #1a6b52; padding:2px 0 4px 26px;
+               margin:6px 0 0; }
+  .uma-socle .uma-sur { color:#1a6b52; font-size:12px;
+                        letter-spacing:.11em; margin:0 0 20px; }
+  .uma-esc { position:relative; }
+  /* Le tracé passe SOUS les mots : posé au-dessus, il barrerait les
+     chiffres au premier changement de langue. */
+  .uma-fil { position:absolute; left:0; top:0; width:100%; height:100%;
+             pointer-events:none; z-index:0; overflow:visible; }
+  .uma-pousse { position:absolute; left:2px; top:-4px; z-index:0; }
+  .uma-e { position:relative; z-index:1; display:flex; align-items:baseline;
+           gap:11px; margin:0 0 15px; }
+  /* TOUT S'ALIGNE SUR LA PREMIÈRE LIGNE DE BASE, mots d'avant compris.
+     `align-self:last baseline` avait l'air plus juste sur la quatrième
+     marche — c'est sa seconde ligne qui doit venir sous le nombre — mais en
+     flexbox les éléments alignés par la DERNIÈRE ligne de base forment un
+     second groupe, plaqué contre le bas de la rangée : sur la troisième
+     marche, dont le mot d'après tient sur deux lignes, « plusieurs »
+     décrochait d'une ligne entière sous « mois ». Une règle qui corrige une
+     marche et en casse une autre n'est pas une règle. */
+  .uma-av { font-size:14.5px; color:#5a6a80; line-height:1.35;
+            text-align:right; flex:0 0 auto; max-width:31ch; }
+  /* LE MÊME ROMAIN À EMPATTEMENTS QUE LA PHRASE D'OUVERTURE. Les deux blocs
+     se répondent en haut et en bas de la colonne ; une troisième police les
+     aurait séparés sans raison. */
+  .uma-nb { font-family:Georgia,"Times New Roman",serif; font-size:44px;
+            line-height:1; color:#1f7a4d; letter-spacing:-.015em;
+            white-space:nowrap; flex:0 0 auto; }
+  .uma-ap { font-size:14.5px; color:#33455c; line-height:1.35;
+            max-width:26ch; }
+
   /* LA CARTE N'A NI CADRE NI FOND, ET LA MER EST TRANSPARENTE.
      Encadrée sur un aplat bleu, elle formait une vignette collée au milieu
      d'une page blanche — un objet rapporté. Le rectangle marin est effacé
@@ -681,22 +706,64 @@ def _nombre(v):
     return t.replace(",", " ") if i18n.get_lang() == "fr" else t
 
 
-def _socle(m):
-    """Le paragraphe de preuve, ses chiffres comptés et ses gras posés.
+# LE TRACÉ EST UN DÉCOR, ET IL EST ÉCRIT UNE FOIS POUR TOUTES. Il relie les
+# quatre marches dans l'ordre de lecture ; ses coordonnées sont posées dans un
+# repère de 623 sur 225 que le navigateur étire au bloc réel. Le trait, lui,
+# ne s'étire pas (`non-scaling-stroke`) : les pointillés restent ronds et
+# réguliers quelle que soit la déformation.
+_FIL = """<svg class="uma-fil" viewBox="0 0 623 225" preserveAspectRatio="none"
+ aria-hidden="true" focusable="false">
+  <path d="M14,6 C2,28 8,48 34,60 C62,72 92,64 110,80
+           C126,96 142,116 160,140 C186,156 214,166 244,188"
+        fill="none" stroke="#1f7a4d" stroke-width="1.6" stroke-linecap="round"
+        stroke-dasharray="1.5 7" vector-effect="non-scaling-stroke"
+        opacity=".62"/>
+</svg>"""
 
-    LES `**` VIENNENT DU TEXTE, LE `<b>` EST POSÉ ICI. Le texte est échappé
-    d'abord — sans quoi une traduction contenant un chevron ouvrirait une
-    balise — puis seuls les segments marqués deviennent du gras. C'est
-    l'inverse de l'ordre naturel, et c'est le seul ordre sûr.
+# La pousse est dessinée à part, dans un SVG à ses propres proportions : mise
+# dans le tracé étiré, elle serait écrasée avec lui.
+_POUSSE = """<svg class="uma-pousse" width="26" height="26" viewBox="0 0 26 26"
+ aria-hidden="true" focusable="false">
+  <path d="M13,24 C13,16 13,10 13,5" fill="none" stroke="#1f7a4d"
+        stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M13,11 C13,4 17,1 23,1 C23,7 19,11 13,11 Z" fill="#1f7a4d"
+        opacity=".85"/>
+  <path d="M13,16 C13,11 10,8 5,8 C5,13 8,16 13,16 Z" fill="#1f7a4d"
+        opacity=".5"/>
+</svg>"""
+
+
+def _marche(avant, nombre, apres, decalage):
+    """Une marche : le mot d'avant, le nombre en grand, le mot d'après."""
+    return (f'<div class="uma-e" style="padding-left:{decalage}px">'
+            + (f'<span class="uma-av">{_e(avant)}</span>' if avant else "")
+            + f'<span class="uma-nb">{_e(nombre)}</span>'
+            + f'<span class="uma-ap">{_e(apres)}</span></div>')
+
+
+def _socle(m):
+    """Les quatre nombres du socle, en escalier, reliés par un pointillé.
+
+    LES NOMBRES SONT COMPTÉS DANS LES DONNÉES, les mots viennent des
+    traductions. Le décalage de chaque marche est écrit ici plutôt que dans
+    la feuille de style : il n'a de sens que par rapport aux trois autres, et
+    quatre valeurs qui se règlent ensemble se lisent mieux côte à côte.
     """
     menages = _rond(m.get("menages"), 100)
     sections = len(m.get("sections_n") or {}) or len(SECTIONS)
-    t = _e(T("po_socle_x",
-             m=_nombre(menages) if menages else "1 200",
-             s=sections))
-    bouts = t.split("**")
-    return "".join(b if i % 2 == 0 else f"<b>{b}</b>"
-                   for i, b in enumerate(bouts))
+    marches = [
+        # La première marche n'a pas de mot d'avant : le nombre ouvre la
+        # phrase dans les deux langues. On passe une chaîne vide plutôt
+        # qu'une clé de traduction vide — une clé sans texte s'affiche
+        # sous son propre nom.
+        ("", (_nombre(menages) if menages else "1 200") + "+",
+         T("po_s1_z"), 50),
+        (T("po_s2_a"), str(sections), T("po_s2_z"), 76),
+        (T("po_s3_a"), T("po_s3_n"), T("po_s3_z"), 96),
+        (T("po_s4_a"), T("po_s4_n"), T("po_s4_z"), 32),
+    ]
+    return ('<div class="uma-esc">' + _FIL + _POUSSE
+            + "".join(_marche(*x) for x in marches) + '</div>')
 
 
 def _comprendre(m):
@@ -726,18 +793,11 @@ def _comprendre(m):
     # découpent la ligne. Plus la ligne est longue, plus les blancs se
     # répartissent. La carte perd la largeur correspondante et rétrécit
     # d'autant en hauteur : la page y gagne même de l'air.
-    g, d = st.columns([1.25, 1.6], gap="medium")
+    g, d = st.columns([1.42, 1.5], gap="medium")
     with g:
         st.markdown(f'<div class="uma-socle">'
                     f'<div class="uma-sur">{_e(T("po_socle_sur"))}</div>'
-                    # `lang` N'EST PAS DÉCORATIF : la césure automatique
-                    # applique le dictionnaire de la langue déclarée, et le
-                    # document est en anglais pour Streamlit. Sans cet
-                    # attribut, le texte français serait coupé selon les
-                    # règles anglaises — ou pas coupé du tout.
-                    f'<p class="uma-s" lang="{i18n.get_lang()}">'
-                    f'{_socle(m)}</p></div>',
-                    unsafe_allow_html=True)
+                    f'{_socle(m)}</div>', unsafe_allow_html=True)
     if not c:
         return
     with d:
@@ -775,7 +835,8 @@ def render():
     # fichier et arrondi à la centaine inférieure : « plus de » doit rester
     # vrai quel que soit le référentiel.
     n_ind = _rond(sum(e["n"] for e in (m.get("dims") or {}).values()), 100)
-    st.markdown(f'<p class="uma-i">{_e(T("po_intro", n=n_ind or 100))}</p>',
+    st.markdown(f'<p class="uma-i" lang="{i18n.get_lang()}">'
+                f'{_e(T("po_intro", n=n_ind or 100))}</p>',
                 unsafe_allow_html=True)
     _entrees()
     _comprendre(m)
