@@ -336,52 +336,6 @@ TEXTES = {
               "the wave travel, isolate a loop.",
         "fr": "L'outil est dans l'onglet **Boucles de rétroaction** : "
               "poussez un levier, suivez l'onde, isolez une boucle."},
-    # ================= STRATE 1, les quatre cartouches de tête =============
-    "cad_n1_t": {"en": "What APRI measures", "fr": "Ce que mesure APRI"},
-    "cad_n1": {"en": "A territory's capacity to anticipate, absorb and adapt "
-                     "to disturbances.",
-               "fr": "La capacité d'un territoire à anticiper, absorber et "
-                     "s'adapter aux perturbations."},
-    "cad_n2_t": {"en": "What the index captures", "fr": "Ce que l'indice saisit"},
-    "cad_n2": {"en": "The capacities a territory already holds before a shock, "
-                     "across {n} dimensions of resilience.",
-               "fr": "Les capacités que le territoire détient déjà avant le "
-                     "choc, sur {n} dimensions de la résilience."},
-    "cad_n3_t": {"en": "How it is measured", "fr": "Comment il est mesuré"},
-    "cad_n3": {"en": "A 0 to 10 score built from {i} indicators and three "
-                     "independent data sources.",
-               "fr": "Un score de 0 à 10 construit sur {i} indicateurs et "
-                     "trois sources de données indépendantes."},
-    "cad_n4_t": {"en": "What it does NOT measure",
-                 "fr": "Ce qu'il ne mesure PAS"},
-    "cad_n4": {"en": "Not the damage suffered after an event, and not a "
-                     "forecast of what a hazard will cost.",
-               "fr": "Ni les dommages subis après un événement, ni une "
-                     "prévision de ce que coûtera un aléa."},
-
-    # ================= le schéma d'ensemble ==================================
-    "cad_apercu": {"en": "APRI at a glance", "fr": "APRI en un coup d'œil"},
-    "cad_ap_note": {
-        "en": "Read left to right: the index is defined by three attributes, "
-              "spread over dimensions, computed from indicators, and returned "
-              "as one score. Every figure below is counted from the framework "
-              "file, not written by hand.",
-        "fr": "De gauche à droite : l'indice se définit par trois attributs, "
-              "se déploie en dimensions, se calcule sur des indicateurs, et "
-              "se rend en un score. Chaque chiffre ci-dessous est compté dans "
-              "le fichier du référentiel, non écrit à la main."},
-    "cad_ap_1": {"en": "attributes", "fr": "attributs"},
-    "cad_ap_2": {"en": "dimensions", "fr": "dimensions"},
-    "cad_ap_3": {"en": "indicators", "fr": "indicateurs"},
-    "cad_ap_3x": {"en": "{f} scored to date", "fr": "{f} scorés à ce jour"},
-    "cad_ap_4": {"en": "score", "fr": "score"},
-    "cad_ap_4x": {"en": "0 = most critical, 10 = most favourable",
-                  "fr": "0 = le plus critique, 10 = le plus favorable"},
-    "cad_ap_1x": {"en": "anticipate · absorb · adapt",
-                  "fr": "anticiper · absorber · s'adapter"},
-    "cad_ap_2x": {"en": "{s} carrying a computed indicator",
-                  "fr": "{s} portant un indicateur calculé"},
-
     # ================= les trois sources =====================================
     "cad_src": {"en": "How the index is built", "fr": "Comment l'indice est construit"},
     "cad_src_note": {
@@ -731,6 +685,47 @@ STYLE = """
   .cad-n-t, .cad-carte-x { text-align:left !important; }
   .cad-fl-n, .cad-fl-l, .cad-fl-x { text-align:center !important; }
 
+  /* --- les trois attributs, en colonnes numérotées ------------------------
+     TROIS COLONNES ÉGALES, SÉPARÉES PAR UN FILET, ET AUCUNE CARTE. Les trois
+     attributs étaient dans trois cartes encadrées, comme les portes de la
+     page d'accueil : un cadre annonce qu'on peut prendre l'objet, or il n'y
+     a rien à cliquer ici. Le filet vertical suffit à dire que ce sont trois
+     colonnes et non un paragraphe en trois morceaux.
+
+     LE NUMÉRO EST MAIGRE ET GRAND. Gros et gras, il aurait pesé plus que le
+     mot qu'il annonce ; maigre, il donne l'ordre sans le disputer. */
+  .cad-aaa  { display:grid; grid-template-columns:repeat(3,1fr);
+              margin-top:4px; }
+  .cad-a    { padding:6px 30px 2px 0; }
+  .cad-a + .cad-a { border-left:1px solid #e6ecf2; padding-left:30px; }
+  .cad-a-h  { display:flex; align-items:center; gap:14px; margin-bottom:24px; }
+  .cad-a-n  { font-size:56px; font-weight:200; line-height:1;
+              color:#1b5e3a; letter-spacing:.01em;
+              font-variant-numeric:tabular-nums; flex:0 0 auto; }
+  .cad-a-i  { width:50px; height:50px; border-radius:50%; background:#eef3ef;
+              display:flex; align-items:center; justify-content:center;
+              flex:0 0 auto; }
+  /* Le trait s'arrête sur un point : une ligne qui se termine dans le vide
+     se lit comme une ligne coupée. */
+  .cad-a-l  { flex:1 1 auto; height:1px; background:#cfe0d6;
+              position:relative; min-width:24px; }
+  .cad-a-l::after { content:""; position:absolute; right:0; top:-2.5px;
+              width:6px; height:6px; border-radius:50%; background:#1b5e3a; }
+  .cad-a-t  { font-size:16px; font-weight:700; color:#1a6b52;
+              letter-spacing:.055em; text-transform:uppercase;
+              margin:0 0 9px; }
+  p.cad-a-x { font-size:14.5px !important; color:#3c4761 !important;
+              line-height:1.55 !important; margin:0 !important;
+              text-align:left !important; max-width:36ch; }
+  /* En dessous de neuf cents pixels, trois colonnes de trente signes ne se
+     lisent plus : elles se remettent l'une sous l'autre, et le filet passe
+     de la gauche au haut. */
+  @media (max-width: 900px) {
+    .cad-aaa { grid-template-columns:1fr; }
+    .cad-a + .cad-a { border-left:0; border-top:1px solid #e6ecf2;
+                      padding-left:0; padding-top:22px; margin-top:18px; }
+  }
+
   /* --- la phrase qui ouvre le premier onglet ------------------------------
      LE `!important` EST NÉCESSAIRE : la feuille de l'application fixe
      14,5 px et la justification à tout paragraphe du contenu, avec une
@@ -951,67 +946,34 @@ def _icone(nom, couleur):
             + icones.svg(nom, couleur=couleur, taille=19) + '</div>')
 
 
-def _tete(stats, n_sec_avec):
-    """STRATE 1 — quatre cartouches, et rien d'autre à lire.
-
-    LES QUATRE QUESTIONS SONT CELLES QU'ON POSE DANS CET ORDRE : ce que
-    l'indice mesure, ce qu'il saisit, comment il le mesure, et — la plus
-    utile — ce qu'il ne mesure pas. La quatrième est traitée comme les trois
-    autres, en carte pleine et non en note de bas de page : une limite qu'on
-    lit après coup n'a jamais empêché personne de se tromper.
-    """
-    n = [("cad_n1", "cible", "#2166ac", {}),
-         ("cad_n2", "bouclier", "#1a8a4f", {"n": len(stats["dims"])}),
-         ("cad_n3", "barres", "#d1730c", {"i": stats["n"]}),
-         ("cad_n4", "info", "#8a93a5", {})]
-    fond = ' style="background:#fafbfd"'
-    return ('<div class="cad-grille" style="margin:14px 0 2px">' + "".join(
-        '<div class="cad-n"' + (fond if k == "cad_n4" else "") + '>'
-        + _icone(ic, c)
-        + f'<p class="cad-n-t">{_e(T(k + "_t"))}</p>'
-        + f'<p class="cad-n-x">{_e(T(k, **kw))}</p></div>'
-        for k, ic, c, kw in n) + '</div>')
-
-
-def _apercu(stats, n_sec_avec):
-    """Le schéma d'ensemble : APRI → attributs → dimensions → indicateurs → score.
-
-    Quatre pavés chiffrés reliés par des chevrons. Les chiffres viennent du
-    référentiel : sept dimensions parce qu'il en compte sept, cent vingt-huit
-    indicateurs parce qu'il en liste cent vingt-huit. Un schéma de méthode qui
-    annoncerait un compte faux se retournerait contre la méthode.
-    """
-    cases = [("3", T("cad_ap_1"), T("cad_ap_1x")),
-             (str(len(stats["dims"])), T("cad_ap_2"),
-              T("cad_ap_2x", s=n_sec_avec)),
-             (str(stats["n"]), T("cad_ap_3"),
-              T("cad_ap_3x", f=stats["faits"])),
-             ("0–10", T("cad_ap_4"), T("cad_ap_4x"))]
-    blocs = []
-    for i, (v, lab, sous) in enumerate(cases):
-        if i:
-            blocs.append('<div class="cad-fl-c">&rsaquo;</div>')
-        blocs.append(f'<div class="cad-fl"><div class="cad-fl-n">{_e(v)}</div>'
-                     f'<div class="cad-fl-l">{_e(lab)}</div>'
-                     f'<div class="cad-fl-x">{_e(sous)}</div></div>')
-    return '<div class="cad-flux">' + "".join(blocs) + '</div>'
-
-
 def _attributs():
-    """Les trois attributs, en cartes égales — c'est la définition d'APRI."""
-    return ('<div class="cad-grille">' + "".join(
-        f'<div class="cad-n" style="flex:1 1 240px;border-top:3px solid {c}">'
-        + _icone(ic, c)
-        + f'<p class="cad-n-t" style="font-size:14.5px">{_e(T(k + "_t"))}</p>'
-        + f'<p class="cad-n-x">{_e(T(k))}</p></div>'
-        # UNE SEULE TEINTE POUR LES TROIS. Bleu, orange et vert donnaient à
-        # croire que les trois capacités sont de natures différentes ; elles
-        # sont les trois faces d'une même définition. Le vert du site les
-        # tient ensemble, et rien d'autre sur la page ne change de couleur.
-        for k, ic, c in (("cad_a1", "loupe", VERT_APRI),
-                         ("cad_a2", "bouclier", VERT_APRI),
-                         ("cad_a3", "rafraichir", VERT_APRI)))
-        + '</div>')
+    """Les trois attributs, en trois colonnes numérotées.
+
+    C'EST LE SEUL CONTENU DU PREMIER ONGLET, et il porte donc toute la
+    définition. Les quatre cartouches d'ouverture et le schéma d'ensemble qui
+    l'entouraient ont été retirés : ils répondaient à quatre questions à la
+    fois, et aucune ne disait en une ligne ce qu'APRI mesure. La phrase le dit
+    maintenant, au-dessus ; ces trois colonnes la déplient, et rien d'autre.
+
+    LE NUMÉRO EST GROS ET MAIGRE, ET C'EST VOULU. Il donne l'ordre de lecture
+    sans peser autant que le mot qu'il précède — anticiper vient avant
+    absorber, qui vient avant s'adapter, parce que c'est l'ordre du temps.
+    Le trait qui part du pictogramme et s'achève sur un point ne dit rien de
+    plus : il tient la colonne et l'ouvre vers la droite.
+    """
+    cols = []
+    for i, (k, ic) in enumerate((("cad_a1", "loupe"), ("cad_a2", "bouclier"),
+                                 ("cad_a3", "rafraichir")), start=1):
+        cols.append(
+            '<div class="cad-a">'
+            '<div class="cad-a-h">'
+            f'<span class="cad-a-n">{i:02d}</span>'
+            f'<span class="cad-a-i">'
+            + icones.svg(ic, couleur=VERT_APRI, taille=21) + '</span>'
+            '<span class="cad-a-l"></span></div>'
+            f'<div class="cad-a-t">{_e(T(k + "_t"))}</div>'
+            f'<p class="cad-a-x">{_e(T(k))}</p></div>')
+    return '<div class="cad-aaa">' + "".join(cols) + '</div>'
 
 
 def _sources(menages, n_ocb):
@@ -1137,7 +1099,7 @@ def render(doc_complet=None):
     elif vue == "document":
         _v_document(doc_complet)
     else:
-        _v_mesure(stats)
+        _v_mesure()
 
 
 def _titre(cle, note=None, marge=4):
@@ -1148,30 +1110,21 @@ def _titre(cle, note=None, marge=4):
 
 
 # --- 1 · ce que mesure APRI -------------------------------------------------
-def _v_mesure(stats):
-    """La définition, et rien qui ressemble à de la méthode.
+def _v_mesure():
+    """Une phrase, puis les trois attributs. Rien d'autre.
 
-    QUATRE CARTOUCHES, TROIS ATTRIBUTS, UN SCHÉMA D'ENSEMBLE. La quatrième
-    carte dit ce que l'indice ne mesure PAS, et elle est traitée comme les
-    trois autres : une limite qu'on lit après coup n'a jamais empêché
-    personne de se tromper.
+    L'ONGLET DISAIT TROP DE CHOSES À LA FOIS. Quatre cartouches d'ouverture,
+    les trois attributs, puis un schéma d'ensemble en quatre pavés chiffrés :
+    trois réponses empilées à la question « qu'est-ce qu'APRI mesure ? »,
+    dont aucune ne la donnait en une ligne. La phrase la donne, et les trois
+    attributs la déplient. Le reste — la portée de l'indice, ce qu'il ne
+    mesure pas, le compte des dimensions et des indicateurs — est dit dans
+    les onglets qui traitent de ces sujets, et mieux qu'ici.
     """
-    n_sec_avec = sum(1 for e in stats["dims"].values() if e["faits"])
-    # LA PHRASE D'ABORD, LES CARTES ENSUITE. L'onglet s'ouvrait sur quatre
-    # cartouches : quatre réponses à la fois, dont aucune ne disait en une
-    # ligne ce qu'APRI mesure. La phrase le dit, et le mot qui compte est
-    # « système complexe adaptatif » — c'est lui qui explique pourquoi le
-    # site parle ensuite de boucles et de rétroactions plutôt que d'un simple
-    # classement. Elle porte la même italique à empattements que la phrase
-    # d'ouverture de l'accueil : les deux disent la même chose, à deux
-    # endroits, et se reconnaissent.
     st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>',
                 unsafe_allow_html=True)
-    st.markdown(_tete(stats, n_sec_avec), unsafe_allow_html=True)
-    st.markdown(_titre("cad_aaa", "cad_aaa_note", marge=30) + _attributs(),
+    st.markdown(_titre("cad_aaa", "cad_aaa_note", marge=32) + _attributs(),
                 unsafe_allow_html=True)
-    st.markdown(_titre("cad_apercu", "cad_ap_note", marge=30)
-                + _apercu(stats, n_sec_avec), unsafe_allow_html=True)
 
 
 # --- 2 · comment la résilience est mesurée ----------------------------------
