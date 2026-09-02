@@ -100,6 +100,13 @@ TEXTES = {
         "fr": "10 est la configuration la plus favorable, 0 la plus critique. "
               "C'est une position relative, pas une probabilité."},
 
+    # --- LA PHRASE QUI OUVRE LE PREMIER ONGLET
+    "cad_uma": {
+        "en": "APRI measures the resilience of a landscape, understood as a "
+              "complex adaptive system.",
+        "fr": "APRI mesure la résilience d'un paysage, compris comme un "
+              "système complexe adaptatif."},
+
     # --- le cadre AAA
     "cad_aaa": {"en": "Three attributes, read across every dimension",
                 "fr": "Trois attributs, lus sur chaque dimension"},
@@ -724,6 +731,17 @@ STYLE = """
   .cad-n-t, .cad-carte-x { text-align:left !important; }
   .cad-fl-n, .cad-fl-l, .cad-fl-x { text-align:center !important; }
 
+  /* --- la phrase qui ouvre le premier onglet ------------------------------
+     LE `!important` EST NÉCESSAIRE : la feuille de l'application fixe
+     14,5 px et la justification à tout paragraphe du contenu, avec une
+     spécificité supérieure à celle d'une classe. */
+  p.cad-uma { font-size:19px !important; line-height:1.6 !important;
+              font-family:Georgia,"Times New Roman",serif; font-style:italic;
+              font-weight:400; color:#26364a !important;
+              margin:18px 0 4px !important; max-width:62ch;
+              border-left:3px solid #1a6b52; padding-left:22px;
+              text-align:left !important; }
+
   /* --- les sept onglets de tête ------------------------------------------
      UNE RANGÉE, SEPT CASES DE MÊME LARGEUR. Le sélecteur reste un `st.radio`
      — c'est lui qui retient le code de la vue et qui survit au changement de
@@ -746,8 +764,17 @@ STYLE = """
       transition:background .12s ease, border-color .12s ease; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"] > label:hover {
       border-color:#b6d8c6 !important; background:#f6fbf8 !important; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label > div:first-child {
-      display:none !important; }
+  /* LA PASTILLE RONDE EST ENFOUIE DE TROIS NIVEAUX. Ce n'est ni le premier
+     enfant du label — c'est le champ, que Streamlit cache déjà hors écran —
+     ni un pseudo-élément : c'est un vrai `div` de quatorze pixels, arrondi à
+     50 %, premier enfant de la boîte qui aligne la pastille et le libellé.
+     Deux règles écrites de mémoire l'ont manquée ; celle-ci nomme le chemin
+     complet. Le `gap` est remis à zéro pour reprendre la place qu'elle
+     occupait, et le libellé prend toute la largeur de la case. */
+  div[class*="st-key-cad_nav"] div[role="radiogroup"]
+      > label > div > div > div:first-child { display:none !important; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label > div > div {
+      gap:0 !important; width:100% !important; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"] > label > div:last-child {
       width:100%; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"] > label p {
@@ -1130,6 +1157,16 @@ def _v_mesure(stats):
     personne de se tromper.
     """
     n_sec_avec = sum(1 for e in stats["dims"].values() if e["faits"])
+    # LA PHRASE D'ABORD, LES CARTES ENSUITE. L'onglet s'ouvrait sur quatre
+    # cartouches : quatre réponses à la fois, dont aucune ne disait en une
+    # ligne ce qu'APRI mesure. La phrase le dit, et le mot qui compte est
+    # « système complexe adaptatif » — c'est lui qui explique pourquoi le
+    # site parle ensuite de boucles et de rétroactions plutôt que d'un simple
+    # classement. Elle porte la même italique à empattements que la phrase
+    # d'ouverture de l'accueil : les deux disent la même chose, à deux
+    # endroits, et se reconnaissent.
+    st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>',
+                unsafe_allow_html=True)
     st.markdown(_tete(stats, n_sec_avec), unsafe_allow_html=True)
     st.markdown(_titre("cad_aaa", "cad_aaa_note", marge=30) + _attributs(),
                 unsafe_allow_html=True)
