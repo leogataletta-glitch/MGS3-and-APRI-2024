@@ -137,18 +137,16 @@ TEXTES = {
     "po_socle_sur": {"en": "An unprecedented evidence base",
                      "fr": "Une base de preuves sans précédent"},
     "po_socle_x": {
-        "en": "Built from **satellite data** and **several months of "
-              "fieldwork** by biologists, sociologists and economists, APRI "
-              "draws on more than **{m} household surveys** across **{s} "
-              "communal sections**, together with biodiversity measurements "
-              "and spatial analysis conducted in **two pilot territories**.",
-        "fr": "Construit à partir de **données satellitaires** et de "
-              "**plusieurs mois de terrain** menés par des biologistes, des "
-              "sociologues et des économistes, APRI s'appuie sur plus de "
-              "**{m} enquêtes ménage** réparties sur **{s} sections "
-              "communales**, avec des mesures de biodiversité et des "
-              "analyses spatiales conduites dans **deux territoires "
-              "pilotes**."},
+        "en": "APRI draws on more than **{m} household surveys** across "
+              "**{s} communal sections**, together with biodiversity "
+              "measurements and spatial analysis conducted over **several "
+              "months** by biologists, sociologists and economists in **two "
+              "pilot territories**.",
+        "fr": "APRI s'appuie sur plus de **{m} enquêtes ménage** réparties "
+              "sur **{s} sections communales**, ainsi que sur des mesures de "
+              "biodiversité et des analyses spatiales conduites pendant "
+              "**plusieurs mois** par des biologistes, des sociologues et "
+              "des économistes, dans **deux territoires pilotes**."},
     # LA CARTE NE PORTE PLUS DE SCORE : son titre dit donc ce qu'elle
     # montre, c'est-à-dire l'emprise de l'enquête et rien d'autre.
     "po_carte_cap": {
