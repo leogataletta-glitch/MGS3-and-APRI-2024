@@ -90,37 +90,65 @@ TEXTES = {
     # les données » annonce ce qu'on vient y faire, là où l'onglet se contente
     # de nommer la rubrique.
     "po_c1": {"en": "Explore the Territory", "fr": "Explorer le territoire"},
-    "po_c1x": {"en": "Ten communal sections, their maps and landscapes.",
-               "fr": "Dix sections communales, leurs cartes et leurs "
-                     "paysages."},
+    "po_c1x": {"en": "Maps and landscapes across ten communal sections.",
+               "fr": "Cartes et paysages des dix sections communales."},
     "po_c2": {"en": "Resilience Framework", "fr": "Cadre de résilience"},
-    "po_c2x": {"en": "Seven dimensions and how each score is constructed.",
-               "fr": "Sept dimensions et comment chaque score se construit."},
+    "po_c2x": {"en": "Dimensions, indicators and scoring methodology.",
+               "fr": "Dimensions, indicateurs et méthode de notation."},
     "po_c3": {"en": "Results Analysis", "fr": "Analyse des résultats"},
-    "po_c3x": {"en": "Scores, profiles and cross-tabulated results.",
-               "fr": "Scores, profils et croisements de résultats."},
+    "po_c3x": {"en": "Compare resilience across territories and populations.",
+               "fr": "Comparer la résilience entre territoires et "
+                     "populations."},
     "po_c4": {"en": "Feedback Loops", "fr": "Boucles de rétroaction"},
-    "po_c4x": {"en": "Causal relationships and systemic leverage points.",
-               "fr": "Relations causales et leviers systémiques."},
+    "po_c4x": {"en": "Understand systemic drivers and leverage points.",
+               "fr": "Comprendre les moteurs systémiques et les leviers."},
     "po_c5": {"en": "Download Data", "fr": "Télécharger les données"},
-    "po_c5x": {"en": "Indicators, sources and downloadable datasets.",
-               "fr": "Indicateurs, sources et jeux de données "
-                     "téléchargeables."},
+    "po_c5x": {"en": "Access indicators, sources and datasets.",
+               "fr": "Accéder aux indicateurs, aux sources et aux jeux de "
+                     "données."},
 
-    # --- CE QU'APRI MESURE, EN UNE PHRASE
-    "po_uma_x": {
-        "en": "APRI measures resilience, that is a territory's capacity to "
-              "anticipate, absorb and adapt, through a set of indicators "
-              "grouped into seven dimensions and converted into a 0-to-10 "
-              "score by the framework's scales. All of it at landscape "
-              "scale, the landscape understood as a complex adaptive system.",
-        "fr": "APRI mesure la résilience, c'est-à-dire la capacité d'un "
-              "territoire à anticiper, absorber et s'adapter, au travers "
-              "d'une série "
-              "d'indicateurs regroupés en sept dimensions et convertis en un "
-              "score de 0 à 10 par les barèmes du cadre. Le tout à l'échelle "
-              "du paysage, entendu comme un système complexe adaptatif."},
-    "po_uma_sur": {"en": "What APRI measures", "fr": "Ce que mesure APRI"},
+    # --- LA PHRASE D'OUVERTURE, SOUS LE BANDEAU
+    # ELLE A REMPLACÉ LA DÉFINITION EN CADRE. La définition longue disait la
+    # même chose, en cinq lignes de 20 px posées à côté de la carte : elle
+    # occupait le tiers de la page pour un contenu que le cadre de résilience
+    # déplie en entier, onglet par onglet. Ici, une phrase suffit — elle dit
+    # l'objet et l'ordre de grandeur, et elle laisse la carte respirer.
+    #
+    # LE NOMBRE D'INDICATEURS EST COMPTÉ, PAS ÉCRIT. Il est arrondi à la
+    # dizaine inférieure et annoncé comme un minimum : une page d'accueil qui
+    # promet un chiffre exact le dément le jour où un indicateur de plus est
+    # calculé.
+    "po_intro": {
+        "en": "APRI measures the capacity of landscapes and communities to "
+              "anticipate, absorb, adapt and transform. More than {n} "
+              "indicators across seven dimensions reveal where "
+              "vulnerabilities accumulate and where action is most needed.",
+        "fr": "APRI mesure la capacité des paysages et des communautés à "
+              "anticiper, absorber, s'adapter et se transformer. Plus de {n} "
+              "indicateurs répartis en sept dimensions révèlent où les "
+              "vulnérabilités s'accumulent et où l'action est la plus "
+              "nécessaire."},
+
+    # --- LE SOCLE DE PREUVES
+    # LES SEGMENTS ENTRE ** SONT MIS EN GRAS À L'AFFICHAGE. Écrire le gras
+    # dans le texte plutôt que de découper la phrase en morceaux dans le code
+    # est ce qui permet aux deux langues de ne pas mettre l'accent aux mêmes
+    # endroits — l'anglais insiste sur la source, le français sur l'ampleur.
+    "po_socle_sur": {"en": "An unprecedented evidence base",
+                     "fr": "Une base de preuves sans précédent"},
+    "po_socle_x": {
+        "en": "Built from **satellite data** and **several months of "
+              "fieldwork** by biologists, sociologists and economists, APRI "
+              "draws on more than **{m} household surveys** across **{s} "
+              "communal sections**, together with biodiversity measurements "
+              "and spatial analysis conducted in **two pilot territories**.",
+        "fr": "Construit à partir de **données satellitaires** et de "
+              "**plusieurs mois de terrain** menés par des biologistes, des "
+              "sociologues et des économistes, APRI s'appuie sur plus de "
+              "**{m} enquêtes ménage** réparties sur **{s} sections "
+              "communales**, avec des mesures de biodiversité et des "
+              "analyses spatiales conduites dans **deux territoires "
+              "pilotes**."},
     # LA CARTE NE PORTE PLUS DE SCORE : son titre dit donc ce qu'elle
     # montre, c'est-à-dire l'emprise de l'enquête et rien d'autre.
     "po_carte_cap": {
@@ -167,37 +195,44 @@ STYLE = """
      bande de chiffres est une surface parce qu'elle se lit d'un bloc ; le
      reste est du texte posé sur du blanc. */
 
-  /* --- CE QU'APRI MESURE : LE MESSAGE PRINCIPAL DE LA PAGE --------------
-     C'EST LA PHRASE QUI DOIT ÊTRE LUE, ET ELLE DOIT ÊTRE LA PLUS GROSSE.
-     À 15,5 px elle avait la taille d'un paragraphe courant : posée à côté
-     d'une carte, elle passait pour une légende. Elle monte à 20 px, sur une
-     colonne de 42 signes — la largeur où l'œil retrouve seul le début de la
-     ligne suivante — et devient ce qu'elle est : la définition qu'un
-     visiteur doit avoir lue avant tout le reste.
+  /* --- LA PHRASE D'OUVERTURE, SOUS LE BANDEAU ---------------------------
+     ELLE EST EN ITALIQUE ET EN ROMAIN À EMPATTEMENTS, et c'est le seul
+     endroit du site qui l'est. Ce n'est pas un ornement : la page enchaîne
+     ensuite cinq cartes, un surtitre, un paragraphe et une carte, tous en
+     linéale. Une phrase qui doit se lire AVANT le reste doit d'abord se
+     distinguer du reste ; le changement de casse fait ce travail sans
+     grossir le corps ni prendre de hauteur.
 
-     LE MOT « APRI » EST DÉTACHÉ EN VERT, en tête. Il ne s'agit pas d'un
-     ornement : le nom du dispositif est le sujet de la phrase, et le lire
-     d'abord met le reste en place. Le surtitre, lui, dit à quoi sert le
-     paragraphe qui suit, ce qu'aucune mise en forme ne peut dire seule. */
+     LE `!important` N'EST PAS UN CAPRICE : la feuille de l'application fixe
+     14,5 px et la justification à tous les paragraphes du contenu, avec une
+     spécificité supérieure à celle d'une classe. */
+  p.uma-i  { font-size:15.5px !important; line-height:1.62 !important;
+             font-family:Georgia,"Times New Roman",serif; font-style:italic;
+             font-weight:400; color:#26364a !important;
+             margin:16px 0 6px !important; max-width:74ch;
+             text-align:left !important; }
+
+  /* --- LE SOCLE DE PREUVES ----------------------------------------------
+     PAS DE CADRE, PAS DE FOND, UN FILET VERT. La règle de la page tient en
+     une phrase : rien n'est encadré sauf ce qui se clique. La définition
+     précédente était posée dans une boîte teintée à côté de la carte, et
+     deux surfaces encadrées côte à côte se disputaient l'attention. Il reste
+     un filet, qui rattache le bloc à la marge sans en faire un objet.
+
+     LES CHIFFRES SONT EN GRAS PARCE QU'ILS SONT LA PREUVE. Le reste de la
+     phrase est du liant ; ce qu'on doit retenir, c'est l'ampleur — le nombre
+     d'enquêtes, le nombre de sections, le nombre de territoires. */
   .uma-sur { font-size:11px; font-weight:700; color:#8a93a5;
              letter-spacing:.09em; text-transform:uppercase;
              margin:0 0 10px; }
-  /* Le `!important` et la mesure en `em` ne sont pas des caprices : la
-     feuille de l'application fixe 14,5 px à tous les paragraphes du contenu,
-     avec une spécificité supérieure, et la largeur en `ch` se calcule sur la
-     police du CADRE, pas sur celle du texte — d'où une boîte de 44 signes
-     qui n'en tenait que trente. Le cadre porte donc lui aussi la taille. */
-  p.uma-x  { font-size:20px !important; line-height:1.55 !important;
-             color:#1c2b3a !important;
-             margin:0; font-weight:450; letter-spacing:-.005em; }
-  p.uma-x b { font-weight:800; color:#1a6b52; letter-spacing:0; }
-  /* Le filet vert et le fond très pâle en font ce qu'elle est — la
-     définition de référence, celle qu'on revient chercher. Le vert est celui
-     du cadre de résilience, où la même définition se déplie en entier. */
-  .uma-cadre { border:1px solid #dde9e3; border-left:4px solid #1a6b52;
-               border-radius:12px; background:#f6faf8;
-               font-size:20px;
-               padding:24px 28px 26px; margin:2px 0 0; max-width:42ch; }
+  .uma-socle { border-left:3px solid #1a6b52; padding:1px 0 1px 22px;
+               margin:6px 0 0; max-width:46ch; }
+  .uma-socle .uma-sur { color:#12314c; font-size:11.5px;
+                        letter-spacing:.105em; margin:0 0 13px; }
+  p.uma-s  { font-size:14.5px !important; line-height:1.95 !important;
+             color:#33455c !important; margin:0 !important; font-weight:400;
+             text-align:left !important; }
+  p.uma-s b { font-weight:700; color:#12314c; }
   /* LA CARTE N'A NI CADRE NI FOND, ET LA MER EST TRANSPARENTE.
      Encadrée sur un aplat bleu, elle formait une vignette collée au milieu
      d'une page blanche — un objet rapporté. Le rectangle marin est effacé
@@ -218,9 +253,12 @@ STYLE = """
      descendance lui imposait `width:100%`, ce qui écrase ses propres `x`,
      `y` et `width` — le carton prenait alors toute la carte et la couvrait
      entièrement. */
+  /* La constante retranchée a grandi de la hauteur de la phrase
+     d'ouverture : sans cela, la carte reprendrait à elle seule la place que
+     la phrase vient de prendre, et la page se remettrait à défiler. */
   .uma-carte > svg { display:block; width:100%; height:auto;
                      margin:0 !important;
-                     max-height: max(205px, calc(100vh - 418px)); }
+                     max-height: max(205px, calc(100vh - 472px)); }
   .uma-carte > svg > .sea, .uma-carte > svg .sea { fill:transparent !important; }
   .uma-zone   { position:relative; }
   /* LA PHRASE EST AU-DESSUS DE LA CARTE, ET EN GRAS. Rangée dessous et en
@@ -513,11 +551,23 @@ def _carte_indice(m):
 # en deux.
 _REPERE = re.compile(r'<(line|text|path)\b[^>]*class="(?:cl|ca|ct|ct2)"[^>]*>')
 _ABSCISSE = re.compile(r'\b(x|x1|x2)="(-?[\d.]+)"')
+_ORDONNEE = re.compile(r'\b(y|y1|y2)="(-?[\d.]+)"')
 _TRACE = re.compile(r'\bd="([^"]*)"')
 
 
-def _pousser_reperes(svg, dx=-210):
-    """Décale la rose des vents et l'échelle kilométrique vers la côte."""
+def _pousser_reperes(svg, dx=-210, dy=-26, plancher=200):
+    """Décale la rose des vents et l'échelle kilométrique vers la côte.
+
+    ET REMONTE L'ÉCHELLE DE VINGT-SIX POINTS. Le moteur de cartes pose le
+    mot « ≈ 25 km » à vingt-deux points du bord bas du canevas. C'est
+    suffisant partout ailleurs ; sur la page d'accueil, où la carte est
+    plafonnée en hauteur et calée par `preserveAspectRatio`, la dernière
+    ligne du canevas tombe hors de la boîte rendue et le mot disparaît — le
+    trait de l'échelle restait seul, sans dire combien il mesure, ce qui est
+    pire qu'une échelle absente. Seuls les repères du bas remontent : le
+    `plancher` sépare l'échelle, en bas du canevas, de la rose des vents qui
+    est en haut et n'a pas à bouger.
+    """
     def _chemin(m):
         # Le tracé de la pointe est une suite « M x,y L x,y … » : seule
         # l'abscisse, en tête de chaque couple, se décale.
@@ -526,8 +576,12 @@ def _pousser_reperes(svg, dx=-210):
             lambda c: f'{float(c.group(1)) - dx:g},{c.group(2)}', m.group(1))
 
     def _un(m):
-        return _TRACE.sub(_chemin, _ABSCISSE.sub(
+        t = _TRACE.sub(_chemin, _ABSCISSE.sub(
             lambda a: f'{a.group(1)}="{float(a.group(2)) - dx:g}"', m.group(0)))
+        if any(float(v) > plancher for _c, v in _ORDONNEE.findall(t)):
+            t = _ORDONNEE.sub(
+                lambda o: f'{o.group(1)}="{float(o.group(2)) + dy:g}"', t)
+        return t
     return _REPERE.sub(_un, svg)
 
 
@@ -594,6 +648,42 @@ def _carton(svg_carte):
     return svg_carte.replace("</svg>", imbrique + "</svg>")
 
 
+def _rond(v, pas):
+    """Un ordre de grandeur, arrondi à la dizaine ou à la centaine INFÉRIEURE.
+
+    LE SENS EST DANS LE MOT « PLUS DE ». Arrondir au plus proche donnerait
+    « plus de 1 200 » pour 1 180 enquêtes, ce qui serait faux. Arrondir vers
+    le bas rend la phrase vraie quel que soit le fichier de résultats.
+    """
+    if not v:
+        return None
+    return int(v) // pas * pas
+
+
+def _nombre(v):
+    """Un entier écrit avec le séparateur de milliers de la langue affichée."""
+    t = f"{int(v):,}"
+    return t.replace(",", " ") if i18n.get_lang() == "fr" else t
+
+
+def _socle(m):
+    """Le paragraphe de preuve, ses chiffres comptés et ses gras posés.
+
+    LES `**` VIENNENT DU TEXTE, LE `<b>` EST POSÉ ICI. Le texte est échappé
+    d'abord — sans quoi une traduction contenant un chevron ouvrirait une
+    balise — puis seuls les segments marqués deviennent du gras. C'est
+    l'inverse de l'ordre naturel, et c'est le seul ordre sûr.
+    """
+    menages = _rond(m.get("menages"), 100)
+    sections = len(m.get("sections_n") or {}) or len(SECTIONS)
+    t = _e(T("po_socle_x",
+             m=_nombre(menages) if menages else "1 200",
+             s=sections))
+    bouts = t.split("**")
+    return "".join(b if i % 2 == 0 else f"<b>{b}</b>"
+                   for i, b in enumerate(bouts))
+
+
 def _comprendre(m):
     # DE L'AIR ENTRE LES QUATRE PORTES ET CE QUI SUIT. Les cartes touchaient
     # le texte : deux blocs collés se lisent comme un seul, et la définition
@@ -614,16 +704,11 @@ def _comprendre(m):
     # revient au dessin. La mise en garde suit la définition, sous le cadre :
     # elle parle de l'échelle, qui est juste à côté.
     c = _carte_indice(m)
-    g, d = st.columns([1.05, 1.6], gap="medium")
+    g, d = st.columns([1, 1.8], gap="medium")
     with g:
-        # LE PREMIER MOT EST DÉTACHÉ. Les deux langues commencent la phrase
-        # par le nom du dispositif ; on le coupe donc du reste plutôt que de
-        # le chercher dans le texte, ce qui casserait à la première
-        # reformulation.
-        _mot, _reste = _e(T("po_uma_x")).split(" ", 1)
-        st.markdown(f'<div class="uma-cadre">'
-                    f'<div class="uma-sur">{_e(T("po_uma_sur"))}</div>'
-                    f'<p class="uma-x"><b>{_mot}</b> {_reste}</p></div>',
+        st.markdown(f'<div class="uma-socle">'
+                    f'<div class="uma-sur">{_e(T("po_socle_sur"))}</div>'
+                    f'<p class="uma-s">{_socle(m)}</p></div>',
                     unsafe_allow_html=True)
     if not c:
         return
@@ -651,5 +736,12 @@ def render():
     if not m:
         st.info(T("po_absent"))
         return
+    # LA PHRASE D'OUVERTURE PASSE AVANT LES PORTES, et c'est tout son
+    # intérêt : on lit ce que fait l'observatoire avant de choisir où aller.
+    # Placée sous les cartes, elle aurait été lue par les seuls visiteurs qui
+    # n'ont pas cliqué — c'est-à-dire par personne.
+    n_ind = _rond(m.get("n_scores"), 10)
+    st.markdown(f'<p class="uma-i">{_e(T("po_intro", n=n_ind or 50))}</p>',
+                unsafe_allow_html=True)
     _entrees()
     _comprendre(m)
