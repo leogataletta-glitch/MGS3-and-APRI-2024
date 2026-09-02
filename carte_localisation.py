@@ -153,12 +153,50 @@ def _e(t):
 
 
 @st.cache_data(show_spinner=False)
+def _anneaux(geom):
+    """Les anneaux extérieurs d'un polygone ou d'un multipolygone."""
+    if not geom:
+        return []
+    t, c = geom.get("type"), geom.get("coordinates") or []
+    if t == "Polygon":
+        return [a for a in c if a]
+    if t == "MultiPolygon":
+        return [poly[0] for poly in c if poly and poly[0]]
+    return []
+
+
+def _terres():
+    """Les contours de terre — Haïti et son voisin — pour le fond sobre.
+
+    LE FOND SOBRE NE VIENT PLUS D'UN SERVEUR DE TUILES, IL EST DESSINÉ ICI.
+    CARTO exige désormais une clé et barre ses tuiles d'un filigrane ; le
+    canevas clair d'Esri, pris en remplacement, peint la terre et la mer
+    dans deux gris si proches que la carte paraissait entièrement bleue. Or
+    ce fond ne demande que deux aplats — la terre en gris, la mer en bleu —
+    et le trait de côte est déjà dans le dépôt, puisque la vignette de
+    situation s'en sert. Un fond dessiné sur place ne dépend de personne, ne
+    peut pas changer de conditions, et s'affiche même sans réseau.
+    """
+    out = []
+    for nom in ("hti_terre.geojson", "dom_terre.geojson"):
+        p = os.path.join(DATA, nom)
+        if not os.path.exists(p):
+            continue
+        with open(p, encoding="utf-8") as f:
+            for feat in json.load(f).get("features", []):
+                for anneau in _anneaux(feat.get("geometry")):
+                    out.append({"a": [anneau]})
+    return out
+
+
 def _couches():
     p = os.path.join(DATA, "carte_localisation.json")
     if not os.path.exists(p):
         return None
     with open(p, encoding="utf-8") as f:
-        return json.load(f)
+        d = json.load(f)
+    d["terre"] = _terres()
+    return d
 
 
 @st.cache_data(show_spinner=False)
@@ -193,7 +231,10 @@ __LEAFLET__
 <style>
  html,body{margin:0;padding:0;height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
  #carte{position:absolute;inset:0;border-radius:12px}
- .leaflet-container{background:#dfe9f2;border-radius:12px;font-family:inherit}
+ /* LA MER, C'EST LE FOND DU CONTENEUR : le fond sobre ne dessine que la
+    terre, et laisse voir celui-ci. Un bleu franc plutôt que le gris bleuté
+    d'avant — la terre est grise, la mer doit s'en distinguer sans effort. */
+ .leaflet-container{background:#cfe0ef;border-radius:12px;font-family:inherit}
  /* --- le panneau de couches ------------------------------------------- */
  #panneau{position:absolute;top:10px;right:10px;bottom:10px;width:264px;
    background:rgba(255,255,255,.96);border:1px solid #dbe3ec;border-radius:12px;
@@ -254,6 +295,36 @@ function recadrer(){ carte.fitBounds(EMPRISE, {padding:[12,12]}); }
 recadrer();
 
 /* ---- fonds de carte : un seul à la fois ------------------------------- */
+/* LE FOND SOBRE SE FAIT EN DEUX COUCHES, DE PART ET D'AUTRE DES TUILES.
+   L'ombrage du relief est une image opaque : posé sur la carte, il grise la
+   mer autant que la terre ; et le fond sobre, s'il est peint par-dessus,
+   efface le relief. La seule façon d'avoir les deux — une terre grise et
+   ombrée, une mer bleue — est de prendre l'ombrage en sandwich :
+
+     150  la terre, en gris          (visible quand l'ombrage est éteint)
+     200  les tuiles, dont l'ombrage (le relief se pose sur la terre)
+     250  la mer, en bleu, percée aux contours de la terre
+     400  les couches de données     (sections, routes, points…)
+
+   Leaflet ne range les vecteurs que dans un calque, au-dessus des tuiles :
+   il faut donc lui ouvrir ces deux calques-là, chacun avec son moteur de
+   rendu (la carte dessine sur canevas, et un canevas appartient à un
+   calque). */
+carte.createPane('fondTerre');
+carte.getPane('fondTerre').style.zIndex = 150;
+carte.createPane('fondMer');
+carte.getPane('fondMer').style.zIndex = 250;
+const RENDU_TERRE = L.canvas({pane:'fondTerre'});
+const RENDU_MER = L.canvas({pane:'fondMer'});
+
+/* LA MER EST UN TROU, PAS UN APLAT. Un rectangle grand comme le monde, percé
+   aux contours de chaque terre : le remplissage « pair-impair » de Leaflet
+   fait le reste. Peindre la mer plutôt que de la laisser au fond du
+   conteneur est ce qui permet de la garder bleue SOUS l'ombrage. */
+const ANNEAUX_TERRE = (D.terre||[]).map(function(o){
+  return o.a[0].map(function(c){ return [c[1], c[0]]; }); });
+const MONDE = [[85,-180],[85,180],[-85,180],[-85,-180]];
+
 const FONDS = {
   plan:  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           {maxZoom:19, attribution:'© OpenStreetMap'}),
@@ -261,30 +332,30 @@ const FONDS = {
           {maxZoom:17, attribution:'© OpenTopoMap, © OpenStreetMap'}),
   sat:   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
           {maxZoom:19, attribution:'Esri, Maxar, Earthstar Geographics'}),
-  /* LE FOND SOBRE VENAIT DE CARTO, ET IL A CESSÉ D'ÊTRE LIBRE. Les tuiles
-     de basemaps.cartocdn.com sont désormais servies barrées d'un « API KEY
-     REQUIRED » en travers de l'image : le fond ne disparaissait pas, il
-     s'affichait couvert d'un filigrane. Esri sert le même genre de fond
-     très clair sans clé, et c'est déjà lui qui fournit la vue satellite et
-     l'ombrage de cette carte : une source de moins à surveiller.
-
-     IL SE FAIT EN DEUX TUILES, le fond et les noms de lieux — Esri les
-     sépare, là où CARTO les fondait. `maxNativeZoom` les fait agrandir
-     au-delà de leur dernier niveau plutôt que de les faire disparaître,
-     comme cela arrive à l'ombrage passé le zoom 16. */
+  /* LE FOND SOBRE EST DESSINÉ, PAS TÉLÉCHARGÉ. Deux aplats suffisent à ce
+     qu'on lui demande, et le trait de côte est déjà dans le dépôt. Ni l'un
+     ni l'autre n'intercepte les clics : les couches de données restent
+     accessibles au travers. */
   sobre: L.layerGroup([
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-          {maxZoom:19, maxNativeZoom:16, attribution:'Esri, HERE, Garmin'}),
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
-          {maxZoom:19, maxNativeZoom:16})])
+    polys(D.terre, 'terre',
+          {renderer: RENDU_TERRE, pane:'fondTerre',
+           stroke:false, fillColor:'#e6e8ea', fillOpacity:1,
+           interactive:false}),
+    L.polygon([MONDE].concat(ANNEAUX_TERRE),
+          {renderer: RENDU_MER, pane:'fondMer',
+           color:'#b9c3cf', weight:1, fillColor:'#cfe0ef', fillOpacity:1,
+           interactive:false})])
 };
-let fondActif = 'plan';
-FONDS.plan.addTo(carte);
-/* Un fond peut être une tuile ou un groupe de deux : `bringToBack` n'existe
-   que sur la première, d'où le détour. */
+let fondActif = 'sobre';
+versArriere(FONDS.sobre.addTo(carte));
+/* UN FOND EST UNE TUILE, OU UN GROUPE, OU UN GROUPE DE GROUPES. Seule la
+   tuile et le tracé savent `bringToBack` ; il faut donc descendre. La
+   descente est récursive parce qu'elle ne l'était pas : un groupe contenant
+   un groupe levait une erreur qui arrêtait le reste du script — la carte
+   s'affichait, mais sans une seule de ses couches ni son panneau. */
 function versArriere(l){
   if (l.bringToBack) l.bringToBack();
-  else l.eachLayer(function(x){ x.bringToBack(); });
+  else if (l.eachLayer) l.eachLayer(versArriere);
 }
 function choisirFond(k){
   if (k === fondActif) return;
@@ -324,9 +395,6 @@ COUCHES.pays = polys(D.pays, 'pays',
 COUCHES.deps = polys(D.departements, 'deps',
   {color:C.deps, weight:1.8, dashArray:'7 5', fill:false, opacity:.95},
   p => p && p.nom ? pop(L_.dep, '<b>'+p.nom+'</b>') : null);
-COUCHES.communes = polys(D.communes, 'communes',
-  {color:C.communes, weight:1.1, fill:false, opacity:.95},
-  p => p && p.NAME ? pop(L_.commune, '<b>'+p.NAME+'</b>') : null);
 COUCHES.ap = polys(D.aires_protegees, 'ap',
   {color:C.ap, weight:1.6, fillColor:C.ap, fillOpacity:.16},
   p => p && p.Name ? pop(L_.ap, '<b>'+p.Name+'</b>') : null);
@@ -436,7 +504,7 @@ function basculer(cle, on){
 /* L'ORDRE DE SUPERPOSITION EST REFAIT À CHAQUE ALLUMAGE. Leaflet empile les
    couches dans l'ordre où on les ajoute : sans cela, rallumer les communes
    après les points d'entretien couvrait les points d'un aplat. */
-const ORDRE = ['ombrage','paysage','paysage_sud','ap','sections','communes',
+const ORDRE = ['ombrage','paysage','paysage_sud','ap','sections',
                'deps','pays','riv','rs','rp','pts_l','pts_m','villes'];
 function reordonner(){
   ORDRE.forEach(function(k){
@@ -471,11 +539,18 @@ def _groupes(d):
     litt = sum(1 for e in d.get("entretiens") or [] if e[3] != "Montagne")
     mont = sum(1 for e in d.get("entretiens") or [] if e[3] == "Montagne")
     return [
+        # LE FOND SOBRE OUVRE LA LISTE, ET C'EST LUI QU'ON VOIT EN ARRIVANT.
+        # Avec l'ombrage par-dessus, c'est la combinaison qui donne le mieux
+        # à voir ce que la page montre : le relief d'une presqu'île, et
+        # dessus les sections enquêtées. Les fonds de rue, topographique et
+        # satellite chargent des tuiles et couvrent la carte de détails que
+        # personne ne vient chercher ici ; ils restent à un clic.
         {"titre": T("cl_g_fond"), "ferme": False, "lignes": [
-            {"cle": "plan", "titre": T("cl_f_plan"), "fond": True, "on": True},
+            {"cle": "sobre", "titre": T("cl_f_sobre"), "fond": True,
+             "on": True},
+            {"cle": "plan", "titre": T("cl_f_plan"), "fond": True},
             {"cle": "relief", "titre": T("cl_f_relief"), "fond": True},
             {"cle": "sat", "titre": T("cl_f_sat"), "fond": True},
-            {"cle": "sobre", "titre": T("cl_f_sobre"), "fond": True},
         ]},
         {"titre": T("cl_g_etude"), "ferme": False, "lignes": [
             {"cle": "sections", "titre": T("cl_sections"), "on": True,
@@ -499,8 +574,6 @@ def _groupes(d):
         {"titre": T("cl_g_limites"), "ferme": False, "lignes": [
             {"cle": "deps", "titre": T("cl_deps"), "on": True, "nb": n("departements"),
              "sym": {"type": "ligne", "c": COULEURS["deps"], "d": True}},
-            {"cle": "communes", "titre": T("cl_communes"), "nb": n("communes"),
-             "sym": {"type": "ligne", "c": COULEURS["communes"], "w": 1}},
             {"cle": "pays", "titre": T("cl_pays"), "nb": n("pays"),
              "sym": {"type": "ligne", "c": COULEURS["pays"]}},
         ]},
@@ -511,7 +584,7 @@ def _groupes(d):
              "sym": {"type": "ligne", "c": COULEURS["rs"]}},
         ]},
         {"titre": T("cl_g_relief"), "ferme": False, "lignes": [
-            {"cle": "ombrage", "titre": T("cl_ombrage"),
+            {"cle": "ombrage", "titre": T("cl_ombrage"), "on": True,
              "sym": {"type": "tuile"}},
             {"cle": "riv", "titre": T("cl_riv"), "nb": n("rivieres"),
              "sym": {"type": "ligne", "c": COULEURS["riv"], "w": 1.5}},
@@ -547,11 +620,10 @@ def render(hauteur=660):
     if not d:
         st.info(T("cl_absent"))
         return
-    st.markdown(f'<div class="titre-bloc">{_e(T("cl_titre"))}</div>',
-                unsafe_allow_html=True)
+    # NI TITRE NI NOTE : LA CARTE EST TOUTE LA PAGE. « Le territoire » ne
+    # contient qu'elle, et l'onglet du haut porte déjà son nom — le répéter
+    # en travers de la page ne renseignait personne. Le mode d'emploi non
+    # plus : une carte se manipule d'instinct, on ne lit pas qu'on peut
+    # zoomer avant d'essayer. Les deux textes restent dans les traductions,
+    # à disposition de qui voudrait les remettre.
     components.html(html(d), height=hauteur, scrolling=False)
-    # LA SOURCE EST SOUS LA CARTE, PAS DANS LE PANNEAU. Elle y occupait un
-    # cinquième de la hauteur du panneau — de la place prise à la liste des
-    # couches, qui est ce qu'on vient y chercher — et personne ne lit une
-    # source pendant qu'il cherche une case à cocher.
-    st.caption(T("cl_note") + "  \n" + T("cl_source"))
