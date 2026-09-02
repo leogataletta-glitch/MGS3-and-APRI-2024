@@ -2802,7 +2802,7 @@ DICO = {
     "et_plus": {"en": "{v}{u} and above", "fr": "{v}{u} et plus"},
     "intervalle": {"en": "{a} – {b}{u}", "fr": "{a} – {b}{u}"},
     "base_carte": {"en": "base: {n}", "fr": "base : {n}"},
-    "km": {"en": "≈ 10 km", "fr": "≈ 10 km"},
+    "km": {"en": "≈ {n} km", "fr": "≈ {n} km"},
     "legende_seuils": {"en": "THRESHOLDS", "fr": "SEUILS"},
     "legende_apri": {"en": "APRI SCORE", "fr": "SCORE APRI"},
     "cap_mauvais": {
