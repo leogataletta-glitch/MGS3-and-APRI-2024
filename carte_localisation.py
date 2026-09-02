@@ -152,7 +152,6 @@ def _e(t):
             .replace(">", "&gt;"))
 
 
-@st.cache_data(show_spinner=False)
 def _anneaux(geom):
     """Les anneaux extérieurs d'un polygone ou d'un multipolygone."""
     if not geom:
@@ -189,6 +188,11 @@ def _terres():
     return out
 
 
+# LE CACHE ÉTAIT POSÉ SUR `_couches`, ET J'AI GLISSÉ `_anneaux` ENTRE LES
+# DEUX : le décorateur a suivi la ligne, pas la fonction. Il gardait donc en
+# mémoire le découpage d'un polygone — passé en dictionnaire, donc rehaché
+# à chaque appel — au lieu de la lecture des fichiers, qui est ce qui coûte.
+@st.cache_data(show_spinner=False)
 def _couches():
     p = os.path.join(DATA, "carte_localisation.json")
     if not os.path.exists(p):
@@ -234,7 +238,7 @@ __LEAFLET__
  /* LA MER, C'EST LE FOND DU CONTENEUR : le fond sobre ne dessine que la
     terre, et laisse voir celui-ci. Un bleu franc plutôt que le gris bleuté
     d'avant — la terre est grise, la mer doit s'en distinguer sans effort. */
- .leaflet-container{background:#cfe0ef;border-radius:12px;font-family:inherit}
+ .leaflet-container{background:#c6dcee;border-radius:12px;font-family:inherit}
  /* --- le panneau de couches ------------------------------------------- */
  #panneau{position:absolute;top:10px;right:10px;bottom:10px;width:264px;
    background:rgba(255,255,255,.96);border:1px solid #dbe3ec;border-radius:12px;
@@ -336,15 +340,20 @@ const FONDS = {
      qu'on lui demande, et le trait de côte est déjà dans le dépôt. Ni l'un
      ni l'autre n'intercepte les clics : les couches de données restent
      accessibles au travers. */
-  sobre: L.layerGroup([
+  /* LE MASQUE MARIN NE SE POSE QUE S'IL A DES TROUS. Sans les contours de
+     terre — fichier absent, lecture ratée — le rectangle couvrirait la carte
+     entière d'un bleu uni, terre et relief compris. Mieux vaut alors ne rien
+     peindre et laisser la mer du conteneur : on perd la terre grise, pas la
+     carte. */
+  sobre: L.layerGroup(ANNEAUX_TERRE.length ? [
     polys(D.terre, 'terre',
           {renderer: RENDU_TERRE, pane:'fondTerre',
-           stroke:false, fillColor:'#e6e8ea', fillOpacity:1,
+           stroke:false, fillColor:'#e4e7ea', fillOpacity:1,
            interactive:false}),
     L.polygon([MONDE].concat(ANNEAUX_TERRE),
           {renderer: RENDU_MER, pane:'fondMer',
-           color:'#b9c3cf', weight:1, fillColor:'#cfe0ef', fillOpacity:1,
-           interactive:false})])
+           color:'#b3bfcc', weight:1, fillColor:'#c6dcee', fillOpacity:1,
+           interactive:false})] : [])
 };
 let fondActif = 'sobre';
 versArriere(FONDS.sobre.addTo(carte));
@@ -400,7 +409,6 @@ COUCHES.ap = polys(D.aires_protegees, 'ap',
   p => p && p.Name ? pop(L_.ap, '<b>'+p.Name+'</b>') : null);
 COUCHES.riv = lignes(D.rivieres, {color:C.riv, weight:1.3, opacity:.75});
 COUCHES.rp = lignes(D.routes_p, {color:C.rp, weight:2.4, opacity:.9});
-COUCHES.rs = lignes(D.routes_s, {color:C.rs, weight:1.5, opacity:.85});
 const STYLE_PAYSAGE = {color:C.paysage, weight:2, dashArray:'4 4',
                        fillColor:C.paysage, fillOpacity:.08};
 COUCHES.paysage = polys(D.paysage_ga, 'paysage', STYLE_PAYSAGE,
@@ -505,7 +513,7 @@ function basculer(cle, on){
    couches dans l'ordre où on les ajoute : sans cela, rallumer les communes
    après les points d'entretien couvrait les points d'un aplat. */
 const ORDRE = ['ombrage','paysage','paysage_sud','ap','sections',
-               'deps','pays','riv','rs','rp','pts_l','pts_m','villes'];
+               'deps','pays','riv','rp','pts_l','pts_m','villes'];
 function reordonner(){
   ORDRE.forEach(function(k){
     const c = COUCHES[k];
@@ -580,8 +588,6 @@ def _groupes(d):
         {"titre": T("cl_g_infra"), "ferme": False, "lignes": [
             {"cle": "rp", "titre": T("cl_rp"), "on": True, "nb": n("routes_p"),
              "sym": {"type": "ligne", "c": COULEURS["rp"], "w": 3}},
-            {"cle": "rs", "titre": T("cl_rs"), "nb": n("routes_s"),
-             "sym": {"type": "ligne", "c": COULEURS["rs"]}},
         ]},
         {"titre": T("cl_g_relief"), "ferme": False, "lignes": [
             {"cle": "ombrage", "titre": T("cl_ombrage"), "on": True,
