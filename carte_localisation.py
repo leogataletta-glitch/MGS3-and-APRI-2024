@@ -261,16 +261,36 @@ const FONDS = {
           {maxZoom:17, attribution:'© OpenTopoMap, © OpenStreetMap'}),
   sat:   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
           {maxZoom:19, attribution:'Esri, Maxar, Earthstar Geographics'}),
-  sobre: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-          {maxZoom:19, attribution:'© OpenStreetMap, © CARTO'})
+  /* LE FOND SOBRE VENAIT DE CARTO, ET IL A CESSÉ D'ÊTRE LIBRE. Les tuiles
+     de basemaps.cartocdn.com sont désormais servies barrées d'un « API KEY
+     REQUIRED » en travers de l'image : le fond ne disparaissait pas, il
+     s'affichait couvert d'un filigrane. Esri sert le même genre de fond
+     très clair sans clé, et c'est déjà lui qui fournit la vue satellite et
+     l'ombrage de cette carte : une source de moins à surveiller.
+
+     IL SE FAIT EN DEUX TUILES, le fond et les noms de lieux — Esri les
+     sépare, là où CARTO les fondait. `maxNativeZoom` les fait agrandir
+     au-delà de leur dernier niveau plutôt que de les faire disparaître,
+     comme cela arrive à l'ombrage passé le zoom 16. */
+  sobre: L.layerGroup([
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+          {maxZoom:19, maxNativeZoom:16, attribution:'Esri, HERE, Garmin'}),
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+          {maxZoom:19, maxNativeZoom:16})])
 };
 let fondActif = 'plan';
 FONDS.plan.addTo(carte);
+/* Un fond peut être une tuile ou un groupe de deux : `bringToBack` n'existe
+   que sur la première, d'où le détour. */
+function versArriere(l){
+  if (l.bringToBack) l.bringToBack();
+  else l.eachLayer(function(x){ x.bringToBack(); });
+}
 function choisirFond(k){
   if (k === fondActif) return;
   carte.removeLayer(FONDS[fondActif]);
   fondActif = k;
-  FONDS[k].addTo(carte).bringToBack();
+  versArriere(FONDS[k].addTo(carte));
 }
 
 /* ---- fabrication des couches vectorielles ----------------------------- */
