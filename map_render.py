@@ -157,6 +157,14 @@ SEUILS_APRI = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5]
 POLARITIES = ('eleve_mauvais', 'eleve_bon', 'neutre')
 
 
+# L'ÉCHELLE KILOMÉTRIQUE, EN UN SEUL ENDROIT. La longueur du trait et le
+# nombre écrit dessous se déduisent tous deux de cette constante : séparés,
+# ils finissent par se contredire, et une échelle qui ment est pire que pas
+# d'échelle. Vingt-cinq kilomètres plutôt que dix : sur une presqu'île de
+# cent kilomètres, un trait de dix se lisait comme une graduation perdue.
+ECHELLE_KM = 25
+
+
 def ramp_for(polarity):
     if polarity == 'eleve_mauvais':
         return RAMP_SEVERITY                      # bas = vert, haut = rouge
@@ -1154,7 +1162,7 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
                     f'<text class="cityt" x="{vx:.1f}" y="{vy - 9:.1f}">{nom}</text>')
 
     km_px = 111.32 / sc
-    bar = 10 / km_px
+    bar = ECHELLE_KM / km_px
     chrome = (f'<line class="cl" x1="60" y1="112" x2="60" y2="58"/>'
               f'<path class="ca" d="M60,52 L65.5,66 L60,62.5 L54.5,66 Z"/>'
               f'<text class="ct" x="60" y="130">N</text>'
@@ -1164,7 +1172,7 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
               f'<line class="cl" x1="{46 + bar:.0f}" y1="{height - 47}" '
               f'x2="{46 + bar:.0f}" y2="{height - 37}"/>'
               f'<text class="ct2" x="{46 + bar / 2:.0f}" y="{height - 22}">'
-              + _t('km') + '</text>')
+              + _t('km', n=ECHELLE_KM) + '</text>')
 
     svg = f"""<svg viewBox="0 0 {width} {height}" width="100%"
      style="max-width:{width}px;display:block;margin:0 auto" role="img"
