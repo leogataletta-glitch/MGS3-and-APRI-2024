@@ -181,39 +181,12 @@ TEXTES = {
                      "calculés sont exclus du dénominateur"},
 
     # --- le plan de sondage
-    "cad_sondage": {"en": "Sampling design", "fr": "Plan de sondage"},
     "cad_s1_t": {"en": "questionnaires", "fr": "questionnaires"},
     "cad_s1": {"en": "collected in 2024", "fr": "collectés en 2024"},
     "cad_s2_t": {"en": "communal sections", "fr": "sections communales"},
     "cad_s2": {"en": "each surveyed in full", "fr": "enquêtées en entier"},
-    "cad_s3_t": {"en": "confidence", "fr": "de confiance"},
-    "cad_s3": {"en": "for a 7.5 % margin of error",
-               "fr": "pour une marge d'erreur de 7,5 %"},
     "cad_s4_t": {"en": "households minimum", "fr": "ménages au minimum"},
     "cad_s4": {"en": "per communal section", "fr": "par section communale"},
-    "cad_strates": {"en": "Four crossed strata",
-                    "fr": "Quatre critères de stratification"},
-    "cad_st1": {"en": "Landscape, coastal or mountain",
-                "fr": "Paysage, littoral ou montagne"},
-    "cad_st2": {"en": "Age, 15-30 or over 30", "fr": "Âge, 15-30 ou plus de 30"},
-    "cad_st3": {"en": "Sex, woman or man", "fr": "Sexe, femme ou homme"},
-    "cad_st4": {"en": "Economic category, extreme poverty, poverty, "
-                      "non-poverty",
-                "fr": "Catégorie économique, extrême pauvreté, pauvreté, "
-                      "non-pauvreté"},
-    "cad_tirage": {
-        "en": "Households are drawn at random within strata from a "
-              "georeferenced building base (OpenStreetMap), so that areas "
-              "without a reliable administrative register are still covered. "
-              "The strata reproduce the population structure, which is why "
-              "simple means by profile are unbiased estimators, no "
-              "post-stratification weighting is applied.",
-        "fr": "Les ménages sont tirés au sort dans chaque strate à partir "
-              "d'une base de bâtiments géoréférencés (OpenStreetMap), pour "
-              "que les zones sans registre administratif fiable soient "
-              "couvertes malgré tout. Les strates reproduisent la structure "
-              "de la population : les moyennes simples par profil sont donc "
-              "des estimateurs sans biais, sans redressement."},
 
     # --- les limites
     "cad_limites": {"en": "What the index cannot say",
@@ -368,12 +341,24 @@ TEXTES = {
               "les moyens d'existence, les biens, la perception du risque, "
               "la préparation et l'accès aux services."},
     "cad_so1_p": {
-        "en": "Structured questionnaires|Stratified and randomized sampling|"
+        "en": "Structured questionnaires|Random draw within strata from a "
+              "georeferenced building base (OpenStreetMap)|Four crossed "
+              "strata: landscape, age, sex, economic category|"
               "Socio-economic and institutional data|Perceptions and "
               "behaviours",
-        "fr": "Questionnaires structurés|Échantillonnage stratifié et "
-              "aléatoire|Données socio-économiques et institutionnelles|"
-              "Perceptions et comportements"},
+        "fr": "Questionnaires structurés|Tirage aléatoire dans chaque strate "
+              "à partir d'une base de bâtiments géoréférencés "
+              "(OpenStreetMap)|Quatre strates croisées : paysage, âge, sexe, "
+              "catégorie économique|Données socio-économiques et "
+              "institutionnelles|Perceptions et comportements"},
+    # LA PHRASE QUI JUSTIFIE L'ABSENCE DE REDRESSEMENT. Elle n'est pas un
+    # détail de méthode : sans elle, un lecteur averti se demande pourquoi les
+    # moyennes par profil ne sont pas repondérées, et doute du reste.
+    "cad_so1_note": {
+        "en": "Strata reproduce the population structure: means by profile "
+              "are unbiased, with no post-stratification weighting.",
+        "fr": "Les strates reproduisent la structure de la population : les "
+              "moyennes par profil sont sans biais, sans redressement."},
 
     "cad_so2_t": {"en": "Geospatial data", "fr": "Données géospatiales"},
     "cad_so2_x": {
@@ -693,8 +678,8 @@ STYLE = """
 <style>
   .cad-h    { font-size:17.5px; font-weight:700; color:#101728;
               letter-spacing:-.015em; margin:0 0 3px; }
-  .cad-note { font-size:12.5px; color:#6b7590; line-height:1.55;
-              max-width:96ch; margin:0 0 14px; }
+  .cad-note { font-size:12.5px; color:#6b7590; line-height:1.5;
+              max-width:96ch; margin:0 0 10px; }
   .cad-grille { display:flex; gap:14px; flex-wrap:wrap; }
   .cad-carte  { flex:1 1 250px; min-width:230px; background:#fff;
                 border:1px solid #e3eaf3; border-radius:14px;
@@ -702,12 +687,6 @@ STYLE = """
   .cad-carte-t{ font-size:11px; letter-spacing:.07em; text-transform:uppercase;
                 font-weight:700; margin:0 0 6px; }
   .cad-carte-x{ font-size:13.5px; color:#3c4761; line-height:1.55; margin:0; }
-  .cad-chiffre{ font-size:25px; font-weight:700; color:#101728;
-                letter-spacing:-.03em; font-variant-numeric:tabular-nums;
-                line-height:1; }
-  .cad-lab    { font-size:12.5px; color:#3c4761; font-weight:600;
-                margin-top:5px; }
-  .cad-sous   { font-size:11px; color:#8a93a5; margin-top:1px; }
   .cad-liste  { margin:0; padding:0; list-style:none; }
   .cad-liste li { font-size:13px; color:#3c4761; line-height:1.5;
                   padding:6px 0 6px 16px; position:relative; }
@@ -746,22 +725,42 @@ STYLE = """
      plancher de 250 px donne quatre cartes sur un écran large, deux sur un
      portable, une sur un téléphone, sans qu'aucune ne descende sous la
      largeur où une liste à puces cesse de se lire. */
-  .cad-so   { display:grid; gap:16px; margin-top:6px;
+  .cad-so   { display:grid; gap:14px; margin-top:4px;
               grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); }
   .cad-so-c { background:#fff; border:1px solid #e3eaf3; border-radius:14px;
-              padding:18px 20px 20px;
+              padding:15px 17px 16px;
               box-shadow:0 1px 2px rgba(16,23,40,.05); }
-  .cad-so-t { font-size:16px; font-weight:700; color:#1a6b52;
-              letter-spacing:-.01em; margin:0 0 9px; }
-  p.cad-so-x { font-size:13px !important; color:#3c4761 !important;
-              line-height:1.6 !important; margin:0 0 14px !important;
+  .cad-so-t { font-size:15.5px; font-weight:700; color:#1a6b52;
+              letter-spacing:-.01em; margin:0 0 7px; }
+  p.cad-so-x { font-size:12.5px !important; color:#3c4761 !important;
+              line-height:1.5 !important; margin:0 0 11px !important;
               text-align:left !important; }
-  .cad-so-s { height:1px; background:#eaf0f6; margin:0 0 12px; }
+  .cad-so-s { height:1px; background:#eaf0f6; margin:0 0 9px; }
   .cad-so-l { margin:0; padding:0; list-style:none; }
   .cad-so-l li { font-size:12.5px; color:#3c4761; line-height:1.45;
-              padding:5px 0 5px 15px; position:relative; }
-  .cad-so-l li::before { content:""; position:absolute; left:0; top:11px;
+              padding:3px 0 3px 15px; position:relative;
+              text-align:left !important; }
+  .cad-so-l li::before { content:""; position:absolute; left:0; top:10px;
               width:5px; height:5px; border-radius:50%; background:#7fae94; }
+
+  /* Les compteurs de l'enquête ménage, à l'intérieur de sa carte. Ils
+     tenaient dans trois grandes cartes séparées, sous la page ; à cette
+     taille ils écrasaient la source qu'ils décrivent. */
+  /* TROIS LIGNES, PAS TROIS COLONNES. En colonnes de quatre-vingt-douze
+     pixels, les intitulés se coupaient en trois lignes chacun et la
+     justification du site y creusait des couloirs blancs. En lignes, le
+     nombre tient la marge gauche et l'intitulé court à côté de lui. */
+  .cad-so-k { margin:0 0 11px; }
+  .cad-so-k > div { display:flex; align-items:baseline; gap:9px;
+              padding:3px 0; }
+  .cad-so-k b { flex:0 0 auto; min-width:46px; font-size:16.5px;
+              font-weight:700; color:#101728; letter-spacing:-.02em;
+              font-variant-numeric:tabular-nums; }
+  .cad-so-k span { font-size:11.5px; color:#5a6a80; line-height:1.35;
+              text-align:left !important; }
+  p.cad-so-n2 { font-size:11px !important; color:#8a93a5 !important;
+              line-height:1.45 !important; margin:9px 0 0 !important;
+              text-align:left !important; }
 
   /* --- la bande de clôture -------------------------------------------------
      ELLE FERME LA LISTE ET DIT CE QU'ON EN FAIT. Sans elle, la page laissait
@@ -769,7 +768,7 @@ STYLE = """
      nombre est à droite, isolé : c'est le résultat, pas un item de plus. */
   .cad-band { display:flex; align-items:center; gap:18px; flex-wrap:wrap;
               background:#f4f8f5; border:1px solid #e0ebe4; border-radius:14px;
-              padding:16px 22px; margin-top:20px; }
+              padding:13px 20px; margin-top:12px; }
   .cad-band-i { width:44px; height:44px; border-radius:50%; background:#e2eee8;
               display:flex; align-items:center; justify-content:center;
               flex:0 0 auto; }
@@ -1039,13 +1038,6 @@ def _chaine(ptot):
             'align-items:stretch">' + "".join(blocs) + '</div>')
 
 
-def _chiffre(val, lab, sous):
-    return (f'<div class="cad-carte" style="flex:1 1 190px;min-width:165px">'
-            f'<div class="cad-chiffre">{_e(val)}</div>'
-            f'<div class="cad-lab">{_e(lab)}</div>'
-            f'<div class="cad-sous">{_e(sous)}</div></div>')
-
-
 def _attributs():
     """Les trois attributs, en trois colonnes numérotées.
 
@@ -1076,7 +1068,7 @@ def _attributs():
     return '<div class="cad-aaa">' + "".join(cols) + '</div>'
 
 
-def _sources():
+def _sources(extras=None):
     """Les quatre sources, une carte par source.
 
     LE PARCOURS EN CHEVRONS A DISPARU. Les trois sources étaient reliées par
@@ -1089,18 +1081,38 @@ def _sources():
     contestable : « données géospatiales » ne veut rien dire tant qu'on n'a
     pas lu Sentinel, Landsat, NDVI. Une source qu'on ne peut pas vérifier est
     une source qu'on doit croire.
+
+    `extras` GLISSE UN BLOC SOUS LA DESCRIPTION D'UNE CARTE. L'enquête ménage
+    est la seule des quatre dont on connaisse l'effectif, le nombre de
+    sections et le minimum par section : ces chiffres tenaient dans un bloc
+    « plan de sondage » à part, sous la page, qu'il fallait aller chercher.
+    Ils appartiennent à la carte qu'ils décrivent.
     """
+    extras = extras or {}
     cartes = []
     for k in ("cad_so1", "cad_so2", "cad_so3", "cad_so4"):
         puces = [x.strip() for x in T(k + "_p").split("|") if x.strip()]
+        note = T(k + "_note") if (k + "_note") in i18n.DICO else ""
         cartes.append(
             '<div class="cad-so-c">'
             f'<div class="cad-so-t">{_e(T(k + "_t"))}</div>'
             f'<p class="cad-so-x">{_e(T(k + "_x"))}</p>'
-            '<div class="cad-so-s"></div><ul class="cad-so-l">'
+            + extras.get(k, "")
+            + '<div class="cad-so-s"></div><ul class="cad-so-l">'
             + "".join(f'<li>{_e(p)}</li>' for p in puces)
-            + '</ul></div>')
+            + '</ul>'
+            + (f'<p class="cad-so-n2">{_e(note)}</p>' if note else "")
+            + '</div>')
     return '<div class="cad-so">' + "".join(cartes) + '</div>'
+
+
+def _compteurs(paires):
+    """Une rangée compacte de chiffres, à l'intérieur d'une carte."""
+    if not paires:
+        return ""
+    return ('<div class="cad-so-k">' + "".join(
+        f'<div><b>{_e(v)}</b><span>{_e(lab)}, {_e(sous)}</span></div>'
+        for v, lab, sous in paires) + '</div>')
 
 
 def _bande(n_ind):
@@ -1236,44 +1248,35 @@ def _v_mesure():
 
 # --- 2 · comment la résilience est mesurée ----------------------------------
 def _v_sources(stats):
-    """Les quatre sources, ce qui en sort, puis le plan de sondage.
+    """Les quatre sources et ce qui en sort. Tout tient dans l'écran.
 
     LA QUATRIÈME SOURCE MANQUAIT. Les entretiens structurés menés dans chaque
     paysage auprès des autorités sanitaires, éducatives et politiques
     communales et des organisations de la société civile existaient dans la
-    collecte, et la page n'en disait rien : elle annonçait trois sources pour
-    un dispositif qui en compte quatre.
+    collecte, et la page n'en disait rien.
 
-    LE PLAN DE SONDAGE RESTE SOUS LA BANDE. Il ne décrit qu'une des quatre
-    sources — l'enquête ménage — et le mettre à côté des trois autres l'aurait
-    donné pour le protocole d'ensemble.
+    LE PLAN DE SONDAGE N'EST PLUS UN BLOC À PART. Il occupait le bas de
+    l'onglet — trois grands nombres, quatre strates, un paragraphe — et il
+    fallait faire défiler pour l'atteindre alors qu'il ne décrit qu'UNE des
+    quatre sources. Ses chiffres sont entrés dans la carte de l'enquête
+    ménage, ses strates dans une puce, et sa justification dans la note du
+    bas. Rien n'a été perdu ; il n'y a plus rien sous les quatre blocs.
     """
     menages, n_sections = _menages()
-    st.markdown(_titre("cad_src", "cad_src_note", marge=4) + _sources(),
-                unsafe_allow_html=True)
-    st.markdown(_bande(stats["n"]), unsafe_allow_html=True)
-
-    cartes = []
+    compteurs = []
     if menages:
-        cartes.append(_chiffre(_fmt(menages, 0), T("cad_s1_t"), T("cad_s1")))
+        compteurs.append((_fmt(menages, 0), T("cad_s1_t"), T("cad_s1")))
     if n_sections:
-        cartes.append(_chiffre(str(n_sections), T("cad_s2_t"), T("cad_s2")))
+        compteurs.append((str(n_sections), T("cad_s2_t"), T("cad_s2")))
     mini = _min_section()
     if mini:
-        cartes.append(_chiffre(_fmt(mini, 0), T("cad_s4_t"), T("cad_s4")))
-    if cartes:
-        st.markdown(_titre("cad_sondage", marge=32)
-                    + '<div class="cad-grille">' + "".join(cartes) + '</div>',
-                    unsafe_allow_html=True)
+        compteurs.append((_fmt(mini, 0), T("cad_s4_t"), T("cad_s4")))
 
     st.markdown(
-        f'<div class="cad-etage">{_e(T("cad_strates"))}</div>'
-        '<ul class="cad-liste">'
-        + "".join(f'<li>{_e(T(k))}</li>'
-                  for k in ("cad_st1", "cad_st2", "cad_st3", "cad_st4"))
-        + '</ul>'
-        f'<p class="cad-note" style="margin-top:12px;max-width:92ch">'
-        f'{_e(T("cad_tirage"))}</p>', unsafe_allow_html=True)
+        _titre("cad_src", "cad_src_note", marge=4)
+        + _sources({"cad_so1": _compteurs(compteurs)}),
+        unsafe_allow_html=True)
+    st.markdown(_bande(stats["n"]), unsafe_allow_html=True)
 
 
 # --- 3 · les dimensions -----------------------------------------------------
