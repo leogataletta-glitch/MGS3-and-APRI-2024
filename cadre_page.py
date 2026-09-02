@@ -27,6 +27,7 @@ accompagnée du nom de la dimension en toutes lettres.
 
 import json
 import os
+from urllib.parse import quote
 
 import streamlit as st
 
@@ -432,6 +433,14 @@ TEXTES = {
               "detail of each choice.",
         "fr": "Tout ce qui précède, en texte suivi, avec les sources et le "
               "détail de chaque choix."},
+    "cad_doc_lire": {"en": "Or read it on screen",
+                     "fr": "Ou le lire à l'écran"},
+    "cad_doc_absent": {
+        "en": "The file is not in the repository yet: add "
+              "data/IRLA_approche_complete.doc to make the download appear.",
+        "fr": "Le fichier n'est pas encore dans le dépôt : ajoutez "
+              "data/IRLA_approche_complete.doc pour que le téléchargement "
+              "apparaisse."},
 }
 
 for _c, _v in TEXTES.items():
@@ -447,6 +456,72 @@ def _fmt(v, dec=1):
     if v is None:
         return "—"
     return f"{v:,.{dec}f}".replace(",", " ").replace(".", ",")
+
+
+def _fond_icone(nom, couleur="#2a6b3f", taille=22):
+    """Une icône du module commun, prête à servir de `background-image`.
+
+    LE MODULE N'ÉCRIT PAS L'ESPACE DE NOMS SVG, et un SVG en `data:` qui n'en
+    a pas ne peint rien du tout — sans erreur, sans trace. On l'ajoute ici.
+    """
+    brut = icones.svg(nom, couleur, taille).replace(
+        "<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ', 1)
+    return 'url("data:image/svg+xml,%s")' % quote(brut)
+
+
+def _css_telechargement():
+    """La pièce jointe a la forme d'une pièce jointe.
+
+    LE BOUTON EST LA CARTE ENTIÈRE, et non un bouton posé dans une carte :
+    toute la surface se clique, ce qui est la promesse que fait un bloc
+    encadré. Streamlit ne pose qu'un libellé sur un bouton, donc la flèche et
+    la ligne du format sont écrites en CSS, dans ::before et ::after.
+    """
+    b = 'div[class*="st-key-cad_tel"] div[data-testid="stDownloadButton"] > button'
+    return f"""<style>
+    {b} {{
+      display:grid !important;
+      grid-template-columns:46px 1fr; grid-template-rows:auto auto;
+      column-gap:16px; row-gap:0; align-items:center;
+      text-align:left !important;
+      padding:17px 22px !important; min-height:0 !important;
+      background:#ffffff !important;
+      border:1px solid #dde9e3 !important;
+      border-left:4px solid {VERT_APRI} !important;
+      border-radius:12px !important;
+      box-shadow:none !important; transform:none !important;
+      transition:border-color .15s ease, box-shadow .15s ease;
+    }}
+    {b}:hover {{
+      border-color:#bcd6c7 !important;
+      border-left-color:{VERT_APRI} !important;
+      box-shadow:0 2px 14px rgba(16,23,40,.06) !important;
+    }}
+    {b}::before {{
+      content:""; grid-column:1; grid-row:1 / span 2;
+      width:46px; height:46px; border-radius:50%;
+      background:#eaf3ed {_fond_icone("telecharger")} center/22px no-repeat;
+    }}
+    {b} > div {{ grid-column:2; grid-row:1; width:auto !important;
+                 justify-self:start !important; }}
+    {b} div[data-testid="stMarkdownContainer"] {{ text-align:left !important; }}
+    {b} p {{
+      font-size:15px !important; font-weight:700 !important;
+      color:#12314c !important; margin:0 !important;
+      text-align:left !important; line-height:1.3 !important;
+    }}
+    {b}::after {{
+      content:"{_txt_css(T("cad_doc_tel"))} · {_txt_css(T("cad_doc_note"))}";
+      grid-column:2; grid-row:2; margin-top:4px;
+      font-size:12.5px; font-weight:500; color:#6b7590; line-height:1.5;
+    }}
+    </style>"""
+
+
+def _txt_css(t):
+    """Un texte prêt pour `content:` — les guillemets et les barres obliques
+    inverses y sont des délimiteurs, pas des caractères."""
+    return t.replace("\\", "\\\\").replace('"', '\\"')
 
 
 def _trouver(nom):
@@ -954,16 +1029,26 @@ def _cadre_apri(stats, doc_complet):
     # La page réexpliquait en trois volets ce que le document dit en entier et
     # mieux : sources, plan de sondage, limites. Une paraphrase vieillit à
     # part de son original et finit par le contredire. Le fichier est servi
-    # tel quel ; le rendu HTML du document reste dessous, pour qui préfère
-    # lire à l'écran.
-    with st.expander(T("cad_doc")):
-        chemin = _trouver("IRLA_approche_complete.doc")
-        if chemin:
+    # tel quel.
+    #
+    # ET CE N'EST PLUS UN VOLET REPLIÉ. Un volet demande un clic pour savoir
+    # ce qu'il contient, et n'annonce rien de ce qu'on peut en faire : le
+    # document se rangeait derrière une flèche, comme un paragraphe de plus.
+    # C'est une pièce jointe : elle a la forme d'une pièce jointe — une carte
+    # cliquable, une flèche de téléchargement, le format et le poids annoncés
+    # avant le clic. Le rendu à l'écran reste dessous, pour qui préfère lire
+    # sans télécharger.
+    st.markdown(_css_telechargement(), unsafe_allow_html=True)
+    chemin = _trouver("IRLA_approche_complete.doc")
+    if chemin:
+        with st.container(key="cad_tel"):
             with open(chemin, "rb") as f:
                 st.download_button(
-                    T("cad_doc_tel"), f.read(),
+                    T("cad_doc"), f.read(),
                     file_name="IRLA_approche_complete.doc",
-                    mime="application/msword")
-            st.caption(T("cad_doc_note"))
-        if doc_complet is not None:
+                    mime="application/msword", use_container_width=True)
+    else:
+        st.info(T("cad_doc_absent"))
+    if doc_complet is not None:
+        with st.expander(T("cad_doc_lire")):
             doc_complet()
