@@ -108,13 +108,15 @@ TEXTES = {
               "système complexe adaptatif."},
 
     # --- le cadre AAA
-    "cad_aaa": {"en": "Three attributes, read across every dimension",
-                "fr": "Trois attributs, lus sur chaque dimension"},
-    "cad_aaa_note": {
-        "en": "Every indicator in the framework is attached to the attribute "
-              "or attributes it contributes to.",
-        "fr": "Chaque indicateur du référentiel est rattaché à l'attribut ou "
-              "aux attributs auxquels il contribue."},
+    # L'INTITULÉ DIT CE QU'ON MESURE, PAS COMMENT C'EST RANGÉ. « Trois
+    # attributs, lus sur chaque dimension » décrivait la structure du
+    # référentiel ; la ligne de dessous ajoutait qu'un indicateur est rattaché
+    # à l'attribut auquel il contribue — deux phrases de méthode, à l'endroit
+    # où le lecteur cherche l'objet de la mesure. Il est dit en une ligne.
+    "cad_aaa": {"en": "What is measured is the capacity to attain three "
+                      "attributes",
+                "fr": "Ce que l'on mesure, c'est la capacité à atteindre "
+                      "trois attributs"},
     "cad_a1_t": {"en": "Anticipate", "fr": "Anticiper"},
     "cad_a1": {"en": "Detect disturbances and prepare responses before they "
                      "arrive",
@@ -1123,7 +1125,7 @@ def _v_mesure():
     """
     st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>',
                 unsafe_allow_html=True)
-    st.markdown(_titre("cad_aaa", "cad_aaa_note", marge=32) + _attributs(),
+    st.markdown(_titre("cad_aaa", marge=32) + _attributs(),
                 unsafe_allow_html=True)
 
 
