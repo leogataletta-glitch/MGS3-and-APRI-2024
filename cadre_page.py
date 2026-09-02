@@ -425,9 +425,13 @@ TEXTES = {
 
     "cad_doc": {"en": "The full methodological document",
                 "fr": "Le document méthodologique complet"},
+    # LE POIDS EST CALCULÉ, PAS ÉCRIT. Annoncé en dur, il aurait continué de
+    # dire 7,7 Mo le jour où le document est remplacé par une version plus
+    # lourde — et un poids faux avant un téléchargement de plusieurs méga
+    # octets est exactement le genre de détail qui fait douter du reste.
     "cad_doc_tel": {
-        "en": "Download the IRLA approach (Word, 7.7 MB)",
-        "fr": "Télécharger l'approche IRLA (Word, 7,7 Mo)"},
+        "en": "Download the IRLA approach (Word, {t})",
+        "fr": "Télécharger l'approche IRLA (Word, {t})"},
     "cad_doc_note": {
         "en": "Everything above, in full prose, with the sources and the "
               "detail of each choice.",
@@ -436,11 +440,11 @@ TEXTES = {
     "cad_doc_lire": {"en": "Or read it on screen",
                      "fr": "Ou le lire à l'écran"},
     "cad_doc_absent": {
-        "en": "The file is not in the repository yet: add "
-              "data/IRLA_approche_complete.doc to make the download appear.",
-        "fr": "Le fichier n'est pas encore dans le dépôt : ajoutez "
-              "data/IRLA_approche_complete.doc pour que le téléchargement "
-              "apparaisse."},
+        "en": "The file is not in the repository yet: drop a Word document "
+              "whose name contains IRLA into data/ and the download appears.",
+        "fr": "Le fichier n'est pas encore dans le dépôt : déposez dans "
+              "data/ un document Word dont le nom contient IRLA et le "
+              "téléchargement apparaîtra."},
 }
 
 for _c, _v in TEXTES.items():
@@ -458,6 +462,35 @@ def _fmt(v, dec=1):
     return f"{v:,.{dec}f}".replace(",", " ").replace(".", ",")
 
 
+def _document_irla():
+    """Le document de référence, sous quelque nom qu'il ait été déposé.
+
+    LE FICHIER EST CHERCHÉ, PAS NOMMÉ. Le code attendait
+    `IRLA_approche_complete.doc` ; le document a été déposé dans le dépôt sous
+    son titre entier, parenthèses et numéro de version compris, et la carte de
+    téléchargement est restée muette sans rien dire de pourquoi. Un nom de
+    fichier est une convention entre deux personnes, et une convention se
+    perd : on prend donc le premier document Word du dossier dont le nom
+    porte « IRLA ». Le déposer suffit, le renommer n'est plus nécessaire.
+    """
+    for dossier in (DATA, APP_DIR):
+        if not os.path.isdir(dossier):
+            continue
+        for nom in sorted(os.listdir(dossier)):
+            bas = nom.lower()
+            if bas.endswith((".doc", ".docx")) and "irla" in bas:
+                return os.path.join(dossier, nom)
+    return None
+
+
+def _poids(chemin):
+    """Le poids du fichier, dans la langue courante."""
+    mo = os.path.getsize(chemin) / (1024 * 1024)
+    if i18n.get_lang() == "en":
+        return f"{mo:.1f} MB"
+    return f"{mo:.1f} Mo".replace(".", ",")
+
+
 def _fond_icone(nom, couleur="#2a6b3f", taille=22):
     """Une icône du module commun, prête à servir de `background-image`.
 
@@ -469,7 +502,7 @@ def _fond_icone(nom, couleur="#2a6b3f", taille=22):
     return 'url("data:image/svg+xml,%s")' % quote(brut)
 
 
-def _css_telechargement():
+def _css_telechargement(poids):
     """La pièce jointe a la forme d'une pièce jointe.
 
     LE BOUTON EST LA CARTE ENTIÈRE, et non un bouton posé dans une carte :
@@ -511,7 +544,7 @@ def _css_telechargement():
       text-align:left !important; line-height:1.3 !important;
     }}
     {b}::after {{
-      content:"{_txt_css(T("cad_doc_tel"))} · {_txt_css(T("cad_doc_note"))}";
+      content:"{_txt_css(T("cad_doc_tel", t=poids))} · {_txt_css(T("cad_doc_note"))}";
       grid-column:2; grid-row:2; margin-top:4px;
       font-size:12.5px; font-weight:500; color:#6b7590; line-height:1.5;
     }}
@@ -1038,14 +1071,14 @@ def _cadre_apri(stats, doc_complet):
     # cliquable, une flèche de téléchargement, le format et le poids annoncés
     # avant le clic. Le rendu à l'écran reste dessous, pour qui préfère lire
     # sans télécharger.
-    st.markdown(_css_telechargement(), unsafe_allow_html=True)
-    chemin = _trouver("IRLA_approche_complete.doc")
+    chemin = _document_irla()
     if chemin:
+        st.markdown(_css_telechargement(_poids(chemin)), unsafe_allow_html=True)
         with st.container(key="cad_tel"):
             with open(chemin, "rb") as f:
                 st.download_button(
                     T("cad_doc"), f.read(),
-                    file_name="IRLA_approche_complete.doc",
+                    file_name=os.path.basename(chemin),
                     mime="application/msword", use_container_width=True)
     else:
         st.info(T("cad_doc_absent"))
