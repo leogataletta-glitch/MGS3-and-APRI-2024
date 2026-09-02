@@ -213,10 +213,15 @@ STYLE = """
      (`preserveAspectRatio` par défaut) : il rétrécit, il ne s'écrase pas.
      Le plancher de 205 px est le point où la carte cesse d'être lisible :
      en dessous, on préfère que la page défile. */
-  .uma-carte svg { display:block; width:100%; height:auto;
-                   margin:0 !important;
-                   max-height: max(205px, calc(100vh - 418px)); }
-  .uma-carte svg .sea { fill:transparent !important; }
+  /* LE SÉLECTEUR VISE L'ENFANT DIRECT, ET C'EST INDISPENSABLE. Le carton de
+     situation est un SVG imbriqué dans celui de la carte : une règle en
+     descendance lui imposait `width:100%`, ce qui écrase ses propres `x`,
+     `y` et `width` — le carton prenait alors toute la carte et la couvrait
+     entièrement. */
+  .uma-carte > svg { display:block; width:100%; height:auto;
+                     margin:0 !important;
+                     max-height: max(205px, calc(100vh - 418px)); }
+  .uma-carte > svg > .sea, .uma-carte > svg .sea { fill:transparent !important; }
   .uma-zone   { position:relative; }
   /* LA PHRASE EST AU-DESSUS DE LA CARTE, ET EN GRAS. Rangée dessous et en
      gris pâle, elle se lisait comme une mention légale — après le dessin,
@@ -228,11 +233,6 @@ STYLE = """
              color:#3c4761 !important; margin:0 0 12px;
              line-height:1.45 !important; max-width:52ch;
              text-align:left !important; }
-  /* LA VIGNETTE RÉPOND À « OÙ EST-CE ? », que la carte détaillée ne peut pas
-     dire : cadrée sur la presqu'île, elle montre dix sections sans montrer
-     le pays. Le badge est large et bas — l'île l'est aussi — ce qui le fait
-     tenir sous la définition sans pousser la page. */
-  .uma-badge { margin:14px 0 0; max-width:300px; }
 
   @media (max-width:760px){ .uma-t{font-size:25px} }
 </style>
@@ -496,8 +496,39 @@ def _carte_indice(m):
         "<svg ", '<svg preserveAspectRatio="xMinYMid meet" ', 1).replace(
         "margin:0 auto", "margin:0")
     svg = _sans_valeur(svg)
+    svg = _pousser_reperes(svg)
+    svg = _carton(svg)
     return {"carte": f'<div class="uma-carte">{svg}</div>',
             "note": _e(T("po_carte_cap"))}
+
+
+# LA ROSE DES VENTS ET L'ÉCHELLE SONT DESSINÉES CONTRE LE BORD GAUCHE DU
+# CANEVAS, à quarante-six points d'un dessin dont la côte commence vers 336 :
+# elles flottaient au large, à trois cents points de la terre qu'elles
+# servent à lire. On les ramène contre le rivage, et la place ainsi libérée
+# revient au carton de situation. Les quatre repères portent des classes qui
+# leur sont propres — `cl` pour les traits, `ca` pour la pointe de la flèche,
+# `ct` et `ct2` pour les mots — donc rien d'autre ne bouge. LA POINTE COMPTE
+# AUTANT QUE LE TRAIT : oubliée, elle reste en arrière et la flèche se coupe
+# en deux.
+_REPERE = re.compile(r'<(line|text|path)\b[^>]*class="(?:cl|ca|ct|ct2)"[^>]*>')
+_ABSCISSE = re.compile(r'\b(x|x1|x2)="(-?[\d.]+)"')
+_TRACE = re.compile(r'\bd="([^"]*)"')
+
+
+def _pousser_reperes(svg, dx=-210):
+    """Décale la rose des vents et l'échelle kilométrique vers la côte."""
+    def _chemin(m):
+        # Le tracé de la pointe est une suite « M x,y L x,y … » : seule
+        # l'abscisse, en tête de chaque couple, se décale.
+        return 'd="%s"' % re.sub(
+            r'(-?[\d.]+),(-?[\d.]+)',
+            lambda c: f'{float(c.group(1)) - dx:g},{c.group(2)}', m.group(1))
+
+    def _un(m):
+        return _TRACE.sub(_chemin, _ABSCISSE.sub(
+            lambda a: f'{a.group(1)}="{float(a.group(2)) - dx:g}"', m.group(0)))
+    return _REPERE.sub(_un, svg)
 
 
 # LE MOTEUR DE CARTES ÉCRIT TOUJOURS LA VALEUR, et il n'a pas de réglage pour
@@ -515,27 +546,52 @@ def _sans_valeur(svg):
     return _INFOBULLE.sub(r'\1\2\3', _ETIQUETTE.sub('', svg))
 
 
-def _badge():
-    """Le badge de localisation : où se trouve la zone enquêtée dans Haïti.
+# Le carton se pose dans le coin haut-gauche de la carte, sur la mer, en
+# unités du canevas de la carte (920 par 400). Cette bande d'eau va jusqu'à
+# la côte, qui commence vers x = 336 : le carton en prend la moitié gauche,
+# la rose des vents et l'échelle kilométrique occupent l'autre, contre la
+# terre.
+_CARTON = (6, 8, 232, 95)          # x, y, largeur, hauteur
+_OUVRE_SVG = re.compile(r'^<svg\b[^>]*>')
 
-    LA CARTE DÉTAILLÉE NE PEUT PAS RÉPONDRE À « OÙ EST-CE ? ». Cadrée sur la
-    presqu'île du Sud, elle montre dix sections communales et trois noms de
-    département ; qui ne connaît pas Haïti n'y reconnaît ni le pays, ni même
-    l'île. Le badge le dit en une image : l'île entière, la République
-    dominicaine nommée en retrait, et la zone d'étude cerclée de vert.
 
-    IL EST LARGE ET BAS parce que l'île l'est, et il est PLUS LARGE QUE
-    L'ÎLE : la boîte est volontairement plus étirée que le contour, de sorte
-    que la hauteur cadre le dessin et laisse du jeu sur les côtés. Sans ce
-    jeu, le cercle de la zone d'étude — qui déborde du contour, et qui tombe
-    à l'extrême sud-ouest — sortait du cadre par la gauche.
+def _carton(svg_carte):
+    """Pose la vignette de localisation DANS la carte, sur la mer.
+
+    ELLE ÉTAIT SOUS LA DÉFINITION, ET ELLE COÛTAIT CENT CINQUANTE PIXELS DE
+    HAUTEUR à une page qui doit tenir dans un écran — alors que la carte,
+    elle, porte une large bande de mer vide à l'ouest de la presqu'île. Un
+    carton de situation dans un coin d'eau est d'ailleurs la façon dont les
+    atlas règlent la question depuis toujours : la vue générale et la vue de
+    détail se lisent d'un seul regard, sans que la seconde ait à céder de la
+    place à la première.
+
+    UN SVG S'IMBRIQUE DANS UN SVG, avec ses propres `x`, `y` et `viewBox` :
+    c'est du SVG 1.1, tous les navigateurs le rendent, et cela évite d'avoir
+    à reprojeter l'île dans le repère de la carte. La vignette est donc
+    dessinée à la taille exacte qu'elle occupera, et non réduite après coup :
+    ses deux noms de pays gardent leur corps de texte.
     """
     geo = territoire_page._geo()
-    # LA MER EST PRESQUE BLANCHE ICI. Le bleu gris de la page « Le territoire »
-    # formerait un rectangle plein sur une page qu'on a débarrassée de ses
-    # boîtes : seule l'île doit se voir.
-    svg = territoire_page._vignette(geo, larg=300, haut=122, mer="#f7fafc")
-    return f'<div class="uma-badge">{svg}</div>' if svg else ""
+    x, y, larg, haut = _CARTON
+    # LA MER EST PRESQUE BLANCHE ICI. Le bleu gris de la page « Le
+    # territoire » ferait une tache sur une carte dont la mer est
+    # transparente : seule l'île doit se voir.
+    vignette = territoire_page._vignette(geo, larg=larg, haut=haut,
+                                         mer="#ffffff")
+    if not vignette:
+        return svg_carte
+    # LE CADRE EST REDESSINÉ EN SVG. Celui de la vignette est une bordure
+    # CSS, qui n'existe pas à l'intérieur d'un SVG : on le remplace par un
+    # rectangle arrondi, posé sous le dessin.
+    dedans = _OUVRE_SVG.sub("", vignette)[:-len("</svg>")]
+    dedans = dedans.replace(
+        f'<rect width="{larg}" height="{haut}" fill="#ffffff"/>',
+        f'<rect x=".5" y=".5" width="{larg - 1}" height="{haut - 1}" rx="8" '
+        f'fill="#ffffff" stroke="#dfe7ef" stroke-width="1"/>', 1)
+    imbrique = (f'<svg x="{x}" y="{y}" width="{larg}" height="{haut}" '
+                f'viewBox="0 0 {larg} {haut}">{dedans}</svg>')
+    return svg_carte.replace("</svg>", imbrique + "</svg>")
 
 
 def _comprendre(m):
@@ -567,8 +623,8 @@ def _comprendre(m):
         _mot, _reste = _e(T("po_uma_x")).split(" ", 1)
         st.markdown(f'<div class="uma-cadre">'
                     f'<div class="uma-sur">{_e(T("po_uma_sur"))}</div>'
-                    f'<p class="uma-x"><b>{_mot}</b> {_reste}</p></div>'
-                    + _badge(), unsafe_allow_html=True)
+                    f'<p class="uma-x"><b>{_mot}</b> {_reste}</p></div>',
+                    unsafe_allow_html=True)
     if not c:
         return
     with d:
