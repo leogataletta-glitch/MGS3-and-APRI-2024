@@ -338,33 +338,105 @@ TEXTES = {
               "the wave travel, isolate a loop.",
         "fr": "L'outil est dans l'onglet **Boucles de rétroaction** : "
               "poussez un levier, suivez l'onde, isolez une boucle."},
-    # ================= les trois sources =====================================
-    "cad_src": {"en": "How the index is built", "fr": "Comment l'indice est construit"},
+    # ================= LES QUATRE SOURCES ====================================
+    # ELLES ÉTAIENT TROIS, ELLES SONT QUATRE. Le quatrième volet — les
+    # entretiens structurés menés dans chaque paysage auprès des autorités
+    # sanitaires, éducatives et politiques communales et des organisations de
+    # la société civile — existait dans la collecte et pas sur la page. Une
+    # source de données qu'on ne nomme pas est une source qu'on ne peut pas
+    # contester : c'est le contraire de ce que fait une page de méthode.
+    #
+    # LES PUCES SONT UNE SEULE CHAÎNE, séparée par des barres verticales.
+    # Seize clés de traduction pour seize puces se désynchronisent à la
+    # première relecture ; une chaîne par langue se relit d'un coup.
+    "cad_src": {"en": "The data sources", "fr": "Les sources de données"},
     "cad_src_note": {
-        "en": "Three sources, each answering what the others cannot reach. "
-              "A single one would leave a blind spot.",
-        "fr": "Trois sources, chacune répondant là où les autres n'atteignent "
-              "pas. Une seule laisserait un angle mort."},
-    "cad_src1_t": {"en": "Household survey", "fr": "Enquête ménage"},
-    "cad_src1": {"en": "What families live through: water, energy, income, "
-                       "food, health, mutual aid.",
-                 "fr": "Ce que vivent les familles : eau, énergie, revenus, "
-                       "alimentation, santé, entraide."},
-    "cad_src1_c": {"en": "{n} questionnaires", "fr": "{n} questionnaires"},
-    "cad_src2_t": {"en": "Geospatial data", "fr": "Données géospatiales"},
-    "cad_src2": {"en": "What no questionnaire can see: forest cover, rainfall, "
-                       "vegetation, surface temperature, aridity.",
-                 "fr": "Ce qu'aucun questionnaire ne voit : couvert forestier, "
-                       "pluie, végétation, température de surface, aridité."},
-    "cad_src2_c": {"en": "25 years of imagery", "fr": "25 ans d'imagerie"},
-    "cad_src3_t": {"en": "Community-based assessment",
-                   "fr": "Évaluation communautaire"},
-    "cad_src3": {"en": "What holds the territory together: the base "
-                       "organisations, their reach and their capacity to act.",
-                 "fr": "Ce qui tient le territoire : les organisations de "
-                       "base, leur portée et leur capacité d'action."},
-    "cad_src3_c": {"en": "{n} organisations surveyed",
-                   "fr": "{n} organisations recensées"},
+        "en": "Resilience is measured using multiple, complementary data "
+              "sources that capture the condition of households, ecosystems, "
+              "institutions and the territories where people live.",
+        "fr": "La résilience se mesure à partir de plusieurs sources de "
+              "données complémentaires, qui saisissent l'état des ménages, "
+              "des écosystèmes, des institutions et des territoires où vivent "
+              "les gens."},
+
+    "cad_so1_t": {"en": "Household survey", "fr": "Enquête ménage"},
+    "cad_so1_x": {
+        "en": "Information collected directly from households on "
+              "livelihoods, assets, risk perception, preparedness and access "
+              "to services.",
+        "fr": "Informations recueillies directement auprès des ménages sur "
+              "les moyens d'existence, les biens, la perception du risque, "
+              "la préparation et l'accès aux services."},
+    "cad_so1_p": {
+        "en": "Structured questionnaires|Stratified and randomized sampling|"
+              "Socio-economic and institutional data|Perceptions and "
+              "behaviours",
+        "fr": "Questionnaires structurés|Échantillonnage stratifié et "
+              "aléatoire|Données socio-économiques et institutionnelles|"
+              "Perceptions et comportements"},
+
+    "cad_so2_t": {"en": "Geospatial data", "fr": "Données géospatiales"},
+    "cad_so2_x": {
+        "en": "Satellite and spatial data used to measure land cover, "
+              "vegetation, environmental conditions and landscape "
+              "characteristics.",
+        "fr": "Données satellitaires et spatiales utilisées pour mesurer le "
+              "couvert, la végétation, les conditions environnementales et "
+              "les caractéristiques du paysage."},
+    "cad_so2_p": {
+        "en": "Satellite imagery (Sentinel, Landsat)|Land cover and land use|"
+              "Vegetation indices (NDVI, EVI)|Environmental indicators "
+              "(e.g. SPI)|Topography and hydrography",
+        "fr": "Imagerie satellitaire (Sentinel, Landsat)|Couvert et usage des "
+              "sols|Indices de végétation (NDVI, EVI)|Indicateurs "
+              "environnementaux (SPI, etc.)|Topographie et hydrographie"},
+
+    "cad_so3_t": {"en": "Biodiversity assessment",
+                  "fr": "Évaluation de la biodiversité"},
+    "cad_so3_x": {
+        "en": "Field observations and inventories used to characterize "
+              "biodiversity and ecological conditions.",
+        "fr": "Observations et inventaires de terrain utilisés pour "
+              "caractériser la biodiversité et l'état écologique."},
+    "cad_so3_p": {
+        "en": "Species inventories|Habitat and ecosystem assessments|"
+              "Indicator species and functional groups|Ecological condition "
+              "indices",
+        "fr": "Inventaires d'espèces|Évaluation des habitats et des "
+              "écosystèmes|Espèces indicatrices et groupes fonctionnels|"
+              "Indices d'état écologique"},
+
+    "cad_so4_t": {"en": "Institutional interviews",
+                  "fr": "Entretiens institutionnels"},
+    "cad_so4_x": {
+        "en": "Structured interviews conducted in each landscape with the "
+              "actors who deliver services, take decisions and organise "
+              "collective action.",
+        "fr": "Entretiens structurés menés dans chaque paysage auprès des "
+              "acteurs qui délivrent les services, décident et organisent "
+              "l'action collective."},
+    "cad_so4_p": {
+        "en": "Health authorities|Education authorities|Communal political "
+              "authorities|Civil society organisations",
+        "fr": "Autorités sanitaires|Autorités éducatives|Autorités "
+              "politiques communales|Organisations de la société civile"},
+
+    # ================= LA BANDE DE CLÔTURE ===================================
+    # LE NOMBRE EST COMPTÉ DANS LE RÉFÉRENTIEL, jamais écrit. C'est le seul
+    # chiffre de la bande, et un chiffre faux à cet endroit — juste après la
+    # liste des sources — discrédite les sources elles-mêmes.
+    "cad_band_t": {
+        "en": "From these different sources, APRI compiles a set of "
+              "resilience indicators.",
+        "fr": "À partir de ces différentes sources, APRI constitue un "
+              "ensemble d'indicateurs de résilience."},
+    "cad_band_x": {
+        "en": "These indicators are standardized and aggregated to produce "
+              "resilience scores across the seven dimensions.",
+        "fr": "Ces indicateurs sont normalisés puis agrégés pour produire les "
+              "scores de résilience sur les sept dimensions."},
+    "cad_band_lab": {"en": "resilience indicators",
+                     "fr": "indicateurs de résilience"},
 
     # ================= les volets repliés ====================================
     "cad_v_pourquoi": {"en": "Why APRI?", "fr": "Pourquoi APRI ?"},
@@ -647,33 +719,10 @@ STYLE = """
      LEUR LECTURE : la quatrième dit ce que l'indice NE mesure PAS, et
      renvoyée seule à la ligne suivante elle se lisait comme une note de bas
      de page. À 235 px de base elles débordaient de douze pixels. */
-  .cad-n    { flex:1 1 200px; min-width:186px; background:#fff;
-              border:1px solid #e3eaf3; border-radius:14px; padding:16px 18px;
-              box-shadow:0 1px 2px rgba(16,23,40,.05); }
-  .cad-n-i  { width:34px; height:34px; border-radius:10px; display:flex;
-              align-items:center; justify-content:center; margin-bottom:11px; }
-  .cad-n-t  { font-size:13.5px; font-weight:700; color:#101728;
-              letter-spacing:-.01em; margin:0 0 5px; line-height:1.25; }
-  .cad-n-x  { font-size:12.5px; color:#3c4761; line-height:1.55; margin:0; }
 
   /* --- le schéma d'ensemble --------------------------------------------- */
-  .cad-flux { display:flex; align-items:stretch; gap:4px; flex-wrap:wrap; }
-  .cad-fl   { flex:1 1 150px; min-width:132px; text-align:center;
-              padding:13px 10px; border:1px solid #e3eaf3; border-radius:13px;
-              background:#fff; }
-  .cad-fl-n { font-size:21px; font-weight:700; color:#101728; line-height:1;
-              letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
-  .cad-fl-l { font-size:11.5px; font-weight:700; color:#3c4761; margin-top:5px;
-              letter-spacing:.02em; }
-  .cad-fl-x { font-size:11.5px; color:#8a93a5; margin-top:3px; line-height:1.4; }
-  .cad-fl-c { align-self:center; color:#c3ccda; font-size:16px; flex:0 0 auto; }
 
   /* --- les trois sources ------------------------------------------------- */
-  .cad-src  { flex:1 1 260px; min-width:230px; background:#fff;
-              border:1px solid #e3eaf3; border-radius:14px; padding:15px 17px;
-              position:relative; }
-  .cad-src-c{ font-size:11.5px; font-weight:700; letter-spacing:.06em;
-              text-transform:uppercase; }
   .cad-etage{ font-size:11px; letter-spacing:.11em; text-transform:uppercase;
               font-weight:700; color:#a7b0be; margin:26px 0 8px; }
   /* LA JUSTIFICATION EST ANNULÉE DANS LES CARTES. La feuille de style du site
@@ -684,8 +733,62 @@ STYLE = """
      ils vivent dans des cases étroites, où la justification creuserait
      des couloirs blancs. Les descriptions et les listes, elles, courent
      sur toute la largeur et se justifient comme le reste du site. */
-  .cad-n-t, .cad-carte-x { text-align:left !important; }
-  .cad-fl-n, .cad-fl-l, .cad-fl-x { text-align:center !important; }
+  .cad-carte-x { text-align:left !important; }
+
+  /* --- les quatre sources, en cartes ---------------------------------------
+     ELLES SONT ENCADRÉES, CONTRAIREMENT AUX TROIS ATTRIBUTS. La règle de la
+     page tient en une phrase : un cadre dit qu'on tient un objet séparé. Les
+     attributs sont trois faces d'une même définition, ils se lisent d'un
+     trait ; les sources sont quatre dispositifs distincts, chacun avec son
+     protocole et sa liste — un cadre par source.
+
+     LA GRILLE S'AJUSTE AU LIEU D'IMPOSER QUATRE COLONNES. `auto-fit` avec un
+     plancher de 250 px donne quatre cartes sur un écran large, deux sur un
+     portable, une sur un téléphone, sans qu'aucune ne descende sous la
+     largeur où une liste à puces cesse de se lire. */
+  .cad-so   { display:grid; gap:16px; margin-top:6px;
+              grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); }
+  .cad-so-c { background:#fff; border:1px solid #e3eaf3; border-radius:14px;
+              padding:18px 20px 20px;
+              box-shadow:0 1px 2px rgba(16,23,40,.05); }
+  .cad-so-t { font-size:16px; font-weight:700; color:#1a6b52;
+              letter-spacing:-.01em; margin:0 0 9px; }
+  p.cad-so-x { font-size:13px !important; color:#3c4761 !important;
+              line-height:1.6 !important; margin:0 0 14px !important;
+              text-align:left !important; }
+  .cad-so-s { height:1px; background:#eaf0f6; margin:0 0 12px; }
+  .cad-so-l { margin:0; padding:0; list-style:none; }
+  .cad-so-l li { font-size:12.5px; color:#3c4761; line-height:1.45;
+              padding:5px 0 5px 15px; position:relative; }
+  .cad-so-l li::before { content:""; position:absolute; left:0; top:11px;
+              width:5px; height:5px; border-radius:50%; background:#7fae94; }
+
+  /* --- la bande de clôture -------------------------------------------------
+     ELLE FERME LA LISTE ET DIT CE QU'ON EN FAIT. Sans elle, la page laissait
+     le lecteur devant quatre protocoles sans lui dire ce qui en sort. Le
+     nombre est à droite, isolé : c'est le résultat, pas un item de plus. */
+  .cad-band { display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+              background:#f4f8f5; border:1px solid #e0ebe4; border-radius:14px;
+              padding:16px 22px; margin-top:20px; }
+  .cad-band-i { width:44px; height:44px; border-radius:50%; background:#e2eee8;
+              display:flex; align-items:center; justify-content:center;
+              flex:0 0 auto; }
+  .cad-band-c { flex:1 1 320px; min-width:0; }
+  .cad-band-t { font-size:14.5px; font-weight:700; color:#1a6b52;
+              margin:0 0 3px; line-height:1.4; }
+  p.cad-band-x { font-size:12.5px !important; color:#5a6a80 !important;
+              line-height:1.5 !important; margin:0 !important;
+              text-align:left !important; }
+  /* LA COLONNE DU NOMBRE A UNE LARGEUR MINIMALE, et ce n'est pas un détail :
+     bornée à onze signes, l'étiquette coupait « RESILIENCE » en plein milieu
+     — le mot est plus long que la boîte une fois l'interlettrage appliqué. */
+  .cad-band-n { flex:0 0 auto; text-align:center; padding-left:16px;
+              min-width:118px; border-left:1px solid #d8e6de; }
+  .cad-band-v { font-size:34px; font-weight:700; color:#1a6b52; line-height:1;
+              letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+  .cad-band-lab { font-size:10.5px; font-weight:700; color:#5a6a80;
+              letter-spacing:.09em; text-transform:uppercase; margin-top:5px;
+              line-height:1.35; }
 
   /* --- les trois attributs, en colonnes numérotées ------------------------
      TROIS COLONNES ÉGALES, SÉPARÉES PAR UN FILET, ET AUCUNE CARTE. Les trois
@@ -943,11 +1046,6 @@ def _chiffre(val, lab, sous):
             f'<div class="cad-sous">{_e(sous)}</div></div>')
 
 
-def _icone(nom, couleur):
-    return (f'<div class="cad-n-i" style="background:{couleur}17;color:{couleur}">'
-            + icones.svg(nom, couleur=couleur, taille=19) + '</div>')
-
-
 def _attributs():
     """Les trois attributs, en trois colonnes numérotées.
 
@@ -978,39 +1076,46 @@ def _attributs():
     return '<div class="cad-aaa">' + "".join(cols) + '</div>'
 
 
-def _sources(menages, n_ocb):
-    """Les trois sources, en parcours : enquête → satellite → communautés."""
-    src = [("cad_src1", "personnes", VERT_APRI,
-            T("cad_src1_c", n=_fmt(menages, 0)) if menages else ""),
-           ("cad_src2", "carte", VERT_APRI, T("cad_src2_c")),
-           ("cad_src3", "maison", VERT_APRI,
-            T("cad_src3_c", n=n_ocb) if n_ocb else "")]
-    blocs = []
-    for i, (k, ic, c, chiffre) in enumerate(src):
-        if i:
-            blocs.append('<div class="cad-fl-c" style="align-self:center">'
-                         '&rsaquo;</div>')
-        blocs.append(
-            f'<div class="cad-src" style="border-top:3px solid {c}">'
-            + _icone(ic, c)
-            + f'<p class="cad-n-t">{_e(T(k + "_t"))}</p>'
-            + f'<p class="cad-n-x">{_e(T(k))}</p>'
-            + (f'<div class="cad-src-c" style="color:{c};margin-top:9px">'
-               f'{_e(chiffre)}</div>' if chiffre else "")
-            + '</div>')
-    return ('<div class="cad-flux" style="align-items:stretch">'
-            + "".join(blocs) + '</div>')
+def _sources():
+    """Les quatre sources, une carte par source.
+
+    LE PARCOURS EN CHEVRONS A DISPARU. Les trois sources étaient reliées par
+    des « › », comme des étapes ; elles n'en sont pas — on n'enquête pas les
+    ménages AVANT de regarder les images satellitaires, les quatre dispositifs
+    tournent en parallèle. Quatre cartes côte à côte disent la simultanéité,
+    ce qu'une flèche disait faux.
+
+    CHAQUE CARTE PORTE SA LISTE, et c'est elle qui rend la source
+    contestable : « données géospatiales » ne veut rien dire tant qu'on n'a
+    pas lu Sentinel, Landsat, NDVI. Une source qu'on ne peut pas vérifier est
+    une source qu'on doit croire.
+    """
+    cartes = []
+    for k in ("cad_so1", "cad_so2", "cad_so3", "cad_so4"):
+        puces = [x.strip() for x in T(k + "_p").split("|") if x.strip()]
+        cartes.append(
+            '<div class="cad-so-c">'
+            f'<div class="cad-so-t">{_e(T(k + "_t"))}</div>'
+            f'<p class="cad-so-x">{_e(T(k + "_x"))}</p>'
+            '<div class="cad-so-s"></div><ul class="cad-so-l">'
+            + "".join(f'<li>{_e(p)}</li>' for p in puces)
+            + '</ul></div>')
+    return '<div class="cad-so">' + "".join(cartes) + '</div>'
 
 
-def _n_ocb():
-    p = _trouver("ocb.json")
-    if not p:
-        return None
-    try:
-        with open(p, encoding="utf-8") as f:
-            return len(json.load(f).get("fiches") or [])
-    except Exception:
-        return None
+def _bande(n_ind):
+    """Ce qui sort des quatre sources : un nombre d'indicateurs."""
+    return (
+        '<div class="cad-band">'
+        '<div class="cad-band-i">'
+        + icones.svg("barres", couleur=VERT_APRI, taille=20) + '</div>'
+        '<div class="cad-band-c">'
+        f'<div class="cad-band-t">{_e(T("cad_band_t"))}</div>'
+        f'<p class="cad-band-x">{_e(T("cad_band_x"))}</p></div>'
+        '<div class="cad-band-n">'
+        f'<div class="cad-band-v">{_e(n_ind)}</div>'
+        f'<div class="cad-band-lab">{_e(T("cad_band_lab"))}</div>'
+        '</div></div>')
 
 
 def _min_section():
@@ -1089,7 +1194,7 @@ def render(doc_complet=None):
     st.markdown('<div style="height:10px"></div>', unsafe_allow_html=True)
 
     if vue == "sources":
-        _v_sources()
+        _v_sources(stats)
     elif vue == "dimensions":
         _v_dimensions(stats)
     elif vue == "score":
@@ -1130,20 +1235,23 @@ def _v_mesure():
 
 
 # --- 2 · comment la résilience est mesurée ----------------------------------
-def _v_sources():
-    """Les trois sources, puis le plan de sondage qui les a produites.
+def _v_sources(stats):
+    """Les quatre sources, ce qui en sort, puis le plan de sondage.
 
-    LE PLAN DE SONDAGE ÉTAIT ÉCRIT ET NE S'AFFICHAIT PLUS. Ses textes sont
-    restés dans le fichier après la refonte précédente, sans plus aucun appel
-    pour les rendre : la page annonçait trois sources sans jamais dire
-    combien de ménages, dans combien de sections, ni comment ils avaient été
-    tirés. Ils reviennent ici, et leurs chiffres sont comptés dans les
-    données plutôt qu'écrits à la main.
+    LA QUATRIÈME SOURCE MANQUAIT. Les entretiens structurés menés dans chaque
+    paysage auprès des autorités sanitaires, éducatives et politiques
+    communales et des organisations de la société civile existaient dans la
+    collecte, et la page n'en disait rien : elle annonçait trois sources pour
+    un dispositif qui en compte quatre.
+
+    LE PLAN DE SONDAGE RESTE SOUS LA BANDE. Il ne décrit qu'une des quatre
+    sources — l'enquête ménage — et le mettre à côté des trois autres l'aurait
+    donné pour le protocole d'ensemble.
     """
     menages, n_sections = _menages()
-    n_ocb = _n_ocb()
-    st.markdown(_titre("cad_src", "cad_src_note", marge=4)
-                + _sources(menages, n_ocb), unsafe_allow_html=True)
+    st.markdown(_titre("cad_src", "cad_src_note", marge=4) + _sources(),
+                unsafe_allow_html=True)
+    st.markdown(_bande(stats["n"]), unsafe_allow_html=True)
 
     cartes = []
     if menages:
@@ -1154,7 +1262,7 @@ def _v_sources():
     if mini:
         cartes.append(_chiffre(_fmt(mini, 0), T("cad_s4_t"), T("cad_s4")))
     if cartes:
-        st.markdown(_titre("cad_sondage", marge=30)
+        st.markdown(_titre("cad_sondage", marge=32)
                     + '<div class="cad-grille">' + "".join(cartes) + '</div>',
                     unsafe_allow_html=True)
 
