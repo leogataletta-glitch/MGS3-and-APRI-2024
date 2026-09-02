@@ -445,6 +445,27 @@ TEXTES = {
         "fr": "Le fichier n'est pas encore dans le dépôt : déposez dans "
               "data/ un document Word dont le nom contient IRLA et le "
               "téléchargement apparaîtra."},
+
+    # ================= LES SEPT ONGLETS DE LA PAGE ==========================
+    # LES TITRES SONT CEUX DU COMMANDITAIRE, MOT POUR MOT. Un intitulé qu'on
+    # « améliore » en le traduisant dans sa propre langue disparaît de la
+    # table des matières que son auteur a en tête, et la page devient
+    # introuvable pour la personne qui l'a commandée.
+    "cad_o1": {"en": "What APRI Measures", "fr": "Ce que mesure APRI"},
+    "cad_o2": {"en": "How Resilience Is Measured: Sources and Data",
+               "fr": "Comment la résilience est mesurée : sources et données"},
+    "cad_o3": {"en": "The Dimensions of Resilience",
+               "fr": "Les dimensions de la résilience"},
+    "cad_o4": {"en": "From Raw Measures to Resilience Scores",
+               "fr": "Des mesures brutes aux scores de résilience"},
+    "cad_o5": {"en": "Understanding Resilience Through Feedback Loops and "
+                     "Complex Systems",
+               "fr": "Comprendre la résilience par les boucles de rétroaction "
+                     "et les systèmes complexes"},
+    "cad_o6": {"en": "The Specific Case of Environmental Data",
+               "fr": "Le cas particulier des données environnementales"},
+    "cad_o7": {"en": "Download the Theoretical and Methodological Framework",
+               "fr": "Télécharger le cadre théorique et méthodologique"},
 }
 
 for _c, _v in TEXTES.items():
@@ -702,6 +723,55 @@ STYLE = """
      sur toute la largeur et se justifient comme le reste du site. */
   .cad-n-t, .cad-carte-x { text-align:left !important; }
   .cad-fl-n, .cad-fl-l, .cad-fl-x { text-align:center !important; }
+
+  /* --- les sept onglets de tête ------------------------------------------
+     UNE RANGÉE, SEPT CASES DE MÊME LARGEUR. Le sélecteur reste un `st.radio`
+     — c'est lui qui retient le code de la vue et qui survit au changement de
+     langue — mais il ne doit pas se lire comme un formulaire : la pastille
+     ronde est retirée, la case entière devient la cible, et l'onglet actif
+     est plein plutôt que coché. `flex:1 1 0` avec `min-width:0` est ce qui
+     donne sept largeurs égales : sans le `min-width`, le titre le plus long
+     imposerait sa largeur aux six autres.
+     La barre du site force `font-size:14.5px` sur tout paragraphe : les
+     déclarations de texte ci-dessous portent donc `!important`. */
+  div[class*="st-key-cad_nav"] div[role="radiogroup"] {
+      display:flex !important; flex-wrap:nowrap !important; gap:7px !important;
+      width:100%; align-items:stretch; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label {
+      flex:1 1 0 !important; min-width:0 !important; margin:0 !important;
+      background:#fff !important; border:1px solid #e3eaf3 !important;
+      border-radius:12px !important; padding:11px 12px 12px !important;
+      align-items:flex-start !important; cursor:pointer;
+      box-shadow:0 1px 2px rgba(16,23,40,.05);
+      transition:background .12s ease, border-color .12s ease; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label:hover {
+      border-color:#b6d8c6 !important; background:#f6fbf8 !important; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label > div:first-child {
+      display:none !important; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label > div:last-child {
+      width:100%; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label p {
+      font-size:11.5px !important; line-height:1.35 !important;
+      font-weight:600 !important; color:#3c4761 !important;
+      margin:0 !important; text-align:left !important; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"]
+      > label:has(input:checked) {
+      background:#215434 !important; border-color:#215434 !important;
+      box-shadow:0 2px 7px rgba(33,84,52,.22); }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"]
+      > label:has(input:checked):hover {
+      background:#1b472c !important; border-color:#1b472c !important; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"]
+      > label:has(input:checked) p { color:#fff !important; }
+  /* L'ÉTROITESSE EST UNE LIMITE RÉELLE : sept cases sur un écran de portable
+     ne tiennent pas. Elles passent alors sur deux rangées plutôt que de se
+     comprimer jusqu'à l'illisible. */
+  @media (max-width: 900px) {
+    div[class*="st-key-cad_nav"] div[role="radiogroup"] {
+        flex-wrap:wrap !important; }
+    div[class*="st-key-cad_nav"] div[role="radiogroup"] > label {
+        flex:1 1 30% !important; }
+  }
 </style>
 """
 
@@ -952,18 +1022,59 @@ def _n_ocb():
         return None
 
 
-def render(doc_complet=None):
-    """La page en trois strates : comprendre, explorer, approfondir.
+def _min_section():
+    """Le plus petit effectif enquêté parmi les sections communales.
 
-    POURQUOI TROIS STRATES, ET PAS UN TEXTE MIEUX ÉCRIT.
-    La version précédente disait les mêmes choses, toutes à la fois, en huit
-    blocs dépliés. Le contenu était juste et personne ne le lisait : sur un
-    tableau de bord, un mur de prose se saute. Ce qui a changé n'est donc pas
-    le fond mais la PROFONDEUR — quatre cartes et deux schémas pour
-    comprendre en trente secondes, deux blocs pour explorer, six volets
-    repliés pour la méthode. Rien n'a été supprimé : tout ce qui était visible
-    est encore là, un cran plus bas.
+    LE CHIFFRE EST COMPTÉ, PAS ANNONCÉ. Un plan de sondage qui promet un
+    minimum par section et qu'on ne recompte jamais finit par décrire un
+    protocole plutôt que la collecte réellement faite.
     """
+    p = _trouver("ventilation.json")
+    if not p:
+        return None
+    try:
+        with open(p, encoding="utf-8") as f:
+            eff = (json.load(f) or {}).get("effectifs") or {}
+        vals = [v for v in ((d or {}).get("Total") for d in eff.values()) if v]
+        return min(vals) if vals else None
+    except Exception:
+        return None
+
+
+# ---------------------------------------------------------------------------
+# LA PAGE, EN SEPT ONGLETS
+# ---------------------------------------------------------------------------
+# ELLE TENAIT EN DEUX ONGLETS ET UNE PILE DE BLOCS. Tout y était — les trois
+# attributs, les sept dimensions, les sources, la chaîne de calcul, les
+# boucles, le document — mais dans l'ordre où les blocs avaient été écrits, et
+# le lecteur devait deviner lui-même où s'arrêtait une réponse et où
+# commençait la suivante. Un plan de sondage et une liste de limites étaient
+# même restés dans le fichier de textes sans plus rien pour les afficher.
+#
+# SEPT ONGLETS, SEPT QUESTIONS, dans l'ordre où elles se posent : ce que
+# l'indice mesure, avec quoi on le mesure, sur quelles dimensions, comment on
+# passe de la mesure au score, comment se lisent les rétroactions, ce que
+# l'environnement a de particulier, et où se télécharge le cadre complet.
+# Aucun contenu n'a été réécrit ni supprimé : il a été rangé, et ce qui avait
+# été perdu de vue est revenu à sa place.
+#
+# UN SÉLECTEUR, ET NON `st.tabs`. `st.tabs` rend TOUS les onglets à chaque
+# affichage : l'onglet environnemental — transects, séries satellitaires,
+# trajectoires de couvert et de pluie — serait recalculé pour montrer une
+# page de définitions. Le sélecteur ne rend que ce qu'on regarde.
+#
+# IL RETIENT UN CODE, JAMAIS UN LIBELLÉ. Le libellé change avec la langue ;
+# une vue mémorisée par son libellé retomberait sur la première case au
+# premier changement de langue, et le harnais de rendu croirait couvrir sept
+# onglets en n'en rendant qu'un.
+VUES = ("mesure", "sources", "dimensions", "score", "boucles",
+        "environnement", "document")
+_LIB = {"mesure": "cad_o1", "sources": "cad_o2", "dimensions": "cad_o3",
+        "score": "cad_o4", "boucles": "cad_o5", "environnement": "cad_o6",
+        "document": "cad_o7"}
+
+
+def render(doc_complet=None):
     stats = _stats()
     st.markdown(STYLE, unsafe_allow_html=True)
 
@@ -971,106 +1082,183 @@ def render(doc_complet=None):
         f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
         f'letter-spacing:-.02em;margin:2px 0 0">{T("cad_titre")}</h2>'
         f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
-        f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
+        f'text-transform:uppercase;margin:2px 0 10px;font-weight:600">'
         f'{T("cad_sous_titre")}</p>', unsafe_allow_html=True)
 
     if not stats:
         st.info(T("e_absent"))
         return
 
-    # DEUX ONGLETS, ET LE SECOND N'EST PAS UN SUPPLÉMENT.
-    # La dimension environnementale est la seule qui ne se mesure pas en
-    # interrogeant des ménages : elle demande des transects, des images
-    # satellitaires et des barèmes qui leur sont propres. Fondue dans la page
-    # générale, elle y aurait tenu six lignes ; à part, elle garde son
-    # protocole entier.
-    _ong_apri, _ong_env = st.tabs(
-        [T("env_onglet_apri"), T("env_onglet")])
-    with _ong_env:
-        # LES TRAJECTOIRES ONT REJOINT CET ONGLET. Couvert forestier, pluies,
-        # temperatures : quatre series physiques du meme territoire, qui
-        # avaient leur propre entree de menu alors qu'elles disent la meme
-        # chose que cette page — l'etat de l'environnement — a ceci pres
-        # qu'elles le disent dans le temps.
-        environnement_cadre.render(
-            complement=lambda: trajectoires.render(entete=False))
-    with _ong_apri:
-        _cadre_apri(stats, doc_complet)
+    with st.container(key="cad_nav"):
+        vue = st.radio(
+            "cad", VUES, horizontal=True, label_visibility="collapsed",
+            key="cad_vue",
+            format_func=lambda c: f"{VUES.index(c) + 1}. " + T(_LIB[c]))
+
+    st.markdown('<div style="height:10px"></div>', unsafe_allow_html=True)
+
+    if vue == "sources":
+        _v_sources()
+    elif vue == "dimensions":
+        _v_dimensions(stats)
+    elif vue == "score":
+        _v_score(stats)
+    elif vue == "boucles":
+        _v_boucles()
+    elif vue == "environnement":
+        _v_environnement()
+    elif vue == "document":
+        _v_document(doc_complet)
+    else:
+        _v_mesure(stats)
 
 
-def _cadre_apri(stats, doc_complet):
-    """Le cadre, en quatre blocs et rien d'autre.
+def _titre(cle, note=None, marge=4):
+    """Un intitulé de bloc, et sa note s'il en a une."""
+    h = (f'<div class="cad-h" style="margin-top:{marge}px">'
+         f'{_e(T(cle))}</div>')
+    return h + (f'<p class="cad-note">{_e(T(note))}</p>' if note else "")
 
-    LA PAGE AVAIT TROIS ÉTAGES ET DOUZE BLOCS. Elle disait, dans l'ordre :
-    pourquoi APRI existe, ce qu'il mesure, les trois attributs, les sources,
-    les sept dimensions, la chaîne de calcul, puis six volets repliés. C'était
-    complet et illisible : personne ne lit douze blocs pour apprendre ce qu'est
-    un score.
 
-    Il reste ce qu'on vient chercher : les trois capacités, les sept
-    dimensions, la chaîne qui mène au score, les trois sources. Quatre objets,
-    presque pas de phrases. Tout le reste — le récit d'origine, la portée, le
-    plan de sondage, les limites, les boucles, le document complet — est
-    intact, dans deux volets fermés au bas de la page. Une information qu'on
-    doit ouvrir se lit mieux qu'une information qu'on doit sauter.
+# --- 1 · ce que mesure APRI -------------------------------------------------
+def _v_mesure(stats):
+    """La définition, et rien qui ressemble à de la méthode.
+
+    QUATRE CARTOUCHES, TROIS ATTRIBUTS, UN SCHÉMA D'ENSEMBLE. La quatrième
+    carte dit ce que l'indice ne mesure PAS, et elle est traitée comme les
+    trois autres : une limite qu'on lit après coup n'a jamais empêché
+    personne de se tromper.
+    """
+    n_sec_avec = sum(1 for e in stats["dims"].values() if e["faits"])
+    st.markdown(_tete(stats, n_sec_avec), unsafe_allow_html=True)
+    st.markdown(_titre("cad_aaa", "cad_aaa_note", marge=30) + _attributs(),
+                unsafe_allow_html=True)
+    st.markdown(_titre("cad_apercu", "cad_ap_note", marge=30)
+                + _apercu(stats, n_sec_avec), unsafe_allow_html=True)
+
+
+# --- 2 · comment la résilience est mesurée ----------------------------------
+def _v_sources():
+    """Les trois sources, puis le plan de sondage qui les a produites.
+
+    LE PLAN DE SONDAGE ÉTAIT ÉCRIT ET NE S'AFFICHAIT PLUS. Ses textes sont
+    restés dans le fichier après la refonte précédente, sans plus aucun appel
+    pour les rendre : la page annonçait trois sources sans jamais dire
+    combien de ménages, dans combien de sections, ni comment ils avaient été
+    tirés. Ils reviennent ici, et leurs chiffres sont comptés dans les
+    données plutôt qu'écrits à la main.
     """
     menages, n_sections = _menages()
     n_ocb = _n_ocb()
-    n_sec_avec = sum(1 for e in stats["dims"].values() if e["faits"])
+    st.markdown(_titre("cad_src", "cad_src_note", marge=4)
+                + _sources(menages, n_ocb), unsafe_allow_html=True)
 
-    # 1 — les trois capacités : c'est la définition, elle passe en tête
-    st.markdown(f'<div class="cad-h" style="margin-top:18px">'
-                f'{_e(T("cad_aaa"))}</div>' + _attributs(),
-                unsafe_allow_html=True)
+    cartes = []
+    if menages:
+        cartes.append(_chiffre(_fmt(menages, 0), T("cad_s1_t"), T("cad_s1")))
+    if n_sections:
+        cartes.append(_chiffre(str(n_sections), T("cad_s2_t"), T("cad_s2")))
+    mini = _min_section()
+    if mini:
+        cartes.append(_chiffre(_fmt(mini, 0), T("cad_s4_t"), T("cad_s4")))
+    if cartes:
+        st.markdown(_titre("cad_sondage", marge=30)
+                    + '<div class="cad-grille">' + "".join(cartes) + '</div>',
+                    unsafe_allow_html=True)
 
-    # 2 — les sept dimensions
-    st.markdown(f'<div class="cad-h" style="margin-top:30px">'
-                f'{_e(T("cad_dims"))}</div>' + _tableau_dimensions(stats),
-                unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="cad-etage">{_e(T("cad_strates"))}</div>'
+        '<ul class="cad-liste">'
+        + "".join(f'<li>{_e(T(k))}</li>'
+                  for k in ("cad_st1", "cad_st2", "cad_st3", "cad_st4"))
+        + '</ul>'
+        f'<p class="cad-note" style="margin-top:12px;max-width:92ch">'
+        f'{_e(T("cad_tirage"))}</p>', unsafe_allow_html=True)
+
+
+# --- 3 · les dimensions -----------------------------------------------------
+def _v_dimensions(stats):
+    st.markdown(_titre("cad_dims", "cad_dims_note", marge=4)
+                + _tableau_dimensions(stats), unsafe_allow_html=True)
     st.caption(T("cad_dim7_note"))
 
-    # 3 — les trois sources
-    st.markdown(f'<div class="cad-h" style="margin-top:30px">'
-                f'{_e(T("cad_src"))}</div>' + _sources(menages, n_ocb),
-                unsafe_allow_html=True)
 
-    # ---- ce qui était déplié, et qui est maintenant fermé ----------------
-    st.markdown('<div style="height:26px"></div>', unsafe_allow_html=True)
+# --- 4 · de la mesure brute au score ---------------------------------------
+def _v_score(stats):
+    """La chaîne de calcul, puis ce qu'elle ne permet pas de dire.
 
-    with st.expander(T("cad_v_boucles")):
-        st.markdown(
-            f'<p class="cad-note" style="max-width:92ch">{_e(T("cad_dbc_x"))}</p>'
-            '<div class="cad-grille">'
-            + "".join(
-                f'<div style="flex:1 1 220px;min-width:200px;'
-                f'border-left:3px solid {c};padding:2px 0 2px 14px">'
-                f'<div style="font-size:13.5px;font-weight:700;color:{ENCRE}">'
-                f'{_e(T(k + "_t"))}</div>'
-                f'<div style="font-size:12px;color:{ENCRE2};line-height:1.5;'
-                f'margin-top:3px">{_e(T(k))}</div></div>'
-                for k, c in (("cad_dbc_1", "#c33a24"), ("cad_dbc_2", "#d1730c"),
-                             ("cad_dbc_3", "#2166ac"), ("cad_dbc_4", "#1a8a4f")))
-            + '</div>', unsafe_allow_html=True)
-        g, d = st.columns([1.15, 1])
-        with g:
-            st.markdown(T("cad_lecture_x"))
-            st.warning(T("cad_lecture_piege"))
-        with d:
-            st.markdown(_schema_boucles(), unsafe_allow_html=True)
+    LES LIMITES SUIVENT LA CHAÎNE, ET C'EST VOULU. Elles ne se comprennent
+    qu'une fois le calcul connu : la circularité d'un indice composite ne
+    veut rien dire tant qu'on n'a pas vu qu'il agrège ses propres variables
+    explicatives. Elles avaient disparu de l'affichage à la refonte
+    précédente ; les publier plus loin que le calcul serait les enterrer une
+    seconde fois.
+    """
+    st.markdown(_titre("cad_chaine", marge=4)
+                + _chaine(stats["poids_total"]), unsafe_allow_html=True)
+    st.markdown(
+        _titre("cad_limites", marge=30)
+        + '<div class="cad-grille">'
+        # UNE SEULE TEINTE, ET ELLE EST GRISE. Quatre couleurs sur quatre
+        # limites laisseraient croire à quatre natures de limite ; elles sont
+        # quatre façons de dire la même chose — l'indice cadre, il ne prédit
+        # pas.
+        + "".join(_cartouche(T(k + "_t"), T(k), ENCRE3)
+                  for k in ("cad_l1", "cad_l2", "cad_l3", "cad_l4"))
+        + '</div>', unsafe_allow_html=True)
 
-    # LE DOCUMENT DE RÉFÉRENCE SE TÉLÉCHARGE, IL NE SE PARAPHRASE PLUS.
-    # La page réexpliquait en trois volets ce que le document dit en entier et
-    # mieux : sources, plan de sondage, limites. Une paraphrase vieillit à
-    # part de son original et finit par le contredire. Le fichier est servi
-    # tel quel.
-    #
-    # ET CE N'EST PLUS UN VOLET REPLIÉ. Un volet demande un clic pour savoir
-    # ce qu'il contient, et n'annonce rien de ce qu'on peut en faire : le
-    # document se rangeait derrière une flèche, comme un paragraphe de plus.
-    # C'est une pièce jointe : elle a la forme d'une pièce jointe — une carte
-    # cliquable, une flèche de téléchargement, le format et le poids annoncés
-    # avant le clic. Le rendu à l'écran reste dessous, pour qui préfère lire
-    # sans télécharger.
+
+# --- 5 · les boucles de rétroaction ----------------------------------------
+def _v_boucles():
+    st.markdown(
+        _titre("cad_dbc", marge=4)
+        + f'<p class="cad-note" style="max-width:92ch">{_e(T("cad_dbc_x"))}</p>'
+        '<div class="cad-grille">'
+        + "".join(
+            f'<div style="flex:1 1 220px;min-width:200px;'
+            f'border-left:3px solid {c};padding:2px 0 2px 14px">'
+            f'<div style="font-size:13.5px;font-weight:700;color:{ENCRE}">'
+            f'{_e(T(k + "_t"))}</div>'
+            f'<div style="font-size:12px;color:{ENCRE2};line-height:1.5;'
+            f'margin-top:3px">{_e(T(k))}</div></div>'
+            for k, c in (("cad_dbc_1", "#c33a24"), ("cad_dbc_2", "#d1730c"),
+                         ("cad_dbc_3", "#2166ac"), ("cad_dbc_4", "#1a8a4f")))
+        + '</div>', unsafe_allow_html=True)
+
+    g, d = st.columns([1.15, 1])
+    with g:
+        st.markdown(_titre("cad_lecture", marge=28), unsafe_allow_html=True)
+        st.markdown(T("cad_lecture_x"))
+        st.warning(T("cad_lecture_piege"))
+    with d:
+        st.markdown('<div style="height:40px"></div>' + _schema_boucles(),
+                    unsafe_allow_html=True)
+    st.info(T("cad_dbc_lien"))
+
+
+# --- 6 · le cas de l'environnement -----------------------------------------
+def _v_environnement():
+    """La dimension qui ne se mesure pas en interrogeant des ménages.
+
+    Transects, images satellitaires et barèmes propres : fondue dans la page
+    générale elle y tiendrait six lignes ; à part, elle garde son protocole
+    entier — et les trajectoires, qui disent le même territoire dans le
+    temps, la suivent.
+    """
+    environnement_cadre.render(
+        complement=lambda: trajectoires.render(entete=False))
+
+
+# --- 7 · le document de référence ------------------------------------------
+def _v_document(doc_complet):
+    """Le cadre complet, en pièce jointe.
+
+    CE N'EST PAS UN VOLET REPLIÉ. Un volet demande un clic pour savoir ce
+    qu'il contient et n'annonce rien de ce qu'on peut en faire. C'est une
+    pièce jointe : elle en a la forme — une carte cliquable, une flèche de
+    téléchargement, le format et le poids annoncés avant le clic. Le rendu à
+    l'écran reste dessous, pour qui préfère lire sans télécharger.
+    """
     chemin = _document_irla()
     if chemin:
         st.markdown(_css_telechargement(_poids(chemin)), unsafe_allow_html=True)
