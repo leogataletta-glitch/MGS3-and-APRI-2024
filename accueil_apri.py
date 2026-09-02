@@ -39,6 +39,12 @@ import streamlit as st
 
 import i18n
 import map_render
+# LA VIGNETTE DE LOCALISATION EXISTE DÉJÀ, ET ELLE EST BONNE. « Le
+# territoire » la dessine depuis toujours : l'île entière, la République
+# dominicaine nommée en retrait, la zone enquêtée en vert dans son cercle.
+# La redessiner ici aurait donné deux dessins du même objet, qui auraient
+# divergé au premier ajustement.
+import territoire_page
 from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -78,23 +84,28 @@ TEXTES = {
                 "fr": "Sud et Grand'Anse, Haïti · enquête 2024"},
 
 
-    # --- LES QUATRE PORTES. Chacune mène à une rubrique qui existe déjà ;
-    # la description dit ce qu'on y trouve, pas ce qu'elle promet.
-    "po_c1": {"en": "Explore the territory", "fr": "Explorer le territoire"},
-    "po_c1x": {"en": "The ten communal sections, their maps and their "
-                     "landscapes.",
-               "fr": "Les dix sections communales, leurs cartes et leurs "
+    # --- LES CINQ PORTES. Chacune mène à une rubrique du menu, dans le même
+    # ordre que lui ; la description dit ce qu'on y trouve, pas ce qu'elle
+    # promet. Les libellés sont ceux du menu, à un mot près : « Télécharger
+    # les données » annonce ce qu'on vient y faire, là où l'onglet se contente
+    # de nommer la rubrique.
+    "po_c1": {"en": "Explore the Territory", "fr": "Explorer le territoire"},
+    "po_c1x": {"en": "Ten communal sections, their maps and landscapes.",
+               "fr": "Dix sections communales, leurs cartes et leurs "
                      "paysages."},
-    "po_c2": {"en": "Resilience framework", "fr": "Cadre de résilience"},
-    "po_c2x": {"en": "The seven dimensions, and how a score is built.",
-               "fr": "Les sept dimensions, et comment un score se construit."},
-    "po_c3": {"en": "Indicators & data", "fr": "Indicateurs et données"},
-    "po_c3x": {"en": "Every indicator, its source and its raw values.",
-               "fr": "Chaque indicateur, sa source et ses valeurs brutes."},
-    "po_c4": {"en": "Maps & results", "fr": "Cartes et résultats"},
-    "po_c4x": {"en": "Scores dimension by dimension, section by section.",
-               "fr": "Les scores dimension par dimension, section par "
-                     "section."},
+    "po_c2": {"en": "Resilience Framework", "fr": "Cadre de résilience"},
+    "po_c2x": {"en": "Seven dimensions and how each score is constructed.",
+               "fr": "Sept dimensions et comment chaque score se construit."},
+    "po_c3": {"en": "Results Analysis", "fr": "Analyse des résultats"},
+    "po_c3x": {"en": "Scores, profiles and cross-tabulated results.",
+               "fr": "Scores, profils et croisements de résultats."},
+    "po_c4": {"en": "Feedback Loops", "fr": "Boucles de rétroaction"},
+    "po_c4x": {"en": "Causal relationships and systemic leverage points.",
+               "fr": "Relations causales et leviers systémiques."},
+    "po_c5": {"en": "Download Data", "fr": "Télécharger les données"},
+    "po_c5x": {"en": "Indicators, sources and downloadable datasets.",
+               "fr": "Indicateurs, sources et jeux de données "
+                     "téléchargeables."},
 
     # --- CE QU'APRI MESURE, EN UNE PHRASE
     "po_uma_x": {
@@ -110,7 +121,7 @@ TEXTES = {
               "score de 0 à 10 par les barèmes du cadre. Le tout à l'échelle "
               "du paysage, entendu comme un système complexe adaptatif."},
     "po_uma_sur": {"en": "What APRI measures", "fr": "Ce que mesure APRI"},
-    # LA CARTE NE PORTE PLUS DE SCORE : sa légende dit donc ce qu'elle
+    # LA CARTE NE PORTE PLUS DE SCORE : son titre dit donc ce qu'elle
     # montre, c'est-à-dire l'emprise de l'enquête et rien d'autre.
     "po_carte_cap": {
         "en": "The ten surveyed communal sections, in the Sud and "
@@ -207,14 +218,21 @@ STYLE = """
                    max-height: max(205px, calc(100vh - 418px)); }
   .uma-carte svg .sea { fill:transparent !important; }
   .uma-zone   { position:relative; }
-  /* LA LÉGENDE SE RANGE SOUS LE DESSIN, ET DONC À DROITE. Calée au bord
-     gauche de la colonne, elle commençait à côté du texte et non sous la
-     carte. Le `!important` est nécessaire — la règle de justification de
-     l'application porte sur tous les paragraphes du contenu et l'emporterait
-     autrement. */
-  p.uma-n  { font-size:11.5px; color:#8a93a5; margin:9px 0 0 auto;
-             line-height:1.5; max-width:58ch;
-             text-align:right !important; }
+  /* LA PHRASE EST AU-DESSUS DE LA CARTE, ET EN GRAS. Rangée dessous et en
+     gris pâle, elle se lisait comme une mention légale — après le dessin,
+     alors qu'elle dit ce qu'il faut savoir pour le lire. C'est un titre :
+     elle prend donc la place et le poids d'un titre. Le `!important` est
+     nécessaire — la feuille de l'application fixe la taille et l'alignement
+     de tous les paragraphes du contenu, avec une spécificité supérieure. */
+  p.uma-n  { font-size:13.5px !important; font-weight:700;
+             color:#3c4761 !important; margin:0 0 12px;
+             line-height:1.45 !important; max-width:52ch;
+             text-align:left !important; }
+  /* LA VIGNETTE RÉPOND À « OÙ EST-CE ? », que la carte détaillée ne peut pas
+     dire : cadrée sur la presqu'île, elle montre dix sections sans montrer
+     le pays. Le badge est large et bas — l'île l'est aussi — ce qui le fait
+     tenir sous la définition sans pousser la page. */
+  .uma-badge { margin:14px 0 0; max-width:300px; }
 
   @media (max-width:760px){ .uma-t{font-size:25px} }
 </style>
@@ -358,11 +376,11 @@ def _aller(mode):
     st.session_state["app_mode"] = mode
 
 
-# LES QUATRE ENTRÉES DU SITE, ET RIEN QUE QUATRE.
-# Le menu de gauche en compte douze : c'est la table des matières, elle sert
-# à qui sait déjà ce qu'il cherche. La page d'accueil s'adresse à qui ne le
-# sait pas encore, et quatre portes se choisissent d'un coup d'œil là où
-# douze se lisent une par une.
+# LES CINQ ENTRÉES DU SITE, ET RIEN QUE CINQ.
+# La barre du haut en compte huit : c'est la table des matières, elle sert à
+# qui sait déjà ce qu'il cherche. La page d'accueil s'adresse à qui ne le
+# sait pas encore, et cinq portes se choisissent d'un coup d'œil là où huit
+# se lisent une par une.
 # L'ORDRE EST CELUI DU MENU, ET C'EST LE SEUL QUI SE DÉFENDE. Deux rangées
 # d'entrées vers les mêmes rubriques, dans deux ordres différents, obligent à
 # relire : le lecteur cherche « Analyse des résultats » en quatrième position
@@ -370,14 +388,15 @@ def _aller(mode):
 # maintenant la même chose dans le même ordre.
 #
 # ET IL N'Y A PLUS DE PICTOGRAMME. Une pastille verte devant chaque titre
-# annonçait une différence entre les quatre portes ; les quatre dessins —
+# annonçait une différence entre les portes ; les dessins —
 # un globe, une pousse, des barres, une carte — ne disaient rien que le titre
 # ne dise mieux, et coûtaient cinquante pixels de hauteur sur une page qui
 # doit tenir dans un écran.
 ENTREES = (("po_c1", "accueil"),
            ("po_c2", "methodologie"),
-           ("po_c4", "dimensions"),
-           ("po_c3", "donnees"))
+           ("po_c3", "dimensions"),
+           ("po_c4", "boucles"),
+           ("po_c5", "donnees"))
 
 
 def _css_entrees():
@@ -496,6 +515,29 @@ def _sans_valeur(svg):
     return _INFOBULLE.sub(r'\1\2\3', _ETIQUETTE.sub('', svg))
 
 
+def _badge():
+    """Le badge de localisation : où se trouve la zone enquêtée dans Haïti.
+
+    LA CARTE DÉTAILLÉE NE PEUT PAS RÉPONDRE À « OÙ EST-CE ? ». Cadrée sur la
+    presqu'île du Sud, elle montre dix sections communales et trois noms de
+    département ; qui ne connaît pas Haïti n'y reconnaît ni le pays, ni même
+    l'île. Le badge le dit en une image : l'île entière, la République
+    dominicaine nommée en retrait, et la zone d'étude cerclée de vert.
+
+    IL EST LARGE ET BAS parce que l'île l'est, et il est PLUS LARGE QUE
+    L'ÎLE : la boîte est volontairement plus étirée que le contour, de sorte
+    que la hauteur cadre le dessin et laisse du jeu sur les côtés. Sans ce
+    jeu, le cercle de la zone d'étude — qui déborde du contour, et qui tombe
+    à l'extrême sud-ouest — sortait du cadre par la gauche.
+    """
+    geo = territoire_page._geo()
+    # LA MER EST PRESQUE BLANCHE ICI. Le bleu gris de la page « Le territoire »
+    # formerait un rectangle plein sur une page qu'on a débarrassée de ses
+    # boîtes : seule l'île doit se voir.
+    svg = territoire_page._vignette(geo, larg=300, haut=122, mer="#f7fafc")
+    return f'<div class="uma-badge">{svg}</div>' if svg else ""
+
+
 def _comprendre(m):
     # DE L'AIR ENTRE LES QUATRE PORTES ET CE QUI SUIT. Les cartes touchaient
     # le texte : deux blocs collés se lisent comme un seul, et la définition
@@ -525,14 +567,14 @@ def _comprendre(m):
         _mot, _reste = _e(T("po_uma_x")).split(" ", 1)
         st.markdown(f'<div class="uma-cadre">'
                     f'<div class="uma-sur">{_e(T("po_uma_sur"))}</div>'
-                    f'<p class="uma-x"><b>{_mot}</b> {_reste}</p></div>',
-                    unsafe_allow_html=True)
+                    f'<p class="uma-x"><b>{_mot}</b> {_reste}</p></div>'
+                    + _badge(), unsafe_allow_html=True)
     if not c:
         return
     with d:
-        # LA LÉGENDE EST SOUS LE DESSIN, PARCE QU'ELLE PORTE SUR LUI.
-        st.markdown(f'<div class="uma-zone">{c["carte"]}'
-                    f'<p class="uma-n">{c["note"]}</p></div>',
+        # LE TITRE EST AU-DESSUS DU DESSIN, PARCE QU'IL DIT CE QU'ON REGARDE.
+        st.markdown(f'<div class="uma-zone">'
+                    f'<p class="uma-n">{c["note"]}</p>{c["carte"]}</div>',
                     unsafe_allow_html=True)
 
 
