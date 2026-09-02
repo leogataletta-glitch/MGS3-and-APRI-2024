@@ -299,35 +299,24 @@ function recadrer(){ carte.fitBounds(EMPRISE, {padding:[12,12]}); }
 recadrer();
 
 /* ---- fonds de carte : un seul à la fois ------------------------------- */
-/* LE FOND SOBRE SE FAIT EN DEUX COUCHES, DE PART ET D'AUTRE DES TUILES.
-   L'ombrage du relief est une image opaque : posé sur la carte, il grise la
-   mer autant que la terre ; et le fond sobre, s'il est peint par-dessus,
-   efface le relief. La seule façon d'avoir les deux — une terre grise et
-   ombrée, une mer bleue — est de prendre l'ombrage en sandwich :
+/* LE FOND SOBRE PASSE SOUS LES TUILES, ET C'EST TOUT.
+   Il a d'abord été peint par-dessus : il effaçait l'ombrage. Puis en
+   sandwich, avec un masque marin posé au-dessus des tuiles pour rendre à la
+   mer son bleu — un rectangle grand comme le monde, percé aux contours des
+   terres. Ce masque est une mauvaise idée : Leaflet découpe chaque anneau
+   séparément au bord de la vue, et un trou qui déborde de la vue cesse
+   d'être un trou. Selon la taille de la fenêtre et le niveau de zoom, le
+   rectangle se refermait et couvrait la carte entière d'un bleu uni, terre
+   et relief compris. Une figure qui dépend de la taille de l'écran n'est pas
+   une figure : elle est retirée.
 
-     150  la terre, en gris          (visible quand l'ombrage est éteint)
-     200  les tuiles, dont l'ombrage (le relief se pose sur la terre)
-     250  la mer, en bleu, percée aux contours de la terre
-     400  les couches de données     (sections, routes, points…)
-
-   Leaflet ne range les vecteurs que dans un calque, au-dessus des tuiles :
-   il faut donc lui ouvrir ces deux calques-là, chacun avec son moteur de
-   rendu (la carte dessine sur canevas, et un canevas appartient à un
-   calque). */
+   RESTE LE SIMPLE, QUI MARCHE : la terre grise dans un calque sous les
+   tuiles, la mer bleue au fond du conteneur. L'ombrage, posé sur les deux à
+   moitié transparent, dessine le relief sur la terre et bleuit à peine la
+   mer — c'est exactement l'image d'avant, quand le fond venait de CARTO. */
 carte.createPane('fondTerre');
 carte.getPane('fondTerre').style.zIndex = 150;
-carte.createPane('fondMer');
-carte.getPane('fondMer').style.zIndex = 250;
 const RENDU_TERRE = L.canvas({pane:'fondTerre'});
-const RENDU_MER = L.canvas({pane:'fondMer'});
-
-/* LA MER EST UN TROU, PAS UN APLAT. Un rectangle grand comme le monde, percé
-   aux contours de chaque terre : le remplissage « pair-impair » de Leaflet
-   fait le reste. Peindre la mer plutôt que de la laisser au fond du
-   conteneur est ce qui permet de la garder bleue SOUS l'ombrage. */
-const ANNEAUX_TERRE = (D.terre||[]).map(function(o){
-  return o.a[0].map(function(c){ return [c[1], c[0]]; }); });
-const MONDE = [[85,-180],[85,180],[-85,180],[-85,-180]];
 
 const FONDS = {
   plan:  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -340,23 +329,13 @@ const FONDS = {
      qu'on lui demande, et le trait de côte est déjà dans le dépôt. Ni l'un
      ni l'autre n'intercepte les clics : les couches de données restent
      accessibles au travers. */
-  /* LE MASQUE MARIN NE SE POSE QUE S'IL A DES TROUS. Sans les contours de
-     terre — fichier absent, lecture ratée — le rectangle couvrirait la carte
-     entière d'un bleu uni, terre et relief compris. Mieux vaut alors ne rien
-     peindre et laisser la mer du conteneur : on perd la terre grise, pas la
-     carte. */
-  sobre: L.layerGroup(ANNEAUX_TERRE.length ? [
-    polys(D.terre, 'terre',
+  sobre: polys(D.terre, 'terre',
           {renderer: RENDU_TERRE, pane:'fondTerre',
-           stroke:false, fillColor:'#e4e7ea', fillOpacity:1,
-           interactive:false}),
-    L.polygon([MONDE].concat(ANNEAUX_TERRE),
-          {renderer: RENDU_MER, pane:'fondMer',
-           color:'#b3bfcc', weight:1, fillColor:'#c6dcee', fillOpacity:1,
-           interactive:false})] : [])
+           color:'#b3bfcc', weight:1, fillColor:'#e4e7ea', fillOpacity:1,
+           interactive:false})
 };
-let fondActif = 'sobre';
-versArriere(FONDS.sobre.addTo(carte));
+let fondActif = 'sat';
+versArriere(FONDS.sat.addTo(carte));
 /* UN FOND EST UNE TUILE, OU UN GROUPE, OU UN GROUPE DE GROUPES. Seule la
    tuile et le tracé savent `bringToBack` ; il faut donc descendre. La
    descente est récursive parce qu'elle ne l'était pas : un groupe contenant
@@ -547,18 +526,15 @@ def _groupes(d):
     litt = sum(1 for e in d.get("entretiens") or [] if e[3] != "Montagne")
     mont = sum(1 for e in d.get("entretiens") or [] if e[3] == "Montagne")
     return [
-        # LE FOND SOBRE OUVRE LA LISTE, ET C'EST LUI QU'ON VOIT EN ARRIVANT.
-        # Avec l'ombrage par-dessus, c'est la combinaison qui donne le mieux
-        # à voir ce que la page montre : le relief d'une presqu'île, et
-        # dessus les sections enquêtées. Les fonds de rue, topographique et
-        # satellite chargent des tuiles et couvrent la carte de détails que
-        # personne ne vient chercher ici ; ils restent à un clic.
+        # LE SATELLITE OUVRE LA LISTE, ET C'EST LUI QU'ON VOIT EN ARRIVANT.
+        # L'image aérienne montre le relief, le couvert et le bâti sans qu'on
+        # ait rien à superposer : c'est le fond qui demande le moins au
+        # lecteur. Les trois autres restent à un clic.
         {"titre": T("cl_g_fond"), "ferme": False, "lignes": [
-            {"cle": "sobre", "titre": T("cl_f_sobre"), "fond": True,
-             "on": True},
+            {"cle": "sat", "titre": T("cl_f_sat"), "fond": True, "on": True},
+            {"cle": "sobre", "titre": T("cl_f_sobre"), "fond": True},
             {"cle": "plan", "titre": T("cl_f_plan"), "fond": True},
             {"cle": "relief", "titre": T("cl_f_relief"), "fond": True},
-            {"cle": "sat", "titre": T("cl_f_sat"), "fond": True},
         ]},
         {"titre": T("cl_g_etude"), "ferme": False, "lignes": [
             {"cle": "sections", "titre": T("cl_sections"), "on": True,
