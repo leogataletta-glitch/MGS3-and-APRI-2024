@@ -213,11 +213,23 @@ STYLE = """
              text-align:left !important; }
 
   /* --- LE SOCLE DE PREUVES ----------------------------------------------
-     PAS DE CADRE, PAS DE FOND, UN FILET VERT. La règle de la page tient en
-     une phrase : rien n'est encadré sauf ce qui se clique. La définition
-     précédente était posée dans une boîte teintée à côté de la carte, et
-     deux surfaces encadrées côte à côte se disputaient l'attention. Il reste
-     un filet, qui rattache le bloc à la marge sans en faire un objet.
+     UN CADRE, ET UN SEUL SUR LA PAGE. Les portes sont des cartes parce
+     qu'on les prend ; la carte du territoire n'a ni fond ni bord. Le socle
+     est le troisième objet, et l'encadrer le pose comme un bloc qui se lit
+     d'un tenant plutôt que comme un paragraphe qui traîne à côté du dessin.
+     Le filet vert du bord gauche reste : c'est lui qui le rattache à la
+     marge et qui reprend le vert du cadre de résilience.
+
+     LE TEXTE EST JUSTIFIÉ, ET LA CÉSURE EST INDISPENSABLE. Une colonne de
+     quarante-huit signes justifiée sans césure creuse des couloirs blancs
+     au milieu des lignes — le défaut exact qui avait fait annuler la
+     justification dans les cartes. `hyphens:auto` coupe les mots longs et
+     rend les blancs réguliers ; le préfixe `-webkit-` n'est pas décoratif,
+     c'est la seule forme que reconnaissent encore certains navigateurs.
+
+     LA MESURE EN `ch` SE CALCULE SUR LA POLICE DU CADRE, PAS SUR CELLE DU
+     TEXTE. Le cadre porte donc lui aussi la taille, sans quoi une boîte
+     annoncée à quarante-huit signes n'en tiendrait que trente-cinq.
 
      LES CHIFFRES SONT EN GRAS PARCE QU'ILS SONT LA PREUVE. Le reste de la
      phrase est du liant ; ce qu'on doit retenir, c'est l'ampleur — le nombre
@@ -225,13 +237,17 @@ STYLE = """
   .uma-sur { font-size:11px; font-weight:700; color:#8a93a5;
              letter-spacing:.09em; text-transform:uppercase;
              margin:0 0 10px; }
-  .uma-socle { border-left:3px solid #1a6b52; padding:1px 0 1px 22px;
-               margin:6px 0 0; max-width:46ch; }
+  .uma-socle { border:1px solid #dde9e3; border-left:4px solid #1a6b52;
+               border-radius:12px; background:#f7faf8;
+               font-size:16px;
+               padding:20px 24px 22px; margin:4px 0 0; max-width:58ch;
+               box-shadow:0 1px 2px rgba(16,23,40,.04); }
   .uma-socle .uma-sur { color:#12314c; font-size:11.5px;
-                        letter-spacing:.105em; margin:0 0 13px; }
-  p.uma-s  { font-size:14.5px !important; line-height:1.95 !important;
+                        letter-spacing:.105em; margin:0 0 12px; }
+  p.uma-s  { font-size:16px !important; line-height:1.8 !important;
              color:#33455c !important; margin:0 !important; font-weight:400;
-             text-align:left !important; }
+             text-align:justify !important;
+             hyphens:auto; -webkit-hyphens:auto; }
   p.uma-s b { font-weight:700; color:#12314c; }
   /* LA CARTE N'A NI CADRE NI FOND, ET LA MER EST TRANSPARENTE.
      Encadrée sur un aplat bleu, elle formait une vignette collée au milieu
@@ -704,11 +720,24 @@ def _comprendre(m):
     # revient au dessin. La mise en garde suit la définition, sous le cadre :
     # elle parle de l'échelle, qui est juste à côté.
     c = _carte_indice(m)
-    g, d = st.columns([1, 1.8], gap="medium")
+    # LA COLONNE DE GAUCHE S'ÉLARGIT POUR QUE LA JUSTIFICATION TIENNE.
+    # Justifié sur trente-huit signes, le paragraphe creusait des couloirs
+    # blancs verticaux — c'est le défaut classique d'une colonne trop
+    # étroite, et il se voit d'autant plus que les chiffres en gras
+    # découpent la ligne. Plus la ligne est longue, plus les blancs se
+    # répartissent. La carte perd la largeur correspondante et rétrécit
+    # d'autant en hauteur : la page y gagne même de l'air.
+    g, d = st.columns([1.25, 1.6], gap="medium")
     with g:
         st.markdown(f'<div class="uma-socle">'
                     f'<div class="uma-sur">{_e(T("po_socle_sur"))}</div>'
-                    f'<p class="uma-s">{_socle(m)}</p></div>',
+                    # `lang` N'EST PAS DÉCORATIF : la césure automatique
+                    # applique le dictionnaire de la langue déclarée, et le
+                    # document est en anglais pour Streamlit. Sans cet
+                    # attribut, le texte français serait coupé selon les
+                    # règles anglaises — ou pas coupé du tout.
+                    f'<p class="uma-s" lang="{i18n.get_lang()}">'
+                    f'{_socle(m)}</p></div>',
                     unsafe_allow_html=True)
     if not c:
         return
