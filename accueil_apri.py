@@ -109,16 +109,14 @@ TEXTES = {
               "d'indicateurs regroupés en sept dimensions et convertis en un "
               "score de 0 à 10 par les barèmes du cadre. Le tout à l'échelle "
               "du paysage, entendu comme un système complexe adaptatif."},
-    "po_uma_leg": {"en": "Resilience score", "fr": "Score de résilience"},
-    "po_uma_b0": {"en": "weakest", "fr": "le plus faible"},
-    "po_uma_b10": {"en": "strongest", "fr": "le plus fort"},
-    "po_uma_note": {
-        "en": "The ten sections lie between {a} and {b}; the colour "
-              "thresholds are cut inside that range, not across the whole "
-              "0–10 scale.",
-        "fr": "Les dix sections tiennent entre {a} et {b} ; les seuils de "
-              "couleur sont découpés dans cette fourchette, pas sur toute "
-              "l'échelle 0–10."},
+    "po_uma_sur": {"en": "What APRI measures", "fr": "Ce que mesure APRI"},
+    # LA CARTE NE PORTE PLUS DE SCORE : sa légende dit donc ce qu'elle
+    # montre, c'est-à-dire l'emprise de l'enquête et rien d'autre.
+    "po_carte_cap": {
+        "en": "The ten surveyed communal sections, in the Sud and "
+              "Grand'Anse pilot landscape.",
+        "fr": "Les dix sections communales enquêtées, dans le paysage "
+              "pilote du Sud et de la Grand'Anse."},
 
 
     "po_absent": {
@@ -158,22 +156,37 @@ STYLE = """
      bande de chiffres est une surface parce qu'elle se lit d'un bloc ; le
      reste est du texte posé sur du blanc. */
 
-  /* --- ce qu'APRI mesure --- */
-  /* LA PHRASE EST PLUS GROSSE QUE LE RESTE, ET C'EST LA SEULE.
-     Elle n'a plus de titre au-dessus d'elle : c'est elle le titre. À 17 px
-     sur une colonne de 46 signes, elle se lit d'un trait, ce qui est la
-     seule façon de faire passer une définition en une phrase. */
-  .uma-x   { font-size:15.5px; line-height:1.6; color:#2b3444;
-             margin:0; font-weight:500; }
-  /* LA DÉFINITION EST DANS UN CADRE, ET C'EST LE SEUL DE LA PAGE.
-     Posée à même le blanc, elle se lisait comme un chapeau d'article : un
-     texte d'introduction qu'on saute. Le filet vert à gauche et le fond très
-     pâle en font ce qu'elle est — la définition de référence, celle qu'on
-     revient chercher. Le vert est celui du cadre de résilience, où la même
-     définition se déplie en entier. */
-  .uma-cadre { border:1px solid #e2ebe6; border-left:3px solid #1a6b52;
-               border-radius:10px; background:#f7fbf9;
-               padding:18px 21px 19px; margin:2px 0 0; max-width:52ch; }
+  /* --- CE QU'APRI MESURE : LE MESSAGE PRINCIPAL DE LA PAGE --------------
+     C'EST LA PHRASE QUI DOIT ÊTRE LUE, ET ELLE DOIT ÊTRE LA PLUS GROSSE.
+     À 15,5 px elle avait la taille d'un paragraphe courant : posée à côté
+     d'une carte, elle passait pour une légende. Elle monte à 20 px, sur une
+     colonne de 42 signes — la largeur où l'œil retrouve seul le début de la
+     ligne suivante — et devient ce qu'elle est : la définition qu'un
+     visiteur doit avoir lue avant tout le reste.
+
+     LE MOT « APRI » EST DÉTACHÉ EN VERT, en tête. Il ne s'agit pas d'un
+     ornement : le nom du dispositif est le sujet de la phrase, et le lire
+     d'abord met le reste en place. Le surtitre, lui, dit à quoi sert le
+     paragraphe qui suit, ce qu'aucune mise en forme ne peut dire seule. */
+  .uma-sur { font-size:11px; font-weight:700; color:#8a93a5;
+             letter-spacing:.09em; text-transform:uppercase;
+             margin:0 0 10px; }
+  /* Le `!important` et la mesure en `em` ne sont pas des caprices : la
+     feuille de l'application fixe 14,5 px à tous les paragraphes du contenu,
+     avec une spécificité supérieure, et la largeur en `ch` se calcule sur la
+     police du CADRE, pas sur celle du texte — d'où une boîte de 44 signes
+     qui n'en tenait que trente. Le cadre porte donc lui aussi la taille. */
+  p.uma-x  { font-size:20px !important; line-height:1.55 !important;
+             color:#1c2b3a !important;
+             margin:0; font-weight:450; letter-spacing:-.005em; }
+  p.uma-x b { font-weight:800; color:#1a6b52; letter-spacing:0; }
+  /* Le filet vert et le fond très pâle en font ce qu'elle est — la
+     définition de référence, celle qu'on revient chercher. Le vert est celui
+     du cadre de résilience, où la même définition se déplie en entier. */
+  .uma-cadre { border:1px solid #dde9e3; border-left:4px solid #1a6b52;
+               border-radius:12px; background:#f6faf8;
+               font-size:20px;
+               padding:24px 28px 26px; margin:2px 0 0; max-width:42ch; }
   /* LA CARTE N'A NI CADRE NI FOND, ET LA MER EST TRANSPARENTE.
      Encadrée sur un aplat bleu, elle formait une vignette collée au milieu
      d'une page blanche — un objet rapporté. Le rectangle marin est effacé
@@ -191,68 +204,15 @@ STYLE = """
      en dessous, on préfère que la page défile. */
   .uma-carte svg { display:block; width:100%; height:auto;
                    margin:0 !important;
-                   max-height: max(205px, calc(100vh - 428px)); }
+                   max-height: max(205px, calc(100vh - 418px)); }
   .uma-carte svg .sea { fill:transparent !important; }
-  /* --- L'ÉCHELLE, POSÉE DANS LA CARTE ---------------------------------
-     QUATRE PAVÉS ALIGNÉS NE SONT PAS UNE ÉCHELLE. « moins de 4,2 · 4,2–4,5 ·
-     4,5–4,6 · 4,6 et plus » se lisait comme une liste de catégories : rien
-     n'y montrait que les quatre se suivent, ni dans quel sens. Les mêmes
-     couleurs mises bout à bout dans une seule barre le disent d'un coup, et
-     le plus fort se lit en haut comme sur toute échelle graduée.
-
-     ELLE EST DANS LA CARTE, ET NON DANS UNE COLONNE À CÔTÉ. Rangée à part,
-     elle restait à deux cents pixels du dessin — et ce n'est pas la colonne
-     qui les séparait, c'est le large vide que la carte porte elle-même à
-     l'ouest de la presqu'île, où la rose des vents et l'échelle
-     kilométrique tiennent seules. La légende vient s'y installer.
-
-     LE DÉCALAGE EST EN POURCENTAGE parce que ce vide l'est aussi : il se
-     resserre avec la carte, et la légende le suit. LE CARTOUCHE BLANC N'EST
-     PAS UN ORNEMENT : quand la fenêtre rétrécit, la place libre finit par
-     manquer et un nom de section passerait dessous. Sur un fond, la légende
-     reste lisible quoi qu'il arrive derrière elle. Elle ne prend pas les
-     clics : la carte reste entière dessous.
-
-     SA HAUTEUR SUIT CELLE DE LA CARTE, à la même formule : les deux
-     rétrécissent ensemble quand la fenêtre est basse. */
   .uma-zone   { position:relative; }
-  .uma-ecv    { position:absolute; left:9.2%; top:0; width:118px;
-                z-index:2; pointer-events:none; box-sizing:border-box;
-                padding:9px 10px 10px; border-radius:9px;
-                background:rgba(255,255,255,.92);
-                border:1px solid #eaeff5;
-                box-shadow:0 1px 6px rgba(16,23,40,.05);
-                backdrop-filter:blur(1.5px); }
-  .uma-ech-t  { font-size:11px; font-weight:700; color:#8a93a5;
-                letter-spacing:.06em; text-transform:uppercase;
-                margin:0 0 9px; line-height:1.35; text-align:right; }
-  .uma-ecv-h  { font-size:11.5px; font-weight:700; color:#3c4761;
-                white-space:nowrap; margin:0 0 8px; text-align:right; }
-  .uma-ecv-l  { font-size:11.5px; font-weight:700; color:#3c4761;
-                white-space:nowrap; margin:8px 0 0; text-align:right; }
-  /* LES REPÈRES SONT À GAUCHE DE LA BARRE. Posés à sa droite, ils
-     s'intercalaient entre la couleur et le dessin : trente pixels de
-     chiffres entre ce qu'on compare et ce sur quoi on le lit. */
-  .uma-ecv-c  { display:flex; align-items:stretch;
-                justify-content:flex-end; }
-  .uma-ecv-bar { display:flex; flex-direction:column; width:13px;
-                 flex:0 0 13px; order:2;
-                 height:max(180px, calc(100vh - 500px));
-                 border-radius:6px; overflow:hidden;
-                 box-shadow:inset 0 0 0 1px rgba(0,0,0,.09); }
-  .uma-ecv-bar i { flex:1 1 0; }
-  .uma-ecv-tk { position:relative; flex:0 0 30px; order:1; }
-  .uma-ecv-tk span { position:absolute; right:5px; transform:translateY(-50%);
-                     font-size:11px; color:#7c8698; white-space:nowrap; }
-  .uma-ecv-tk span::before { content:""; position:absolute; right:-5px;
-                             top:50%; width:5px; height:1px;
-                             background:#ccd4de; }
-  /* LA MISE EN GARDE SE RANGE SOUS LE DESSIN, ET DONC À DROITE. Calée au
-     bord gauche de la colonne, elle commençait sous la légende et non sous
-     la carte : on la lisait comme une note de la légende. Le `!important`
-     est nécessaire — la règle de justification de l'application porte sur
-     tous les paragraphes du contenu et l'emporterait autrement. */
-  p.uma-n  { font-size:11px; color:#a7b0bb; margin:7px 0 0 auto;
+  /* LA LÉGENDE SE RANGE SOUS LE DESSIN, ET DONC À DROITE. Calée au bord
+     gauche de la colonne, elle commençait à côté du texte et non sous la
+     carte. Le `!important` est nécessaire — la règle de justification de
+     l'application porte sur tous les paragraphes du contenu et l'emporterait
+     autrement. */
+  p.uma-n  { font-size:11.5px; color:#8a93a5; margin:9px 0 0 auto;
              line-height:1.5; max-width:58ch;
              text-align:right !important; }
 
@@ -483,104 +443,57 @@ def _entrees():
 
 # ------------------------------------------------- comprendre, mesurer, agir
 def _carte_indice(m):
-    """La carte des dix sections, colorée par l'indice global.
+    """La carte du territoire enquêté — dix sections, et aucun score.
 
-    C'EST LA SEULE CARTE DU SITE QUI PORTE UN SCORE SUR LA PAGE D'ACCUEIL, et
-    c'est délibéré : la promesse de la page est « on mesure la résilience d'un
-    territoire », et une carte muette ne la tient pas. Les valeurs sont celles
-    du référentiel commun aux dix sections — le seul qui permette de les
-    comparer entre elles.
+    ELLE PORTAIT L'INDICE GLOBAL, ET C'ÉTAIT UNE ERREUR DE PLACE. La couleur
+    de chaque section était juste, mais elle arrivait avant tout ce qui
+    permet de la lire : ce qu'est APRI, ce qu'est un score sur dix, pourquoi
+    les seuils sont découpés dans une fourchette de 3,6 à 5,3 et non sur
+    l'échelle entière. Un visiteur qui découvre le site y voyait des couleurs
+    qui semblent classer dix territoires, sans avoir de quoi comprendre ce
+    qu'elles classent. Les scores n'ont pas disparu : ils sont dans « Analyse
+    des résultats », derrière la porte qui les annonce.
+
+    CE QU'ELLE MONTRE MAINTENANT EST CE QUE LA PAGE PROMET : où l'enquête a
+    eu lieu. Les dix sections communales d'une seule couleur, dans le paysage
+    pilote du Sud et de la Grand'Anse, dont les noms sont déjà portés par le
+    fond de carte.
     """
-    valeurs = {s: (round(v, 2) if v is not None else None)
-               for s, v in m["sections"]}
-    dispo = [v for v in valeurs.values() if v is not None]
-    if not dispo:
-        return None
-    seuils = map_render.nice_thresholds(dispo)
-    svg, seuils_ret, _ = map_render.render_map_svg(
-        valeurs, {s: 1 for s in SECTIONS}, seuils, height=400,
-        polarity="eleve_bon", unite="")
-    # LE DESSIN SE CALE À GAUCHE DE SA COLONNE, CONTRE L'ÉCHELLE.
-    # Le plafond de hauteur laisse la boîte plus large que le dessin ; par
-    # défaut un SVG se centre alors dans ce qui reste, et la carte se
-    # retrouvait à deux cents pixels de sa légende, séparée d'elle par du
-    # vide. `xMinYMid` la ramène contre l'échelle, qui n'est là que pour
-    # elle. La marge automatique du gabarit est défaite dans la foulée.
+    valeurs = {s: 1.0 for s in SECTIONS}
+    # UNE SEULE COULEUR, ET TROIS SEUILS HORS D'ATTEINTE : toutes les sections
+    # tombent dans la même classe, donc aucune ne se lit comme meilleure ou
+    # pire qu'une autre. C'est le seul réglage du moteur de cartes qui donne
+    # un aplat uniforme sans avoir à le réécrire.
+    uni = ("#2f6b4f", "#ffffff")
+    svg, _seuils, _ = map_render.render_map_svg(
+        valeurs, {s: 1 for s in SECTIONS}, [9, 9.5, 10], height=400,
+        ramp=[uni, uni, uni, uni], unite="")
+    # LE DESSIN SE CALE À GAUCHE DE SA COLONNE. Le plafond de hauteur laisse
+    # la boîte plus large que le dessin ; par défaut un SVG se centre alors
+    # dans ce qui reste, et la carte partait à la dérive vers la droite.
+    # `xMinYMid` la ramène contre le texte. La marge automatique du gabarit
+    # est défaite dans la foulée.
     svg = svg.replace(
         "<svg ", '<svg preserveAspectRatio="xMinYMid meet" ', 1).replace(
         "margin:0 auto", "margin:0")
-    svg = _pousser_reperes(svg)
-    lo, hi = min(dispo), max(dispo)
+    svg = _sans_valeur(svg)
     return {"carte": f'<div class="uma-carte">{svg}</div>',
-            "echelle": _echelle(seuils_ret),
-            "note": _e(T("po_uma_note",
-                         a=f"{lo:.1f}".replace(".", ","),
-                         b=f"{hi:.1f}".replace(".", ",")))}
+            "note": _e(T("po_carte_cap"))}
 
 
-# La rose des vents et l'échelle kilométrique sont dessinées entre x=46 et
-# x=76 dans un canevas de 920 : elles ouvrent la bande de mer vide où la
-# légende vient se poser, et lui prennent la vingtaine de points qui lui
-# manquent. Les décaler d'autant, vers le bord, rend la bande juste assez
-# large. Les quatre repères portent des classes qui leur sont propres — `cl`
-# pour les traits, `ca` pour la pointe de la flèche, `ct` et `ct2` pour les
-# mots — donc rien d'autre ne bouge. LA POINTE COMPTE AUTANT QUE LE TRAIT :
-# oubliée au premier essai, elle restait en arrière et la flèche se coupait
-# en deux.
-_REPERE = re.compile(r'<(line|text|path)\b[^>]*class="(?:cl|ca|ct|ct2)"[^>]*>')
-_ABSCISSE = re.compile(r'\b(x|x1|x2)="(-?[\d.]+)"')
-_TRACE = re.compile(r'\bd="([^"]*)"')
+# LE MOTEUR DE CARTES ÉCRIT TOUJOURS LA VALEUR, et il n'a pas de réglage pour
+# s'en abstenir : elle rejoint le nom dans l'étiquette (« Trichet · 5,3 ») et
+# ouvre l'infobulle (« Trichet — 5,3 (base: 1) »). Les deux se retirent après
+# coup, ici, plutôt qu'en ajoutant une option à un module dont sept autres
+# pages dépendent. La valeur retirée est celle qu'on vient d'inventer pour
+# obtenir un aplat : il n'y a rien à perdre.
+_ETIQUETTE = re.compile(r'( · [\d]+,[\d]+)(?=</text>)')
+_INFOBULLE = re.compile(r'(<title>)([^<—]+?) — [^<]*(</title>)')
 
 
-def _pousser_reperes(svg, dx=20):
-    """Décale la rose des vents et l'échelle kilométrique vers le bord."""
-    def _chemin(m):
-        # Le tracé de la pointe est une suite « M x,y L x,y … » : seule
-        # l'abscisse, en tête de chaque couple, se décale.
-        return 'd="%s"' % re.sub(
-            r'(-?[\d.]+),(-?[\d.]+)',
-            lambda c: f'{float(c.group(1)) - dx:g},{c.group(2)}', m.group(1))
-
-    def _un(m):
-        return _TRACE.sub(_chemin, _ABSCISSE.sub(
-            lambda a: f'{a.group(1)}="{float(a.group(2)) - dx:g}"', m.group(0)))
-    return _REPERE.sub(_un, svg)
-
-
-def _echelle(seuils):
-    """L'échelle des scores, dressée entre le texte et la carte.
-
-    ELLE EST VERTICALE PARCE QU'ELLE EST DANS UNE COLONNE. Couchée au-dessus
-    de la carte, elle coûtait deux lignes de hauteur — le titre, la barre —
-    sur une page qui doit tenir dans un écran, et cette hauteur-là est prise
-    à la carte. Debout dans une bande étroite entre la définition et la
-    carte, elle ne coûte plus rien en hauteur et occupe une colonne qui,
-    sinon, serait de la marge.
-
-    ET LE SENS DE LECTURE Y EST LE BON : le plus fort en haut, le plus
-    faible en bas, comme sur n'importe quelle échelle graduée. La rampe est
-    donc retournée, et les trois seuils avec elle.
-
-    LES QUATRE SEGMENTS SONT DE LARGEUR ÉGALE, ET C'EST EXACT : ce sont
-    quatre classes de même effectif, pas quatre tranches de même amplitude.
-    La barre représente le rang, comme les couleurs de la carte.
-    """
-    rampe = map_render.ramp_for("eleve_bon")          # du plus faible au fort
-    n = len(rampe)
-    bandes = "".join(f'<i style="background:{c}"></i>'
-                     for c, _ in reversed(rampe))     # en haut, le plus fort
-    reperes = "".join(
-        f'<span style="top:{(k + 1) * 100 / n:.4g}%">'
-        f'{_e(map_render.fmt(s))}</span>'
-        for k, s in enumerate(reversed(seuils[:n - 1])))
-    return (f'<div class="uma-ecv">'
-            f'<div class="uma-ech-t">{_e(T("po_uma_leg"))}</div>'
-            f'<div class="uma-ecv-h">10 · {_e(T("po_uma_b10"))}</div>'
-            f'<div class="uma-ecv-c">'
-            f'<div class="uma-ecv-bar">{bandes}</div>'
-            f'<div class="uma-ecv-tk">{reperes}</div></div>'
-            f'<div class="uma-ecv-l">0 · {_e(T("po_uma_b0"))}</div>'
-            f'</div>')
+def _sans_valeur(svg):
+    """Retire le score des étiquettes et des infobulles."""
+    return _INFOBULLE.sub(r'\1\2\3', _ETIQUETTE.sub('', svg))
 
 
 def _comprendre(m):
@@ -603,28 +516,22 @@ def _comprendre(m):
     # revient au dessin. La mise en garde suit la définition, sous le cadre :
     # elle parle de l'échelle, qui est juste à côté.
     c = _carte_indice(m)
-    g, d = st.columns([1, 1.75], gap="small")
+    g, d = st.columns([1.05, 1.6], gap="medium")
     with g:
+        # LE PREMIER MOT EST DÉTACHÉ. Les deux langues commencent la phrase
+        # par le nom du dispositif ; on le coupe donc du reste plutôt que de
+        # le chercher dans le texte, ce qui casserait à la première
+        # reformulation.
+        _mot, _reste = _e(T("po_uma_x")).split(" ", 1)
         st.markdown(f'<div class="uma-cadre">'
-                    f'<p class="uma-x">{_e(T("po_uma_x"))}</p></div>',
+                    f'<div class="uma-sur">{_e(T("po_uma_sur"))}</div>'
+                    f'<p class="uma-x"><b>{_mot}</b> {_reste}</p></div>',
                     unsafe_allow_html=True)
     if not c:
         return
     with d:
-        # L'ÉCHELLE EST POSÉE DANS LA CARTE, SUR LA MER.
-        # Rangée dans une colonne à part, elle restait à deux cents pixels du
-        # dessin : ce n'est pas la colonne qui les séparait, c'est le large
-        # vide que la carte porte elle-même à l'ouest de la presqu'île — la
-        # rose des vents et l'échelle kilométrique y tiennent seules. La
-        # légende vient s'y installer, et se retrouve à côté de ce qu'elle
-        # légende. Le décalage est en pourcentage : ce vide est proportionnel
-        # à la carte, donc la légende le suit quand la fenêtre change.
-        #
-        # LA MISE EN GARDE EST SOUS LE DESSIN, PARCE QU'ELLE PORTE SUR LUI.
-        # Rangée sous la définition, elle passait pour une note de bas de
-        # texte ; c'est une légende, et une légende se lit au pied de ce
-        # qu'elle légende.
-        st.markdown(f'<div class="uma-zone">{c["echelle"]}{c["carte"]}'
+        # LA LÉGENDE EST SOUS LE DESSIN, PARCE QU'ELLE PORTE SUR LUI.
+        st.markdown(f'<div class="uma-zone">{c["carte"]}'
                     f'<p class="uma-n">{c["note"]}</p></div>',
                     unsafe_allow_html=True)
 
