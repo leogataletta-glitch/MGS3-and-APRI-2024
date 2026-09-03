@@ -230,8 +230,11 @@ STYLE = """
   .uma-sur { font-size:11px; font-weight:700; color:#8a93a5;
              letter-spacing:.09em; text-transform:uppercase;
              margin:0 0 10px; }
-  .uma-socle { border-left:3px solid #1a6b52; padding:2px 0 4px 26px;
-               margin:6px 0 0; }
+  /* PLUS DE FILET VERTICAL LE LONG DE L'ESCALIER. Le filet marque, partout
+     ailleurs sur le site, la rubrique ou l'onglet courant : le poser à côté
+     d'un bloc de chiffres lui donnait un sens qu'il n'a pas ici. Le
+     surtitre en capitales vertes suffit à ouvrir le bloc. */
+  .uma-socle { padding:2px 0 4px 2px; margin:6px 0 0; }
   .uma-socle .uma-sur { color:#1a6b52; font-size:12px;
                         letter-spacing:.11em; margin:0 0 20px; }
   .uma-esc { position:relative; }
