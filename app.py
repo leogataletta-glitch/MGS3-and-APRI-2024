@@ -996,11 +996,15 @@ st.markdown(("""
      logo foncé ailleurs, et tout voile assez fort pour le sauver se voyait.
      Posé en calque, il garde son ombre portée — laquelle le détache aussi
      bien du clair que du sombre, sans rien changer à l'image. */
+  /* LE LOGO EST BLEU SUR UN BANDEAU CLAIR. Il était blanc, avec deux ombres
+     sombres pour le détacher d'une photographie ; sur un dessin au crayon
+     posé sur du blanc, un logo blanc ne se voit plus du tout. Le bleu du
+     PNUE se lit sur le papier, et un halo blanc l'écarte des traits de
+     crayon qui passent dessous. */
   .bandeau-logo {
     position: absolute; top: 16px; right: 32px; height: 54px; width: auto;
     display: block; pointer-events: none; z-index: 4;
-    filter: drop-shadow(0 1px 4px rgba(18,40,25,.65))
-            drop-shadow(0 0 12px rgba(18,40,25,.35));
+    filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px rgba(255,255,255,.9));
   }
 
   /* L'ILLUSTRATION OCCUPE TOUTE LA LARGEUR ET N'EST PAS ROGNÉE. Streamlit
@@ -1084,10 +1088,9 @@ st.markdown(("""
      `::before` sur le conteneur, où il devient une case de la rangée. */
   div[class*="st-key-zone_langue"]::before {
     content: ""; width: 15px; height: 15px; flex: 0 0 15px;
-    margin-right: 9px; background-color: #ffffff;
+    margin-right: 9px; background-color: #6b7590;
     -webkit-mask: MASQUE center/contain no-repeat;
     mask: MASQUE center/contain no-repeat;
-    filter: drop-shadow(0 1px 2px rgba(20,45,30,.45));
   }
   /* Streamlit donne au conteneur du bouton la largeur de son mot : sans ces
      deux lignes, le `width:100%` du bouton vaut 100 % de vingt-cinq pixels,
@@ -1117,25 +1120,23 @@ st.markdown(("""
   div[data-testid="stButton"] > button p {
     font-size: 11.5px !important; font-weight: 600 !important;
     letter-spacing: .08em !important; text-transform: uppercase;
-    color: rgba(255,255,255,.72) !important; text-align: left !important;
-    text-shadow: 0 1px 3px rgba(20,45,30,.55);
+    color: #6b7590 !important; text-align: left !important;
     transition: color .15s ease;
   }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button:hover { background: transparent !important; }
   div[class*="st-key-lang_"]
-  div[data-testid="stButton"] > button:hover p { color: #ffffff !important; }
+  div[data-testid="stButton"] > button:hover p { color: #1a6b52 !important; }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] p {
-    color: #ffffff !important; font-weight: 800 !important;
+    color: #1a6b52 !important; font-weight: 800 !important;
   }
   div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
   div[class*="st-key-lang_"] { position: relative; padding-left: 13px; }
   div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
   div[class*="st-key-lang_"]::before {
     content: "/"; position: absolute; left: 2px; top: 2px;
-    font-size: 11.5px; color: rgba(255,255,255,.5);
-    text-shadow: 0 1px 3px rgba(20,45,30,.55);
+    font-size: 11.5px; color: #b6bdc9;
   }
   div[class*="st-key-zone_langue"] {
     display: flex !important; flex-direction: row !important;
@@ -1878,8 +1879,13 @@ def _bandeau_b64():
     # `data/` puis à la racine : le dépôt déployé n'a pas toujours la même
     # arborescence que l'atelier.
     chemin = None
-    for nom in ("bandeau_apri_site.jpg", "bandeau_apri_large.jpg",
-                "bandeau_apri.jpg"):
+    # LE DESSIN PASSE DEVANT LA PHOTOGRAPHIE. La composition au crayon tient
+    # sur le même blanc que la page et la colonne de menu : les trois se
+    # lisent comme une seule feuille, là où la photographie posait un
+    # rectangle de couleur en haut de l'écran. La photographie reste sous
+    # `bandeau_apri_site.jpg` — retirer le dessin la remet en service.
+    for nom in ("bandeau_apri_dessin.jpg", "bandeau_apri_site.jpg",
+                "bandeau_apri_large.jpg", "bandeau_apri.jpg"):
         for base in (os.path.join(APP_DIR, "data"), APP_DIR):
             essai = os.path.join(base, nom)
             if os.path.exists(essai):
@@ -1897,26 +1903,13 @@ _CSS_LANGUE_NUE = """
 <style>
   /* SANS BANDEAU, LES DEUX CODES NE FLOTTENT PLUS SUR RIEN. Ils sont posés
      en absolu dans le ruban, qui n'a plus de hauteur dès que l'illustration
-     ne s'y trouve pas : ils se seraient rangés en haut du contenu, en blanc
-     sur blanc. Ici, ils reprennent leur place dans le flux, alignés à
-     droite, et repassent en encre. */
+     ne s'y trouve pas : ils se seraient rangés en haut du contenu, par-dessus
+     ce qui commence là. Ici, ils reprennent leur place dans le flux, alignés
+     à droite. La couleur, elle, ne change pas : ils sont en encre partout
+     depuis que le bandeau est clair. */
   div[class*="st-key-zone_langue"] {
     position: static !important; margin: 2px 0 0 auto !important;
     justify-content: flex-end !important;
-  }
-  div[class*="st-key-zone_langue"]::before {
-    background-color: #6b7590 !important; filter: none !important;
-  }
-  div[class*="st-key-lang_"] div[data-testid="stButton"] > button p {
-    color: #6b7590 !important; text-shadow: none !important;
-  }
-  div[class*="st-key-lang_"] div[data-testid="stButton"] > button:hover p,
-  div[class*="st-key-lang_"] div[data-testid="stButton"] > button[kind="primary"] p {
-    color: #1a6b52 !important;
-  }
-  div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
-  div[class*="st-key-lang_"]::before {
-    color: #b6bdc9 !important; text-shadow: none !important;
   }
 </style>
 """
@@ -1971,7 +1964,7 @@ def _rendre_ruban(avec_image):
             f'<img class="bandeau-fond" alt="APRI" '
             f'src="data:image/jpeg;base64,{img}">'
             f'<img class="bandeau-logo" alt="UNEP" '
-            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
+            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLEU}">'
             f'</div>', unsafe_allow_html=True)
 
 
