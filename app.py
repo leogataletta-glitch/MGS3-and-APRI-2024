@@ -486,6 +486,70 @@ st.markdown(("""
     color: var(--encre) !important;
   }
 
+  /* --- LES SOUS-ONGLETS, EN BARRE NUMÉROTÉE ---------------------------
+     C'est le format du cadre de résilience, repris ici : numéro en gras,
+     titre à côté, filet sous la rangée, soulignement vert sur l'onglet
+     ouvert. La pastille ronde du sélecteur est enfouie de trois niveaux et
+     n'est ni le premier enfant du label ni un pseudo-élément — d'où le
+     chemin complet ci-dessous.
+
+     Chaque enveloppe que Streamlit interpose est forcée à la pleine largeur :
+     les cases ne contiennent qu'un numéro et deux mots, et un `width:100%`
+     calculé sur un parent ajusté au contenu ne donnerait rien. */
+  div[class*="st-key-ra_nav"],
+  div[class*="st-key-ra_nav"] div[data-testid="stElementContainer"],
+  div[class*="st-key-ra_nav"] div[data-testid="stRadio"] {
+      width: 100% !important;
+  }
+  div[class*="st-key-ra_nav"] div[role="radiogroup"] {
+      display: flex !important; flex-wrap: nowrap !important; gap: 0 !important;
+      width: 100% !important; align-items: stretch;
+      border-bottom: 1px solid #e9eef4; margin: 2px 0 12px;
+  }
+  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label {
+      flex: 1 1 0 !important; min-width: 0 !important; margin: 0 !important;
+      background: none !important; border: 0 !important;
+      padding: 0 14px 11px 0 !important; position: relative; cursor: pointer;
+  }
+  div[class*="st-key-ra_nav"] div[role="radiogroup"]
+      > label > div > div > div:first-child { display: none !important; }
+  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label > div > div {
+      gap: 0 !important; width: 100% !important;
+  }
+  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label > div:last-child p,
+  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label p {
+      font-size: 12px !important; font-weight: 500 !important;
+      color: #8a93a5 !important; margin: 0 !important;
+      text-align: left !important; line-height: 1.35 !important;
+  }
+  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label p strong {
+      font-size: 13px; font-weight: 700; color: #a7b0be;
+      font-variant-numeric: tabular-nums;
+  }
+  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label:hover p,
+  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label:hover p strong {
+      color: #3c4761 !important;
+  }
+  div[class*="st-key-ra_nav"] div[role="radiogroup"]
+      > label:has(input:checked) p {
+      color: #1a6b52 !important; font-weight: 700 !important;
+  }
+  div[class*="st-key-ra_nav"] div[role="radiogroup"]
+      > label:has(input:checked) p strong { color: #1a6b52; }
+  div[class*="st-key-ra_nav"] div[role="radiogroup"]
+      > label:has(input:checked)::after {
+      content: ""; position: absolute; left: 0; right: 14px; bottom: -1px;
+      height: 2px; background: #1a6b52; border-radius: 2px;
+  }
+  @media (max-width: 900px) {
+    div[class*="st-key-ra_nav"] div[role="radiogroup"] {
+        flex-wrap: wrap !important; border-bottom: 0;
+    }
+    div[class*="st-key-ra_nav"] div[role="radiogroup"] > label {
+        flex: 1 1 45% !important; padding-bottom: 8px !important;
+    }
+  }
+
   /* --- radios : pastilles cliquables --- */
   .stRadio > div[role="radiogroup"] { gap: 8px; flex-wrap: wrap; }
   .stRadio > div[role="radiogroup"] > label {
@@ -1710,13 +1774,21 @@ with _c_contenu:
         # égale au texte affiché change de langue avec lui : il faut alors une
         # clé par langue, et la vue choisie se perd au premier basculement.
         # `format_func` sépare ce qu'on stocke de ce qu'on montre.
+        # LA BARRE PREND LE FORMAT DU CADRE DE RÉSILIENCE : numéro en gras,
+        # titre à côté, filet sous la rangée et soulignement vert sur l'onglet
+        # ouvert. Quatre pastilles rondes se lisaient comme un formulaire à
+        # cocher ; ce sont des onglets, ils en ont la forme.
         _RA = {"dims": T("ra_o_dims"),
                "croisement": T("mode_croisement"),
                "synthese": T("mode_synthese"),
                "bailleurs": T("mode_bailleurs")}
-        _ra = st.radio("ra", list(_RA), horizontal=True,
-                       label_visibility="collapsed", key="ra_vue",
-                       format_func=lambda c: _RA[c])
+        _CODES_RA = list(_RA)
+        with st.container(key="ra_nav"):
+            _ra = st.radio(
+                "ra", _CODES_RA, horizontal=True,
+                label_visibility="collapsed", key="ra_vue",
+                format_func=lambda c: (f"**{_CODES_RA.index(c) + 1:02d}**"
+                                       f"&nbsp; {_RA[c]}"))
 
         if _ra == "dims":
             # Deux dimensions prolongent leur page avec un détail qui existait déjà,

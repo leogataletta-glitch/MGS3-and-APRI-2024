@@ -37,6 +37,11 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 import croisement_moteur as M
+# L'EXPLORATEUR EST LE PREMIER ÉCRAN DE CETTE PAGE. Le constructeur libre qui
+# suit répond à « quel est le profil de CE groupe ? » ; l'explorateur répond
+# à « sur CETTE question, qui répond CETTE réponse ? », qui est la question
+# qu'on se pose en arrivant.
+import explorateur
 import i18n
 import map_render
 from i18n import T
@@ -546,6 +551,10 @@ def render():
     if not cat:
         st.error(T("cx_absent"))
         return
+
+    # ---- l'explorateur : question, réponse, ventilation, format --------
+    explorateur.render(cat)
+    st.markdown('<div style="height:26px"></div>', unsafe_allow_html=True)
 
     couv = M.couverture(cat)
     st.info(T("cx_intro", n=len(cat["questions"])))

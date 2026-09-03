@@ -119,16 +119,15 @@ TEXTES = {
     # promet un chiffre exact le dément le jour où un indicateur de plus est
     # calculé.
     "po_intro": {
-        "en": "APRI assesses landscape and community resilience through four "
-              "core capacities: anticipation, absorption, adaptation, and "
-              "transformation. Using {n}+ indicators across seven "
-              "dimensions, it identifies negative loops to guide targeted "
-              "intervention.",
+        "en": "APRI assesses landscape and community resilience through "
+              "three core capacities: anticipation, absorption and "
+              "adaptation. Using {n}+ indicators across seven dimensions, it "
+              "identifies negative loops to guide targeted intervention.",
         "fr": "APRI évalue la résilience des paysages et des communautés au "
-              "travers de quatre capacités fondamentales : anticipation, "
-              "absorption, adaptation et transformation. À partir de plus de "
-              "{n} indicateurs répartis en sept dimensions, il identifie les "
-              "boucles négatives pour cibler l'intervention."},
+              "travers de trois capacités fondamentales : anticipation, "
+              "absorption et adaptation. À partir de plus de {n} indicateurs "
+              "répartis en sept dimensions, il identifie les boucles "
+              "négatives pour cibler l'intervention."},
 
     # --- LE SOCLE DE PREUVES, EN QUATRE MARCHES
     # CHAQUE MARCHE SE LIT « MOT D'AVANT · NOMBRE · MOT D'APRÈS ». Découper
