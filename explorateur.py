@@ -32,6 +32,7 @@ import streamlit as st
 
 import croisement_moteur as M
 import i18n
+import map_render
 import radar
 from i18n import T
 
@@ -91,6 +92,23 @@ TEXTES = {
               "Elle est disponible sur le score de résilience."},
     "ex_score": {"en": "score out of 10", "fr": "score sur 10"},
     "ex_tableau": {"en": "Table", "fr": "Tableau"},
+    "ex_carte": {"en": "Map", "fr": "Carte"},
+    "ex_carte_sec": {
+        "en": "The map is drawn by communal section: it is available when "
+              "the breakdown includes the communal sections.",
+        "fr": "La carte se dessine par section communale : elle est "
+              "disponible quand la ventilation contient les sections "
+              "communales."},
+    "ex_filtre": {"en": "Restrict to", "fr": "Restreindre à"},
+    "ex_f_section": {"en": "Communal section", "fr": "Section communale"},
+    "ex_f_groupe": {"en": "Social group", "fr": "Groupe social"},
+    "ex_f_paysage": {"en": "Landscape", "fr": "Paysage"},
+    "ex_f_tous": {"en": "All", "fr": "Tout"},
+    "ex_filtre_n": {"en": "Restricted to {n} households of {t}.",
+                    "fr": "Restreint à {n} ménages sur {t}."},
+    "ex_filtre_vide": {
+        "en": "No household matches all three restrictions at once.",
+        "fr": "Aucun ménage ne réunit les trois restrictions à la fois."},
     "ex_format": {"en": "Chart", "fr": "Graphique"},
     "ex_barres": {"en": "Bar chart", "fr": "Histogramme"},
     "ex_radar": {"en": "Radar chart", "fr": "Diagramme radar"},
@@ -105,6 +123,10 @@ TEXTES = {
     "ex_ens": {"en": "All respondents", "fr": "Ensemble des répondants"},
     "ex_n": {"en": "{k} of {n} respondents",
              "fr": "{k} sur {n} répondants"},
+    # L'INTITULÉ DE COLONNE N'EST PAS LA PHRASE. `ex_n` est un gabarit à deux
+    # trous ; posé tel quel en tête de colonne, il s'affichait « {k} of {n}
+    # respondents ». Une clé par usage.
+    "ex_col_n": {"en": "respondents", "fr": "répondants"},
     "ex_fragile": {
         "en": "Bars in pale green rest on fewer than {n} respondents: they "
               "move by several points if one household answers differently.",
@@ -169,6 +191,78 @@ def _lib(v):
     return T(cles[v]) if v in cles else v
 
 
+def _masque_filtres(cat, choix):
+    """Le sous-échantillon retenu par les trois filtres, en ET.
+
+    LES TROIS NIVEAUX SE CUMULENT, ET C'EST VOULU. « Littoral » ET « femmes »
+    ET « Trichet » restreint trois fois de suite ; l'effectif restant est
+    annoncé sous les commandes, parce qu'une part calculée sur onze ménages
+    doit se lire en sachant qu'ils sont onze.
+    """
+    m = np.ones(cat["n"], dtype=bool)
+    for v in choix:
+        if not v:
+            continue
+        g = cat["groupes"].get(v)
+        if g is not None:
+            m &= g
+    return m
+
+
+def _filtres(cat):
+    """Les trois niveaux de restriction : localité, groupe social, paysage."""
+    c1, c2, c3 = st.columns(3)
+    choix = []
+    with c1:
+        sec = st.selectbox(
+            T("ex_f_section"), [None] + list(_VALEURS["section"]),
+            key="ex_f_sec", format_func=lambda v: T("ex_f_tous") if v is None
+            else v)
+        choix.append(sec)
+    with c2:
+        soc = []
+        for axe in ("sexe", "age", "richesse"):
+            soc += [(v, f'{T(dict(AXES)[axe])} · {_lib(v)}')
+                    for v in _VALEURS[axe]]
+        grp = st.selectbox(
+            T("ex_f_groupe"), [None] + [v for v, _l in soc], key="ex_f_grp",
+            format_func=lambda v: T("ex_f_tous") if v is None
+            else dict(soc)[v])
+        choix.append(grp)
+    with c3:
+        pay = st.selectbox(
+            T("ex_f_paysage"), [None] + list(_VALEURS["paysage"]),
+            key="ex_f_pay", format_func=lambda v: T("ex_f_tous") if v is None
+            else _lib(v))
+        choix.append(pay)
+    return _masque_filtres(cat, choix), any(choix)
+
+
+def _carte(lignes):
+    """La part par section communale, portée sur la carte du territoire.
+
+    LA CARTE NE MONTRE QUE LES SECTIONS. Les autres axes — sexe, âge,
+    catégorie — n'ont pas de géographie : les porter sur une carte
+    inventerait un territoire qu'ils n'ont pas.
+    """
+    vals = {l["cle"]: l["part"] for l in lignes
+            if l.get("axe_code") == "section" and l["part"] is not None}
+    if len(vals) < 2:
+        return None
+    dispo = list(vals.values())
+    seuils = map_render.nice_thresholds(dispo)
+    svg, seuils_ret, _m = map_render.render_map_svg(
+        vals, {s: 1 for s in vals}, seuils, height=560,
+        polarity="neutre", unite="%")
+    legende = "".join(
+        f'<span style="display:inline-flex;align-items:center;gap:7px;'
+        f'margin-right:16px"><span style="width:20px;height:11px;'
+        f'border-radius:3px;background:{c}"></span>'
+        f'<span style="font-size:11.5px;color:#52514e">{lab}</span></span>'
+        for c, lab in map_render.legend_items(seuils_ret, "neutre", "%"))
+    return (f'<div style="margin:6px 0 8px">{legende}</div>{svg}')
+
+
 def _cases(cat, axe):
     """Les cases d'un axe : (clé technique, libellé affiché)."""
     if axe == "dimension":
@@ -176,7 +270,7 @@ def _cases(cat, axe):
     return [(v, _lib(v)) for v in _VALEURS.get(axe, [])]
 
 
-def _ventiler(cat, mesure, q, modalite, axes):
+def _ventiler(cat, mesure, q, modalite, axes, filtre=None):
     """Une ligne par case, pour tous les axes retenus, dans leur ordre.
 
     LES AXES S'ADDITIONNENT, ILS NE SE CROISENT PAS. Cumuler « localité » et
@@ -190,13 +284,16 @@ def _ventiler(cat, mesure, q, modalite, axes):
     et il est renvoyé avec la part : sans lui, 100 % sur trois ménages et
     100 % sur cent quarante se liraient pareil.
     """
+    if filtre is None:
+        filtre = np.ones(cat["n"], dtype=bool)
     if mesure == "score":
-        return _ventiler_score(cat, axes)
+        return _ventiler_score(cat, axes, filtre)
 
     m_rep = np.zeros(cat["n"], dtype=bool)          # a répondu à la question
     for j in range(len(q["modalites"])):
         m_rep |= cat["bits"][q["debut"] + j]
-    m_mod = cat["bits"][q["debut"] + q["modalites"].index(modalite)]
+    m_rep &= filtre
+    m_mod = cat["bits"][q["debut"] + q["modalites"].index(modalite)] & filtre
 
     out = []
     for axe in axes:
@@ -207,7 +304,8 @@ def _ventiler(cat, mesure, q, modalite, axes):
             if g is None:
                 continue
             base = int((m_rep & g).sum())
-            out.append({"nom": lib, "axe": T(dict(AXES)[axe]),
+            out.append({"nom": lib, "cle": v, "axe": T(dict(AXES)[axe]),
+                        "axe_code": axe,
                         "n": base, "k": int((m_mod & g).sum()),
                         "part": (100 * int((m_mod & g).sum()) / base)
                                 if base else None})
@@ -217,7 +315,7 @@ def _ventiler(cat, mesure, q, modalite, axes):
     return out, ens
 
 
-def _ventiler_score(cat, axes):
+def _ventiler_score(cat, axes, filtre=None):
     """Le score de résilience par case — dimensions comprises.
 
     LE SCORE D'UNE DIMENSION EST CELUI DE L'ENSEMBLE DES MÉNAGES : une
@@ -226,15 +324,17 @@ def _ventiler_score(cat, axes):
     contredire, et c'est pour cela qu'ils peuvent figurer sur le même
     graphique.
     """
-    tout = np.ones(cat["n"], dtype=bool)
+    tout = filtre if filtre is not None else np.ones(cat["n"], dtype=bool)
     ag_tout = M.agreger(M.profil(cat, tout))
     out = []
     for axe in axes:
         if axe == "dimension":
             for c, lib in _cases(cat, "dimension"):
                 v = ag_tout["dimensions"].get(c)
-                out.append({"nom": lib, "axe": T("ex_ax_dimension"),
-                            "n": cat["n"], "k": None,
+                out.append({"nom": lib, "cle": c,
+                            "axe": T("ex_ax_dimension"),
+                            "axe_code": "dimension",
+                            "n": int(tout.sum()), "k": None,
                             "part": (10 * v / 10) if v is not None else None,
                             "score": v})
             continue
@@ -242,11 +342,13 @@ def _ventiler_score(cat, axes):
             g = cat["groupes"].get(v)
             if g is None:
                 continue
+            g = g & tout
             nb = int(g.sum())
             sc = M.agreger(M.profil(cat, g))["global"] if nb else None
-            out.append({"nom": lib, "axe": T(dict(AXES)[axe]), "n": nb,
+            out.append({"nom": lib, "cle": v, "axe": T(dict(AXES)[axe]),
+                        "axe_code": axe, "n": nb,
                         "k": None, "part": sc, "score": sc})
-    ens = {"n": cat["n"], "k": None, "part": ag_tout["global"],
+    ens = {"n": int(tout.sum()), "k": None, "part": ag_tout["global"],
            "score": ag_tout["global"]}
     return out, ens
 
@@ -352,7 +454,7 @@ def _tableau(lignes, ens, mesure):
          f'<th>{_e(T("ex_axe"))}</th>'
          f'<th class="n">{_e(col)}</th>']
     if mesure == "part":
-        r.append(f'<th class="n">{_e(T("ex_n"))}</th>')
+        r.append(f'<th class="n">{_e(T("ex_col_n"))}</th>')
     else:
         r.append(f'<th class="n">n</th>')
     r.append('</tr></thead><tbody>')
@@ -374,8 +476,13 @@ def _libelle_question(q):
     return f'{mod} · {q["question"]}'
 
 
-def render(cat):
+def render(cat, mode=None):
     """L'explorateur, dans l'ordre : mesure, question, ventilation, format.
+
+    `mode` fige la mesure quand la page n'en propose qu'une : « brut » pour
+    les résultats d'enquête, « score » pour les scores de résilience. Deux
+    onglets qui traitent chacun d'une seule mesure ne doivent pas demander au
+    lecteur de la choisir avant de commencer.
 
     L'ORDRE DES COMMANDES EST L'ORDRE DE LA PENSÉE. On ne choisit pas un
     format de graphique avant de savoir ce qu'on regarde : ce qu'on mesure
@@ -390,9 +497,14 @@ def render(cat):
         f'{_e(T("ex_intro"))}</p>', unsafe_allow_html=True)
 
     questions = cat["questions"]
-    mesure = st.radio(
-        T("ex_mesure"), ["part", "score"], horizontal=True, key="ex_mes",
-        format_func=lambda m: T("ex_m_" + m))
+    if mode == "brut":
+        mesure = "part"
+    elif mode == "score":
+        mesure = "score"
+    else:
+        mesure = st.radio(
+            T("ex_mesure"), ["part", "score"], horizontal=True, key="ex_mes",
+            format_func=lambda m: T("ex_m_" + m))
 
     q, modalite = None, None
     if mesure == "part":
@@ -419,8 +531,8 @@ def render(cat):
             T("ex_axe"), dispo, default=["section"], key=f"ex_axes_{mesure}",
             format_func=lambda a: T(dict(AXES)[a]))
     with c2:
-        forme = st.selectbox(T("ex_format"), ["barres", "radar", "tableau"],
-                             key="ex_forme",
+        formes = ["barres", "radar", "tableau", "carte"]
+        forme = st.selectbox(T("ex_format"), formes, key="ex_forme",
                              format_func=lambda f: T("ex_" + f))
     with c3:
         extremes = st.selectbox(
@@ -434,7 +546,21 @@ def render(cat):
         st.info(T("ex_axes_vide"))
         return
 
-    lignes, ens = _ventiler(cat, mesure, q, modalite, axes)
+    # ---- les trois niveaux de restriction --------------------------------
+    st.markdown(f'<div class="ex-lab" style="margin:10px 0 2px">'
+                f'{_e(T("ex_filtre"))}</div>', unsafe_allow_html=True)
+    filtre, actif = _filtres(cat)
+    n_f = int(filtre.sum())
+    if n_f == 0:
+        st.info(T("ex_filtre_vide"))
+        return
+    if actif:
+        st.markdown(
+            f'<p class="ex-note" style="margin:2px 0 0">'
+            f'{_e(T("ex_filtre_n", n=n_f, t=cat["n"]))}</p>',
+            unsafe_allow_html=True)
+
+    lignes, ens = _ventiler(cat, mesure, q, modalite, axes, filtre)
     lignes = [l for l in lignes if l["n"] > 0]
     if not lignes:
         st.info(T("ex_vide"))
@@ -445,6 +571,18 @@ def render(cat):
     if forme == "radar" and len(montrees) < 3:
         st.info(T("ex_radar_court"))
         forme = "barres"
+
+    if forme == "carte":
+        svg = _carte(montrees)
+        if svg is None:
+            st.info(T("ex_carte_sec"))
+            forme = "barres"
+        else:
+            st.markdown(
+                f'<div style="font-family:Inter,system-ui,sans-serif">{svg}'
+                f'</div>', unsafe_allow_html=True)
+            st.markdown(_tableau(montrees, ens, mesure),
+                        unsafe_allow_html=True)
 
     if forme == "radar":
         # LE RADAR EST GRADUÉ DE 0 À 10, comme tous les radars du site : le

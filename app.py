@@ -30,9 +30,11 @@ import actualites
 import assets
 import boucles_page
 import cadre_page
+import analyse_ecarts
 import croisement_resultats
 import dimension_page
 import environnement_page
+import explorateur
 import fiche_paysages
 import filtres
 import icones
@@ -40,15 +42,14 @@ import interventions_page
 import i18n
 import map_render
 import methodologie_page
-import note_bailleurs
 import ondes_choc
 import ocb_page
-import radar_accueil
 import rapport_donateur
 import resilience_page
 import saillants_page
 import si_je_change
 import systeme_page
+import pistes_page
 import synthese_page
 import telechargements_page
 import territoire_page
@@ -1338,9 +1339,25 @@ TEXTES_NAV = {
     # seul renseignement utile à quelqu'un qui parcourt un menu. La page
     # elle-même n'a pas bougé d'une ligne.
     "mode_bailleurs": {"en": "Key Lessons", "fr": "Enseignements clés"},
-    # Les quatre vues d'« Analyse des résultats ». La première est celle qui
-    # existait seule ; les trois autres étaient des entrées de menu.
-    "ra_o_dims": {"en": "By dimension", "fr": "Par dimension"},
+    # LES SIX VUES D'« ANALYSE DES RÉSULTATS », dans l'ordre de la lecture :
+    # ce que les gens ont répondu, ce que le référentiel en fait, puis trois
+    # façons de chercher les écarts, puis ce qu'on peut y faire.
+    #
+    # « PAR DIMENSION » N'EST PLUS UN ONGLET. Ce n'est pas une façon de
+    # regarder les résultats à côté des autres : c'est la structure du score
+    # lui-même. Elle est donc rangée là où le score se lit, dans le second
+    # onglet, sous son propre sélecteur.
+    #
+    # « ENSEIGNEMENTS CLÉS » A ÉTÉ RETIRÉ de la rangée : une note de
+    # restitution n'est pas une lecture des résultats, c'est un texte sur
+    # eux.
+    "ra_o_brut": {"en": "Raw Results", "fr": "Résultats bruts"},
+    "ra_o_scores": {"en": "Resilience Scores",
+                    "fr": "Scores de résilience"},
+    "ra_o_indic": {"en": "By Indicator", "fr": "Par indicateur"},
+    "ra_o_paysage": {"en": "By Landscape", "fr": "Par paysage"},
+    "ra_o_groupe": {"en": "By Social Group", "fr": "Par groupe social"},
+    "ra_o_solutions": {"en": "Solutions", "fr": "Solutions"},
     "mode_levier": {"en": "If I change one thing",
                     "fr": "Si je change une chose"},
     # LE RAPPORT ET LA NOTE NE FONT PAS LE MÊME MÉTIER. La note tient sur une
@@ -1363,7 +1380,8 @@ TEXTES_NAV = {
 _RENOMMEES = ("mode_accueil", "mode_methodo", "mode_dimensions",
               "mode_synthese", "mode_actions", "mode_donnees",
               "mode_boucles", "mode_croisement", "mode_rapport",
-              "mode_levier", "mode_bailleurs", "ra_o_dims")
+              "mode_levier", "mode_bailleurs", "ra_o_brut", "ra_o_scores",
+              "ra_o_indic", "ra_o_paysage", "ra_o_groupe", "ra_o_solutions")
 for _c, _v in TEXTES_NAV.items():
     if _c in _RENOMMEES:
         i18n.DICO[_c] = _v
@@ -1778,10 +1796,25 @@ with _c_contenu:
         # titre à côté, filet sous la rangée et soulignement vert sur l'onglet
         # ouvert. Quatre pastilles rondes se lisaient comme un formulaire à
         # cocher ; ce sont des onglets, ils en ont la forme.
-        _RA = {"dims": T("ra_o_dims"),
-               "croisement": T("mode_croisement"),
-               "synthese": T("mode_synthese"),
-               "bailleurs": T("mode_bailleurs")}
+        # SIX ONGLETS, ET L'ORDRE EST CELUI DE LA LECTURE.
+        #
+        #   01 Raw Results      — ce que les ménages répondent, sans calcul ;
+        #   02 Resilience Scores— ce que le référentiel en fait, dimension
+        #                         par dimension ;
+        #   03 By Indicator     — un indicateur, ses écarts sur le territoire ;
+        #   04 By Landscape     — un paysage contre l'autre ;
+        #   05 By Social Group  — un groupe contre tous les autres ;
+        #   06 Solutions        — ce qu'on peut faire de tout cela.
+        #
+        # Les trois écrans du milieu répondent à la même question sous trois
+        # angles : où sont les écarts, et quels indicateurs les font. Ils
+        # partagent donc un seul moteur de calcul.
+        _RA = {"brut": T("ra_o_brut"),
+               "scores": T("ra_o_scores"),
+               "indic": T("ra_o_indic"),
+               "paysage": T("ra_o_paysage"),
+               "groupe": T("ra_o_groupe"),
+               "solutions": T("ra_o_solutions")}
         _CODES_RA = list(_RA)
         with st.container(key="ra_nav"):
             _ra = st.radio(
@@ -1790,71 +1823,62 @@ with _c_contenu:
                 format_func=lambda c: (f"**{_CODES_RA.index(c) + 1:02d}**"
                                        f"&nbsp; {_RA[c]}"))
 
-        if _ra == "dims":
-            # Deux dimensions prolongent leur page avec un détail qui existait déjà,
-            # plutôt que d'en dupliquer la logique. Ce détail est passé à la page de
-            # dimension, qui le place dans le bon sous-onglet — celui des indicateurs.
+        # LE CATALOGUE EST CHARGÉ UNE FOIS POUR LES CINQ PREMIERS ONGLETS.
+        # C'est le même fichier de réponses individuelles ; le charger dans
+        # chaque module en ferait cinq copies en mémoire.
+        _cat = croisement_resultats._catalogue() \
+            if _ra in ("brut", "scores", "indic", "paysage", "groupe") \
+            else None
+
+        if _ra == "brut":
+            # LES RÉSULTATS BRUTS SONT CE QUE LES GENS ONT RÉPONDU, et rien
+            # d'autre : aucun barème, aucune pondération. Une question, une
+            # réponse, la part qui la donne — ventilée, filtrée, et portée sur
+            # la carte quand la ventilation est géographique.
+            explorateur.render(_cat, mode="brut")
+
+        elif _ra == "scores":
+            # LES SCORES, DANS LES DEUX SENS DE LECTURE : d'abord comparés
+            # entre territoires, paysages et groupes ; ensuite dépliés
+            # dimension par dimension, avec le détail de leurs indicateurs.
+            explorateur.render(_cat, mode="score")
+            st.markdown('<div style="height:30px"></div>',
+                        unsafe_allow_html=True)
             _COMPLEMENT = {
                 "dim3": lambda: environnement_page.render(entete=False),
                 "dim5": lambda: ocb_page.render(entete=False),
             }
-
-            # DES CARTES, PAS DES ONGLETS DE STREAMLIT.
-            #
-            # `st.tabs` donnait six intitulés en petit, soulignés, qu'il fallait
-            # chercher — et surtout il RENDAIT LES SIX PAGES à chaque affichage, y
-            # compris les trois cents questions de la dimension économique. Sept
-            # secondes pour en montrer une.
-            #
-            # Une rangée de cartes rectangulaires règle les deux : la cible est
-            # franche, l'onglet courant se distingue par un aplat de couleur, et seule
-            # la dimension demandée est calculée.
-            # UNE LISTE DÉROULANTE, ET PLUS SIX CARTES.
-            # La rangée de cartes prenait deux tiers d'écran avant le premier
-            # chiffre, et le filtre — qui commande ce qu'on lit — se retrouvait
-            # sous la ligne de flottaison. Un menu déroulant tient sur une ligne :
-            # la dimension d'abord, les filtres juste après, le résultat ensuite.
             st.session_state.setdefault("dim_active", MODES_DIM[0])
             if st.session_state["dim_active"] not in MODES_DIM:
                 st.session_state["dim_active"] = MODES_DIM[0]
-
             st.selectbox(T("d_choix_dim"), MODES_DIM, key="dim_active",
                          format_func=lambda m: T(m))
-
             _m = st.session_state["dim_active"]
             dimension_page.render(_m, complement=_COMPLEMENT.get(_m))
 
-        elif _ra == "croisement":
-            # L'outil d'exploration des reponses individuelles. Il ne lit pas
-            # les filtres de la colonne : ses conditions SONT son filtre, et
-            # deux mecanismes de selection sur la meme page se
-            # contrediraient.
-            croisement_resultats.render()
+        elif _ra == "indic":
+            analyse_ecarts.render_indicateur(_cat)
 
-        elif _ra == "synthese":
-            # TROIS FAÇONS DE COMPARER DES PROFILS.
-            #
-            #   · par territoire ou par groupe — une section contre les neuf
-            #     autres, les femmes contre l'ensemble ;
-            #   · par paysage — la fiche littoral contre montagne, qui se lit
-            #     d'une traite sans rien demander ;
-            #   · par la figure elle-même — le radar, avec son mode d'emploi.
-            st.title(T("mode_synthese"))
-            _o_prof, _o_pays, _o_radar = st.tabs(
-                [T("syn_o_profils"), T("syn_o_paysages"), T("syn_o_radar")])
-            with _o_prof:
-                synthese_page.render(entete=False)
-            with _o_pays:
-                fiche_paysages.render(entete=False)
-            with _o_radar:
-                radar_accueil.render(entete=False)
+        elif _ra == "paysage":
+            # LA FICHE PAYSAGE EXISTAIT DÉJÀ et se lit d'une traite ; l'écran
+            # d'écarts la prolonge par ce qu'elle ne disait pas — quels
+            # indicateurs, précisément, séparent un paysage de l'autre.
+            analyse_ecarts.render_paysage(_cat)
+            st.markdown('<div style="height:30px"></div>',
+                        unsafe_allow_html=True)
+            fiche_paysages.render(entete=False)
+
+        elif _ra == "groupe":
+            analyse_ecarts.render_groupe(_cat)
+            st.markdown('<div style="height:30px"></div>',
+                        unsafe_allow_html=True)
+            synthese_page.render(entete=False)
 
         else:
-            # La page de restitution : constats calculés, réponses classées
-            # par le modèle, et ce que le modèle ne couvre pas. Aucun filtre —
-            # une note se cite, et une note dont les chiffres dépendent d'un
-            # filtre posé ailleurs ne se cite pas.
-            note_bailleurs.render()
+            # LES SOLUTIONS SE LISENT APRÈS LES ÉCARTS, et c'est la seule
+            # place qui leur convienne : une piste d'action qu'on lit avant le
+            # diagnostic est une opinion.
+            pistes_page.render()
 
     if app_mode == MODE_METHODO:
         # « Cadre de résilience » a remplacé la page de méthodologie : des schémas
