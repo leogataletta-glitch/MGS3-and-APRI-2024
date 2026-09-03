@@ -34,6 +34,7 @@ import streamlit as st
 import environnement_cadre
 import trajectoires
 import i18n
+import onglets
 import icones
 from i18n import T
 
@@ -75,6 +76,23 @@ TEXTES = {
     "cad_titre": {"en": "Resilience Framework",
                   "fr": "Cadre de résilience"},
 
+    # La ligne de description de chaque onglet, sous son titre.
+    "cad_d1": {"en": "The three capacities the index is built on",
+               "fr": "Les trois capacités sur lesquelles l'indice est bâti"},
+    "cad_d2": {"en": "The four instruments the measurements come from",
+               "fr": "Les quatre instruments dont viennent les mesures"},
+    "cad_d3": {"en": "The seven dimensions and their weights",
+               "fr": "Les sept dimensions et leurs pondérations"},
+    "cad_d4": {"en": "How a raw measurement becomes a score out of 10",
+               "fr": "Comment une mesure brute devient un score sur 10"},
+    "cad_d5": {"en": "Why resilience is read as a system, not a list",
+               "fr": "Pourquoi la résilience se lit comme un système, pas "
+                     "comme une liste"},
+    "cad_d6": {"en": "What a satellite measures, and what it cannot",
+               "fr": "Ce qu'un satellite mesure, et ce qu'il ne peut pas"},
+    "cad_d7": {"en": "The methodological document, in full",
+               "fr": "Le document méthodologique, en entier"},
+
     # --- les trois cartouches d'ouverture
     "cad_quoi_t": {"en": "General resilience", "fr": "Résilience générale"},
     "cad_quoi": {
@@ -97,12 +115,6 @@ TEXTES = {
               "C'est une position relative, pas une probabilité."},
 
     # --- LA PHRASE QUI OUVRE LE PREMIER ONGLET
-    "cad_uma": {
-        "en": "APRI measures the resilience of a landscape, understood as a "
-              "complex adaptive system.",
-        "fr": "APRI mesure la résilience d'un paysage, compris comme un "
-              "système complexe adaptatif."},
-
     # --- le cadre AAA
     # L'INTITULÉ DIT CE QU'ON MESURE, PAS COMMENT C'EST RANGÉ. « Trois
     # attributs, lus sur chaque dimension » décrivait la structure du
@@ -950,71 +962,7 @@ STYLE = """
                       padding-left:0; padding-top:22px; margin-top:18px; }
   }
 
-  /* --- la phrase qui ouvre le premier onglet ------------------------------
-     LE `!important` EST NÉCESSAIRE : la feuille de l'application fixe
-     14,5 px et la justification à tout paragraphe du contenu, avec une
-     spécificité supérieure à celle d'une classe. */
-  p.cad-uma { font-size:19px !important; line-height:1.6 !important;
-              font-family:Georgia,"Times New Roman",serif; font-style:italic;
-              font-weight:400; color:#26364a !important;
-              margin:18px 0 4px !important; max-width:62ch;
-              border-left:3px solid #1a6b52; padding-left:22px;
-              text-align:left !important; }
-
-  /* --- la barre des sept onglets ------------------------------------------
-     ELLE PORTAIT SEPT TITRES ENTIERS ET FAISAIT CENT TRENTE PIXELS DE HAUT,
-     plus que le contenu de certains onglets. Elle porte maintenant le numéro
-     et le titre COURT sur une ligne : le numéro seul était net mais muet —
-     pour savoir ce qu'il y a dans l'onglet 4, il fallait cliquer.
-
-     LE FILET EST SOUS LA RANGÉE, PAS ENTRE LES NUMÉROS. Un trait tiré entre
-     deux numéros n'a plus de place dès qu'un titre s'intercale ; sous la
-     rangée, il tient les sept cases ensemble, et le soulignement vert dit
-     laquelle est ouverte.
-
-     LA BARRE DOIT S'ÉTIRER, ET RIEN NE L'Y OBLIGE : chaque enveloppe que
-     Streamlit interpose est donc forcée à la pleine largeur. */
-  div[class*="st-key-cad_nav"],
-  div[class*="st-key-cad_nav"] div[data-testid="stElementContainer"],
-  div[class*="st-key-cad_nav"] div[data-testid="stRadio"] {
-      width:100% !important; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"] {
-      display:flex !important; flex-wrap:nowrap !important; gap:0 !important;
-      width:100% !important; align-items:stretch;
-      border-bottom:1px solid #e9eef4; margin:2px 0 4px; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label {
-      flex:1 1 0 !important; min-width:0 !important; margin:0 !important;
-      background:none !important; border:0 !important;
-      padding:0 14px 11px 0 !important; position:relative; cursor:pointer; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"]
-      > label > div > div > div:first-child { display:none !important; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label > div > div {
-      gap:0 !important; width:100% !important; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label p {
-      font-size:11.5px !important; font-weight:500 !important;
-      color:#8a93a5 !important; margin:0 !important;
-      text-align:left !important; line-height:1.35 !important; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label p strong {
-      font-size:13px; font-weight:700; color:#a7b0be;
-      font-variant-numeric:tabular-nums; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label:hover p,
-  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label:hover p strong {
-      color:#3c4761 !important; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"]
-      > label:has(input:checked) p {
-      color:#1a6b52 !important; font-weight:700 !important; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"]
-      > label:has(input:checked) p strong { color:#1a6b52; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"]
-      > label:has(input:checked)::after {
-      content:""; position:absolute; left:0; right:14px; bottom:-1px;
-      height:2px; background:#1a6b52; border-radius:2px; }
-  @media (max-width: 900px) {
-    div[class*="st-key-cad_nav"] div[role="radiogroup"] {
-        flex-wrap:wrap !important; border-bottom:0; }
-    div[class*="st-key-cad_nav"] div[role="radiogroup"] > label {
-        flex:1 1 30% !important; padding-bottom:8px !important; }
-  }
+  /* La barre d'onglets vient de `onglets.py`, comme sur les autres pages. */
 
 </style>
 """
@@ -1330,6 +1278,9 @@ _LIB = {"mesure": "cad_o1", "sources": "cad_o2", "dimensions": "cad_o3",
 _COURT = {"mesure": "cad_c1", "sources": "cad_c2", "dimensions": "cad_c3",
           "score": "cad_c4", "boucles": "cad_c5", "environnement": "cad_c6",
           "document": "cad_c7"}
+_DESC = {"mesure": "cad_d1", "sources": "cad_d2", "dimensions": "cad_d3",
+         "score": "cad_d4", "boucles": "cad_d5", "environnement": "cad_d6",
+         "document": "cad_d7"}
 
 
 def render(doc_complet=None):
@@ -1345,21 +1296,14 @@ def render(doc_complet=None):
         st.info(T("e_absent"))
         return
 
-    with st.container(key="cad_nav"):
-        vue = st.radio(
-            "cad", VUES, horizontal=True, label_visibility="collapsed",
-            key="cad_vue",
-            # LE TITRE COURT REVIENT À CÔTÉ DU NUMÉRO. La barre numérotée
-            # seule était nette mais muette : pour savoir ce qu'il y a dans
-            # l'onglet 4, il fallait cliquer. Le libellé de Streamlit est
-            # rendu en markdown, ce qui permet de mettre le numéro en gras et
-            # de le styler à part du titre.
-            # PAS DE NUMÉRO DEVANT CES SEPT-LÀ. Les onglets des résultats
-            # sont numérotés parce qu'ils décrivent un parcours : on lit les
-            # résultats bruts avant les scores, les scores avant les écarts.
-            # Le cadre, lui, est une documentation : on y vient chercher ce
-            # qu'on cherche, et l'ordre des sept titres n'oblige à rien.
-            format_func=lambda c: T(_COURT[c]))
+    # LA BARRE EST CELLE DE TOUT LE SITE. Elle était recopiée ici avec sa
+    # propre feuille de style ; à force de retouches faites d'un côté et pas
+    # de l'autre, elle n'avait plus tout à fait la même graisse que celle des
+    # résultats, et l'on changeait de site en changeant de page.
+    vue = onglets.barre("cad_vue", list(VUES),
+                        titre=lambda c: T(_COURT[c]),
+                        description=lambda c: T(_DESC[c]),
+                        defaut=VUES[0])
 
     if vue == "sources":
         _v_sources()
@@ -1394,9 +1338,11 @@ def _v_mesure():
     dont aucune ne la donnait en une ligne. La phrase la donne, et les trois
     attributs la déplient.
     """
-    st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>',
-                unsafe_allow_html=True)
-    st.markdown(_titre("cad_aaa", marge=32) + _attributs(),
+    # LA DÉFINITION EST REMONTÉE À L'ACCUEIL, et elle n'a pas à être dite
+    # deux fois : c'est la phrase qui ouvre le site, pas l'en-tête d'un
+    # onglet de documentation. L'onglet commence donc directement par ce
+    # qu'il apporte — les trois attributs.
+    st.markdown(_titre("cad_aaa", marge=8) + _attributs(),
                 unsafe_allow_html=True)
 
 

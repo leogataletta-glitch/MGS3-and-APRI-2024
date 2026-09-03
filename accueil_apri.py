@@ -125,10 +125,10 @@ TEXTES = {
     # `{n}` n'y figure plus, et l'appel garde son argument sans l'utiliser —
     # il n'y a rien à casser du côté de l'appelant.
     "po_intro": {
-        "en": "APRI: a single measure of resilience at the scale of a "
-              "landscape",
-        "fr": "APRI : une mesure unique de la résilience à l'échelle d'un "
-              "paysage"},
+        "en": "APRI measures the resilience of a landscape, understood as a "
+              "complex adaptive system.",
+        "fr": "APRI mesure la résilience d'un paysage, compris comme un "
+              "système complexe adaptatif."},
 
     # --- LE SOCLE DE PREUVES, EN QUATRE MARCHES
     # CHAQUE MARCHE SE LIT « MOT D'AVANT · NOMBRE · MOT D'APRÈS ». Découper
@@ -480,8 +480,12 @@ def _aller(mode):
 # un globe, une pousse, des barres, une carte — ne disaient rien que le titre
 # ne dise mieux, et coûtaient cinquante pixels de hauteur sur une page qui
 # doit tenir dans un écran.
-ENTREES = (("po_c1", "accueil"),
-           ("po_c2", "methodologie"),
+# LES CARTES SUIVENT LE MENU, ET C'EST UNE RÈGLE, PAS UNE COÏNCIDENCE. Deux
+# listes des mêmes destinations dans deux ordres différents obligent le
+# lecteur à réapprendre le site en descendant d'un centimètre. Le cadre passe
+# donc devant le territoire ici aussi.
+ENTREES = (("po_c2", "methodologie"),
+           ("po_c1", "accueil"),
            ("po_c3", "dimensions"),
            ("po_c4", "boucles"),
            ("po_c5", "donnees"))

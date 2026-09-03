@@ -44,6 +44,7 @@ import methodologie_page
 import ondes_choc
 import ocb_page
 import rapport_donateur
+import onglets
 import satellite_page
 import systeme_complexe
 import resilience_page
@@ -493,69 +494,9 @@ st.markdown(("""
     color: var(--encre) !important;
   }
 
-  /* --- LES SOUS-ONGLETS, EN BARRE NUMÉROTÉE ---------------------------
-     C'est le format du cadre de résilience, repris ici : numéro en gras,
-     titre à côté, filet sous la rangée, soulignement vert sur l'onglet
-     ouvert. La pastille ronde du sélecteur est enfouie de trois niveaux et
-     n'est ni le premier enfant du label ni un pseudo-élément — d'où le
-     chemin complet ci-dessous.
-
-     Chaque enveloppe que Streamlit interpose est forcée à la pleine largeur :
-     les cases ne contiennent qu'un numéro et deux mots, et un `width:100%`
-     calculé sur un parent ajusté au contenu ne donnerait rien. */
-  div[class*="st-key-ra_nav"],
-  div[class*="st-key-ra_nav"] div[data-testid="stElementContainer"],
-  div[class*="st-key-ra_nav"] div[data-testid="stRadio"] {
-      width: 100% !important;
-  }
-  div[class*="st-key-ra_nav"] div[role="radiogroup"] {
-      display: flex !important; flex-wrap: nowrap !important; gap: 0 !important;
-      width: 100% !important; align-items: stretch;
-      border-bottom: 1px solid #e9eef4; margin: 2px 0 12px;
-  }
-  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label {
-      flex: 1 1 0 !important; min-width: 0 !important; margin: 0 !important;
-      background: none !important; border: 0 !important;
-      padding: 0 14px 11px 0 !important; position: relative; cursor: pointer;
-  }
-  div[class*="st-key-ra_nav"] div[role="radiogroup"]
-      > label > div > div > div:first-child { display: none !important; }
-  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label > div > div {
-      gap: 0 !important; width: 100% !important;
-  }
-  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label > div:last-child p,
-  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label p {
-      font-size: 12px !important; font-weight: 500 !important;
-      color: #8a93a5 !important; margin: 0 !important;
-      text-align: left !important; line-height: 1.35 !important;
-  }
-  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label p strong {
-      font-size: 13px; font-weight: 700; color: #a7b0be;
-      font-variant-numeric: tabular-nums;
-  }
-  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label:hover p,
-  div[class*="st-key-ra_nav"] div[role="radiogroup"] > label:hover p strong {
-      color: #3c4761 !important;
-  }
-  div[class*="st-key-ra_nav"] div[role="radiogroup"]
-      > label:has(input:checked) p {
-      color: #1a6b52 !important; font-weight: 700 !important;
-  }
-  div[class*="st-key-ra_nav"] div[role="radiogroup"]
-      > label:has(input:checked) p strong { color: #1a6b52; }
-  div[class*="st-key-ra_nav"] div[role="radiogroup"]
-      > label:has(input:checked)::after {
-      content: ""; position: absolute; left: 0; right: 14px; bottom: -1px;
-      height: 2px; background: #1a6b52; border-radius: 2px;
-  }
-  @media (max-width: 900px) {
-    div[class*="st-key-ra_nav"] div[role="radiogroup"] {
-        flex-wrap: wrap !important; border-bottom: 0;
-    }
-    div[class*="st-key-ra_nav"] div[role="radiogroup"] > label {
-        flex: 1 1 45% !important; padding-bottom: 8px !important;
-    }
-  }
+  /* La barre d'onglets du site vit dans `onglets.py`, avec sa feuille de
+     style : trois pages la partagent, et une seule source évite qu'elles
+     divergent. Rien à styler ici. */
 
   /* --- radios : pastilles cliquables --- */
   .stRadio > div[role="radiogroup"] { gap: 8px; flex-wrap: wrap; }
@@ -1440,6 +1381,44 @@ TEXTES_NAV = {
     "sx_deplier_onde": {
         "en": "Watch the wave travel, step by step",
         "fr": "Regarder la vague voyager, pas à pas"},
+    # LA DESCRIPTION DE CHAQUE ONGLET, une ligne, sous son titre. Elle dit ce
+    # qu'on y trouve plutôt que comment ça s'appelle : « Par paysage » oblige
+    # à cliquer pour savoir, « ce qui distingue un paysage du reste » laisse
+    # choisir depuis la barre.
+    "ra_d_brut": {
+        "en": "What households answered and satellites measured",
+        "fr": "Ce que les ménages ont répondu et ce que les satellites ont "
+              "mesuré"},
+    "ra_d_scores": {
+        "en": "The 0–10 index, on any combination of groups",
+        "fr": "L'indice sur 10, sur n'importe quelle combinaison de groupes"},
+    "ra_d_indic": {
+        "en": "One indicator, read across the whole territory",
+        "fr": "Un indicateur, lu à travers tout le territoire"},
+    "ra_d_paysage": {
+        "en": "What sets a landscape apart from the rest",
+        "fr": "Ce qui distingue un paysage du reste"},
+    "ra_d_groupe": {
+        "en": "What sets a social group apart from the rest",
+        "fr": "Ce qui distingue un groupe social du reste"},
+    "ra_d_solutions": {
+        "en": "Where to start, and why there rather than elsewhere",
+        "fr": "Par où commencer, et pourquoi là plutôt qu'ailleurs"},
+    "sx_d1": {"en": "A critical variable, and the system around it",
+              "fr": "Une variable critique, et le système autour d'elle"},
+    "sx_d2": {"en": "Correlation, mechanism and evidence, kept apart",
+              "fr": "Corrélation, mécanisme et preuve, tenus séparés"},
+    "sx_d3": {"en": "Where a push travels furthest",
+              "fr": "Où une poussée voyage le plus loin"},
+    "sx_d4": {"en": "Push several variables at once",
+              "fr": "Pousser plusieurs variables à la fois"},
+    "sx_d5": {"en": "Wave after wave, and what the loops add",
+              "fr": "Vague après vague, et ce que les boucles ajoutent"},
+    "ra_srcd_menages": {"en": "483 questions, 1,200+ households",
+                        "fr": "483 questions, plus de 1 200 ménages"},
+    "ra_srcd_satellite": {"en": "Forest cover and vegetation indices",
+                          "fr": "Couverture forestière et indices de "
+                                "végétation"},
     "ra_src": {"en": "Measured by", "fr": "Mesuré par"},
     "ra_src_menages": {"en": "Household questionnaire",
                        "fr": "Questionnaire ménage"},
@@ -1694,11 +1673,13 @@ MODE_DIMENSIONS = "dimensions"
 # le récit de la méthode, qui est passé dans le cadre.
 _NAV = [
     (MODE_PORTAIL, "maison"),
-    # LE TERRITOIRE PASSE DEVANT LE CADRE. On dit d'abord où l'on est, ensuite
-    # comment on y mesure : c'est l'ordre des quatre cartes de l'accueil, et
-    # le menu doit dire la même chose qu'elles.
-    (MODE_ACCUEIL, "epingle"),
+    # LE CADRE PASSE DEVANT LE TERRITOIRE. On dit d'abord ce qu'on mesure,
+    # ensuite où on l'a mesuré : une carte de dix sections ne dit rien tant
+    # qu'on ne sait pas ce qui y est compté, alors que la définition de
+    # l'indice se lit sans connaître le terrain. L'ordre du menu est celui de
+    # la lecture, pas celui de la collecte.
     (MODE_METHODO, "bouclier"),
+    (MODE_ACCUEIL, "epingle"),
     (MODE_DIMENSIONS, "barres"),
     # LES TRAJECTOIRES NE SONT PLUS UNE ENTREE : elles ont rejoint l'onglet
     # « Résilience environnementale » du cadre, dont elles disent la version
@@ -1925,19 +1906,12 @@ with _c_contenu:
         # Les trois écrans du milieu répondent à la même question sous trois
         # angles : où sont les écarts, et quels indicateurs les font. Ils
         # partagent donc un seul moteur de calcul.
-        _RA = {"brut": T("ra_o_brut"),
-               "scores": T("ra_o_scores"),
-               "indic": T("ra_o_indic"),
-               "paysage": T("ra_o_paysage"),
-               "groupe": T("ra_o_groupe"),
-               "solutions": T("ra_o_solutions")}
-        _CODES_RA = list(_RA)
-        with st.container(key="ra_nav"):
-            _ra = st.radio(
-                "ra", _CODES_RA, horizontal=True,
-                label_visibility="collapsed", key="ra_vue",
-                format_func=lambda c: (f"**{_CODES_RA.index(c) + 1:02d}**"
-                                       f"&nbsp; {_RA[c]}"))
+        _CODES_RA = ["brut", "scores", "indic", "paysage", "groupe",
+                     "solutions"]
+        _ra = onglets.barre("ra_vue", _CODES_RA,
+                            titre=lambda c: T("ra_o_" + c),
+                            description=lambda c: T("ra_d_" + c),
+                            defaut="brut")
 
         # LE CATALOGUE EST CHARGÉ UNE FOIS POUR LES CINQ PREMIERS ONGLETS.
         # C'est le même fichier de réponses individuelles ; le charger dans
@@ -1954,10 +1928,10 @@ with _c_contenu:
             # interroge des ménages, et le satellite, qui regarde le sol. Un
             # seul des deux à la fois : ils ne se ventilent pas pareil, et
             # les empiler ferait deux écrans sur une page.
-            _SRC = {"menages": T("ra_src_menages"),
-                    "satellite": T("ra_src_satellite")}
-            _src = st.radio(T("ra_src"), list(_SRC), horizontal=True,
-                            key="ra_source", format_func=lambda c: _SRC[c])
+            _src = onglets.barre(
+                "ra_source", ["menages", "satellite"],
+                titre=lambda c: T("ra_src_" + c),
+                description=lambda c: T("ra_srcd_" + c), defaut="menages")
             if _src == "satellite":
                 satellite_page.render()
             else:
@@ -2053,18 +2027,16 @@ with _c_contenu:
             f'<h2 style="font-size:21.5px;font-weight:700;color:#101728;'
             f'letter-spacing:-.02em;margin:2px 0 0">{T("mode_boucles")}</h2>',
             unsafe_allow_html=True)
-        _SX = {"construire": T("sx_o1"), "relations": T("sx_o2"),
-               "leviers": T("sx_o3"), "simuler": T("sx_o4"),
-               "vagues": T("sx_o5")}
-        _CODES_SX = list(_SX)
-        if st.session_state.get("bcl_vue") not in _CODES_SX:
-            st.session_state["bcl_vue"] = _CODES_SX[0]
-        with st.container(key="ra_nav_sx"):
-            _vue = st.radio(
-                "vue", _CODES_SX, horizontal=True,
-                label_visibility="collapsed", key="bcl_vue",
-                format_func=lambda c: (f"**{_CODES_SX.index(c) + 1:02d}**"
-                                       f"&nbsp; {_SX[c]}"))
+        _CODES_SX = ["construire", "relations", "leviers", "simuler",
+                     "vagues"]
+        _N_SX = dict(zip(_CODES_SX, ("sx_o1", "sx_o2", "sx_o3", "sx_o4",
+                                     "sx_o5")))
+        _D_SX = dict(zip(_CODES_SX, ("sx_d1", "sx_d2", "sx_d3", "sx_d4",
+                                     "sx_d5")))
+        _vue = onglets.barre("bcl_vue", _CODES_SX,
+                             titre=lambda c: T(_N_SX[c]),
+                             description=lambda c: T(_D_SX[c]),
+                             defaut="construire")
         if _vue == "construire":
             systeme_complexe.render_construire()
         elif _vue == "relations":
