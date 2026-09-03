@@ -46,6 +46,7 @@ import ondes_choc
 import ocb_page
 import rapport_donateur
 import satellite_page
+import systeme_complexe
 import resilience_page
 import saillants_page
 import si_je_change
@@ -1361,6 +1362,16 @@ TEXTES_NAV = {
     # L'ONGLET NE PROPOSE PLUS DES SOLUTIONS, IL DÉSIGNE DES CIBLES. Une
     # piste d'action lue avant d'avoir nommé la variable qui décroche est une
     # opinion ; nommer la variable, c'est le point de départ des boucles.
+    "sx_deplier_tout": {
+        "en": "Unfold the whole model — its 45 variables and 82 relations",
+        "fr": "Déplier le modèle entier — ses 45 variables et 82 relations"},
+    "sx_deplier_syst": {
+        "en": "Open the interactive system — hold variables and watch it settle",
+        "fr": "Ouvrir le système interactif — tenir des variables et le "
+              "regarder se poser"},
+    "sx_deplier_onde": {
+        "en": "Watch the wave travel, step by step",
+        "fr": "Regarder la vague voyager, pas à pas"},
     "ra_src": {"en": "Measured by", "fr": "Mesuré par"},
     "ra_src_menages": {"en": "Household questionnaire",
                        "fr": "Questionnaire ménage"},
@@ -1930,42 +1941,58 @@ with _c_contenu:
         cadre_page.render(doc_complet=_document_methodologique)
 
     if app_mode == MODE_BOUCLES:
-        # DEUX LECTURES DU MÊME MODÈLE, ET UN SEUL RENDU À LA FOIS.
+        # CINQ ÉCRANS QUI SONT UN SEUL PARCOURS, ET UN SEUL RENDU À LA FOIS.
         #
-        #   · l'onde — où passe le choc, vague après vague, et quand il revient
-        #     sur ses pas ;
-        #   · l'analyse — l'effet total une fois tout distribué, les boucles
-        #     énumérées, les leviers classés.
+        #   1 · construire le système autour d'une variable critique ;
+        #   2 · en justifier chaque relation, corrélation et preuve séparées ;
+        #   3 · y chercher où appuyer ;
+        #   4 · appuyer, sur plusieurs variables à la fois ;
+        #   5 · regarder ce que ça fait vague après vague.
         #
-        # `st.tabs` rendrait les deux à chaque affichage : l'énumération des
-        # trente-huit boucles et l'animation seraient calculées ensemble, pour
-        # n'en montrer qu'une. Un sélecteur ne rend que ce qu'on regarde.
+        # Le système — variable centrale, population regardée, profondeur — est
+        # choisi UNE fois, dans le premier onglet, et les quatre autres
+        # travaillent dessus. C'est ce qui en fait un parcours et non cinq
+        # outils qui se ressembleraient.
+        #
+        # `st.tabs` rendrait les cinq à chaque affichage : l'énumération des
+        # boucles et les propagations seraient calculées ensemble pour n'en
+        # montrer qu'une. Un sélecteur ne rend que ce qu'on regarde.
         st.markdown(
             f'<h2 style="font-size:21.5px;font-weight:700;color:#101728;'
             f'letter-spacing:-.02em;margin:2px 0 0">{T("mode_boucles")}</h2>',
             unsafe_allow_html=True)
-        # QUATRE VUES, ET LA QUATRIÈME EST « SI JE CHANGE UNE CHOSE ».
-        # Elle lit le même graphe causal que les trois autres : c'est la
-        # question qu'on se pose juste après les avoir vues — ce chiffre-là,
-        # d'où sort-il, et que devient-il si je le pousse ?
-        # Ici aussi la session retient un code : une clé par langue laissait
-        # la vue choisie se perdre au basculement.
-        _VUES = {"onde": T("oc_titre"), "systeme": T("sy_titre"),
-                 "analyse": T("bcl_vue_analyse"), "levier": T("mode_levier")}
-        _vue = st.radio("vue", list(_VUES), horizontal=True,
-                        label_visibility="collapsed", key="bcl_vue",
-                        format_func=lambda c: _VUES[c])
-        if _vue == "onde":
-            ondes_choc.render(entete=False)
-        elif _vue == "systeme":
-            systeme_page.render(entete=False)
-        elif _vue == "analyse":
-            boucles_page.render(entete=False)
+        _SX = {"construire": T("sx_o1"), "relations": T("sx_o2"),
+               "leviers": T("sx_o3"), "simuler": T("sx_o4"),
+               "vagues": T("sx_o5")}
+        _CODES_SX = list(_SX)
+        if st.session_state.get("bcl_vue") not in _CODES_SX:
+            st.session_state["bcl_vue"] = _CODES_SX[0]
+        with st.container(key="ra_nav_sx"):
+            _vue = st.radio(
+                "vue", _CODES_SX, horizontal=True,
+                label_visibility="collapsed", key="bcl_vue",
+                format_func=lambda c: (f"**{_CODES_SX.index(c) + 1:02d}**"
+                                       f"&nbsp; {_SX[c]}"))
+        if _vue == "construire":
+            systeme_complexe.render_construire()
+        elif _vue == "relations":
+            systeme_complexe.render_relations()
+        elif _vue == "leviers":
+            systeme_complexe.render_leviers()
+            # LE SCHÉMA COMPLET RESTE ACCESSIBLE, REPLIÉ. Les quarante-cinq
+            # variables et leurs quatre-vingt-deux relations ne se lisent pas
+            # d'un coup, mais on vient parfois vérifier qu'une relation existe
+            # ailleurs que dans le système qu'on regarde.
+            with st.expander(T("sx_deplier_tout")):
+                boucles_page.render(entete=False)
+        elif _vue == "simuler":
+            systeme_complexe.render_simuler()
+            with st.expander(T("sx_deplier_syst")):
+                systeme_page.render(entete=False)
         else:
-            # Aucun filtre : le modèle causal est le même pour tout le
-            # territoire, et un filtre posé ailleurs ne changerait rien à ce
-            # qu'il propage.
-            si_je_change.render(entete=False)
+            systeme_complexe.render_vagues()
+            with st.expander(T("sx_deplier_onde")):
+                ondes_choc.render(entete=False)
 
     if app_mode == MODE_ACTIONS:
         # Les fiches descendent des leviers calculés par l'analyse des boucles.
