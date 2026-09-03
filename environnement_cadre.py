@@ -67,16 +67,18 @@ TEXTES = {
 
     # ---------------- strate 3
     "env_s3": {"en": "The protocol in detail", "fr": "Le protocole en détail"},
-    "env_v_terrain": {"en": "Field records, six indicators and their scale",
-                      "fr": "Relevés de terrain, six indicateurs et leur barème"},
-    "env_v_veg": {"en": "Vegetation and productivity, {n} indicators",
-                  "fr": "Végétation et productivité, {n} indicateurs"},
-    "env_v_frag": {"en": "Landscape fragmentation, {n} indicators",
-                   "fr": "Fragmentation du paysage, {n} indicateurs"},
-    "env_v_conn": {"en": "Connectivity, {n} indicators",
-                   "fr": "Connectivité, {n} indicateurs"},
-    "env_v_cot": {"en": "Coastal resilience, six families",
-                  "fr": "Résilience côtière, six familles"},
+    # LES INTITULÉS NE COMPTENT PLUS. « Six indicateurs », « onze
+    # indicateurs », « six familles » : le volet ouvert les montre, et les
+    # compter dans son titre revenait à annoncer une longueur avant de dire
+    # un contenu. Le nom du volet dit ce qu'on y trouve, rien de plus.
+    "env_v_terrain": {"en": "Field records and their scale",
+                      "fr": "Relevés de terrain et leur barème"},
+    "env_v_veg": {"en": "Vegetation and productivity",
+                  "fr": "Végétation et productivité"},
+    "env_v_frag": {"en": "Landscape fragmentation",
+                   "fr": "Fragmentation du paysage"},
+    "env_v_conn": {"en": "Connectivity", "fr": "Connectivité"},
+    "env_v_cot": {"en": "Coastal resilience", "fr": "Résilience côtière"},
     "env_v_hydro": {"en": "Anthropogenic pressure, hydrology and climate",
                     "fr": "Pressions anthropiques, hydrologie et climat"},
     "env_v_men": {"en": "Household proxies", "fr": "Les proxys d'enquête ménage"},
@@ -391,14 +393,14 @@ def render(complement=None):
         st.caption(c["intro"]["bareme"])
         _bloc_terrain(c)
 
-    with st.expander(T("env_v_veg", n=len(c["vegetation"]))):
+    with st.expander(T("env_v_veg")):
         st.markdown(_tableau(c["vegetation"]), unsafe_allow_html=True)
 
-    with st.expander(T("env_v_frag", n=len(c["fragmentation"]))):
+    with st.expander(T("env_v_frag")):
         st.caption(c["intro"]["fragmentation"])
         st.markdown(_tableau(c["fragmentation"]), unsafe_allow_html=True)
 
-    with st.expander(T("env_v_conn", n=len(c["connectivite"]))):
+    with st.expander(T("env_v_conn")):
         st.caption(c["intro"]["connectivite"])
         st.markdown(_tableau(c["connectivite"]), unsafe_allow_html=True)
 

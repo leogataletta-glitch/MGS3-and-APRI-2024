@@ -996,15 +996,16 @@ st.markdown(("""
      logo foncé ailleurs, et tout voile assez fort pour le sauver se voyait.
      Posé en calque, il garde son ombre portée — laquelle le détache aussi
      bien du clair que du sombre, sans rien changer à l'image. */
-  /* LE LOGO EST BLEU SUR UN BANDEAU CLAIR. Il était blanc, avec deux ombres
-     sombres pour le détacher d'une photographie ; sur un dessin au crayon
-     posé sur du blanc, un logo blanc ne se voit plus du tout. Le bleu du
-     PNUE se lit sur le papier, et un halo blanc l'écarte des traits de
-     crayon qui passent dessous. */
+  /* LE LOGO EST BLANC, ET SES OMBRES SONT CE QUI LE REND LISIBLE. Sur un
+     dessin au crayon, du blanc sur du blanc ne se verrait pas : les deux
+     ombres portées lui dessinent un contour sombre, et c'est ce contour
+     qu'on lit là où le papier est clair. La hauteur suit celle du bandeau,
+     qui vient d'être raccourci. */
   .bandeau-logo {
-    position: absolute; top: 16px; right: 32px; height: 54px; width: auto;
+    position: absolute; top: 13px; right: 30px; height: 44px; width: auto;
     display: block; pointer-events: none; z-index: 4;
-    filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px rgba(255,255,255,.9));
+    filter: drop-shadow(0 1px 2px rgba(30,45,35,.85))
+            drop-shadow(0 0 6px rgba(30,45,35,.55));
   }
 
   /* L'ILLUSTRATION OCCUPE TOUTE LA LARGEUR ET N'EST PAS ROGNÉE. Streamlit
@@ -1070,18 +1071,16 @@ st.markdown(("""
      valeur que sur la colonne de gauche, pour que les deux partent d'une
      seule ligne. */
   div[class*="st-key-zone_page"] { margin-top: 14px !important; }
-  /* L'ENVELOPPE DU SÉLECTEUR NE COMPTE PLUS DANS LA COLONNE. Le bloc de
-     langue est en position absolue : sa hauteur est nulle, mais l'enveloppe
-     que Streamlit lui pose autour restait une case du ruban, et le `gap` de
-     cette colonne poussait le bandeau à dix pixels du haut de l'écran.
-     `display: contents` retire l'enveloppe de la mise en page sans rien
-     retirer de ce qu'elle contient. */
-  div[data-testid="stLayoutWrapper"]:has(> div[class*="st-key-zone_langue"]) {
-    display: contents !important;
-  }
+  /* LE SÉLECTEUR OUVRE LA COLONNE DE MENU. Il était posé en absolu dans
+     l'angle du bandeau ; le bandeau ne paraît plus que sur l'accueil, et un
+     réglage qui change de place selon la page n'est plus un réglage. Il
+     prend donc sa place dans le flux, en tête de la colonne, séparé de la
+     première rubrique par un filet — au-dessus de la table des matières,
+     sans en faire partie. */
   div[class*="st-key-zone_langue"] {
-    position: absolute !important; right: calc(2.6rem * var(--dz));
-    bottom: 12px; z-index: 6; width: auto !important;
+    width: auto !important; margin: 2px 0 10px 2px !important;
+    padding-bottom: 10px !important;
+    border-bottom: 1px solid #edecea !important;
   }
   /* LE GLOBE, PEINT EN MASQUE DEVANT LES DEUX CODES. On ne peut rien écrire
      dans le contenu d'un bouton Streamlit ; le tracé est donc posé en
@@ -1899,22 +1898,6 @@ def _bandeau_b64():
         return _b64.b64encode(f.read()).decode()
 
 
-_CSS_LANGUE_NUE = """
-<style>
-  /* SANS BANDEAU, LES DEUX CODES NE FLOTTENT PLUS SUR RIEN. Ils sont posés
-     en absolu dans le ruban, qui n'a plus de hauteur dès que l'illustration
-     ne s'y trouve pas : ils se seraient rangés en haut du contenu, par-dessus
-     ce qui commence là. Ici, ils reprennent leur place dans le flux, alignés
-     à droite. La couleur, elle, ne change pas : ils sont en encre partout
-     depuis que le bandeau est clair. */
-  div[class*="st-key-zone_langue"] {
-    position: static !important; margin: 2px 0 0 auto !important;
-    justify-content: flex-end !important;
-  }
-</style>
-"""
-
-
 def _rendre_ruban(avec_image):
     """Le bandeau composé, en tête de l'accueil.
 
@@ -1939,32 +1922,14 @@ def _rendre_ruban(avec_image):
         img = _bandeau_b64() if avec_image else None
         if avec_image and not img:
             avec_image = False
-        # LES DEUX LANGUES SE POSENT DANS L'ANGLE BAS-DROIT DU BANDEAU.
-        # Elles fermaient la colonne de menu, ce qui les rangeait parmi les
-        # rubriques alors qu'elles n'en sont pas une : la langue est un
-        # réglage du site, et sa place est avec l'enseigne, pas avec la table
-        # des matières. Le globe est le signe consacré — il se lit sans
-        # traduction, ce qu'aucun mot ne peut faire ici par construction.
-        with st.container(key="zone_langue"):
-            _cl = st.columns(2)
-            # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie est en tête.
-            _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
-            for _col, _code in zip(_cl, _ordre):
-                with _col:
-                    st.button(_code.upper(), key=f"lang_{_code}",
-                              on_click=_changer_langue, args=(_code,),
-                              type=("primary"
-                                    if st.session_state["choix_langue"]
-                                    == _code else "secondary"))
         if not avec_image:
-            st.markdown(_CSS_LANGUE_NUE, unsafe_allow_html=True)
             return
         st.markdown(
             f'<div class="bandeau-haut bandeau-enveloppe">'
             f'<img class="bandeau-fond" alt="APRI" '
             f'src="data:image/jpeg;base64,{img}">'
             f'<img class="bandeau-logo" alt="UNEP" '
-            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLEU}">'
+            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
             f'</div>', unsafe_allow_html=True)
 
 
@@ -1976,6 +1941,23 @@ with _zone_nav:
     # l'écran quand la page défile — c'est ce qui la rend « toujours
     # disponible » sans qu'elle ait à flotter par-dessus le contenu.
     st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
+    # LA LANGUE OUVRE LA COLONNE. Elle vivait dans l'angle du bandeau, qui
+    # n'existe plus que sur l'accueil : sur les quinze autres pages, le
+    # réglage se serait trouvé ailleurs qu'à l'endroit où on l'avait laissé.
+    # En tête de la colonne, il est au même endroit partout, au-dessus de la
+    # table des matières sans en faire partie — un réglage du site, pas une
+    # destination.
+    with st.container(key="zone_langue"):
+        _cl = st.columns(2)
+        # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie est en tête.
+        _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
+        for _col, _code in zip(_cl, _ordre):
+            with _col:
+                st.button(_code.upper(), key=f"lang_{_code}",
+                          on_click=_changer_langue, args=(_code,),
+                          type=("primary"
+                                if st.session_state["choix_langue"] == _code
+                                else "secondary"))
     for _fam, _entrees in _NAV_FAMILLES:
         if _fam:
             st.markdown(f'<div class="nav-famille">{T(_fam)}</div>',

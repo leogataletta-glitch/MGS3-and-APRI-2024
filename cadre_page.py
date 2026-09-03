@@ -114,6 +114,9 @@ TEXTES = {
     # référentiel ; la ligne de dessous ajoutait qu'un indicateur est rattaché
     # à l'attribut auquel il contribue — deux phrases de méthode, à l'endroit
     # où le lecteur cherche l'objet de la mesure. Il est dit en une ligne.
+    "cad_attr_x": {
+        "en": "Resilience is measured through three attributes:",
+        "fr": "La résilience est mesurée à travers trois attributs :"},
     "cad_a1_t": {"en": "Anticipate", "fr": "Anticiper"},
     "cad_a1": {"en": "Detect disturbances and prepare responses before they "
                      "arrive",
@@ -581,16 +584,6 @@ TEXTES = {
     "cad_c3": {"en": "Dimensions", "fr": "Dimensions"},
     "cad_c35": {"en": "Indicators and weights",
                 "fr": "Indicateurs et pondérations"},
-    "cad_ind_x": {
-        "en": "The {n} indicators of the framework, each with the scale that "
-              "turns its raw value into a score out of 10 and the weight it "
-              "carries in its dimension. The scale is reproduced as written "
-              "in the reference file — it is the one the computation used.",
-        "fr": "Les {n} indicateurs du référentiel, chacun avec l'échelle qui "
-              "convertit sa valeur brute en score sur 10 et la pondération "
-              "qu'il porte dans sa dimension. L'échelle est reproduite telle "
-              "qu'elle est écrite dans le référentiel — c'est celle qui a "
-              "servi au calcul."},
     "cad_ind_dim": {"en": "Dimension", "fr": "Dimension"},
     "cad_ind_all": {"en": "All seven", "fr": "Toutes les sept"},
     "cad_ind_q": {"en": "Search an indicator", "fr": "Chercher un indicateur"},
@@ -973,7 +966,7 @@ STYLE = """
        padding-top:44px; }
   .cad-bp-i { width:96px; height:96px; border-radius:50%; flex:0 0 96px;
        display:flex; align-items:center; justify-content:center; }
-  .cad-bp-fi { width:34px; height:2.5px; border-radius:2px; margin:16px 0 14px;
+  .cad-bp-fi { width:34px; height:2.5px; border-radius:2px; margin:2px 0 14px;
        opacity:.85; }
   .cad-bp-t { font-size:13px; font-weight:700; letter-spacing:.06em;
        line-height:1.3; }
@@ -1165,6 +1158,13 @@ STYLE = """
   .cad-a    { padding:6px 30px 2px 0; }
   .cad-a + .cad-a { border-left:1px solid #e6ecf2; padding-left:30px; }
   .cad-a-h  { display:flex; align-items:center; gap:14px; margin-bottom:24px; }
+  p.cad-attr-x { font-size:15px !important; color:#3c4761 !important;
+            line-height:1.55 !important; margin:2px 0 18px !important;
+            max-width:96ch; }
+  /* SANS PICTOGRAMME, C'EST LE TITRE QUI OUVRE LA COLONNE, et un filet vert
+     sous lui remplace le disque : il tient le même rôle — dire où commence
+     la colonne — sans rien dessiner de plus. */
+  .cad-a    { border-top:2px solid #1a6b52; padding-top:14px; }
   .cad-a-i  { width:50px; height:50px; border-radius:50%; background:#eef3ef;
               display:flex; align-items:center; justify-content:center;
               flex:0 0 auto; }
@@ -1388,24 +1388,22 @@ def _attributs():
     fois, et aucune ne disait en une ligne ce qu'APRI mesure. La phrase le dit
     maintenant, au-dessus ; ces trois colonnes la déplient, et rien d'autre.
 
-    PLUS DE NUMÉRO DEVANT LES TROIS. Un numéro promet un ordre obligatoire —
-    faites 01, puis 02, puis 03. Ces trois-là ne sont pas des étapes : un
-    territoire anticipe, absorbe et s'adapte en même temps, et le même
-    indicateur peut servir deux d'entre eux. Le pictogramme et le trait
-    tiennent la colonne aussi bien, sans rien promettre de faux.
+    NI NUMÉRO NI PICTOGRAMME. Un numéro promettrait un ordre obligatoire —
+    faites 01, puis 02, puis 03 — alors qu'un territoire anticipe, absorbe et
+    s'adapte en même temps, et que le même indicateur peut servir deux de ces
+    attributs. Quant au pictogramme, une loupe, un bouclier et une flèche
+    circulaire ne disent rien qu'« anticiper », « absorber » et « s'adapter »
+    ne disent déjà, en toutes lettres, juste en dessous. Le titre et le filet
+    tiennent la colonne.
     """
     cols = []
-    for k, ic in (("cad_a1", "loupe"), ("cad_a2", "bouclier"),
-                  ("cad_a3", "rafraichir")):
+    for k in ("cad_a1", "cad_a2", "cad_a3"):
         cols.append(
             '<div class="cad-a">'
-            '<div class="cad-a-h">'
-            f'<span class="cad-a-i">'
-            + icones.svg(ic, couleur=VERT_APRI, taille=21) + '</span>'
-            '<span class="cad-a-l"></span></div>'
             f'<div class="cad-a-t">{_e(T(k + "_t"))}</div>'
             f'<p class="cad-a-x">{_e(T(k))}</p></div>')
-    return '<div class="cad-aaa">' + "".join(cols) + '</div>'
+    return (f'<p class="cad-attr-x">{_e(T("cad_attr_x"))}</p>'
+            '<div class="cad-aaa">' + "".join(cols) + '</div>')
 
 
 def _sources(extras=None):
@@ -1744,10 +1742,6 @@ def _v_indicateurs():
     if not tous:
         st.info(T("e_absent"))
         return
-    st.markdown(f'<p class="cad-note" style="margin:2px 0 12px;max-width:96ch">'
-                f'{_e(T("cad_ind_x", n=len(tous)))}</p>',
-                unsafe_allow_html=True)
-
     g, d = st.columns([1, 1.6])
     with g:
         dim = st.selectbox(T("cad_ind_dim"), [None] + ORDRE, key="cad_i_dim",
@@ -1850,25 +1844,26 @@ def _v_boucles():
     faut connaître avant de regarder le premier schéma. Le piège du « + » lu
     comme « bon » est dit à part, dans son propre cartouche.
     """
-    st.markdown(
-        f'<div class="cad-bt">{_e(T("cad_bt"))}</div>'
-        f'<p class="cad-bt-x">{_e(T("cad_bt_x"))}</p>',
-        unsafe_allow_html=True)
+    # PAS DE TITRE : l'onglet ouvert dit déjà « Boucles de rétroaction », et
+    # « Diagrammes de boucles causales » juste en dessous nommait la même
+    # chose une seconde fois. La ligne qui suit, elle, apprend quelque chose.
+    st.markdown(f'<p class="cad-bt-x">{_e(T("cad_bt_x"))}</p>',
+                unsafe_allow_html=True)
 
-    ETAPES = (("cad_b1", "pousse", "#9b2c2c", "#fbeaea"),
-              ("cad_b2", "rafraichir", "#b45309", "#fdf1e3"),
-              ("cad_b3", "cible", "#1e5a8e", "#e7eff7"),
-              ("cad_b4", "fiche", "#1a6b52", "#eef3f0"))
+    # LES QUATRE COULEURS RESTENT, LES PICTOGRAMMES NON. Une pousse, une
+    # flèche circulaire, une cible et une fiche ne disaient rien de plus que
+    # « symptôme », « boucle », « levier » et « action », écrits juste
+    # dessous ; le filet coloré suffit à ouvrir la case.
+    ETAPES = (("cad_b1", "#9b2c2c"), ("cad_b2", "#b45309"),
+              ("cad_b3", "#1e5a8e"), ("cad_b4", "#1a6b52"))
     cases = []
-    for i, (k, ic, coul, fond) in enumerate(ETAPES, start=1):
+    for i, (k, coul) in enumerate(ETAPES, start=1):
         if i > 1:
             cases.append('<div class="cad-bp-fl">'
                          + icones.svg("chevron", couleur="#c8cfd8", taille=22)
                          + '</div>')
         cases.append(
             '<div class="cad-bp-e">'
-            f'<div class="cad-bp-i" style="background:{fond}">'
-            + icones.svg(ic, couleur=coul, taille=30) + '</div>'
             f'<div class="cad-bp-fi" style="background:{coul}"></div>'
             f'<div class="cad-bp-t" style="color:{coul}">'
             f'{i}. {_e(T(k + "_t")).upper()}</div>'
@@ -1904,8 +1899,7 @@ def _v_boucles():
         f'<div class="cad-bl-n" style="color:#d1730c">'
         f'{_e(T("cad_bl_b"))}</div>'
         f'<div class="cad-bl-s">{_e(T("cad_bl_b_x"))}</div></div></div>'
-        '<div class="cad-bl-i"><span class="cad-bl-ii">'
-        + icones.svg("pousse", couleur=VERT_APRI, taille=17) + '</span><div>'
+        '<div class="cad-bl-i"><div>'
         f'<div class="cad-bl-it">{_e(T("cad_bl_i_t"))}</div>'
         f'<p class="cad-bl-ix">{_e(T("cad_bl_i_x"))}</p></div></div>'
         '</div></div>', unsafe_allow_html=True)
