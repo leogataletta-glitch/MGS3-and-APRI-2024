@@ -216,7 +216,12 @@ STYLE = """
   p.uma-i  { font-size:15.5px !important; line-height:1.62 !important;
              font-family:Georgia,"Times New Roman",serif; font-style:italic;
              font-weight:400; color:#26364a !important;
-             margin:16px 0 6px !important; max-width:84ch;
+             /* DEUX LIGNES, PAS TROIS. Bornée à quatre-vingt-quatre
+                signes, la phrase en prenait trois et repoussait tout le
+                reste de la page d'une ligne entière. Elle court maintenant
+                sur toute la colonne : à cette taille et dans cette casse,
+                deux lignes se lisent sans que l'œil perde le retour. */
+             margin:14px 0 6px !important; max-width:none;
              border-left:3px solid #1a6b52; padding-left:24px;
              text-align:justify !important;
              hyphens:auto; -webkit-hyphens:auto; }
@@ -298,7 +303,7 @@ STYLE = """
      la phrase vient de prendre, et la page se remettrait à défiler. */
   .uma-carte > svg { display:block; width:100%; height:auto;
                      margin:0 !important;
-                     max-height: max(205px, calc(100vh - 472px)); }
+                     max-height: max(205px, calc(100vh - 442px)); }
   .uma-carte > svg > .sea, .uma-carte > svg .sea { fill:transparent !important; }
   .uma-zone   { position:relative; }
   /* LA PHRASE EST AU-DESSUS DE LA CARTE, ET EN GRAS. Rangée dessous et en

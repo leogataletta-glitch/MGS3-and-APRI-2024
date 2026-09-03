@@ -50,67 +50,9 @@ TEXTES = {
     "env_onglet_apri": {"en": "The APRI framework", "fr": "Le cadre APRI"},
     "env_titre": {"en": "Monitoring environmental resilience",
                   "fr": "Le monitoring de la résilience environnementale"},
-    "env_sous": {"en": "Three ways of looking, one 0–10 scale",
-                 "fr": "Trois façons de regarder, une seule échelle de 0 à 10"},
-    "env_intro": {
-        "en": "This tab sets out the framework note for the environmental "
-              "dimension: what is observed on the ground, what is read from "
-              "satellite imagery, what is asked of households, and how each "
-              "of those becomes a score. The thresholds are shown as written "
-              "in the note.",
-        "fr": "Cet onglet expose la note de cadrage de la dimension "
-              "environnementale : ce qui s'observe au sol, ce qui se lit sur "
-              "l'image satellitaire, ce qui se demande aux ménages, et "
-              "comment chacun devient un score. Les seuils sont affichés tels "
-              "qu'ils figurent dans la note."},
 
     # ---------------- strate 1
-    "env_n1_t": {"en": "What is measured", "fr": "Ce qui est mesuré"},
-    "env_n1": {"en": "The ecosystems' capacity to keep their diversity, their "
-                     "functions and their connectivity under disturbance.",
-               "fr": "La capacité des écosystèmes à conserver leur diversité, "
-                     "leurs fonctions et leur connectivité sous perturbation."},
-    "env_n2_t": {"en": "Three independent sources",
-                 "fr": "Trois sources indépendantes"},
-    "env_n2": {"en": "Field transects, satellite imagery, household survey. "
-                     "None of the three sees what the other two see.",
-               "fr": "Transects de terrain, imagerie satellitaire, enquête "
-                     "ménage. Aucune des trois ne voit ce que voient les "
-                     "deux autres."},
-    "env_n3_t": {"en": "What 0 and 10 mean here",
-                 "fr": "Ce que valent 0 et 10 ici"},
-    "env_n3": {"en": "0 is a degraded but stable regime; 10 is the healthy "
-                     "regime beyond which no further gain adds resilience.",
-               "fr": "0 est un régime dégradé mais stable ; 10 le régime sain "
-                     "au-delà duquel aucun gain n'ajoute de résilience."},
-    "env_n4_t": {"en": "What is computed today", "fr": "Ce qui est calculé à ce jour"},
-    "env_n4": {"en": "{f} of the {n} indicators of the dimension, all from "
-                     "satellite. The field surveys have not been carried out.",
-               "fr": "{f} des {n} indicateurs de la dimension, tous "
-                     "satellitaires. Les relevés de terrain n'ont pas été "
-                     "réalisés."},
 
-    "env_flux": {"en": "The protocol at a glance",
-                 "fr": "Le protocole en un coup d'œil"},
-    "env_flux_note": {
-        "en": "Counted from the framework note, family by family. The last "
-              "box is the only figure that comes from the platform: what is "
-              "actually computed today.",
-        "fr": "Compté dans la note de cadrage, famille par famille. La "
-              "dernière case est le seul chiffre qui vienne de la "
-              "plateforme : ce qui est réellement calculé à ce jour."},
-    "env_f1": {"en": "field indicators", "fr": "indicateurs de terrain"},
-    "env_f1x": {"en": "on 3 taxa · 0 computed", "fr": "sur 3 taxons · 0 calculé"},
-    "env_f2": {"en": "satellite indicators", "fr": "indicateurs satellitaires"},
-    "env_f2x": {"en": "vegetation, fragmentation, connectivity",
-                "fr": "végétation, fragmentation, connectivité"},
-    "env_f3": {"en": "coastal & hydro families",
-               "fr": "familles côtières et hydro"},
-    "env_f3x": {"en": "turbidity, mangroves, reefs, shoreline…",
-                "fr": "turbidité, mangroves, récifs, littoral…"},
-    "env_f4": {"en": "household proxies", "fr": "proxys d'enquête"},
-    "env_f4x": {"en": "pressure, dependence, adaptation",
-                "fr": "pression, dépendance, adaptation"},
 
     # ---------------- strate 2
     "env_s2": {"en": "The three sources", "fr": "Les trois sources"},
@@ -308,39 +250,6 @@ def _icone(nom, couleur):
             + icones.svg(nom, couleur=couleur, taille=19) + '</div>')
 
 
-def _tete(c, etat):
-    cartes = [("env_n1", "montagne", VERT, {}),
-              ("env_n2", "grille", BLEU, {}),
-              ("env_n3", "barres", AMBRE, {}),
-              ("env_n4", "info", GRIS,
-               {"f": len(etat["faits"]), "n": etat["n"]})]
-    fond = ' style="background:#fafbfd"'
-    return ('<div style="display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 2px">'
-            + "".join(
-                '<div class="ev-n"' + (fond if k == "env_n4" else "") + '>'
-                + _icone(ic, coul)
-                + f'<p class="ev-t">{_e(T(k + "_t"))}</p>'
-                + f'<p class="ev-x">{_e(T(k, **kw))}</p></div>'
-                for k, ic, coul, kw in cartes) + '</div>')
-
-
-def _flux(c, etat):
-    n_cot = sum(len(b["points"]) for b in c["cotier"])
-    cases = [(str(len(c["terrain"])), T("env_f1"), T("env_f1x")),
-             (str(len(c["vegetation"]) + len(c["fragmentation"])
-                  + len(c["connectivite"])), T("env_f2"), T("env_f2x")),
-             (str(n_cot + len(c["hydro"])), T("env_f3"), T("env_f3x")),
-             (str(len(c["menages"])), T("env_f4"), T("env_f4x"))]
-    blocs = []
-    for i, (v, lab, sous) in enumerate(cases):
-        if i:
-            blocs.append('<div class="ev-ch">&rsaquo;</div>')
-        blocs.append(f'<div class="ev-fl"><div class="ev-fn">{_e(v)}</div>'
-                     f'<div class="ev-fl-l">{_e(lab)}</div>'
-                     f'<div class="ev-fl-x">{_e(sous)}</div></div>')
-    return '<div class="ev-flux">' + "".join(blocs) + '</div>'
-
-
 def _tableau(lignes):
     """Les trois tableaux satellitaires ont la même forme : nom, ce qu'il
     mesure, lien avec la résilience, seuils du 0 et du 10."""
@@ -416,28 +325,21 @@ def render(complement=None):
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(
         f'<h3 style="font-size:17.5px;font-weight:700;color:{ENCRE};'
-        f'letter-spacing:-.02em;margin:6px 0 0">{_e(T("env_titre"))}</h3>'
-        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
-        f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
-        f'{_e(T("env_sous"))}</p>', unsafe_allow_html=True)
+        f'letter-spacing:-.02em;margin:6px 0 12px">{_e(T("env_titre"))}</h3>'
+        , unsafe_allow_html=True)
 
     if not c:
         st.info(T("env_absent"))
         return
 
+    # L'ENTREE EN MATIERE A ETE RETIREE. Elle occupait le haut de l'onglet
+    # avec une note d'intention, quatre cartouches et un « protocole en un
+    # coup d'oeil » : cinq facons d'annoncer ce que la page allait dire,
+    # avant de le dire. Les trois sources et le detail du protocole, qui
+    # suivent, le disent en entier — et le compte des indicateurs calcules
+    # est deja donne, dimension par dimension, dans l'onglet des dimensions.
+    #
     etat = _etat_dimension(i18n.get_lang())
-    st.info(T("env_intro"))
-
-    # ===================== STRATE 1 — COMPRENDRE ==========================
-    st.markdown(_tete(c, etat), unsafe_allow_html=True)
-
-    with st.container(border=True):
-        st.markdown(
-            f'<div style="font-size:17.5px;font-weight:700;color:{ENCRE};'
-            f'margin:0 0 3px">{_e(T("env_flux"))}</div>'
-            f'<p style="font-size:12.5px;color:{ENCRE3};line-height:1.55;'
-            f'max-width:96ch;margin:0 0 14px">{_e(T("env_flux_note"))}</p>'
-            + _flux(c, etat), unsafe_allow_html=True)
 
     # ===================== STRATE 2 — EXPLORER ============================
     st.markdown(f'<div class="ev-etage">{_e(T("env_s2"))}</div>',

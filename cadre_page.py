@@ -156,29 +156,87 @@ TEXTES = {
               "figure ici pour qu'une absence ne passe pas pour une "
               "inexistence."},
 
-    # --- la chaîne de calcul
-    "cad_chaine": {"en": "From an answer to a score",
-                   "fr": "De la réponse au score"},
-    "cad_e1_t": {"en": "1 · Metric", "fr": "1 · Métrique"},
-    "cad_e1": {"en": "Answers are aggregated at communal-section level, most "
-                     "often as a percentage of households",
-               "fr": "Les réponses sont agrégées à l'échelle de la section "
-                     "communale, le plus souvent en pourcentage de ménages"},
-    "cad_e2_t": {"en": "2 · Scale", "fr": "2 · Barème"},
-    "cad_e2": {"en": "Each metric is cut into 11 ordinal classes, from 0 to "
-                     "10, by a published threshold table",
-               "fr": "Chaque métrique est découpée en 11 classes ordinales, "
-                     "de 0 à 10, par une table de seuils publiée"},
-    "cad_e3_t": {"en": "3 · Weight", "fr": "3 · Pondération"},
-    "cad_e3": {"en": "Each indicator carries its own weight; the sum across "
-                     "the framework is {ptot}",
-               "fr": "Chaque indicateur porte son poids propre ; leur somme "
-                     "sur le référentiel vaut {ptot}"},
-    "cad_e4_t": {"en": "4 · Aggregation", "fr": "4 · Agrégation"},
-    "cad_e4": {"en": "Weighted mean of the scored indicators, uncomputed "
-                     "ones are excluded from the denominator",
-               "fr": "Moyenne pondérée des indicateurs scorés, les non "
-                     "calculés sont exclus du dénominateur"},
+    # --- LA MÉTHODE DE CALCUL, EN TROIS TEMPS
+    # LES NOMBRES DE L'EXEMPLE SONT UN EXEMPLE, et l'onglet le dit. Quarante-
+    # cinq minutes pour aller chercher l'eau, 3,5 sur 10, 6,1 en score global :
+    # ce sont des valeurs de démonstration choisies pour que la chaîne se
+    # suive. Publiées sans mention, elles se liraient comme des résultats —
+    # et le score global réel n'est pas 6,1.
+    "cad_ex": {"en": "Example", "fr": "Exemple"},
+
+    "cad_p1_t": {"en": "From a raw measure to an indicator score",
+                 "fr": "De la mesure brute au score d'un indicateur"},
+    "cad_p1a_t": {"en": "Raw measure", "fr": "Mesure brute"},
+    "cad_p1a_v": {"en": "45 min", "fr": "45 min"},
+    "cad_p1a_x": {"en": "Time to collect water",
+                  "fr": "Temps pour aller chercher l'eau"},
+    "cad_p1b_t": {"en": "Direction", "fr": "Sens"},
+    "cad_p1b_v": {"en": "Lower is better", "fr": "Moins, c'est mieux"},
+    "cad_p1c_t": {"en": "Reference", "fr": "Référence"},
+    "cad_p1c_v": {"en": "0 = ≥ 120 min", "fr": "0 = ≥ 120 min"},
+    "cad_p1c_x": {"en": "10 = ≤ 15 min", "fr": "10 = ≤ 15 min"},
+    "cad_p1d_t": {"en": "Normalisation", "fr": "Normalisation"},
+    "cad_p1d_v": {"en": "Score = 3.5 / 10", "fr": "Score = 3,5 / 10"},
+    "cad_p1e_t": {"en": "Indicator score", "fr": "Score de l'indicateur"},
+    "cad_p1e_v": {"en": "3.5 / 10", "fr": "3,5 / 10"},
+
+    "cad_p2_t": {"en": "Two normalisation methods",
+                 "fr": "Deux méthodes de normalisation"},
+    "cad_p2s_t": {"en": "Statistical normalisation",
+                  "fr": "Normalisation statistique"},
+    "cad_p2s_x": {"en": "Used when a continuous distribution of values is "
+                        "available.",
+                  "fr": "Utilisée quand on dispose d'une distribution "
+                        "continue de valeurs."},
+    "cad_p2h": {"en": "Higher is better", "fr": "Plus, c'est mieux"},
+    "cad_p2l": {"en": "Lower is better", "fr": "Moins, c'est mieux"},
+    "cad_p2b_t": {"en": "Threshold-based normalisation",
+                  "fr": "Normalisation par seuils"},
+    "cad_p2b_x": {"en": "Used when clear benchmarks or standards exist.",
+                  "fr": "Utilisée quand il existe des repères ou des normes "
+                        "clairs."},
+    # Les paliers sont écrits « borne → score », séparés par des barres.
+    "cad_p2b_r": {"en": "≥ 120 min→0|60–120 min→2.5|30–60 min→5|"
+                        "15–30 min→7.5|≤ 15 min→10",
+                  "fr": "≥ 120 min→0|60–120 min→2,5|30–60 min→5|"
+                        "15–30 min→7,5|≤ 15 min→10"},
+    "cad_p2b_n": {"en": "Thresholds may come from international standards, "
+                        "national norms or expert consensus.",
+                  "fr": "Les seuils peuvent venir de standards "
+                        "internationaux, de normes nationales ou d'un "
+                        "consensus d'experts."},
+
+    "cad_p3_t": {"en": "From indicator scores to overall resilience",
+                 "fr": "Des scores d'indicateurs à la résilience d'ensemble"},
+    "cad_p3a_t": {"en": "Indicator scores", "fr": "Scores des indicateurs"},
+    "cad_p3a_x": {"en": "Scores from 0 to 10", "fr": "Des scores de 0 à 10"},
+    "cad_p3b_t": {"en": "Dimension score", "fr": "Score de dimension"},
+    "cad_p3b_x": {"en": "Indicators within the same dimension are combined",
+                  "fr": "Les indicateurs d'une même dimension sont combinés"},
+    "cad_p3b_v": {"en": "Dimension score: 6.3 / 10",
+                  "fr": "Score de dimension : 6,3 / 10"},
+    "cad_p3c_t": {"en": "Weighting by dimension",
+                  "fr": "Pondération par dimension"},
+    "cad_p3c_x": {"en": "Each dimension is weighted according to its "
+                        "relative importance",
+                  "fr": "Chaque dimension est pondérée selon son importance "
+                        "relative"},
+    "cad_p3d_t": {"en": "Overall resilience score",
+                  "fr": "Score de résilience d'ensemble"},
+    "cad_p3d_x": {"en": "Weighted dimension scores are aggregated",
+                  "fr": "Les scores pondérés des dimensions sont agrégés"},
+    "cad_p3d_v": {"en": "Overall score: 6.1 / 10",
+                  "fr": "Score global : 6,1 / 10"},
+
+    "cad_p4_t": {"en": "Why 0–10?", "fr": "Pourquoi 0–10 ?"},
+    "cad_p4_x": {"en": "A common scale makes indicators expressed in "
+                       "different units comparable and results easier to "
+                       "interpret.",
+                 "fr": "Une échelle commune rend comparables des indicateurs "
+                       "exprimés dans des unités différentes, et les "
+                       "résultats plus faciles à interpréter."},
+    "cad_p4_lab": {"en": "resilience indicators across {d} dimensions",
+                   "fr": "indicateurs de résilience sur {d} dimensions"},
 
     # --- le plan de sondage
     "cad_s1_t": {"en": "questionnaires", "fr": "questionnaires"},
@@ -494,7 +552,7 @@ TEXTES = {
     "cad_c1": {"en": "What APRI measures", "fr": "Ce que mesure APRI"},
     "cad_c2": {"en": "Sources and data", "fr": "Sources et données"},
     "cad_c3": {"en": "Dimensions", "fr": "Dimensions"},
-    "cad_c4": {"en": "From measures to scores", "fr": "De la mesure au score"},
+    "cad_c4": {"en": "Measures to scores", "fr": "De la mesure au score"},
     "cad_c5": {"en": "Feedback loops", "fr": "Boucles de rétroaction"},
     "cad_c6": {"en": "Environmental data", "fr": "Données environnementales"},
     "cad_c7": {"en": "The full framework", "fr": "Le cadre complet"},
@@ -758,6 +816,91 @@ STYLE = """
   .cad-so-l li::before { content:"—"; position:absolute; left:0; top:3px;
               color:#a7b0be; font-size:11px; }
 
+  /* --- la méthode de calcul, en trois temps -------------------------------
+     TROIS SECTIONS NUMÉROTÉES, SÉPARÉES PAR UN FILET. Le calcul est une
+     suite d'opérations : le lecteur doit voir où finit l'une et où commence
+     la suivante, et un filet le dit mieux qu'un blanc.
+
+     LES ÉTAPES SONT RELIÉES PAR DES FLÈCHES, et c'est le seul endroit du
+     site où une flèche se justifie : ici l'ordre EST l'information — on ne
+     normalise pas avant d'avoir fixé le sens et la référence. */
+  .cad-p    { padding:16px 0 18px; border-bottom:1px solid #e9eef4; }
+  .cad-p:last-of-type { border-bottom:0; }
+  .cad-p-t  { font-size:14.5px; font-weight:700; color:#101728;
+              margin:0 0 14px; letter-spacing:-.01em; }
+  .cad-p-t b { color:#3c4761; font-weight:700; margin-right:7px; }
+  .cad-ex   { display:inline-block; margin-left:10px; font-size:9.5px;
+              font-weight:700; letter-spacing:.11em; text-transform:uppercase;
+              color:#8a93a5; border:1px solid #e3eaf3; border-radius:99px;
+              padding:2px 8px; vertical-align:2px; }
+  .cad-flo  { display:flex; align-items:flex-start; gap:0; flex-wrap:wrap; }
+  .cad-flo-e { flex:1 1 150px; min-width:130px; text-align:center;
+              padding:0 6px; }
+  .cad-flo-t { font-size:12.5px; font-weight:700; color:#1a6b52;
+              line-height:1.3; margin-bottom:5px; }
+  .cad-flo-v { font-size:12px; color:#101728; font-weight:600;
+              line-height:1.45; }
+  .cad-flo-x { font-size:11px; color:#8a93a5; line-height:1.4; margin-top:3px; }
+  /* La flèche est dessinée, pas écrite : un caractère « → » change de dessin
+     d'une police à l'autre et se retrouve trop haut ou trop bas. */
+  .cad-flo-f { flex:0 1 70px; min-width:34px; height:1px; background:#c9d6cf;
+              margin:16px 0 0; position:relative; }
+  .cad-flo-f::after { content:""; position:absolute; right:0; top:-3px;
+              border-left:6px solid #c9d6cf; border-top:3.5px solid transparent;
+              border-bottom:3.5px solid transparent; }
+
+  /* Les deux méthodes de normalisation, séparées par un filet vertical. */
+  .cad-nrm  { display:grid; grid-template-columns:1fr 1fr; gap:34px; }
+  .cad-nrm > div + div { border-left:1px solid #e9eef4; padding-left:34px; }
+  .cad-nrm-t { font-size:12.5px; font-weight:700; color:#1a6b52;
+              margin:0 0 4px; }
+  .cad-nrm-x { font-size:11px; color:#8a93a5; line-height:1.45;
+              margin:0 0 14px; text-align:left !important; }
+  /* LES DEUX FORMULES NE S'ÉCARTENT PAS JUSQU'AUX BORDS. Étirées à parts
+     égales dans leur colonne, elles se retrouvaient à quarante centimètres
+     l'une de l'autre et cessaient de se lire comme une paire. */
+  .cad-duo  { display:flex; gap:38px; flex-wrap:wrap;
+              justify-content:flex-start; align-items:flex-start; }
+  .cad-duo > div { flex:0 1 auto; max-width:100%; }
+  .cad-duo-t { font-size:11.5px; font-weight:700; color:#3c4761;
+              margin:0 0 8px; }
+  .cad-eq   { display:flex; align-items:center; gap:6px; font-size:12px;
+              color:#101728; }
+  /* La fraction est composée, pas écrite avec une barre oblique : c'est la
+     forme sous laquelle la formule est publiée dans le document de méthode,
+     et une barre oblique se relit mal quand le numérateur est une
+     soustraction. */
+  .cad-fr   { display:inline-block; text-align:center; vertical-align:middle; }
+  .cad-fr-n { display:block; padding:0 4px 2px;
+              border-bottom:1px solid #101728; }
+  .cad-fr-d { display:block; padding:2px 4px 0; }
+  .cad-seu  { display:grid; grid-template-columns:auto 18px auto;
+              justify-content:start; gap:5px 10px; align-items:center;
+              font-size:11.5px; color:#3c4761; }
+  .cad-seu i { color:#a7b0be; font-style:normal; text-align:center; }
+  .cad-seu b { color:#101728; font-weight:700;
+              font-variant-numeric:tabular-nums; }
+  /* La spécificité compte : `.cad-duo > div` porte déjà un `max-width`, et
+     un sélecteur de classe simple ne l'emporte pas sur un sélecteur d'enfant.
+     La note est donc visée à travers son parent. */
+  .cad-duo > .cad-seu-n { font-size:11px; color:#1a6b52; line-height:1.5;
+              max-width:27ch; text-align:left !important; }
+
+  /* Le pied : pourquoi l'échelle est de 0 à 10, et combien d'indicateurs. */
+  .cad-pied { display:flex; align-items:flex-start; gap:26px; flex-wrap:wrap;
+              border-top:1px solid #1a6b52; margin-top:6px; padding-top:14px; }
+  .cad-pied-c { flex:1 1 380px; min-width:0; }
+  .cad-pied-t { font-size:12.5px; font-weight:700; color:#1a6b52;
+              margin:0 0 3px; }
+  p.cad-pied-x { font-size:11.5px !important; color:#8a93a5 !important;
+              line-height:1.5 !important; margin:0 !important;
+              text-align:left !important; max-width:70ch; }
+  .cad-pied-n { flex:0 0 auto; display:flex; align-items:baseline; gap:10px; }
+  .cad-pied-v { font-size:30px; font-weight:700; color:#1a6b52; line-height:1;
+              letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+  .cad-pied-l { font-size:11px; color:#5a6a80; line-height:1.35;
+              max-width:21ch; text-align:left !important; }
+
   /* --- la phrase de clôture ------------------------------------------------
      UN FILET, DEUX LIGNES, PAS D'ENCADRÉ. Elle ferme la liste des sources et
      dit ce qu'on en fait ; un bloc teinté en aurait fait un cinquième objet
@@ -818,67 +961,59 @@ STYLE = """
               border-left:3px solid #1a6b52; padding-left:22px;
               text-align:left !important; }
 
-  /* --- la barre des sept onglets, en numéros ------------------------------
+  /* --- la barre des sept onglets ------------------------------------------
      ELLE PORTAIT SEPT TITRES ENTIERS ET FAISAIT CENT TRENTE PIXELS DE HAUT,
-     plus que le contenu de certains onglets. Elle ne porte plus que des
-     numéros reliés par un filet, et le titre court de l'onglet regardé
-     s'inscrit sous son numéro. Le titre entier n'est pas perdu : c'est
-     l'intitulé du bloc, juste en dessous.
+     plus que le contenu de certains onglets. Elle porte maintenant le numéro
+     et le titre COURT sur une ligne : le numéro seul était net mais muet —
+     pour savoir ce qu'il y a dans l'onglet 4, il fallait cliquer.
 
-     LE FILET EST TRACÉ PAR CHAQUE CASE, VERS LA DROITE, sauf la dernière.
-     C'est la seule façon d'obtenir un trait qui s'étire entre deux numéros
-     sans connaître à l'avance la largeur disponible : le pseudo-élément part
-     après le numéro et va jusqu'au bord de sa propre case.
+     LE FILET EST SOUS LA RANGÉE, PAS ENTRE LES NUMÉROS. Un trait tiré entre
+     deux numéros n'a plus de place dès qu'un titre s'intercale ; sous la
+     rangée, il tient les sept cases ensemble, et le soulignement vert dit
+     laquelle est ouverte.
 
-     LA PLACE DU LIBELLÉ EST RÉSERVÉE PAR LA BARRE, PAS PAR LA CASE. Le
-     libellé est en position absolue — s'il poussait la hauteur de sa case,
-     la rangée entière se décalerait au moindre changement d'onglet. */
-  /* LA BARRE DOIT S'ÉTIRER, ET RIEN NE L'Y OBLIGE. Les cases ne contiennent
-     plus que deux chiffres : la largeur naturelle du groupe est celle de
-     quatorze caractères, et un `width:100%` calculé sur ce parent-là ne
-     donne rien. Chaque enveloppe que Streamlit interpose est donc forcée à
-     la pleine largeur. */
+     LA BARRE DOIT S'ÉTIRER, ET RIEN NE L'Y OBLIGE : chaque enveloppe que
+     Streamlit interpose est donc forcée à la pleine largeur. */
   div[class*="st-key-cad_nav"],
   div[class*="st-key-cad_nav"] div[data-testid="stElementContainer"],
   div[class*="st-key-cad_nav"] div[data-testid="stRadio"] {
       width:100% !important; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"] {
       display:flex !important; flex-wrap:nowrap !important; gap:0 !important;
-      width:100% !important; align-items:flex-start; padding:2px 0 22px; }
+      width:100% !important; align-items:stretch;
+      border-bottom:1px solid #e9eef4; margin:2px 0 4px; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"] > label {
       flex:1 1 0 !important; min-width:0 !important; margin:0 !important;
-      background:none !important; border:0 !important; padding:0 !important;
-      position:relative; cursor:pointer; }
+      background:none !important; border:0 !important;
+      padding:0 14px 11px 0 !important; position:relative; cursor:pointer; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"]
       > label > div > div > div:first-child { display:none !important; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"] > label > div > div {
       gap:0 !important; width:100% !important; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"] > label p {
-      font-size:13px !important; font-weight:600 !important;
-      color:#a7b0be !important; margin:0 !important;
-      text-align:left !important; letter-spacing:.02em;
-      transition:color .12s ease; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label:hover p {
+      font-size:11.5px !important; font-weight:500 !important;
+      color:#8a93a5 !important; margin:0 !important;
+      text-align:left !important; line-height:1.35 !important; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label p strong {
+      font-size:13px; font-weight:700; color:#a7b0be;
+      font-variant-numeric:tabular-nums; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label:hover p,
+  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label:hover p strong {
       color:#3c4761 !important; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label::before {
-      content:""; position:absolute; left:30px; right:10px; top:9px;
-      height:1px; background:#d6e2da; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"]
-      > label:last-of-type::before { display:none; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"]
       > label:has(input:checked) p {
-      font-size:19px !important; font-weight:600 !important;
-      color:#1a6b52 !important; line-height:1 !important;
-      margin:-4px 0 0 !important; }
-  /* Le titre court, écrit par `_css_rail`, n'apparaît que sous l'actif. */
-  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label::after {
-      position:absolute; left:0; top:22px; font-size:10.5px; font-weight:700;
-      color:#1a6b52; letter-spacing:.02em; white-space:nowrap; }
-  @media (max-width: 760px) {
+      color:#1a6b52 !important; font-weight:700 !important; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"]
+      > label:has(input:checked) p strong { color:#1a6b52; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"]
+      > label:has(input:checked)::after {
+      content:""; position:absolute; left:0; right:14px; bottom:-1px;
+      height:2px; background:#1a6b52; border-radius:2px; }
+  @media (max-width: 900px) {
     div[class*="st-key-cad_nav"] div[role="radiogroup"] {
-        flex-wrap:wrap !important; }
+        flex-wrap:wrap !important; border-bottom:0; }
     div[class*="st-key-cad_nav"] div[role="radiogroup"] > label {
-        flex:0 0 14%; }
+        flex:1 1 30% !important; padding-bottom:8px !important; }
   }
 
 </style>
@@ -1007,30 +1142,59 @@ def _tableau_dimensions(stats):
             + '</div>')
 
 
-def _chaine(ptot):
-    """La chaîne de calcul, quatre étapes reliées par des chevrons.
+def _flot(etapes):
+    """Une suite d'étapes reliées par des flèches.
 
-    Un schéma plutôt qu'un paragraphe : l'ordre des opérations est ce qui
-    compte, et un ordre se montre.
+    L'ORDRE EST L'INFORMATION. C'est le seul endroit du site où une flèche se
+    justifie : on ne normalise pas avant d'avoir fixé le sens de lecture et
+    la référence. Ailleurs, les flèches disaient une succession qui n'en
+    était pas une.
     """
-    etapes = [("cad_e1", {}), ("cad_e2", {}),
-              ("cad_e3", {"ptot": _fmt(ptot, 0)}), ("cad_e4", {})]
     blocs = []
-    for i, (cle, kw) in enumerate(etapes):
+    for i, (titre, valeur, note) in enumerate(etapes):
         if i:
-            blocs.append(
-                '<div style="align-self:center;color:#c3ccda;font-size:17.5px;'
-                'flex:0 0 auto;padding:0 2px">›</div>')
+            blocs.append('<div class="cad-flo-f"></div>')
         blocs.append(
-            f'<div style="flex:1 1 190px;min-width:175px;background:#fff;'
-            f'border:1px solid {BORD};border-radius:13px;padding:13px 15px">'
-            f'<div style="font-size:11px;letter-spacing:.06em;'
-            f'text-transform:uppercase;font-weight:700;color:#2166ac">'
-            f'{_e(T(cle + "_t"))}</div>'
-            f'<div style="font-size:12.5px;color:{ENCRE2};line-height:1.5;'
-            f'margin-top:5px">{_e(T(cle, **kw))}</div></div>')
-    return ('<div style="display:flex;gap:6px;flex-wrap:wrap;'
-            'align-items:stretch">' + "".join(blocs) + '</div>')
+            '<div class="cad-flo-e">'
+            f'<div class="cad-flo-t">{_e(titre)}</div>'
+            + (f'<div class="cad-flo-v">{_e(valeur)}</div>' if valeur else "")
+            + (f'<div class="cad-flo-x">{_e(note)}</div>' if note else "")
+            + '</div>')
+    return '<div class="cad-flo">' + "".join(blocs) + '</div>'
+
+
+def _fraction(haut, bas):
+    """Une fraction composée : numérateur, filet, dénominateur."""
+    return (f'<span class="cad-fr"><span class="cad-fr-n">{haut}</span>'
+            f'<span class="cad-fr-d">{bas}</span></span>')
+
+
+def _formule(sens, haut):
+    """Score_i = 10 × (fraction), sous le sens de lecture qu'elle sert."""
+    bas = 'x<sub>max</sub> &minus; x<sub>min</sub>'
+    return ('<div><div class="cad-duo-t">' + _e(sens) + '</div>'
+            '<div class="cad-eq">'
+            '<span>Score<sub>i</sub> = 10 &times;</span>'
+            + _fraction(haut, bas) + '</div></div>')
+
+
+def _seuils(brut):
+    """Le tableau des paliers, écrit « borne → score » dans la traduction."""
+    lignes = []
+    for p_ in brut.split("|"):
+        if "→" not in p_:
+            continue
+        borne, _, val = p_.partition("→")
+        lignes.append(f'<span>{_e(borne.strip())}</span><i>&rarr;</i>'
+                      f'<b>{_e(val.strip())}</b>')
+    return '<div class="cad-seu">' + "".join(lignes) + '</div>'
+
+
+def _titre_p(rang, cle, exemple=False):
+    """L'intitulé numéroté d'une des trois sections du calcul."""
+    return (f'<div class="cad-p-t"><b>{rang}.</b>{_e(T(cle))}'
+            + (f'<span class="cad-ex">{_e(T("cad_ex"))}</span>'
+               if exemple else "") + '</div>')
 
 
 def _attributs():
@@ -1169,23 +1333,6 @@ _COURT = {"mesure": "cad_c1", "sources": "cad_c2", "dimensions": "cad_c3",
           "document": "cad_c7"}
 
 
-def _css_rail():
-    """Le libellé court de l'onglet actif, posé sous son numéro.
-
-    STREAMLIT NE MET QU'UN LIBELLÉ PAR CASE, et c'est le numéro. Le titre
-    court est donc écrit en CSS, dans un pseudo-élément que seule la case
-    cochée affiche — une règle par rang, générée ici pour que le texte suive
-    la langue.
-    """
-    b = 'div[class*="st-key-cad_nav"] div[role="radiogroup"] > label'
-    r = ["<style>"]
-    for i, code in enumerate(VUES, start=1):
-        r.append(f'{b}:nth-of-type({i}):has(input:checked)::after '
-                 f'{{ content:"{_txt_css(T(_COURT[code]))}"; }}')
-    r.append("</style>")
-    return "".join(r)
-
-
 def render(doc_complet=None):
     stats = _stats()
     st.markdown(STYLE, unsafe_allow_html=True)
@@ -1201,12 +1348,17 @@ def render(doc_complet=None):
         st.info(T("e_absent"))
         return
 
-    st.markdown(_css_rail(), unsafe_allow_html=True)
     with st.container(key="cad_nav"):
         vue = st.radio(
             "cad", VUES, horizontal=True, label_visibility="collapsed",
             key="cad_vue",
-            format_func=lambda c: f"{VUES.index(c) + 1:02d}")
+            # LE TITRE COURT REVIENT À CÔTÉ DU NUMÉRO. La barre numérotée
+            # seule était nette mais muette : pour savoir ce qu'il y a dans
+            # l'onglet 4, il fallait cliquer. Le libellé de Streamlit est
+            # rendu en markdown, ce qui permet de mettre le numéro en gras et
+            # de le styler à part du titre.
+            format_func=lambda c: (f"**{VUES.index(c) + 1:02d}**&nbsp; "
+                                   + T(_COURT[c])))
 
     if vue == "sources":
         _v_sources()
@@ -1297,24 +1449,74 @@ def _v_dimensions(stats):
 
 # --- 4 · de la mesure brute au score ---------------------------------------
 def _v_score(stats):
-    """La chaîne de calcul, puis ce qu'elle ne permet pas de dire.
+    """Comment on passe d'une mesure brute à un score, en trois temps.
 
-    LES LIMITES SUIVENT LA CHAÎNE, ET C'EST VOULU. Elles ne se comprennent
-    qu'une fois le calcul connu : la circularité d'un indice composite ne
-    veut rien dire tant qu'on n'a pas vu qu'il agrège ses propres variables
-    explicatives. Elles avaient disparu de l'affichage à la refonte
-    précédente ; les publier plus loin que le calcul serait les enterrer une
-    seconde fois.
+    LA CHAÎNE TENAIT EN QUATRE PAVÉS ET NE MONTRAIT RIEN. « Métrique ›
+    barème › pondération › agrégation » nommait les opérations sans en
+    exécuter une seule : le lecteur savait qu'un barème existe, pas ce qu'il
+    fait à quarante-cinq minutes de marche pour aller chercher l'eau. Les
+    trois sections déroulent l'opération sur un cas, donnent les deux
+    formules de normalisation, puis remontent jusqu'au score d'ensemble.
+
+    LES VALEURS DE L'EXEMPLE PORTENT LA MENTION « EXEMPLE ». Elles sont
+    choisies pour que la chaîne se suive, et le score global réel n'est pas
+    celui-là ; sans la mention, elles se liraient comme un résultat.
     """
-    st.markdown(_titre("cad_chaine", marge=4)
-                + _chaine(stats["poids_total"]), unsafe_allow_html=True)
     st.markdown(
-        _titre("cad_limites", marge=30)
+        '<div class="cad-p">'
+        + _titre_p(1, "cad_p1_t", exemple=True)
+        + _flot([
+            (T("cad_p1a_t"), T("cad_p1a_v"), T("cad_p1a_x")),
+            (T("cad_p1b_t"), T("cad_p1b_v"), ""),
+            (T("cad_p1c_t"), T("cad_p1c_v"), T("cad_p1c_x")),
+            (T("cad_p1d_t"), T("cad_p1d_v"), ""),
+            (T("cad_p1e_t"), T("cad_p1e_v"), ""),
+        ]) + '</div>'
+
+        + '<div class="cad-p">' + _titre_p(2, "cad_p2_t")
+        + '<div class="cad-nrm"><div>'
+        + f'<div class="cad-nrm-t">{_e(T("cad_p2s_t"))}</div>'
+        + f'<div class="cad-nrm-x">{_e(T("cad_p2s_x"))}</div>'
+        + '<div class="cad-duo">'
+        + _formule(T("cad_p2h"),
+                   'x<sub>i</sub> &minus; x<sub>min</sub>')
+        + _formule(T("cad_p2l"),
+                   'x<sub>max</sub> &minus; x<sub>i</sub>')
+        + '</div></div><div>'
+        + f'<div class="cad-nrm-t">{_e(T("cad_p2b_t"))}</div>'
+        + f'<div class="cad-nrm-x">{_e(T("cad_p2b_x"))}</div>'
+        + '<div class="cad-duo">' + _seuils(T("cad_p2b_r"))
+        + f'<div class="cad-seu-n">{_e(T("cad_p2b_n"))}</div>'
+        + '</div></div></div></div>'
+
+        + '<div class="cad-p">'
+        + _titre_p(3, "cad_p3_t", exemple=True)
+        + _flot([
+            (T("cad_p3a_t"), "", T("cad_p3a_x")),
+            (T("cad_p3b_t"), T("cad_p3b_v"), T("cad_p3b_x")),
+            (T("cad_p3c_t"), "", T("cad_p3c_x")),
+            (T("cad_p3d_t"), T("cad_p3d_v"), T("cad_p3d_x")),
+        ]) + '</div>',
+        unsafe_allow_html=True)
+
+    # LE COMPTE D'INDICATEURS EST CELUI DU RÉFÉRENTIEL, dimensions comprises.
+    st.markdown(
+        '<div class="cad-pied"><div class="cad-pied-c">'
+        f'<div class="cad-pied-t">{_e(T("cad_p4_t"))}</div>'
+        f'<p class="cad-pied-x">{_e(T("cad_p4_x"))}</p></div>'
+        '<div class="cad-pied-n">'
+        f'<div class="cad-pied-v">{stats["n"]}</div>'
+        f'<div class="cad-pied-l">'
+        f'{_e(T("cad_p4_lab", d=len(stats["dims"])))}</div>'
+        '</div></div>', unsafe_allow_html=True)
+
+    # CE QUE L'INDICE NE PEUT PAS DIRE reste sur cet onglet : les limites ne
+    # se comprennent qu'une fois le calcul connu — la circularité d'un indice
+    # composite ne veut rien dire tant qu'on n'a pas vu qu'il agrège ses
+    # propres variables explicatives.
+    st.markdown(
+        _titre("cad_limites", marge=34)
         + '<div class="cad-grille">'
-        # UNE SEULE TEINTE, ET ELLE EST GRISE. Quatre couleurs sur quatre
-        # limites laisseraient croire à quatre natures de limite ; elles sont
-        # quatre façons de dire la même chose — l'indice cadre, il ne prédit
-        # pas.
         + "".join(_cartouche(T(k + "_t"), T(k), ENCRE3)
                   for k in ("cad_l1", "cad_l2", "cad_l3", "cad_l4"))
         + '</div>', unsafe_allow_html=True)
