@@ -75,6 +75,15 @@ VERT_APRI = "#2a6b3f"
 TEXTES = {
     "cad_titre": {"en": "Resilience Framework",
                   "fr": "Cadre de résilience"},
+    # LA DÉFINITION REVIENT ICI, ET C'EST SA PLACE. Sur l'accueil elle
+    # arrivait juste sous le sous-titre du bandeau, qui dit déjà ce qu'est le
+    # site ; ici elle ouvre l'onglet qui porte son nom, et les trois attributs
+    # en dessous la déplient.
+    "cad_uma": {
+        "en": "APRI measures the resilience of a landscape, understood as a "
+              "complex adaptive system.",
+        "fr": "APRI mesure la résilience d'un paysage, compris comme un "
+              "système complexe adaptatif."},
 
     # La ligne de description de chaque onglet, sous son titre.
     "cad_d1": {"en": "The three capacities the index is built on",
@@ -955,6 +964,17 @@ STYLE = """
                       padding-left:0; padding-top:22px; margin-top:18px; }
   }
 
+  /* La phrase qui ouvre le premier onglet. Le `!important` est nécessaire :
+     la feuille de l'application fixe 14,5 px et la justification à tout
+     paragraphe du contenu, avec une spécificité supérieure à celle d'une
+     classe. */
+  p.cad-uma { font-size:18px !important; line-height:1.55 !important;
+              font-family:Georgia,"Times New Roman",serif; font-style:italic;
+              font-weight:400; color:#26364a !important;
+              margin:2px 0 6px !important; max-width:62ch;
+              border-left:3px solid #1a6b52; padding-left:20px;
+              text-align:left !important; }
+
   /* La barre d'onglets vient de `onglets.py`, comme sur les autres pages. */
 
 </style>
@@ -1349,7 +1369,8 @@ def _v_mesure():
     # deux fois : c'est la phrase qui ouvre le site, pas l'en-tête d'un
     # onglet de documentation. L'onglet commence donc directement par ce
     # qu'il apporte — les trois attributs.
-    st.markdown(_attributs(), unsafe_allow_html=True)
+    st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>' + _attributs(),
+                unsafe_allow_html=True)
 
 
 # --- 2 · comment la résilience est mesurée ----------------------------------

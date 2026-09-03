@@ -709,6 +709,15 @@ st.markdown(("""
     border-right: 1px solid #eef2f7;
     padding: 4px 12px 12px 0; margin: 2px 0 0;
   }
+  /* LES ENTRÉES RESPIRENT. Streamlit colle ses conteneurs d'élément les uns
+     aux autres : le fond de survol d'une ligne venait alors toucher celui de
+     la ligne au-dessus, et l'on croyait avoir survolé les deux. Quatre pixels
+     entre deux lignes suffisent à ce que la zone qui s'allume soit
+     visiblement UNE ligne — c'est peu, et c'est exactement ce qui manquait. */
+  div[class*="st-key-zone_nav"] div[data-testid="stElementContainer"]:has(
+      div[data-testid="stButton"]) {
+    margin: 3px 0 !important;
+  }
   div[class*="st-key-zone_nav"] div[data-testid="stElementContainer"],
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] {
     width: 100% !important; flex: 0 0 auto !important;
@@ -719,13 +728,13 @@ st.markdown(("""
   div[class*="st-key-zone_nav"] .nav-famille {
     font-size: 10px; font-weight: 700; letter-spacing: .11em;
     text-transform: uppercase; color: #2f6b4f;
-    margin: 16px 0 5px; padding-left: 10px;
+    margin: 20px 0 7px; padding-left: 10px;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button {
     display: flex !important; align-items: center !important;
     justify-content: flex-start !important;
     width: 100% !important; min-height: 30px !important; height: auto !important;
-    padding: 7px 10px !important; border-radius: 8px !important;
+    padding: 8px 10px !important; border-radius: 8px !important;
     border: none !important;
     background: transparent !important; box-shadow: none !important;
     transition: background .15s ease, color .15s ease;
@@ -932,6 +941,14 @@ st.markdown(("""
     justify-content: space-between; align-items: flex-start;
     padding: 15px 42px 18px; pointer-events: none;
   }
+  /* LE TITRE SE DÉCALE À DROITE, SOUS L'ILLUSTRATION ET NON SOUS LA MARQUE.
+     Aligné au même bord gauche qu'elle, il formait avec elle une seule
+     colonne de quatre lignes empilées dans le même angle, où l'on ne savait
+     plus laquelle était l'enseigne et laquelle le titre. Décalé, il occupe le
+     tiers clair de l'illustration — celui que le dégradé du fichier a
+     justement éclairci pour qu'on puisse y écrire. */
+  .bandeau-titre { margin-left: 132px; }
+  @media (max-width: 1100px) { .bandeau-titre { margin-left: 0; } }
   .bandeau-marque {
     display: flex; align-items: center; gap: 13px;
   }
@@ -978,9 +995,14 @@ st.markdown(("""
     font-size: 27px; font-weight: 800; color: #1f5b46;
     letter-spacing: -.02em; line-height: 1.1;
   }
+  /* PAS DE JUSTIFICATION. La feuille de l'application justifie tout
+     paragraphe de contenu ; sur deux lignes de cinquante caractères, cela
+     creusait des blancs entre les mots — « Understand,  measure  and
+     compare » — qu'on lisait comme un défaut de rendu. */
   .bandeau-titre .bt-sous {
-    font-size: 14px; font-weight: 500; color: #23384a; line-height: 1.45;
-    margin-top: 7px; max-width: 46ch;
+    font-size: 13.5px; font-weight: 500; color: #23384a; line-height: 1.45;
+    margin-top: 6px; max-width: 48ch; text-align: left !important;
+    hyphens: none;
   }
   @media (max-width: 900px) {
     .bandeau-titre .bt-sous { display: none; }
@@ -1891,7 +1913,13 @@ def _rendre_ruban():
             f'<div class="bm-texte">'
             f'<div class="bm-nom">APRI</div>'
             f'<div class="bm-filet"></div>'
-            f'<div class="bm-base">{T("a_titre_court")}</div>'
+            # LA MARQUE NE REDIT PLUS LE TITRE. Elle portait « Landscape
+            # resilience observatory », que le titre reprend mot pour mot en
+            # dessous sous la forme « APRI Observatory », suivi d'un
+            # sous-titre qui redit encore la même chose en une phrase. Trois
+            # énoncés du même renseignement dans le même angle. La marque dit
+            # maintenant QUI et OÙ — le sigle et le territoire ; le titre dit
+            # QUOI. Chacun sa question, aucune posée deux fois.
             f'<div class="bm-lieu">{T("a_lieu")}</div>'
             f'</div></div>'
             # LE TITRE EST POSÉ SUR L'IMAGE, EN BAS À GAUCHE, et pas au-dessus

@@ -124,11 +124,6 @@ TEXTES = {
     # vérifier avant d'avoir vu un seul chiffre, et chacune d'elles a sa page.
     # `{n}` n'y figure plus, et l'appel garde son argument sans l'utiliser —
     # il n'y a rien à casser du côté de l'appelant.
-    "po_intro": {
-        "en": "APRI measures the resilience of a landscape, understood as a "
-              "complex adaptive system.",
-        "fr": "APRI mesure la résilience d'un paysage, compris comme un "
-              "système complexe adaptatif."},
 
     # --- LE SOCLE DE PREUVES, EN QUATRE MARCHES
     # CHAQUE MARCHE SE LIT « MOT D'AVANT · NOMBRE · MOT D'APRÈS ». Découper
@@ -848,9 +843,11 @@ def render():
     # il est dit dimension par dimension. Le nombre reste compté dans le
     # fichier et arrondi à la centaine inférieure : « plus de » doit rester
     # vrai quel que soit le référentiel.
-    n_ind = _rond(sum(e["n"] for e in (m.get("dims") or {}).values()), 100)
-    st.markdown(f'<p class="uma-i" lang="{i18n.get_lang()}">'
-                f'{_e(T("po_intro", n=n_ind or 100))}</p>',
-                unsafe_allow_html=True)
+    # LA DÉFINITION D'APRI EST DITE UNE FOIS, ET C'EST DANS LE BANDEAU.
+    # Elle était ici en plus du sous-titre du bandeau, à cent pixels
+    # au-dessous : deux phrases pour un seul renseignement, dont la seconde
+    # arrivait juste après avoir été lue. La définition technique — le système
+    # complexe adaptatif — est remontée dans le cadre de résilience, où
+    # l'onglet « Ce que mesure APRI » existe pour elle.
     _entrees()
     _comprendre(m)
