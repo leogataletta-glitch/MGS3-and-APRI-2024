@@ -1850,14 +1850,17 @@ def _v_boucles():
     st.markdown(f'<p class="cad-bt-x">{_e(T("cad_bt_x"))}</p>',
                 unsafe_allow_html=True)
 
-    # LES QUATRE COULEURS RESTENT, LES PICTOGRAMMES NON. Une pousse, une
-    # flèche circulaire, une cible et une fiche ne disaient rien de plus que
-    # « symptôme », « boucle », « levier » et « action », écrits juste
-    # dessous ; le filet coloré suffit à ouvrir la case.
-    ETAPES = (("cad_b1", "#9b2c2c"), ("cad_b2", "#b45309"),
-              ("cad_b3", "#1e5a8e"), ("cad_b4", "#1a6b52"))
+    # UN SEUL VERT POUR LES QUATRE. Rouge, ambre, bleu, vert : quatre teintes
+    # pour quatre étapes du MÊME parcours laissaient croire à quatre natures
+    # différentes — un danger, un avertissement, une information, une réussite
+    # — là où il n'y a qu'un ordre de lecture. Le numéro le donne déjà. La
+    # couleur, elle, redevient ce qu'elle est ailleurs sur le site : celle du
+    # site, et rien de plus.
+    ETAPES = ("cad_b1", "cad_b2", "cad_b3", "cad_b4")
+    VERT = "#1a6b52"
     cases = []
-    for i, (k, coul) in enumerate(ETAPES, start=1):
+    for i, k in enumerate(ETAPES, start=1):
+        coul = VERT
         if i > 1:
             cases.append('<div class="cad-bp-fl">'
                          + icones.svg("chevron", couleur="#c8cfd8", taille=22)

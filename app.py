@@ -749,7 +749,7 @@ st.markdown(("""
     border-left: none;
     border-radius: 0 14px 14px 0;
     padding: 12px 12px 16px 16px;
-    margin: 14px 0 0 -2.6rem;
+    margin: 0 0 0 -2.6rem;
   }
   /* LES ENTRÉES RESPIRENT. Streamlit colle ses conteneurs d'élément les uns
      aux autres : le fond de survol d'une ligne venait alors toucher celui de
@@ -1020,10 +1020,21 @@ st.markdown(("""
     display: block !important; max-width: none !important;
   }
 
+  /* LE PIED, LUI, RESTE PLEINE LARGEUR : il est rendu hors des colonnes, et
+     c'est cette règle qui l'étend d'un bord à l'autre de la fenêtre. */
   .bandeau-haut {
     width: calc(100vw * var(--dz)) !important;
     max-width: calc(100vw * var(--dz)) !important;
     margin-left: calc(50% - 100vw * var(--dz) / 2);
+  }
+  /* L'ILLUSTRATION, ELLE, TIENT DANS SA COLONNE — et la déborde à droite du
+     seul rembourrage du bloc principal, pour aller toucher le bord de
+     l'écran comme le menu touche l'autre. Elle porte les deux classes ; la
+     règle qui suit celle du pied la reprend donc entièrement. */
+  .bandeau-haut.bandeau-enveloppe {
+    width: calc(100% + 2.6rem) !important;
+    max-width: calc(100% + 2.6rem) !important;
+    margin-left: 0 !important; margin-right: -2.6rem !important;
   }
   /* LES TEXTES SONT JUSTIFIÉS.
      Un paragraphe au fer à gauche laisse un bord droit en dents de scie qui,
@@ -1064,13 +1075,12 @@ st.markdown(("""
      cela le bloc se placerait par rapport à la fenêtre et glisserait au
      défilement. */
   div[class*="st-key-zone_ruban"] { position: relative; }
-  /* UN FILET DE BLANC SOUS LE BANDEAU. Le contenu commençait au pixel où
-     l'illustration finissait : la carte du territoire, sur l'accueil,
-     semblait découpée dans la photo plutôt que posée sur la page. Quatorze
-     pixels suffisent à séparer l'en-tête de ce qu'il coiffe — c'est la même
-     valeur que sur la colonne de gauche, pour que les deux partent d'une
-     seule ligne. */
-  div[class*="st-key-zone_page"] { margin-top: 14px !important; }
+  /* LES DEUX COLONNES PARTENT DU MÊME BORD HAUT, et c'est le bandeau qui
+     ouvre celle de droite. Le filet de blanc qui le séparait du contenu est
+     porté par son propre conteneur : sur les pages sans illustration, la
+     colonne de droite commence donc au même pixel que le menu. */
+  div[class*="st-key-zone_page"] { margin-top: 0 !important; }
+  div[class*="st-key-zone_ruban"] { margin: 0 0 14px !important; }
   /* LE SÉLECTEUR OUVRE LA COLONNE DE MENU. Il était posé en absolu dans
      l'angle du bandeau ; le bandeau ne paraît plus que sur l'accueil, et un
      réglage qui change de place selon la page n'est plus un réglage. Il
@@ -1667,16 +1677,20 @@ st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
 # hauteur, pour quatorze mots. Le contenu — cartes, tableaux, graphiques —
 # était comprimé d'autant, alors que c'est lui qu'on vient voir. En haut, sur
 # une seule ligne qui se replie si besoin, elle rend l'écran entier à la page.
-# LE BANDEAU EST AU-DESSUS DE TOUT, ET IL PREND TOUTE LA LARGEUR.
-# Le menu vient dessous, dans une colonne à gauche qui ne se replie pas :
-# c'est la géométrie d'un tableau de bord, et elle a deux avantages sur la
-# rangée horizontale qui la précédait. Les quatorze rubriques tiennent dans
-# une colonne sans jamais passer à la ligne ni être tronquées, et la rubrique
-# courante se lit d'un coup d'œil au lieu de se chercher dans une rangée.
-_ruban = st.container(key="zone_ruban")
+# LE MENU MONTE JUSQU'EN HAUT, ET LE BANDEAU SE RANGE À CÔTÉ DE LUI.
+# Le bandeau tenait toute la largeur au-dessus des deux colonnes : la colonne
+# de menu commençait alors deux cent cinquante pixels plus bas que le haut de
+# l'écran, et l'on descendait pour atteindre la première rubrique d'un site
+# dont l'en-tête, lui, ne dit rien qu'on ait à lire deux fois. Les deux
+# colonnes partent maintenant du même bord haut : le menu à gauche,
+# l'illustration en tête de la page, à sa droite.
 # La colonne de menu est étroite et fixe ; la page prend tout le reste.
 _col_nav, _col_page = st.columns([1, 5.0], gap="medium")
 _zone_nav = _col_nav.container(key="zone_nav")
+# LE BANDEAU EST DANS LA COLONNE DE DROITE, ET IL Y VIENT EN PREMIER : c'est
+# l'ordre de création des conteneurs qui fixe l'ordre à l'écran, pas celui
+# des appels qui les remplissent.
+_ruban = _col_page.container(key="zone_ruban")
 # Réservé maintenant, peint tout en bas : il doit venir après les deux
 # colonnes dans le flux, et son contenu n'est connu qu'une fois la page rendue.
 _pied = st.container(key="zone_pied")
