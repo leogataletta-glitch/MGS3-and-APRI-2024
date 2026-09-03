@@ -411,77 +411,83 @@ XLSX = ("application/vnd.openxmlformats-officedocument."
         "spreadsheetml.sheet")
 
 
-def _bloc(cle_titre, cle_desc, teinte, nom_fichier, mime, format_txt,
-          fabrique, poids=None):
-    with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc {teinte}">{T(cle_titre)}</div>',
-                    unsafe_allow_html=True)
-        st.markdown(
-            f'<p style="font-size:14.5px;line-height:1.6;color:#3c4761;'
-            f'margin:4px 0 10px">{T(cle_desc)}</p>', unsafe_allow_html=True)
-        # Un fichier source absent du dépôt ne doit pas emporter tout l'onglet :
-        # on signale le jeu manquant et les cinq autres restent téléchargeables.
-        try:
-            data = fabrique()
-        except Exception as err:
-            st.markdown(
-                f'<p style="font-size:13px;color:#a8690a;background:#fdf3e3;'
-                f'border:1px solid #f0dcb8;border-radius:10px;padding:9px 13px;'
-                f'margin:0">{T("d_indispo", f=nom_fichier)}<br>'
-                f'<span style="font-size:11.5px;color:#8a6a3a">'
-                f'{type(err).__name__}</span></p>', unsafe_allow_html=True)
-            return
+_STYLE = """
+<style>
+  /* UNE LIGNE PAR DOCUMENT, SÉPARÉE PAR UN FILET. Sept cartes encadrées
+     donnaient sept objets à examiner ; sept lignes donnent une liste, ce
+     qu'une page de téléchargement doit être. */
+  .dl-t { font-size:15px; font-weight:600; color:#101728;
+          line-height:1.45; padding:2px 0; }
+  div[class*="st-key-zone_page"] div[data-testid="stHorizontalBlock"]:has(
+      .dl-t) {
+      border-bottom:1px solid #edecea; padding:10px 0 12px; margin:0;
+  }
+  div[data-testid="stDownloadButton"] > button {
+      border-radius:9px !important; min-height:36px !important;
+      border:1px solid #cddbd2 !important; background:#fff !important;
+  }
+  div[data-testid="stDownloadButton"] > button p {
+      font-size:12.5px !important; font-weight:600 !important;
+      color:#1a6b52 !important;
+  }
+  div[data-testid="stDownloadButton"] > button:hover {
+      background:#eaf2ed !important; border-color:#1a6b52 !important;
+  }
+</style>
+"""
 
-        col_a, col_b = st.columns([1, 2])
-        with col_a:
-            st.download_button(
-                f"{T('d_bouton')} · {format_txt}", data=data,
-                file_name=nom_fichier, mime=mime,
-                key=f"dl_{nom_fichier}_{i18n.get_lang()}",
-                use_container_width=True)
-        with col_b:
-            st.markdown(
-                f'<p style="font-size:12px;color:#6b7590;margin:8px 0 0">'
-                f'{nom_fichier} · {len(data) / 1024:.0f} Ko</p>',
-                unsafe_allow_html=True)
+
+def _bloc(cle_titre, nom_fichier, mime, format_txt, fabrique):
+    """Une ligne : le nom du document, et le bouton qui le télécharge.
+
+    LA PAGE NE COMMENTE PLUS SES FICHIERS. Chaque jeu portait un cartouche —
+    un titre, un paragraphe de description, un bouton, le nom du fichier et
+    son poids — et la page entière deux encadrés d'avertissement avant même
+    le premier. On venait y chercher un fichier, on lisait une notice. Le
+    titre dit ce que le document contient ; ce qui doit être dit de plus long
+    l'est dans la feuille « lisez-moi » du classeur, où il reste avec les
+    données au lieu de tenir l'écran.
+    """
+    # Un fichier source absent du dépôt ne doit pas emporter tout l'onglet :
+    # on signale le jeu manquant et les autres restent téléchargeables.
+    try:
+        data = fabrique()
+    except Exception as err:
+        st.markdown(
+            f'<p style="font-size:13px;color:#a8690a;background:#fdf3e3;'
+            f'border:1px solid #f0dcb8;border-radius:10px;padding:9px 13px;'
+            f'margin:0 0 8px">{T("d_indispo", f=nom_fichier)}<br>'
+            f'<span style="font-size:11.5px;color:#8a6a3a">'
+            f'{type(err).__name__}</span></p>', unsafe_allow_html=True)
+        return
+
+    g, d = st.columns([3.4, 1], vertical_alignment="center")
+    with g:
+        st.markdown(f'<div class="dl-t">{T(cle_titre)}</div>',
+                    unsafe_allow_html=True)
+    with d:
+        st.download_button(
+            f"{T('d_bouton')} · {format_txt}", data=data,
+            file_name=nom_fichier, mime=mime,
+            key=f"dl_{nom_fichier}_{i18n.get_lang()}",
+            use_container_width=True)
 
 
 def render():
     lang = i18n.get_lang()
+    st.markdown(_STYLE, unsafe_allow_html=True)
 
-    # PAS DE TITRE DE PAGE : la colonne de menu marque déjà la rubrique. Le
-    # sous-titre reste, lui : il dit ce que les sept fichiers ont en commun,
-    # ce que « Données » ne dit pas.
-    st.markdown(
-        '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
-        'text-transform:uppercase;margin:2px 0 6px;font-weight:600">'
-        + T("d_sous_titre") + "</p>", unsafe_allow_html=True)
-
-    st.markdown(
-        '<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
-        'solid #1a6bb0;border-radius:14px;padding:13px 17px;font-size:14.5px;'
-        'color:#3c4761;box-shadow:0 1px 2px rgba(16,23,40,.05),'
-        '0 8px 20px rgba(16,23,40,.06);margin:10px 0 6px">'
-        + T("d_intro") + "</div>", unsafe_allow_html=True)
-    st.markdown(
-        '<div style="background:#fdf7ec;border:1px solid #f0dcb8;border-left:5px '
-        'solid #d99b28;border-radius:14px;padding:13px 17px;font-size:14.5px;'
-        'color:#5b4a2b;margin:0 0 14px">' + T("d_avert") + "</div>",
-        unsafe_allow_html=True)
-
-    _bloc("d1_titre", "d1_desc", "", "01_resultats_descriptifs.xlsx", XLSX,
+    _bloc("d1_titre", "01_resultats_descriptifs.xlsx", XLSX,
           "Excel", lambda: _fichier_descriptif(lang))
-    _bloc("d2_titre", "d2_desc", "vert", "02_indicateurs_resilience.xlsx", XLSX,
+    _bloc("d2_titre", "02_indicateurs_resilience.xlsx", XLSX,
           "Excel", lambda: _fichier_indicateurs(lang))
-    _bloc("d3_titre", "d3_desc", "ambre", "03_ventilation_section_souspop.xlsx",
+    _bloc("d3_titre", "03_ventilation_section_souspop.xlsx",
           XLSX, "Excel", lambda: _fichier_ventilation(lang))
-    _bloc("d4_titre", "d4_desc", "", "04_scores_composites.xlsx", XLSX,
+    _bloc("d4_titre", "04_scores_composites.xlsx", XLSX,
           "Excel", lambda: _fichier_composite(lang))
-    _bloc("d5_titre", "d5_desc", "vert", "05_base_individuelle_anonymisee.csv",
+    _bloc("d5_titre", "05_base_individuelle_anonymisee.csv",
           "text/csv", "CSV", _fichier_brut)
-    _bloc("d6_titre", "d6_desc", "ambre", "06_dictionnaire_questionnaire.xlsx",
+    _bloc("d6_titre", "06_dictionnaire_questionnaire.xlsx",
           XLSX, "Excel", lambda: _fichier_dictionnaire(lang))
-    _bloc("d7_titre", "d7_desc", "", "07_organisations_communautaires.xlsx",
+    _bloc("d7_titre", "07_organisations_communautaires.xlsx",
           XLSX, "Excel", lambda: _fichier_ocb(lang))
-
-    st.caption(T("credit"))

@@ -2179,11 +2179,12 @@ with _c_contenu:
         interventions_page.render()
 
     if app_mode == MODE_DONNEES:
+        # LA PAGE NE PORTE QUE LES FICHIERS. Sous les sept documents venait
+        # le fil des livraisons récentes — des cartouches, des descriptions,
+        # des boutons qui mènent ailleurs. On vient ici prendre un fichier,
+        # pas lire ce qui a été calculé cette semaine : chaque écran dit ce
+        # qu'il a à dire, et celui-ci n'a que des documents à donner.
         telechargements_page.render()
-        # Les livraisons récentes ont suivi les jeux de données : c'est ici
-        # qu'on vient voir ce qui est disponible, et donc ce qui vient
-        # d'arriver.
-        actualites.rendre(_bascule)
 
 
 # LE PIED EST RENDU HORS DE LA COLONNE DE DROITE, pour qu'il prenne toute la
