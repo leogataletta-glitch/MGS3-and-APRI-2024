@@ -181,16 +181,10 @@ STYLE = """
      défilent, et c'est vingt pixels perdus sur celle qui doit tenir dans un
      écran. La carte les reprend. */
   div[data-testid="stMainBlockContainer"] { padding-top: 0 !important; }
-  /* LE BANDEAU RESPIRE. À cent cinquante-deux pixels il n'avait la place
-     que d'une bande de verdure ; le titre y est maintenant posé dedans, et il
-     lui faut de quoi tenir sans toucher le bord. Deux cent dix pixels : le
-     paysage se voit, le titre s'y pose, et l'accueil tient encore d'un seul
-     regard.
-     LES RÉGLAGES DE LA MARQUE ONT DISPARU AVEC ELLE — elle ne figure plus sur
-     le bandeau, et sept règles la repositionnaient encore. */
-  .bandeau-fond { height: 210px !important; }
-  .bandeau-logo { top: 14px !important; right: 24px !important;
-                  height: 44px !important; }
+  /* LE BANDEAU N'A PLUS DE RÉGLAGE PROPRE À L'ACCUEIL. Il était plus court
+     ici et portait un titre en surimpression que cette feuille repositionnait ;
+     le fichier composé porte tout, il est le même sur les quatorze pages, et
+     sa hauteur suit sa largeur. Six règles de moins à tenir d'accord. */
 
   /* ================ LA PAGE D'ATTERRISSAGE ============================
      Une seule règle gouverne tout : rien n'est encadré sauf ce qui se
