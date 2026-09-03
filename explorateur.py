@@ -679,12 +679,16 @@ def render(cat, mode=None):
     else:
         mesure = None
 
-    st.markdown(
-        f'<div class="titre-bloc">'
-        f'{_e(T("ex_t_score") if mesure == "score" else T("ex_titre"))}</div>'
-        f'<p class="ex-note" style="margin:0 0 12px;max-width:96ch">'
-        f'{_e(T("ex_intro_score") if mesure == "score" else T("ex_intro"))}'
-        f'</p>', unsafe_allow_html=True)
+    # LE TITRE ET SON CHAPEAU NE SONT RENDUS QUE POUR LES SCORES. En mesure
+    # brute, l'onglet au-dessus dit déjà « Questionnaire ménage » : répéter
+    # « Explorateur de réponses » juste en dessous, avec un paragraphe qui
+    # explique ce que les commandes montrent d'elles-mêmes, ne faisait
+    # qu'éloigner les commandes du haut de l'écran.
+    if mesure == "score":
+        st.markdown(
+            f'<div class="titre-bloc">{_e(T("ex_t_score"))}</div>'
+            f'<p class="ex-note" style="margin:0 0 12px;max-width:96ch">'
+            f'{_e(T("ex_intro_score"))}</p>', unsafe_allow_html=True)
 
     if mesure is None:
         mesure = st.radio(

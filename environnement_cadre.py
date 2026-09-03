@@ -48,8 +48,6 @@ TEXTES = {
     "env_onglet": {"en": "Environmental resilience",
                    "fr": "Résilience environnementale"},
     "env_onglet_apri": {"en": "The APRI framework", "fr": "Le cadre APRI"},
-    "env_titre": {"en": "Monitoring environmental resilience",
-                  "fr": "Le monitoring de la résilience environnementale"},
 
     # ---------------- strate 1
 
@@ -155,6 +153,13 @@ STYLE = """
                 width:5px; height:5px; border-radius:50%; background:#c3ccda; }
   .ev-lab  { font-size:11px; letter-spacing:.09em; text-transform:uppercase;
              font-weight:700; color:#8a93a5; margin:0 0 7px; }
+  /* LE TEXTE EST JUSTIFIE ET PREND TOUTE LA LARGEUR. Les paragraphes
+     etaient bornes a quatre-vingt-seize caracteres et alignes a gauche :
+     sur un ecran large, ils laissaient un tiers de la page vide a leur
+     droite, et le bord droit en dents de scie faisait paraitre la colonne
+     plus etroite encore. */
+  .ev-x, p.ev-x { max-width:none !important; text-align:justify !important;
+       text-justify:inter-word; hyphens:auto; }
   .ev-etage{ font-size:11px; letter-spacing:.11em; text-transform:uppercase;
              font-weight:700; color:#a7b0be; margin:26px 0 8px; }
   .ev-verdict { font-size:11.5px; color:#1a8a4f; font-weight:600;
@@ -307,10 +312,8 @@ def render(complement=None):
     """
     c = _contenu()
     st.markdown(STYLE, unsafe_allow_html=True)
-    st.markdown(
-        f'<h3 style="font-size:17.5px;font-weight:700;color:{ENCRE};'
-        f'letter-spacing:-.02em;margin:6px 0 12px">{_e(T("env_titre"))}</h3>'
-        , unsafe_allow_html=True)
+    # PAS DE TITRE DE PAGE : la barre d'onglets porte deja « Environmental
+    # data », et la colonne de menu la rubrique.
 
     if not c:
         st.info(T("env_absent"))
@@ -331,12 +334,15 @@ def render(complement=None):
     st.markdown(f'<div class="ev-etage">{_e(T("env_s2"))}</div>',
                 unsafe_allow_html=True)
 
+    # TOUT EST REPLIE, ET C'EST LA MEME REGLE POUR LES SIX. Trois sources
+    # deroulees puis six volets, c'etait deux traitements pour un seul
+    # contenu : une methode. Repliee, la page tient en une liste de titres
+    # qu'on ouvre quand on veut la verifier — ce qui est exactement
+    # l'usage d'un protocole.
     ta = c["intro"]["taxons"]
-    with st.container(border=True):
+    with st.expander(T("env_src1_t")):
         st.markdown(
-            f'<div style="font-size:15.5px;font-weight:700;color:{ENCRE}">'
-            f'{_e(T("env_src1_t"))}</div>'
-            f'<p class="ev-x" style="margin-top:6px;max-width:96ch">'
+            f'<p class="ev-x" style="margin-top:2px">'
             f'{_e(c["intro"]["terrain"])}</p>'
             f'<div class="ev-lab" style="margin:14px 0 7px">'
             f'{_e(T("env_taxons"))}</div>'
@@ -351,11 +357,9 @@ def render(complement=None):
             + '</div>', unsafe_allow_html=True)
         st.caption(c["intro"]["transects"])
 
-    with st.container(border=True):
+    with st.expander(T("env_src2_t")):
         st.markdown(
-            f'<div style="font-size:15.5px;font-weight:700;color:{ENCRE}">'
-            f'{_e(T("env_src2_t"))}</div>'
-            f'<p class="ev-x" style="margin-top:6px;max-width:96ch">'
+            f'<p class="ev-x" style="margin-top:2px">'
             f'{_e(c["intro"]["geo"])}</p>'
             '<div class="ev-flux" style="margin-top:12px">'
             + "".join(
@@ -370,11 +374,9 @@ def render(complement=None):
             + '</div>', unsafe_allow_html=True)
         st.caption(c["intro"]["geo_fin"])
 
-    with st.container(border=True):
+    with st.expander(T("env_src3_t")):
         st.markdown(
-            f'<div style="font-size:15.5px;font-weight:700;color:{ENCRE}">'
-            f'{_e(T("env_src3_t"))}</div>'
-            f'<p class="ev-x" style="margin-top:6px;max-width:96ch">'
+            f'<p class="ev-x" style="margin-top:2px">'
             f'{_e(c["intro"]["menages"])}</p>'
             '<ul class="ev-puce" style="margin-top:8px">'
             + "".join(f'<li>{_e(p)}</li>' for p in c["menages"]) + '</ul>',

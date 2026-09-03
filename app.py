@@ -286,6 +286,26 @@ st.markdown(("""
      Le blanc est rendu plus bas, dans la page elle-même, où il sépare
      quelque chose de quelque chose. */
   div[data-testid="stMainBlockContainer"] { padding-top: 0 !important; }
+  /* UNE FEUILLE DE STYLE OCCUPE UNE CASE DANS LA COLONNE. Chaque appel à
+     `st.markdown("<style>…")` produit un bloc de hauteur nulle — invisible,
+     mais compté par le `gap` du conteneur vertical : deux d'entre eux, l'un
+     à la racine et l'autre dans le ruban, décollaient le bandeau de vingt-
+     huit pixels du haut de l'écran sans que rien ne soit dessiné dedans. On
+     les retire de la mise en page ; le `:only-child` garantit qu'on ne vise
+     que les blocs qui ne contiennent QUE du style, jamais un texte qui
+     porterait sa mise en forme avec lui. */
+  div[data-testid="stElementContainer"]:has(
+      div[data-testid="stMarkdownContainer"] > style:only-child),
+  /* ET L'ENVELOPPE QUI NE CONTIENT QUE LUI. Streamlit interpose un bloc
+     autour de chaque case ; masquer la case laissait l'enveloppe, vide et
+     haute de zéro, occuper encore une place dans la colonne — donc encore
+     un `gap`. On masque les deux, jamais une enveloppe qui porterait autre
+     chose à côté. */
+  div[data-testid="stVerticalBlock"] > div:has(
+      > div[data-testid="stElementContainer"]:only-child
+        div[data-testid="stMarkdownContainer"] > style:only-child) {
+      display: none !important;
+  }
   div[data-testid="stVerticalBlock"] { gap: .65rem; }
   div[data-testid="stElementContainer"] { margin-bottom: 0; }
 
@@ -718,8 +738,18 @@ st.markdown(("""
        colonne reprend donc exactement sa couleur, et les deux se lisent
        comme une seule zone de cadre autour du contenu blanc. */
     background: linear-gradient(180deg, #f0efed 0%, #f7f6f4 100%);
-    border-radius: 14px;
-    padding: 12px 12px 16px; margin: 2px 0 0 -10px;
+    /* ELLE TOUCHE LE BORD GAUCHE DE L'ÉCRAN. La gouttière du bloc principal
+       — 2,6 rem — laissait une bande blanche entre le bord de la fenêtre et
+       la colonne, alors que le bandeau au-dessus, lui, va d'un bord à
+       l'autre : les deux zones de cadre ne s'alignaient pas et la colonne
+       paraissait posée de travers. La marge négative annule exactement cette
+       gouttière, le bord et les deux coins de gauche disparaissent avec
+       elle, et le rembourrage gauche est augmenté d'autant pour que les
+       rubriques ne collent pas au bord. */
+    border-left: none;
+    border-radius: 0 14px 14px 0;
+    padding: 12px 12px 16px 16px;
+    margin: 14px 0 0 -2.6rem;
   }
   /* LES ENTRÉES RESPIRENT. Streamlit colle ses conteneurs d'élément les uns
      aux autres : le fond de survol d'une ligne venait alors toucher celui de
@@ -1029,6 +1059,22 @@ st.markdown(("""
      cela le bloc se placerait par rapport à la fenêtre et glisserait au
      défilement. */
   div[class*="st-key-zone_ruban"] { position: relative; }
+  /* UN FILET DE BLANC SOUS LE BANDEAU. Le contenu commençait au pixel où
+     l'illustration finissait : la carte du territoire, sur l'accueil,
+     semblait découpée dans la photo plutôt que posée sur la page. Quatorze
+     pixels suffisent à séparer l'en-tête de ce qu'il coiffe — c'est la même
+     valeur que sur la colonne de gauche, pour que les deux partent d'une
+     seule ligne. */
+  div[class*="st-key-zone_page"] { margin-top: 14px !important; }
+  /* L'ENVELOPPE DU SÉLECTEUR NE COMPTE PLUS DANS LA COLONNE. Le bloc de
+     langue est en position absolue : sa hauteur est nulle, mais l'enveloppe
+     que Streamlit lui pose autour restait une case du ruban, et le `gap` de
+     cette colonne poussait le bandeau à dix pixels du haut de l'écran.
+     `display: contents` retire l'enveloppe de la mise en page sans rien
+     retirer de ce qu'elle contient. */
+  div[data-testid="stLayoutWrapper"]:has(> div[class*="st-key-zone_langue"]) {
+    display: contents !important;
+  }
   div[class*="st-key-zone_langue"] {
     position: absolute !important; right: calc(2.6rem * var(--dz));
     bottom: 12px; z-index: 6; width: auto !important;
@@ -1451,6 +1497,33 @@ TEXTES_NAV = {
     "ra_srcd_satellite": {"en": "Forest cover and vegetation indices",
                           "fr": "Couverture forestière et indices de "
                                 "végétation"},
+    "ra_srcd_institutions": {
+        "en": "Communal authorities, services and local organisations",
+        "fr": "Autorités communales, services et organisations locales"},
+    "ra_srcd_biodiversite": {
+        "en": "Field inventories of species and habitats",
+        "fr": "Inventaires de terrain, espèces et habitats"},
+    # L'ONGLET EXISTE AVANT SES DONNÉES, ET C'EST VOULU. Les deux enquêtes
+    # ont été menées ; leurs fichiers ne sont pas encore versés sur la
+    # plateforme. Un onglet qui annonce l'attente vaut mieux qu'un onglet
+    # absent : le lecteur sait que la mesure existe, et il sait qu'il la
+    # trouvera ici. Rien n'est inventé en attendant.
+    "ra_attente_t": {"en": "Data not yet loaded",
+                     "fr": "Données pas encore versées"},
+    "ra_attente_inst": {
+        "en": "The institutional survey has been carried out. Its answers "
+              "are being cleaned and coded, and will be published on this "
+              "page as soon as they are loaded onto the platform.",
+        "fr": "L'enquête institutionnelle a été réalisée. Ses réponses sont "
+              "en cours d'apurement et de codage ; elles seront publiées sur "
+              "cette page dès leur versement sur la plateforme."},
+    "ra_attente_bio": {
+        "en": "The biodiversity survey has been carried out. Its inventories "
+              "are being consolidated and will be published on this page as "
+              "soon as they are loaded onto the platform.",
+        "fr": "L'enquête biodiversité a été réalisée. Ses inventaires sont "
+              "en cours de consolidation ; ils seront publiés sur cette page "
+              "dès leur versement sur la plateforme."},
 
     # --- les quatre familles de la colonne de menu
     "nav_g_comprendre": {"en": "Understand", "fr": "Comprendre"},
@@ -1470,6 +1543,10 @@ TEXTES_NAV = {
     "ra_src_menages": {"en": "Household questionnaire",
                        "fr": "Questionnaire ménage"},
     "ra_src_satellite": {"en": "Satellite", "fr": "Satellite"},
+    "ra_src_institutions": {"en": "Institutional survey",
+                            "fr": "Enquête institutionnelle"},
+    "ra_src_biodiversite": {"en": "Biodiversity survey",
+                            "fr": "Enquête biodiversité"},
     "ra_deplier_dim": {
         "en": "Unfold one dimension in full — its indicators, one by one",
         "fr": "Déplier une dimension en entier — ses indicateurs, un par un"},
@@ -1966,11 +2043,26 @@ with _c_contenu:
             # seul des deux à la fois : ils ne se ventilent pas pareil, et
             # les empiler ferait deux écrans sur une page.
             _src = onglets.barre(
-                "ra_source", ["menages", "satellite"],
+                "ra_source",
+                ["menages", "institutions", "biodiversite", "satellite"],
                 titre=lambda c: T("ra_src_" + c),
                 description=lambda c: T("ra_srcd_" + c), defaut="menages")
             if _src == "satellite":
                 satellite_page.render()
+            elif _src in ("institutions", "biodiversite"):
+                _msg = T("ra_attente_inst" if _src == "institutions"
+                         else "ra_attente_bio")
+                st.markdown(
+                    f'<div style="border:1px solid #e4e2de;'
+                    f'background:#faf9f7;border-radius:12px;'
+                    f'padding:20px 22px;margin:6px 0 4px;max-width:96ch">'
+                    f'<div style="font-size:12px;letter-spacing:.09em;'
+                    f'text-transform:uppercase;color:#8a7f6d;'
+                    f'font-weight:600;margin-bottom:7px">'
+                    f'{T("ra_attente_t")}</div>'
+                    f'<p style="margin:0;font-size:14px;line-height:1.6;'
+                    f'color:#3c4761;text-align:justify">{_msg}</p>'
+                    f'</div>', unsafe_allow_html=True)
             else:
                 explorateur.render(_cat, mode="brut")
 

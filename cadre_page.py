@@ -328,6 +328,52 @@ TEXTES = {
         "fr": "Pour chaque levier : effet attendu sur le score, faisabilité, "
               "acteurs clés, horizon de mise en œuvre, et les indicateurs de "
               "performance qui diront si cela a marché."},
+    # --- les diagrammes de boucles causales, en quatre temps
+    "cad_bt": {"en": "Causal loop diagrams",
+               "fr": "Diagrammes de boucles causales"},
+    "cad_bt_x": {
+        "en": "See how causes and effects feed back into each other — and "
+              "where action can change the system.",
+        "fr": "Voir comment les causes et les effets se répondent — et où "
+              "l'action peut changer le système."},
+    "cad_b1_t": {"en": "The symptom", "fr": "Le symptôme"},
+    "cad_b1_x": {"en": "Start from a critical indicator",
+                 "fr": "Partir d'un indicateur critique"},
+    "cad_b1_e": {"en": "Falling tree cover",
+                 "fr": "Couvert arboré en baisse"},
+    "cad_b2_t": {"en": "The loop", "fr": "La boucle"},
+    "cad_b2_x": {"en": "Understand what reinforces the problem",
+                 "fr": "Comprendre ce qui renforce le problème"},
+    "cad_b2_e": {"en": "Deforestation ↔ declining yields",
+                 "fr": "Déforestation ↔ baisse des rendements"},
+    "cad_b3_t": {"en": "The lever", "fr": "Le levier"},
+    "cad_b3_x": {"en": "Identify where intervention can change the system",
+                 "fr": "Repérer où une intervention change le système"},
+    "cad_b3_e": {"en": "Access to alternatives",
+                 "fr": "Accès à des solutions de remplacement"},
+    "cad_b4_t": {"en": "The action", "fr": "L'action"},
+    "cad_b4_x": {"en": "Translate the lever into an intervention",
+                 "fr": "Traduire le levier en intervention"},
+    "cad_b4_e": {"en": "Action sheet + monitoring",
+                 "fr": "Fiche d'action + suivi"},
+    "cad_bl_t": {"en": "How to read a loop", "fr": "Comment lire une boucle"},
+    "cad_bl_p_t": {"en": "Same direction", "fr": "Même sens"},
+    "cad_bl_p_x": {"en": "If A increases, B increases.",
+                   "fr": "Si A augmente, B augmente."},
+    "cad_bl_m_t": {"en": "Opposite direction", "fr": "Sens contraire"},
+    "cad_bl_m_x": {"en": "If A increases, B decreases.",
+                   "fr": "Si A augmente, B diminue."},
+    "cad_bl_r": {"en": "R — Reinforcing", "fr": "R — Renforçante"},
+    "cad_bl_r_x": {"en": "Amplifies change", "fr": "Amplifie le changement"},
+    "cad_bl_b": {"en": "B — Balancing", "fr": "B — Équilibrante"},
+    "cad_bl_b_x": {"en": "Counteracts change",
+                   "fr": "Contrarie le changement"},
+    "cad_bl_i_t": {"en": "Important", "fr": "Important"},
+    "cad_bl_i_x": {
+        "en": "“+” does not mean good and “−” does not mean bad. They "
+              "indicate the direction of the relationship.",
+        "fr": "« + » ne veut pas dire bon et « − » ne veut pas dire mauvais. "
+              "Ils indiquent le sens de la relation."},
     "cad_lecture": {"en": "How to read a loop", "fr": "Comment lire une boucle"},
     "cad_lecture_x": {
         "en": "Each arrow carries a polarity. **+** the two variables move "
@@ -909,6 +955,71 @@ STYLE = """
               border-bottom:3.5px solid transparent; }
 
   /* Les deux méthodes de normalisation, séparées par un filet vertical. */
+  /* --- les diagrammes de boucles causales ---------------------------------
+     LE PARCOURS EN QUATRE TEMPS, PUIS LA CONVENTION DE NOTATION, séparés par
+     un filet. Le premier explique une démarche, la seconde une écriture :
+     les mettre à la suite sans rien entre eux les ferait lire comme six
+     étapes d'une même chose. */
+  .cad-bt { font-size:27px; font-weight:700; color:#1a4d3a;
+       font-family:Georgia,"Times New Roman",serif; letter-spacing:-.01em;
+       margin:2px 0 4px; }
+  p.cad-bt-x { font-size:13.5px !important; color:#3c4761 !important;
+       line-height:1.5 !important; margin:0 0 26px !important;
+       text-align:left !important; }
+  .cad-bp { display:flex; align-items:flex-start; gap:0; margin:0 0 8px; }
+  .cad-bp-e { flex:1 1 0; min-width:0; display:flex; flex-direction:column;
+       align-items:center; text-align:center; padding:0 12px; }
+  .cad-bp-fl { flex:0 0 46px; display:flex; justify-content:center;
+       padding-top:44px; }
+  .cad-bp-i { width:96px; height:96px; border-radius:50%; flex:0 0 96px;
+       display:flex; align-items:center; justify-content:center; }
+  .cad-bp-fi { width:34px; height:2.5px; border-radius:2px; margin:16px 0 14px;
+       opacity:.85; }
+  .cad-bp-t { font-size:13px; font-weight:700; letter-spacing:.06em;
+       line-height:1.3; }
+  .cad-bp-x { font-size:13px; color:#101728; line-height:1.45; margin-top:9px;
+       max-width:26ch; }
+  .cad-bp-ex { font-size:12.5px; color:#5a6a80; font-style:italic;
+       line-height:1.45; margin-top:9px; max-width:26ch; }
+  @media (max-width: 1100px) {
+    .cad-bp { flex-wrap:wrap; row-gap:26px; }
+    .cad-bp-e { flex:1 1 44%; }
+    .cad-bp-fl { display:none; }
+  }
+  .cad-bl { border-top:1px solid #e9eef4; margin-top:26px; padding-top:20px; }
+  .cad-bl-h { font-size:12.5px; font-weight:700; letter-spacing:.09em;
+       color:#101728; text-align:center; margin-bottom:20px; }
+  .cad-bl-g { display:grid; gap:0 26px; align-items:center;
+       grid-template-columns:1fr 1.15fr 1fr; }
+  .cad-bl-g > div:nth-child(2) { border-left:1px solid #e9eef4;
+       border-right:1px solid #e9eef4; padding:0 26px; }
+  @media (max-width: 1000px) {
+    .cad-bl-g { grid-template-columns:1fr; row-gap:26px; }
+    .cad-bl-g > div:nth-child(2) { border:0; padding:0; }
+  }
+  .cad-bs { display:flex; align-items:flex-start; gap:14px; margin-bottom:22px; }
+  .cad-bs-p { width:46px; height:46px; flex:0 0 46px; border-radius:50%;
+       display:flex; align-items:center; justify-content:center;
+       font-size:19px; font-weight:700; }
+  .cad-bs-t { font-size:13px; font-weight:700; }
+  .cad-bs-x { font-size:12.5px; color:#3c4761; margin-top:3px;
+       line-height:1.45; }
+  .cad-bs-f { font-size:12.5px; color:#5a6a80; margin-top:5px;
+       font-variant-numeric:tabular-nums; }
+  .cad-bl-d { display:flex; gap:14px; }
+  .cad-bl-d > div { flex:1 1 0; text-align:center; }
+  .cad-bl-n { font-size:13px; font-weight:700; margin-top:6px; }
+  .cad-bl-s { font-size:12px; color:#5a6a80; margin-top:3px; }
+  .cad-bl-i { display:flex; gap:13px; align-items:flex-start;
+       background:#f4f6f5; border-radius:12px; padding:14px 16px; }
+  .cad-bl-ii { width:32px; height:32px; flex:0 0 32px; border-radius:50%;
+       background:#fff; display:flex; align-items:center;
+       justify-content:center; }
+  .cad-bl-it { font-size:13px; font-weight:700; color:#101728; }
+  p.cad-bl-ix { font-size:12.5px !important; color:#3c4761 !important;
+       line-height:1.55 !important; margin:4px 0 0 !important;
+       text-align:left !important; }
+
   /* --- la liste des indicateurs -------------------------------------------
      L'ÉCHELLE PREND LA COLONNE LA PLUS LARGE. Onze paliers écrits à la suite
      tiennent sur deux ou trois lignes ; le nom de l'indicateur, lui, tient
@@ -949,13 +1060,11 @@ STYLE = """
   .cad-ch-e { flex:1 1 0; min-width:0; display:flex; flex-direction:column;
               align-items:center; text-align:center; padding:0 10px; }
   .cad-ch-fl { flex:0 0 44px; display:flex; align-items:flex-start;
-               justify-content:center; padding-top:62px; }
+               justify-content:center; padding-top:52px; }
   .cad-ch-t { font-size:12.5px; font-weight:700; letter-spacing:.09em;
               text-transform:uppercase; color:#1a6b52; line-height:1.3;
-              min-height:32px; }
-  .cad-ch-i { width:74px; height:74px; border-radius:50%; background:#f1f4f2;
-              display:flex; align-items:center; justify-content:center;
-              margin:6px 0 14px; flex:0 0 74px; }
+              min-height:32px; padding-bottom:14px; margin-bottom:14px;
+              border-bottom:2px solid #dbe7e0; width:74%; }
   .cad-ch-v { font-size:21px; font-weight:700; color:#101728;
               letter-spacing:-.02em; line-height:1.25; }
   .cad-ch-s { font-size:12px; color:#5a6a80; line-height:1.45; margin-top:4px;
@@ -1573,10 +1682,15 @@ def _v_score(stats):
     une sixième étape : elles disent COMMENT la deuxième s'exécute, et une
     formule posée dans la rangée aurait cassé la lecture d'un bout à l'autre.
     """
-    ETAPES = (("cad_e1", "goutte"), ("cad_e2", "jauge"), ("cad_e3", "barres"),
-              ("cad_e4", "personnes"), ("cad_e5", "bouclier"))
+    # PAS DE PICTOGRAMME SUR CETTE CHAÎNE. Une goutte, une jauge, un
+    # histogramme, un groupe et un bouclier illustraient cinq opérations de
+    # calcul : ils décoraient sans rien dire de plus que les intitulés, et le
+    # disque qui les portait coûtait cent pixels de hauteur sur une rangée qui
+    # doit se lire d'un seul coup d'œil. Le chiffre est ce qui compte ici, et
+    # il monte d'autant.
+    ETAPES = ("cad_e1", "cad_e2", "cad_e3", "cad_e4", "cad_e5")
     cases = []
-    for i, (k, ic) in enumerate(ETAPES):
+    for i, k in enumerate(ETAPES):
         if i:
             cases.append('<div class="cad-ch-fl">'
                          + icones.svg("chevron", couleur="#8fb39c", taille=22)
@@ -1584,8 +1698,6 @@ def _v_score(stats):
         cases.append(
             '<div class="cad-ch-e">'
             f'<div class="cad-ch-t">{_e(T(k + "_t"))}</div>'
-            '<div class="cad-ch-i">'
-            + icones.svg(ic, couleur=VERT_APRI, taille=30) + '</div>'
             f'<div class="cad-ch-v">{_e(T(k + "_v"))}</div>'
             f'<div class="cad-ch-s">{_e(T(k + "_s"))}</div>'
             f'<p class="cad-ch-x">{_e(T(k + "_x"))}</p></div>')
@@ -1685,30 +1797,118 @@ def _v_indicateurs():
 
 
 # --- 5 · les boucles de rétroaction ----------------------------------------
-def _v_boucles():
-    st.markdown(
-        _titre("cad_dbc", marge=4)
-        + f'<p class="cad-note" style="max-width:92ch">{_e(T("cad_dbc_x"))}</p>'
-        '<div class="cad-grille">'
-        + "".join(
-            f'<div style="flex:1 1 220px;min-width:200px;'
-            f'border-left:3px solid {c};padding:2px 0 2px 14px">'
-            f'<div style="font-size:13.5px;font-weight:700;color:{ENCRE}">'
-            f'{_e(T(k + "_t"))}</div>'
-            f'<div style="font-size:12px;color:{ENCRE2};line-height:1.5;'
-            f'margin-top:3px">{_e(T(k))}</div></div>'
-            for k, c in (("cad_dbc_1", "#c33a24"), ("cad_dbc_2", "#d1730c"),
-                         ("cad_dbc_3", "#2166ac"), ("cad_dbc_4", "#1a8a4f")))
-        + '</div>', unsafe_allow_html=True)
+def _boucle_svg(sens):
+    """Un cercle, deux variables, une flèche : la boucle réduite à sa forme.
 
-    g, d = st.columns([1.15, 1])
-    with g:
-        st.markdown(_titre("cad_lecture", marge=28), unsafe_allow_html=True)
-        st.markdown(T("cad_lecture_x"))
-        st.warning(T("cad_lecture_piege"))
-    with d:
-        st.markdown('<div style="height:40px"></div>' + _schema_boucles(),
-                    unsafe_allow_html=True)
+    DEUX DESSINS PLUTÔT QU'UNE DÉFINITION. « Renforçante » et « équilibrante »
+    sont des mots qu'on croit comprendre et qu'on confond dès la première
+    boucle réelle. Deux cercles côte à côte, l'un vert marqué « + » et l'autre
+    orange marqué « − », montrent la différence sans qu'on ait à retenir
+    laquelle est laquelle : c'est le signe posé sur l'arc qui la porte.
+    """
+    coul = "#1a6b52" if sens == "R" else "#d1730c"
+    signe = "+" if sens == "R" else "−"
+    L, H, cx, cy, r = 230, 190, 115, 100, 62
+    # Les deux sommets sont aux extrémités horizontales du cercle.
+    ax, bx = cx - r, cx + r
+    return (
+        f'<svg viewBox="0 0 {L} {H}" width="100%" '
+        f'style="max-width:{L}px;display:block;margin:0 auto" role="img" '
+        f'font-family="Inter,system-ui,sans-serif">'
+        f'<defs><marker id="fb{sens}" viewBox="0 0 10 10" refX="8" refY="5" '
+        f'markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">'
+        f'<path d="M0,1 L9,5 L0,9 z" fill="{coul}"/></marker></defs>'
+        # l'arc du haut porte la flèche et le signe ; celui du bas ferme
+        f'<path d="M{ax},{cy} A{r},{r} 0 0 1 {bx},{cy}" fill="none" '
+        f'stroke="{coul}" stroke-width="1.8" marker-end="url(#fb{sens})"/>'
+        f'<path d="M{bx},{cy} A{r},{r} 0 0 1 {ax},{cy}" fill="none" '
+        f'stroke="{coul}" stroke-width="1.8" marker-end="url(#fb{sens})"/>'
+        f'<text x="{cx}" y="{cy - r - 10}" text-anchor="middle" '
+        f'font-size="20" font-weight="700" fill="{coul}">{signe}</text>'
+        f'<text x="{cx}" y="{cy + 11}" text-anchor="middle" font-size="30" '
+        f'font-weight="800" fill="{coul}">{sens}</text>'
+        + "".join(
+            f'<circle cx="{x}" cy="{cy}" r="16" fill="#fff" stroke="{coul}" '
+            f'stroke-width="1.6"/>'
+            f'<text x="{x}" y="{cy + 5}" text-anchor="middle" font-size="13" '
+            f'font-weight="600" fill="{coul}">{lab}</text>'
+            for x, lab in ((ax, "A"), (bx, "B")))
+        + '</svg>')
+
+
+def _v_boucles():
+    """Le parcours en quatre temps, puis la lecture d'une boucle.
+
+    LE PARCOURS EST LE MÊME QUE CELUI DE LA SECTION « FEEDBACK LOOPS », et
+    c'est voulu : cet onglet-ci l'explique, l'autre l'exécute. Symptôme,
+    boucle, levier, action — quatre étapes numérotées, chacune avec son
+    exemple en italique, parce qu'une méthode décrite sans un cas ne se
+    retient pas.
+
+    LA LECTURE D'UNE BOUCLE EST EN DESSOUS, ET SÉPARÉE PAR UN FILET. Elle ne
+    fait pas partie du parcours : c'est la convention de notation, celle qu'il
+    faut connaître avant de regarder le premier schéma. Le piège du « + » lu
+    comme « bon » est dit à part, dans son propre cartouche.
+    """
+    st.markdown(
+        f'<div class="cad-bt">{_e(T("cad_bt"))}</div>'
+        f'<p class="cad-bt-x">{_e(T("cad_bt_x"))}</p>',
+        unsafe_allow_html=True)
+
+    ETAPES = (("cad_b1", "pousse", "#9b2c2c", "#fbeaea"),
+              ("cad_b2", "rafraichir", "#b45309", "#fdf1e3"),
+              ("cad_b3", "cible", "#1e5a8e", "#e7eff7"),
+              ("cad_b4", "fiche", "#1a6b52", "#eef3f0"))
+    cases = []
+    for i, (k, ic, coul, fond) in enumerate(ETAPES, start=1):
+        if i > 1:
+            cases.append('<div class="cad-bp-fl">'
+                         + icones.svg("chevron", couleur="#c8cfd8", taille=22)
+                         + '</div>')
+        cases.append(
+            '<div class="cad-bp-e">'
+            f'<div class="cad-bp-i" style="background:{fond}">'
+            + icones.svg(ic, couleur=coul, taille=30) + '</div>'
+            f'<div class="cad-bp-fi" style="background:{coul}"></div>'
+            f'<div class="cad-bp-t" style="color:{coul}">'
+            f'{i}. {_e(T(k + "_t")).upper()}</div>'
+            f'<div class="cad-bp-x">{_e(T(k + "_x"))}</div>'
+            f'<div class="cad-bp-ex">{_e(T(k + "_e"))}</div></div>')
+    st.markdown(f'<div class="cad-bp">{"".join(cases)}</div>',
+                unsafe_allow_html=True)
+
+    # ---- comment lire une boucle -----------------------------------------
+    signes = "".join(
+        f'<div class="cad-bs">'
+        f'<div class="cad-bs-p" style="background:{fond};color:{coul}">'
+        f'{s}</div><div>'
+        f'<div class="cad-bs-t" style="color:{coul}">{s}&nbsp; '
+        f'{_e(T(k + "_t"))}</div>'
+        f'<div class="cad-bs-x">{_e(T(k + "_x"))}</div>'
+        f'<div class="cad-bs-f">A &uarr; &rarr; B {fl}</div></div></div>'
+        for k, s, fl, coul, fond in
+        (("cad_bl_p", "+", "&uarr;", "#1a6b52", "#eef3f0"),
+         ("cad_bl_m", "&minus;", "&darr;", "#d1730c", "#fdf1e3")))
+
+    st.markdown(
+        '<div class="cad-bl">'
+        f'<div class="cad-bl-h">{_e(T("cad_bl_t")).upper()}</div>'
+        '<div class="cad-bl-g">'
+        f'<div>{signes}</div>'
+        '<div class="cad-bl-d">'
+        f'<div>{_boucle_svg("R")}'
+        f'<div class="cad-bl-n" style="color:#1a6b52">'
+        f'{_e(T("cad_bl_r"))}</div>'
+        f'<div class="cad-bl-s">{_e(T("cad_bl_r_x"))}</div></div>'
+        f'<div>{_boucle_svg("B")}'
+        f'<div class="cad-bl-n" style="color:#d1730c">'
+        f'{_e(T("cad_bl_b"))}</div>'
+        f'<div class="cad-bl-s">{_e(T("cad_bl_b_x"))}</div></div></div>'
+        '<div class="cad-bl-i"><span class="cad-bl-ii">'
+        + icones.svg("pousse", couleur=VERT_APRI, taille=17) + '</span><div>'
+        f'<div class="cad-bl-it">{_e(T("cad_bl_i_t"))}</div>'
+        f'<p class="cad-bl-ix">{_e(T("cad_bl_i_x"))}</p></div></div>'
+        '</div></div>', unsafe_allow_html=True)
 
 
 # --- 6 · le cas de l'environnement -----------------------------------------
