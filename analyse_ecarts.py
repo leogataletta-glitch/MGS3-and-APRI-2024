@@ -192,6 +192,55 @@ TEXTES = {
     "ec_rien": {"en": "No indicator can be computed on this group.",
                 "fr": "Aucun indicateur ne peut être calculé sur ce groupe."},
     "ec_combien": {"en": "Indicators shown", "fr": "Indicateurs affichés"},
+    "al_titre": {"en": "Identifying the most alarming variables",
+                 "fr": "Identification des variables les plus alarmantes"},
+    "al_intro": {
+        "en": "The five screens before this one answer questions that were "
+              "put to them. This one asks nothing: it sweeps the whole "
+              "framework and returns the indicators that score lowest — "
+              "across the territory first, then group by group. These are "
+              "the variables a causal loop diagram should be drawn around, "
+              "and the levers come after the loops, not before them.",
+        "fr": "Les cinq écrans précédents répondent aux questions qu'on leur "
+              "pose. Celui-ci n'en pose aucune : il balaye le cadre entier et "
+              "renvoie les indicateurs dont le score est le plus bas — sur le "
+              "territoire d'abord, puis groupe par groupe. Ce sont les "
+              "variables autour desquelles tracer un schéma de boucle "
+              "causale, et les leviers viennent après les boucles, pas "
+              "avant."},
+    "al_t1": {"en": "The lowest indicators across the territory",
+              "fr": "Les indicateurs les plus bas sur le territoire"},
+    "al_x1": {
+        "en": "Ranked by score, lowest first, on all {n} households. A low "
+              "score here is a weakness of the whole landscape, not of one "
+              "group in it.",
+        "fr": "Classés par score, du plus bas au plus haut, sur les {n} "
+              "ménages. Un score bas ici est une faiblesse du paysage "
+              "entier, pas d'un groupe en particulier."},
+    "al_t2": {"en": "The lowest indicator of each group, relative to the others",
+              "fr": "L'indicateur le plus bas de chaque groupe, par rapport "
+                    "aux autres"},
+    "al_x2": {
+        "en": "For every group, the indicator on which it falls furthest "
+              "below everyone else. The gap is what makes it the group's own "
+              "weakness rather than the territory's: an indicator that is low "
+              "everywhere shows up in the table above, not in this one.",
+        "fr": "Pour chaque groupe, l'indicateur sur lequel il décroche le "
+              "plus par rapport à tous les autres. C'est l'écart qui en fait "
+              "une faiblesse propre au groupe et non du territoire : un "
+              "indicateur bas partout figure dans le tableau du dessus, pas "
+              "dans celui-ci."},
+    "al_combien": {"en": "Variables listed", "fr": "Variables listées"},
+    "al_par_groupe": {"en": "Variables per group", "fr": "Variables par groupe"},
+    "al_registres": {"en": "Groups swept", "fr": "Registres balayés"},
+    "al_col_groupe": {"en": "Group", "fr": "Groupe"},
+    "al_col_var": {"en": "Variable", "fr": "Variable"},
+    "al_col_sien": {"en": "Its score", "fr": "Son score"},
+    "al_col_autres": {"en": "The others", "fr": "Les autres"},
+    "al_vide": {"en": "No group falls clearly below the others on any "
+                      "indicator.",
+                "fr": "Aucun groupe ne décroche nettement des autres sur un "
+                      "indicateur."},
     "ec_fragile": {
         "en": "Rows resting on fewer than {n} households are shown in pale "
               "type: a single answer moves them.",
@@ -853,3 +902,145 @@ def render_groupe(cat):
     # ferait deux chemins vers le même tableau.
     _rendre_profil(cat, cat["groupes"].get(opts[k][0]), opts[k][2], "grp",
                    avec_paysage=True)
+
+
+# ============================== les variables les plus alarmantes
+def _table_bas(lignes, n_tot):
+    """Les indicateurs les plus bas du territoire, du plus bas au plus haut."""
+    r = ['<table class="ec-tab"><thead><tr>'
+         f'<th>{_e(T("al_col_var"))}</th>'
+         f'<th class="n">{_e(T("ec_col_score"))}</th>'
+         f'<th class="n">{_e(T("ec_col_val"))}</th>'
+         f'<th class="n">{_e(T("ec_col_n"))}</th></tr></thead><tbody>']
+    for x in lignes:
+        cl = ' class="pale"' if x["n"] < N_MIN else ""
+        r.append(f'<tr{cl}><td>{_e(x["nom"])}<br>'
+                 f'<span style="font-size:11px;color:#8a93a5">'
+                 f'{_e(x["dim"])}</span></td>'
+                 f'<td class="n v" style="color:{ROUGE}">'
+                 f'{_f(x["score"], 1)}</td>'
+                 f'<td class="n">{_f(x["valeur"], 1)}&#8201;%</td>'
+                 f'<td class="n">{x["n"]}</td></tr>')
+    r.append('</tbody></table>')
+    return "".join(r)
+
+
+def _table_bas_groupes(lignes):
+    """Une ligne par groupe : là où il décroche le plus des autres."""
+    r = ['<table class="ec-tab"><thead><tr>'
+         f'<th>{_e(T("al_col_groupe"))}</th>'
+         f'<th>{_e(T("al_col_var"))}</th>'
+         f'<th class="n">{_e(T("al_col_sien"))}</th>'
+         f'<th class="n">{_e(T("al_col_autres"))}</th>'
+         f'<th class="n">{_e(T("ec_col_ecart"))}</th>'
+         f'<th class="n">{_e(T("ec_col_n"))}</th></tr></thead><tbody>']
+    vu = None
+    for x in lignes:
+        cl = ' class="pale"' if x["n"] < N_MIN else ""
+        tete = "" if x["groupe"] == vu else (
+            f'{_e(x["groupe"])}<br><span style="font-size:11px;'
+            f'color:#8a93a5">{_e(x["registre"])}</span>')
+        vu = x["groupe"]
+        r.append(f'<tr{cl}><td>{tete}</td>'
+                 f'<td>{_e(x["nom"])}<br><span style="font-size:11px;'
+                 f'color:#8a93a5">{_e(x["dim"])}</span></td>'
+                 f'<td class="n v" style="color:{ROUGE}">'
+                 f'{_f(x["g"], 1)}</td>'
+                 f'<td class="n">{_f(x["a"], 1)}</td>'
+                 f'<td class="n v" style="color:{ROUGE}">'
+                 f'{_f(x["d"], 1, True)}</td>'
+                 f'<td class="n">{x["n"]}</td></tr>')
+    r.append('</tbody></table>')
+    return "".join(r)
+
+
+def render_alarmes(cat):
+    """Les variables sur lesquelles commencer, et rien d'autre.
+
+    CE QUE CET ÉCRAN FAIT ET QUE LES CINQ AUTRES NE FONT PAS. Les précédents
+    répondent à une question posée : cet indicateur-là, ce paysage-là, ce
+    groupe-là. Celui-ci ne demande rien et balaye tout — les soixante-six
+    indicateurs sur le territoire, puis les soixante-six sur chacun des vingt
+    et un groupes — pour ne remonter que les scores les plus bas.
+
+    DEUX TABLEAUX PARCE QU'IL Y A DEUX SORTES DE FAIBLESSE, et les confondre
+    envoie une intervention au mauvais endroit. Une faiblesse du TERRITOIRE
+    est basse partout : elle appelle une action de couverture, la même pour
+    tous. Une faiblesse de GROUPE est basse pour lui et pas pour les autres :
+    elle appelle un ciblage. Le premier tableau classe sur le score, le second
+    sur l'écart au complément, et un indicateur bas partout ne peut donc pas
+    apparaître dans le second.
+    """
+    if not cat or not cat.get("indicateurs"):
+        return
+    st.markdown(STYLE, unsafe_allow_html=True)
+    st.markdown(f'<div class="titre-bloc">{_e(T("al_titre"))}</div>'
+                f'<p class="ec-note" style="margin:0 0 14px">'
+                f'{_e(T("al_intro"))}</p>', unsafe_allow_html=True)
+
+    tout = np.ones(cat["n"], dtype=bool)
+    bas = []
+    for ind in cat["indicateurs"]:
+        m = _mesure(ind, tout)
+        if m["score"] is not None:
+            bas.append({"nom": _nom(ind), "dim": T(ind["dim"]), **m})
+    if not bas:
+        st.info(T("ec_rien"))
+        return
+    bas.sort(key=lambda x: (x["score"], x["valeur"]))
+
+    # ---- 1 · le territoire ------------------------------------------------
+    st.markdown(f'<div class="titre-bloc">{_e(T("al_t1"))}</div>'
+                f'<p class="ec-note" style="margin:0">'
+                f'{_e(T("al_x1", n=cat["n"]))}</p>', unsafe_allow_html=True)
+    k1 = st.slider(T("al_combien"), 5, min(40, len(bas)),
+                   min(15, len(bas)), key="al_k1")
+    st.markdown(_table_bas(bas[:k1], cat["n"]), unsafe_allow_html=True)
+
+    # ---- 2 · groupe par groupe -------------------------------------------
+    st.markdown(f'<div class="titre-bloc" style="margin-top:26px">'
+                f'{_e(T("al_t2"))}</div>'
+                f'<p class="ec-note" style="margin:0">{_e(T("al_x2"))}</p>',
+                unsafe_allow_html=True)
+    g, d = st.columns([1.7, 1])
+    with g:
+        registres = st.multiselect(
+            T("al_registres"), [a for a, _l in AXES],
+            default=[a for a, _l in AXES], key="al_reg",
+            format_func=lambda a: T(dict(AXES)[a]))
+    with d:
+        par = st.slider(T("al_par_groupe"), 1, 3, 1, key="al_par")
+    if not registres:
+        return
+
+    lignes = []
+    for axe in registres:
+        for val, lib in _cases(cat, axe):
+            m_g = cat["groupes"][val]
+            autre = ~m_g
+            pires = []
+            for ind in cat["indicateurs"]:
+                a, b = _mesure(ind, m_g), _mesure(ind, autre)
+                if a["score"] is None or b["score"] is None:
+                    continue
+                d_ = a["score"] - b["score"]
+                dv = a["valeur"] - b["valeur"]
+                # SEUL UN DÉCROCHAGE COMPTE, pas un écart quelconque : c'est
+                # un tableau de faiblesses, et un groupe qui fait MIEUX que
+                # les autres n'y a rien à faire.
+                if d_ >= 0 or (abs(d_) < ECART_MIN
+                               and abs(dv) < VALEUR_MIN):
+                    continue
+                pires.append({"groupe": lib, "registre": T(dict(AXES)[axe]),
+                              "nom": _nom(ind), "dim": T(ind["dim"]),
+                              "g": a["score"], "a": b["score"], "d": d_,
+                              "n": a["n"]})
+            pires.sort(key=lambda x: x["d"])
+            lignes += pires[:par]
+    if not lignes:
+        st.info(T("al_vide"))
+        return
+    st.markdown(_table_bas_groupes(lignes), unsafe_allow_html=True)
+    if any(x["n"] < N_MIN for x in lignes):
+        st.markdown(f'<p class="ec-note">{_e(T("ec_fragile", n=N_MIN))}</p>',
+                    unsafe_allow_html=True)

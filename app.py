@@ -1357,7 +1357,11 @@ TEXTES_NAV = {
     "ra_o_indic": {"en": "By Indicator", "fr": "Par indicateur"},
     "ra_o_paysage": {"en": "By Landscape", "fr": "Par paysage"},
     "ra_o_groupe": {"en": "By Social Group", "fr": "Par groupe social"},
-    "ra_o_solutions": {"en": "Solutions", "fr": "Solutions"},
+    # L'ONGLET NE PROPOSE PLUS DES SOLUTIONS, IL DÉSIGNE DES CIBLES. Une
+    # piste d'action lue avant d'avoir nommé la variable qui décroche est une
+    # opinion ; nommer la variable, c'est le point de départ des boucles.
+    "ra_o_solutions": {"en": "Most alarming variables",
+                       "fr": "Variables les plus alarmantes"},
     "mode_levier": {"en": "If I change one thing",
                     "fr": "Si je change une chose"},
     # LE RAPPORT ET LA NOTE NE FONT PAS LE MÊME MÉTIER. La note tient sur une
@@ -1827,7 +1831,8 @@ with _c_contenu:
         # C'est le même fichier de réponses individuelles ; le charger dans
         # chaque module en ferait cinq copies en mémoire.
         _cat = croisement_resultats._catalogue() \
-            if _ra in ("brut", "scores", "indic", "paysage", "groupe") \
+            if _ra in ("brut", "scores", "indic", "paysage", "groupe",
+                       "solutions") \
             else None
 
         if _ra == "brut":
@@ -1875,9 +1880,12 @@ with _c_contenu:
             synthese_page.render(entete=False)
 
         else:
-            # LES SOLUTIONS SE LISENT APRÈS LES ÉCARTS, et c'est la seule
-            # place qui leur convienne : une piste d'action qu'on lit avant le
-            # diagnostic est une opinion.
+            # LES VARIABLES ALARMANTES SE LISENT APRÈS LES ÉCARTS, et c'est
+            # la seule place qui leur convienne : elles sont le résultat des
+            # cinq écrans précédents, et l'entrée des boucles causales.
+            analyse_ecarts.render_alarmes(_cat)
+            st.markdown('<div style="height:30px"></div>',
+                        unsafe_allow_html=True)
             pistes_page.render()
 
     if app_mode == MODE_METHODO:

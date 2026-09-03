@@ -85,8 +85,6 @@ TEXTES = {
     "ex_mesure": {"en": "Measure", "fr": "Mesure"},
     "ex_m_part": {"en": "Share of an answer", "fr": "Part d'une réponse"},
     "ex_m_score": {"en": "Resilience score", "fr": "Score de résilience"},
-    "ex_axes_vide": {"en": "Choose at least one breakdown.",
-                     "fr": "Choisissez au moins une ventilation."},
     "ex_score": {"en": "score out of 10", "fr": "score sur 10"},
     "ex_cible": {"en": "Resilience indicator",
                  "fr": "Indicateur de résilience"},
@@ -113,14 +111,13 @@ TEXTES = {
               "communales."},
     "ex_filtre": {"en": "Restrict to", "fr": "Restreindre à"},
     "ex_f_section": {"en": "Communal section", "fr": "Section communale"},
-    "ex_f_groupe": {"en": "Social group", "fr": "Groupe social"},
     "ex_f_paysage": {"en": "Landscape", "fr": "Paysage"},
     "ex_f_tous": {"en": "All", "fr": "Tout"},
     "ex_filtre_n": {"en": "Restricted to {n} households of {t}.",
                     "fr": "Restreint à {n} ménages sur {t}."},
     "ex_filtre_vide": {
-        "en": "No household matches all three restrictions at once.",
-        "fr": "Aucun ménage ne réunit les trois restrictions à la fois."},
+        "en": "No household matches all the restrictions at once.",
+        "fr": "Aucun ménage ne réunit toutes les restrictions à la fois."},
     "ex_format": {"en": "Chart", "fr": "Graphique"},
     "ex_barres": {"en": "Bar chart", "fr": "Histogramme"},
     "ex_radar": {"en": "Radar chart", "fr": "Diagramme radar"},
@@ -130,6 +127,8 @@ TEXTES = {
     "ex_flop": {"en": "Lowest three", "fr": "Les trois plus bas"},
     "ex_topflop": {"en": "Highest and lowest three",
                    "fr": "Les trois plus hauts et les trois plus bas"},
+    "ex_ecart": {"en": "Biggest gap with the whole sample",
+                 "fr": "Plus fort écart avec l'ensemble"},
     "ex_part": {"en": "share of respondents",
                 "fr": "part des répondants"},
     "ex_ens": {"en": "All respondents", "fr": "Ensemble des répondants"},
@@ -222,31 +221,31 @@ def _masque_filtres(cat, choix):
 
 
 def _filtres(cat):
-    """Les trois niveaux de restriction : localité, groupe social, paysage."""
-    c1, c2, c3 = st.columns(3)
+    """Une barre déroulante par registre : localité, sexe, âge, richesse,
+    paysage.
+
+    UN MENU PAR REGISTRE, PAS UN MENU POUR TROIS. Les trois registres sociaux
+    tenaient dans une seule liste aplatie — « Sexe · Femmes », « Âge · 60+ »,
+    « Catégorie · Cat C » à la suite — et cette liste ne permettait d'en
+    retenir qu'un : demander les femmes de plus de soixante ans était
+    impossible alors que le croisement, lui, l'était. Cinq menus séparés
+    posent la question comme on la pense, et se cumulent en ET.
+    """
+    cles = [("section", "ex_f_section", "sec", None),
+            ("sexe", "ex_ax_sexe", "sexe", _lib),
+            ("age", "ex_ax_age", "age", _lib),
+            ("richesse", "ex_ax_richesse", "rich", _lib),
+            ("paysage", "ex_f_paysage", "pay", _lib)]
+    cols = st.columns(len(cles))
     choix = []
-    with c1:
-        sec = st.selectbox(
-            T("ex_f_section"), [None] + list(_VALEURS["section"]),
-            key="ex_f_sec", format_func=lambda v: T("ex_f_tous") if v is None
-            else v)
-        choix.append(sec)
-    with c2:
-        soc = []
-        for axe in ("sexe", "age", "richesse"):
-            soc += [(v, f'{T(dict(AXES)[axe])} · {_lib(v)}')
-                    for v in _VALEURS[axe]]
-        grp = st.selectbox(
-            T("ex_f_groupe"), [None] + [v for v, _l in soc], key="ex_f_grp",
-            format_func=lambda v: T("ex_f_tous") if v is None
-            else dict(soc)[v])
-        choix.append(grp)
-    with c3:
-        pay = st.selectbox(
-            T("ex_f_paysage"), [None] + list(_VALEURS["paysage"]),
-            key="ex_f_pay", format_func=lambda v: T("ex_f_tous") if v is None
-            else _lib(v))
-        choix.append(pay)
+    for (axe, lab, suff, fmt), col in zip(cles, cols):
+        with col:
+            v = st.selectbox(
+                T(lab), [None] + list(_VALEURS.get(axe, [])),
+                key=f"ex_f_{suff}",
+                format_func=lambda v, f=fmt: (T("ex_f_tous") if v is None
+                                              else (f(v) if f else v)))
+            choix.append(v)
     return _masque_filtres(cat, choix), any(choix)
 
 
@@ -428,16 +427,30 @@ def _ventiler_score(cat, axes, filtre=None, cible=None):
     return out, ens
 
 
-def _filtrer(lignes, choix):
+def _filtrer(lignes, choix, ens=None):
     """Ne garder que les extrêmes, si on les a demandés.
 
     L'ORDRE D'ORIGINE EST CONSERVÉ. Trier les barres par valeur donnerait un
     classement ; ce n'en est pas un — les sections ont un ordre géographique
     et les tranches d'âge un ordre naturel, qu'un tri par part détruirait.
+
+    L'ÉCART SE MESURE CONTRE L'ENSEMBLE DES RÉPONDANTS, et c'est le seul
+    terme qui ait un sens ici : « la plus forte différence » sans dire avec
+    quoi ne veut rien dire, et le repère déjà tracé en pointillés sur le
+    graphique est justement celui-là. Une case à 62 % quand l'ensemble est à
+    31 % s'écarte plus qu'une case à 90 % quand l'ensemble est à 88 %, même
+    si la seconde est plus haute.
     """
     mesurees = [x for x in lignes if x["part"] is not None]
     if choix == "tous" or len(mesurees) <= 3:
         return lignes
+    if choix == "ecart":
+        ref = (ens or {}).get("part")
+        if ref is None:
+            return lignes
+        tri = sorted(mesurees, key=lambda x: -abs(x["part"] - ref))
+        garder = {id(x) for x in tri[:3]}
+        return [x for x in lignes if id(x) in garder]
     tri = sorted(mesurees, key=lambda x: x["part"])
     garder = set()
     if choix in ("top", "topflop"):
@@ -612,27 +625,31 @@ def render(cat, mode=None):
                                     key=f"ex_m_{qi}")
 
     # ---- 2 · la ventilation, le format, les extrêmes ---------------------
+    # UNE SEULE VENTILATION À LA FOIS, ET C'EST UN CHOIX, PAS UNE LIMITE. Le
+    # menu à cocher permettait d'empiler les cinq registres : l'écran
+    # affichait alors les dix sections, les deux sexes, les quatre tranches
+    # d'âge, les trois catégories et les deux paysages — vingt-et-une barres
+    # d'un coup, dont dix-neuf que personne n'avait demandées. On regarde un
+    # registre, on en change d'un geste, et les autres servent à restreindre.
     dispo = [a for a, _ in AXES]
     c1, c2, c3 = st.columns([1.6, 1, 1.15])
     with c1:
-        axes = st.multiselect(
-            T("ex_axe"), dispo, default=["section"], key=f"ex_axes_{mesure}",
+        axe = st.selectbox(
+            T("ex_axe"), dispo, key=f"ex_axe_{mesure}",
             format_func=lambda a: T(dict(AXES)[a]))
+    axes = [axe]
     with c2:
         formes = ["barres", "radar", "tableau", "carte"]
         forme = st.selectbox(T("ex_format"), formes, key="ex_forme",
                              format_func=lambda f: T("ex_" + f))
     with c3:
         extremes = st.selectbox(
-            T("ex_extremes"), ["tous", "top", "flop", "topflop"],
+            T("ex_extremes"), ["tous", "top", "flop", "topflop", "ecart"],
             key="ex_ext",
             format_func=lambda c: T({"tous": "ex_tous", "top": "ex_top",
                                      "flop": "ex_flop",
-                                     "topflop": "ex_topflop"}[c]))
-
-    if not axes:
-        st.info(T("ex_axes_vide"))
-        return
+                                     "topflop": "ex_topflop",
+                                     "ecart": "ex_ecart"}[c]))
 
     # ---- les trois niveaux de restriction --------------------------------
     st.markdown(f'<div class="ex-lab" style="margin:10px 0 2px">'
@@ -653,9 +670,13 @@ def render(cat, mode=None):
     if not lignes:
         st.info(T("ex_vide"))
         return
-    montrees = _filtrer(lignes, extremes)
+    montrees = _filtrer(lignes, extremes, ens)
 
     # ---- 3 · le dessin ---------------------------------------------------
+    # LE TABLEAU EST UN MODE, PAS UNE ANNEXE. Il était accroché sous chaque
+    # dessin : on lisait la même colonne de chiffres deux fois, une fois au
+    # bout des barres et une fois dessous, et l'écran doublait de hauteur pour
+    # rien. Qui veut les chiffres choisit « Tableau ».
     if forme == "radar" and len(montrees) < 3:
         st.info(T("ex_radar_court"))
         forme = "barres"
@@ -669,8 +690,6 @@ def render(cat, mode=None):
             st.markdown(
                 f'<div style="font-family:Inter,system-ui,sans-serif">{svg}'
                 f'</div>', unsafe_allow_html=True)
-            st.markdown(_tableau(montrees, ens, mesure),
-                        unsafe_allow_html=True)
 
     if forme == "radar":
         # LE RADAR EST GRADUÉ DE 0 À 10, comme tous les radars du site : le
@@ -693,12 +712,10 @@ def render(cat, mode=None):
                 + _e(T("ex_radar_ech", p=_f(ens["part"], 0),
                        v=_f((ens["part"] or 0) / 10, 1))) + '</p>',
                 unsafe_allow_html=True)
-        st.markdown(_tableau(montrees, ens, mesure), unsafe_allow_html=True)
     elif forme == "tableau":
         st.markdown(_tableau(montrees, ens, mesure), unsafe_allow_html=True)
     else:
         st.markdown(_barres(montrees, ens, mesure), unsafe_allow_html=True)
-        st.markdown(_tableau(montrees, ens, mesure), unsafe_allow_html=True)
 
     if mesure == "part" and any(l["n"] < N_FRAGILE for l in montrees):
         st.markdown(
