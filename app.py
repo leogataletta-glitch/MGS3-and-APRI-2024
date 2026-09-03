@@ -706,8 +706,11 @@ st.markdown(("""
        indispensable : sans lui la colonne de Streamlit s'étire sur toute la
        hauteur de la page et `sticky` n'a plus rien à quoi se coller. */
     position: sticky; top: 10px; align-self: flex-start;
-    border-right: 1px solid #eef2f7;
-    padding: 4px 12px 12px 0; margin: 2px 0 0;
+    border-right: 1px solid #e4ece7;
+    background: linear-gradient(180deg, #f2f7f4 0%, #f7faf8 42%,
+                                #ffffff 100%);
+    border-radius: 0 14px 14px 0;
+    padding: 10px 12px 18px 12px; margin: 2px 0 0 -12px;
   }
   /* LES ENTRÉES RESPIRENT. Streamlit colle ses conteneurs d'élément les uns
      aux autres : le fond de survol d'une ligne venait alors toucher celui de

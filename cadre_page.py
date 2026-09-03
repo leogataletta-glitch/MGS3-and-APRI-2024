@@ -145,27 +145,10 @@ TEXTES = {
                      "l'état antérieur"},
 
     # --- les sept dimensions
-    "cad_dims_note": {
-        "en": "Weight is the share of the composite index each dimension "
-              "carries. Coverage is the share of that weight actually "
-              "computed to date, an uncomputed indicator is excluded from "
-              "the mean, never counted as a zero.",
-        "fr": "Le poids est la part de l'indice composite que porte chaque "
-              "dimension. La couverture est la part de ce poids réellement "
-              "calculée à ce jour, un indicateur non calculé est exclu de la "
-              "moyenne, jamais compté comme un zéro."},
     "cad_col_dim": {"en": "Dimension", "fr": "Dimension"},
     "cad_col_poids": {"en": "Weight in the index", "fr": "Poids dans l'indice"},
     "cad_col_couv": {"en": "Coverage", "fr": "Couverture"},
     "cad_col_ind": {"en": "Indicators", "fr": "Indicateurs"},
-    "cad_dim7_note": {
-        "en": "The seventh dimension, cultural, identity-based and "
-              "psychological, has no computed indicator to date. It is shown "
-              "here so that an absence is not mistaken for a non-existence.",
-        "fr": "La septième dimension, culturelle, identitaire et "
-              "psychologique, n'a aucun indicateur calculé à ce jour. Elle "
-              "figure ici pour qu'une absence ne passe pas pour une "
-              "inexistence."},
 
     # --- LA MÉTHODE DE CALCUL, EN TROIS TEMPS
     # LES NOMBRES DE L'EXEMPLE SONT UN EXEMPLE, et l'onglet le dit. Quarante-
@@ -265,35 +248,6 @@ TEXTES = {
     "cad_s4": {"en": "per communal section", "fr": "par section communale"},
 
     # --- les limites
-    "cad_limites": {"en": "What the index cannot say",
-                    "fr": "Ce que l'indice ne peut pas dire"},
-    "cad_l1_t": {"en": "Circularity", "fr": "Circularité"},
-    "cad_l1": {"en": "Like any composite index, it defines resilience by the "
-                     "variables assumed to produce it. A rising score first "
-                     "means the measured dimensions moved.",
-               "fr": "Comme tout indice composite, il définit la résilience "
-                     "par les variables supposées la produire. Un score qui "
-                     "monte signifie d'abord que les dimensions mesurées ont "
-                     "bougé."},
-    "cad_l2_t": {"en": "No empirical validation", "fr": "Pas de validation empirique"},
-    "cad_l2": {"en": "Phase 4 on the OECD-UN scale: operational on a limited "
-                     "territory, not yet confronted with trajectories "
-                     "observed after a real shock.",
-               "fr": "Phase 4 sur l'échelle OCDE-ONU : opérationnel sur un "
-                     "territoire limité, pas encore confronté à des "
-                     "trajectoires observées après un choc réel."},
-    "cad_l3_t": {"en": "A static measure", "fr": "Une mesure statique"},
-    "cad_l3": {"en": "It describes capacities at one moment. Feedback loops "
-                     "and tipping points are the job of the participatory "
-                     "causal analysis, not of the index.",
-               "fr": "Il décrit des capacités à un instant donné. Les boucles "
-                     "de rétroaction et les seuils de bascule relèvent de "
-                     "l'analyse causale participative, pas de l'indice."},
-    "cad_l4_t": {"en": "Framing, not forecasting", "fr": "Cadrage, pas prévision"},
-    "cad_l4": {"en": "It ranks and prioritises. It does not predict what a "
-                     "given hazard will cost a given section.",
-               "fr": "Il hiérarchise et priorise. Il ne prédit pas ce qu'un "
-                     "aléa donné coûtera à une section donnée."},
 
     # --- le second volet : l'analyse causale
     "cad_dbc": {"en": "The second strand, causal loop diagrams",
@@ -979,12 +933,19 @@ STYLE = """
      la feuille de l'application fixe 14,5 px et la justification à tout
      paragraphe du contenu, avec une spécificité supérieure à celle d'une
      classe. */
-  p.cad-uma { font-size:18px !important; line-height:1.55 !important;
+  p.cad-uma { font-size:17px !important; line-height:1.5 !important;
               font-family:Georgia,"Times New Roman",serif; font-style:italic;
               font-weight:400; color:#26364a !important;
-              margin:2px 0 6px !important; max-width:62ch;
+              margin:2px 0 8px !important; max-width:none !important;
               border-left:3px solid #1a6b52; padding-left:20px;
-              text-align:left !important; }
+              text-align:left !important; white-space:nowrap;
+              overflow:hidden; text-overflow:ellipsis; }
+  /* SUR ÉCRAN ÉTROIT ELLE A LE DROIT DE PASSER À LA LIGNE. Une phrase tenue
+     de force sur une ligne dans huit cents pixels finirait tronquée par les
+     points de suspension, ce qui est pire que deux lignes. */
+  @media (max-width: 1150px) {
+    p.cad-uma { white-space:normal; font-size:15.5px !important; }
+  }
 
   /* La barre d'onglets vient de `onglets.py`, comme sur les autres pages. */
 
@@ -1436,11 +1397,12 @@ def _v_dimensions(stats):
     elle prend maintenant le gris des notes du site, sous un filet qui la
     rattache au tableau.
     """
-    st.markdown(_titre(None, "cad_dims_note", marge=4)
-                + _tableau_dimensions(stats)
-                + f'<p class="cad-note" style="margin:16px 0 0;'
-                  f'max-width:92ch">{_e(T("cad_dim7_note"))}</p>',
-                unsafe_allow_html=True)
+    # LE TABLEAU SE SUFFIT. Les deux notes qui l'entouraient définissaient
+    # « pondération » et « couverture » au-dessus, et signalaient la septième
+    # dimension au-dessous : le tableau porte déjà ses intitulés de colonne,
+    # et la septième s'y lit à zéro indicateur calculé. Une définition écrite
+    # à côté d'une colonne qui la montre n'apprend rien de plus.
+    st.markdown(_tableau_dimensions(stats), unsafe_allow_html=True)
 
 
 # --- 4 · de la mesure brute au score ---------------------------------------
@@ -1506,16 +1468,6 @@ def _v_score(stats):
         f'{_e(T("cad_p4_lab", d=len(stats["dims"])))}</div>'
         '</div></div>', unsafe_allow_html=True)
 
-    # CE QUE L'INDICE NE PEUT PAS DIRE reste sur cet onglet : les limites ne
-    # se comprennent qu'une fois le calcul connu — la circularité d'un indice
-    # composite ne veut rien dire tant qu'on n'a pas vu qu'il agrège ses
-    # propres variables explicatives.
-    st.markdown(
-        _titre("cad_limites", marge=34)
-        + '<div class="cad-grille">'
-        + "".join(_cartouche(T(k + "_t"), T(k), ENCRE3)
-                  for k in ("cad_l1", "cad_l2", "cad_l3", "cad_l4"))
-        + '</div>', unsafe_allow_html=True)
 
 
 # --- 5 · les boucles de rétroaction ----------------------------------------
