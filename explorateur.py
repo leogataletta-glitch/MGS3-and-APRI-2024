@@ -297,6 +297,13 @@ STYLE = """
      restriction ni ce qui était retenu. Le panneau leur donne un fond, un
      bord et un titre — assez pour qu'on le trouve d'un coup d'œil, assez peu
      pour qu'il ne pèse pas plus que les résultats qu'il commande. */
+  /* UN TITRE DE RÉSULTAT, ET RIEN DE PLUS. Il ressemble à la pastille du
+     site sans en porter la classe : celle-ci déclenche, sur le bloc qui la
+     contient, la mise en carte générale — et le bloc, ici, c'est la page. */
+  .ex-titre { display:inline-flex; align-items:center; gap:9px;
+            font-weight:700; font-size:12px; letter-spacing:.06em;
+            text-transform:uppercase; color:#1a6b52; background:#eaf5f0;
+            padding:6px 13px; border-radius:999px; margin:0 0 4px; }
   .ex-pan-x { font-size:11.5px; color:#6b7590; line-height:1.5;
             margin:0 0 10px; max-width:92ch; text-align:left !important; }
   /* L'OPTION DÉJÀ RETENUE SE VOIT DANS LA LISTE OUVERTE. Sans quoi, rouvrir
@@ -852,7 +859,7 @@ def render(cat, mode=None):
     # qu'éloigner les commandes du haut de l'écran.
     if mesure == "score":
         st.markdown(
-            f'<div class="titre-bloc">{_e(T("ex_t_score"))}</div>'
+            f'<div class="ex-titre">{_e(T("ex_t_score"))}</div>'
             f'<p class="ex-note" style="margin:0 0 12px;max-width:96ch">'
             f'{_e(T("ex_intro_score"))}</p>', unsafe_allow_html=True)
 
@@ -1161,8 +1168,12 @@ def render_scores(cat):
     if not cat or not cat.get("indicateurs"):
         return
     st.markdown(STYLE, unsafe_allow_html=True)
+    # PAS DE TITRE DE PAGE : l'onglet ouvert dit déjà « Scores de résilience »,
+    # et le répéter dessous ajoutait une ligne pour ne rien apprendre. La
+    # pastille avait de plus un effet de bord : la règle générale transforme
+    # en carte tout bloc qui porte un `titre-bloc` en enfant direct, et c'est
+    # la PAGE ENTIÈRE qui se retrouvait encadrée.
     st.markdown(
-        f'<div class="titre-bloc">{_e(T("ex_s_titre"))}</div>'
         f'<p class="ex-note" style="margin:0 0 12px;max-width:96ch">'
         f'{_e(T("ex_s_intro"))}</p>', unsafe_allow_html=True)
 
@@ -1205,7 +1216,7 @@ def render_scores(cat):
     # ---- les écarts entre groupes ont leur propre tableau -----------------
     if mode == "ecarts":
         _etape(4, "ex_res")
-        st.markdown(f'<div class="titre-bloc" style="margin-top:16px">'
+        st.markdown(f'<div class="ex-titre" style="margin-top:16px">'
                     f'{_e(T("ex_s_ec_t"))}</div>'
                     f'<p class="ex-note" style="margin:0 0 4px">'
                     f'{_e(T("ex_s_ec_x"))}</p>', unsafe_allow_html=True)
@@ -1252,7 +1263,7 @@ def render_scores(cat):
                         reverse=(mode == "haut"))[:combien]
 
     _etape(4, "ex_res")
-    st.markdown(f'<div class="titre-bloc" style="margin-top:4px">'
+    st.markdown(f'<div class="ex-titre" style="margin-top:4px">'
                 f'{_e(titre)}</div>', unsafe_allow_html=True)
     ens = {"n": nb_sel, "k": None, "part": sc_sel, "score": sc_sel}
 

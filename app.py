@@ -1547,9 +1547,6 @@ TEXTES_NAV = {
                             "fr": "Enquête institutionnelle"},
     "ra_src_biodiversite": {"en": "Biodiversity survey",
                             "fr": "Enquête biodiversité"},
-    "ra_deplier_dim": {
-        "en": "Unfold one dimension in full — its indicators, one by one",
-        "fr": "Déplier une dimension en entier — ses indicateurs, un par un"},
     "ra_o_solutions": {"en": "Most alarming variables",
                        "fr": "Variables les plus alarmantes"},
     "mode_levier": {"en": "If I change one thing",
@@ -2067,28 +2064,17 @@ with _c_contenu:
                 explorateur.render(_cat, mode="brut")
 
         elif _ra == "scores":
-            # LES SCORES SE DEMANDENT, ILS NE SE DÉVERSENT PAS. La version
-            # d'avant posait l'explorateur, puis une page de dimension
-            # entière en dessous, puis ses indicateurs : trois écrans empilés
-            # dont deux que personne n'avait demandés. Ici on dit ce qu'on
-            # mesure, sur qui, comment le lire — et il ne se dessine qu'une
-            # chose. Le dépliage dimension par dimension reste accessible,
-            # replié, pour qui le cherche.
+            # LES SCORES SE DEMANDENT, ILS NE SE DÉVERSENT PAS, et le volet
+            # repliable est parti avec le reste. Il portait une page de
+            # dimension entière — ses indicateurs un par un, ses cartes, ses
+            # compléments — sous un écran qui venait justement d'être réglé
+            # pour ne montrer QUE la combinaison demandée. Replié, il n'en
+            # restait pas moins un second écran posé sous le premier, avec
+            # ses propres commandes et son propre découpage ; on ne peut pas
+            # promettre « rien par défaut » et garder au bas de la page de
+            # quoi tout déplier. Ce qui s'affiche ici, désormais, c'est le
+            # mode d'affichage choisi et rien d'autre.
             explorateur.render_scores(_cat)
-            st.markdown('<div style="height:22px"></div>',
-                        unsafe_allow_html=True)
-            _COMPLEMENT = {
-                "dim3": lambda: environnement_page.render(entete=False),
-                "dim5": lambda: ocb_page.render(entete=False),
-            }
-            with st.expander(T("ra_deplier_dim")):
-                st.session_state.setdefault("dim_active", MODES_DIM[0])
-                if st.session_state["dim_active"] not in MODES_DIM:
-                    st.session_state["dim_active"] = MODES_DIM[0]
-                st.selectbox(T("d_choix_dim"), MODES_DIM, key="dim_active",
-                             format_func=lambda m: T(m))
-                _m = st.session_state["dim_active"]
-                dimension_page.render(_m, complement=_COMPLEMENT.get(_m))
 
         elif _ra == "indic":
             analyse_ecarts.render_indicateur(_cat)
