@@ -104,6 +104,10 @@ TRACES = {
               '<circle cx="18.6" cy="17" r="2.4"/>'
               '<path d="M10.8 7.4L6.6 14.8"/><path d="M13.2 7.4l4.2 7.4"/>'
               '<path d="M7.8 17h8.4"/>',
+    # LA GOUTTE — la donnée brute de la chaîne de calcul est un temps de
+    # collecte d'eau, et c'est le pictogramme que la maquette lui donne.
+    "goutte": '<path d="M12 3.2c3.4 4 5.4 6.6 5.4 9.2a5.4 5.4 0 0 1-10.8 0'
+              'c0-2.6 2-5.2 5.4-9.2z"/>',
 }
 
 

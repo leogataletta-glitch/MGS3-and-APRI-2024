@@ -142,6 +142,47 @@ TEXTES = {
     # et le score global réel n'est pas 6,1.
     "cad_ex": {"en": "Example", "fr": "Exemple"},
 
+    # --- la chaîne en cinq étapes ------------------------------------------
+    "cad_e1_t": {"en": "Raw data", "fr": "Donnée brute"},
+    "cad_e1_v": {"en": "45 min", "fr": "45 min"},
+    "cad_e1_s": {"en": "Time to collect water",
+                 "fr": "Temps pour aller chercher l'eau"},
+    "cad_e1_x": {"en": "Observed value from surveys, spatial data or other "
+                       "sources.",
+                 "fr": "Valeur observée, issue des enquêtes, des données "
+                       "spatiales ou d'autres sources."},
+    "cad_e2_t": {"en": "Normalise", "fr": "Normaliser"},
+    "cad_e2_v": {"en": "Convert to a 0–10 scale",
+                 "fr": "Ramener sur une échelle de 0 à 10"},
+    "cad_e2_s": {"en": "(statistical or threshold-based)",
+                 "fr": "(statistique ou par seuils)"},
+    "cad_e2_x": {"en": "The raw value is converted using statistical values "
+                       "or reference thresholds.",
+                 "fr": "La valeur brute est convertie à l'aide de valeurs "
+                       "statistiques ou de seuils de référence."},
+    "cad_e3_t": {"en": "Indicator score", "fr": "Score de l'indicateur"},
+    "cad_e3_v": {"en": "3.5 / 10", "fr": "3,5 / 10"},
+    "cad_e3_s": {"en": "Indicator score", "fr": "Score de l'indicateur"},
+    "cad_e3_x": {"en": "Each indicator receives a comparable score from "
+                       "0 (lowest) to 10 (highest).",
+                 "fr": "Chaque indicateur reçoit un score comparable, de "
+                       "0 (le plus bas) à 10 (le plus haut)."},
+    "cad_e4_t": {"en": "Weight & combine", "fr": "Pondérer et agréger"},
+    "cad_e4_v": {"en": "Expert weighting", "fr": "Pondération d'experts"},
+    "cad_e4_s": {"en": "combines all indicators",
+                 "fr": "agrège tous les indicateurs"},
+    "cad_e4_x": {"en": "Indicators are weighted according to their importance "
+                       "and combined by dimension.",
+                 "fr": "Les indicateurs sont pondérés selon leur importance, "
+                       "puis agrégés par dimension."},
+    "cad_e5_t": {"en": "Resilience score", "fr": "Score de résilience"},
+    "cad_e5_v": {"en": "6.1 / 10", "fr": "6,1 / 10"},
+    "cad_e5_s": {"en": "Overall resilience score",
+                 "fr": "Score de résilience global"},
+    "cad_e5_x": {"en": "Dimension scores are combined into the final "
+                       "resilience score.",
+                 "fr": "Les scores de dimension sont agrégés en un score de "
+                       "résilience final."},
     "cad_p1_t": {"en": "From a raw measure to an indicator score",
                  "fr": "De la mesure brute au score d'un indicateur"},
     "cad_p1a_t": {"en": "Raw measure", "fr": "Mesure brute"},
@@ -455,8 +496,6 @@ TEXTES = {
               "detail of each choice.",
         "fr": "Tout ce qui précède, en texte suivi, avec les sources et le "
               "détail de chaque choix."},
-    "cad_doc_lire": {"en": "Or read it on screen",
-                     "fr": "Ou le lire à l'écran"},
     "cad_doc_absent": {
         "en": "The file is not in the repository yet: drop a Word document "
               "whose name contains IRLA into data/ and the download appears.",
@@ -494,6 +533,41 @@ TEXTES = {
     "cad_c1": {"en": "What APRI measures", "fr": "Ce que mesure APRI"},
     "cad_c2": {"en": "Sources and data", "fr": "Sources et données"},
     "cad_c3": {"en": "Dimensions", "fr": "Dimensions"},
+    "cad_c35": {"en": "Indicators and weights",
+                "fr": "Indicateurs et pondérations"},
+    "cad_ind_x": {
+        "en": "The {n} indicators of the framework, each with the scale that "
+              "turns its raw value into a score out of 10 and the weight it "
+              "carries in its dimension. The scale is reproduced as written "
+              "in the reference file — it is the one the computation used.",
+        "fr": "Les {n} indicateurs du référentiel, chacun avec l'échelle qui "
+              "convertit sa valeur brute en score sur 10 et la pondération "
+              "qu'il porte dans sa dimension. L'échelle est reproduite telle "
+              "qu'elle est écrite dans le référentiel — c'est celle qui a "
+              "servi au calcul."},
+    "cad_ind_dim": {"en": "Dimension", "fr": "Dimension"},
+    "cad_ind_all": {"en": "All seven", "fr": "Toutes les sept"},
+    "cad_ind_q": {"en": "Search an indicator", "fr": "Chercher un indicateur"},
+    "cad_ind_c_nom": {"en": "Indicator", "fr": "Indicateur"},
+    "cad_ind_c_ech": {"en": "Normalisation scale, 0 to 10",
+                      "fr": "Échelle de normalisation, de 0 à 10"},
+    "cad_ind_c_p": {"en": "Weight", "fr": "Pondération"},
+    "cad_ind_haut": {"en": "higher is better", "fr": "plus, c'est mieux"},
+    "cad_ind_bas": {"en": "lower is better", "fr": "moins, c'est mieux"},
+    "cad_ind_sans": {"en": "no scale written in the reference file",
+                     "fr": "aucune échelle écrite dans le référentiel"},
+    "cad_ind_rien": {"en": "No indicator matches this search.",
+                     "fr": "Aucun indicateur ne correspond à cette recherche."},
+    "cad_ind_n": {"en": "{k} of {n} indicators shown.",
+                  "fr": "{k} indicateurs affichés sur {n}."},
+    "cad_ind_pds": {
+        "en": "Weights run from {a} to {b}. They were set by a panel of "
+              "experts, and a dimension's weight is the sum of its own "
+              "indicators' — no dimension was weighted directly.",
+        "fr": "Les pondérations vont de {a} à {b}. Elles ont été fixées par un "
+              "groupe d'experts, et la pondération d'une dimension est la "
+              "somme de celles de ses indicateurs — aucune dimension n'a été "
+              "pondérée directement."},
     "cad_c4": {"en": "Raw measures to resilience scores",
                "fr": "De la mesure brute au score de résilience"},
     "cad_c5": {"en": "Feedback loops", "fr": "Boucles de rétroaction"},
@@ -619,6 +693,45 @@ def _trouver(nom):
 
 
 @st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False)
+def _referentiel():
+    """Les indicateurs du référentiel, tels qu'ils y sont écrits.
+
+    ON NE RECOMPOSE RIEN. L'échelle de normalisation est reprise telle quelle
+    du fichier : c'est le barème qui a servi au calcul, et le réécrire en plus
+    joli, c'est risquer d'en publier un qui n'est pas celui qui a tourné.
+    """
+    p = _trouver("resultats.json")
+    if not p:
+        return []
+    with open(p, encoding="utf-8") as f:
+        res = json.load(f)
+    res = res["indicateurs"] if isinstance(res, dict) and "indicateurs" in res \
+        else res
+    out = []
+    for r in res:
+        cle = DIM_CLE.get(r.get("dimension", ""))
+        if not cle:
+            continue
+        ech = (r.get("echelle") or "").strip()
+        # Le préfixe « CE : » est une convention de saisie, pas un contenu.
+        for pre in ("CE :", "CE:"):
+            if ech.startswith(pre):
+                ech = ech[len(pre):].strip()
+        out.append({
+            "ligne": r.get("ligne"), "dim": cle,
+            "nom": r.get("indicateur") or "",
+            "metrique": (r.get("metrique") or "").strip(),
+            "poids": float(r.get("ponderation") or 1),
+            "echelle": ech,
+            "sens": r.get("sens") or "",
+            "calcule": (r.get("scores_corriges") or {}).get("Total")
+                       is not None})
+    out.sort(key=lambda x: (ORDRE.index(x["dim"]) if x["dim"] in ORDRE else 99,
+                            -x["poids"]))
+    return out
+
+
 def _stats():
     """Poids, couverture et effectif de chaque dimension, calculés.
 
@@ -796,6 +909,69 @@ STYLE = """
               border-bottom:3.5px solid transparent; }
 
   /* Les deux méthodes de normalisation, séparées par un filet vertical. */
+  /* --- la liste des indicateurs -------------------------------------------
+     L'ÉCHELLE PREND LA COLONNE LA PLUS LARGE. Onze paliers écrits à la suite
+     tiennent sur deux ou trois lignes ; le nom de l'indicateur, lui, tient
+     sur une ou deux. C'est donc l'échelle qui commande la largeur. */
+  .cad-it { width:100%; border-collapse:collapse; margin-top:14px; }
+  .cad-it th { font-size:10.5px; font-weight:700; letter-spacing:.09em;
+       text-transform:uppercase; color:#8a93a5; text-align:left;
+       padding:0 14px 8px 0; border-bottom:1px solid #e9eef4; }
+  .cad-it th.n, .cad-it td.n { text-align:right; }
+  .cad-it td { padding:11px 14px 11px 0; border-bottom:1px solid #f2f5f9;
+       vertical-align:top; }
+  .cad-it td:first-child { width:30%; }
+  .cad-it td:last-child { width:86px; }
+  .cad-it-n { font-size:12.5px; font-weight:600; color:#101728;
+       line-height:1.35; }
+  .cad-it-d { font-size:11px; color:#8a93a5; margin-top:3px;
+       line-height:1.35; }
+  .cad-it-r { color:#2a6b3f; font-weight:700; }
+  .cad-it-e { font-size:11.5px !important; color:#3c4761 !important;
+       line-height:1.55 !important; text-align:left !important;
+       font-variant-numeric:tabular-nums; }
+  .cad-it-p { font-size:13px; font-weight:700; color:#101728;
+       font-variant-numeric:tabular-nums; }
+  .cad-it-b { height:4px; border-radius:99px; background:#eef3f0;
+       overflow:hidden; margin-top:5px; }
+  .cad-it-b > div { height:100%; border-radius:99px; background:#2a6b3f; }
+
+  /* --- la chaîne de calcul en cinq étapes ---------------------------------
+     UNE RANGÉE, CINQ COLONNES ÉGALES, DES CHEVRONS ENTRE ELLES. La chaîne se
+     lit de gauche à droite comme une phrase : la donnée entre à gauche, le
+     score sort à droite. Empilée, elle deviendrait une liste d'opérations —
+     ce qu'elle était avant, et ce qui ne montrait rien.
+
+     LE PICTOGRAMME EST DANS UN DISQUE PÂLE, ET LE DISQUE EST LE MÊME PARTOUT :
+     c'est lui qui aligne les cinq colonnes à la même hauteur, quel que soit
+     le nombre de lignes du texte au-dessus. */
+  .cad-ch { display:flex; align-items:stretch; gap:0; margin:8px 0 26px; }
+  .cad-ch-e { flex:1 1 0; min-width:0; display:flex; flex-direction:column;
+              align-items:center; text-align:center; padding:0 10px; }
+  .cad-ch-fl { flex:0 0 44px; display:flex; align-items:flex-start;
+               justify-content:center; padding-top:62px; }
+  .cad-ch-t { font-size:12.5px; font-weight:700; letter-spacing:.09em;
+              text-transform:uppercase; color:#1a6b52; line-height:1.3;
+              min-height:32px; }
+  .cad-ch-i { width:74px; height:74px; border-radius:50%; background:#f1f4f2;
+              display:flex; align-items:center; justify-content:center;
+              margin:6px 0 14px; flex:0 0 74px; }
+  .cad-ch-v { font-size:21px; font-weight:700; color:#101728;
+              letter-spacing:-.02em; line-height:1.25; }
+  .cad-ch-s { font-size:12px; color:#5a6a80; line-height:1.45; margin-top:4px;
+              min-height:34px; }
+  .cad-ch-x { font-size:12px !important; color:#3c4761 !important;
+              line-height:1.5 !important; text-align:center !important;
+              background:#f5f6f7; border-radius:10px; padding:11px 13px;
+              margin:12px 0 0 !important; width:100%; }
+  /* SUR ÉCRAN ÉTROIT LA CHAÎNE SE PLIE EN DEUX RANGÉES, et les chevrons
+     disparaissent : une flèche qui pointe vers le bord n'indique plus rien. */
+  @media (max-width: 1150px) {
+    .cad-ch { flex-wrap:wrap; row-gap:22px; }
+    .cad-ch-e { flex:1 1 30%; }
+    .cad-ch-fl { display:none; }
+  }
+
   .cad-nrm  { display:grid; grid-template-columns:1fr 1fr; gap:34px; }
   .cad-nrm > div + div { border-left:1px solid #e9eef4; padding-left:34px; }
   .cad-nrm-t { font-size:12.5px; font-weight:700; color:#1a6b52;
@@ -1230,14 +1406,16 @@ def _min_section():
 # une vue mémorisée par son libellé retomberait sur la première case au
 # premier changement de langue, et le harnais de rendu croirait couvrir sept
 # onglets en n'en rendant qu'un.
-VUES = ("mesure", "sources", "dimensions", "score", "boucles",
+VUES = ("mesure", "sources", "dimensions", "indicateurs", "score", "boucles",
         "environnement", "document")
+# `_LIB` porte les intitulés longs ; ils ne sont plus rendus depuis que la
+# barre a pris les titres courts, mais la table reste la carte des sept vues.
 _LIB = {"mesure": "cad_o1", "sources": "cad_o2", "dimensions": "cad_o3",
-        "score": "cad_o4", "boucles": "cad_o5", "environnement": "cad_o6",
-        "document": "cad_o7"}
+        "indicateurs": "cad_c35", "score": "cad_o4", "boucles": "cad_o5",
+        "environnement": "cad_o6", "document": "cad_o7"}
 _COURT = {"mesure": "cad_c1", "sources": "cad_c2", "dimensions": "cad_c3",
-          "score": "cad_c4", "boucles": "cad_c5", "environnement": "cad_c6",
-          "document": "cad_c7"}
+          "indicateurs": "cad_c35", "score": "cad_c4", "boucles": "cad_c5",
+          "environnement": "cad_c6", "document": "cad_c7"}
 
 
 def render(doc_complet=None):
@@ -1271,6 +1449,8 @@ def render(doc_complet=None):
         _v_sources()
     elif vue == "dimensions":
         _v_dimensions(stats)
+    elif vue == "indicateurs":
+        _v_indicateurs()
     elif vue == "score":
         _v_score(stats)
     elif vue == "boucles":
@@ -1375,67 +1555,133 @@ def _v_dimensions(stats):
 
 # --- 4 · de la mesure brute au score ---------------------------------------
 def _v_score(stats):
-    """Comment on passe d'une mesure brute à un score, en trois temps.
+    """La chaîne de calcul en cinq étapes, puis les deux normalisations.
 
-    LA CHAÎNE TENAIT EN QUATRE PAVÉS ET NE MONTRAIT RIEN. « Métrique ›
+    UNE OPÉRATION PAR COLONNE, ET LA FLÈCHE ENTRE DEUX. « Métrique ›
     barème › pondération › agrégation » nommait les opérations sans en
     exécuter une seule : le lecteur savait qu'un barème existe, pas ce qu'il
     fait à quarante-cinq minutes de marche pour aller chercher l'eau. Les
-    trois sections déroulent l'opération sur un cas, donnent les deux
-    formules de normalisation, puis remontent jusqu'au score d'ensemble.
+    cinq colonnes déroulent la même donnée d'un bout à l'autre — une durée
+    devient un score, le score devient un indice — et chacune porte son
+    pictogramme, son chiffre et sa phrase.
 
-    LES VALEURS DE L'EXEMPLE PORTENT LA MENTION « EXEMPLE ». Elles sont
-    choisies pour que la chaîne se suive, et le score global réel n'est pas
-    celui-là ; sans la mention, elles se liraient comme un résultat.
+    LES VALEURS SONT UN EXEMPLE, ET LA MENTION EST PORTÉE PAR L'ÉTAPE. Elles
+    sont choisies pour que la chaîne se suive ; le score global réel n'est pas
+    6,1, et sans la mention elles se liraient comme un résultat.
+
+    LES DEUX NORMALISATIONS SONT SOUS LA CHAÎNE, PAS DEDANS. Elles ne sont pas
+    une sixième étape : elles disent COMMENT la deuxième s'exécute, et une
+    formule posée dans la rangée aurait cassé la lecture d'un bout à l'autre.
     """
-    st.markdown(
-        '<div class="cad-p">'
-        + _titre_p(1, "cad_p1_t", exemple=True)
-        + _flot([
-            (T("cad_p1a_t"), T("cad_p1a_v"), T("cad_p1a_x")),
-            (T("cad_p1b_t"), T("cad_p1b_v"), ""),
-            (T("cad_p1c_t"), T("cad_p1c_v"), T("cad_p1c_x")),
-            (T("cad_p1d_t"), T("cad_p1d_v"), ""),
-            (T("cad_p1e_t"), T("cad_p1e_v"), ""),
-        ]) + '</div>'
+    ETAPES = (("cad_e1", "goutte"), ("cad_e2", "jauge"), ("cad_e3", "barres"),
+              ("cad_e4", "personnes"), ("cad_e5", "bouclier"))
+    cases = []
+    for i, (k, ic) in enumerate(ETAPES):
+        if i:
+            cases.append('<div class="cad-ch-fl">'
+                         + icones.svg("chevron", couleur="#8fb39c", taille=22)
+                         + '</div>')
+        cases.append(
+            '<div class="cad-ch-e">'
+            f'<div class="cad-ch-t">{_e(T(k + "_t"))}</div>'
+            '<div class="cad-ch-i">'
+            + icones.svg(ic, couleur=VERT_APRI, taille=30) + '</div>'
+            f'<div class="cad-ch-v">{_e(T(k + "_v"))}</div>'
+            f'<div class="cad-ch-s">{_e(T(k + "_s"))}</div>'
+            f'<p class="cad-ch-x">{_e(T(k + "_x"))}</p></div>')
+    st.markdown(f'<div class="cad-ch">{"".join(cases)}</div>',
+                unsafe_allow_html=True)
 
-        + '<div class="cad-p">' + _titre_p(2, "cad_p2_t")
-        + '<div class="cad-nrm"><div>'
+    # ---- les deux façons de normaliser, sous la chaîne --------------------
+    st.markdown(
+        '<div class="cad-nrm"><div>'
         + f'<div class="cad-nrm-t">{_e(T("cad_p2s_t"))}</div>'
         + f'<div class="cad-nrm-x">{_e(T("cad_p2s_x"))}</div>'
         + '<div class="cad-duo">'
-        + _formule(T("cad_p2h"),
-                   'x<sub>i</sub> &minus; x<sub>min</sub>')
-        + _formule(T("cad_p2l"),
-                   'x<sub>max</sub> &minus; x<sub>i</sub>')
+        + _formule(T("cad_p2h"), 'x<sub>i</sub> &minus; x<sub>min</sub>')
+        + _formule(T("cad_p2l"), 'x<sub>max</sub> &minus; x<sub>i</sub>')
         + '</div></div><div>'
         + f'<div class="cad-nrm-t">{_e(T("cad_p2b_t"))}</div>'
         + f'<div class="cad-nrm-x">{_e(T("cad_p2b_x"))}</div>'
         + '<div class="cad-duo">' + _seuils(T("cad_p2b_r"))
         + f'<div class="cad-seu-n">{_e(T("cad_p2b_n"))}</div>'
-        + '</div></div></div></div>'
+        + '</div></div></div>', unsafe_allow_html=True)
 
-        + '<div class="cad-p">'
-        + _titre_p(3, "cad_p3_t", exemple=True)
-        + _flot([
-            (T("cad_p3a_t"), "", T("cad_p3a_x")),
-            (T("cad_p3b_t"), T("cad_p3b_v"), T("cad_p3b_x")),
-            (T("cad_p3c_t"), "", T("cad_p3c_x")),
-            (T("cad_p3d_t"), T("cad_p3d_v"), T("cad_p3d_x")),
-        ]) + '</div>',
-        unsafe_allow_html=True)
 
-    # LE COMPTE D'INDICATEURS EST CELUI DU RÉFÉRENTIEL, dimensions comprises.
+# --- les indicateurs, leur échelle et leur pondération ----------------------
+def _v_indicateurs():
+    """La liste du référentiel : un indicateur, son barème, son poids.
+
+    CET ONGLET EXISTE PARCE QUE LES DEUX PRÉCÉDENTS S'ARRÊTENT AVANT LUI. Le
+    tableau des dimensions dit combien d'indicateurs chacune porte ; la chaîne
+    de calcul dit comment une mesure devient un score, sur un exemple. Ni l'un
+    ni l'autre ne dit QUELS indicateurs, ni avec QUEL barème chacun a été
+    converti. Ce sont les deux choses qu'on vient vérifier quand on conteste
+    un score, et elles n'étaient nulle part.
+
+    L'ÉCHELLE EST REPRODUITE MOT POUR MOT. Onze paliers par indicateur, écrits
+    dans le référentiel : les remettre en forme, c'est risquer de publier un
+    barème qui n'est pas celui qui a tourné. Le seul retrait est le préfixe de
+    saisie.
+
+    UN FILTRE ET UNE RECHERCHE, PARCE QU'IL Y EN A CENT VINGT-HUIT. Une liste
+    de cent vingt-huit lignes sans moyen d'y entrer n'est pas une liste, c'est
+    un mur.
+    """
+    tous = _referentiel()
+    if not tous:
+        st.info(T("e_absent"))
+        return
+    st.markdown(f'<p class="cad-note" style="margin:2px 0 12px;max-width:96ch">'
+                f'{_e(T("cad_ind_x", n=len(tous)))}</p>',
+                unsafe_allow_html=True)
+
+    g, d = st.columns([1, 1.6])
+    with g:
+        dim = st.selectbox(T("cad_ind_dim"), [None] + ORDRE, key="cad_i_dim",
+                           format_func=lambda c: (T("cad_ind_all") if c is None
+                                                  else T(c)))
+    with d:
+        q = st.text_input(T("cad_ind_q"), key="cad_i_q").strip().lower()
+
+    vus = [x for x in tous
+           if (dim is None or x["dim"] == dim)
+           and (not q or q in x["nom"].lower() or q in x["metrique"].lower())]
+    if not vus:
+        st.info(T("cad_ind_rien"))
+        return
+
+    pmax = max(x["poids"] for x in tous) or 1
+    lignes = ['<table class="cad-it"><thead><tr>'
+              f'<th>{_e(T("cad_ind_c_nom"))}</th>'
+              f'<th>{_e(T("cad_ind_c_ech"))}</th>'
+              f'<th class="n">{_e(T("cad_ind_c_p"))}</th>'
+              '</tr></thead><tbody>']
+    for x in vus:
+        sens = (T("cad_ind_bas") if "bas" in x["sens"].split("=")[-1]
+                else T("cad_ind_haut") if x["sens"] else "")
+        num, _, court = T(x["dim"]).partition(". ")
+        ech = _e(x["echelle"]) if x["echelle"] else (
+            f'<span style="color:#a7b0be">{_e(T("cad_ind_sans"))}</span>')
+        lignes.append(
+            '<tr><td>'
+            f'<div class="cad-it-n">{_e(x["nom"])}</div>'
+            f'<div class="cad-it-d"><span class="cad-it-r">{_e(num)}</span> '
+            f'{_e(court)}{" · " + _e(sens) if sens else ""}</div></td>'
+            f'<td class="cad-it-e">{ech}</td>'
+            '<td class="n"><div class="cad-it-p">'
+            f'{_fmt(x["poids"])}</div>'
+            '<div class="cad-it-b"><div style="width:'
+            f'{max(100 * x["poids"] / pmax, 4):.0f}%"></div></div></td></tr>')
+    lignes.append('</tbody></table>')
+    st.markdown("".join(lignes), unsafe_allow_html=True)
+
+    ps = [x["poids"] for x in tous]
     st.markdown(
-        '<div class="cad-pied"><div class="cad-pied-c">'
-        f'<div class="cad-pied-t">{_e(T("cad_p4_t"))}</div>'
-        f'<p class="cad-pied-x">{_e(T("cad_p4_x"))}</p></div>'
-        '<div class="cad-pied-n">'
-        f'<div class="cad-pied-v">{stats["n"]}</div>'
-        f'<div class="cad-pied-l">'
-        f'{_e(T("cad_p4_lab", d=len(stats["dims"])))}</div>'
-        '</div></div>', unsafe_allow_html=True)
-
+        f'<p class="cad-note">{_e(T("cad_ind_n", k=len(vus), n=len(tous)))}</p>'
+        f'<p class="cad-note">'
+        f'{_e(T("cad_ind_pds", a=_fmt(min(ps)), b=_fmt(max(ps))))}</p>',
+        unsafe_allow_html=True)
 
 
 # --- 5 · les boucles de rétroaction ----------------------------------------
@@ -1503,6 +1749,7 @@ def _v_document(doc_complet):
                     mime="application/msword", use_container_width=True)
     else:
         st.info(T("cad_doc_absent"))
-    if doc_complet is not None:
-        with st.expander(T("cad_doc_lire")):
-            doc_complet()
+    # LE VOLET « OU LE LIRE À L'ÉCRAN » A SAUTÉ. Le document se télécharge, et
+    # c'est ce que la carte au-dessus propose ; en proposer en plus une
+    # transcription repliée mettait deux fois le même contenu sur la page,
+    # dont une derrière un clic qui n'annonce rien.

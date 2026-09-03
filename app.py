@@ -706,13 +706,18 @@ st.markdown(("""
        indispensable : sans lui la colonne de Streamlit s'étire sur toute la
        hauteur de la page et `sticky` n'a plus rien à quoi se coller. */
     position: sticky; top: 10px; align-self: flex-start;
-    border: 1px solid #dde9e2;
+    border: 1px solid #e4e2de;
     /* LE FOND EST POSÉ SUR LA COLONNE, PAS DERRIÈRE ELLE. Un dégradé qui
        blanchit à mi-hauteur disparaissait avant le bas de la liste : la
        moitié inférieure du menu était sur le même blanc que la page, et la
        colonne ne se distinguait plus. Le vert pâle tient sur toute la
        hauteur, et il n'est éclairci que légèrement vers le bas. */
-    background: linear-gradient(180deg, #edf5f0 0%, #f4f9f6 100%);
+    /* LE GRIS EST CELUI DU BANDEAU, AU PIXEL PRÈS. Le tiers gauche de
+       l'illustration est un #f0efed — un gris chaud, pas un blanc : posé
+       au-dessus d'une colonne verte, il paraissait sale par contraste. La
+       colonne reprend donc exactement sa couleur, et les deux se lisent
+       comme une seule zone de cadre autour du contenu blanc. */
+    background: linear-gradient(180deg, #f0efed 0%, #f7f6f4 100%);
     border-radius: 14px;
     padding: 12px 12px 16px; margin: 2px 0 0 -10px;
   }
@@ -954,6 +959,19 @@ st.markdown(("""
   .pied .pd-credit { color: #a9c7b8; }
   @media (max-width: 700px) { .pied { justify-content: flex-start; } }
 
+
+  /* LE LOGO DU PNUE EST UN CALQUE, PAS UN MORCEAU DE LA PHOTOGRAPHIE. Le
+     coin haut-droit du cadrage mêle du ciel vif et des frondaisons sombres :
+     recomposé dans l'image, un logo blanc s'y perdait par endroits et un
+     logo foncé ailleurs, et tout voile assez fort pour le sauver se voyait.
+     Posé en calque, il garde son ombre portée — laquelle le détache aussi
+     bien du clair que du sombre, sans rien changer à l'image. */
+  .bandeau-logo {
+    position: absolute; top: 16px; right: 32px; height: 54px; width: auto;
+    display: block; pointer-events: none; z-index: 4;
+    filter: drop-shadow(0 1px 4px rgba(18,40,25,.65))
+            drop-shadow(0 0 12px rgba(18,40,25,.35));
+  }
 
   /* L'ILLUSTRATION OCCUPE TOUTE LA LARGEUR ET N'EST PAS ROGNÉE. Streamlit
      impose à toute image un `object-fit: scale-down` et un `max-width` :
@@ -1844,6 +1862,8 @@ def _rendre_ruban():
             f'<div class="bandeau-haut bandeau-enveloppe">'
             f'<img class="bandeau-fond" alt="APRI" '
             f'src="data:image/jpeg;base64,{img}">'
+            f'<img class="bandeau-logo" alt="UNEP" '
+            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
             f'</div>', unsafe_allow_html=True)
 
 
