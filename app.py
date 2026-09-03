@@ -732,12 +732,12 @@ st.markdown(("""
        moitié inférieure du menu était sur le même blanc que la page, et la
        colonne ne se distinguait plus. Le vert pâle tient sur toute la
        hauteur, et il n'est éclairci que légèrement vers le bas. */
-    /* LE GRIS EST CELUI DU BANDEAU, AU PIXEL PRÈS. Le tiers gauche de
-       l'illustration est un #f0efed — un gris chaud, pas un blanc : posé
-       au-dessus d'une colonne verte, il paraissait sale par contraste. La
-       colonne reprend donc exactement sa couleur, et les deux se lisent
-       comme une seule zone de cadre autour du contenu blanc. */
-    background: linear-gradient(180deg, #f0efed 0%, #f7f6f4 100%);
+    /* BLANCHE, COMME LE DÉGRADÉ DU BANDEAU. La colonne reprenait le gris
+       chaud de l'illustration ; l'illustration, elle, part maintenant du
+       blanc pur, et un gris posé sous un dégradé blanc se voit comme une
+       salissure. Le bord et l'arrondi suffisent à détacher la colonne du
+       contenu — c'est une zone, pas une couleur. */
+    background: #ffffff;
     /* ELLE TOUCHE LE BORD GAUCHE DE L'ÉCRAN. La gouttière du bloc principal
        — 2,6 rem — laissait une bande blanche entre le bord de la fenêtre et
        la colonne, alors que le bandeau au-dessus, lui, va d'un bord à
@@ -1893,8 +1893,37 @@ def _bandeau_b64():
         return _b64.b64encode(f.read()).decode()
 
 
-def _rendre_ruban():
-    """Le bandeau composé, en tête de chaque page.
+_CSS_LANGUE_NUE = """
+<style>
+  /* SANS BANDEAU, LES DEUX CODES NE FLOTTENT PLUS SUR RIEN. Ils sont posés
+     en absolu dans le ruban, qui n'a plus de hauteur dès que l'illustration
+     ne s'y trouve pas : ils se seraient rangés en haut du contenu, en blanc
+     sur blanc. Ici, ils reprennent leur place dans le flux, alignés à
+     droite, et repassent en encre. */
+  div[class*="st-key-zone_langue"] {
+    position: static !important; margin: 2px 0 0 auto !important;
+    justify-content: flex-end !important;
+  }
+  div[class*="st-key-zone_langue"]::before {
+    background-color: #6b7590 !important; filter: none !important;
+  }
+  div[class*="st-key-lang_"] div[data-testid="stButton"] > button p {
+    color: #6b7590 !important; text-shadow: none !important;
+  }
+  div[class*="st-key-lang_"] div[data-testid="stButton"] > button:hover p,
+  div[class*="st-key-lang_"] div[data-testid="stButton"] > button[kind="primary"] p {
+    color: #1a6b52 !important;
+  }
+  div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
+  div[class*="st-key-lang_"]::before {
+    color: #b6bdc9 !important; text-shadow: none !important;
+  }
+</style>
+"""
+
+
+def _rendre_ruban(avec_image):
+    """Le bandeau composé, en tête de l'accueil.
 
     IL EST DÉJÀ COMPLET, ET ON N'Y AJOUTE RIEN. Le fichier porte la marque
     APRI, le filet, le titre, le sous-titre et le logo du PNUE : les
@@ -1902,19 +1931,21 @@ def _rendre_ruban():
     c'est exactement ce que faisaient la couche de titre et la réglette des
     pages intérieures. Elles sont retirées toutes les deux.
 
-    LE MÊME BANDEAU PARTOUT, ET C'EST CE QUI FAIT L'EN-TÊTE. Une couverture
-    sur l'accueil et une réglette ailleurs, c'étaient deux en-têtes à
-    reconnaître ; un seul, identique d'une page à l'autre, se lit une fois
-    pour toutes et laisse l'œil descendre droit au contenu.
+    IL N'EST PLUS QUE SUR L'ACCUEIL. Répété en tête des quinze pages, il
+    prenait le quart de chaque écran pour redire à chaque fois de quel site
+    il s'agit — une couverture qu'on relit à chaque chapitre. L'accueil la
+    porte, les pages intérieures partent droit au contenu. Le sélecteur de
+    langue, lui, reste partout : il vit dans le ruban et se pose dans le
+    flux, à droite, dès que l'illustration n'est pas là pour l'accueillir.
 
     IL N'EST PAS ROGNÉ. Sa composition va du logo de gauche à celui de
     droite : `object-fit: cover` couperait l'un des deux dès que la fenêtre
     change de proportion. La hauteur suit donc la largeur, et rien ne sort.
     """
     with _ruban:
-        img = _bandeau_b64()
-        if not img:
-            return
+        img = _bandeau_b64() if avec_image else None
+        if avec_image and not img:
+            avec_image = False
         # LES DEUX LANGUES SE POSENT DANS L'ANGLE BAS-DROIT DU BANDEAU.
         # Elles fermaient la colonne de menu, ce qui les rangeait parmi les
         # rubriques alors qu'elles n'en sont pas une : la langue est un
@@ -1932,6 +1963,9 @@ def _rendre_ruban():
                               type=("primary"
                                     if st.session_state["choix_langue"]
                                     == _code else "secondary"))
+        if not avec_image:
+            st.markdown(_CSS_LANGUE_NUE, unsafe_allow_html=True)
+            return
         st.markdown(
             f'<div class="bandeau-haut bandeau-enveloppe">'
             f'<img class="bandeau-fond" alt="APRI" '
@@ -1964,7 +1998,7 @@ _c_contenu = _col_page.container(key="zone_page")
 # Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par
 # la colonne de gauche qu'on vient de rendre.
-_rendre_ruban()
+_rendre_ruban(st.session_state["app_mode"] == MODE_PORTAIL)
 
 app_mode = st.session_state["app_mode"]
 

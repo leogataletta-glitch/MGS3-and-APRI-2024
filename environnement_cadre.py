@@ -67,17 +67,6 @@ TEXTES = {
 
     # ---------------- strate 3
     "env_s3": {"en": "The protocol in detail", "fr": "Le protocole en détail"},
-    "env_s3_note": {
-        "en": "Everything below is the framework note, folded. Thresholds and "
-              "scenarios are reproduced as written.",
-        "fr": "Tout ce qui suit est la note de cadrage, repliée. Les seuils et "
-              "les scénarios sont reproduits tels qu'ils sont écrits."},
-    "env_vf": {
-        "en": "Source document in French. Thresholds and scenarios are kept "
-              "in the original wording: a translated threshold is no longer "
-              "the threshold of the source note.",
-        "fr": "Les seuils et les scénarios sont reproduits dans la langue du "
-              "document source."},
     "env_v_terrain": {"en": "Field records, six indicators and their scale",
                       "fr": "Relevés de terrain, six indicateurs et leur barème"},
     "env_v_veg": {"en": "Vegetation and productivity, {n} indicators",
@@ -390,11 +379,13 @@ def render(complement=None):
         complement()
 
     # ===================== STRATE 3 — APPROFONDIR =========================
-    st.markdown(f'<div class="ev-etage">{_e(T("env_s3"))}</div>'
-                f'<p style="font-size:12.5px;color:{ENCRE3};line-height:1.55;'
-                f'max-width:96ch;margin:-4px 0 6px">{_e(T("env_s3_note"))}</p>',
+    # LE TITRE D'ÉTAGE SUFFIT. Les deux lignes qui le suivaient disaient que
+    # ce qui vient est la note de cadrage repliée et que ses seuils sont
+    # reproduits tels quels : la première décrit ce que les volets montrent
+    # déjà d'eux-mêmes, la seconde s'excusait d'un français que le lecteur
+    # voit sans qu'on le lui annonce.
+    st.markdown(f'<div class="ev-etage">{_e(T("env_s3"))}</div>',
                 unsafe_allow_html=True)
-    st.caption(T("env_vf"))
 
     with st.expander(T("env_v_terrain")):
         st.caption(c["intro"]["bareme"])
