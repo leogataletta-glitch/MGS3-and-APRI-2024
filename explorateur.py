@@ -191,6 +191,16 @@ TEXTES = {
               "disponible quand la ventilation contient les sections "
               "communales."},
     "ex_filtre": {"en": "Restrict to", "fr": "Restreindre à"},
+    "ex_filtres_t": {"en": "Filters", "fr": "Filtres"},
+    "ex_filtres_x": {
+        "en": "Several options can be picked in the same field: they add up. "
+              "Two different fields narrow one after the other.",
+        "fr": "Plusieurs options peuvent être retenues dans un même champ : "
+              "elles s'additionnent. Deux champs différents restreignent l'un "
+              "après l'autre."},
+    "ex_raz": {"en": "Clear all", "fr": "Tout effacer"},
+    "ex_res": {"en": "Results", "fr": "Résultats"},
+    "ex_aucun_f": {"en": "No filter", "fr": "Aucun filtre"},
     "ex_f_section": {"en": "Communal section", "fr": "Section communale"},
     "ex_f_paysage": {"en": "Landscape", "fr": "Paysage"},
     "ex_f_tous": {"en": "All", "fr": "Tout"},
@@ -268,6 +278,118 @@ STYLE = """
             margin-top:4px; font-variant-numeric:tabular-nums; }
   .ex-k-u { font-size:13px; font-weight:400; color:#8a93a5; }
   .ex-k-s { font-size:11px; color:#8a93a5; margin-top:3px; }
+
+  /* --- LA HIÉRARCHIE DE L'ÉCRAN, ÉCRITE PLUTÔT QUE SUGGÉRÉE --------------
+     Cinq moments se suivent — la question, la réponse, la ventilation, les
+     filtres, les résultats — et rien ne le disait : cinq rangées de menus
+     de même graisse se lisaient comme un formulaire à remplir dans un ordre
+     quelconque. Un numéro et un filet suffisent à dire l'ordre ; il n'y a
+     ni pictogramme ni couleur de plus. */
+  .ex-etape { display:flex; align-items:center; gap:10px; margin:20px 0 7px; }
+  .ex-etape .n { font-size:11px; font-weight:700; color:#1a6b52;
+            font-variant-numeric:tabular-nums; }
+  .ex-etape .t { font-size:10.5px; font-weight:700; letter-spacing:.1em;
+            text-transform:uppercase; color:#3c4761; white-space:nowrap; }
+  .ex-etape .l { flex:1 1 auto; height:1px; background:#e6ece8; }
+
+  /* --- LE PANNEAU DES FILTRES --------------------------------------------
+     Les menus se fondaient dans la page : rien ne disait où commençait la
+     restriction ni ce qui était retenu. Le panneau leur donne un fond, un
+     bord et un titre — assez pour qu'on le trouve d'un coup d'œil, assez peu
+     pour qu'il ne pèse pas plus que les résultats qu'il commande. */
+  .ex-pan-x { font-size:11.5px; color:#6b7590; line-height:1.5;
+            margin:0 0 10px; max-width:92ch; text-align:left !important; }
+  /* L'OPTION DÉJÀ RETENUE SE VOIT DANS LA LISTE OUVERTE. Sans quoi, rouvrir
+     un champ chargé oblige à comparer la liste aux étiquettes pour savoir ce
+     qui est déjà pris. La liste est posée par le navigateur hors du panneau :
+     la règle ne peut pas être portée par la clé du conteneur. */
+  [role="option"][aria-selected="true"] {
+      background:#eef5f1 !important; color:#1a6b52 !important;
+      font-weight:600 !important;
+  }
+  /* « SELECT ALL » EST RETIRÉ DE LA LISTE. Streamlit l'écrit en anglais quel
+     que soit le site, et il ne dit rien de plus que le champ vide : ne rien
+     retenir, c'est déjà tout retenir. Dix étiquettes pour dire « tout » ne
+     seraient qu'une façon plus lourde de ne rien filtrer. */
+  [role="option"][data-key="__select_all__"] { display:none !important; }
+</style>
+"""
+
+# LA FEUILLE DU PANNEAU EST À PART, parce qu'elle vise des clés de conteneur
+# que Streamlit ne pose qu'au moment du rendu : elle est émise une fois par
+# panneau, avec la clé exacte, et n'a donc rien à faire dans la feuille
+# générale.
+_CSS_PANNEAU = """
+<style>
+  div[class*="st-key-KEY"] {
+      background: linear-gradient(180deg,#f3f8f5 0%,#fbfcfb 100%);
+      border: 1px solid #d5e2da; border-radius: 14px;
+      padding: 14px 16px 6px; margin: 2px 0 4px;
+  }
+  /* LES INTITULÉS DE CHAMP SONT PLUS FRANCS QUE CEUX DE LA PAGE. Dans un
+     panneau teinté, le gris pâle des libellés Streamlit devenait illisible ;
+     ils passent en encre et en capitales espacées, comme les en-têtes de
+     colonne des tableaux. */
+  div[class*="st-key-KEY"] label p {
+      font-size: 10.5px !important; font-weight: 700 !important;
+      letter-spacing: .09em !important; text-transform: uppercase !important;
+      color: #3c4761 !important;
+  }
+  /* LE CHAMP LUI-MÊME. Cette version de Streamlit ne dessine plus ses menus
+     avec BaseWeb mais avec react-aria : le contrôle est le `div[role=group]`
+     du champ, les options retenues sont des `span[data-tag]`, et une feuille
+     écrite pour l'ancien jeu d'attributs ne toucherait rien du tout. */
+  div[class*="st-key-KEY"] div[data-testid="stMultiSelect"] div[role="group"] {
+      background: #fff !important; border: 1px solid #cddbd2 !important;
+      border-radius: 9px !important; min-height: 38px;
+      /* UN CHAMP CHARGÉ NE POUSSE PAS LA PAGE. Dix sections retenues
+         donneraient un champ haut de quatre rangées et les cinq colonnes se
+         désaligneraient ; au-delà de trois rangées, on fait défiler dans le
+         champ. */
+      max-height: 108px; overflow-y: auto !important;
+  }
+  /* LE CHAMP QUI PORTE UNE SÉLECTION SE VOIT DE LOIN : bord vert et halo. */
+  div[class*="st-key-KEY"] div[data-testid="stMultiSelect"]
+      div[role="group"]:has(span[data-tag]) {
+      border-color: #1a6b52 !important;
+      box-shadow: 0 0 0 1px rgba(26,107,82,.16) !important;
+  }
+  /* CHAQUE OPTION RETENUE EST UNE ÉTIQUETTE VERTE, AVEC SA CROIX. C\'est le
+     seul endroit du site où le vert profond sert de fond à du texte : ici il
+     dit « retenu », et la croix dit qu\'on peut le retirer sans rouvrir le
+     menu. */
+  div[class*="st-key-KEY"] span[data-tag] {
+      background: #1a6b52 !important; border: none !important;
+      border-radius: 7px !important;
+      display: inline-flex !important; align-items: center !important;
+      gap: 3px !important;
+      margin: 2px 4px 2px 0 !important; padding: 2px 5px 2px 8px !important;
+  }
+  div[class*="st-key-KEY"] span[data-tag] > span {
+      color: #fff !important; font-size: 11px !important;
+      font-weight: 600 !important;
+  }
+  div[class*="st-key-KEY"] span[data-tag] button {
+      color: #fff !important; opacity: .8; border-radius: 4px !important;
+  }
+  div[class*="st-key-KEY"] span[data-tag] button:hover {
+      opacity: 1; background: rgba(255,255,255,.22) !important;
+  }
+  div[class*="st-key-KEY"] span[data-tag] svg { stroke: #fff !important; }
+  /* LE BOUTON D\'EFFACEMENT EST UNE MENTION, PAS UNE ACTION PRINCIPALE. */
+  div[class*="st-key-KEY"] div[data-testid="stButton"] > button {
+      background: transparent !important; border: 1px solid #cddbd2 !important;
+      color: #1a6b52 !important; border-radius: 8px !important;
+      min-height: 30px !important; height: 30px !important;
+      padding: 0 12px !important; width: 100% !important;
+  }
+  div[class*="st-key-KEY"] div[data-testid="stButton"] > button p {
+      font-size: 11px !important; font-weight: 600 !important;
+      color: #1a6b52 !important; letter-spacing: .02em !important;
+  }
+  div[class*="st-key-KEY"] div[data-testid="stButton"] > button:hover {
+      background: #eaf2ed !important; border-color: #1a6b52 !important;
+  }
 </style>
 """
 
@@ -275,6 +397,12 @@ STYLE = """
 def _e(t):
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
+
+
+def _n(v):
+    """Un effectif, avec sa séparation de milliers dans la langue du site."""
+    s = f"{int(v):,}"
+    return s.replace(",", "\u202f") if i18n.get_lang() == "fr" else s
 
 
 def _f(v, dec=1):
@@ -293,51 +421,89 @@ def _lib(v):
     return T(cles[v]) if v in cles else v
 
 
-def _masque_filtres(cat, choix):
-    """Le sous-échantillon retenu par les trois filtres, en ET.
+def _masque_multi(cat, choix):
+    """Le sous-échantillon retenu par des filtres à choix multiples.
 
-    LES TROIS NIVEAUX SE CUMULENT, ET C'EST VOULU. « Littoral » ET « femmes »
-    ET « Trichet » restreint trois fois de suite ; l'effectif restant est
-    annoncé sous les commandes, parce qu'une part calculée sur onze ménages
-    doit se lire en sachant qu'ils sont onze.
+    DEUX LOGIQUES, ET C'EST CE QUI REND LE PANNEAU UTILE. À l'intérieur d'un
+    même champ, les options s'ADDITIONNENT : « Anse à Drick, Barbois, Dumont »
+    retient les ménages des trois sections réunies, parce que personne n'a
+    jamais voulu dire « les ménages qui sont à la fois dans trois sections »
+    — la phrase n'a pas de sens. Entre deux champs, elles se CUMULENT :
+    « ces trois sections » ET « les femmes » restreint deux fois de suite.
+    Un champ vide ne restreint rien.
     """
     m = np.ones(cat["n"], dtype=bool)
-    for v in choix:
-        if not v:
+    for _axe, vals in choix.items():
+        vals = [v for v in (vals or []) if v]
+        if not vals:
             continue
-        g = cat["groupes"].get(v)
-        if g is not None:
-            m &= g
+        ou = np.zeros(cat["n"], dtype=bool)
+        for v in vals:
+            g = cat["groupes"].get(v)
+            if g is not None:
+                ou |= g
+        m &= ou
     return m
 
 
-def _filtres(cat):
-    """Une barre déroulante par registre : localité, sexe, âge, richesse,
-    paysage.
+def _etape(n, cle):
+    """Un numéro, un intitulé, un filet : le rang d'un moment dans l'écran."""
+    st.markdown(
+        f'<div class="ex-etape"><span class="n">{n}</span>'
+        f'<span class="t">{_e(T(cle))}</span><span class="l"></span></div>',
+        unsafe_allow_html=True)
 
-    UN MENU PAR REGISTRE, PAS UN MENU POUR TROIS. Les trois registres sociaux
-    tenaient dans une seule liste aplatie — « Sexe · Femmes », « Âge · 60+ »,
-    « Catégorie · Cat C » à la suite — et cette liste ne permettait d'en
-    retenir qu'un : demander les femmes de plus de soixante ans était
-    impossible alors que le croisement, lui, l'était. Cinq menus séparés
-    posent la question comme on la pense, et se cumulent en ET.
+
+def _panneau_filtres(cat, cle, registres, num, titre_cle):
+    """Le panneau des filtres : un champ à choix multiples par registre.
+
+    POURQUOI UN PANNEAU ET PLUS UNE RANGÉE DE MENUS. Les cinq menus vivaient
+    au milieu de la page, de la même couleur qu'elle et de la même graisse
+    que les commandes d'affichage : on ne savait ni où commençait la
+    restriction, ni ce qui était retenu, ni comment revenir en arrière. Le
+    panneau répond aux trois d'un coup — un fond, un titre, et un bouton qui
+    remet tout à zéro.
+
+    LE BOUTON EST RENDU AVANT LES CHAMPS, ET C'EST LOAD-BEARING. Streamlit
+    interdit d'écrire dans l'état d'un widget déjà construit : vider les
+    sélections depuis un bouton posé APRÈS les champs lèverait une exception.
+    Posé avant, il vide l'état pendant que les champs n'existent pas encore,
+    et ils naissent vides dans la même passe — sans second aller-retour.
     """
-    cles = [("section", "ex_f_section", "sec", None),
-            ("sexe", "ex_ax_sexe", "sexe", _lib),
-            ("age", "ex_ax_age", "age", _lib),
-            ("richesse", "ex_ax_richesse", "rich", _lib),
-            ("paysage", "ex_f_paysage", "pay", _lib)]
-    cols = st.columns(len(cles))
-    choix = []
-    for (axe, lab, suff, fmt), col in zip(cles, cols):
-        with col:
-            v = st.selectbox(
-                T(lab), [None] + list(_VALEURS.get(axe, [])),
-                key=f"ex_f_{suff}",
-                format_func=lambda v, f=fmt: (T("ex_f_tous") if v is None
-                                              else (f(v) if f else v)))
-            choix.append(v)
-    return _masque_filtres(cat, choix), any(choix)
+    st.markdown(_CSS_PANNEAU.replace("KEY", cle), unsafe_allow_html=True)
+    cles = {axe: f"{cle}_{axe}" for axe, _l in registres}
+    with st.container(key=cle):
+        h1, h2 = st.columns([5, 1], vertical_alignment="center")
+        with h1:
+            st.markdown(
+                f'<div class="ex-etape" style="margin:0 0 3px">'
+                f'<span class="n">{num}</span>'
+                f'<span class="t">{_e(T(titre_cle))}</span>'
+                f'<span class="l"></span></div>'
+                f'<p class="ex-pan-x">{_e(T("ex_filtres_x"))}</p>',
+                unsafe_allow_html=True)
+        with h2:
+            if st.button(T("ex_raz"), key=f"{cle}_raz"):
+                for k in cles.values():
+                    st.session_state[k] = []
+        cols = st.columns(len(registres))
+        choix = {}
+        for (axe, lab), col in zip(registres, cols):
+            with col:
+                choix[axe] = st.multiselect(
+                    T(lab), list(_VALEURS.get(axe, [])), key=cles[axe],
+                    placeholder=T("ex_f_tous"), format_func=_lib)
+    poses = [(a, v) for a, vs in choix.items() for v in (vs or [])]
+    return _masque_multi(cat, choix), poses
+
+
+# LES CINQ REGISTRES DE RESTRICTION, DANS L'ORDRE OÙ ON LES PENSE : où, puis
+# qui. Ils étaient décrits deux fois — une liste ici, une autre pour les
+# scores — et les deux écrans avaient fini par ne plus proposer tout à fait
+# les mêmes intitulés.
+_REGISTRES_F = [("section", "ex_f_section"), ("sexe", "ex_ax_sexe"),
+                ("age", "ex_ax_age"), ("richesse", "ex_ax_richesse"),
+                ("paysage", "ex_f_paysage")]
 
 
 def _carte(lignes):
@@ -708,7 +874,8 @@ def render(cat, mode=None):
         g, d = st.columns([1.55, 1])
         with g:
             qi = st.selectbox(
-                T("ex_question"), [x["i"] for x in questions], key="ex_q",
+                f'1 · {T("ex_question")}', [x["i"] for x in questions],
+                key="ex_q",
                 format_func=lambda i: _libelle_question(
                     next(x for x in questions if x["i"] == i)))
         q = next(x for x in questions if x["i"] == qi)
@@ -716,7 +883,7 @@ def render(cat, mode=None):
             # LA CLÉ DE LA RÉPONSE DÉPEND DE LA QUESTION : sans cela, changer
             # de question garderait l'index de l'ancienne réponse et
             # afficherait une modalité qui n'a rien à voir.
-            modalite = st.selectbox(T("ex_reponse"), q["modalites"],
+            modalite = st.selectbox(f'2 · {T("ex_reponse")}', q["modalites"],
                                     key=f"ex_m_{qi}")
 
     # ---- 2 · la ventilation, le format, les extrêmes ---------------------
@@ -730,7 +897,7 @@ def render(cat, mode=None):
     c1, c2, c3 = st.columns([1.6, 1, 1.15])
     with c1:
         axe = st.selectbox(
-            T("ex_axe"), dispo, key=f"ex_axe_{mesure}",
+            f'3 · {T("ex_axe")}', dispo, key=f"ex_axe_{mesure}",
             format_func=lambda a: T(dict(AXES)[a]))
     axes = [axe]
     with c2:
@@ -746,18 +913,17 @@ def render(cat, mode=None):
                                      "topflop": "ex_topflop",
                                      "ecart": "ex_ecart"}[c]))
 
-    # ---- les trois niveaux de restriction --------------------------------
-    st.markdown(f'<div class="ex-lab" style="margin:10px 0 2px">'
-                f'{_e(T("ex_filtre"))}</div>', unsafe_allow_html=True)
-    filtre, actif = _filtres(cat)
+    # ---- 4 · les cinq registres, cumulables ------------------------------
+    filtre, poses = _panneau_filtres(cat, "ex_pan", _REGISTRES_F,
+                                     4, "ex_filtres_t")
     n_f = int(filtre.sum())
     if n_f == 0:
         st.info(T("ex_filtre_vide"))
         return
-    if actif:
+    if poses:
         st.markdown(
             f'<p class="ex-note" style="margin:2px 0 0">'
-            f'{_e(T("ex_filtre_n", n=n_f, t=cat["n"]))}</p>',
+            f'{_e(T("ex_filtre_n", n=_n(n_f), t=_n(cat["n"])))}</p>',
             unsafe_allow_html=True)
 
     lignes, ens = _ventiler(cat, mesure, q, modalite, axes, filtre, cible)
@@ -767,7 +933,8 @@ def render(cat, mode=None):
         return
     montrees = _filtrer(lignes, extremes, ens)
 
-    # ---- 3 · le dessin ---------------------------------------------------
+    # ---- 5 · le dessin ---------------------------------------------------
+    _etape(5, "ex_res")
     # LE TABLEAU EST UN MODE, PAS UNE ANNEXE. Il était accroché sous chaque
     # dessin : on lisait la même colonne de chiffres deux fois, une fois au
     # bout des barres et une fois dessous, et l'écran doublait de hauteur pour
@@ -831,29 +998,16 @@ _REGISTRES_S = [("section", "ex_ax_section"), ("sexe", "ex_ax_sexe"),
 
 
 def _zone_filtres(cat):
-    """Les cinq restrictions, cumulables, et le sous-échantillon qu'elles font.
+    """Les cinq restrictions des scores, dans le même panneau que les brutes.
 
-    ELLES SE CUMULENT EN ET, ET C'EST TOUT L'INTÉRÊT. « Les femmes de 40 à 59
-    ans, catégorie C, en montagne, à Trichet » est une question légitime et
-    elle n'a pas de page à elle : cinq menus la posent. L'effectif restant est
-    annoncé sous les menus, parce qu'un score calculé sur onze ménages doit se
-    lire en sachant qu'ils sont onze.
+    ELLES SE CUMULENT, ET PLUSIEURS OPTIONS TIENNENT DANS UN MÊME CHAMP.
+    « Les femmes de 40 à 59 ans, catégorie C, en montagne, à Trichet OU
+    Barbois » est une question légitime et elle n'a pas de page à elle : un
+    panneau la pose. L'effectif restant est annoncé sous les champs, parce
+    qu'un score calculé sur onze ménages doit se lire en sachant qu'ils sont
+    onze.
     """
-    cols = st.columns(len(_REGISTRES_S))
-    masque = np.ones(cat["n"], dtype=bool)
-    poses = []
-    for (axe, lab), col in zip(_REGISTRES_S, cols):
-        with col:
-            v = st.selectbox(
-                T(lab), [None] + list(_VALEURS.get(axe, [])),
-                key=f"exs_f_{axe}",
-                format_func=lambda v: T("ex_f_tous") if v is None else _lib(v))
-        if v is not None:
-            g = cat["groupes"].get(v)
-            if g is not None:
-                masque = masque & g
-                poses.append((axe, v))
-    return masque, poses
+    return _panneau_filtres(cat, "exs_pan", _REGISTRES_S, 2, "ex_s_qui")
 
 
 def _zone_cible(cat):
@@ -898,7 +1052,7 @@ def _kpi_score(lib, sc, n, tot, sc_ech):
         f'</div><div class="ex-k-s">{_e(lib)}</div></div>'
         f'<div class="ex-k"><div class="ex-k-l">{_e(T("ex_s_ech"))}</div>'
         f'<div class="ex-k-v">{_f(sc_ech, 2)}<span class="ex-k-u"> / 10</span>'
-        f'</div><div class="ex-k-s">{_e(T("ex_s_n", n=n, t=tot))}</div></div>'
+        f'</div><div class="ex-k-s">{_e(T("ex_s_n", n=_n(n), t=_n(tot)))}</div></div>'
         f'<div class="ex-k"><div class="ex-k-l">'
         f'{_e(T("ex_s_ecart_ech"))}</div>'
         f'<div class="ex-k-v" style="color:{coul}">{_f(ec, 2)}</div>'
@@ -1013,13 +1167,10 @@ def render_scores(cat):
         f'{_e(T("ex_s_intro"))}</p>', unsafe_allow_html=True)
 
     # ---- 1 · ce qu'on mesure ---------------------------------------------
-    st.markdown(f'<div class="ex-lab">{_e(T("ex_s_quoi"))}</div>',
-                unsafe_allow_html=True)
+    _etape(1, "ex_s_quoi")
     cible, lib_cible, ind, inds = _zone_cible(cat)
 
     # ---- 2 · sur qui -----------------------------------------------------
-    st.markdown(f'<div class="ex-lab">{_e(T("ex_s_qui"))}</div>',
-                unsafe_allow_html=True)
     filtre, poses = _zone_filtres(cat)
     n_f = int(filtre.sum())
     if n_f == 0:
@@ -1027,12 +1178,11 @@ def render_scores(cat):
         return
     if poses:
         st.markdown(f'<p class="ex-note" style="margin:2px 0 0">'
-                    f'{_e(T("ex_s_n", n=n_f, t=cat["n"]))}</p>',
+                    f'{_e(T("ex_s_n", n=_n(n_f), t=_n(cat["n"])))}</p>',
                     unsafe_allow_html=True)
 
     # ---- 3 · comment le lire ---------------------------------------------
-    st.markdown(f'<div class="ex-lab">{_e(T("ex_s_comment"))}</div>',
-                unsafe_allow_html=True)
+    _etape(3, "ex_s_comment")
     c1, c2, c3 = st.columns([1.25, 1, 1.3])
     with c1:
         axe = st.selectbox(
@@ -1054,6 +1204,7 @@ def render_scores(cat):
 
     # ---- les écarts entre groupes ont leur propre tableau -----------------
     if mode == "ecarts":
+        _etape(4, "ex_res")
         st.markdown(f'<div class="titre-bloc" style="margin-top:16px">'
                     f'{_e(T("ex_s_ec_t"))}</div>'
                     f'<p class="ex-note" style="margin:0 0 4px">'
@@ -1079,6 +1230,7 @@ def render_scores(cat):
         if sc_sel is None:
             st.info(T("ex_s_rien"))
             return
+        _etape(4, "ex_res")
         st.markdown(_kpi_score(lib_cible, sc_sel, nb_sel, cat["n"], sc_ech),
                     unsafe_allow_html=True)
         return
@@ -1099,7 +1251,8 @@ def render_scores(cat):
         lignes = sorted(lignes, key=lambda x: x["score"],
                         reverse=(mode == "haut"))[:combien]
 
-    st.markdown(f'<div class="titre-bloc" style="margin-top:14px">'
+    _etape(4, "ex_res")
+    st.markdown(f'<div class="titre-bloc" style="margin-top:4px">'
                 f'{_e(titre)}</div>', unsafe_allow_html=True)
     ens = {"n": nb_sel, "k": None, "part": sc_sel, "score": sc_sel}
 
