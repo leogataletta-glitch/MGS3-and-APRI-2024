@@ -785,12 +785,7 @@ st.markdown(("""
     div[data-testid="stButton"] > button[kind="primary"]:hover {
     background: #e8f1ec !important;
   }
-  /* LES DEUX LANGUES FERMENT LA COLONNE, séparées par un filet : ce n'est pas
-     une rubrique de plus, c'est un réglage du site. */
-  div[class*="st-key-zone_langue"] {
-    margin-top: 10px !important; padding-top: 10px !important;
-    border-top: 1px solid #eef2f7;
-  }
+
   /* SUR ÉCRAN ÉTROIT LA COLONNE REDEVIENT UNE RANGÉE. Une colonne de menu
      large de quatre-vingts pixels sur un téléphone ne sert personne : les
      entrées se remettent côte à côte et passent à la ligne. */
@@ -1011,24 +1006,35 @@ st.markdown(("""
      intérieur, le retrait automatique laissait l'enveloppe prendre toute la
      largeur : la paire tombait sur une deuxième ligne, à droite mais en
      dessous. Les deux reçoivent donc la même largeur et la même marge. */
-  /* DANS UNE COLONNE, LES DEUX LANGUES NE SONT PLUS POUSSÉES À DROITE : elles
-     ferment la liste, à sa largeur. La marge automatique qui les collait au
-     bord droit de la rangée horizontale n'a plus d'objet. */
-  div[class*="st-key-zone_nav"] > div:has(div[class*="st-key-zone_langue"]),
+  /* LE SÉLECTEUR DE LANGUE EST POSÉ DANS LE BANDEAU, dans son angle bas-droit,
+     par-dessus l'herbe. `zone_ruban` devient le repère de position ; sans
+     cela le bloc se placerait par rapport à la fenêtre et glisserait au
+     défilement. */
+  div[class*="st-key-zone_ruban"] { position: relative; }
   div[class*="st-key-zone_langue"] {
-    width: 100% !important; flex: 0 0 auto !important; min-width: 0 !important;
+    position: absolute !important; right: calc(2.6rem * var(--dz));
+    bottom: 12px; z-index: 6; width: auto !important;
+  }
+  /* LE GLOBE, PEINT EN MASQUE DEVANT LES DEUX CODES. On ne peut rien écrire
+     dans le contenu d'un bouton Streamlit ; le tracé est donc posé en
+     `::before` sur le conteneur, où il devient une case de la rangée. */
+  div[class*="st-key-zone_langue"]::before {
+    content: ""; width: 15px; height: 15px; flex: 0 0 15px;
+    margin-right: 9px; background-color: #ffffff;
+    -webkit-mask: MASQUE center/contain no-repeat;
+    mask: MASQUE center/contain no-repeat;
+    filter: drop-shadow(0 1px 2px rgba(20,45,30,.45));
   }
   /* Streamlit donne au conteneur du bouton la largeur de son mot : sans ces
      deux lignes, le `width:100%` du bouton vaut 100 % de vingt-cinq pixels,
      et la pastille se ferme en rond. La classe à clé est posée SUR le
      conteneur d'élément, pas sur un parent : elle se sélectionne donc
      directement. */
-  /* DEUX MOTS, PAS DEUX PASTILLES. Une pastille est un bouton d'action ; la
-     langue n'est pas une action, c'est un état du site — et deux pastilles
-     encadrées, posées au pied d'une colonne de titres nus, pesaient plus que
-     les sept rubriques au-dessus d'elles. Deux codes, une barre oblique, le
-     courant en gras foncé et l'autre en gris : c'est la convention de tous
-     les sites bilingues, et elle ne coûte rien à l'œil. */
+  /* DEUX MOTS EN BLANC, PAS DEUX PASTILLES. Une pastille est un bouton
+     d'action ; la langue n'est pas une action, c'est un état du site. Posés
+     sur l'herbe du bandeau, les deux codes sont blancs, et une ombre portée
+     les détache là où le vert passe clair — une plaque translucide, elle,
+     découperait un rectangle net dans la photographie. */
   div[class*="st-key-lang_"],
   div[class*="st-key-lang_"] div[data-testid="stButton"] {
     width: auto !important;
@@ -1047,36 +1053,34 @@ st.markdown(("""
   div[data-testid="stButton"] > button p {
     font-size: 11.5px !important; font-weight: 600 !important;
     letter-spacing: .08em !important; text-transform: uppercase;
-    color: #a7b0be !important; text-align: left !important;
+    color: rgba(255,255,255,.72) !important; text-align: left !important;
+    text-shadow: 0 1px 3px rgba(20,45,30,.55);
     transition: color .15s ease;
   }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button:hover { background: transparent !important; }
   div[class*="st-key-lang_"]
-  div[data-testid="stButton"] > button:hover p { color: #101728 !important; }
+  div[data-testid="stButton"] > button:hover p { color: #ffffff !important; }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] p {
-    color: #101728 !important; font-weight: 800 !important;
+    color: #ffffff !important; font-weight: 800 !important;
   }
-  /* LA BARRE OBLIQUE SÉPARE LES DEUX, et elle est portée par la seconde
-     colonne : c'est le seul endroit où elle tombe exactement entre les deux
-     mots quel que soit l'ordre des langues. */
   div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
-  div[class*="st-key-lang_"] { position: relative; padding-left: 9px; }
+  div[class*="st-key-lang_"] { position: relative; padding-left: 13px; }
   div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
   div[class*="st-key-lang_"]::before {
-    content: "/"; position: absolute; left: 0; top: 2px;
-    font-size: 11.5px; color: #ccd4de;
+    content: "/"; position: absolute; left: 2px; top: 2px;
+    font-size: 11.5px; color: rgba(255,255,255,.5);
+    text-shadow: 0 1px 3px rgba(20,45,30,.55);
   }
-  /* LA RANGÉE DES DEUX LANGUES, ET ELLE SEULE. `:has()` traverse toute la
-     descendance : tant que la barre était un bloc à part, seule la rangée des
-     deux boutons portait `st-key-lang_`. Depuis que le menu vit dans une
-     colonne, la grande rangée « menu | page » contient elle aussi ces boutons
-     — et elle héritait de ce plafond de cent trente-deux pixels, ce qui
-     écrasait la page entière. On l'ancre donc au conteneur de langue. */
+  div[class*="st-key-zone_langue"] {
+    display: flex !important; flex-direction: row !important;
+    align-items: center !important;
+  }
+  div[class*="st-key-zone_langue"] div[data-testid="stElementContainer"],
   div[class*="st-key-zone_langue"] div[data-testid="stHorizontalBlock"] {
     padding: 0; margin: 0; max-width: 96px; gap: 0 !important;
-    flex-wrap: nowrap !important;
+    flex-wrap: nowrap !important; width: auto !important;
   }
   div[class*="st-key-zone_langue"] div[data-testid="stColumn"] {
     width: auto !important; flex: 0 0 auto !important; min-width: 0 !important;
@@ -1274,7 +1278,11 @@ st.markdown(("""
 </style>
 """).replace("__ICONE_RESET__", icones.regle_masque(
     'section[data-testid="stSidebar"] div[class*="st-key-f_reset_global"] '
-    'div[data-testid="stButton"] > button', "rafraichir", 16, 10)),
+    'div[data-testid="stButton"] > button', "rafraichir", 16, 10))
+   # LE GLOBE DU SÉLECTEUR DE LANGUE. Le tracé est injecté ici plutôt
+   # qu'écrit dans la feuille : il vient du même jeu d'icônes que le reste du
+   # site, et une URL de données recopiée à la main dériverait du tracé.
+   .replace("MASQUE", icones.masque("monde")),
     unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------------
@@ -1815,6 +1823,23 @@ def _rendre_ruban():
         img = _bandeau_b64()
         if not img:
             return
+        # LES DEUX LANGUES SE POSENT DANS L'ANGLE BAS-DROIT DU BANDEAU.
+        # Elles fermaient la colonne de menu, ce qui les rangeait parmi les
+        # rubriques alors qu'elles n'en sont pas une : la langue est un
+        # réglage du site, et sa place est avec l'enseigne, pas avec la table
+        # des matières. Le globe est le signe consacré — il se lit sans
+        # traduction, ce qu'aucun mot ne peut faire ici par construction.
+        with st.container(key="zone_langue"):
+            _cl = st.columns(2)
+            # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie est en tête.
+            _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
+            for _col, _code in zip(_cl, _ordre):
+                with _col:
+                    st.button(_code.upper(), key=f"lang_{_code}",
+                              on_click=_changer_langue, args=(_code,),
+                              type=("primary"
+                                    if st.session_state["choix_langue"]
+                                    == _code else "secondary"))
         st.markdown(
             f'<div class="bandeau-haut bandeau-enveloppe">'
             f'<img class="bandeau-fond" alt="APRI" '
@@ -1836,30 +1861,6 @@ with _zone_nav:
                         unsafe_allow_html=True)
         for _mode, _icone in _entrees:
             _entree_nav(_mode, _icone)
-
-    # LES DEUX LANGUES FERMENT LA BARRE, À DROITE.
-    # Elles ont été un moment posées sur l'illustration, en blanc ; celle-ci
-    # ne paraît plus que sur l'accueil, et un réglage du site ne peut pas
-    # n'exister que sur une page. Dans la barre, qui est partout, elles sont
-    # un élément de plus de la même rangée, poussé à droite par une marge
-    # automatique : rien à recalculer si la barre se replie.
-    #
-    # DEUX CODES, ET NON DEUX NOMS. Le nom d'une langue lu dans cette langue
-    # n'apprend rien à qui la cherche ; les deux codes ISO sont la convention
-    # de tous les sites bilingues. `i18n.LANGUES` garde les noms complets, qui
-    # restent le libellé juste partout ailleurs.
-    with st.container(key="zone_langue"):
-        _cl = st.columns(2)
-        # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie est en tête.
-        _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
-        for _col, _code in zip(_cl, _ordre):
-            with _col:
-                st.button(_code.upper(), key=f"lang_{_code}",
-                          on_click=_changer_langue, args=(_code,),
-                          type=("primary"
-                                if st.session_state["choix_langue"] == _code
-                                else "secondary"))
-
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
 # l'aiguillage, pour que chaque page se dessine dedans sans avoir à savoir

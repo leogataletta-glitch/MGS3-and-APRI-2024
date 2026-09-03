@@ -59,12 +59,25 @@ STYLE = """
   /* La première ligne est le titre, la seconde la description : deux
      paragraphes dans le même libellé, et le CSS les distingue par leur rang
      plutôt que par une classe qu'on ne peut pas poser dans un libellé. */
+  /* LE LIBELLÉ EST CENTRÉ, EN PETITES CAPITALES, ET SANS GRAS. Le gras d'un
+     titre de carte le faisait lire comme un titre de section ; ce sont des
+     onglets, et une capitale espacée dit « rubrique » sans peser. Le
+     centrage vaut aussi verticalement — les cartes s'étirent à la hauteur de
+     la plus haute, et un libellé collé en haut d'une carte de deux lignes
+     laissait un vide sous lui. */
+  div[class*="st-key-ong_"] div[role="radiogroup"] > label > div,
+  div[class*="st-key-ong_"] div[role="radiogroup"] > label > div > div {
+      height: 100% !important;
+      display: flex !important; flex-direction: column !important;
+      justify-content: center !important; align-items: center !important;
+  }
   div[class*="st-key-ong_"] div[role="radiogroup"] > label p {
       margin: 0 !important; text-align: center !important;
   }
   div[class*="st-key-ong_"] div[role="radiogroup"] > label p:first-child {
-      font-size: 13px !important; font-weight: 700 !important;
-      color: #101728 !important; line-height: 1.3 !important;
+      font-size: 11.5px !important; font-weight: 500 !important;
+      letter-spacing: .09em !important; text-transform: uppercase !important;
+      color: #3c4761 !important; line-height: 1.35 !important;
   }
   div[class*="st-key-ong_"] div[role="radiogroup"] > label p:not(:first-child) {
       font-size: 11.5px !important; font-weight: 400 !important;
@@ -84,7 +97,9 @@ STYLE = """
       box-shadow: inset 0 3px 0 0 #2a6b3f !important;
   }
   div[class*="st-key-ong_"] div[role="radiogroup"]
-      > label:has(input:checked) p:first-child { color: #1a6b52 !important; }
+      > label:has(input:checked) p:first-child {
+      color: #1a6b52 !important; font-weight: 700 !important;
+  }
   div[class*="st-key-ong_"] div[role="radiogroup"]
       > label:has(input:checked) p:not(:first-child) {
       color: #3c4761 !important;

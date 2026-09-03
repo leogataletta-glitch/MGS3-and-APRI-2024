@@ -89,11 +89,6 @@ TEXTES = {
     # promet. Les libellés sont ceux du menu, à un mot près : « Télécharger
     # les données » annonce ce qu'on vient y faire, là où l'onglet se contente
     # de nommer la rubrique.
-    "po_c1": {"en": "Explore the Territory", "fr": "Explorer le territoire"},
-    "po_c2": {"en": "Resilience Framework", "fr": "Cadre de résilience"},
-    "po_c3": {"en": "Results Analysis", "fr": "Analyse des résultats"},
-    "po_c4": {"en": "Feedback Loops", "fr": "Boucles de rétroaction"},
-    "po_c5": {"en": "Download Data", "fr": "Télécharger les données"},
 
     # --- LA PHRASE D'OUVERTURE, SOUS LE BANDEAU
     # ELLE A REMPLACÉ LA DÉFINITION EN CADRE. La définition longue disait la
@@ -298,10 +293,16 @@ STYLE = """
      elle prend donc la place et le poids d'un titre. Le `!important` est
      nécessaire — la feuille de l'application fixe la taille et l'alignement
      de tous les paragraphes du contenu, avec une spécificité supérieure. */
-  p.uma-n  { font-size:13.5px !important; font-weight:700;
-             color:#3c4761 !important; margin:0 0 12px;
-             line-height:1.45 !important; max-width:52ch;
+  /* LA LÉGENDE DE LA CARTE TIENT SUR UNE LIGNE. À cinquante-deux caractères
+     de large elle se cassait en deux au-dessus du dessin, et une légende sur
+     deux lignes prend autant de place que le carton de situation qu'elle
+     surplombe. Elle a toute la largeur de la colonne, et elle s'y range. */
+  p.uma-n  { font-size:13px !important; font-weight:700;
+             color:#3c4761 !important; margin:0 0 10px;
+             line-height:1.45 !important; max-width:none !important;
+             white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
              text-align:left !important; }
+  @media (max-width: 1200px) { p.uma-n { white-space:normal; } }
 
   @media (max-width:760px){ .uma-t{font-size:25px} }
 </style>
@@ -439,101 +440,6 @@ def _mesures(lang):
             "n_commun": len(commun), "sections": ordre, "dims": dims,
             "faits": faits, "menages": menages, "bandes": bandes,
             "paysages": paysages}
-
-
-def _aller(mode):
-    st.session_state["app_mode"] = mode
-
-
-# LES CINQ ENTRÉES DU SITE, ET RIEN QUE CINQ.
-# La barre du haut en compte huit : c'est la table des matières, elle sert à
-# qui sait déjà ce qu'il cherche. La page d'accueil s'adresse à qui ne le
-# sait pas encore, et cinq portes se choisissent d'un coup d'œil là où huit
-# se lisent une par une.
-# L'ORDRE EST CELUI DU MENU, ET C'EST LE SEUL QUI SE DÉFENDE. Deux rangées
-# d'entrées vers les mêmes rubriques, dans deux ordres différents, obligent à
-# relire : le lecteur cherche « Analyse des résultats » en quatrième position
-# parce qu'il l'a vue là-haut, et la trouve en troisième. Elles disent
-# maintenant la même chose dans le même ordre.
-#
-# ET IL N'Y A PLUS DE PICTOGRAMME. Une pastille verte devant chaque titre
-# annonçait une différence entre les portes ; les dessins —
-# un globe, une pousse, des barres, une carte — ne disaient rien que le titre
-# ne dise mieux, et coûtaient cinquante pixels de hauteur sur une page qui
-# doit tenir dans un écran.
-# LES CARTES SUIVENT LE MENU, ET C'EST UNE RÈGLE, PAS UNE COÏNCIDENCE. Deux
-# listes des mêmes destinations dans deux ordres différents obligent le
-# lecteur à réapprendre le site en descendant d'un centimètre. Le cadre passe
-# donc devant le territoire ici aussi.
-ENTREES = (("po_c2", "methodologie"),
-           ("po_c1", "accueil"),
-           ("po_c3", "dimensions"),
-           ("po_c4", "boucles"),
-           ("po_c5", "donnees"))
-
-
-def _css_entrees():
-    """La feuille des cinq cartes d'entrée.
-
-    ELLES PRENNENT LE FORMAT DES ONGLETS DU SITE, et c'est la même raison qui
-    l'impose : ce sont cinq destinations en rangée, comme les six de l'analyse
-    des résultats ou les sept du cadre. Deux formats pour un même geste
-    obligeaient à réapprendre la page en descendant d'un centimètre.
-
-    LA DESCRIPTION A SAUTÉ. Elle servait quand ces cartes étaient la seule
-    annonce des cinq rubriques ; la colonne de menu les nomme maintenant à
-    gauche, et chaque page porte sa propre barre d'onglets décrite. Trois
-    façons de dire la même chose, c'était deux de trop.
-
-    LE FILET VERT APPARAÎT AU SURVOL, PAS À LA SÉLECTION. Une carte d'accueil
-    n'a pas d'état sélectionné — on la prend et on quitte la page. Le filet
-    dit donc « celle-ci » pendant qu'on la vise, exactement comme il dit
-    « celle-ci » sur l'onglet ouvert ailleurs : le même signe pour la même
-    chose.
-    """
-    r = ["<style>"]
-    for cle, _mode in ENTREES:
-        b = f'div[class*="st-key-po_e_{cle}"] button'
-        r.append(f"""
-        {b}, {b}[kind="primary"] {{
-          display:flex !important; align-items:center !important;
-          justify-content:center !important;
-          text-align:center !important;
-          padding:14px 15px !important;
-          min-height:58px !important; height:100% !important;
-          background:#ffffff !important;
-          border:1px solid #e3eaf3 !important; border-radius:12px !important;
-          box-shadow:none !important; transform:none !important;
-          transition:border-color .15s ease, background .15s ease,
-                     box-shadow .15s ease;
-        }}
-        {b}:hover, {b}[kind="primary"]:hover {{
-          background:#f4f9f6 !important;
-          border-color:#2a6b3f !important;
-          box-shadow:inset 0 3px 0 0 #2a6b3f !important;
-        }}
-        {b} > div, {b}[kind="primary"] > div {{
-          justify-self:center !important; width:auto !important;
-        }}
-        {b} p, {b}[kind="primary"] p {{
-          font-size:13px !important; font-weight:700 !important;
-          color:#101728 !important; margin:0 !important;
-          text-align:center !important; line-height:1.3 !important;
-        }}
-        {b}:hover p, {b}[kind="primary"]:hover p {{
-          color:#1a6b52 !important;
-        }}""")
-    r.append("</style>")
-    return "".join(r)
-
-
-def _entrees():
-    st.markdown(_css_entrees(), unsafe_allow_html=True)
-    cols = st.columns(len(ENTREES), gap="medium")
-    for col, (cle, mode) in zip(cols, ENTREES):
-        with col:
-            st.button(T(cle), key=f"po_e_{cle}", on_click=_aller,
-                      args=(mode,), use_container_width=True)
 
 
 # ------------------------------------------------- comprendre, mesurer, agir
@@ -838,5 +744,8 @@ def render():
     # arrivait juste après avoir été lue. La définition technique — le système
     # complexe adaptatif — est remontée dans le cadre de résilience, où
     # l'onglet « Ce que mesure APRI » existe pour elle.
-    _entrees()
+    # PLUS DE CARTES D'ENTRÉE. Les cinq mêmes destinations sont dans la
+    # colonne de menu, à trois centimètres à gauche, avec leur icône et leur
+    # famille. Deux listes des mêmes rubriques sur le même écran obligeaient
+    # à choisir laquelle regarder.
     _comprendre(m)
