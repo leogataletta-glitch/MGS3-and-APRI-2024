@@ -215,12 +215,19 @@ TEXTES = {
                   "fr": "Les indicateurs d'une même dimension sont combinés"},
     "cad_p3b_v": {"en": "Dimension score: 6.3 / 10",
                   "fr": "Score de dimension : 6,3 / 10"},
-    "cad_p3c_t": {"en": "Weighting by dimension",
-                  "fr": "Pondération par dimension"},
-    "cad_p3c_x": {"en": "Each dimension is weighted according to its "
-                        "relative importance",
-                  "fr": "Chaque dimension est pondérée selon son importance "
-                        "relative"},
+    # LA PONDÉRATION SE FAIT À L'INDICATEUR, PAS À LA DIMENSION. « Chaque
+    # dimension est pondérée selon son importance relative » laissait croire
+    # à un poids posé sur les sept dimensions ; il n'existe pas. Chaque
+    # indicateur porte le sien, fixé par un groupe d'experts, et le poids
+    # d'une dimension n'est que la somme de ceux de ses indicateurs —
+    # c'est exactement ainsi qu'il est calculé dans le fichier de
+    # résultats, et c'est ce que montre le tableau de l'onglet 3.
+    "cad_p3c_t": {"en": "Expert weighting", "fr": "Pondération par expertise"},
+    "cad_p3c_x": {"en": "Each indicator carries a weight set by a panel of "
+                        "experts; a dimension's weight is the sum of its own",
+                  "fr": "Chaque indicateur porte une pondération fixée par un "
+                        "groupe d'experts ; le poids d'une dimension est la "
+                        "somme des siennes"},
     "cad_p3d_t": {"en": "Overall resilience score",
                   "fr": "Score de résilience d'ensemble"},
     "cad_p3d_x": {"en": "Weighted dimension scores are aggregated",

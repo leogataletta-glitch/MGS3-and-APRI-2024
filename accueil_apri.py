@@ -119,16 +119,16 @@ TEXTES = {
     # promet un chiffre exact le dément le jour où un indicateur de plus est
     # calculé.
     "po_intro": {
-        "en": "APRI measures resilience, that is to say the capacity of "
-              "landscapes and communities to anticipate, absorb, adapt and "
-              "transform. More than {n} indicators across seven dimensions "
-              "reveal where negative resilience loops take hold and where "
-              "action is most needed.",
-        "fr": "APRI mesure la résilience, c'est-à-dire la capacité des "
-              "paysages et des communautés à anticiper, absorber, s'adapter "
-              "et se transformer. Plus de {n} indicateurs répartis en sept "
-              "dimensions révèlent où s'installent des boucles de résilience "
-              "négative et où l'action est la plus nécessaire."},
+        "en": "APRI assesses landscape and community resilience through four "
+              "core capacities: anticipation, absorption, adaptation, and "
+              "transformation. Using {n}+ indicators across seven "
+              "dimensions, it identifies negative loops to guide targeted "
+              "intervention.",
+        "fr": "APRI évalue la résilience des paysages et des communautés au "
+              "travers de quatre capacités fondamentales : anticipation, "
+              "absorption, adaptation et transformation. À partir de plus de "
+              "{n} indicateurs répartis en sept dimensions, il identifie les "
+              "boucles négatives pour cibler l'intervention."},
 
     # --- LE SOCLE DE PREUVES, EN QUATRE MARCHES
     # CHAQUE MARCHE SE LIT « MOT D'AVANT · NOMBRE · MOT D'APRÈS ». Découper
@@ -181,6 +181,11 @@ STYLE = """
      corps du document : cette feuille n'est écrite que par la page
      d'accueil, et arrive après celle de l'application, donc elle l'emporte.
      Les autres pages gardent le bandeau et les proportions d'origine. */
+  /* LA PAGE REMONTE DE VINGT PIXELS. Le gabarit de l'application réserve
+     1,2 rem au-dessus de la barre d'onglets : c'est juste sur les pages qui
+     défilent, et c'est vingt pixels perdus sur celle qui doit tenir dans un
+     écran. La carte les reprend. */
+  div[data-testid="stMainBlockContainer"] { padding-top: 0.35rem !important; }
   .bandeau-fond { height: 152px !important; }
   .bandeau-marque { left: 34px !important; gap: 15px !important; }
   .bandeau-marque .bm-embleme { height: 66px !important; width: 66px !important; }
@@ -303,7 +308,7 @@ STYLE = """
      la phrase vient de prendre, et la page se remettrait à défiler. */
   .uma-carte > svg { display:block; width:100%; height:auto;
                      margin:0 !important;
-                     max-height: max(205px, calc(100vh - 442px)); }
+                     max-height: max(205px, calc(100vh - 428px)); }
   .uma-carte > svg > .sea, .uma-carte > svg .sea { fill:transparent !important; }
   .uma-zone   { position:relative; }
   /* LA PHRASE EST AU-DESSUS DE LA CARTE, ET EN GRAS. Rangée dessous et en
