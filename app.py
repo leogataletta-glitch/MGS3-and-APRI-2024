@@ -278,7 +278,12 @@ st.markdown(("""
      de toucher les bords. */
   .block-container { max-width: none; padding-top: 0; padding-bottom: 2.4rem;
                      padding-left: 2.6rem; padding-right: 2.6rem; }
-  div[data-testid="stMainBlockContainer"] { padding-top: 1.2rem; }
+  /* LE BANDEAU TOUCHE LE HAUT DE LA PAGE. Il est la première chose du bloc
+     principal ; le pouce de blanc que Streamlit réserve au-dessus le
+     décollait du bord et faisait flotter l'illustration au lieu de la poser.
+     Le blanc est rendu plus bas, dans la page elle-même, où il sépare
+     quelque chose de quelque chose. */
+  div[data-testid="stMainBlockContainer"] { padding-top: 0 !important; }
   div[data-testid="stVerticalBlock"] { gap: .65rem; }
   div[data-testid="stElementContainer"] { margin-bottom: 0; }
 
@@ -1016,8 +1021,10 @@ st.markdown(("""
     letter-spacing: -.01em; line-height: 1; }
   .reglette .rg-base { font-size: 11.5px; color: #8a93a5; line-height: 1;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .reglette .rg-logo { height: 31px; width: auto; display: block;
-    margin-left: auto; }
+  /* PAS DE LOGO SUR LA RÉGLETTE. Réduit à trente pixels de haut, l'emblème
+     du PNUE n'était plus lisible : un petit carré bleu dans un coin, qui
+     n'identifiait rien et occupait le seul angle libre de la page. Il reste
+     sur l'accueil, en pleine taille, où il identifie réellement le site. */
   .bandeau-haut {
     width: calc(100vw * var(--dz)) !important;
     max-width: calc(100vw * var(--dz)) !important;
@@ -1069,45 +1076,50 @@ st.markdown(("""
      et la pastille se ferme en rond. La classe à clé est posée SUR le
      conteneur d'élément, pas sur un parent : elle se sélectionne donc
      directement. */
+  /* DEUX MOTS, PAS DEUX PASTILLES. Une pastille est un bouton d'action ; la
+     langue n'est pas une action, c'est un état du site — et deux pastilles
+     encadrées, posées au pied d'une colonne de titres nus, pesaient plus que
+     les sept rubriques au-dessus d'elles. Deux codes, une barre oblique, le
+     courant en gras foncé et l'autre en gris : c'est la convention de tous
+     les sites bilingues, et elle ne coûte rien à l'œil. */
   div[class*="st-key-lang_"],
   div[class*="st-key-lang_"] div[data-testid="stButton"] {
-    width: 100% !important;
+    width: auto !important;
   }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button,
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] {
-    background: #ffffff !important;
-    border: 1px solid #dfe5ee !important;
-    border-radius: 999px !important;
-    box-shadow: none !important; padding: 3px 4px !important;
-    min-height: 0 !important; height: auto !important; width: 100% !important;
-    justify-content: center !important; transform: none !important;
-    transition: border-color .15s ease, background .15s ease;
+    background: transparent !important;
+    border: none !important; border-radius: 0 !important;
+    box-shadow: none !important; padding: 2px 4px !important;
+    min-height: 0 !important; height: auto !important; width: auto !important;
+    justify-content: flex-start !important; transform: none !important;
   }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button p {
     font-size: 11.5px !important; font-weight: 600 !important;
     letter-spacing: .08em !important; text-transform: uppercase;
-    color: #6b7590 !important; text-align: center !important;
+    color: #a7b0be !important; text-align: left !important;
     transition: color .15s ease;
   }
   div[class*="st-key-lang_"]
-  div[data-testid="stButton"] > button:hover {
-    background: #f4f6fa !important; border-color: #c6cfdd !important;
-  }
+  div[data-testid="stButton"] > button:hover { background: transparent !important; }
   div[class*="st-key-lang_"]
-  div[data-testid="stButton"] > button:hover p {
-    color: #101728 !important;
-  }
-  div[class*="st-key-lang_"]
-  div[data-testid="stButton"] > button[kind="primary"] {
-    background: #ffffff !important;
-    border: 1.5px solid #101728 !important;
-  }
+  div[data-testid="stButton"] > button:hover p { color: #101728 !important; }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] p {
     color: #101728 !important; font-weight: 800 !important;
+  }
+  /* LA BARRE OBLIQUE SÉPARE LES DEUX, et elle est portée par la seconde
+     colonne : c'est le seul endroit où elle tombe exactement entre les deux
+     mots quel que soit l'ordre des langues. */
+  div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
+  div[class*="st-key-lang_"] { position: relative; padding-left: 9px; }
+  div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
+  div[class*="st-key-lang_"]::before {
+    content: "/"; position: absolute; left: 0; top: 2px;
+    font-size: 11.5px; color: #ccd4de;
   }
   /* LA RANGÉE DES DEUX LANGUES, ET ELLE SEULE. `:has()` traverse toute la
      descendance : tant que la barre était un bloc à part, seule la rangée des
@@ -1116,7 +1128,11 @@ st.markdown(("""
      — et elle héritait de ce plafond de cent trente-deux pixels, ce qui
      écrasait la page entière. On l'ancre donc au conteneur de langue. */
   div[class*="st-key-zone_langue"] div[data-testid="stHorizontalBlock"] {
-    padding: 0; margin: 0; max-width: 132px; gap: 7px !important;
+    padding: 0; margin: 0; max-width: 96px; gap: 0 !important;
+    flex-wrap: nowrap !important;
+  }
+  div[class*="st-key-zone_langue"] div[data-testid="stColumn"] {
+    width: auto !important; flex: 0 0 auto !important; min-width: 0 !important;
   }
 
   /* La ligne de contexte, sous le ruban : la page courante à gauche, ce sur
@@ -1790,8 +1806,6 @@ def _rendre_ruban():
                 f'src="data:image/png;base64,{assets.EMBLEME_APRI}">'
                 f'<div class="rg-texte"><span class="rg-nom">APRI</span>'
                 f'<span class="rg-base">{T("a_titre_court")}</span></div>'
-                f'<img class="rg-logo" alt="UNEP" '
-                f'src="data:image/png;base64,{assets.LOGO_UNEP}">'
                 f'</div>', unsafe_allow_html=True)
             return
         img = _bandeau_b64()

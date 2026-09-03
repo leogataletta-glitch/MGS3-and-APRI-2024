@@ -118,16 +118,17 @@ TEXTES = {
     # dizaine inférieure et annoncé comme un minimum : une page d'accueil qui
     # promet un chiffre exact le dément le jour où un indicateur de plus est
     # calculé.
+    # UNE LIGNE, ET C'EST TOUT CE QUE L'ACCUEIL DOIT DIRE. La phrase qui
+    # précédait déroulait les trois capacités, le nombre d'indicateurs, les
+    # sept dimensions et les boucles négatives : quatre affirmations à
+    # vérifier avant d'avoir vu un seul chiffre, et chacune d'elles a sa page.
+    # `{n}` n'y figure plus, et l'appel garde son argument sans l'utiliser —
+    # il n'y a rien à casser du côté de l'appelant.
     "po_intro": {
-        "en": "APRI assesses landscape and community resilience through "
-              "three core capacities: anticipation, absorption and "
-              "adaptation. Using {n}+ indicators across seven dimensions, it "
-              "identifies negative loops to guide targeted intervention.",
-        "fr": "APRI évalue la résilience des paysages et des communautés au "
-              "travers de trois capacités fondamentales : anticipation, "
-              "absorption et adaptation. À partir de plus de {n} indicateurs "
-              "répartis en sept dimensions, il identifie les boucles "
-              "négatives pour cibler l'intervention."},
+        "en": "APRI: a single measure of resilience at the scale of a "
+              "landscape",
+        "fr": "APRI : une mesure unique de la résilience à l'échelle d'un "
+              "paysage"},
 
     # --- LE SOCLE DE PREUVES, EN QUATRE MARCHES
     # CHAQUE MARCHE SE LIT « MOT D'AVANT · NOMBRE · MOT D'APRÈS ». Découper
@@ -184,7 +185,7 @@ STYLE = """
      1,2 rem au-dessus de la barre d'onglets : c'est juste sur les pages qui
      défilent, et c'est vingt pixels perdus sur celle qui doit tenir dans un
      écran. La carte les reprend. */
-  div[data-testid="stMainBlockContainer"] { padding-top: 0.35rem !important; }
+  div[data-testid="stMainBlockContainer"] { padding-top: 0 !important; }
   .bandeau-fond { height: 152px !important; }
   .bandeau-marque { left: 34px !important; gap: 15px !important; }
   .bandeau-marque .bm-embleme { height: 66px !important; width: 66px !important; }

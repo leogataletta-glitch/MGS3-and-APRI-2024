@@ -74,10 +74,6 @@ VERT_APRI = "#2a6b3f"
 TEXTES = {
     "cad_titre": {"en": "Resilience Framework",
                   "fr": "Cadre de résilience"},
-    "cad_sous_titre": {
-        "en": "What the index measures, how it is built, and what it cannot say",
-        "fr": "Ce que l'indice mesure, comment il est construit, et ce qu'il "
-              "ne peut pas dire"},
 
     # --- les trois cartouches d'ouverture
     "cad_quoi_t": {"en": "General resilience", "fr": "Résilience générale"},
@@ -933,9 +929,6 @@ STYLE = """
   .cad-a    { padding:6px 30px 2px 0; }
   .cad-a + .cad-a { border-left:1px solid #e6ecf2; padding-left:30px; }
   .cad-a-h  { display:flex; align-items:center; gap:14px; margin-bottom:24px; }
-  .cad-a-n  { font-size:56px; font-weight:200; line-height:1;
-              color:#1b5e3a; letter-spacing:.01em;
-              font-variant-numeric:tabular-nums; flex:0 0 auto; }
   .cad-a-i  { width:50px; height:50px; border-radius:50%; background:#eef3ef;
               display:flex; align-items:center; justify-content:center;
               flex:0 0 auto; }
@@ -1213,19 +1206,18 @@ def _attributs():
     fois, et aucune ne disait en une ligne ce qu'APRI mesure. La phrase le dit
     maintenant, au-dessus ; ces trois colonnes la déplient, et rien d'autre.
 
-    LE NUMÉRO EST GROS ET MAIGRE, ET C'EST VOULU. Il donne l'ordre de lecture
-    sans peser autant que le mot qu'il précède — anticiper vient avant
-    absorber, qui vient avant s'adapter, parce que c'est l'ordre du temps.
-    Le trait qui part du pictogramme et s'achève sur un point ne dit rien de
-    plus : il tient la colonne et l'ouvre vers la droite.
+    PLUS DE NUMÉRO DEVANT LES TROIS. Un numéro promet un ordre obligatoire —
+    faites 01, puis 02, puis 03. Ces trois-là ne sont pas des étapes : un
+    territoire anticipe, absorbe et s'adapte en même temps, et le même
+    indicateur peut servir deux d'entre eux. Le pictogramme et le trait
+    tiennent la colonne aussi bien, sans rien promettre de faux.
     """
     cols = []
-    for i, (k, ic) in enumerate((("cad_a1", "loupe"), ("cad_a2", "bouclier"),
-                                 ("cad_a3", "rafraichir")), start=1):
+    for k, ic in (("cad_a1", "loupe"), ("cad_a2", "bouclier"),
+                  ("cad_a3", "rafraichir")):
         cols.append(
             '<div class="cad-a">'
             '<div class="cad-a-h">'
-            f'<span class="cad-a-n">{i:02d}</span>'
             f'<span class="cad-a-i">'
             + icones.svg(ic, couleur=VERT_APRI, taille=21) + '</span>'
             '<span class="cad-a-l"></span></div>'
@@ -1346,10 +1338,8 @@ def render(doc_complet=None):
 
     st.markdown(
         f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
-        f'letter-spacing:-.02em;margin:2px 0 0">{T("cad_titre")}</h2>'
-        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
-        f'text-transform:uppercase;margin:2px 0 10px;font-weight:600">'
-        f'{T("cad_sous_titre")}</p>', unsafe_allow_html=True)
+        f'letter-spacing:-.02em;margin:2px 0 10px">{T("cad_titre")}</h2>',
+        unsafe_allow_html=True)
 
     if not stats:
         st.info(T("e_absent"))
@@ -1364,8 +1354,12 @@ def render(doc_complet=None):
             # l'onglet 4, il fallait cliquer. Le libellé de Streamlit est
             # rendu en markdown, ce qui permet de mettre le numéro en gras et
             # de le styler à part du titre.
-            format_func=lambda c: (f"**{VUES.index(c) + 1:02d}**&nbsp; "
-                                   + T(_COURT[c])))
+            # PAS DE NUMÉRO DEVANT CES SEPT-LÀ. Les onglets des résultats
+            # sont numérotés parce qu'ils décrivent un parcours : on lit les
+            # résultats bruts avant les scores, les scores avant les écarts.
+            # Le cadre, lui, est une documentation : on y vient chercher ce
+            # qu'on cherche, et l'ordre des sept titres n'oblige à rien.
+            format_func=lambda c: T(_COURT[c]))
 
     if vue == "sources":
         _v_sources()
