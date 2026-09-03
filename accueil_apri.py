@@ -181,13 +181,14 @@ STYLE = """
      défilent, et c'est vingt pixels perdus sur celle qui doit tenir dans un
      écran. La carte les reprend. */
   div[data-testid="stMainBlockContainer"] { padding-top: 0 !important; }
-  .bandeau-fond { height: 152px !important; }
-  .bandeau-marque { left: 34px !important; gap: 15px !important; }
-  .bandeau-marque .bm-embleme { height: 66px !important; width: 66px !important; }
-  .bandeau-marque .bm-nom { font-size: 29px !important; }
-  .bandeau-marque .bm-filet { margin: 5px 0 6px !important; }
-  .bandeau-marque .bm-base { font-size: 12.5px !important; }
-  .bandeau-marque .bm-lieu { font-size: 12px !important; margin-top: 3px !important; }
+  /* LE BANDEAU RESPIRE. À cent cinquante-deux pixels il n'avait la place
+     que d'une bande de verdure ; le titre y est maintenant posé dedans, et il
+     lui faut de quoi tenir sans toucher le bord. Deux cent dix pixels : le
+     paysage se voit, le titre s'y pose, et l'accueil tient encore d'un seul
+     regard.
+     LES RÉGLAGES DE LA MARQUE ONT DISPARU AVEC ELLE — elle ne figure plus sur
+     le bandeau, et sept règles la repositionnaient encore. */
+  .bandeau-fond { height: 210px !important; }
   .bandeau-logo { top: 14px !important; right: 24px !important;
                   height: 44px !important; }
 

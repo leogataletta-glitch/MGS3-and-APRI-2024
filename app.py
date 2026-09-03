@@ -911,62 +911,6 @@ st.markdown(("""
      `object-fit: scale-down` : l'illustration se réduisait alors pour tenir
      entière dans le bandeau, et se retrouvait posée en petit au milieu d'une
      bande blanche au lieu de la remplir. */
-  /* LE BANDEAU PORTE MAINTENANT DEUX BLOCS, IL LUI FAUT LA HAUTEUR DE DEUX
-     BLOCS. À deux cent quarante-six pixels, la marque en haut et le titre en
-     bas se touchaient et la seconde ligne du sous-titre débordait sous
-     l'illustration. */
-  .bandeau-fond {
-    width: 100% !important; height: 300px !important;
-    object-fit: cover !important; object-position: 50% 56% !important;
-    display: block !important; max-width: none !important;
-  }
-  /* LA MARQUE VIT DANS L'IMAGE. Elle occupait la tête de la colonne de
-     gauche ; la colonne ayant disparu, elle serait devenue orpheline. Posée
-     sur le tiers clair de l'illustration, elle redevient ce qu'elle est :
-     l'enseigne du site, au même endroit sur toutes les pages. */
-  /* LA MARQUE MONTE EN HAUT À GAUCHE ET RÉTRÉCIT. Elle occupait le milieu de
-     l'illustration, à la même hauteur et à la même abscisse que le titre qui
-     s'y pose maintenant : les deux se recouvraient. Ce sont deux choses
-     différentes et elles ont chacune leur place — la marque identifie
-     l'émetteur, en petit et en haut, comme un en-tête de papier ; le titre
-     dit ce qu'est le site, en grand et en bas, à la façon d'une couverture. */
-  /* UNE COUCHE QUI REMPLIT LE BANDEAU ET RÉPARTIT SES DEUX BLOCS. Positionner
-     la marque et le titre chacun dans son coin marchait tant que la hauteur du
-     bandeau était celle qu'on croyait ; elle dépend du facteur de zoom, et les
-     deux se sont recouverts dès que l'illustration a rendu plus court que
-     prévu. Un `space-between` ne peut pas se tromper : quelle que soit la
-     hauteur, la marque est en haut et le titre en bas. */
-  .bandeau-couche {
-    position: absolute; inset: 0; display: flex; flex-direction: column;
-    justify-content: space-between; align-items: flex-start;
-    padding: 15px 42px 18px; pointer-events: none;
-  }
-  /* LE TITRE SE DÉCALE À DROITE, SOUS L'ILLUSTRATION ET NON SOUS LA MARQUE.
-     Aligné au même bord gauche qu'elle, il formait avec elle une seule
-     colonne de quatre lignes empilées dans le même angle, où l'on ne savait
-     plus laquelle était l'enseigne et laquelle le titre. Décalé, il occupe le
-     tiers clair de l'illustration — celui que le dégradé du fichier a
-     justement éclairci pour qu'on puisse y écrire. */
-  .bandeau-titre { margin-left: 132px; }
-  @media (max-width: 1100px) { .bandeau-titre { margin-left: 0; } }
-  .bandeau-marque {
-    display: flex; align-items: center; gap: 13px;
-  }
-  .bandeau-marque .bm-embleme { height: 52px; width: 52px; display: block; }
-  .bandeau-marque .bm-nom {
-    font-size: 25px; font-weight: 800; color: #16324a;
-    letter-spacing: -.015em; line-height: 1;
-  }
-  .bandeau-marque .bm-filet {
-    height: 2px; width: 100%; background: #2f6b4f; margin: 5px 0 5px;
-    border-radius: 2px;
-  }
-  .bandeau-marque .bm-base {
-    font-size: 11.5px; font-weight: 700; color: #2f6b4f; line-height: 1.3;
-  }
-  .bandeau-marque .bm-lieu {
-    font-size: 11.5px; font-weight: 700; color: #16324a; margin-top: 2px;
-  }
   /* LE PIED DE PAGE, EN PLEINE LARGEUR ET EN VERT PROFOND. Il ferme la page
      comme le bandeau l'ouvre : deux barres de la même largeur, l'une claire
      et l'autre foncée, entre lesquelles le contenu tient. Sans lui, la page
@@ -981,57 +925,8 @@ st.markdown(("""
   .pied .pd-g { display: flex; align-items: center; gap: 10px; }
   .pied .pd-devise { color: #cfe3d8; }
   .pied .pd-credit { color: #a9c7b8; }
-  @media (max-width: 700px) {
-    .pied { justify-content: flex-start; }
-  }
+  @media (max-width: 700px) { .pied { justify-content: flex-start; } }
 
-  /* LE BLOC DE TITRE, POSÉ EN BAS À GAUCHE DE L'ILLUSTRATION. Le filet vert
-     vertical est le même signe que celui qui marque la rubrique courante dans
-     la colonne de menu : le site n'a qu'une façon de dire « c'est ici ». */
-  .bandeau-titre {
-    border-left: 4px solid #2f6b4f; padding-left: 18px; max-width: 56ch;
-  }
-  .bandeau-titre .bt-nom {
-    font-size: 27px; font-weight: 800; color: #1f5b46;
-    letter-spacing: -.02em; line-height: 1.1;
-  }
-  /* PAS DE JUSTIFICATION. La feuille de l'application justifie tout
-     paragraphe de contenu ; sur deux lignes de cinquante caractères, cela
-     creusait des blancs entre les mots — « Understand,  measure  and
-     compare » — qu'on lisait comme un défaut de rendu. */
-  .bandeau-titre .bt-sous {
-    font-size: 13.5px; font-weight: 500; color: #23384a; line-height: 1.45;
-    margin-top: 6px; max-width: 48ch; text-align: left !important;
-    hyphens: none;
-  }
-  @media (max-width: 900px) {
-    .bandeau-titre .bt-sous { display: none; }
-  }
-
-  /* LE LOGO EST BLANC ET POSÉ À MÊME L'IMAGE, SANS PLAQUE.
-     Le cartouche blanc qu'il portait découpait un rectangle net dans le
-     paysage. L'angle de l'illustration a été légèrement assombri à la place
-     — un vignetage, pas une plaque — ce qui ramène la clarté du fond autour
-     de 119 sur 255 : assez sombre pour qu'un logo blanc s'y détache, assez
-     clair pour qu'on ne voie pas une tache. L'ombre portée finit le travail
-     là où un nuage passe plus clair. */
-  .bandeau-logo {
-    position: absolute; top: 22px; right: 30px; height: 62px;
-    filter: drop-shadow(0 1px 7px rgba(0,0,0,.45));
-  }
-
-  /* LES DEUX LANGUES SE POSENT SUR L'IMAGE, EN HAUT À GAUCHE.
-     Ce sont de vrais boutons, donc ils ne peuvent pas vivre dans le HTML de
-     l'illustration : on les sort du flux et on les place par-dessus. Le
-     conteneur du bloc principal sert de repère, d'où sa position relative. */
-  div[data-testid="stMainBlockContainer"] { position: relative; }
-  /* LA COLONNE DE GAUCHE EST RETIRÉE, PAS SEULEMENT REPLIÉE. Streamlit garde
-     sinon sa poignée d'ouverture en haut à gauche, posée en plein sur la
-     marque. */
-  section[data-testid="stSidebar"],
-  div[data-testid="stSidebarCollapseButton"],
-  button[data-testid="stBaseButton-headerNoPadding"] { display: none !important; }
-  /* l'illustration reprend la largeur libérée par la colonne */
   /* LA RÉGLETTE : la marque, en quarante-huit pixels, sur les pages
      intérieures. Elle porte le même fond blanc que la barre et le même filet
      que la colonne de menu, pour que les trois se lisent comme un seul
@@ -1049,6 +944,77 @@ st.markdown(("""
     letter-spacing: -.01em; line-height: 1; }
   .reglette .rg-base { font-size: 11.5px; color: #8a93a5; line-height: 1;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* LE FICHIER SERVI EST RECADRÉ. L'illustration livrée portait, sur son
+     tiers gauche, un aplat de blanc pur peint pour couvrir un logo incrusté :
+     ce tiers ne contenait aucune image, et c'était lui le vide qu'on voyait
+     sous le titre. La version servie ne garde que la partie qui porte le
+     paysage, et elle court d'un bord à l'autre. La hauteur est fixée plus bas
+     par la feuille de l'accueil, seule page où ce bandeau paraît. */
+  .bandeau-fond {
+    width: 100% !important; height: 300px !important;
+    object-fit: cover !important; object-position: 50% 56% !important;
+    display: block !important; max-width: none !important;
+  }
+  /* UNE COUCHE QUI REMPLIT LE BANDEAU ET POUSSE LE TITRE EN BAS. Positionner
+     le bloc par un `bottom` en pixels marchait tant que la hauteur du bandeau
+     était celle qu'on croyait ; elle dépend du facteur de zoom, et le titre
+     est sorti de l'image dès que l'illustration a rendu plus court que prévu.
+     Un `flex-end` ne peut pas se tromper : quelle que soit la hauteur, le
+     titre est au bas de l'image. */
+  .bandeau-couche {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    justify-content: flex-end; align-items: flex-start;
+    padding: 15px 42px 22px; pointer-events: none;
+  }
+  /* UN VOILE CLAIR SOUS LE TITRE, ET LUI SEUL. Le paysage recadré est vert
+     partout : un texte foncé posé dessus se lirait mal. Le voile éclaircit le
+     coin bas-gauche et s'éteint avant le milieu — c'est une brume, pas une
+     plaque, et il ne touche ni les arbres de droite ni le ciel. */
+  .bandeau-voile {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      linear-gradient(100deg, rgba(255,255,255,.92) 0%,
+                              rgba(255,255,255,.80) 20%,
+                              rgba(255,255,255,.38) 38%,
+                              rgba(255,255,255,0) 56%),
+      linear-gradient(to top, rgba(255,255,255,.50) 0%,
+                              rgba(255,255,255,0) 44%);
+  }
+  /* LE FILET VERT VERTICAL EST LE MÊME SIGNE que celui qui marque la rubrique
+     courante dans la colonne de menu : le site n'a qu'une façon de dire
+     « c'est ici ». */
+  .bandeau-titre {
+    border-left: 4px solid #2f6b4f; padding-left: 18px; max-width: 58ch;
+    line-height: normal;
+  }
+  .bandeau-titre .bt-nom {
+    font-size: 31px; font-weight: 800; color: #1f5b46;
+    letter-spacing: -.02em; line-height: 1.12;
+  }
+  /* PAS DE JUSTIFICATION. La feuille de l'application justifie tout
+     paragraphe de contenu ; sur deux lignes de cinquante caractères, cela
+     creusait des blancs entre les mots qu'on lisait comme un défaut de
+     rendu. */
+  .bandeau-titre .bt-sous {
+    font-size: 13.5px; font-weight: 500; color: #23384a; line-height: 1.5;
+    margin-top: 7px; max-width: 52ch; text-align: left !important;
+    hyphens: none;
+  }
+  @media (max-width: 900px) {
+    .bandeau-titre .bt-sous { display: none; }
+    .bandeau-titre .bt-nom { font-size: 23px; }
+  }
+
+  /* LE LOGO DU PNUE, DANS L'ANGLE HAUT-DROIT DE L'ILLUSTRATION. L'ombre
+     portée le détache là où le fond passe clair sans lui poser de plaque :
+     une plaque blanche découperait un rectangle net dans le paysage. */
+  .bandeau-logo {
+    position: absolute; top: 16px; right: 30px; height: 46px; width: auto;
+    display: block; pointer-events: none;
+    filter: drop-shadow(0 1px 3px rgba(255,255,255,.85));
+  }
+
   /* PAS DE LOGO SUR LA RÉGLETTE. Réduit à trente pixels de haut, l'emblème
      du PNUE n'était plus lisible : un petit carré bleu dans un coin, qui
      n'identifiait rien et occupait le seul angle libre de la page. Il reste
@@ -1855,8 +1821,24 @@ def _bandeau_b64():
     réexécution de la page coûterait plus cher que de le garder en mémoire.
     """
     import base64 as _b64
-    chemin = os.path.join(APP_DIR, "data", "bandeau_apri.jpg")
-    if not os.path.exists(chemin):
+    # LA VERSION RECADRÉE D'ABORD. Le fichier d'origine porte, sur son tiers
+    # gauche, un aplat blanc pur qui avait été peint pour couvrir un logo
+    # incrusté : ce tiers-là ne contient aucune image, et c'était le vide
+    # qu'on voyait sous le titre. La version recadrée ne garde que la partie
+    # qui porte le paysage. L'original reste en repli.
+    # QUATRE CHEMINS, DANS L'ORDRE DE PRÉFÉRENCE. Le recadré d'abord, puis
+    # l'original ; et chacun cherché dans `data/` puis à la racine, parce que
+    # le dépôt déployé n'a pas toujours la même arborescence que l'atelier.
+    chemin = None
+    for nom in ("bandeau_apri_large.jpg", "bandeau_apri.jpg"):
+        for base in (os.path.join(APP_DIR, "data"), APP_DIR):
+            essai = os.path.join(base, nom)
+            if os.path.exists(essai):
+                chemin = essai
+                break
+        if chemin:
+            break
+    if not chemin:
         return None
     with open(chemin, "rb") as f:
         return _b64.b64encode(f.read()).decode()
@@ -1906,37 +1888,31 @@ def _rendre_ruban():
             f'<div class="bandeau-haut bandeau-enveloppe">'
             f'<img class="bandeau-fond" '
             f'src="data:image/jpeg;base64,{img}">'
+            # PLUS DE BLOC DE MARQUE SUR LE BANDEAU. L'emblème, le sigle et
+            # le lieu occupaient l'angle haut-gauche pour redire ce que le
+            # titre dit juste en dessous — « Observatoire APRI » porte le nom,
+            # et le sous-titre porte le lieu. La marque complète reste sur la
+            # réglette des pages intérieures, où elle identifie l'émetteur
+            # d'un écran qui n'a pas de titre.
+            f'<div class="bandeau-voile"></div>'
             f'<div class="bandeau-couche">'
-            f'<div class="bandeau-marque">'
-            f'<img class="bm-embleme" alt="APRI" '
-            f'src="data:image/png;base64,{assets.EMBLEME_APRI}">'
-            f'<div class="bm-texte">'
-            f'<div class="bm-nom">APRI</div>'
-            f'<div class="bm-filet"></div>'
-            # LA MARQUE NE REDIT PLUS LE TITRE. Elle portait « Landscape
-            # resilience observatory », que le titre reprend mot pour mot en
-            # dessous sous la forme « APRI Observatory », suivi d'un
-            # sous-titre qui redit encore la même chose en une phrase. Trois
-            # énoncés du même renseignement dans le même angle. La marque dit
-            # maintenant QUI et OÙ — le sigle et le territoire ; le titre dit
-            # QUOI. Chacun sa question, aucune posée deux fois.
-            f'<div class="bm-lieu">{T("a_lieu")}</div>'
-            f'</div></div>'
-            # LE TITRE EST POSÉ SUR L'IMAGE, EN BAS À GAUCHE, et pas au-dessus
-            # d'elle. Une illustration qui n'annonce rien est une illustration
-            # décorative : elle occupe deux cent quarante-six pixels pour dire
-            # « c'est joli ». Le titre posé dessus les fait travailler
-            # ensemble — on lit ce qu'est le site en même temps qu'on voit où
-            # il se passe. Le tiers gauche de l'illustration porte déjà un
-            # dégradé clair composé dans le fichier : le texte foncé s'y pose
-            # sans avoir besoin d'un voile ajouté par-dessus.
+            # LE TITRE EST DANS L'IMAGE, PAS AU-DESSUS D'ELLE. Une
+            # illustration qui n'annonce rien est décorative : elle dépense
+            # deux cents pixels pour dire « c'est joli ». Le titre posé
+            # dedans les fait travailler ensemble — on lit ce qu'est le site
+            # en même temps qu'on voit où il se passe.
             f'<div class="bandeau-titre">'
             f'<div class="bt-nom">{T("bh_titre")}</div>'
             f'<div class="bt-sous">{T("bh_sous")}</div>'
             f'</div>'
             f'</div>'
+            # LE LOGO REPASSE EN VERSION FONCÉE. Il était blanc parce que
+            # l'angle haut-droit de l'illustration d'origine était sombre ;
+            # le recadrage l'a remplacé par du ciel et de l'herbe claire, où
+            # un logo blanc disparaît. La couleur de l'emblème suit le fond,
+            # pas l'habitude.
             f'<img class="bandeau-logo" alt="UNEP" '
-            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
+            f'src="data:image/png;base64,{assets.LOGO_UNEP}">'
             f'</div>', unsafe_allow_html=True)
 
 

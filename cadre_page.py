@@ -788,50 +788,53 @@ STYLE = """
      jusqu'à laisser des couloirs blancs au milieu. */
   .cad-carte-x { text-align:left !important; }
 
-  /* --- les quatre sources, en deux colonnes de texte ----------------------
-     LES CADRES ONT SAUTÉ. Quatre cartes blanches côte à côte tenaient dans
-     l'écran mais imposaient à chacune la hauteur de la plus haute — celle de
-     l'enquête ménage, qui porte le plan de sondage — et laissaient trois
-     grands vides. Deux colonnes, deux rangées : chaque source prend la
-     hauteur qu'elle demande, et le numéro suivi de son filet fait le travail
-     que faisait le cadre, dire où commence un bloc.
+  /* --- les quatre sources, en quatre colonnes séparées de filets ----------
+     RIEN N'EST ENCADRÉ. Quatre cartes blanches se lisent comme quatre boutons
+     et alignent leur hauteur sur la plus haute — celle de l'enquête ménage,
+     qui porte le plan de sondage — ce qui laissait trois grands vides. Le
+     filet vertical sépare sans encadrer, et chaque colonne prend la hauteur
+     qu'elle demande.
 
      LES PUCES SONT DES TIRETS. Le rond plein appelle une liste d'items de
      même nature ; ce sont ici des précisions de protocole, de longueurs très
      inégales, que le tiret introduit sans les aligner de force. */
-  /* DEUX COLONNES, ET PAS « AUTANT QUE ÇA RENTRE ». En `auto-fit`, un écran
-     large en formait trois et renvoyait la quatrième source seule sur une
-     seconde rangée — une source isolée se lit comme un ajout. */
-  .cad-so   { display:grid; gap:28px 56px; margin-top:14px;
-              grid-template-columns:repeat(2,1fr); }
-  @media (max-width: 900px) { .cad-so { grid-template-columns:1fr; } }
-  .cad-so-b { display:grid; grid-template-columns:104px 1fr;
-              align-items:start; }
-  .cad-so-i { position:relative; font-size:13px; font-weight:600;
-              color:#8a93a5; padding-top:2px; letter-spacing:.02em; }
-  .cad-so-i::after { content:""; position:absolute; left:30px; right:16px;
-              top:11px; height:1px; background:#1a6b52; opacity:.45; }
-  .cad-so-t { font-size:15.5px; font-weight:700; color:#1a6b52;
-              letter-spacing:-.01em; margin:0 0 7px; }
+  .cad-so   { display:grid; gap:0; margin-top:6px;
+              grid-template-columns:repeat(4,1fr); }
+  .cad-so-b { padding:2px 26px 4px; border-left:1px solid #e9eef4; }
+  .cad-so-b:first-child { border-left:0; padding-left:0; }
+  @media (max-width: 1150px) {
+    .cad-so { grid-template-columns:repeat(2,1fr); row-gap:26px; }
+    .cad-so-b:nth-child(3) { border-left:0; padding-left:0; }
+  }
+  @media (max-width: 700px) {
+    .cad-so { grid-template-columns:1fr; }
+    .cad-so-b { border-left:0; padding-left:0; }
+  }
+  .cad-so-h { display:flex; align-items:center; gap:11px; margin:0 0 12px; }
+  .cad-so-ic { display:flex; align-items:center; justify-content:center;
+              width:34px; height:34px; flex:0 0 34px; border-radius:50%;
+              background:#f1f6f3; }
+  .cad-so-n { font-size:27px; font-weight:200; color:#1a6b52; line-height:1;
+              font-variant-numeric:tabular-nums; }
+  .cad-so-t { font-size:14px; font-weight:700; color:#1a6b52;
+              letter-spacing:-.01em; line-height:1.25;
+              padding-left:11px; border-left:1px solid #cfe0d6; }
   p.cad-so-x { font-size:12.5px !important; color:#3c4761 !important;
-              line-height:1.5 !important; margin:0 0 9px !important;
-              text-align:left !important; max-width:64ch; }
-  /* Les compteurs de l'enquête ménage : c'est la seule source dont on
-     connaisse l'effectif, le nombre de sections et le minimum par section. */
+              line-height:1.55 !important; margin:0 0 12px !important;
+              text-align:left !important; }
+  .cad-so-l { list-style:none; padding:0; margin:10px 0 0; }
+  .cad-so-l li { position:relative; padding-left:16px; margin-bottom:7px;
+              font-size:12px; color:#3c4761; line-height:1.45; }
+  .cad-so-l li::before { content:"–"; position:absolute; left:0;
+              color:#8a93a5; }
   .cad-so-k { margin:0 0 9px; }
   .cad-so-k > div { display:flex; align-items:baseline; gap:9px;
               padding:2px 0; }
-  .cad-so-k b { flex:0 0 auto; min-width:44px; font-size:14.5px;
+  .cad-so-k b { flex:0 0 auto; min-width:38px; font-size:14px;
               font-weight:700; color:#101728; letter-spacing:-.02em;
               font-variant-numeric:tabular-nums; }
   .cad-so-k span { font-size:11.5px; color:#5a6a80; line-height:1.35;
               text-align:left !important; }
-  .cad-so-l { margin:0; padding:0; list-style:none; }
-  .cad-so-l li { font-size:12.5px; color:#3c4761; line-height:1.45;
-              padding:3px 0 3px 20px; position:relative;
-              text-align:left !important; }
-  .cad-so-l li::before { content:"—"; position:absolute; left:0; top:3px;
-              color:#a7b0be; font-size:11px; }
 
   /* --- la méthode de calcul, en trois temps -------------------------------
      TROIS SECTIONS NUMÉROTÉES, SÉPARÉES PAR UN FILET. Le calcul est une
@@ -922,10 +925,18 @@ STYLE = """
      UN FILET, DEUX LIGNES, PAS D'ENCADRÉ. Elle ferme la liste des sources et
      dit ce qu'on en fait ; un bloc teinté en aurait fait un cinquième objet
      de même rang que les quatre sources. */
-  .cad-fin  { border-top:1px solid #1a6b52; margin-top:24px;
-              padding-top:14px; }
-  .cad-fin-t { font-size:14.5px; font-weight:700; color:#1a6b52;
-              margin:0 0 3px; line-height:1.4; }
+  /* LA CONCLUSION EST DANS UN BANDEAU TEINTÉ, ET C'EST SA FONCTION QUI LE
+     VEUT : elle ne fait pas partie de la liste des quatre sources, elle dit
+     ce qu'on en fait. Un filet l'aurait rattachée à la quatrième colonne ;
+     le fond pâle la détache de toutes les quatre. */
+  .cad-fin  { display:flex; align-items:flex-start; gap:15px;
+              background:#f4f9f6; border:1px solid #dfeae3;
+              border-radius:12px; margin-top:26px; padding:14px 18px; }
+  .cad-fin-i { display:flex; align-items:center; justify-content:center;
+              width:38px; height:38px; flex:0 0 38px; border-radius:50%;
+              background:#fff; border:1px solid #dfeae3; }
+  .cad-fin-t { font-size:14px; font-weight:700; color:#1a6b52;
+              margin:2px 0 3px; line-height:1.4; }
   p.cad-fin-x { font-size:12.5px !important; color:#5a6a80 !important;
               line-height:1.5 !important; margin:0 !important;
               text-align:left !important; }
@@ -1190,12 +1201,16 @@ def _attributs():
 def _sources(extras=None):
     """Les quatre sources, en deux colonnes de texte.
 
-    LE PARCOURS EN CHEVRONS A DISPARU, PUIS LES CADRES. Les trois sources
-    étaient d'abord reliées par des « › », comme des étapes ; elles n'en sont
-    pas — les quatre dispositifs tournent en parallèle. Elles sont ensuite
-    passées en cartes, ce qui disait bien la simultanéité mais alignait leur
-    hauteur sur la plus haute et laissait trois grands vides. Deux colonnes
-    de texte, numérotées : chaque source prend la hauteur qu'elle demande.
+    QUATRE COLONNES, SÉPARÉES PAR UN FILET, ET RIEN D'ENCADRÉ. Les quatre
+    dispositifs tournent en parallèle : les mettre l'un sous l'autre en
+    ferait des étapes, les encadrer en ferait quatre objets qu'on croit
+    cliquables. Un simple filet vertical entre les colonnes dit « ceci n'est
+    pas cela » sans rien promettre de plus, et les quatre se comparent d'un
+    balayage horizontal — ce qu'on veut faire d'une liste de sources.
+
+    LE PICTOGRAMME, LE NUMÉRO ET LE TITRE TIENNENT SUR UNE LIGNE. Le numéro
+    est gros et maigre : il donne le rang sans peser autant que le mot qu'il
+    précède, et le filet vertical qui le suit sépare le compte du nom.
 
     CHAQUE SOURCE PORTE SA LISTE, et c'est elle qui la rend contestable :
     « données géospatiales » ne veut rien dire tant qu'on n'a pas lu
@@ -1207,21 +1222,25 @@ def _sources(extras=None):
     le minimum par section.
     """
     extras = extras or {}
+    ICONES = ("maison", "monde", "pousse", "fiche")
     blocs = []
-    for i, k in enumerate(("cad_so1", "cad_so2", "cad_so3", "cad_so4"),
-                          start=1):
+    for i, (k, ic) in enumerate(zip(("cad_so1", "cad_so2", "cad_so3",
+                                     "cad_so4"), ICONES), start=1):
         puces = [x.strip() for x in T(k + "_p").split("|") if x.strip()]
         if (k + "_note") in i18n.DICO:
             puces.append(T(k + "_note"))
         blocs.append(
             '<div class="cad-so-b">'
-            f'<div class="cad-so-i">{i:02d}</div><div>'
-            f'<div class="cad-so-t">{_e(T(k + "_t"))}</div>'
+            '<div class="cad-so-h">'
+            f'<span class="cad-so-ic">'
+            + icones.svg(ic, couleur=VERT_APRI, taille=19) + '</span>'
+            f'<span class="cad-so-n">{i:02d}</span>'
+            f'<span class="cad-so-t">{_e(T(k + "_t"))}</span></div>'
             f'<p class="cad-so-x">{_e(T(k + "_x"))}</p>'
             + extras.get(k, "")
             + '<ul class="cad-so-l">'
             + "".join(f'<li>{_e(p)}</li>' for p in puces)
-            + '</ul></div></div>')
+            + '</ul></div>')
     return '<div class="cad-so">' + "".join(blocs) + '</div>'
 
 
@@ -1243,8 +1262,11 @@ def _fin():
     dimension — dans l'onglet des dimensions.
     """
     return ('<div class="cad-fin">'
+            '<span class="cad-fin-i">'
+            + icones.svg("barres", couleur=VERT_APRI, taille=20) + '</span>'
+            '<div>'
             f'<div class="cad-fin-t">{_e(T("cad_band_t"))}</div>'
-            f'<p class="cad-fin-x">{_e(T("cad_band_x"))}</p></div>')
+            f'<p class="cad-fin-x">{_e(T("cad_band_x"))}</p></div></div>')
 
 
 def _min_section():
