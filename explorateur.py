@@ -47,15 +47,20 @@ N_FRAGILE = 20
 # Les axes de ventilation. « section » est la localité ; les quatre autres
 # sont les groupes d'intérêt, dans l'ordre où ils éclairent le plus souvent
 # une différence.
+# LA DIMENSION N'EST PLUS UN AXE, ELLE EST UNE MESURE. Tant que le score
+# affiché était l'indice global, ventiler par dimension était la seule façon
+# de voir les sept ; maintenant que la dimension — et même l'indicateur — se
+# choisit comme on choisissait une question, la garder en axe donnerait deux
+# chemins vers le même chiffre.
 AXES = [("section", "ex_ax_section"),
-        ("dimension", "ex_ax_dimension"),
         ("sexe", "ex_ax_sexe"),
         ("age", "ex_ax_age"),
         ("richesse", "ex_ax_richesse"),
         ("paysage", "ex_ax_paysage")]
 _VALEURS = dict(M.REGISTRES)
-# LES SEPT DIMENSIONS SONT UN AXE COMME LES AUTRES, mais seulement pour le
-# score : une dimension est une propriété des indicateurs, pas des ménages.
+# LES DIMENSIONS SONT DES CIBLES, PAS DES AXES : on les choisit comme on
+# choisit une question, et le score obtenu se ventile ensuite sur les mêmes
+# axes que tout le reste.
 _DIMS = [c for c, _l in M.DIMENSIONS]
 
 TEXTES = {
@@ -80,17 +85,24 @@ TEXTES = {
     "ex_mesure": {"en": "Measure", "fr": "Mesure"},
     "ex_m_part": {"en": "Share of an answer", "fr": "Part d'une réponse"},
     "ex_m_score": {"en": "Resilience score", "fr": "Score de résilience"},
-    "ex_ax_dimension": {"en": "Dimension", "fr": "Dimension"},
     "ex_axes_vide": {"en": "Choose at least one breakdown.",
                      "fr": "Choisissez au moins une ventilation."},
-    "ex_dim_part": {
-        "en": "A dimension is a property of indicators, not of households: it "
-              "cannot break down the share of an answer. It is available on "
-              "the resilience score.",
-        "fr": "Une dimension est une propriété des indicateurs, pas des "
-              "ménages : elle ne peut pas ventiler la part d'une réponse. "
-              "Elle est disponible sur le score de résilience."},
     "ex_score": {"en": "score out of 10", "fr": "score sur 10"},
+    "ex_cible": {"en": "Resilience indicator",
+                 "fr": "Indicateur de résilience"},
+    "ex_c_global": {"en": "Overall resilience index",
+                    "fr": "Indice de résilience global"},
+    "ex_c_dims": {"en": "Dimensions", "fr": "Dimensions"},
+    "ex_t_score": {"en": "Resilience score explorer",
+                   "fr": "Explorateur des scores de résilience"},
+    "ex_intro_score": {
+        "en": "Pick the overall index, a dimension or a single indicator: its "
+              "0–10 score is computed for every communal section, landscape "
+              "and social group, on the households of each.",
+        "fr": "Choisissez l'indice global, une dimension ou un indicateur : "
+              "son score sur 10 est calculé pour chaque section communale, "
+              "chaque paysage et chaque groupe social, sur les ménages de "
+              "chacun."},
     "ex_tableau": {"en": "Table", "fr": "Tableau"},
     "ex_carte": {"en": "Map", "fr": "Carte"},
     "ex_carte_sec": {
@@ -265,12 +277,58 @@ def _carte(lignes):
 
 def _cases(cat, axe):
     """Les cases d'un axe : (clé technique, libellé affiché)."""
-    if axe == "dimension":
-        return [(c, T(c)) for c in _DIMS]
     return [(v, _lib(v)) for v in _VALEURS.get(axe, [])]
 
 
-def _ventiler(cat, mesure, q, modalite, axes, filtre=None):
+def _nom_ind(ind):
+    return ((ind.get("nom_fr") or ind.get("nom")) if i18n.get_lang() == "fr"
+            else (ind.get("nom") or ind.get("nom_fr")))
+
+
+def _inds_tries(cat):
+    """Les indicateurs calculables, rangés par dimension puis par nom."""
+    return sorted(cat.get("indicateurs") or [],
+                  key=lambda x: (x["dim"], _nom_ind(x)))
+
+
+def _mesure_ind(ind, masque):
+    """Le score d'UN indicateur sur UN masque, sans calculer les autres.
+
+    `profil` calcule les soixante-six indicateurs d'un coup ; pour une
+    ventilation en dix sections, en demander un seul par ce chemin ferait six
+    cent soixante calculs pour n'en afficher que dix.
+    """
+    base = ind["base"] & masque
+    nb = int(base.sum())
+    if nb == 0:
+        return 0, None
+    val = 100.0 * float((ind["cible"] & masque).sum()) / nb
+    return nb, M._score_de(val, ind["bornes"], ind["decroissant"])
+
+
+def _cibles(cat):
+    """Ce qu'on peut mesurer : l'indice, les dimensions, les indicateurs.
+
+    LA CIBLE REMPLACE LA QUESTION, ELLE NE S'AJOUTE PAS À ELLE. Sur les
+    résultats bruts on choisit une question puis une réponse ; sur les scores
+    il n'y a rien à choisir dans les réponses — le score est déjà l'agrégat de
+    toutes. Ce qui reste à choisir, c'est le NIVEAU : l'indice global, l'une
+    des dimensions, ou l'un des indicateurs qui les composent.
+
+    Les codes sont stables (`global`, `d:dim3`, `i:12`) parce qu'ils sont
+    retenus en session : un index de liste changerait de cible dès que la
+    langue change l'ordre alphabétique des indicateurs.
+    """
+    inds = _inds_tries(cat)
+    opts = [("global", T("ex_c_global"), None)]
+    for c in _DIMS:
+        opts.append((f"d:{c}", f'{T("ex_c_dims")} · {T(c)}', None))
+    for k, ind in enumerate(inds):
+        opts.append((f"i:{k}", f'{T(ind["dim"])} · {_nom_ind(ind)}', ind))
+    return opts
+
+
+def _ventiler(cat, mesure, q, modalite, axes, filtre=None, cible=None):
     """Une ligne par case, pour tous les axes retenus, dans leur ordre.
 
     LES AXES S'ADDITIONNENT, ILS NE SE CROISENT PAS. Cumuler « localité » et
@@ -287,7 +345,7 @@ def _ventiler(cat, mesure, q, modalite, axes, filtre=None):
     if filtre is None:
         filtre = np.ones(cat["n"], dtype=bool)
     if mesure == "score":
-        return _ventiler_score(cat, axes, filtre)
+        return _ventiler_score(cat, axes, filtre, cible)
 
     m_rep = np.zeros(cat["n"], dtype=bool)          # a répondu à la question
     for j in range(len(q["modalites"])):
@@ -297,8 +355,6 @@ def _ventiler(cat, mesure, q, modalite, axes, filtre=None):
 
     out = []
     for axe in axes:
-        if axe == "dimension":
-            continue
         for v, lib in _cases(cat, axe):
             g = cat["groupes"].get(v)
             if g is None:
@@ -315,41 +371,60 @@ def _ventiler(cat, mesure, q, modalite, axes, filtre=None):
     return out, ens
 
 
-def _ventiler_score(cat, axes, filtre=None):
-    """Le score de résilience par case — dimensions comprises.
+def _score_cible(cat, masque, cible, ind):
+    """Le score de la cible choisie sur un sous-échantillon : (n, score).
 
-    LE SCORE D'UNE DIMENSION EST CELUI DE L'ENSEMBLE DES MÉNAGES : une
-    dimension ne découpe pas l'échantillon, elle découpe le référentiel. Les
-    deux axes se lisent donc sur la même échelle de 0 à 10 sans se
-    contredire, et c'est pour cela qu'ils peuvent figurer sur le même
-    graphique.
+    LES TROIS NIVEAUX SE CALCULENT SUR LES MÊMES MÉNAGES, jamais sur trois
+    échantillons différents : l'indice global, la dimension et l'indicateur
+    d'une même section portent sur la section, et se lisent donc l'un à côté
+    de l'autre sur la même échelle de 0 à 10.
+
+    L'EFFECTIF D'UN INDICATEUR EST SA BASE, pas la case entière. Un indicateur
+    qui ne concerne que les ménages cultivateurs n'est pas calculé sur les
+    autres ; annoncer l'effectif de la case laisserait croire que le score
+    porte sur tout le monde.
+    """
+    nb = int(masque.sum())
+    if not nb:
+        return 0, None
+    if ind is not None:
+        return _mesure_ind(ind, masque)
+    ag = M.agreger(M.profil(cat, masque))
+    if cible == "global":
+        return nb, ag["global"]
+    return nb, ag["dimensions"].get(cible.split(":", 1)[1])
+
+
+def _ventiler_score(cat, axes, filtre=None, cible=None):
+    """Le score de la cible choisie, case par case, pour tous les axes.
+
+    LA CIBLE EST CE QU'ON MESURE, L'AXE EST LÀ OÙ ON LE MESURE. Tant que le
+    chiffre affiché était forcément l'indice global, la dimension devait être
+    un axe pour qu'on puisse en voir sept ; maintenant qu'elle se choisit
+    comme cible, elle sortirait deux fois du même écran.
     """
     tout = filtre if filtre is not None else np.ones(cat["n"], dtype=bool)
-    ag_tout = M.agreger(M.profil(cat, tout))
+    cible = cible or "global"
+    ind = None
+    if cible.startswith("i:"):
+        inds = _inds_tries(cat)
+        k = int(cible.split(":", 1)[1])
+        ind = inds[k] if k < len(inds) else None
+        if ind is None:
+            cible = "global"
+
     out = []
     for axe in axes:
-        if axe == "dimension":
-            for c, lib in _cases(cat, "dimension"):
-                v = ag_tout["dimensions"].get(c)
-                out.append({"nom": lib, "cle": c,
-                            "axe": T("ex_ax_dimension"),
-                            "axe_code": "dimension",
-                            "n": int(tout.sum()), "k": None,
-                            "part": (10 * v / 10) if v is not None else None,
-                            "score": v})
-            continue
         for v, lib in _cases(cat, axe):
             g = cat["groupes"].get(v)
             if g is None:
                 continue
-            g = g & tout
-            nb = int(g.sum())
-            sc = M.agreger(M.profil(cat, g))["global"] if nb else None
+            nb, sc = _score_cible(cat, g & tout, cible, ind)
             out.append({"nom": lib, "cle": v, "axe": T(dict(AXES)[axe]),
                         "axe_code": axe, "n": nb,
                         "k": None, "part": sc, "score": sc})
-    ens = {"n": int(tout.sum()), "k": None, "part": ag_tout["global"],
-           "score": ag_tout["global"]}
+    nb_t, sc_t = _score_cible(cat, tout, cible, ind)
+    ens = {"n": nb_t, "k": None, "part": sc_t, "score": sc_t}
     return out, ens
 
 
@@ -491,10 +566,6 @@ def render(cat, mode=None):
     if not cat or not cat.get("questions"):
         return
     st.markdown(STYLE, unsafe_allow_html=True)
-    st.markdown(
-        f'<div class="titre-bloc">{_e(T("ex_titre"))}</div>'
-        f'<p class="ex-note" style="margin:0 0 12px;max-width:96ch">'
-        f'{_e(T("ex_intro"))}</p>', unsafe_allow_html=True)
 
     questions = cat["questions"]
     if mode == "brut":
@@ -502,11 +573,28 @@ def render(cat, mode=None):
     elif mode == "score":
         mesure = "score"
     else:
+        mesure = None
+
+    st.markdown(
+        f'<div class="titre-bloc">'
+        f'{_e(T("ex_t_score") if mesure == "score" else T("ex_titre"))}</div>'
+        f'<p class="ex-note" style="margin:0 0 12px;max-width:96ch">'
+        f'{_e(T("ex_intro_score") if mesure == "score" else T("ex_intro"))}'
+        f'</p>', unsafe_allow_html=True)
+
+    if mesure is None:
         mesure = st.radio(
             T("ex_mesure"), ["part", "score"], horizontal=True, key="ex_mes",
             format_func=lambda m: T("ex_m_" + m))
 
-    q, modalite = None, None
+    q, modalite, cible = None, None, None
+    if mesure == "score":
+        # ---- 1 · la cible : l'indice, une dimension ou un indicateur -----
+        opts = _cibles(cat)
+        libs = {c: lib for c, lib, _i in opts}
+        cible = st.selectbox(T("ex_cible"), [c for c, _l, _i in opts],
+                             key="ex_cible_sel",
+                             format_func=lambda c: libs.get(c, c))
     if mesure == "part":
         # ---- 1 · la question, puis la réponse ----------------------------
         g, d = st.columns([1.55, 1])
@@ -524,7 +612,7 @@ def render(cat, mode=None):
                                     key=f"ex_m_{qi}")
 
     # ---- 2 · la ventilation, le format, les extrêmes ---------------------
-    dispo = [a for a, _ in AXES if mesure == "score" or a != "dimension"]
+    dispo = [a for a, _ in AXES]
     c1, c2, c3 = st.columns([1.6, 1, 1.15])
     with c1:
         axes = st.multiselect(
@@ -560,7 +648,7 @@ def render(cat, mode=None):
             f'{_e(T("ex_filtre_n", n=n_f, t=cat["n"]))}</p>',
             unsafe_allow_html=True)
 
-    lignes, ens = _ventiler(cat, mesure, q, modalite, axes, filtre)
+    lignes, ens = _ventiler(cat, mesure, q, modalite, axes, filtre, cible)
     lignes = [l for l in lignes if l["n"] > 0]
     if not lignes:
         st.info(T("ex_vide"))
@@ -591,7 +679,9 @@ def render(cat, mode=None):
         # sous le dessin plutôt que laissée à deviner.
         vals = [((l["part"] / 10 if mesure == "part" else l["part"])
                  if l["part"] is not None else None) for l in montrees]
-        nom = _e(modalite) if mesure == "part" else T("ex_m_score")
+        nom = (_e(modalite) if mesure == "part"
+               else {c: l for c, l, _i in _cibles(cat)}.get(
+                   cible or "global", T("ex_m_score")))
         svg = radar.render_radar_svg(
             [l["nom"] for l in montrees], [(nom, vals, VERT_APRI)],
             taille=430)
