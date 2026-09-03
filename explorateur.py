@@ -85,6 +85,87 @@ TEXTES = {
     "ex_mesure": {"en": "Measure", "fr": "Mesure"},
     "ex_m_part": {"en": "Share of an answer", "fr": "Part d'une réponse"},
     "ex_m_score": {"en": "Resilience score", "fr": "Score de résilience"},
+    # ---- l'explorateur de scores : filtres combinables, un seul dessin ----
+    "ex_s_titre": {"en": "Resilience scores", "fr": "Scores de résilience"},
+    "ex_s_intro": {
+        "en": "Nothing is shown until you ask for it. Narrow the sample with "
+              "the filters, choose what to measure, then choose how to read "
+              "it: one chart at a time, on exactly the combination you built.",
+        "fr": "Rien ne s'affiche avant d'être demandé. Resserrez "
+              "l'échantillon avec les filtres, choisissez ce qu'on mesure, "
+              "puis comment le lire : un seul dessin à la fois, sur exactement "
+              "la combinaison que vous avez construite."},
+    "ex_s_quoi": {"en": "What is measured", "fr": "Ce qu'on mesure"},
+    "ex_s_qui": {"en": "On which households", "fr": "Sur quels ménages"},
+    "ex_s_comment": {"en": "How to read it", "fr": "Comment le lire"},
+    "ex_s_dim": {"en": "Dimension", "fr": "Dimension"},
+    "ex_s_ind": {"en": "Indicator", "fr": "Indicateur"},
+    "ex_s_toutes": {"en": "All — overall index", "fr": "Toutes — indice global"},
+    "ex_s_tous_i": {"en": "None — dimension score",
+                    "fr": "Aucun — score de la dimension"},
+    "ex_s_tous_i0": {"en": "None — overall index",
+                     "fr": "Aucun — indice global"},
+    "ex_s_axe": {"en": "Break down by", "fr": "Ventiler par"},
+    "ex_s_aucun": {"en": "Nothing — the selection alone",
+                   "fr": "Rien — la sélection seule"},
+    "ex_s_ax_dim": {"en": "Dimension", "fr": "Dimension"},
+    "ex_s_mode": {"en": "Analysis", "fr": "Analyse"},
+    "ex_s_m_actuel": {"en": "Current score", "fr": "Score actuel"},
+    "ex_s_m_bas": {"en": "Lowest scores", "fr": "Scores les plus bas"},
+    "ex_s_m_haut": {"en": "Highest scores", "fr": "Scores les plus élevés"},
+    "ex_s_m_ecarts": {"en": "Biggest differences between groups",
+                      "fr": "Différences les plus fortes entre groupes"},
+    "ex_s_combien": {"en": "How many", "fr": "Combien"},
+    "ex_s_sel": {"en": "Selection", "fr": "Sélection"},
+    "ex_s_ech": {"en": "Whole sample", "fr": "Échantillon entier"},
+    "ex_s_ecart_ech": {"en": "Gap with the whole sample",
+                       "fr": "Écart avec l'échantillon entier"},
+    "ex_s_n": {"en": "{n} households of {t}",
+               "fr": "{n} ménages sur {t}"},
+    "ex_s_vide": {"en": "No household matches this combination. Widen one of "
+                        "the filters.",
+                  "fr": "Aucun ménage ne réunit cette combinaison. Élargissez "
+                        "l'un des filtres."},
+    "ex_s_rien": {"en": "This score cannot be computed on the selected "
+                        "households.",
+                  "fr": "Ce score ne peut pas être calculé sur les ménages "
+                        "sélectionnés."},
+    "ex_s_bas_i": {"en": "The lowest indicators on the selection",
+                   "fr": "Les indicateurs les plus bas sur la sélection"},
+    "ex_s_haut_i": {"en": "The highest indicators on the selection",
+                    "fr": "Les indicateurs les plus hauts sur la sélection"},
+    "ex_s_bas_a": {"en": "The lowest of the breakdown",
+                   "fr": "Les plus bas de la ventilation"},
+    "ex_s_haut_a": {"en": "The highest of the breakdown",
+                    "fr": "Les plus hauts de la ventilation"},
+    "ex_s_ec_t": {"en": "Group against group, ranked by the size of the gap",
+                  "fr": "Groupe contre groupe, classés par la taille de "
+                        "l'écart"},
+    "ex_s_ec_x": {
+        "en": "Every pair inside each register is compared — women against "
+              "men, one age band against another, one locality against "
+              "another — and the pairs are ranked by the size of the gap. The "
+              "two groups compared are named on every row, so a gap is never "
+              "read without knowing between whom it holds.",
+        "fr": "Chaque paire à l'intérieur d'un registre est comparée — les "
+              "femmes contre les hommes, une tranche d'âge contre une autre, "
+              "une localité contre une autre — et les paires sont classées "
+              "par la taille de l'écart. Les deux groupes comparés sont "
+              "nommés sur chaque ligne : un écart ne se lit jamais sans "
+              "savoir entre qui il tient."},
+    "ex_s_ec_vs": {"en": "vs", "fr": "contre"},
+    "ex_s_ec_col": {"en": "Comparison", "fr": "Comparaison"},
+    "ex_s_ec_reg": {"en": "Register", "fr": "Registre"},
+    "ex_s_ecart": {"en": "Gap", "fr": "Écart"},
+    "ex_s_ec_rien": {"en": "No pair of groups can be compared on this score "
+                           "within the selection.",
+                     "fr": "Aucune paire de groupes n'est comparable sur ce "
+                           "score dans la sélection."},
+    "ex_s_carte_sec": {
+        "en": "The map needs the communal sections: set the breakdown to "
+              "Communal section.",
+        "fr": "La carte demande les sections communales : mettez la "
+              "ventilation sur Section communale."},
     "ex_score": {"en": "score out of 10", "fr": "score sur 10"},
     "ex_cible": {"en": "Resilience indicator",
                  "fr": "Indicateur de résilience"},
@@ -177,6 +258,16 @@ STYLE = """
   .ex-tab td.v { font-weight:700; color:#101728; }
   .ex-note { font-size:11.5px; color:#8a93a5; line-height:1.5;
             margin:10px 0 0; text-align:left !important; }
+  .ex-tab tr.pale td { opacity:.55; }
+  .ex-kpi { display:flex; gap:14px; flex-wrap:wrap; margin:6px 0 4px; }
+  .ex-k { flex:1 1 190px; background:#fff; border:1px solid #e3eaf3;
+            border-radius:12px; padding:12px 15px; }
+  .ex-k-l { font-size:10.5px; font-weight:700; letter-spacing:.08em;
+            text-transform:uppercase; color:#8a93a5; }
+  .ex-k-v { font-size:24px; font-weight:700; color:#101728; line-height:1.1;
+            margin-top:4px; font-variant-numeric:tabular-nums; }
+  .ex-k-u { font-size:13px; font-weight:400; color:#8a93a5; }
+  .ex-k-s { font-size:11px; color:#8a93a5; margin-top:3px; }
 </style>
 """
 
@@ -721,3 +812,311 @@ def render(cat, mode=None):
         st.markdown(
             f'<p class="ex-note">{_e(T("ex_fragile", n=N_FRAGILE))}</p>',
             unsafe_allow_html=True)
+
+
+# ==================================================== l'explorateur de scores
+# CET ÉCRAN EST PILOTÉ PAR LA DEMANDE, PAS PAR L'INVENTAIRE. La version d'avant
+# affichait, dès l'ouverture, les dix sections communales sur l'indice global :
+# personne ne l'avait demandé, et il fallait défiler pour arriver à la question
+# qu'on se posait. Ici rien ne se dessine avant qu'on ait dit quoi mesurer, sur
+# qui, et comment le lire — et il ne se dessine qu'UNE chose.
+
+_REGISTRES_S = [("section", "ex_ax_section"), ("sexe", "ex_ax_sexe"),
+                ("age", "ex_ax_age"), ("richesse", "ex_ax_richesse"),
+                ("paysage", "ex_ax_paysage")]
+
+
+def _zone_filtres(cat):
+    """Les cinq restrictions, cumulables, et le sous-échantillon qu'elles font.
+
+    ELLES SE CUMULENT EN ET, ET C'EST TOUT L'INTÉRÊT. « Les femmes de 40 à 59
+    ans, catégorie C, en montagne, à Trichet » est une question légitime et
+    elle n'a pas de page à elle : cinq menus la posent. L'effectif restant est
+    annoncé sous les menus, parce qu'un score calculé sur onze ménages doit se
+    lire en sachant qu'ils sont onze.
+    """
+    cols = st.columns(len(_REGISTRES_S))
+    masque = np.ones(cat["n"], dtype=bool)
+    poses = []
+    for (axe, lab), col in zip(_REGISTRES_S, cols):
+        with col:
+            v = st.selectbox(
+                T(lab), [None] + list(_VALEURS.get(axe, [])),
+                key=f"exs_f_{axe}",
+                format_func=lambda v: T("ex_f_tous") if v is None else _lib(v))
+        if v is not None:
+            g = cat["groupes"].get(v)
+            if g is not None:
+                masque = masque & g
+                poses.append((axe, v))
+    return masque, poses
+
+
+def _zone_cible(cat):
+    """Dimension puis indicateur : deux menus, et le second suit le premier.
+
+    LA DIMENSION FILTRE LA LISTE DES INDICATEURS, elle ne la double pas.
+    Soixante-six indicateurs dans un seul menu déroulant se cherchent à
+    l'aveugle ; choisir d'abord la dimension en laisse une dizaine, et si l'on
+    n'en choisit aucun c'est le score de la dimension qui est mesuré. Les deux
+    menus vides mesurent l'indice global : on part du plus général et on
+    resserre, jamais l'inverse.
+    """
+    g, d = st.columns([1, 1.7])
+    with g:
+        dim = st.selectbox(
+            T("ex_s_dim"), [None] + _DIMS, key="exs_dim",
+            format_func=lambda c: T("ex_s_toutes") if c is None else T(c))
+    inds = [x for x in _inds_tries(cat) if dim is None or x["dim"] == dim]
+    with d:
+        k = st.selectbox(
+            T("ex_s_ind"), [None] + list(range(len(inds))), key=f"exs_ind_{dim}",
+            format_func=lambda i: (
+                T("ex_s_tous_i" if dim else "ex_s_tous_i0") if i is None
+                else (_nom_ind(inds[i]) if dim
+                      else f'{T(inds[i]["dim"])} · {_nom_ind(inds[i])}')))
+    if k is not None:
+        ind = inds[k]
+        return f"i:{_inds_tries(cat).index(ind)}", _nom_ind(ind), ind, inds
+    if dim is not None:
+        return f"d:{dim}", T(dim), None, inds
+    return "global", T("ex_c_global"), None, inds
+
+
+def _kpi_score(lib, sc, n, tot, sc_ech):
+    """Le score de la sélection, seul, quand on n'a rien demandé de plus."""
+    ec = (sc - sc_ech) if (sc is not None and sc_ech is not None) else None
+    coul = VERT if (ec or 0) > 0 else ROUGE if (ec or 0) < 0 else ENCRE3
+    return (
+        '<div class="ex-kpi">'
+        f'<div class="ex-k"><div class="ex-k-l">{_e(T("ex_s_sel"))}</div>'
+        f'<div class="ex-k-v">{_f(sc, 2)}<span class="ex-k-u"> / 10</span>'
+        f'</div><div class="ex-k-s">{_e(lib)}</div></div>'
+        f'<div class="ex-k"><div class="ex-k-l">{_e(T("ex_s_ech"))}</div>'
+        f'<div class="ex-k-v">{_f(sc_ech, 2)}<span class="ex-k-u"> / 10</span>'
+        f'</div><div class="ex-k-s">{_e(T("ex_s_n", n=n, t=tot))}</div></div>'
+        f'<div class="ex-k"><div class="ex-k-l">'
+        f'{_e(T("ex_s_ecart_ech"))}</div>'
+        f'<div class="ex-k-v" style="color:{coul}">{_f(ec, 2)}</div>'
+        f'<div class="ex-k-s">{_e(T("ex_score"))}</div></div></div>')
+
+
+def _lignes_axe(cat, axe, cible, ind, filtre):
+    """Le score de la cible sur chaque case d'un registre, ou par dimension."""
+    out = []
+    if axe == "dimension":
+        for c in _DIMS:
+            nb, sc = _score_cible(cat, filtre, f"d:{c}", None)
+            out.append({"nom": T(c), "cle": c, "axe": T("ex_s_ax_dim"),
+                        "axe_code": "dimension", "n": nb, "k": None,
+                        "part": sc, "score": sc})
+        return out
+    for v, lib in _cases(cat, axe):
+        g = cat["groupes"].get(v)
+        if g is None:
+            continue
+        nb, sc = _score_cible(cat, g & filtre, cible, ind)
+        out.append({"nom": lib, "cle": v, "axe": T(dict(_REGISTRES_S)[axe]),
+                    "axe_code": axe, "n": nb, "k": None,
+                    "part": sc, "score": sc})
+    return [l for l in out if l["n"] > 0]
+
+
+def _lignes_indicateurs(cat, inds, filtre):
+    """Le score de chaque indicateur du périmètre, sur la sélection."""
+    out = []
+    for x in inds:
+        nb, sc = _mesure_ind(x, filtre)
+        if nb and sc is not None:
+            out.append({"nom": _nom_ind(x), "cle": x["dim"],
+                        "axe": T(x["dim"]), "axe_code": "indicateur",
+                        "n": nb, "k": None, "part": sc, "score": sc})
+    return out
+
+
+def _paires_ecarts(cat, cible, ind, filtre, axe=None):
+    """Toutes les paires de groupes d'un même registre, classées par écart.
+
+    ON COMPARE À L'INTÉRIEUR D'UN REGISTRE, JAMAIS ENTRE DEUX REGISTRES. « Les
+    femmes contre la montagne » n'est pas un écart, c'est une confusion : les
+    deux ensembles se recouvrent et la différence mélange le sexe et le lieu.
+    Femmes contre hommes, une tranche d'âge contre une autre, une localité
+    contre une autre : là, les deux termes s'excluent et l'écart a un sens.
+
+    LES SCORES SONT CALCULÉS UNE FOIS PAR GROUPE, PAS UNE FOIS PAR PAIRE. Les
+    dix sections font quarante-cinq paires ; les calculer paire par paire
+    ferait quatre-vingt-dix agrégations pour dix chiffres.
+    """
+    registres = [(a, l) for a, l in _REGISTRES_S if axe in (None, a)]
+    lignes = []
+    for a, lab in registres:
+        scores = {}
+        for v, lib in _cases(cat, a):
+            g = cat["groupes"].get(v)
+            if g is None:
+                continue
+            nb, sc = _score_cible(cat, g & filtre, cible, ind)
+            if nb and sc is not None:
+                scores[v] = (lib, sc, nb)
+        vals = list(scores)
+        for i in range(len(vals)):
+            for j in range(i + 1, len(vals)):
+                (la, sa, na), (lb, sb, nb) = scores[vals[i]], scores[vals[j]]
+                # LE PREMIER NOMMÉ EST LE PLUS BAS. « Femmes 3,2 contre
+                # hommes 6,1 → −2,9 » se lit dans le bon sens ; l'inverse
+                # affiche un écart positif là où il y a un désavantage.
+                if sb < sa:
+                    la, sa, na, lb, sb, nb = lb, sb, nb, la, sa, na
+                lignes.append({"registre": T(lab), "a": la, "b": lb,
+                               "sa": sa, "sb": sb, "d": sa - sb,
+                               "na": na, "nb": nb})
+    lignes.sort(key=lambda x: x["d"])
+    return lignes
+
+
+def _table_paires(lignes):
+    r = ['<table class="ex-tab"><thead><tr>'
+         f'<th>{_e(T("ex_s_ec_col"))}</th>'
+         f'<th>{_e(T("ex_s_ec_reg"))}</th>'
+         f'<th class="n">{_e(T("ex_score"))}</th>'
+         f'<th class="n">{_e(T("ex_col_n"))}</th>'
+         f'<th class="n">{_e(T("ex_s_ecart"))}</th>'
+         '</tr></thead><tbody>']
+    for x in lignes:
+        pale = ' class="pale"' if min(x["na"], x["nb"]) < N_FRAGILE else ""
+        r.append(
+            f'<tr{pale}><td><b>{_e(x["a"])}</b> '
+            f'<span style="color:#8a93a5">{_e(T("ex_s_ec_vs"))}</span> '
+            f'{_e(x["b"])}</td>'
+            f'<td style="color:#8a93a5">{_e(x["registre"])}</td>'
+            f'<td class="n"><b>{_f(x["sa"], 2)}</b> '
+            f'<span style="color:#a7b0be">/ {_f(x["sb"], 2)}</span></td>'
+            f'<td class="n" style="color:#8a93a5">{x["na"]} / {x["nb"]}</td>'
+            f'<td class="n v" style="color:{ROUGE}">'
+            f'{_f(x["d"], 2)}</td></tr>')
+    r.append('</tbody></table>')
+    return "".join(r)
+
+
+def render_scores(cat):
+    """Les scores de résilience : on demande, puis on voit — et une chose."""
+    if not cat or not cat.get("indicateurs"):
+        return
+    st.markdown(STYLE, unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="titre-bloc">{_e(T("ex_s_titre"))}</div>'
+        f'<p class="ex-note" style="margin:0 0 12px;max-width:96ch">'
+        f'{_e(T("ex_s_intro"))}</p>', unsafe_allow_html=True)
+
+    # ---- 1 · ce qu'on mesure ---------------------------------------------
+    st.markdown(f'<div class="ex-lab">{_e(T("ex_s_quoi"))}</div>',
+                unsafe_allow_html=True)
+    cible, lib_cible, ind, inds = _zone_cible(cat)
+
+    # ---- 2 · sur qui -----------------------------------------------------
+    st.markdown(f'<div class="ex-lab">{_e(T("ex_s_qui"))}</div>',
+                unsafe_allow_html=True)
+    filtre, poses = _zone_filtres(cat)
+    n_f = int(filtre.sum())
+    if n_f == 0:
+        st.info(T("ex_s_vide"))
+        return
+    if poses:
+        st.markdown(f'<p class="ex-note" style="margin:2px 0 0">'
+                    f'{_e(T("ex_s_n", n=n_f, t=cat["n"]))}</p>',
+                    unsafe_allow_html=True)
+
+    # ---- 3 · comment le lire ---------------------------------------------
+    st.markdown(f'<div class="ex-lab">{_e(T("ex_s_comment"))}</div>',
+                unsafe_allow_html=True)
+    c1, c2, c3 = st.columns([1.25, 1, 1.3])
+    with c1:
+        axe = st.selectbox(
+            T("ex_s_axe"), [None] + [a for a, _l in _REGISTRES_S]
+            + (["dimension"] if ind is None else []),
+            key="exs_axe",
+            format_func=lambda a: (T("ex_s_aucun") if a is None
+                                   else T("ex_s_ax_dim") if a == "dimension"
+                                   else T(dict(_REGISTRES_S)[a])))
+    with c2:
+        forme = st.selectbox(T("ex_format"),
+                             ["barres", "radar", "tableau", "carte"],
+                             key="exs_forme",
+                             format_func=lambda f: T("ex_" + f))
+    with c3:
+        mode = st.selectbox(
+            T("ex_s_mode"), ["actuel", "bas", "haut", "ecarts"],
+            key="exs_mode", format_func=lambda m: T("ex_s_m_" + m))
+
+    # ---- les écarts entre groupes ont leur propre tableau -----------------
+    if mode == "ecarts":
+        st.markdown(f'<div class="titre-bloc" style="margin-top:16px">'
+                    f'{_e(T("ex_s_ec_t"))}</div>'
+                    f'<p class="ex-note" style="margin:0 0 4px">'
+                    f'{_e(T("ex_s_ec_x"))}</p>', unsafe_allow_html=True)
+        combien = st.selectbox(T("ex_s_combien"), [5, 10, 20],
+                               key="exs_k_ec")
+        paires = _paires_ecarts(cat, cible, ind, filtre,
+                                axe if axe not in (None, "dimension") else None)
+        if not paires:
+            st.info(T("ex_s_ec_rien"))
+            return
+        st.markdown(_table_paires(paires[:combien]), unsafe_allow_html=True)
+        return
+
+    # ---- ce qui est mesuré, et sur quoi on le ventile ---------------------
+    nb_sel, sc_sel = _score_cible(cat, filtre, cible, ind)
+    _nb_e, sc_ech = _score_cible(cat, np.ones(cat["n"], dtype=bool),
+                                 cible, ind)
+
+    if axe is None and mode == "actuel":
+        # RIEN N'A ÉTÉ DEMANDÉ DE PLUS QUE LE SCORE : on donne le score, et
+        # pas dix barres par-dessus.
+        if sc_sel is None:
+            st.info(T("ex_s_rien"))
+            return
+        st.markdown(_kpi_score(lib_cible, sc_sel, nb_sel, cat["n"], sc_ech),
+                    unsafe_allow_html=True)
+        return
+
+    if axe is None:
+        titre = T("ex_s_bas_i" if mode == "bas" else "ex_s_haut_i")
+        lignes = _lignes_indicateurs(cat, inds, filtre)
+    else:
+        titre = (T("ex_s_bas_a") if mode == "bas"
+                 else T("ex_s_haut_a") if mode == "haut" else lib_cible)
+        lignes = _lignes_axe(cat, axe, cible, ind, filtre)
+    if not lignes:
+        st.info(T("ex_s_rien"))
+        return
+
+    if mode in ("bas", "haut"):
+        combien = st.selectbox(T("ex_s_combien"), [5, 10, 20], key="exs_k")
+        lignes = sorted(lignes, key=lambda x: x["score"],
+                        reverse=(mode == "haut"))[:combien]
+
+    st.markdown(f'<div class="titre-bloc" style="margin-top:14px">'
+                f'{_e(titre)}</div>', unsafe_allow_html=True)
+    ens = {"n": nb_sel, "k": None, "part": sc_sel, "score": sc_sel}
+
+    if forme == "radar" and len(lignes) < 3:
+        st.info(T("ex_radar_court"))
+        forme = "barres"
+    if forme == "carte":
+        svg = _carte(lignes) if axe == "section" else None
+        if svg is None:
+            st.info(T("ex_s_carte_sec"))
+            forme = "barres"
+        else:
+            st.markdown(f'<div style="font-family:Inter,system-ui,sans-serif">'
+                        f'{svg}</div>', unsafe_allow_html=True)
+    if forme == "radar":
+        svg = radar.render_radar_svg(
+            [l["nom"] for l in lignes],
+            [(lib_cible, [l["score"] for l in lignes], VERT_APRI)], taille=430)
+        st.markdown(f'<div style="max-width:760px;margin:6px auto 0">{svg}'
+                    f'</div>', unsafe_allow_html=True)
+    elif forme == "tableau":
+        st.markdown(_tableau(lignes, ens, "score"), unsafe_allow_html=True)
+    elif forme == "barres":
+        st.markdown(_barres(lignes, ens, "score"), unsafe_allow_html=True)

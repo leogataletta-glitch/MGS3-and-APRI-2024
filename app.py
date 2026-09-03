@@ -45,6 +45,7 @@ import methodologie_page
 import ondes_choc
 import ocb_page
 import rapport_donateur
+import satellite_page
 import resilience_page
 import saillants_page
 import si_je_change
@@ -1360,6 +1361,13 @@ TEXTES_NAV = {
     # L'ONGLET NE PROPOSE PLUS DES SOLUTIONS, IL DÉSIGNE DES CIBLES. Une
     # piste d'action lue avant d'avoir nommé la variable qui décroche est une
     # opinion ; nommer la variable, c'est le point de départ des boucles.
+    "ra_src": {"en": "Measured by", "fr": "Mesuré par"},
+    "ra_src_menages": {"en": "Household questionnaire",
+                       "fr": "Questionnaire ménage"},
+    "ra_src_satellite": {"en": "Satellite", "fr": "Satellite"},
+    "ra_deplier_dim": {
+        "en": "Unfold one dimension in full — its indicators, one by one",
+        "fr": "Déplier une dimension en entier — ses indicateurs, un par un"},
     "ra_o_solutions": {"en": "Most alarming variables",
                        "fr": "Variables les plus alarmantes"},
     "mode_levier": {"en": "If I change one thing",
@@ -1625,10 +1633,11 @@ _NAV = [
     # Elle est la sortie de tout ce qui précède : elle ne se comprend qu'après
     # les fiches, dont elle reprend les chiffres, et elle doit rester au-dessus
     # des téléchargements, qui ferment toujours la marche.
-    # LE RAPPORT PRÉCÈDE LA NOTE, PARCE QU'IL LA FONDE. Six chapitres qui
-    # partent des volumes de terrain et finissent par ce qui reste après le
-    # projet ; la note qui suit en est la page arrachée.
-    (MODE_RAPPORT, "radar"),
+    # LE RAPPORT DONATEUR N'EST PLUS UNE ENTRÉE DE MENU. Il redisait, en six
+    # chapitres de prose, ce que les cinq écrans de résultats montrent
+    # maintenant chiffre par chiffre ; deux récits du même terrain, dont un
+    # figé, se contredisent tôt ou tard. Le module reste dans le dépôt et le
+    # code de mode reste valide — rien ne le rend, et c'est voulu.
     (MODE_DONNEES, "telecharger"),
 ]
 
@@ -1836,30 +1845,44 @@ with _c_contenu:
             else None
 
         if _ra == "brut":
-            # LES RÉSULTATS BRUTS SONT CE QUE LES GENS ONT RÉPONDU, et rien
-            # d'autre : aucun barème, aucune pondération. Une question, une
-            # réponse, la part qui la donne — ventilée, filtrée, et portée sur
-            # la carte quand la ventilation est géographique.
-            explorateur.render(_cat, mode="brut")
+            # LES RÉSULTATS BRUTS SONT CE QUI A ÉTÉ MESURÉ, et rien d'autre :
+            # aucun barème, aucune pondération. Deux instruments l'ont mesuré
+            # et ils ont leur place au même endroit — le questionnaire, qui
+            # interroge des ménages, et le satellite, qui regarde le sol. Un
+            # seul des deux à la fois : ils ne se ventilent pas pareil, et
+            # les empiler ferait deux écrans sur une page.
+            _SRC = {"menages": T("ra_src_menages"),
+                    "satellite": T("ra_src_satellite")}
+            _src = st.radio(T("ra_src"), list(_SRC), horizontal=True,
+                            key="ra_source", format_func=lambda c: _SRC[c])
+            if _src == "satellite":
+                satellite_page.render()
+            else:
+                explorateur.render(_cat, mode="brut")
 
         elif _ra == "scores":
-            # LES SCORES, DANS LES DEUX SENS DE LECTURE : d'abord comparés
-            # entre territoires, paysages et groupes ; ensuite dépliés
-            # dimension par dimension, avec le détail de leurs indicateurs.
-            explorateur.render(_cat, mode="score")
-            st.markdown('<div style="height:30px"></div>',
+            # LES SCORES SE DEMANDENT, ILS NE SE DÉVERSENT PAS. La version
+            # d'avant posait l'explorateur, puis une page de dimension
+            # entière en dessous, puis ses indicateurs : trois écrans empilés
+            # dont deux que personne n'avait demandés. Ici on dit ce qu'on
+            # mesure, sur qui, comment le lire — et il ne se dessine qu'une
+            # chose. Le dépliage dimension par dimension reste accessible,
+            # replié, pour qui le cherche.
+            explorateur.render_scores(_cat)
+            st.markdown('<div style="height:22px"></div>',
                         unsafe_allow_html=True)
             _COMPLEMENT = {
                 "dim3": lambda: environnement_page.render(entete=False),
                 "dim5": lambda: ocb_page.render(entete=False),
             }
-            st.session_state.setdefault("dim_active", MODES_DIM[0])
-            if st.session_state["dim_active"] not in MODES_DIM:
-                st.session_state["dim_active"] = MODES_DIM[0]
-            st.selectbox(T("d_choix_dim"), MODES_DIM, key="dim_active",
-                         format_func=lambda m: T(m))
-            _m = st.session_state["dim_active"]
-            dimension_page.render(_m, complement=_COMPLEMENT.get(_m))
+            with st.expander(T("ra_deplier_dim")):
+                st.session_state.setdefault("dim_active", MODES_DIM[0])
+                if st.session_state["dim_active"] not in MODES_DIM:
+                    st.session_state["dim_active"] = MODES_DIM[0]
+                st.selectbox(T("d_choix_dim"), MODES_DIM, key="dim_active",
+                             format_func=lambda m: T(m))
+                _m = st.session_state["dim_active"]
+                dimension_page.render(_m, complement=_COMPLEMENT.get(_m))
 
         elif _ra == "indic":
             analyse_ecarts.render_indicateur(_cat)
@@ -1949,12 +1972,6 @@ with _c_contenu:
         # Les anciennes pistes de travail, écrites avant cette analyse, ont été
         # retirées : elles ne commandaient plus rien et brouillaient la page.
         interventions_page.render()
-
-    if app_mode == MODE_RAPPORT:
-        # Aucun filtre non plus, et pour la même raison que la note : un rapport
-        # se cite. Les chiffres y sont ceux de l'enquête entière, et chacun porte
-        # son registre — donnée observée, interprétation, implication.
-        rapport_donateur.render()
 
     if app_mode == MODE_DONNEES:
         telechargements_page.render()

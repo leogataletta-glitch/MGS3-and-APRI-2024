@@ -231,6 +231,55 @@ TEXTES = {
               "indicateur bas partout figure dans le tableau du dessus, pas "
               "dans celui-ci."},
     "al_combien": {"en": "Variables listed", "fr": "Variables listées"},
+    "al_rang": {"en": "Rank", "fr": "Rang"},
+    "al_terr": {"en": "Where it is worst", "fr": "Là où c'est le pire"},
+    "al_alerte": {"en": "Alert", "fr": "Alerte"},
+    "al_a3": {"en": "Critical", "fr": "Critique"},
+    "al_a2": {"en": "High", "fr": "Élevée"},
+    "al_a1": {"en": "Moderate", "fr": "Modérée"},
+    "al_alerte_x": {
+        "en": "The alert level is read off two things at once, never one: how "
+              "low the score is, and how far the worst group falls below the "
+              "others. Critical means both — a low score that also collapses "
+              "somewhere in particular.",
+        "fr": "Le niveau d'alerte se lit sur deux choses à la fois, jamais "
+              "une : la hauteur du score, et la profondeur du décrochage du "
+              "groupe le plus bas. « Critique » veut dire les deux — un score "
+              "bas qui, en plus, s'effondre à un endroit précis."},
+    "al_synth": {"en": "The critical variables, in one table",
+                 "fr": "Les variables critiques, en un tableau"},
+    "al_synth_x": {
+        "en": "One row per critical variable: the group that carries it, the "
+              "register that group belongs to, its score, the score it is "
+              "compared with, the gap, and the alert level. This is the table "
+              "the causal loop diagrams are built from.",
+        "fr": "Une ligne par variable critique : le groupe qui la porte, le "
+              "registre dont il relève, son score, le score auquel il est "
+              "comparé, l'écart et le niveau d'alerte. C'est le tableau "
+              "d'entrée des schémas de boucles causales."},
+    "al_trier": {"en": "Sort by", "fr": "Trier par"},
+    "al_t_score": {"en": "Lowest score", "fr": "Score le plus faible"},
+    "al_t_ecart": {"en": "Biggest gap", "fr": "Écart le plus important"},
+    "al_t_dim": {"en": "Dimension", "fr": "Dimension"},
+    "al_t_type": {"en": "Type of group", "fr": "Type de groupe"},
+    "al_type": {"en": "Type of group", "fr": "Type de groupe"},
+    "al_ref": {"en": "Compared with", "fr": "Score de comparaison"},
+    "al_emporter": {"en": "Carry a variable to the Feedback Loops",
+                    "fr": "Emporter une variable vers les boucles"},
+    "al_emporter_b": {"en": "Build its causal loop diagram",
+                      "fr": "Construire son schéma de boucle causale"},
+    "al_emporte": {
+        "en": "{v} is now the central variable of the Feedback Loops "
+              "section — open it to see its system.",
+        "fr": "{v} est désormais la variable centrale de la section Feedback "
+              "Loops — ouvrez-la pour voir son système."},
+    "al_suite": {
+        "en": "These variables are the entry point of the Feedback Loops "
+              "section: the first tab there builds a causal loop diagram "
+              "around any one of them.",
+        "fr": "Ces variables sont l'entrée de la section Feedback Loops : son "
+              "premier onglet construit un schéma de boucle causale autour de "
+              "l'une d'elles."},
     "al_par_groupe": {"en": "Variables per group", "fr": "Variables par groupe"},
     "al_registres": {"en": "Groups swept", "fr": "Registres balayés"},
     "al_col_groupe": {"en": "Group", "fr": "Groupe"},
@@ -903,74 +952,156 @@ def render_groupe(cat):
     _rendre_profil(cat, cat["groupes"].get(opts[k][0]), opts[k][2], "grp",
                    avec_paysage=True)
 
-
 # ============================== les variables les plus alarmantes
-def _table_bas(lignes, n_tot):
-    """Les indicateurs les plus bas du territoire, du plus bas au plus haut."""
+# DEUX SORTES DE FAIBLESSE, DEUX TABLEAUX, ET LES CONFONDRE ENVOIE UNE
+# INTERVENTION AU MAUVAIS ENDROIT. Une faiblesse du TERRITOIRE est basse
+# partout : elle appelle une couverture, la même pour tous. Une faiblesse de
+# GROUPE est basse pour lui et pas pour ses comparables : elle appelle un
+# ciblage. Le premier tableau classe sur le score, le second sur l'écart au
+# reste du registre — et un indicateur bas partout ne peut donc pas remonter
+# dans le second, ce qui est exactement ce qu'on veut.
+
+ALERTES = ((3, "al_a3", "#c33a24"), (2, "al_a2", "#c9821f"),
+           (1, "al_a1", "#8a93a5"))
+
+
+def _alerte(score, ecart):
+    """Le niveau d'alerte, lu sur la hauteur du score ET la profondeur du
+    décrochage.
+
+    UN SEUL DES DEUX NE SUFFIT PAS. Un score de 1/10 partout est grave, mais
+    ce n'est pas une inégalité ; un décrochage de trois points sur un
+    indicateur déjà à 9/10 est une inégalité, mais personne n'en meurt. Ce qui
+    mérite « critique » est la conjonction : bas, et en plus effondré à un
+    endroit précis.
+    """
+    ec = abs(ecart or 0)
+    if score is None:
+        return 1
+    if score <= 2.0 and ec >= 2.0:
+        return 3
+    if score <= 3.0 or ec >= 3.0:
+        return 2
+    return 1
+
+
+def _pastille(niv):
+    lib, coul = next((l, c) for n, l, c in ALERTES if n == niv)
+    return (f'<span style="display:inline-block;font-size:10.5px;'
+            f'font-weight:700;letter-spacing:.05em;text-transform:uppercase;'
+            f'color:{coul};border:1px solid {coul}55;border-radius:20px;'
+            f'padding:1px 8px;white-space:nowrap">{_e(T(lib))}</span>')
+
+
+def _pire_case(ind, cat, axe):
+    """La case d'un registre où l'indicateur est au plus bas, et son écart à
+    la moyenne des autres cases du même registre."""
+    scores = []
+    for v, lib in _cases(cat, axe):
+        m = _mesure(ind, cat["groupes"][v])
+        if m["n"] and m["score"] is not None:
+            scores.append((lib, m))
+    if len(scores) < 2:
+        return None
+    scores.sort(key=lambda x: (x[1]["score"], x[1]["valeur"]))
+    lib, m = scores[0]
+    autres = [s[1]["score"] for s in scores[1:]]
+    ref = sum(autres) / len(autres)
+    return {"nom_groupe": lib, "score": m["score"], "valeur": m["valeur"],
+            "n": m["n"], "ref": ref, "d": m["score"] - ref}
+
+
+def _table_territoire(lignes):
     r = ['<table class="ec-tab"><thead><tr>'
+         f'<th class="n">{_e(T("al_rang"))}</th>'
          f'<th>{_e(T("al_col_var"))}</th>'
          f'<th class="n">{_e(T("ec_col_score"))}</th>'
          f'<th class="n">{_e(T("ec_col_val"))}</th>'
-         f'<th class="n">{_e(T("ec_col_n"))}</th></tr></thead><tbody>']
-    for x in lignes:
-        cl = ' class="pale"' if x["n"] < N_MIN else ""
-        r.append(f'<tr{cl}><td>{_e(x["nom"])}<br>'
-                 f'<span style="font-size:11px;color:#8a93a5">'
-                 f'{_e(x["dim"])}</span></td>'
-                 f'<td class="n v" style="color:{ROUGE}">'
-                 f'{_f(x["score"], 1)}</td>'
-                 f'<td class="n">{_f(x["valeur"], 1)}&#8201;%</td>'
-                 f'<td class="n">{x["n"]}</td></tr>')
-    r.append('</tbody></table>')
-    return "".join(r)
-
-
-def _table_bas_groupes(lignes):
-    """Une ligne par groupe : là où il décroche le plus des autres."""
-    r = ['<table class="ec-tab"><thead><tr>'
-         f'<th>{_e(T("al_col_groupe"))}</th>'
-         f'<th>{_e(T("al_col_var"))}</th>'
-         f'<th class="n">{_e(T("al_col_sien"))}</th>'
-         f'<th class="n">{_e(T("al_col_autres"))}</th>'
-         f'<th class="n">{_e(T("ec_col_ecart"))}</th>'
-         f'<th class="n">{_e(T("ec_col_n"))}</th></tr></thead><tbody>']
-    vu = None
-    for x in lignes:
-        cl = ' class="pale"' if x["n"] < N_MIN else ""
-        tete = "" if x["groupe"] == vu else (
-            f'{_e(x["groupe"])}<br><span style="font-size:11px;'
-            f'color:#8a93a5">{_e(x["registre"])}</span>')
-        vu = x["groupe"]
-        r.append(f'<tr{cl}><td>{tete}</td>'
+         f'<th>{_e(T("al_terr"))}</th>'
+         f'<th>{_e(T("al_alerte"))}</th></tr></thead><tbody>']
+    for i, x in enumerate(lignes, 1):
+        pire = x.get("pire")
+        ou = (f'{_e(pire["nom_groupe"])} <span style="color:#8a93a5">'
+              f'{_f(pire["score"], 1)}</span>' if pire else "—")
+        r.append(f'<tr><td class="n" style="color:#8a93a5;font-weight:700">'
+                 f'{i}</td>'
                  f'<td>{_e(x["nom"])}<br><span style="font-size:11px;'
                  f'color:#8a93a5">{_e(x["dim"])}</span></td>'
                  f'<td class="n v" style="color:{ROUGE}">'
-                 f'{_f(x["g"], 1)}</td>'
-                 f'<td class="n">{_f(x["a"], 1)}</td>'
-                 f'<td class="n v" style="color:{ROUGE}">'
-                 f'{_f(x["d"], 1, True)}</td>'
-                 f'<td class="n">{x["n"]}</td></tr>')
+                 f'{_f(x["score"], 1)}</td>'
+                 f'<td class="n">{_f(x["valeur"], 1)}&#8201;%</td>'
+                 f'<td style="font-size:12px">{ou}</td>'
+                 f'<td>{_pastille(x["alerte"])}</td></tr>')
     r.append('</tbody></table>')
     return "".join(r)
 
 
-def render_alarmes(cat):
-    """Les variables sur lesquelles commencer, et rien d'autre.
+def _table_critiques(lignes):
+    r = ['<table class="ec-tab"><thead><tr>'
+         f'<th>{_e(T("al_col_var"))}</th>'
+         f'<th>{_e(T("al_col_groupe"))}</th>'
+         f'<th>{_e(T("al_type"))}</th>'
+         f'<th class="n">{_e(T("al_col_sien"))}</th>'
+         f'<th class="n">{_e(T("al_ref"))}</th>'
+         f'<th class="n">{_e(T("ec_col_ecart"))}</th>'
+         f'<th>{_e(T("al_alerte"))}</th></tr></thead><tbody>']
+    for x in lignes:
+        pale = ' class="pale"' if x["n"] < N_MIN else ""
+        r.append(f'<tr{pale}><td>{_e(x["nom"])}<br>'
+                 f'<span style="font-size:11px;color:#8a93a5">'
+                 f'{_e(x["dim"])}</span></td>'
+                 f'<td>{_e(x["groupe"])}</td>'
+                 f'<td style="color:#8a93a5;font-size:12px">'
+                 f'{_e(x["registre"])}</td>'
+                 f'<td class="n v" style="color:{ROUGE}">'
+                 f'{_f(x["score"], 1)}</td>'
+                 f'<td class="n">{_f(x["ref"], 1)}</td>'
+                 f'<td class="n v" style="color:{ROUGE}">'
+                 f'{_f(x["d"], 1, True)}</td>'
+                 f'<td>{_pastille(x["alerte"])}</td></tr>')
+    r.append('</tbody></table>')
+    return "".join(r)
 
-    CE QUE CET ÉCRAN FAIT ET QUE LES CINQ AUTRES NE FONT PAS. Les précédents
-    répondent à une question posée : cet indicateur-là, ce paysage-là, ce
-    groupe-là. Celui-ci ne demande rien et balaye tout — les soixante-six
-    indicateurs sur le territoire, puis les soixante-six sur chacun des vingt
-    et un groupes — pour ne remonter que les scores les plus bas.
 
-    DEUX TABLEAUX PARCE QU'IL Y A DEUX SORTES DE FAIBLESSE, et les confondre
-    envoie une intervention au mauvais endroit. Une faiblesse du TERRITOIRE
-    est basse partout : elle appelle une action de couverture, la même pour
-    tous. Une faiblesse de GROUPE est basse pour lui et pas pour les autres :
-    elle appelle un ciblage. Le premier tableau classe sur le score, le second
-    sur l'écart au complément, et un indicateur bas partout ne peut donc pas
-    apparaître dans le second.
+def _emporter(cat, bas):
+    """Le passage de main vers les boucles causales.
+
+    LES DEUX SECTIONS SONT UN SEUL PARCOURS, PAS DEUX PARTIES DU SITE. La
+    variable qu'on vient de désigner comme critique est celle autour de
+    laquelle on veut tracer le schéma ; la retrouver à la main dans une liste
+    de quarante-cinq nœuds, deux onglets plus loin, c'est refaire le travail.
+    Le nœud est donc mémorisé, et le premier onglet des boucles s'ouvre
+    dessus.
+
+    LA JOINTURE SE FAIT PAR NUMÉRO DE LIGNE DU RÉFÉRENTIEL, pas par nom : les
+    noms sont traduits et se réécrivent, la ligne ne bouge pas. Les
+    indicateurs que le graphe causal ne couvre pas ne sont donc pas proposés —
+    et c'est plus honnête que de proposer un nœud approchant.
     """
+    try:
+        import boucles_moteur as B
+        graphe = B.charger()
+    except Exception:
+        return
+    par_ligne = {n.get("ligne"): n for n in graphe["noeuds"] if n.get("ligne")}
+    dispo = [(x, par_ligne[x["ligne"]]) for x in bas
+             if x.get("ligne") in par_ligne]
+    if not dispo:
+        return
+    st.markdown(f'<p class="ec-note" style="margin:14px 0 2px">'
+                f'{_e(T("al_suite"))}</p>', unsafe_allow_html=True)
+    k = st.selectbox(T("al_emporter"), list(range(len(dispo))),
+                     key="al_emp",
+                     format_func=lambda i: (f'{_f(dispo[i][0]["score"], 1)} · '
+                                            f'{dispo[i][0]["nom"]}'))
+    if st.button(T("al_emporter_b"), key="al_emp_b"):
+        st.session_state["bcl_centre"] = dispo[k][1]["id"]
+        st.session_state["bcl_levier"] = dispo[k][1]["id"]
+        st.success(T("al_emporte", v=dispo[k][0]["nom"]))
+
+
+def render_alarmes(cat):
+    """Les variables sur lesquelles commencer, et rien d'autre."""
     if not cat or not cat.get("indicateurs"):
         return
     st.markdown(STYLE, unsafe_allow_html=True)
@@ -983,64 +1114,76 @@ def render_alarmes(cat):
     for ind in cat["indicateurs"]:
         m = _mesure(ind, tout)
         if m["score"] is not None:
-            bas.append({"nom": _nom(ind), "dim": T(ind["dim"]), **m})
+            bas.append({"nom": _nom(ind), "dim": T(ind["dim"]),
+                        "ligne": ind.get("ligne"), "ind": ind, **m})
     if not bas:
         st.info(T("ec_rien"))
         return
     bas.sort(key=lambda x: (x["score"], x["valeur"]))
 
-    # ---- 1 · le territoire ------------------------------------------------
+    # ---- 1 · le classement global ----------------------------------------
     st.markdown(f'<div class="titre-bloc">{_e(T("al_t1"))}</div>'
                 f'<p class="ec-note" style="margin:0">'
                 f'{_e(T("al_x1", n=cat["n"]))}</p>', unsafe_allow_html=True)
-    k1 = st.slider(T("al_combien"), 5, min(40, len(bas)),
-                   min(15, len(bas)), key="al_k1")
-    st.markdown(_table_bas(bas[:k1], cat["n"]), unsafe_allow_html=True)
-
-    # ---- 2 · groupe par groupe -------------------------------------------
-    st.markdown(f'<div class="titre-bloc" style="margin-top:26px">'
-                f'{_e(T("al_t2"))}</div>'
-                f'<p class="ec-note" style="margin:0">{_e(T("al_x2"))}</p>',
+    k1 = st.selectbox(T("al_combien"), [5, 10, 20], key="al_k1")
+    montres = bas[:k1]
+    for x in montres:
+        # LE TERRITOIRE LE PLUS TOUCHÉ N'EST CALCULÉ QUE POUR LES LIGNES
+        # AFFICHÉES : dix sections pour soixante-six indicateurs feraient six
+        # cent soixante calculs dont on n'afficherait que vingt.
+        x["pire"] = _pire_case(x["ind"], cat, "section")
+        x["alerte"] = _alerte(x["score"],
+                              x["pire"]["d"] if x["pire"] else None)
+    st.markdown(_table_territoire(montres), unsafe_allow_html=True)
+    st.markdown(f'<p class="ec-note">{_e(T("al_alerte_x"))}</p>',
                 unsafe_allow_html=True)
-    g, d = st.columns([1.7, 1])
-    with g:
+
+    # ---- 2 · les variables critiques issues des désagrégations ------------
+    st.markdown(f'<div class="titre-bloc" style="margin-top:26px">'
+                f'{_e(T("al_synth"))}</div>'
+                f'<p class="ec-note" style="margin:0 0 4px">'
+                f'{_e(T("al_synth_x"))}</p>', unsafe_allow_html=True)
+    c1, c2, c3 = st.columns([1.6, 1.1, 0.7])
+    with c1:
         registres = st.multiselect(
             T("al_registres"), [a for a, _l in AXES],
             default=[a for a, _l in AXES], key="al_reg",
             format_func=lambda a: T(dict(AXES)[a]))
-    with d:
-        par = st.slider(T("al_par_groupe"), 1, 3, 1, key="al_par")
+    with c2:
+        tri = st.selectbox(T("al_trier"), ["score", "ecart", "dim", "type"],
+                           key="al_tri",
+                           format_func=lambda c: T("al_t_" + c))
+    with c3:
+        k2 = st.selectbox(T("al_combien"), [10, 20, 40], key="al_k2")
     if not registres:
         return
 
-    lignes = []
-    for axe in registres:
-        for val, lib in _cases(cat, axe):
-            m_g = cat["groupes"][val]
-            autre = ~m_g
-            pires = []
-            for ind in cat["indicateurs"]:
-                a, b = _mesure(ind, m_g), _mesure(ind, autre)
-                if a["score"] is None or b["score"] is None:
-                    continue
-                d_ = a["score"] - b["score"]
-                dv = a["valeur"] - b["valeur"]
-                # SEUL UN DÉCROCHAGE COMPTE, pas un écart quelconque : c'est
-                # un tableau de faiblesses, et un groupe qui fait MIEUX que
-                # les autres n'y a rien à faire.
-                if d_ >= 0 or (abs(d_) < ECART_MIN
-                               and abs(dv) < VALEUR_MIN):
-                    continue
-                pires.append({"groupe": lib, "registre": T(dict(AXES)[axe]),
-                              "nom": _nom(ind), "dim": T(ind["dim"]),
-                              "g": a["score"], "a": b["score"], "d": d_,
-                              "n": a["n"]})
-            pires.sort(key=lambda x: x["d"])
-            lignes += pires[:par]
-    if not lignes:
+    ordre_reg = {a: i for i, (a, _l) in enumerate(AXES)}
+    critiques = []
+    for ind in cat["indicateurs"]:
+        for axe in registres:
+            p = _pire_case(ind, cat, axe)
+            # SEUL UN DÉCROCHAGE COMPTE : un groupe qui fait MIEUX que ses
+            # comparables n'a rien à faire dans un tableau de vulnérabilités.
+            if p is None or p["d"] >= -ECART_MIN:
+                continue
+            critiques.append({
+                "nom": _nom(ind), "dim": T(ind["dim"]), "dim_code": ind["dim"],
+                "groupe": p["nom_groupe"], "registre": T(dict(AXES)[axe]),
+                "reg_code": axe, "score": p["score"], "ref": p["ref"],
+                "d": p["d"], "n": p["n"],
+                "alerte": _alerte(p["score"], p["d"])})
+    if not critiques:
         st.info(T("al_vide"))
         return
-    st.markdown(_table_bas_groupes(lignes), unsafe_allow_html=True)
-    if any(x["n"] < N_MIN for x in lignes):
+    cles = {"score": lambda x: (x["score"], x["d"]),
+            "ecart": lambda x: (x["d"], x["score"]),
+            "dim": lambda x: (x["dim_code"], x["score"], x["d"]),
+            "type": lambda x: (ordre_reg[x["reg_code"]], x["d"])}
+    critiques.sort(key=cles[tri])
+    st.markdown(_table_critiques(critiques[:k2]), unsafe_allow_html=True)
+    if any(x["n"] < N_MIN for x in critiques[:k2]):
         st.markdown(f'<p class="ec-note">{_e(T("ec_fragile", n=N_MIN))}</p>',
                     unsafe_allow_html=True)
+
+    _emporter(cat, bas)
