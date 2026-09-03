@@ -706,11 +706,15 @@ st.markdown(("""
        indispensable : sans lui la colonne de Streamlit s'étire sur toute la
        hauteur de la page et `sticky` n'a plus rien à quoi se coller. */
     position: sticky; top: 10px; align-self: flex-start;
-    border-right: 1px solid #e4ece7;
-    background: linear-gradient(180deg, #f2f7f4 0%, #f7faf8 42%,
-                                #ffffff 100%);
-    border-radius: 0 14px 14px 0;
-    padding: 10px 12px 18px 12px; margin: 2px 0 0 -12px;
+    border: 1px solid #dde9e2;
+    /* LE FOND EST POSÉ SUR LA COLONNE, PAS DERRIÈRE ELLE. Un dégradé qui
+       blanchit à mi-hauteur disparaissait avant le bas de la liste : la
+       moitié inférieure du menu était sur le même blanc que la page, et la
+       colonne ne se distinguait plus. Le vert pâle tient sur toute la
+       hauteur, et il n'est éclairci que légèrement vers le bas. */
+    background: linear-gradient(180deg, #edf5f0 0%, #f4f9f6 100%);
+    border-radius: 14px;
+    padding: 12px 12px 16px; margin: 2px 0 0 -10px;
   }
   /* LES ENTRÉES RESPIRENT. Streamlit colle ses conteneurs d'élément les uns
      aux autres : le fond de survol d'une ligne venait alors toucher celui de

@@ -90,22 +90,10 @@ TEXTES = {
     # les données » annonce ce qu'on vient y faire, là où l'onglet se contente
     # de nommer la rubrique.
     "po_c1": {"en": "Explore the Territory", "fr": "Explorer le territoire"},
-    "po_c1x": {"en": "Maps and landscapes across ten communal sections.",
-               "fr": "Cartes et paysages des dix sections communales."},
     "po_c2": {"en": "Resilience Framework", "fr": "Cadre de résilience"},
-    "po_c2x": {"en": "Dimensions, indicators and scoring methodology.",
-               "fr": "Dimensions, indicateurs et méthode de notation."},
     "po_c3": {"en": "Results Analysis", "fr": "Analyse des résultats"},
-    "po_c3x": {"en": "Compare resilience across territories and populations.",
-               "fr": "Comparer la résilience entre territoires et "
-                     "populations."},
     "po_c4": {"en": "Feedback Loops", "fr": "Boucles de rétroaction"},
-    "po_c4x": {"en": "Understand systemic drivers and leverage points.",
-               "fr": "Comprendre les moteurs systémiques et les leviers."},
     "po_c5": {"en": "Download Data", "fr": "Télécharger les données"},
-    "po_c5x": {"en": "Access indicators, sources and datasets.",
-               "fr": "Accéder aux indicateurs, aux sources et aux jeux de "
-                     "données."},
 
     # --- LA PHRASE D'OUVERTURE, SOUS LE BANDEAU
     # ELLE A REMPLACÉ LA DÉFINITION EN CADRE. La définition longue disait la
@@ -482,55 +470,58 @@ ENTREES = (("po_c2", "methodologie"),
 
 
 def _css_entrees():
-    """La feuille des quatre cartes d'entrée, une règle par carte.
+    """La feuille des cinq cartes d'entrée.
 
-    Streamlit ne pose qu'un seul libellé sur un bouton : le texte de
-    description est donc écrit en CSS, dans le pseudo-élément ::after, à
-    partir d'un texte injecté depuis Python. La feuille étant régénérée à
-    chaque rendu, la description suit la langue.
+    ELLES PRENNENT LE FORMAT DES ONGLETS DU SITE, et c'est la même raison qui
+    l'impose : ce sont cinq destinations en rangée, comme les six de l'analyse
+    des résultats ou les sept du cadre. Deux formats pour un même geste
+    obligeaient à réapprendre la page en descendant d'un centimètre.
+
+    LA DESCRIPTION A SAUTÉ. Elle servait quand ces cartes étaient la seule
+    annonce des cinq rubriques ; la colonne de menu les nomme maintenant à
+    gauche, et chaque page porte sa propre barre d'onglets décrite. Trois
+    façons de dire la même chose, c'était deux de trop.
+
+    LE FILET VERT APPARAÎT AU SURVOL, PAS À LA SÉLECTION. Une carte d'accueil
+    n'a pas d'état sélectionné — on la prend et on quitte la page. Le filet
+    dit donc « celle-ci » pendant qu'on la vise, exactement comme il dit
+    « celle-ci » sur l'onglet ouvert ailleurs : le même signe pour la même
+    chose.
     """
     r = ["<style>"]
     for cle, _mode in ENTREES:
         b = f'div[class*="st-key-po_e_{cle}"] button'
         r.append(f"""
         {b}, {b}[kind="primary"] {{
-          display:grid !important;
-          grid-template-rows:auto auto; row-gap:0;
-          justify-items:center; align-content:center;
+          display:flex !important; align-items:center !important;
+          justify-content:center !important;
           text-align:center !important;
-          padding:16px 16px 17px !important;
-          min-height:96px !important; height:100% !important;
+          padding:14px 15px !important;
+          min-height:58px !important; height:100% !important;
           background:#ffffff !important;
-          border:1px solid #e8edf3 !important; border-radius:12px !important;
+          border:1px solid #e3eaf3 !important; border-radius:12px !important;
           box-shadow:none !important; transform:none !important;
-          transition:border-color .15s ease, box-shadow .15s ease;
+          transition:border-color .15s ease, background .15s ease,
+                     box-shadow .15s ease;
         }}
         {b}:hover, {b}[kind="primary"]:hover {{
-          border-color:#cfe3d7 !important;
-          box-shadow:0 2px 14px rgba(16,23,40,.06) !important;
+          background:#f4f9f6 !important;
+          border-color:#2a6b3f !important;
+          box-shadow:inset 0 3px 0 0 #2a6b3f !important;
         }}
         {b} > div, {b}[kind="primary"] > div {{
-          grid-row:1; justify-self:center !important; width:auto !important;
+          justify-self:center !important; width:auto !important;
         }}
         {b} p, {b}[kind="primary"] p {{
-          font-size:14px !important; font-weight:700 !important;
-          color:#12314c !important; margin:0 !important;
+          font-size:13px !important; font-weight:700 !important;
+          color:#101728 !important; margin:0 !important;
           text-align:center !important; line-height:1.3 !important;
         }}
-        {b}::after, {b}[kind="primary"]::after {{
-          content:"{_txt_css(T(cle + 'x'))}"; grid-row:2;
-          margin-top:7px; max-width:26ch;
-          font-size:12px; font-weight:500; color:#6b7590;
-          line-height:1.5; white-space:pre-wrap;
+        {b}:hover p, {b}[kind="primary"]:hover p {{
+          color:#1a6b52 !important;
         }}""")
     r.append("</style>")
     return "".join(r)
-
-
-def _txt_css(t):
-    """Un texte prêt pour `content:` — les guillemets et les barres obliques
-    inverses y sont des délimiteurs, pas des caractères."""
-    return t.replace("\\", "\\\\").replace('"', '\\"')
 
 
 def _entrees():

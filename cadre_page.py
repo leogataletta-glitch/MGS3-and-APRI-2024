@@ -320,11 +320,6 @@ TEXTES = {
               "(B−), la baisse des rendements pousse à la migration, ce qui "
               "allège la pression et laisse la forêt revenir, mais par "
               "effondrement rural."},
-    "cad_dbc_lien": {
-        "en": "The tool is in the **Feedback Loops** tab: push a lever, watch "
-              "the wave travel, isolate a loop.",
-        "fr": "L'outil est dans l'onglet **Boucles de rétroaction** : "
-              "poussez un levier, suivez l'onde, isolez une boucle."},
     # ================= LES QUATRE SOURCES ====================================
     # ELLES ÉTAIENT TROIS, ELLES SONT QUATRE. Le quatrième volet — les
     # entretiens structurés menés dans chaque paysage auprès des autorités
@@ -1008,13 +1003,12 @@ def _tableau_dimensions(stats):
     demander au lecteur de retenir un code de couleurs. Le vert reste, et il
     ne dit qu'une chose : la part de l'indice.
 
-    LA COLONNE « INDICATEURS » PORTE SA PROPRE BARRE. Le rapport « 10/16 »
-    seul se lit mal en balayage — il faut diviser de tête, sept fois. Une
-    barre sous le rapport donne l'avancement d'un coup d'œil, et le rapport
-    reste au-dessus pour qui veut le compte exact.
-
-    UNE DIMENSION SANS AUCUN INDICATEUR CALCULÉ RESTE À SA PLACE, en pâle.
-    L'effacer donnerait à croire que le référentiel en compte six.
+    LA COLONNE « INDICATEURS » DONNE LE TOTAL DU RÉFÉRENTIEL, PAS L'AVANCEMENT.
+    Elle affichait « 10/16 » sous une barre de progression : deux chiffres
+    dont le premier dit l'état d'un chantier, pas la composition du cadre.
+    Cet onglet décrit ce qu'APRI mesure — combien d'indicateurs porte chaque
+    dimension — et l'avancement du calcul est une autre question, qui se lit
+    indicateur par indicateur dans l'analyse des résultats.
     """
     pmax = max(e["part"] for e in stats["dims"].values()) or 1
     col = ('grid-template-columns:minmax(190px,1.5fr) minmax(160px,3fr) '
@@ -1024,9 +1018,6 @@ def _tableau_dimensions(stats):
         e = stats["dims"].get(cle)
         if not e:
             continue
-        vide = e["faits"] == 0
-        pale = "opacity:.4" if vide else ""
-        part_ind = 100 * e["faits"] / e["n"] if e["n"] else 0
         nom = _e(T(cle))
         num, _, reste = nom.partition(". ")
         lignes.append(
@@ -1038,17 +1029,13 @@ def _tableau_dimensions(stats):
             f'<div style="background:#e4efe8;border-radius:99px;height:9px;'
             f'overflow:hidden"><div style="height:100%;border-radius:99px;'
             f'width:{max(100 * e["part"] / pmax, 1.5):.1f}%;'
-            f'background:{VERT_APRI};{pale}"></div></div>'
+            f'background:{VERT_APRI}"></div></div>'
             f'<div style="font-size:12.5px;font-weight:600;color:{ENCRE};'
             f'text-align:right;font-variant-numeric:tabular-nums">'
             f'{_fmt(e["part"])}&thinsp;%</div>'
-            f'<div><div style="font-size:12px;color:{ENCRE2};'
-            f'font-variant-numeric:tabular-nums;margin-bottom:5px">'
-            f'{e["faits"]}/{e["n"]}</div>'
-            f'<div style="background:#eaeef3;border-radius:99px;height:3px;'
-            f'overflow:hidden"><div style="height:100%;border-radius:99px;'
-            f'width:{part_ind:.0f}%;background:{VERT_APRI};{pale}"></div>'
-            f'</div></div></div>')
+            f'<div style="font-size:12.5px;font-weight:600;color:{ENCRE};'
+            f'text-align:right;font-variant-numeric:tabular-nums">'
+            f'{e["n"]}</div></div>')
     entete = (
         f'<div style="display:grid;{col}padding:0 0 9px;font-size:10.5px;'
         f'letter-spacing:.1em;text-transform:uppercase;color:#8a93a5;'
@@ -1481,7 +1468,6 @@ def _v_boucles():
     with d:
         st.markdown('<div style="height:40px"></div>' + _schema_boucles(),
                     unsafe_allow_html=True)
-    st.info(T("cad_dbc_lien"))
 
 
 # --- 6 · le cas de l'environnement -----------------------------------------
