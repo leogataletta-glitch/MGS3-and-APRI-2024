@@ -28,7 +28,6 @@ import streamlit.components.v1 as components
 import accueil_apri
 import actualites
 import assets
-import boucles_page
 import cadre_page
 import analyse_ecarts
 import croisement_resultats
@@ -752,43 +751,42 @@ st.markdown(("""
      donc lui qu'on met en `flex`, et ses enfants directs — les conteneurs
      d'élément — deviennent les cases de la rangée. */
   div[class*="st-key-zone_nav"] {
-    display: flex !important; flex-direction: row !important;
-    flex-wrap: wrap !important; align-items: center !important;
-    gap: 0 2px !important;
-    position: sticky; top: 0; z-index: 20;
-    background: rgba(255,255,255,.97);
-    backdrop-filter: saturate(1.4) blur(6px);
-    border-bottom: 1px solid #eef2f7;
-    margin: 0 calc(-2.6rem * var(--dz)) 0;
-    padding: 3px calc(2.6rem * var(--dz)) 2px;
+    display: flex !important; flex-direction: column !important;
+    align-items: stretch !important; gap: 1px !important;
+    /* COLLANTE, PAS FLOTTANTE. Elle suit la page quand on descend et
+       s'arrête d'elle-même en haut de la fenêtre ; elle ne recouvre jamais
+       le contenu, qui a sa propre colonne. `align-self: flex-start` est
+       indispensable : sans lui la colonne de Streamlit s'étire sur toute la
+       hauteur de la page et `sticky` n'a plus rien à quoi se coller. */
+    position: sticky; top: 10px; align-self: flex-start;
+    border-right: 1px solid #eef2f7;
+    padding: 4px 12px 12px 0; margin: 2px 0 0;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stElementContainer"],
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] {
-    width: auto !important; flex: 0 0 auto !important;
+    width: 100% !important; flex: 0 0 auto !important;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button {
     display: flex !important; align-items: center !important;
-    justify-content: center !important;
-    width: auto !important; min-height: 31px !important; height: auto !important;
-    padding: 6px 9px !important; border-radius: 8px !important;
+    justify-content: flex-start !important;
+    width: 100% !important; min-height: 30px !important; height: auto !important;
+    padding: 7px 10px !important; border-radius: 8px !important;
     border: none !important;
     background: transparent !important; box-shadow: none !important;
     transition: background .15s ease, color .15s ease;
-    white-space: nowrap;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button > div,
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button
     div[data-testid="stMarkdownContainer"] {
-    width: auto !important; text-align: center !important;
+    width: 100% !important; text-align: left !important;
     display: block !important;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button p {
     font-family: "Inter", system-ui, sans-serif !important;
     font-size: 12.5px !important; font-weight: 500 !important;
-    line-height: 1.2 !important;
+    line-height: 1.3 !important;
     color: var(--encre-2) !important;
-    text-align: center !important; margin: 0 !important;
-    white-space: nowrap;
+    text-align: left !important; margin: 0 !important;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button:hover {
     background: #f1f6f4 !important; transform: none !important;
@@ -797,15 +795,16 @@ st.markdown(("""
     div[data-testid="stButton"] > button:hover p {
     color: var(--encre) !important;
   }
-  /* L'ENTRÉE ACTIVE : un filet vert dessous et le mot en gras vert. Un fond
-     plein, sur une rangée de quatorze, aurait fait une tache ; le filet dit
-     la même chose sans peser. */
+  /* L'ENTRÉE ACTIVE : un filet vert à gauche, un fond très pâle, le mot en
+     gras vert. Dans une colonne, le filet se pose au bord d'attaque de la
+     ligne — c'est là que l'œil descend, et il n'a rien à chercher. */
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"] {
-    background: transparent !important;
+    background: #f1f6f4 !important;
     border: none !important; box-shadow: none !important;
-    border-bottom: 2px solid var(--accent) !important;
-    border-radius: 8px 8px 0 0 !important;
+    border-left: 3px solid var(--accent) !important;
+    border-radius: 0 8px 8px 0 !important;
+    padding-left: 9px !important;
   }
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"] p {
@@ -813,7 +812,36 @@ st.markdown(("""
   }
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"]:hover {
-    background: #f1f6f4 !important;
+    background: #e8f1ec !important;
+  }
+  /* LES DEUX LANGUES FERMENT LA COLONNE, séparées par un filet : ce n'est pas
+     une rubrique de plus, c'est un réglage du site. */
+  div[class*="st-key-zone_langue"] {
+    margin-top: 10px !important; padding-top: 10px !important;
+    border-top: 1px solid #eef2f7;
+  }
+  /* SUR ÉCRAN ÉTROIT LA COLONNE REDEVIENT UNE RANGÉE. Une colonne de menu
+     large de quatre-vingts pixels sur un téléphone ne sert personne : les
+     entrées se remettent côte à côte et passent à la ligne. */
+  @media (max-width: 860px) {
+    div[class*="st-key-zone_nav"] {
+      flex-direction: row !important; flex-wrap: wrap !important;
+      position: static; border-right: 0;
+      border-bottom: 1px solid #eef2f7; padding: 2px 0 6px;
+    }
+    div[class*="st-key-zone_nav"] div[data-testid="stElementContainer"],
+    div[class*="st-key-zone_nav"] div[data-testid="stButton"] {
+      width: auto !important;
+    }
+    div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button {
+      width: auto !important; padding: 6px 9px !important;
+    }
+    div[class*="st-key-zone_nav"]
+      div[data-testid="stButton"] > button[kind="primary"] {
+      border-left: 0 !important;
+      border-bottom: 2px solid var(--accent) !important;
+      border-radius: 8px 8px 0 0 !important; padding-left: 9px !important;
+    }
   }
   /* Le sélecteur de langue, seul widget non bouton de la colonne */
   section[data-testid="stSidebar"] label,
@@ -971,6 +999,25 @@ st.markdown(("""
   div[data-testid="stSidebarCollapseButton"],
   button[data-testid="stBaseButton-headerNoPadding"] { display: none !important; }
   /* l'illustration reprend la largeur libérée par la colonne */
+  /* LA RÉGLETTE : la marque, en quarante-huit pixels, sur les pages
+     intérieures. Elle porte le même fond blanc que la barre et le même filet
+     que la colonne de menu, pour que les trois se lisent comme un seul
+     encadrement. */
+  .reglette {
+    display: flex !important; align-items: center; gap: 11px;
+    height: 48px; background: #fff;
+    border-bottom: 1px solid #eef2f7;
+    padding: 0 calc(2.6rem * var(--dz));
+  }
+  .reglette .rg-embleme { height: 27px; width: 27px; display: block; }
+  .reglette .rg-texte { display: flex; align-items: baseline; gap: 9px;
+    min-width: 0; }
+  .reglette .rg-nom { font-size: 15px; font-weight: 700; color: #101728;
+    letter-spacing: -.01em; line-height: 1; }
+  .reglette .rg-base { font-size: 11.5px; color: #8a93a5; line-height: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .reglette .rg-logo { height: 31px; width: auto; display: block;
+    margin-left: auto; }
   .bandeau-haut {
     width: calc(100vw * var(--dz)) !important;
     max-width: calc(100vw * var(--dz)) !important;
@@ -1010,10 +1057,12 @@ st.markdown(("""
      intérieur, le retrait automatique laissait l'enveloppe prendre toute la
      largeur : la paire tombait sur une deuxième ligne, à droite mais en
      dessous. Les deux reçoivent donc la même largeur et la même marge. */
+  /* DANS UNE COLONNE, LES DEUX LANGUES NE SONT PLUS POUSSÉES À DROITE : elles
+     ferment la liste, à sa largeur. La marge automatique qui les collait au
+     bord droit de la rangée horizontale n'a plus d'objet. */
   div[class*="st-key-zone_nav"] > div:has(div[class*="st-key-zone_langue"]),
   div[class*="st-key-zone_langue"] {
-    margin-left: auto !important; width: 132px !important;
-    flex: 0 0 auto !important; min-width: 0 !important;
+    width: 100% !important; flex: 0 0 auto !important; min-width: 0 !important;
   }
   /* Streamlit donne au conteneur du bouton la largeur de son mot : sans ces
      deux lignes, le `width:100%` du bouton vaut 100 % de vingt-cinq pixels,
@@ -1060,7 +1109,13 @@ st.markdown(("""
   div[data-testid="stButton"] > button[kind="primary"] p {
     color: #101728 !important; font-weight: 800 !important;
   }
-  div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-lang_"]) {
+  /* LA RANGÉE DES DEUX LANGUES, ET ELLE SEULE. `:has()` traverse toute la
+     descendance : tant que la barre était un bloc à part, seule la rangée des
+     deux boutons portait `st-key-lang_`. Depuis que le menu vit dans une
+     colonne, la grande rangée « menu | page » contient elle aussi ces boutons
+     — et elle héritait de ce plafond de cent trente-deux pixels, ce qui
+     écrasait la page entière. On l'ancre donc au conteneur de langue. */
+  div[class*="st-key-zone_langue"] div[data-testid="stHorizontalBlock"] {
     padding: 0; margin: 0; max-width: 132px; gap: 7px !important;
   }
 
@@ -1362,9 +1417,6 @@ TEXTES_NAV = {
     # L'ONGLET NE PROPOSE PLUS DES SOLUTIONS, IL DÉSIGNE DES CIBLES. Une
     # piste d'action lue avant d'avoir nommé la variable qui décroche est une
     # opinion ; nommer la variable, c'est le point de départ des boucles.
-    "sx_deplier_tout": {
-        "en": "Unfold the whole model — its 45 variables and 82 relations",
-        "fr": "Déplier le modèle entier — ses 45 variables et 82 relations"},
     "sx_deplier_syst": {
         "en": "Open the interactive system — hold variables and watch it settle",
         "fr": "Ouvrir le système interactif — tenir des variables et le "
@@ -1499,8 +1551,16 @@ st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
 # hauteur, pour quatorze mots. Le contenu — cartes, tableaux, graphiques —
 # était comprimé d'autant, alors que c'est lui qu'on vient voir. En haut, sur
 # une seule ligne qui se replie si besoin, elle rend l'écran entier à la page.
-_zone_nav = st.container(key="zone_nav")
+# LE BANDEAU EST AU-DESSUS DE TOUT, ET IL PREND TOUTE LA LARGEUR.
+# Le menu vient dessous, dans une colonne à gauche qui ne se replie pas :
+# c'est la géométrie d'un tableau de bord, et elle a deux avantages sur la
+# rangée horizontale qui la précédait. Les quatorze rubriques tiennent dans
+# une colonne sans jamais passer à la ligne ni être tronquées, et la rubrique
+# courante se lit d'un coup d'œil au lieu de se chercher dans une rangée.
 _ruban = st.container(key="zone_ruban")
+# La colonne de menu est étroite et fixe ; la page prend tout le reste.
+_col_nav, _col_page = st.columns([1, 5.0], gap="medium")
+_zone_nav = _col_nav.container(key="zone_nav")
 _zone_barre = st.container()
 
 # LA LANGUE EST LUE ICI, AVANT TOUT APPEL À T(), ET CHANGÉE DANS LE BANDEAU.
@@ -1714,9 +1774,26 @@ def _rendre_ruban():
     arbres alentour pour un gain nul : le cartouche recouvre l'ancien et pose
     le vrai, net et à la bonne charte.
     """
-    if st.session_state.get("app_mode") != MODE_PORTAIL:
-        return
     with _ruban:
+        if st.session_state.get("app_mode") != MODE_PORTAIL:
+            # AILLEURS, UNE RÉGLETTE PLUTÔT QUE L'ILLUSTRATION. Le menu doit
+            # se trouver sous un bandeau sur toutes les pages, sinon la
+            # géométrie change d'un écran à l'autre et l'œil doit se
+            # réorienter à chaque clic. Mais l'illustration coûte deux cent
+            # quarante-six pixels, et les redépenser sur chaque page pour
+            # redire une image déjà vue retarde le premier chiffre. La
+            # réglette dit la même chose en quarante-huit pixels : la marque,
+            # le sous-titre, le logo.
+            st.markdown(
+                f'<div class="bandeau-haut reglette">'
+                f'<img class="rg-embleme" alt="APRI" '
+                f'src="data:image/png;base64,{assets.EMBLEME_APRI}">'
+                f'<div class="rg-texte"><span class="rg-nom">APRI</span>'
+                f'<span class="rg-base">{T("a_titre_court")}</span></div>'
+                f'<img class="rg-logo" alt="UNEP" '
+                f'src="data:image/png;base64,{assets.LOGO_UNEP}">'
+                f'</div>', unsafe_allow_html=True)
+            return
         img = _bandeau_b64()
         if not img:
             return
@@ -1739,11 +1816,12 @@ def _rendre_ruban():
 
 
 with _zone_nav:
-    # LES QUATORZE ENTRÉES SONT DES ONGLETS, PAS DES LIGNES DE LISTE.
-    # La feuille de style met le bloc vertical de Streamlit en `flex` : les
-    # boutons se rangent alors côte à côte, prennent la largeur de leur mot et
-    # passent à la ligne suivante quand la fenêtre se rétrécit. Aucun n'est
-    # tronqué, aucun n'est caché derrière un déroulant.
+    # LES ENTRÉES SE LISENT DE HAUT EN BAS, UNE PAR LIGNE.
+    # Rien n'est replié derrière un déroulant et rien ne passe à la ligne :
+    # la colonne se lit comme une table des matières, et la rubrique où l'on
+    # se trouve s'y repère sans la chercher. `position: sticky` la garde à
+    # l'écran quand la page défile — c'est ce qui la rend « toujours
+    # disponible » sans qu'elle ait à flotter par-dessus le contenu.
     st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
     for _mode, _icone in _NAV:
         _entree_nav(_mode, _icone)
@@ -1772,10 +1850,10 @@ with _zone_nav:
                                 else "secondary"))
 
 
-# LA PAGE OCCUPE TOUTE LA LARGEUR. Il n'y a plus de colonne de menu à sa
-# gauche : le conteneur est ouvert ici, avant l'aiguillage, pour que chaque
-# page se dessine dedans.
-_c_contenu = st.container()
+# LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
+# l'aiguillage, pour que chaque page se dessine dedans sans avoir à savoir
+# où elle est.
+_c_contenu = _col_page.container(key="zone_page")
 
 # Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par
@@ -1979,12 +2057,6 @@ with _c_contenu:
             systeme_complexe.render_relations()
         elif _vue == "leviers":
             systeme_complexe.render_leviers()
-            # LE SCHÉMA COMPLET RESTE ACCESSIBLE, REPLIÉ. Les quarante-cinq
-            # variables et leurs quatre-vingt-deux relations ne se lisent pas
-            # d'un coup, mais on vient parfois vérifier qu'une relation existe
-            # ailleurs que dans le système qu'on regarde.
-            with st.expander(T("sx_deplier_tout")):
-                boucles_page.render(entete=False)
         elif _vue == "simuler":
             systeme_complexe.render_simuler()
             with st.expander(T("sx_deplier_syst")):
