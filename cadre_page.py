@@ -420,8 +420,6 @@ TEXTES = {
               "resilience scores across the seven dimensions.",
         "fr": "Ces indicateurs sont normalisés puis agrégés pour produire les "
               "scores de résilience sur les sept dimensions."},
-    "cad_band_lab": {"en": "resilience indicators",
-                     "fr": "indicateurs de résilience"},
 
     # ================= les volets repliés ====================================
     "cad_v_pourquoi": {"en": "Why APRI?", "fr": "Pourquoi APRI ?"},
@@ -486,6 +484,20 @@ TEXTES = {
                "fr": "Le cas particulier des données environnementales"},
     "cad_o7": {"en": "Download the Theoretical and Methodological Framework",
                "fr": "Télécharger le cadre théorique et méthodologique"},
+
+    # LES LIBELLÉS COURTS DE LA BARRE NUMÉROTÉE. Sept titres complets sur une
+    # rangée faisaient une barre de cent trente pixels, plus haute que le
+    # contenu de certains onglets. La barre ne porte plus que des numéros ;
+    # le titre court apparaît sous celui qu'on regarde. Le titre entier reste
+    # celui des clés cad_o1 à cad_o7 — il n'a pas été remplacé, il est en
+    # retrait.
+    "cad_c1": {"en": "What APRI measures", "fr": "Ce que mesure APRI"},
+    "cad_c2": {"en": "Sources and data", "fr": "Sources et données"},
+    "cad_c3": {"en": "Dimensions", "fr": "Dimensions"},
+    "cad_c4": {"en": "From measures to scores", "fr": "De la mesure au score"},
+    "cad_c5": {"en": "Feedback loops", "fr": "Boucles de rétroaction"},
+    "cad_c6": {"en": "Environmental data", "fr": "Données environnementales"},
+    "cad_c7": {"en": "The full framework", "fr": "Le cadre complet"},
 }
 
 for _c, _v in TEXTES.items():
@@ -693,108 +705,76 @@ STYLE = """
   .cad-liste li::before { content:""; position:absolute; left:0; top:13px;
                   width:6px; height:6px; border-radius:50%; background:#c3ccda; }
 
-  /* --- STRATE 1 : les quatre cartouches de tête ------------------------- */
-  /* LES QUATRE CARTES TIENNENT SUR UNE RANGÉE, ET C'EST LA CONDITION DE
-     LEUR LECTURE : la quatrième dit ce que l'indice NE mesure PAS, et
-     renvoyée seule à la ligne suivante elle se lisait comme une note de bas
-     de page. À 235 px de base elles débordaient de douze pixels. */
-
-  /* --- le schéma d'ensemble --------------------------------------------- */
-
-  /* --- les trois sources ------------------------------------------------- */
   .cad-etage{ font-size:11px; letter-spacing:.11em; text-transform:uppercase;
               font-weight:700; color:#a7b0be; margin:26px 0 8px; }
-  /* LA JUSTIFICATION EST ANNULÉE DANS LES CARTES. La feuille de style du site
-     justifie tous les paragraphes : c'est bon pour une colonne de texte, et
-     cela défigure une carte de deux lignes — les mots s'écartent jusqu'à
-     laisser des couloirs blancs au milieu. */
-  /* Seuls les intitulés et le texte des cartes restent au fer à gauche :
-     ils vivent dans des cases étroites, où la justification creuserait
-     des couloirs blancs. Les descriptions et les listes, elles, courent
-     sur toute la largeur et se justifient comme le reste du site. */
+  /* LA JUSTIFICATION EST ANNULÉE DANS LES CARTES. La feuille de style du
+     site justifie tous les paragraphes : c'est bon pour une colonne de
+     texte, et cela défigure une carte de deux lignes — les mots s'écartent
+     jusqu'à laisser des couloirs blancs au milieu. */
   .cad-carte-x { text-align:left !important; }
 
-  /* --- les quatre sources, en cartes ---------------------------------------
-     ELLES SONT ENCADRÉES, CONTRAIREMENT AUX TROIS ATTRIBUTS. La règle de la
-     page tient en une phrase : un cadre dit qu'on tient un objet séparé. Les
-     attributs sont trois faces d'une même définition, ils se lisent d'un
-     trait ; les sources sont quatre dispositifs distincts, chacun avec son
-     protocole et sa liste — un cadre par source.
+  /* --- les quatre sources, en deux colonnes de texte ----------------------
+     LES CADRES ONT SAUTÉ. Quatre cartes blanches côte à côte tenaient dans
+     l'écran mais imposaient à chacune la hauteur de la plus haute — celle de
+     l'enquête ménage, qui porte le plan de sondage — et laissaient trois
+     grands vides. Deux colonnes, deux rangées : chaque source prend la
+     hauteur qu'elle demande, et le numéro suivi de son filet fait le travail
+     que faisait le cadre, dire où commence un bloc.
 
-     LA GRILLE S'AJUSTE AU LIEU D'IMPOSER QUATRE COLONNES. `auto-fit` avec un
-     plancher de 250 px donne quatre cartes sur un écran large, deux sur un
-     portable, une sur un téléphone, sans qu'aucune ne descende sous la
-     largeur où une liste à puces cesse de se lire. */
-  .cad-so   { display:grid; gap:14px; margin-top:4px;
-              grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); }
-  .cad-so-c { background:#fff; border:1px solid #e3eaf3; border-radius:14px;
-              padding:15px 17px 16px;
-              box-shadow:0 1px 2px rgba(16,23,40,.05); }
+     LES PUCES SONT DES TIRETS. Le rond plein appelle une liste d'items de
+     même nature ; ce sont ici des précisions de protocole, de longueurs très
+     inégales, que le tiret introduit sans les aligner de force. */
+  /* DEUX COLONNES, ET PAS « AUTANT QUE ÇA RENTRE ». En `auto-fit`, un écran
+     large en formait trois et renvoyait la quatrième source seule sur une
+     seconde rangée — une source isolée se lit comme un ajout. */
+  .cad-so   { display:grid; gap:28px 56px; margin-top:14px;
+              grid-template-columns:repeat(2,1fr); }
+  @media (max-width: 900px) { .cad-so { grid-template-columns:1fr; } }
+  .cad-so-b { display:grid; grid-template-columns:104px 1fr;
+              align-items:start; }
+  .cad-so-i { position:relative; font-size:13px; font-weight:600;
+              color:#8a93a5; padding-top:2px; letter-spacing:.02em; }
+  .cad-so-i::after { content:""; position:absolute; left:30px; right:16px;
+              top:11px; height:1px; background:#1a6b52; opacity:.45; }
   .cad-so-t { font-size:15.5px; font-weight:700; color:#1a6b52;
               letter-spacing:-.01em; margin:0 0 7px; }
   p.cad-so-x { font-size:12.5px !important; color:#3c4761 !important;
-              line-height:1.5 !important; margin:0 0 11px !important;
-              text-align:left !important; }
-  .cad-so-s { height:1px; background:#eaf0f6; margin:0 0 9px; }
-  .cad-so-l { margin:0; padding:0; list-style:none; }
-  .cad-so-l li { font-size:12.5px; color:#3c4761; line-height:1.45;
-              padding:3px 0 3px 15px; position:relative;
-              text-align:left !important; }
-  .cad-so-l li::before { content:""; position:absolute; left:0; top:10px;
-              width:5px; height:5px; border-radius:50%; background:#7fae94; }
-
-  /* Les compteurs de l'enquête ménage, à l'intérieur de sa carte. Ils
-     tenaient dans trois grandes cartes séparées, sous la page ; à cette
-     taille ils écrasaient la source qu'ils décrivent. */
-  /* TROIS LIGNES, PAS TROIS COLONNES. En colonnes de quatre-vingt-douze
-     pixels, les intitulés se coupaient en trois lignes chacun et la
-     justification du site y creusait des couloirs blancs. En lignes, le
-     nombre tient la marge gauche et l'intitulé court à côté de lui. */
-  .cad-so-k { margin:0 0 11px; }
+              line-height:1.5 !important; margin:0 0 9px !important;
+              text-align:left !important; max-width:64ch; }
+  /* Les compteurs de l'enquête ménage : c'est la seule source dont on
+     connaisse l'effectif, le nombre de sections et le minimum par section. */
+  .cad-so-k { margin:0 0 9px; }
   .cad-so-k > div { display:flex; align-items:baseline; gap:9px;
-              padding:3px 0; }
-  .cad-so-k b { flex:0 0 auto; min-width:46px; font-size:16.5px;
+              padding:2px 0; }
+  .cad-so-k b { flex:0 0 auto; min-width:44px; font-size:14.5px;
               font-weight:700; color:#101728; letter-spacing:-.02em;
               font-variant-numeric:tabular-nums; }
   .cad-so-k span { font-size:11.5px; color:#5a6a80; line-height:1.35;
               text-align:left !important; }
-  p.cad-so-n2 { font-size:11px !important; color:#8a93a5 !important;
-              line-height:1.45 !important; margin:9px 0 0 !important;
+  .cad-so-l { margin:0; padding:0; list-style:none; }
+  .cad-so-l li { font-size:12.5px; color:#3c4761; line-height:1.45;
+              padding:3px 0 3px 20px; position:relative;
               text-align:left !important; }
+  .cad-so-l li::before { content:"—"; position:absolute; left:0; top:3px;
+              color:#a7b0be; font-size:11px; }
 
-  /* --- la bande de clôture -------------------------------------------------
-     ELLE FERME LA LISTE ET DIT CE QU'ON EN FAIT. Sans elle, la page laissait
-     le lecteur devant quatre protocoles sans lui dire ce qui en sort. Le
-     nombre est à droite, isolé : c'est le résultat, pas un item de plus. */
-  .cad-band { display:flex; align-items:center; gap:18px; flex-wrap:wrap;
-              background:#f4f8f5; border:1px solid #e0ebe4; border-radius:14px;
-              padding:13px 20px; margin-top:12px; }
-  .cad-band-i { width:44px; height:44px; border-radius:50%; background:#e2eee8;
-              display:flex; align-items:center; justify-content:center;
-              flex:0 0 auto; }
-  .cad-band-c { flex:1 1 320px; min-width:0; }
-  .cad-band-t { font-size:14.5px; font-weight:700; color:#1a6b52;
+  /* --- la phrase de clôture ------------------------------------------------
+     UN FILET, DEUX LIGNES, PAS D'ENCADRÉ. Elle ferme la liste des sources et
+     dit ce qu'on en fait ; un bloc teinté en aurait fait un cinquième objet
+     de même rang que les quatre sources. */
+  .cad-fin  { border-top:1px solid #1a6b52; margin-top:24px;
+              padding-top:14px; }
+  .cad-fin-t { font-size:14.5px; font-weight:700; color:#1a6b52;
               margin:0 0 3px; line-height:1.4; }
-  p.cad-band-x { font-size:12.5px !important; color:#5a6a80 !important;
+  p.cad-fin-x { font-size:12.5px !important; color:#5a6a80 !important;
               line-height:1.5 !important; margin:0 !important;
               text-align:left !important; }
-  /* LA COLONNE DU NOMBRE A UNE LARGEUR MINIMALE, et ce n'est pas un détail :
-     bornée à onze signes, l'étiquette coupait « RESILIENCE » en plein milieu
-     — le mot est plus long que la boîte une fois l'interlettrage appliqué. */
-  .cad-band-n { flex:0 0 auto; text-align:center; padding-left:16px;
-              min-width:118px; border-left:1px solid #d8e6de; }
-  .cad-band-v { font-size:34px; font-weight:700; color:#1a6b52; line-height:1;
-              letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
-  .cad-band-lab { font-size:10.5px; font-weight:700; color:#5a6a80;
-              letter-spacing:.09em; text-transform:uppercase; margin-top:5px;
-              line-height:1.35; }
 
   /* --- les trois attributs, en colonnes numérotées ------------------------
-     TROIS COLONNES ÉGALES, SÉPARÉES PAR UN FILET, ET AUCUNE CARTE. Les trois
-     attributs étaient dans trois cartes encadrées, comme les portes de la
-     page d'accueil : un cadre annonce qu'on peut prendre l'objet, or il n'y
-     a rien à cliquer ici. Le filet vertical suffit à dire que ce sont trois
-     colonnes et non un paragraphe en trois morceaux.
+     TROIS COLONNES ÉGALES, SÉPARÉES PAR UN FILET, ET AUCUNE CARTE. Un cadre
+     annonce qu'on peut prendre l'objet, or il n'y a rien à cliquer ici. Le
+     filet vertical suffit à dire que ce sont trois colonnes et non un
+     paragraphe en trois morceaux.
 
      LE NUMÉRO EST MAIGRE ET GRAND. Gros et gras, il aurait pesé plus que le
      mot qu'il annonce ; maigre, il donne l'ordre sans le disputer. */
@@ -821,9 +801,6 @@ STYLE = """
   p.cad-a-x { font-size:14.5px !important; color:#3c4761 !important;
               line-height:1.55 !important; margin:0 !important;
               text-align:left !important; max-width:36ch; }
-  /* En dessous de neuf cents pixels, trois colonnes de trente signes ne se
-     lisent plus : elles se remettent l'une sous l'autre, et le filet passe
-     de la gauche au haut. */
   @media (max-width: 900px) {
     .cad-aaa { grid-template-columns:1fr; }
     .cad-a + .cad-a { border-left:0; border-top:1px solid #e6ecf2;
@@ -841,63 +818,69 @@ STYLE = """
               border-left:3px solid #1a6b52; padding-left:22px;
               text-align:left !important; }
 
-  /* --- les sept onglets de tête ------------------------------------------
-     UNE RANGÉE, SEPT CASES DE MÊME LARGEUR. Le sélecteur reste un `st.radio`
-     — c'est lui qui retient le code de la vue et qui survit au changement de
-     langue — mais il ne doit pas se lire comme un formulaire : la pastille
-     ronde est retirée, la case entière devient la cible, et l'onglet actif
-     est plein plutôt que coché. `flex:1 1 0` avec `min-width:0` est ce qui
-     donne sept largeurs égales : sans le `min-width`, le titre le plus long
-     imposerait sa largeur aux six autres.
-     La barre du site force `font-size:14.5px` sur tout paragraphe : les
-     déclarations de texte ci-dessous portent donc `!important`. */
+  /* --- la barre des sept onglets, en numéros ------------------------------
+     ELLE PORTAIT SEPT TITRES ENTIERS ET FAISAIT CENT TRENTE PIXELS DE HAUT,
+     plus que le contenu de certains onglets. Elle ne porte plus que des
+     numéros reliés par un filet, et le titre court de l'onglet regardé
+     s'inscrit sous son numéro. Le titre entier n'est pas perdu : c'est
+     l'intitulé du bloc, juste en dessous.
+
+     LE FILET EST TRACÉ PAR CHAQUE CASE, VERS LA DROITE, sauf la dernière.
+     C'est la seule façon d'obtenir un trait qui s'étire entre deux numéros
+     sans connaître à l'avance la largeur disponible : le pseudo-élément part
+     après le numéro et va jusqu'au bord de sa propre case.
+
+     LA PLACE DU LIBELLÉ EST RÉSERVÉE PAR LA BARRE, PAS PAR LA CASE. Le
+     libellé est en position absolue — s'il poussait la hauteur de sa case,
+     la rangée entière se décalerait au moindre changement d'onglet. */
+  /* LA BARRE DOIT S'ÉTIRER, ET RIEN NE L'Y OBLIGE. Les cases ne contiennent
+     plus que deux chiffres : la largeur naturelle du groupe est celle de
+     quatorze caractères, et un `width:100%` calculé sur ce parent-là ne
+     donne rien. Chaque enveloppe que Streamlit interpose est donc forcée à
+     la pleine largeur. */
+  div[class*="st-key-cad_nav"],
+  div[class*="st-key-cad_nav"] div[data-testid="stElementContainer"],
+  div[class*="st-key-cad_nav"] div[data-testid="stRadio"] {
+      width:100% !important; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"] {
-      display:flex !important; flex-wrap:nowrap !important; gap:7px !important;
-      width:100%; align-items:stretch; }
+      display:flex !important; flex-wrap:nowrap !important; gap:0 !important;
+      width:100% !important; align-items:flex-start; padding:2px 0 22px; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"] > label {
       flex:1 1 0 !important; min-width:0 !important; margin:0 !important;
-      background:#fff !important; border:1px solid #e3eaf3 !important;
-      border-radius:12px !important; padding:11px 12px 12px !important;
-      align-items:flex-start !important; cursor:pointer;
-      box-shadow:0 1px 2px rgba(16,23,40,.05);
-      transition:background .12s ease, border-color .12s ease; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label:hover {
-      border-color:#b6d8c6 !important; background:#f6fbf8 !important; }
-  /* LA PASTILLE RONDE EST ENFOUIE DE TROIS NIVEAUX. Ce n'est ni le premier
-     enfant du label — c'est le champ, que Streamlit cache déjà hors écran —
-     ni un pseudo-élément : c'est un vrai `div` de quatorze pixels, arrondi à
-     50 %, premier enfant de la boîte qui aligne la pastille et le libellé.
-     Deux règles écrites de mémoire l'ont manquée ; celle-ci nomme le chemin
-     complet. Le `gap` est remis à zéro pour reprendre la place qu'elle
-     occupait, et le libellé prend toute la largeur de la case. */
+      background:none !important; border:0 !important; padding:0 !important;
+      position:relative; cursor:pointer; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"]
       > label > div > div > div:first-child { display:none !important; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"] > label > div > div {
       gap:0 !important; width:100% !important; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label > div:last-child {
-      width:100%; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"] > label p {
-      font-size:11.5px !important; line-height:1.35 !important;
-      font-weight:600 !important; color:#3c4761 !important;
-      margin:0 !important; text-align:left !important; }
+      font-size:13px !important; font-weight:600 !important;
+      color:#a7b0be !important; margin:0 !important;
+      text-align:left !important; letter-spacing:.02em;
+      transition:color .12s ease; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label:hover p {
+      color:#3c4761 !important; }
+  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label::before {
+      content:""; position:absolute; left:30px; right:10px; top:9px;
+      height:1px; background:#d6e2da; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"]
-      > label:has(input:checked) {
-      background:#215434 !important; border-color:#215434 !important;
-      box-shadow:0 2px 7px rgba(33,84,52,.22); }
+      > label:last-of-type::before { display:none; }
   div[class*="st-key-cad_nav"] div[role="radiogroup"]
-      > label:has(input:checked):hover {
-      background:#1b472c !important; border-color:#1b472c !important; }
-  div[class*="st-key-cad_nav"] div[role="radiogroup"]
-      > label:has(input:checked) p { color:#fff !important; }
-  /* L'ÉTROITESSE EST UNE LIMITE RÉELLE : sept cases sur un écran de portable
-     ne tiennent pas. Elles passent alors sur deux rangées plutôt que de se
-     comprimer jusqu'à l'illisible. */
-  @media (max-width: 900px) {
+      > label:has(input:checked) p {
+      font-size:19px !important; font-weight:600 !important;
+      color:#1a6b52 !important; line-height:1 !important;
+      margin:-4px 0 0 !important; }
+  /* Le titre court, écrit par `_css_rail`, n'apparaît que sous l'actif. */
+  div[class*="st-key-cad_nav"] div[role="radiogroup"] > label::after {
+      position:absolute; left:0; top:22px; font-size:10.5px; font-weight:700;
+      color:#1a6b52; letter-spacing:.02em; white-space:nowrap; }
+  @media (max-width: 760px) {
     div[class*="st-key-cad_nav"] div[role="radiogroup"] {
         flex-wrap:wrap !important; }
     div[class*="st-key-cad_nav"] div[role="radiogroup"] > label {
-        flex:1 1 30% !important; }
+        flex:0 0 14%; }
   }
+
 </style>
 """
 
@@ -964,52 +947,64 @@ def _cartouche(titre, texte, couleur):
 
 
 def _tableau_dimensions(stats):
-    """Une ligne par dimension : pastille, nom, poids, effectif.
+    """Une ligne par dimension : le nom, le poids, l'effectif calculé.
 
-    LA COLONNE « COUVERTURE » A ÉTÉ RETIRÉE. Elle disait l'avancement du
-    calcul, pas le cadre : sur une page qui répond à « qu'est-ce qu'on
-    mesure », un état de chantier en pourcentage détourne l'attention de la
-    réponse. Le rapport « indicateurs faits sur indicateurs prévus » reste en
-    fin de ligne, où il dit la même chose sans se donner pour une mesure.
+    LA PASTILLE DE COULEUR A SAUTÉ. Sept carrés teintés en tête de ligne
+    annonçaient sept familles distinctes ; ils ne servaient qu'ici, et le
+    chiffre romain qui ouvre déjà chaque nom fait le même travail sans
+    demander au lecteur de retenir un code de couleurs. Le vert reste, et il
+    ne dit qu'une chose : la part de l'indice.
+
+    LA COLONNE « INDICATEURS » PORTE SA PROPRE BARRE. Le rapport « 10/16 »
+    seul se lit mal en balayage — il faut diviser de tête, sept fois. Une
+    barre sous le rapport donne l'avancement d'un coup d'œil, et le rapport
+    reste au-dessus pour qui veut le compte exact.
+
+    UNE DIMENSION SANS AUCUN INDICATEUR CALCULÉ RESTE À SA PLACE, en pâle.
+    L'effacer donnerait à croire que le référentiel en compte six.
     """
     pmax = max(e["part"] for e in stats["dims"].values()) or 1
+    col = ('grid-template-columns:minmax(190px,1.5fr) minmax(160px,3fr) '
+           '64px 96px;gap:22px;align-items:center;')
     lignes = []
     for cle in ORDRE:
         e = stats["dims"].get(cle)
         if not e:
             continue
-        c = TEINTES[cle]
         vide = e["faits"] == 0
+        pale = "opacity:.4" if vide else ""
+        part_ind = 100 * e["faits"] / e["n"] if e["n"] else 0
+        nom = _e(T(cle))
+        num, _, reste = nom.partition(". ")
         lignes.append(
-            f'<div style="display:grid;'
-            f'grid-template-columns:14px minmax(150px,2.6fr) 3fr 62px 74px;'
-            f'gap:11px;align-items:center;padding:9px 0;'
+            f'<div style="display:grid;{col}padding:13px 0;'
             f'border-bottom:1px solid #eef2f7">'
-            # pastille d'identité — jamais seule, le nom la suit
-            f'<div style="width:11px;height:11px;border-radius:3px;'
-            f'background:{c};{"opacity:.35" if vide else ""}"></div>'
-            f'<div style="font-size:13px;font-weight:600;color:{ENCRE};'
-            f'line-height:1.3">{_e(T(cle))}</div>'
-            # poids
-            f'<div style="background:{GRIS};border-radius:5px;height:15px;'
-            f'overflow:hidden"><div style="height:100%;border-radius:5px;'
-            f'width:{max(100 * e["part"] / pmax, 1.2):.1f}%;'
-            f'background:{VERT_APRI};{"opacity:.45" if vide else ""}"></div></div>'
+            f'<div style="font-size:13.5px;line-height:1.35">'
+            f'<span style="color:{VERT_APRI};font-weight:700">{num}.</span> '
+            f'<span style="color:{ENCRE};font-weight:600">{reste}</span></div>'
+            f'<div style="background:#e4efe8;border-radius:99px;height:9px;'
+            f'overflow:hidden"><div style="height:100%;border-radius:99px;'
+            f'width:{max(100 * e["part"] / pmax, 1.5):.1f}%;'
+            f'background:{VERT_APRI};{pale}"></div></div>'
             f'<div style="font-size:12.5px;font-weight:600;color:{ENCRE};'
             f'text-align:right;font-variant-numeric:tabular-nums">'
             f'{_fmt(e["part"])}&thinsp;%</div>'
-            f'<div style="font-size:12px;color:{ENCRE3};text-align:right;'
-            f'font-variant-numeric:tabular-nums">{e["faits"]}/{e["n"]}</div>'
-            f'</div>')
+            f'<div><div style="font-size:12px;color:{ENCRE2};'
+            f'font-variant-numeric:tabular-nums;margin-bottom:5px">'
+            f'{e["faits"]}/{e["n"]}</div>'
+            f'<div style="background:#eaeef3;border-radius:99px;height:3px;'
+            f'overflow:hidden"><div style="height:100%;border-radius:99px;'
+            f'width:{part_ind:.0f}%;background:{VERT_APRI};{pale}"></div>'
+            f'</div></div></div>')
     entete = (
-        f'<div style="display:grid;'
-        f'grid-template-columns:14px minmax(150px,2.6fr) 3fr 62px 74px;'
-        f'gap:11px;padding:0 0 6px;font-size:11px;letter-spacing:.09em;'
-        f'text-transform:uppercase;color:#8a93a5;font-weight:700">'
-        f'<div></div><div>{_e(T("cad_col_dim"))}</div>'
+        f'<div style="display:grid;{col}padding:0 0 9px;font-size:10.5px;'
+        f'letter-spacing:.1em;text-transform:uppercase;color:#8a93a5;'
+        f'font-weight:700">'
+        f'<div>{_e(T("cad_col_dim"))}</div>'
         f'<div style="grid-column:span 2">{_e(T("cad_col_poids"))}</div>'
-        f'<div style="text-align:right">{_e(T("cad_col_ind"))}</div></div>')
-    return entete + "".join(lignes)
+        f'<div>{_e(T("cad_col_ind"))}</div></div>')
+    return ('<div style="margin-top:14px">' + entete + "".join(lignes)
+            + '</div>')
 
 
 def _chaine(ptot):
@@ -1069,45 +1064,45 @@ def _attributs():
 
 
 def _sources(extras=None):
-    """Les quatre sources, une carte par source.
+    """Les quatre sources, en deux colonnes de texte.
 
-    LE PARCOURS EN CHEVRONS A DISPARU. Les trois sources étaient reliées par
-    des « › », comme des étapes ; elles n'en sont pas — on n'enquête pas les
-    ménages AVANT de regarder les images satellitaires, les quatre dispositifs
-    tournent en parallèle. Quatre cartes côte à côte disent la simultanéité,
-    ce qu'une flèche disait faux.
+    LE PARCOURS EN CHEVRONS A DISPARU, PUIS LES CADRES. Les trois sources
+    étaient d'abord reliées par des « › », comme des étapes ; elles n'en sont
+    pas — les quatre dispositifs tournent en parallèle. Elles sont ensuite
+    passées en cartes, ce qui disait bien la simultanéité mais alignait leur
+    hauteur sur la plus haute et laissait trois grands vides. Deux colonnes
+    de texte, numérotées : chaque source prend la hauteur qu'elle demande.
 
-    CHAQUE CARTE PORTE SA LISTE, et c'est elle qui rend la source
-    contestable : « données géospatiales » ne veut rien dire tant qu'on n'a
-    pas lu Sentinel, Landsat, NDVI. Une source qu'on ne peut pas vérifier est
-    une source qu'on doit croire.
+    CHAQUE SOURCE PORTE SA LISTE, et c'est elle qui la rend contestable :
+    « données géospatiales » ne veut rien dire tant qu'on n'a pas lu
+    Sentinel, Landsat, NDVI. Une source qu'on ne peut pas vérifier est une
+    source qu'on doit croire.
 
-    `extras` GLISSE UN BLOC SOUS LA DESCRIPTION D'UNE CARTE. L'enquête ménage
-    est la seule des quatre dont on connaisse l'effectif, le nombre de
-    sections et le minimum par section : ces chiffres tenaient dans un bloc
-    « plan de sondage » à part, sous la page, qu'il fallait aller chercher.
-    Ils appartiennent à la carte qu'ils décrivent.
+    `extras` GLISSE UN BLOC SOUS LA DESCRIPTION. L'enquête ménage est la
+    seule des quatre dont on connaisse l'effectif, le nombre de sections et
+    le minimum par section.
     """
     extras = extras or {}
-    cartes = []
-    for k in ("cad_so1", "cad_so2", "cad_so3", "cad_so4"):
+    blocs = []
+    for i, k in enumerate(("cad_so1", "cad_so2", "cad_so3", "cad_so4"),
+                          start=1):
         puces = [x.strip() for x in T(k + "_p").split("|") if x.strip()]
-        note = T(k + "_note") if (k + "_note") in i18n.DICO else ""
-        cartes.append(
-            '<div class="cad-so-c">'
+        if (k + "_note") in i18n.DICO:
+            puces.append(T(k + "_note"))
+        blocs.append(
+            '<div class="cad-so-b">'
+            f'<div class="cad-so-i">{i:02d}</div><div>'
             f'<div class="cad-so-t">{_e(T(k + "_t"))}</div>'
             f'<p class="cad-so-x">{_e(T(k + "_x"))}</p>'
             + extras.get(k, "")
-            + '<div class="cad-so-s"></div><ul class="cad-so-l">'
+            + '<ul class="cad-so-l">'
             + "".join(f'<li>{_e(p)}</li>' for p in puces)
-            + '</ul>'
-            + (f'<p class="cad-so-n2">{_e(note)}</p>' if note else "")
-            + '</div>')
-    return '<div class="cad-so">' + "".join(cartes) + '</div>'
+            + '</ul></div></div>')
+    return '<div class="cad-so">' + "".join(blocs) + '</div>'
 
 
 def _compteurs(paires):
-    """Une rangée compacte de chiffres, à l'intérieur d'une carte."""
+    """Une rangée compacte de chiffres, sous la description d'une source."""
     if not paires:
         return ""
     return ('<div class="cad-so-k">' + "".join(
@@ -1115,19 +1110,17 @@ def _compteurs(paires):
         for v, lab, sous in paires) + '</div>')
 
 
-def _bande(n_ind):
-    """Ce qui sort des quatre sources : un nombre d'indicateurs."""
-    return (
-        '<div class="cad-band">'
-        '<div class="cad-band-i">'
-        + icones.svg("barres", couleur=VERT_APRI, taille=20) + '</div>'
-        '<div class="cad-band-c">'
-        f'<div class="cad-band-t">{_e(T("cad_band_t"))}</div>'
-        f'<p class="cad-band-x">{_e(T("cad_band_x"))}</p></div>'
-        '<div class="cad-band-n">'
-        f'<div class="cad-band-v">{_e(n_ind)}</div>'
-        f'<div class="cad-band-lab">{_e(T("cad_band_lab"))}</div>'
-        '</div></div>')
+def _fin():
+    """La phrase qui ferme la liste des sources.
+
+    LE NOMBRE D'INDICATEURS N'Y EST PLUS. Il était posé à droite, dans un
+    bloc teinté, et faisait de la conclusion un cinquième objet de même rang
+    que les quatre sources. Le compte reste dit — et détaillé dimension par
+    dimension — dans l'onglet des dimensions.
+    """
+    return ('<div class="cad-fin">'
+            f'<div class="cad-fin-t">{_e(T("cad_band_t"))}</div>'
+            f'<p class="cad-fin-x">{_e(T("cad_band_x"))}</p></div>')
 
 
 def _min_section():
@@ -1152,19 +1145,10 @@ def _min_section():
 # ---------------------------------------------------------------------------
 # LA PAGE, EN SEPT ONGLETS
 # ---------------------------------------------------------------------------
-# ELLE TENAIT EN DEUX ONGLETS ET UNE PILE DE BLOCS. Tout y était — les trois
-# attributs, les sept dimensions, les sources, la chaîne de calcul, les
-# boucles, le document — mais dans l'ordre où les blocs avaient été écrits, et
-# le lecteur devait deviner lui-même où s'arrêtait une réponse et où
-# commençait la suivante. Un plan de sondage et une liste de limites étaient
-# même restés dans le fichier de textes sans plus rien pour les afficher.
-#
 # SEPT ONGLETS, SEPT QUESTIONS, dans l'ordre où elles se posent : ce que
 # l'indice mesure, avec quoi on le mesure, sur quelles dimensions, comment on
 # passe de la mesure au score, comment se lisent les rétroactions, ce que
 # l'environnement a de particulier, et où se télécharge le cadre complet.
-# Aucun contenu n'a été réécrit ni supprimé : il a été rangé, et ce qui avait
-# été perdu de vue est revenu à sa place.
 #
 # UN SÉLECTEUR, ET NON `st.tabs`. `st.tabs` rend TOUS les onglets à chaque
 # affichage : l'onglet environnemental — transects, séries satellitaires,
@@ -1180,6 +1164,26 @@ VUES = ("mesure", "sources", "dimensions", "score", "boucles",
 _LIB = {"mesure": "cad_o1", "sources": "cad_o2", "dimensions": "cad_o3",
         "score": "cad_o4", "boucles": "cad_o5", "environnement": "cad_o6",
         "document": "cad_o7"}
+_COURT = {"mesure": "cad_c1", "sources": "cad_c2", "dimensions": "cad_c3",
+          "score": "cad_c4", "boucles": "cad_c5", "environnement": "cad_c6",
+          "document": "cad_c7"}
+
+
+def _css_rail():
+    """Le libellé court de l'onglet actif, posé sous son numéro.
+
+    STREAMLIT NE MET QU'UN LIBELLÉ PAR CASE, et c'est le numéro. Le titre
+    court est donc écrit en CSS, dans un pseudo-élément que seule la case
+    cochée affiche — une règle par rang, générée ici pour que le texte suive
+    la langue.
+    """
+    b = 'div[class*="st-key-cad_nav"] div[role="radiogroup"] > label'
+    r = ["<style>"]
+    for i, code in enumerate(VUES, start=1):
+        r.append(f'{b}:nth-of-type({i}):has(input:checked)::after '
+                 f'{{ content:"{_txt_css(T(_COURT[code]))}"; }}')
+    r.append("</style>")
+    return "".join(r)
 
 
 def render(doc_complet=None):
@@ -1197,16 +1201,15 @@ def render(doc_complet=None):
         st.info(T("e_absent"))
         return
 
+    st.markdown(_css_rail(), unsafe_allow_html=True)
     with st.container(key="cad_nav"):
         vue = st.radio(
             "cad", VUES, horizontal=True, label_visibility="collapsed",
             key="cad_vue",
-            format_func=lambda c: f"{VUES.index(c) + 1}. " + T(_LIB[c]))
-
-    st.markdown('<div style="height:10px"></div>', unsafe_allow_html=True)
+            format_func=lambda c: f"{VUES.index(c) + 1:02d}")
 
     if vue == "sources":
-        _v_sources(stats)
+        _v_sources()
     elif vue == "dimensions":
         _v_dimensions(stats)
     elif vue == "score":
@@ -1236,9 +1239,7 @@ def _v_mesure():
     les trois attributs, puis un schéma d'ensemble en quatre pavés chiffrés :
     trois réponses empilées à la question « qu'est-ce qu'APRI mesure ? »,
     dont aucune ne la donnait en une ligne. La phrase la donne, et les trois
-    attributs la déplient. Le reste — la portée de l'indice, ce qu'il ne
-    mesure pas, le compte des dimensions et des indicateurs — est dit dans
-    les onglets qui traitent de ces sujets, et mieux qu'ici.
+    attributs la déplient.
     """
     st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>',
                 unsafe_allow_html=True)
@@ -1247,7 +1248,7 @@ def _v_mesure():
 
 
 # --- 2 · comment la résilience est mesurée ----------------------------------
-def _v_sources(stats):
+def _v_sources():
     """Les quatre sources et ce qui en sort. Tout tient dans l'écran.
 
     LA QUATRIÈME SOURCE MANQUAIT. Les entretiens structurés menés dans chaque
@@ -1274,16 +1275,24 @@ def _v_sources(stats):
 
     st.markdown(
         _titre("cad_src", "cad_src_note", marge=4)
-        + _sources({"cad_so1": _compteurs(compteurs)}),
-        unsafe_allow_html=True)
-    st.markdown(_bande(stats["n"]), unsafe_allow_html=True)
+        + _sources({"cad_so1": _compteurs(compteurs)})
+        + _fin(), unsafe_allow_html=True)
 
 
 # --- 3 · les dimensions -----------------------------------------------------
 def _v_dimensions(stats):
+    """Le tableau des sept dimensions, et la note sur la septième.
+
+    LA NOTE N'EST PLUS UNE `st.caption`. Le composant de Streamlit la rendait
+    dans un gris et un corps qui ne sont ceux d'aucun autre texte de la page ;
+    elle prend maintenant le gris des notes du site, sous un filet qui la
+    rattache au tableau.
+    """
     st.markdown(_titre("cad_dims", "cad_dims_note", marge=4)
-                + _tableau_dimensions(stats), unsafe_allow_html=True)
-    st.caption(T("cad_dim7_note"))
+                + _tableau_dimensions(stats)
+                + f'<p class="cad-note" style="margin:16px 0 0;'
+                  f'max-width:92ch">{_e(T("cad_dim7_note"))}</p>',
+                unsafe_allow_html=True)
 
 
 # --- 4 · de la mesure brute au score ---------------------------------------
