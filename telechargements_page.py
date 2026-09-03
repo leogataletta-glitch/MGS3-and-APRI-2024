@@ -449,10 +449,12 @@ def _bloc(cle_titre, cle_desc, teinte, nom_fichier, mime, format_txt,
 def render():
     lang = i18n.get_lang()
 
-    st.title(T("d_titre"))
+    # PAS DE TITRE DE PAGE : la colonne de menu marque déjà la rubrique. Le
+    # sous-titre reste, lui : il dit ce que les sept fichiers ont en commun,
+    # ce que « Données » ne dit pas.
     st.markdown(
         '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
-        'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
+        'text-transform:uppercase;margin:2px 0 6px;font-weight:600">'
         + T("d_sous_titre") + "</p>", unsafe_allow_html=True)
 
     st.markdown(

@@ -1537,12 +1537,8 @@ def _render():
     graphe, par_ligne = _charger()
     par_id = {n["id"]: n for n in graphe["noeuds"]}
     st.markdown(STYLE, unsafe_allow_html=True)
-    st.markdown(
-        f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
-        f'letter-spacing:-.02em;margin:2px 0 0">{T("int_titre")}</h2>'
-        f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
-        f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
-        f'{T("int_sous_titre")}</p>', unsafe_allow_html=True)
+    # PAS DE TITRE DE PAGE : la colonne de menu marque déjà la rubrique
+    # courante. Le sous-titre part avec lui — il paraphrasait le titre.
     st.info(T("int_intro"))
 
     lst_boucles = M.boucles(graphe)

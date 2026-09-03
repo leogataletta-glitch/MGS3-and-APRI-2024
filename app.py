@@ -13,6 +13,7 @@ le résultat, et on l'affiche.
 
 import io
 import json
+import datetime
 import os
 import pickle
 import re
@@ -712,6 +713,14 @@ st.markdown(("""
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] {
     width: 100% !important; flex: 0 0 auto !important;
   }
+  /* LE TITRE DE FAMILLE : petit, en capitales espacées, vert sourd. Il ne
+     doit pas peser autant que les rubriques qu'il coiffe — c'est une
+     étiquette de rangement, pas une destination. */
+  div[class*="st-key-zone_nav"] .nav-famille {
+    font-size: 10px; font-weight: 700; letter-spacing: .11em;
+    text-transform: uppercase; color: #2f6b4f;
+    margin: 16px 0 5px; padding-left: 10px;
+  }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button {
     display: flex !important; align-items: center !important;
     justify-content: flex-start !important;
@@ -893,8 +902,12 @@ st.markdown(("""
      `object-fit: scale-down` : l'illustration se réduisait alors pour tenir
      entière dans le bandeau, et se retrouvait posée en petit au milieu d'une
      bande blanche au lieu de la remplir. */
+  /* LE BANDEAU PORTE MAINTENANT DEUX BLOCS, IL LUI FAUT LA HAUTEUR DE DEUX
+     BLOCS. À deux cent quarante-six pixels, la marque en haut et le titre en
+     bas se touchaient et la seconde ligne du sous-titre débordait sous
+     l'illustration. */
   .bandeau-fond {
-    width: 100% !important; height: 246px !important;
+    width: 100% !important; height: 300px !important;
     object-fit: cover !important; object-position: 50% 56% !important;
     display: block !important; max-width: none !important;
   }
@@ -902,25 +915,77 @@ st.markdown(("""
      gauche ; la colonne ayant disparu, elle serait devenue orpheline. Posée
      sur le tiers clair de l'illustration, elle redevient ce qu'elle est :
      l'enseigne du site, au même endroit sur toutes les pages. */
-  .bandeau-marque {
-    position: absolute; top: 50%; left: 42px; transform: translateY(-46%);
-    display: flex; align-items: center; gap: 20px; pointer-events: none;
+  /* LA MARQUE MONTE EN HAUT À GAUCHE ET RÉTRÉCIT. Elle occupait le milieu de
+     l'illustration, à la même hauteur et à la même abscisse que le titre qui
+     s'y pose maintenant : les deux se recouvraient. Ce sont deux choses
+     différentes et elles ont chacune leur place — la marque identifie
+     l'émetteur, en petit et en haut, comme un en-tête de papier ; le titre
+     dit ce qu'est le site, en grand et en bas, à la façon d'une couverture. */
+  /* UNE COUCHE QUI REMPLIT LE BANDEAU ET RÉPARTIT SES DEUX BLOCS. Positionner
+     la marque et le titre chacun dans son coin marchait tant que la hauteur du
+     bandeau était celle qu'on croyait ; elle dépend du facteur de zoom, et les
+     deux se sont recouverts dès que l'illustration a rendu plus court que
+     prévu. Un `space-between` ne peut pas se tromper : quelle que soit la
+     hauteur, la marque est en haut et le titre en bas. */
+  .bandeau-couche {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; align-items: flex-start;
+    padding: 15px 42px 18px; pointer-events: none;
   }
-  .bandeau-marque .bm-embleme { height: 92px; width: 92px; display: block; }
+  .bandeau-marque {
+    display: flex; align-items: center; gap: 13px;
+  }
+  .bandeau-marque .bm-embleme { height: 52px; width: 52px; display: block; }
   .bandeau-marque .bm-nom {
-    font-size: 40px; font-weight: 800; color: #16324a;
+    font-size: 25px; font-weight: 800; color: #16324a;
     letter-spacing: -.015em; line-height: 1;
   }
   .bandeau-marque .bm-filet {
-    height: 3px; width: 100%; background: #2f6b4f; margin: 7px 0 8px;
+    height: 2px; width: 100%; background: #2f6b4f; margin: 5px 0 5px;
     border-radius: 2px;
   }
   .bandeau-marque .bm-base {
-    font-size: 15.5px; font-weight: 700; color: #2f6b4f; line-height: 1.25;
+    font-size: 11.5px; font-weight: 700; color: #2f6b4f; line-height: 1.3;
   }
   .bandeau-marque .bm-lieu {
-    font-size: 15px; font-weight: 700; color: #16324a; margin-top: 4px;
+    font-size: 11.5px; font-weight: 700; color: #16324a; margin-top: 2px;
   }
+  /* LE PIED DE PAGE, EN PLEINE LARGEUR ET EN VERT PROFOND. Il ferme la page
+     comme le bandeau l'ouvre : deux barres de la même largeur, l'une claire
+     et l'autre foncée, entre lesquelles le contenu tient. Sans lui, la page
+     s'arrêtait sur du blanc et rien ne disait qu'on était arrivé au bout. */
+  .pied {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px; flex-wrap: wrap;
+    background: #1f5b46; color: #e6f0ea;
+    padding: 13px calc(2.6rem * var(--dz)); margin-top: 34px;
+    font-size: 12px; line-height: 1.5;
+  }
+  .pied .pd-g { display: flex; align-items: center; gap: 10px; }
+  .pied .pd-devise { color: #cfe3d8; }
+  .pied .pd-credit { color: #a9c7b8; }
+  @media (max-width: 700px) {
+    .pied { justify-content: flex-start; }
+  }
+
+  /* LE BLOC DE TITRE, POSÉ EN BAS À GAUCHE DE L'ILLUSTRATION. Le filet vert
+     vertical est le même signe que celui qui marque la rubrique courante dans
+     la colonne de menu : le site n'a qu'une façon de dire « c'est ici ». */
+  .bandeau-titre {
+    border-left: 4px solid #2f6b4f; padding-left: 18px; max-width: 56ch;
+  }
+  .bandeau-titre .bt-nom {
+    font-size: 27px; font-weight: 800; color: #1f5b46;
+    letter-spacing: -.02em; line-height: 1.1;
+  }
+  .bandeau-titre .bt-sous {
+    font-size: 14px; font-weight: 500; color: #23384a; line-height: 1.45;
+    margin-top: 7px; max-width: 46ch;
+  }
+  @media (max-width: 900px) {
+    .bandeau-titre .bt-sous { display: none; }
+  }
+
   /* LE LOGO EST BLANC ET POSÉ À MÊME L'IMAGE, SANS PLAQUE.
      Le cartouche blanc qu'il portait découpait un rectangle net dans le
      paysage. L'angle de l'illustration a été légèrement assombri à la place
@@ -1419,6 +1484,28 @@ TEXTES_NAV = {
     "ra_srcd_satellite": {"en": "Forest cover and vegetation indices",
                           "fr": "Couverture forestière et indices de "
                                 "végétation"},
+    # --- le bandeau de l'accueil
+    "bh_titre": {"en": "APRI Observatory", "fr": "Observatoire APRI"},
+    "bh_sous": {
+        "en": "Understand, measure and compare the resilience of the "
+              "landscapes and populations of Haiti's Grand Sud.",
+        "fr": "Comprendre, mesurer et comparer la résilience des paysages et "
+              "des populations du Grand Sud d'Haïti."},
+
+    # --- les quatre familles de la colonne de menu
+    "nav_g_comprendre": {"en": "Understand", "fr": "Comprendre"},
+    "nav_g_analyser": {"en": "Analyse", "fr": "Analyser"},
+    "nav_g_agir": {"en": "Act", "fr": "Agir"},
+    "nav_g_ressources": {"en": "Resources", "fr": "Ressources"},
+
+    # --- le pied de page
+    "pied_devise": {
+        "en": "Measuring today to strengthen tomorrow's resilience.",
+        "fr": "Mesurer aujourd'hui pour renforcer la résilience de demain."},
+    "pied_credit": {
+        "en": "© {a} United Nations Environment Programme",
+        "fr": "© {a} Programme des Nations Unies pour l'environnement"},
+
     "ra_src": {"en": "Measured by", "fr": "Mesuré par"},
     "ra_src_menages": {"en": "Household questionnaire",
                        "fr": "Questionnaire ménage"},
@@ -1556,6 +1643,9 @@ _ruban = st.container(key="zone_ruban")
 # La colonne de menu est étroite et fixe ; la page prend tout le reste.
 _col_nav, _col_page = st.columns([1, 5.0], gap="medium")
 _zone_nav = _col_nav.container(key="zone_nav")
+# Réservé maintenant, peint tout en bas : il doit venir après les deux
+# colonnes dans le flux, et son contenu n'est connu qu'une fois la page rendue.
+_pied = st.container(key="zone_pied")
 _zone_barre = st.container()
 
 # LA LANGUE EST LUE ICI, AVANT TOUT APPEL À T(), ET CHANGÉE DANS LE BANDEAU.
@@ -1671,56 +1761,54 @@ MODE_DIMENSIONS = "dimensions"
 # vient juste après. On dit d'abord ce qu'on mesure, puis où on l'a mesuré ;
 # les résultats suivent. L'accueil, devenu « Le territoire », n'a plus à porter
 # le récit de la méthode, qui est passé dans le cadre.
-_NAV = [
-    (MODE_PORTAIL, "maison"),
+# LE MENU EST RANGÉ EN QUATRE FAMILLES, ET C'EST UNE AIDE À LA DÉCISION, PAS
+# UNE DÉCORATION. Sept entrées à la file se lisent comme sept choix
+# équivalents, alors qu'elles n'en sont pas : on vient comprendre, ou
+# analyser, ou agir, ou chercher un fichier. Le titre de famille dit lequel
+# des quatre on est en train de faire, et il divise par quatre la liste où
+# l'œil doit chercher.
+#
+# L'ACCUEIL N'A PAS DE FAMILLE, et il ne doit pas en avoir une : il est le
+# point d'où l'on part, pas une des choses qu'on y fait.
+_NAV_FAMILLES = [
+    (None, [(MODE_PORTAIL, "maison")]),
     # LE CADRE PASSE DEVANT LE TERRITOIRE. On dit d'abord ce qu'on mesure,
     # ensuite où on l'a mesuré : une carte de dix sections ne dit rien tant
     # qu'on ne sait pas ce qui y est compté, alors que la définition de
-    # l'indice se lit sans connaître le terrain. L'ordre du menu est celui de
-    # la lecture, pas celui de la collecte.
-    (MODE_METHODO, "bouclier"),
-    (MODE_ACCUEIL, "epingle"),
-    (MODE_DIMENSIONS, "barres"),
-    # LES TRAJECTOIRES NE SONT PLUS UNE ENTREE : elles ont rejoint l'onglet
-    # « Résilience environnementale » du cadre, dont elles disent la version
-    # dans le temps. Une entrée de moins, et la barre tient sur une ligne.
-    # « SI JE CHANGE UNE CHOSE » EST DEVENU UNE VUE DES BOUCLES. Les deux
-    # lisent le même graphe causal : les boucles montrent que le système
-    # propage, l'outil répond à la question qui vient juste après — ce
-    # chiffre-là, d'où sort-il ? Deux entrées de menu pour un seul modèle
-    # obligeaient à savoir laquelle des deux portes mène à quoi.
-    (MODE_BOUCLES, "boucle"),
-    # CROISEMENT, PROFILS ET ENSEIGNEMENTS SONT PASSÉS SOUS « ANALYSE DES
-    # RÉSULTATS ». Les quatre lisent la même enquête et répondent à la même
-    # question — que disent les résultats ? — par quatre découpages : la
-    # dimension, le croisement de deux variables, le territoire ou le groupe,
-    # et ce qu'il faut en retenir. Quatre entrées de menu pour un seul sujet,
-    # c'était au lecteur de deviner qu'elles allaient ensemble.
-    (MODE_ACTIONS, "fiche"),
-    # LA NOTE AUX BAILLEURS VIENT APRÈS LES FICHES, ET AVANT LES DONNÉES.
-    # Elle est la sortie de tout ce qui précède : elle ne se comprend qu'après
-    # les fiches, dont elle reprend les chiffres, et elle doit rester au-dessus
-    # des téléchargements, qui ferment toujours la marche.
-    # LE RAPPORT DONATEUR N'EST PLUS UNE ENTRÉE DE MENU. Il redisait, en six
-    # chapitres de prose, ce que les cinq écrans de résultats montrent
-    # maintenant chiffre par chiffre ; deux récits du même terrain, dont un
-    # figé, se contredisent tôt ou tard. Le module reste dans le dépôt et le
-    # code de mode reste valide — rien ne le rend, et c'est voulu.
-    (MODE_DONNEES, "telecharger"),
+    # l'indice se lit sans connaître le terrain.
+    ("nav_g_comprendre", [(MODE_METHODO, "bouclier"),
+                          (MODE_ACCUEIL, "epingle")]),
+    ("nav_g_analyser", [(MODE_DIMENSIONS, "barres"),
+                        (MODE_BOUCLES, "boucle")]),
+    ("nav_g_agir", [(MODE_ACTIONS, "fiche")]),
+    ("nav_g_ressources", [(MODE_DONNEES, "telecharger")]),
 ]
+# LA LISTE PLATE RESTE LA SOURCE UNIQUE dont d'autres vues se servent — elle
+# est dérivée des familles, jamais recopiée à côté d'elles : deux listes des
+# mêmes rubriques divergent au premier ajout.
+# LES TRAJECTOIRES, « SI JE CHANGE UNE CHOSE », LE CROISEMENT, LES PROFILS,
+# LES ENSEIGNEMENTS ET LE RAPPORT DONATEUR NE SONT PLUS DES ENTRÉES : ils sont
+# devenus des vues à l'intérieur des rubriques qui les portent. Leurs codes de
+# mode restent valides, et rien ne les rend depuis le menu.
+_NAV = [e for _fam, entrees in _NAV_FAMILLES for e in entrees]
 
-# PLUS D'ICONE DEVANT LES ENTREES DE MENU.
-# Chaque ligne en portait une, posee en `::before` par la feuille de style.
-# Onze petits pictogrammes alignes en colonne ne disaient rien que le libelle
-# ne disait deja : « Donnees » a cote d'une fleche de telechargement, « Le
-# territoire » a cote d'une epingle. Ils meublaient, ils dataient, et ils
-# ajoutaient onze regles CSS a entretenir. La colonne se lit maintenant comme
-# une liste de titres, ce qu'elle est.
+# LES ICÔNES REVIENNENT, PARCE QUE LA COLONNE A CHANGÉ DE FORME. Alignées dans
+# une rangée horizontale, elles meublaient : le libellé était juste à côté et
+# disait la même chose. Dans une colonne rangée en familles, elles font un
+# travail que le texte ne fait pas — elles donnent à chaque ligne une amorce
+# à hauteur constante, ce qui permet de descendre la liste sans lire, et de
+# reconnaître une rubrique déjà visitée à sa forme.
 #
-# Le second element du couple, dans `_NAV`, n'est plus utilise ici. Il reste
-# en place : c'est la source unique dont d'autres vues se servent, et la
-# vider par acquit de conscience casserait plus qu'elle ne nettoierait.
-_CSS_ICONES_NAV = ""
+# ELLES SONT PEINTES EN MASQUE, PAS INSÉRÉES DANS LE BOUTON. On ne peut rien
+# écrire dans le contenu d'un bouton Streamlit ; le tracé est donc posé en
+# `::before` avec `currentColor`, si bien que l'icône prend la couleur du
+# texte — verte quand la rubrique est active, grise sinon — sans une règle de
+# plus par état.
+_CSS_ICONES_NAV = "<style>" + "".join(
+    icones.regle_masque(
+        f'div[class*="st-key-nav_{_m}"] div[data-testid="stButton"] > button',
+        _ic, taille=17, marge=10)
+    for _m, _ic in _NAV) + "</style>"
 
 
 def _entree_nav(mode, icone):
@@ -1796,6 +1884,7 @@ def _rendre_ruban():
             f'<div class="bandeau-haut bandeau-enveloppe">'
             f'<img class="bandeau-fond" '
             f'src="data:image/jpeg;base64,{img}">'
+            f'<div class="bandeau-couche">'
             f'<div class="bandeau-marque">'
             f'<img class="bm-embleme" alt="APRI" '
             f'src="data:image/png;base64,{assets.EMBLEME_APRI}">'
@@ -1805,6 +1894,19 @@ def _rendre_ruban():
             f'<div class="bm-base">{T("a_titre_court")}</div>'
             f'<div class="bm-lieu">{T("a_lieu")}</div>'
             f'</div></div>'
+            # LE TITRE EST POSÉ SUR L'IMAGE, EN BAS À GAUCHE, et pas au-dessus
+            # d'elle. Une illustration qui n'annonce rien est une illustration
+            # décorative : elle occupe deux cent quarante-six pixels pour dire
+            # « c'est joli ». Le titre posé dessus les fait travailler
+            # ensemble — on lit ce qu'est le site en même temps qu'on voit où
+            # il se passe. Le tiers gauche de l'illustration porte déjà un
+            # dégradé clair composé dans le fichier : le texte foncé s'y pose
+            # sans avoir besoin d'un voile ajouté par-dessus.
+            f'<div class="bandeau-titre">'
+            f'<div class="bt-nom">{T("bh_titre")}</div>'
+            f'<div class="bt-sous">{T("bh_sous")}</div>'
+            f'</div>'
+            f'</div>'
             f'<img class="bandeau-logo" alt="UNEP" '
             f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
             f'</div>', unsafe_allow_html=True)
@@ -1818,8 +1920,12 @@ with _zone_nav:
     # l'écran quand la page défile — c'est ce qui la rend « toujours
     # disponible » sans qu'elle ait à flotter par-dessus le contenu.
     st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
-    for _mode, _icone in _NAV:
-        _entree_nav(_mode, _icone)
+    for _fam, _entrees in _NAV_FAMILLES:
+        if _fam:
+            st.markdown(f'<div class="nav-famille">{T(_fam)}</div>',
+                        unsafe_allow_html=True)
+        for _mode, _icone in _entrees:
+            _entree_nav(_mode, _icone)
 
     # LES DEUX LANGUES FERMENT LA BARRE, À DROITE.
     # Elles ont été un moment posées sur l'illustration, en blanc ; celle-ci
@@ -2023,10 +2129,6 @@ with _c_contenu:
         # `st.tabs` rendrait les cinq à chaque affichage : l'énumération des
         # boucles et les propagations seraient calculées ensemble pour n'en
         # montrer qu'une. Un sélecteur ne rend que ce qu'on regarde.
-        st.markdown(
-            f'<h2 style="font-size:21.5px;font-weight:700;color:#101728;'
-            f'letter-spacing:-.02em;margin:2px 0 0">{T("mode_boucles")}</h2>',
-            unsafe_allow_html=True)
         _CODES_SX = ["construire", "relations", "leviers", "simuler",
                      "vagues"]
         _N_SX = dict(zip(_CODES_SX, ("sx_o1", "sx_o2", "sx_o3", "sx_o4",
@@ -2064,4 +2166,18 @@ with _c_contenu:
         # qu'on vient voir ce qui est disponible, et donc ce qui vient
         # d'arriver.
         actualites.rendre(_bascule)
+
+
+# LE PIED EST RENDU HORS DE LA COLONNE DE DROITE, pour qu'il prenne toute la
+# largeur — colonne de menu comprise. Rendu dedans, il se serait arrêté au
+# bord du contenu et aurait laissé un angle blanc sous le menu.
+with _pied:
+    st.markdown(
+        f'<div class="bandeau-haut pied">'
+        f'<div class="pd-g">'
+        + icones.svg("pousse", couleur="#8fc4a8", taille=16)
+        + f'<span class="pd-devise">{T("pied_devise")}</span></div>'
+        f'<span class="pd-credit">'
+        f'{T("pied_credit", a=datetime.date.today().year)}</span>'
+        f'</div>', unsafe_allow_html=True)
 

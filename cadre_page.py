@@ -121,10 +121,6 @@ TEXTES = {
     # référentiel ; la ligne de dessous ajoutait qu'un indicateur est rattaché
     # à l'attribut auquel il contribue — deux phrases de méthode, à l'endroit
     # où le lecteur cherche l'objet de la mesure. Il est dit en une ligne.
-    "cad_aaa": {"en": "What is measured is the capacity to attain three "
-                      "attributes",
-                "fr": "Ce que l'on mesure, c'est la capacité à atteindre "
-                      "trois attributs"},
     "cad_a1_t": {"en": "Anticipate", "fr": "Anticiper"},
     "cad_a1": {"en": "Detect disturbances and prepare responses before they "
                      "arrive",
@@ -140,8 +136,6 @@ TEXTES = {
                      "l'état antérieur"},
 
     # --- les sept dimensions
-    "cad_dims": {"en": "Seven dimensions, and what each weighs",
-                 "fr": "Sept dimensions, et ce que chacune pèse"},
     "cad_dims_note": {
         "en": "Weight is the share of the composite index each dimension "
               "carries. Coverage is the share of that weight actually "
@@ -395,7 +389,6 @@ TEXTES = {
     # LES PUCES SONT UNE SEULE CHAÎNE, séparée par des barres verticales.
     # Seize clés de traduction pour seize puces se désynchronisent à la
     # première relecture ; une chaîne par langue se relit d'un coup.
-    "cad_src": {"en": "The data sources", "fr": "Les sources de données"},
     "cad_src_note": {
         "en": "Resilience is measured using multiple, complementary data "
               "sources that capture the condition of households, ecosystems, "
@@ -1287,10 +1280,11 @@ def render(doc_complet=None):
     stats = _stats()
     st.markdown(STYLE, unsafe_allow_html=True)
 
-    st.markdown(
-        f'<h2 style="font-size:21.5px;font-weight:700;color:{ENCRE};'
-        f'letter-spacing:-.02em;margin:2px 0 10px">{T("cad_titre")}</h2>',
-        unsafe_allow_html=True)
+    # PAS DE TITRE DE PAGE. La colonne de menu marque déjà la rubrique
+    # courante d'un filet vert et d'un mot en gras ; le répéter en gros
+    # au-dessus des onglets le disait une deuxième fois, et la description
+    # sous l'onglet actif une troisième. La page commence donc par ce qu'elle
+    # apporte.
 
     if not stats:
         st.info(T("e_absent"))
@@ -1322,9 +1316,22 @@ def render(doc_complet=None):
 
 
 def _titre(cle, note=None, marge=4):
-    """Un intitulé de bloc, et sa note s'il en a une."""
+    """Un intitulé de bloc, et sa note s'il en a une.
+
+    `cle` peut valoir None : le bloc n'a alors que sa note. C'est le cas en
+    tête d'onglet — voir ci-dessous.
+
+    UN ONGLET NE REDIT PAS SON PROPRE NOM. Chaque onglet s'ouvrait sur un
+    intitulé qui paraphrasait le titre qu'on venait de lire dans la barre —
+    « Sources et données » puis « Les quatre sources des mesures », deux
+    lignes à trente pixels d'écart pour un seul renseignement. Depuis que la
+    barre porte une description sous chaque titre, la paraphrase est même
+    dite trois fois. Les intitulés d'ouverture ont donc sauté ; ceux qui
+    coiffent une section À L'INTÉRIEUR d'un onglet restent, eux : ils
+    séparent deux choses, ce que ne faisait pas le premier.
+    """
     h = (f'<div class="cad-h" style="margin-top:{marge}px">'
-         f'{_e(T(cle))}</div>')
+         f'{_e(T(cle))}</div>') if cle else ""
     return h + (f'<p class="cad-note">{_e(T(note))}</p>' if note else "")
 
 
@@ -1342,8 +1349,7 @@ def _v_mesure():
     # deux fois : c'est la phrase qui ouvre le site, pas l'en-tête d'un
     # onglet de documentation. L'onglet commence donc directement par ce
     # qu'il apporte — les trois attributs.
-    st.markdown(_titre("cad_aaa", marge=8) + _attributs(),
-                unsafe_allow_html=True)
+    st.markdown(_attributs(), unsafe_allow_html=True)
 
 
 # --- 2 · comment la résilience est mesurée ----------------------------------
@@ -1373,7 +1379,7 @@ def _v_sources():
         compteurs.append((_fmt(mini, 0), T("cad_s4_t"), T("cad_s4")))
 
     st.markdown(
-        _titre("cad_src", "cad_src_note", marge=4)
+        _titre(None, "cad_src_note", marge=4)
         + _sources({"cad_so1": _compteurs(compteurs)})
         + _fin(), unsafe_allow_html=True)
 
@@ -1387,7 +1393,7 @@ def _v_dimensions(stats):
     elle prend maintenant le gris des notes du site, sous un filet qui la
     rattache au tableau.
     """
-    st.markdown(_titre("cad_dims", "cad_dims_note", marge=4)
+    st.markdown(_titre(None, "cad_dims_note", marge=4)
                 + _tableau_dimensions(stats)
                 + f'<p class="cad-note" style="margin:16px 0 0;'
                   f'max-width:92ch">{_e(T("cad_dim7_note"))}</p>',
