@@ -331,14 +331,6 @@ TEXTES = {
     # LES PUCES SONT UNE SEULE CHAÎNE, séparée par des barres verticales.
     # Seize clés de traduction pour seize puces se désynchronisent à la
     # première relecture ; une chaîne par langue se relit d'un coup.
-    "cad_src_note": {
-        "en": "Resilience is measured using multiple, complementary data "
-              "sources that capture the condition of households, ecosystems, "
-              "institutions and the territories where people live.",
-        "fr": "La résilience se mesure à partir de plusieurs sources de "
-              "données complémentaires, qui saisissent l'état des ménages, "
-              "des écosystèmes, des institutions et des territoires où vivent "
-              "les gens."},
 
     "cad_so1_t": {"en": "Household survey", "fr": "Enquête ménage"},
     "cad_so1_x": {
@@ -1356,8 +1348,11 @@ def _v_sources():
         compteurs.append((_fmt(mini, 0), T("cad_s4_t"), T("cad_s4")))
 
     st.markdown(
-        _titre(None, "cad_src_note", marge=4)
-        + _sources({"cad_so1": _compteurs(compteurs)})
+        # LA PHRASE D'INTRODUCTION A SAUTÉ. Elle annonçait que la résilience
+        # se mesure par plusieurs sources complémentaires ; les quatre
+        # colonnes qui suivent le montrent, chacune nommée et détaillée. Une
+        # annonce de ce qui vient juste après ne fait que retarder.
+        _sources({"cad_so1": _compteurs(compteurs)})
         + _fin(), unsafe_allow_html=True)
 
 
