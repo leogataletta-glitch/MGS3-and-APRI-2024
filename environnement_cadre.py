@@ -66,22 +66,6 @@ TEXTES = {
     "env_tx_oi": {"en": "Birds", "fr": "Oiseaux"},
     "env_tx_po": {"en": "Pollinators", "fr": "Pollinisateurs"},
 
-    "env_etat": {"en": "What the platform computes today, and what it does not",
-                 "fr": "Ce que la plateforme calcule aujourd'hui, et ce qu'elle "
-                       "ne calcule pas"},
-    "env_etat_note": {
-        "en": "Left: the {f} indicators of the environmental dimension with a "
-              "score, read from the results file. Right: what the note "
-              "describes and the platform does not yet carry. An absent "
-              "indicator is excluded from the mean, never counted as a zero.",
-        "fr": "À gauche : les {f} indicateurs de la dimension environnementale "
-              "qui portent un score, lus dans le fichier de résultats. À "
-              "droite : ce que la note décrit et que la plateforme ne porte "
-              "pas encore. Un indicateur absent est exclu de la moyenne, "
-              "jamais compté comme un zéro."},
-    "env_etat_ok": {"en": "Computed", "fr": "Calculés"},
-    "env_etat_non": {"en": "Described, not yet computed",
-                     "fr": "Décrits, pas encore calculés"},
 
     # ---------------- strate 3
     "env_s3": {"en": "The protocol in detail", "fr": "Le protocole en détail"},
@@ -338,9 +322,11 @@ def render(complement=None):
     # avant de le dire. Les trois sources et le detail du protocole, qui
     # suivent, le disent en entier — et le compte des indicateurs calcules
     # est deja donne, dimension par dimension, dans l'onglet des dimensions.
+    # LE COMPTE DES INDICATEURS CALCULES A SUIVI. Il disait des resultats —
+    # quatre scores sur dix — au milieu d'une page qui explique une methode.
+    # Il reste lisible dimension par dimension dans l'onglet des dimensions,
+    # et indicateur par indicateur dans l'analyse des resultats.
     #
-    etat = _etat_dimension(i18n.get_lang())
-
     # ===================== STRATE 2 — EXPLORER ============================
     st.markdown(f'<div class="ev-etage">{_e(T("env_s2"))}</div>',
                 unsafe_allow_html=True)
@@ -394,35 +380,10 @@ def render(complement=None):
             + "".join(f'<li>{_e(p)}</li>' for p in c["menages"]) + '</ul>',
             unsafe_allow_html=True)
 
-    # --------- ce qui est calculé, et ce qui ne l'est pas
-    with st.container(border=True):
-        st.markdown(
-            f'<div style="font-size:17.5px;font-weight:700;color:{ENCRE};'
-            f'margin:0 0 3px">{_e(T("env_etat"))}</div>'
-            f'<p style="font-size:12.5px;color:{ENCRE3};line-height:1.55;'
-            f'max-width:96ch;margin:0 0 12px">'
-            f'{_e(T("env_etat_note", f=len(etat["faits"])))}</p>',
-            unsafe_allow_html=True)
-        g, d = st.columns(2, gap="medium")
-        with g:
-            st.markdown(
-                f'<div class="ev-lab" style="color:{VERT}">'
-                f'{_e(T("env_etat_ok"))} · {len(etat["faits"])}</div>'
-                '<ul class="ev-puce">' + "".join(
-                    f'<li>{_e(x["nom"])} <span style="color:#8a93a5">— '
-                    f'{x["score"]:.0f}/10</span></li>'
-                    for x in etat["faits"]) + '</ul>', unsafe_allow_html=True)
-        with d:
-            st.markdown(
-                f'<div class="ev-lab" style="color:{GRIS}">'
-                f'{_e(T("env_etat_non"))} · {len(etat["manquants"])}</div>'
-                '<ul class="ev-puce">' + "".join(
-                    f'<li>{_e(x["nom"])}</li>' for x in etat["manquants"])
-                + '</ul>', unsafe_allow_html=True)
-
-    # LES TRAJECTOIRES FERMENT LA STRATE « EXPLORER ». Elles etaient une
-    # rubrique a elles seules, ce qui obligeait a chercher ailleurs des series
-    # qui decrivent exactement le meme objet que cette page.
+    # LE COMPLÉMENT N'EST PLUS APPELÉ PAR LE CADRE. Les trajectoires
+    # donnaient les séries mesurées — des résultats — au milieu d'une page qui
+    # explique une méthode. Le paramètre reste : la page est aussi rendue
+    # depuis l'analyse des résultats, où un complément a du sens.
     if complement is not None:
         complement()
 

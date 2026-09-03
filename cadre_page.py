@@ -85,22 +85,6 @@ TEXTES = {
         "fr": "APRI mesure la résilience d'un paysage, compris comme un "
               "système complexe adaptatif."},
 
-    # La ligne de description de chaque onglet, sous son titre.
-    "cad_d1": {"en": "The three capacities the index is built on",
-               "fr": "Les trois capacités sur lesquelles l'indice est bâti"},
-    "cad_d2": {"en": "The four instruments the measurements come from",
-               "fr": "Les quatre instruments dont viennent les mesures"},
-    "cad_d3": {"en": "The seven dimensions and their weights",
-               "fr": "Les sept dimensions et leurs pondérations"},
-    "cad_d4": {"en": "How a raw measurement becomes a score out of 10",
-               "fr": "Comment une mesure brute devient un score sur 10"},
-    "cad_d5": {"en": "Why resilience is read as a system, not a list",
-               "fr": "Pourquoi la résilience se lit comme un système, pas "
-                     "comme une liste"},
-    "cad_d6": {"en": "What a satellite measures, and what it cannot",
-               "fr": "Ce qu'un satellite mesure, et ce qu'il ne peut pas"},
-    "cad_d7": {"en": "The methodological document, in full",
-               "fr": "Le document méthodologique, en entier"},
 
     # --- les trois cartouches d'ouverture
     "cad_quoi_t": {"en": "General resilience", "fr": "Résilience générale"},
@@ -523,7 +507,8 @@ TEXTES = {
     "cad_c1": {"en": "What APRI measures", "fr": "Ce que mesure APRI"},
     "cad_c2": {"en": "Sources and data", "fr": "Sources et données"},
     "cad_c3": {"en": "Dimensions", "fr": "Dimensions"},
-    "cad_c4": {"en": "Measures to scores", "fr": "De la mesure au score"},
+    "cad_c4": {"en": "Raw measures to resilience scores",
+               "fr": "De la mesure brute au score de résilience"},
     "cad_c5": {"en": "Feedback loops", "fr": "Boucles de rétroaction"},
     "cad_c6": {"en": "Environmental data", "fr": "Données environnementales"},
     "cad_c7": {"en": "The full framework", "fr": "Le cadre complet"},
@@ -1274,9 +1259,6 @@ _LIB = {"mesure": "cad_o1", "sources": "cad_o2", "dimensions": "cad_o3",
 _COURT = {"mesure": "cad_c1", "sources": "cad_c2", "dimensions": "cad_c3",
           "score": "cad_c4", "boucles": "cad_c5", "environnement": "cad_c6",
           "document": "cad_c7"}
-_DESC = {"mesure": "cad_d1", "sources": "cad_d2", "dimensions": "cad_d3",
-         "score": "cad_d4", "boucles": "cad_d5", "environnement": "cad_d6",
-         "document": "cad_d7"}
 
 
 def render(doc_complet=None):
@@ -1297,9 +1279,13 @@ def render(doc_complet=None):
     # propre feuille de style ; à force de retouches faites d'un côté et pas
     # de l'autre, elle n'avait plus tout à fait la même graisse que celle des
     # résultats, et l'on changeait de site en changeant de page.
+    # PAS DE DESCRIPTION SOUS CES SEPT-LÀ. Elle sert quand un titre est
+    # ambigu — « Par paysage » n'annonce pas ce qu'on y trouve. Ici les sept
+    # titres nomment déjà leur contenu, et la ligne en dessous ne faisait que
+    # le reformuler : « Dimensions » suivi de « Les sept dimensions et leurs
+    # pondérations ». Le composant accepte de n'en pas avoir.
     vue = onglets.barre("cad_vue", list(VUES),
                         titre=lambda c: T(_COURT[c]),
-                        description=lambda c: T(_DESC[c]),
                         defaut=VUES[0])
 
     if vue == "sources":
@@ -1507,8 +1493,12 @@ def _v_environnement():
     entier — et les trajectoires, qui disent le même territoire dans le
     temps, la suivent.
     """
-    environnement_cadre.render(
-        complement=lambda: trajectoires.render(entete=False))
+    # LA MÉTHODE, ET PAS LES RÉSULTATS. Cet onglet appartient au cadre : il
+    # dit comment on mesure l'environnement — transects, capteurs, barèmes.
+    # Les trajectoires qui le suivaient donnaient les séries mesurées, donc
+    # des résultats, dans la section qui explique la méthode ; elles se lisent
+    # dans l'analyse des résultats, avec tout le reste de ce qui a été trouvé.
+    environnement_cadre.render()
 
 
 # --- 7 · le document de référence ------------------------------------------
