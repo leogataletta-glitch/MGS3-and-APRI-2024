@@ -1669,8 +1669,11 @@ def _v_mesure(stats):
     que « anticiper », « absorber » et « s'adapter » écrits juste à côté. Le
     numéro et le filet tiennent la carte.
     """
-    st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>'
-                f'<p class="cad-attr-x">{_e(T("cad_attr_x"))}</p>',
+    # LA DÉFINITION EST PARTIE OUVRIR LES BOUCLES. « Un paysage compris comme
+    # un système complexe adaptatif » ne dit rien des attributs ni des
+    # dimensions : elle annonce un système qui se répond à lui-même, ce qui
+    # est le sujet de l'onglet des boucles. Elle y est maintenant, en tête.
+    st.markdown(f'<p class="cad-attr-x">{_e(T("cad_attr_x"))}</p>',
                 unsafe_allow_html=True)
     g, d = st.columns([1, 1.3], gap="large")
     with g:
@@ -1832,9 +1835,12 @@ def _v_indicateurs():
               f'<th class="n">{_e(T("cad_ind_c_p"))}'
               f'<span class="cad-it-ech">{_e(T("cad_ind_c_p_ech"))}</span>'
               '</th></tr></thead><tbody>']
+    # LE SENS DE LECTURE NE SE RÉPÈTE PLUS. « Plus c'est haut, mieux c'est »
+    # sous cent vingt-huit lignes sur cent vingt-huit : la mention était vraie
+    # partout sauf pour une poignée d'indicateurs, et une mention portée par
+    # toutes les lignes n'en distingue aucune. L'échelle, ligne par ligne, dit
+    # déjà dans quel sens elle monte.
     for x in vus:
-        sens = (T("cad_ind_bas") if "bas" in x["sens"].split("=")[-1]
-                else T("cad_ind_haut") if x["sens"] else "")
         num, _, court = T(x["dim"]).partition(". ")
         ech = _e(x["echelle"]) if x["echelle"] else (
             f'<span style="color:#a7b0be">{_e(T("cad_ind_sans"))}</span>')
@@ -1842,19 +1848,17 @@ def _v_indicateurs():
             '<tr><td>'
             f'<div class="cad-it-n">{_e(x["nom"])}</div>'
             f'<div class="cad-it-d"><span class="cad-it-r">{_e(num)}</span> '
-            f'{_e(court)}{" · " + _e(sens) if sens else ""}</div></td>'
+            f'{_e(court)}</div></td>'
             f'<td class="cad-it-e">{ech}</td>'
             '<td class="n"><div class="cad-it-p">'
             f'{_fmt(x["poids"])}</div></td></tr>')
     lignes.append('</tbody></table>')
     st.markdown("".join(lignes), unsafe_allow_html=True)
 
-    ps = [x["poids"] for x in tous]
-    st.markdown(
-        f'<p class="cad-note">{_e(T("cad_ind_n", k=len(vus), n=len(tous)))}</p>'
-        f'<p class="cad-note">'
-        f'{_e(T("cad_ind_pds", a=_fmt(min(ps)), b=_fmt(max(ps))))}</p>',
-        unsafe_allow_html=True)
+    # RIEN SOUS LE TABLEAU. « 128 sur 128 affichés » ne dit quelque chose que
+    # lorsqu'on filtre, et le filtre est juste au-dessus ; la note sur les
+    # bornes des pondérations répétait l'échelle que l'en-tête de colonne
+    # porte désormais.
 
 
 # --- 5 · les boucles de rétroaction ----------------------------------------
@@ -1914,7 +1918,11 @@ def _v_boucles():
     # PAS DE TITRE : l'onglet ouvert dit déjà « Boucles de rétroaction », et
     # « Diagrammes de boucles causales » juste en dessous nommait la même
     # chose une seconde fois. La ligne qui suit, elle, apprend quelque chose.
-    st.markdown(f'<p class="cad-bt-x">{_e(T("cad_bt_x"))}</p>',
+    # LA DÉFINITION OUVRE CET ONGLET-CI. Elle annonce un paysage « compris
+    # comme un système complexe adaptatif » : c'est exactement ce que les
+    # boucles montrent, et c'est ici qu'elle apprend quelque chose.
+    st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>'
+                f'<p class="cad-bt-x">{_e(T("cad_bt_x"))}</p>',
                 unsafe_allow_html=True)
 
     # UN SEUL VERT POUR LES QUATRE. Rouge, ambre, bleu, vert : quatre teintes

@@ -1943,8 +1943,15 @@ def _entree_nav(mode, icone):
 # o\u00f9 l'on va. Ce qu'il ne faut surtout pas, c'est que les deux listes
 # divergent \u2014 d'o\u00f9 la source unique `_NAV`, dont les deux se servent.
 @st.cache_data(show_spinner=False)
-def _bandeau_b64():
+def _bandeau_b64(lang="fr"):
     """L'illustration du bandeau, encodée une fois pour toutes.
+
+    UNE COMPOSITION PAR LANGUE. Le titre et le sous-titre sont peints DANS
+    l'image : un bandeau français en tête d'un site anglais afficherait
+    « Observatoire de la résilience » au-dessus d'une page entièrement
+    traduite. Le fichier anglais est cherché d'abord quand la langue servie
+    est l'anglais ; s'il manque, le français reprend sa place plutôt que de
+    laisser l'en-tête vide.
 
     Le fichier fait deux cent quarante kilo-octets : l'encoder à chaque
     réexécution de la page coûterait plus cher que de le garder en mémoire.
@@ -1966,8 +1973,11 @@ def _bandeau_b64():
     # lisent comme une seule feuille, là où la photographie posait un
     # rectangle de couleur en haut de l'écran. La photographie reste sous
     # `bandeau_apri_site.jpg` — retirer le dessin la remet en service.
-    for nom in ("bandeau_apri_dessin.jpg", "bandeau_apri_site.jpg",
-                "bandeau_apri_large.jpg", "bandeau_apri.jpg"):
+    noms = ["bandeau_apri_dessin.jpg", "bandeau_apri_site.jpg",
+            "bandeau_apri_large.jpg", "bandeau_apri.jpg"]
+    if lang == "en":
+        noms.insert(0, "bandeau_apri_dessin_en.jpg")
+    for nom in noms:
         for base in (os.path.join(APP_DIR, "data"), APP_DIR):
             essai = os.path.join(base, nom)
             if os.path.exists(essai):
@@ -2002,7 +2012,7 @@ def _rendre_ruban(avec_image):
     change de proportion. La hauteur suit donc la largeur, et rien ne sort.
     """
     with _ruban:
-        img = _bandeau_b64() if avec_image else None
+        img = _bandeau_b64(i18n.get_lang()) if avec_image else None
         if avec_image and not img:
             avec_image = False
         if not avec_image:
