@@ -797,13 +797,10 @@ def _echelle_html(txt):
         i = int(n)
         borne = " ".join(borne.split())
         cases.append(
-            f'<span class="cad-ec-c" style="background:{_teinte(i / nmax)}" '
-            f'title="{_e(str(i))} : {_e(borne)}">{i}</span>')
-    reperes = {int(n): " ".join(b.split()) for n, b in bandes}
-    trois = [i for i in (0, nmax // 2, nmax) if i in reperes]
-    sous = " · ".join(f'<b>{i}</b> {_e(reperes[i])}' for i in trois)
-    return (f'<span class="cad-ec">{"".join(cases)}</span>'
-            f'<span class="cad-ec-x">{sous}</span>')
+            f'<span class="cad-ec-p">'
+            f'<b style="background:{_teinte(i / nmax)}">{i}</b>'
+            f'{_e(borne)}</span>')
+    return f'<span class="cad-ec">{"".join(cases)}</span>' 
 
 
 @st.cache_data(show_spinner=False)
@@ -1117,17 +1114,18 @@ STYLE = """
   .cad-it-ech { display:block; font-size:9.5px; font-weight:500;
         letter-spacing:.02em; text-transform:none; color:#a7b0be;
         margin-top:2px; }
-  /* LA RÈGLE GRADUÉE : onze cases accolées, du rouge au vert, chacune avec
-     son numéro. Elle tient dans la largeur d'une colonne de tableau et se
-     compare d'une ligne à l'autre, ce qu'une phrase de chiffres ne permet
-     pas. */
-  .cad-ec { display:flex; gap:2px; max-width:330px; }
-  .cad-ec-c { flex:1 1 0; height:17px; border-radius:3px; color:#fff;
-       font-size:9.5px; font-weight:700; line-height:17px; text-align:center;
-       cursor:default; }
-  .cad-ec-x { display:block; font-size:10.5px; color:#8a93a5; margin-top:5px;
-       line-height:1.45; max-width:330px; }
-  .cad-ec-x b { color:#3c4761; font-weight:700; }
+  /* LA RÈGLE GRADUÉE : ONZE PASTILLES, CHACUNE AVEC SA BORNE À CÔTÉ. Le
+     numéro seul dans une case colorée obligeait à survoler pour lire le
+     seuil, et les trois repères écrits dessous n'en donnaient que trois sur
+     onze. Chaque score porte donc sa borne, immédiatement à sa droite ; la
+     couleur dit le sens, le chiffre dit le rang, le texte dit le seuil. */
+  .cad-ec { display:flex; flex-wrap:wrap; gap:4px 10px; }
+  .cad-ec-p { display:inline-flex; align-items:center; gap:5px;
+       font-size:11px; color:#3c4761; white-space:nowrap;
+       font-variant-numeric:tabular-nums; }
+  .cad-ec-p b { display:inline-flex; align-items:center;
+       justify-content:center; width:17px; height:17px; border-radius:4px;
+       color:#fff; font-size:9.5px; font-weight:700; flex:0 0 17px; }
   .cad-it-p { font-size:13px; font-weight:700; color:#101728;
        font-variant-numeric:tabular-nums; }
   /* --- la chaîne de calcul en cinq étapes ---------------------------------
