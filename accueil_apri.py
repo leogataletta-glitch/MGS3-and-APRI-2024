@@ -114,8 +114,8 @@ TEXTES = {
     # langues de placer le nombre où leur syntaxe le veut : l'anglais dit
     # « across 10 communal sections », le français « dans 10 sections
     # communales », et le mot d'avant est vide sur la première marche.
-    "po_socle_sur": {"en": "An unprecedented evidence base",
-                     "fr": "Une base de preuves sans précédent"},
+    "po_socle_sur": {"en": "An unprecedented database",
+                     "fr": "Une base de données sans précédent"},
     "po_s1_z": {"en": "household surveys", "fr": "enquêtes ménage"},
     "po_s2_a": {"en": "across", "fr": "dans"},
     "po_s2_z": {"en": "communal sections", "fr": "sections communales"},

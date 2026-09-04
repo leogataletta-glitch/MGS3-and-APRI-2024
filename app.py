@@ -280,46 +280,32 @@ st.markdown(("""
      de toucher les bords. */
   .block-container { max-width: none; padding-top: 0; padding-bottom: 0;
                      padding-left: 2.6rem; padding-right: 2.6rem; }
-  /* --- LE PIED FERME L'ÉCRAN, MÊME QUAND LA PAGE EST COURTE -------------
-     Il était simplement le dernier bloc du flux : sur une page qui tient en
-     six cents pixels, il se posait à six cents pixels et laissait tout le
-     reste de l'écran en blanc, ce qui donnait une page interrompue plutôt
-     que terminée. La colonne principale reçoit donc une hauteur minimale
-     d'un écran, et le pied une marge haute automatique : il descend jusqu'au
-     bas de la fenêtre quand le contenu ne l'y pousse pas, et se laisse
-     pousser plus bas quand le contenu est long.
-
-     LA HAUTEUR EST CORRIGÉE DU FACTEUR DE ZOOM. Le bloc principal porte un
-     `zoom: .95` ; une hauteur de 100vh y serait rendue à quatre-vingt-quinze
-     pour cent de l'écran, et il manquerait toujours une bande blanche en
-     bas. `--dz` est l'inverse de ce facteur — c'est déjà lui qui rend le
-     bandeau et le pied pleine largeur. */
-  div[data-testid="stMainBlockContainer"] > div[data-testid="stVerticalBlock"] {
-      /* LES SEIZE PIXELS RETIRÉS SONT CEUX QUE STREAMLIT RETIRE LUI-MÊME.
-         L'enveloppe du dernier bloc est mesurée seize pixels plus courte que
-         son contenu — c'est constant, quelle que soit la taille de la
-         fenêtre et quel que soit le zoom, et c'est ce qui faisait dépasser
-         la bande verte sous le bord de l'écran. */
-      min-height: calc(100vh * var(--dz) - 16px);
+  /* LE HAUT DE PAGE TOUCHE LE HAUT DE L'ÉCRAN. Le pouce de blanc que
+     Streamlit réserve au-dessus du bloc principal décollait le bandeau et le
+     menu du bord ; le blanc qui sépare vraiment deux choses est rendu plus
+     bas, dans la page. */
+  div[data-testid="stMainBlockContainer"] { padding-top: 0 !important; }
+  /* UNE FEUILLE DE STYLE OCCUPE UNE CASE DANS LA COLONNE. Chaque appel à
+     `st.markdown("<style>…")` produit un bloc de hauteur nulle — invisible,
+     mais compté par le `gap` du conteneur vertical, et deux d'entre eux
+     suffisaient à décoller le haut de page de vingt pixels. On les retire de
+     la mise en page, eux et l'enveloppe qui ne contient qu'eux ; le
+     `:only-child` garantit qu'on ne vise que les blocs qui ne portent QUE du
+     style, jamais un texte qui porterait sa mise en forme avec lui. */
+  div[data-testid="stElementContainer"]:has(
+      div[data-testid="stMarkdownContainer"] > style:only-child),
+  div[data-testid="stVerticalBlock"] > div:has(
+      > div[data-testid="stElementContainer"]:only-child
+        div[data-testid="stMarkdownContainer"] > style:only-child) {
+      display: none !important;
   }
-  div[data-testid="stLayoutWrapper"]:has(> div[class*="st-key-zone_pied"]) {
-      margin-top: auto !important; padding-top: 34px !important;
-      /* SANS CELA, LE FLEX LE COMPRIME. La colonne principale a une hauteur
-         minimale d'un écran ; quand le contenu est court, elle rétrécit le
-         dernier bloc pour tenir la promesse, et la bande verte dépassait de
-         sa boîte par le bas. Le pied ne se comprime pas. */
-      flex: 0 0 auto !important;
-  }
-  /* L'ÉCART AU-DESSUS DU PIED EST PORTÉ PAR L'ENVELOPPE, PAS PAR LE PIED.
-     Une marge posée sur le pied lui-même sortait de la boîte que le flex
-     mesure : le bloc s'arrêtait au bas de l'écran et la bande verte le
-     dépassait de trente-quatre pixels, dont on ne voyait plus la fin. */
-  .pied { margin-top: 0 !important; }
-  /* ET SES ENVELOPPES LE MESURENT VRAIMENT. Streamlit centre le contenu d'un
-     conteneur de markdown : la bande verte, plus haute que la ligne de texte
-     qu'elle contient, débordait de sa boîte au lieu de l'agrandir, et le
-     calcul de la hauteur d'écran comptait quatorze pixels de moins que ce
-     qui se dessine. */
+  /* --- LE PIED SUIT LE CONTENU, ET RIEN NE L'ÉLOIGNE ---------------------
+     Il a été collé au bas de la fenêtre pendant une version : sur une page
+     courte, cela plaçait la bande verte à quatre cents pixels sous la
+     dernière ligne, et il fallait descendre les yeux jusque-là pour ne rien
+     y trouver entre les deux. Il ferme donc le contenu là où le contenu
+     s'arrête. Le blanc qui reste en dessous est celui de la page : rien ne
+     s'y voit, et rien ne s'y cherche. */
   div[class*="st-key-zone_pied"],
   div[data-testid="stLayoutWrapper"]:has(> div[class*="st-key-zone_pied"]),
   div[class*="st-key-zone_pied"] div[data-testid="stElementContainer"],
@@ -328,32 +314,6 @@ st.markdown(("""
   div[class*="st-key-zone_pied"] div[data-testid="stMarkdownContainer"] {
       height: auto !important; min-height: 0 !important;
       display: block !important;
-  }
-  /* LE BANDEAU TOUCHE LE HAUT DE LA PAGE. Il est la première chose du bloc
-     principal ; le pouce de blanc que Streamlit réserve au-dessus le
-     décollait du bord et faisait flotter l'illustration au lieu de la poser.
-     Le blanc est rendu plus bas, dans la page elle-même, où il sépare
-     quelque chose de quelque chose. */
-  div[data-testid="stMainBlockContainer"] { padding-top: 0 !important; }
-  /* UNE FEUILLE DE STYLE OCCUPE UNE CASE DANS LA COLONNE. Chaque appel à
-     `st.markdown("<style>…")` produit un bloc de hauteur nulle — invisible,
-     mais compté par le `gap` du conteneur vertical : deux d'entre eux, l'un
-     à la racine et l'autre dans le ruban, décollaient le bandeau de vingt-
-     huit pixels du haut de l'écran sans que rien ne soit dessiné dedans. On
-     les retire de la mise en page ; le `:only-child` garantit qu'on ne vise
-     que les blocs qui ne contiennent QUE du style, jamais un texte qui
-     porterait sa mise en forme avec lui. */
-  div[data-testid="stElementContainer"]:has(
-      div[data-testid="stMarkdownContainer"] > style:only-child),
-  /* ET L'ENVELOPPE QUI NE CONTIENT QUE LUI. Streamlit interpose un bloc
-     autour de chaque case ; masquer la case laissait l'enveloppe, vide et
-     haute de zéro, occuper encore une place dans la colonne — donc encore
-     un `gap`. On masque les deux, jamais une enveloppe qui porterait autre
-     chose à côté. */
-  div[data-testid="stVerticalBlock"] > div:has(
-      > div[data-testid="stElementContainer"]:only-child
-        div[data-testid="stMarkdownContainer"] > style:only-child) {
-      display: none !important;
   }
   div[data-testid="stVerticalBlock"] { gap: .65rem; }
   div[data-testid="stElementContainer"] { margin-bottom: 0; }
