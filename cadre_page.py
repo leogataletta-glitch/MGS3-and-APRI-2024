@@ -26,6 +26,7 @@ accompagnée du nom de la dimension en toutes lettres.
 """
 
 import json
+import re
 import os
 from urllib.parse import quote
 
@@ -750,7 +751,61 @@ def _trouver(nom):
     return None
 
 
-@st.cache_data(show_spinner=False)
+_RE_BANDE = re.compile(r"(\d{1,2})\s*\(([^)]*)\)")
+
+# LE VERT DU HAUT, L'AMBRE DU MILIEU, LE ROUGE DU BAS — les trois teintes que
+# le site emploie déjà pour les niveaux d'alerte. Une échelle de score n'est
+# pas une grandeur neutre : zéro est mauvais, dix est bon, et la couleur doit
+# le dire du premier coup d'œil.
+_ANCRES = ((0.0, (0x9b, 0x2c, 0x2c)), (0.5, (0xd1, 0x8f, 0x2c)),
+           (1.0, (0x1a, 0x6b, 0x52)))
+
+
+def _teinte(t):
+    """La couleur d'une bande, du rouge au vert en passant par l'ambre."""
+    t = max(0.0, min(1.0, t))
+    for (t0, c0), (t1, c1) in zip(_ANCRES, _ANCRES[1:]):
+        if t <= t1:
+            u = 0 if t1 == t0 else (t - t0) / (t1 - t0)
+            r, v, b = (int(round(a + (b_ - a) * u)) for a, b_ in zip(c0, c1))
+            return f"#{r:02x}{v:02x}{b:02x}"
+    return "#1a6b52"
+
+
+def _echelle_html(txt):
+    """Le barème en onze cases colorées, du zéro rouge au dix vert.
+
+    POURQUOI UN DESSIN PLUTÔT QU'UNE LIGNE DE TEXTE. Le barème est une suite
+    de onze bornes ; écrit d'un trait, il faisait quatre lignes de chiffres
+    entre parenthèses dans lesquelles on ne trouvait ni le seuil du zéro ni
+    celui du dix sans les compter un par un. Dessiné, il se lit comme ce
+    qu'il est : une règle graduée, dont la couleur dit le sens.
+
+    LE TEXTE N'EST PAS PERDU. Chaque case porte sa borne exacte en infobulle,
+    et les trois repères — zéro, cinq, dix — sont écrits sous la règle. Le
+    barème du fichier reste la référence ; on ne le réécrit pas, on le met en
+    forme.
+    """
+    if not txt:
+        return f'<span style="color:#a7b0be">{_e(T("cad_ind_sans"))}</span>'
+    bandes = _RE_BANDE.findall(txt)
+    if len(bandes) < 3:
+        return _e(txt)
+    nmax = max(int(n) for n, _b in bandes) or 1
+    cases = []
+    for n, borne in bandes:
+        i = int(n)
+        borne = " ".join(borne.split())
+        cases.append(
+            f'<span class="cad-ec-c" style="background:{_teinte(i / nmax)}" '
+            f'title="{_e(str(i))} : {_e(borne)}">{i}</span>')
+    reperes = {int(n): " ".join(b.split()) for n, b in bandes}
+    trois = [i for i in (0, nmax // 2, nmax) if i in reperes]
+    sous = " · ".join(f'<b>{i}</b> {_e(reperes[i])}' for i in trois)
+    return (f'<span class="cad-ec">{"".join(cases)}</span>'
+            f'<span class="cad-ec-x">{sous}</span>')
+
+
 @st.cache_data(show_spinner=False)
 def _referentiel():
     """Les indicateurs du référentiel, tels qu'ils y sont écrits.
@@ -1062,6 +1117,17 @@ STYLE = """
   .cad-it-ech { display:block; font-size:9.5px; font-weight:500;
         letter-spacing:.02em; text-transform:none; color:#a7b0be;
         margin-top:2px; }
+  /* LA RÈGLE GRADUÉE : onze cases accolées, du rouge au vert, chacune avec
+     son numéro. Elle tient dans la largeur d'une colonne de tableau et se
+     compare d'une ligne à l'autre, ce qu'une phrase de chiffres ne permet
+     pas. */
+  .cad-ec { display:flex; gap:2px; max-width:330px; }
+  .cad-ec-c { flex:1 1 0; height:17px; border-radius:3px; color:#fff;
+       font-size:9.5px; font-weight:700; line-height:17px; text-align:center;
+       cursor:default; }
+  .cad-ec-x { display:block; font-size:10.5px; color:#8a93a5; margin-top:5px;
+       line-height:1.45; max-width:330px; }
+  .cad-ec-x b { color:#3c4761; font-weight:700; }
   .cad-it-p { font-size:13px; font-weight:700; color:#101728;
        font-variant-numeric:tabular-nums; }
   /* --- la chaîne de calcul en cinq étapes ---------------------------------
@@ -1842,8 +1908,7 @@ def _v_indicateurs():
     # déjà dans quel sens elle monte.
     for x in vus:
         num, _, court = T(x["dim"]).partition(". ")
-        ech = _e(x["echelle"]) if x["echelle"] else (
-            f'<span style="color:#a7b0be">{_e(T("cad_ind_sans"))}</span>')
+        ech = _echelle_html(x["echelle"])
         lignes.append(
             '<tr><td>'
             f'<div class="cad-it-n">{_e(x["nom"])}</div>'
