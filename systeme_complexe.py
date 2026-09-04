@@ -88,15 +88,6 @@ TEXTES = {
               "fr": "Faire tourner le système en direct"},
     "sx_centre": {"en": "Central variable", "fr": "Variable centrale"},
     "sx_prof": {"en": "Depth", "fr": "Profondeur"},
-    "sx_prof_x": {
-        "en": "Depth 1 keeps only what touches the central variable "
-              "directly. Each further step adds the variables that touch "
-              "those, and the system stops being a star and starts being a "
-              "system: that is where the loops appear.",
-        "fr": "La profondeur 1 ne garde que ce qui touche directement la "
-              "variable centrale. Chaque pas de plus ajoute ce qui touche "
-              "celles-là, et le schéma cesse d'être une étoile pour devenir "
-              "un système : c'est là que les boucles apparaissent."},
     "sx_non_mesure": {"en": "not measured", "fr": "non mesurée"},
     "sx_non_mesure_x": {
         "en": "This variable carries no measured score: it exists in the "
@@ -106,11 +97,6 @@ TEXTES = {
               "le modèle comme mécanisme, pas comme résultat. Elle peut être "
               "poussée dans une simulation, mais elle n'a pas d'état de "
               "départ auquel se comparer."},
-    "sx_compte": {
-        "en": "{n} variables and {a} relations at depth {p}, of the {tn} "
-              "variables and {ta} relations of the whole model.",
-        "fr": "{n} variables et {a} relations à la profondeur {p}, sur les "
-              "{tn} variables et {ta} relations du modèle entier."},
     "sx_trop": {
         "en": "At this depth the diagram carries {n} variables and stops "
               "being readable. It is drawn anyway; reduce the depth to read "
@@ -129,25 +115,6 @@ TEXTES = {
               "entrée du système, ou bien la profondeur est trop courte."},
     "sx_r": {"en": "Reinforcing", "fr": "Renforçante"},
     "sx_b": {"en": "Balancing", "fr": "Équilibrante"},
-    "sx_r_x": {
-        "en": "A reinforcing loop amplifies what enters it — in both "
-              "directions: it makes a gain grow and it makes a collapse "
-              "deepen. A balancing loop pushes back towards where it was.",
-        "fr": "Une boucle renforçante amplifie ce qui y entre — dans les deux "
-              "sens : elle fait grandir un gain et elle creuse un "
-              "effondrement. Une boucle équilibrante ramène vers le point de "
-              "départ."},
-    "sx_legende": {
-        "en": "An arrow means: when the first variable rises, the second "
-              "tends to rise (+, green) or to fall (−, red), everything else "
-              "held equal.",
-        "fr": "Une flèche se lit : quand la première variable monte, la "
-              "seconde tend à monter (+, vert) ou à baisser (−, rouge), "
-              "toutes choses égales par ailleurs."},
-
-    # ---------------------------------------------------- onglet 2
-    "sx_t2": {"en": "Every relation of the system, and what backs it",
-              "fr": "Chaque relation du système, et ce qui la fonde"},
     "sx_x2": {
         "en": "The observed correlation, the strength posed in the model, and "
               "the source that strength comes from. A correlation is never a "
@@ -683,17 +650,15 @@ def render_construire():
         st.warning(T("sx_trop", n=len(rang)))
     st.markdown(_svg_cld(m, rang, aretes, s["centre"], isoler),
                 unsafe_allow_html=True)
-    compte = T("sx_compte", n=len(rang), a=len(aretes), p=s["prof"],
-               tn=len(m["ids"]), ta=len(m["aretes"]))
-    st.markdown(f'<p class="sx-note">{_e(T("sx_legende"))}</p>'
-                f'<p class="sx-note">{_e(T("sx_prof_x"))}</p>'
-                f'<p class="sx-note">{_e(compte)}</p>',
-                unsafe_allow_html=True)
+    # QUATRE NOTES SOUS LE SCHÉMA, ET PLUS AUCUNE. La lecture des flèches,
+    # l'effet de la profondeur, le décompte des variables et la différence
+    # entre boucle renforçante et boucle équilibrante faisaient un paragraphe
+    # de mode d'emploi sous chaque dessin — lu une fois, sauté ensuite, mais
+    # occupant l'écran à chaque changement de variable. Les signes sont sur
+    # les flèches, le décompte se voit, et le type de chaque boucle est écrit
+    # en tête de son libellé dans le menu au-dessus.
     if not bcls:
         st.info(T("sx_boucles_0"))
-    else:
-        st.markdown(f'<p class="sx-note">{_e(T("sx_r_x"))}</p>',
-                    unsafe_allow_html=True)
 
 
 # ================================================================= onglet 2

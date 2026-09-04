@@ -42,7 +42,6 @@ import interventions_page
 import i18n
 import map_render
 import methodologie_page
-import ondes_choc
 import ocb_page
 import rapport_donateur
 import onglets
@@ -1608,9 +1607,6 @@ TEXTES_NAV = {
               "fr": "Pousser plusieurs variables à la fois"},
     "sx_d5": {"en": "Wave after wave, and what the loops add",
               "fr": "Vague après vague, et ce que les boucles ajoutent"},
-    "sx_deplier_onde": {
-        "en": "The same wave, wave by wave, in columns",
-        "fr": "La même onde, vague par vague, en colonnes"},
     "sx_d6": {"en": "Push a variable and watch the system move, live",
               "fr": "Poussez une variable et regardez le système bouger, "
                     "en direct"},
@@ -2333,8 +2329,6 @@ with _c_contenu:
             # positions, et il bouge. La lecture en colonnes reste dessous
             # pour qui veut les chiffres vague par vague.
             systeme_direct.render()
-            with st.expander(T("sx_deplier_onde")):
-                ondes_choc.render(entete=False)
 
     if app_mode == MODE_ACTIONS:
         # Les fiches descendent des leviers calculés par l'analyse des boucles.

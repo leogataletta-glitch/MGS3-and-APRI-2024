@@ -113,6 +113,10 @@ TEXTES = {
         "fr": "vagues qui les ont déplacées : au-delà d'une, c'est une boucle "
               "qui a ramené l'onde"},
     "sd_vagues_n": {"en": "waves", "fr": "vagues"},
+    "sd_leg_j": {"en": "the most connected variables",
+                 "fr": "les variables les plus connectées"},
+    "sd_leg_c": {"en": "the ones the wave went through most often",
+                 "fr": "celles que l'onde a le plus retraversées"},
     "sd_liens_n": {"en": "links", "fr": "liens"},
     "sd_perim": {
         "en": "The wave is followed inside the drawn perimeter only: what "
@@ -237,6 +241,13 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
     color:#3c4761;padding:2px 0}
   .fl b{font-variant-numeric:tabular-nums;color:#101728;white-space:nowrap}
   text{font-family:Inter,system-ui,sans-serif}
+  /* LE JAUNE DIT LA STRUCTURE, LE CLIGNOTEMENT DIT LE PARCOURS. Deux
+     propriétés différentes, deux signaux différents : le halo ne bouge pas
+     parce que la connectivité ne dépend pas de la course, le clignotement
+     n'apparaît qu'à la fin parce qu'il compte ce que la course a fait. */
+  .lum{filter:drop-shadow(0 0 4px #f0b73f) drop-shadow(0 0 9px rgba(240,183,63,.75))}
+  @keyframes cli{0%,100%{opacity:1}50%{opacity:.12}}
+  .cli{animation:cli 1.05s ease-in-out infinite}
 </style></head><body><div id="tout">
 <div id="barre">
   <div class="ch"><label>__L_VAR__</label>
@@ -281,6 +292,10 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
     __L_LB__</span>
   <span class="lg"><span style="display:inline-block;width:26px;height:5px;
     border-radius:3px;background:#cfe0d6"></span> __L_LE__</span>
+  <span class="lg"><span class="pt lum" style="background:#f0b73f"></span>
+    __L_LJ__</span>
+  <span class="lg"><span class="pt cli" style="background:#2a6b3f"></span>
+    __L_LC__</span>
 </div>
 </div>
 <script>
@@ -340,6 +355,11 @@ const vues = NO.map(n => {
     fill: n.c ? APRI : (n.r===1 ? "#eef3f0" : "#f6f8fb"),
     stroke: n.c ? APRI : "#dbe3ec", "stroke-width":"1"});
   g.appendChild(r);
+  /* L'anneau du clignotement est dessiné par-dessus la pastille et reste
+     invisible tant qu'il n'a rien à dire : faire clignoter la pastille
+     elle-même effacerait le chiffre une fois sur deux. */
+  const an = el("rect",{x:n.x-79, y:n.y-h/2-3, width:158, height:h+6, rx:11,
+    fill:"none", stroke:"#2a6b3f", "stroke-width":"2.4", opacity:"0"});
   let y0 = n.y - h/2 + 14;
   n.lig.forEach((t,i)=>{
     const e = el("text",{x:n.x, y:y0+i*13, "font-size":"10.5",
@@ -357,9 +377,23 @@ const vues = NO.map(n => {
     "text-anchor":"middle", "font-weight":"700",
     fill: n.c ? "#fff" : "#3c4761"});
   g.appendChild(val);
+  g.appendChild(an);
   gNoeuds.appendChild(g);
-  return {n, rect:r, jauge:jv, val, h, yb};
+  return {n, rect:r, jauge:jv, val, anneau:an, h, yb};
 });
+
+/* ---------- LE HALO JAUNE : LES VARIABLES LES PLUS CONNECTÉES ------------
+   La connectivité ne dépend pas de la poussée : elle est une propriété du
+   périmètre dessiné, et se marque donc dès l'ouverture, avant toute course.
+   Trois pastilles au plus, pour que le signal reste un signal. */
+function poserHalo(){
+  const tri = NO.map((n,i)=>({i, v: DEG[i]})).sort((a,b)=>b.v-a.v);
+  const cles = new Set(tri.filter((x,r)=> r < 3 && x.v >= 2).map(x=>x.i));
+  vues.forEach((u,i)=>{
+    if (cles.has(i)) u.rect.classList.add("lum");
+    else u.rect.classList.remove("lum");
+  });
+}
 
 /* ---------- l'état de la propagation ----------------------------------- */
 let src = D.centre, amp = 1, vitesse = 1, delai = 0;
@@ -435,7 +469,12 @@ function peindre(){
 /* ---------- ce qu'on lit une fois l'onde éteinte ------------------------ */
 function bilan(montrer){
   const e = document.getElementById("fin");
-  if (!montrer || !k){ e.hidden = true; return; }
+  if (!montrer || !k){
+    e.hidden = true;
+    vues.forEach(u => { u.anneau.setAttribute("opacity", 0);
+                        u.anneau.classList.remove("cli"); });
+    return;
+  }
   const con = NO.map((n,i)=>({n, v: DEG[i]}))
                 .filter(x=>x.v>0).sort((a,b)=>b.v-a.v).slice(0,5);
   const pas = NO.map((n,i)=>({n, v: passages[i], c: cum[i]}))
@@ -443,6 +482,15 @@ function bilan(montrer){
                 .slice(0,5);
   const ligne = (x, u) => '<div class="fl"><span>' + x.n.nom
     + '</span><b>' + x.v + ' ' + u + '</b></div>';
+  /* LES TROIS PLUS RETRAVERSÉES SE METTENT À CLIGNOTER SUR LE SCHÉMA. Le
+     tableau les nomme, le clignotement les montre : lire « sécurité
+     alimentaire, huit vagues » ne dit pas où elle est dans le dessin. */
+  const chef = new Set(pas.slice(0, 3).map(x => x.n.id));
+  vues.forEach(u => {
+    const on = chef.has(u.n.id);
+    u.anneau.setAttribute("opacity", on ? 1 : 0);
+    u.anneau.classList.toggle("cli", on);
+  });
   document.getElementById("fc").innerHTML =
     con.map(x=>ligne(x, L.liens)).join("");
   document.getElementById("fp").innerHTML =
@@ -566,6 +614,7 @@ document.getElementById("lire").onclick = () => {
 };
 
 document.getElementById("ampv").textContent = fmt(amp, 1);
+poserHalo();
 remise();
 </script></body></html>"""
 
@@ -598,7 +647,9 @@ def _html(d, lang):
             .replace("__L_CONX__", _e(T("sd_connect_x")))
             .replace("__L_CON__", _e(T("sd_connect")))
             .replace("__L_PASX__", _e(T("sd_passages_x")))
-            .replace("__L_PAS2__", _e(T("sd_passages"))))
+            .replace("__L_PAS2__", _e(T("sd_passages")))
+            .replace("__L_LJ__", _e(T("sd_leg_j")))
+            .replace("__L_LC__", _e(T("sd_leg_c"))))
 
 
 def render():
