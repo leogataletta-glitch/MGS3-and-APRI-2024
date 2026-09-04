@@ -585,7 +585,7 @@ st.markdown(("""
 
   /* --- barre latérale --- */
   section[data-testid="stSidebar"] {
-    background: #ffffff; border-right: 1px solid var(--bord);
+    background: linear-gradient(180deg, #f4f8f5 0%, #fafcfb 100%); border-right: 1px solid var(--bord);
   }
   section[data-testid="stSidebar"] h2 {
     font-size: 1.15rem !important; margin-top: .3rem !important;
@@ -781,12 +781,12 @@ st.markdown(("""
        moitié inférieure du menu était sur le même blanc que la page, et la
        colonne ne se distinguait plus. Le vert pâle tient sur toute la
        hauteur, et il n'est éclairci que légèrement vers le bas. */
-    /* BLANCHE, COMME LE DÉGRADÉ DU BANDEAU. La colonne reprenait le gris
-       chaud de l'illustration ; l'illustration, elle, part maintenant du
-       blanc pur, et un gris posé sous un dégradé blanc se voit comme une
-       salissure. Le bord et l'arrondi suffisent à détacher la colonne du
-       contenu — c'est une zone, pas une couleur. */
-    background: #ffffff;
+    /* UN VERT TRÈS PÂLE, JUSTE ASSEZ POUR QUE LA COLONNE SE DÉTACHE. Toute
+       blanche, elle se confondait avec la page et avec le blanc du bandeau :
+       seul son bord la signalait, et un bord ne fait pas une zone. Le vert
+       est celui du site, dilué jusqu'à la limite du perceptible, et il
+       s'éclaircit vers le bas pour ne pas peser sous la dernière rubrique. */
+    background: linear-gradient(180deg, #f4f8f5 0%, #fafcfb 100%);
     /* ELLE TOUCHE LE BORD GAUCHE DE L'ÉCRAN. La gouttière du bloc principal
        — 2,6 rem — laissait une bande blanche entre le bord de la fenêtre et
        la colonne, alors que le bandeau au-dessus, lui, va d'un bord à

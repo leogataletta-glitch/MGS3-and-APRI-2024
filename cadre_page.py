@@ -591,6 +591,7 @@ TEXTES = {
     "cad_ind_c_ech": {"en": "Normalisation scale, 0 to 10",
                       "fr": "Échelle de normalisation, de 0 à 10"},
     "cad_ind_c_p": {"en": "Weight", "fr": "Pondération"},
+    "cad_ind_c_p_ech": {"en": "1 to 5", "fr": "de 1 à 5"},
     "cad_ind_haut": {"en": "higher is better", "fr": "plus, c'est mieux"},
     "cad_ind_bas": {"en": "lower is better", "fr": "moins, c'est mieux"},
     "cad_ind_sans": {"en": "no scale written in the reference file",
@@ -889,9 +890,6 @@ STYLE = """
     .cad-so-b { border-left:0; padding-left:0; }
   }
   .cad-so-h { display:flex; align-items:center; gap:11px; margin:0 0 12px; }
-  .cad-so-ic { display:flex; align-items:center; justify-content:center;
-              width:34px; height:34px; flex:0 0 34px; border-radius:50%;
-              background:#f1f6f3; }
   .cad-so-n { font-size:27px; font-weight:200; color:#1a6b52; line-height:1;
               font-variant-numeric:tabular-nums; }
   .cad-so-t { font-size:14px; font-weight:700; color:#1a6b52;
@@ -1034,12 +1032,13 @@ STYLE = """
   .cad-it-e { font-size:11.5px !important; color:#3c4761 !important;
        line-height:1.55 !important; text-align:left !important;
        font-variant-numeric:tabular-nums; }
+  /* L'ÉCHELLE, SOUS L'INTITULÉ DE COLONNE : plus petite, en minuscules, et
+     sans graisse — c'est une unité, pas un second titre. */
+  .cad-it-ech { display:block; font-size:9.5px; font-weight:500;
+        letter-spacing:.02em; text-transform:none; color:#a7b0be;
+        margin-top:2px; }
   .cad-it-p { font-size:13px; font-weight:700; color:#101728;
        font-variant-numeric:tabular-nums; }
-  .cad-it-b { height:4px; border-radius:99px; background:#eef3f0;
-       overflow:hidden; margin-top:5px; }
-  .cad-it-b > div { height:100%; border-radius:99px; background:#2a6b3f; }
-
   /* --- la chaîne de calcul en cinq étapes ---------------------------------
      UNE RANGÉE, CINQ COLONNES ÉGALES, DES CHEVRONS ENTRE ELLES. La chaîne se
      lit de gauche à droite comme une phrase : la donnée entre à gauche, le
@@ -1136,9 +1135,6 @@ STYLE = """
   .cad-fin  { display:flex; align-items:flex-start; gap:15px;
               background:#f4f9f6; border:1px solid #dfeae3;
               border-radius:12px; margin-top:26px; padding:14px 18px; }
-  .cad-fin-i { display:flex; align-items:center; justify-content:center;
-              width:38px; height:38px; flex:0 0 38px; border-radius:50%;
-              background:#fff; border:1px solid #dfeae3; }
   .cad-fin-t { font-size:14px; font-weight:700; color:#1a6b52;
               margin:2px 0 3px; line-height:1.4; }
   p.cad-fin-x { font-size:12.5px !important; color:#5a6a80 !important;
@@ -1440,18 +1436,21 @@ def _sources(extras=None):
     le minimum par section.
     """
     extras = extras or {}
-    ICONES = ("maison", "monde", "pousse", "fiche")
+    # PAS DE PICTOGRAMME. Une maison, un globe, une pousse et une fiche pour
+    # « enquête ménage », « imagerie satellitaire », « relevés de terrain » et
+    # « entretiens institutionnels » : le numéro et le titre disent déjà de
+    # quelle source il s'agit, et le disque qui portait l'icône poussait le
+    # titre de trente pixels vers la droite dans une colonne qui en compte
+    # quatre.
     blocs = []
-    for i, (k, ic) in enumerate(zip(("cad_so1", "cad_so2", "cad_so3",
-                                     "cad_so4"), ICONES), start=1):
+    for i, k in enumerate(("cad_so1", "cad_so2", "cad_so3", "cad_so4"),
+                          start=1):
         puces = [x.strip() for x in T(k + "_p").split("|") if x.strip()]
         if (k + "_note") in i18n.DICO:
             puces.append(T(k + "_note"))
         blocs.append(
             '<div class="cad-so-b">'
             '<div class="cad-so-h">'
-            f'<span class="cad-so-ic">'
-            + icones.svg(ic, couleur=VERT_APRI, taille=19) + '</span>'
             f'<span class="cad-so-n">{i:02d}</span>'
             f'<span class="cad-so-t">{_e(T(k + "_t"))}</span></div>'
             f'<p class="cad-so-x">{_e(T(k + "_x"))}</p>'
@@ -1480,8 +1479,6 @@ def _fin():
     dimension — dans l'onglet des dimensions.
     """
     return ('<div class="cad-fin">'
-            '<span class="cad-fin-i">'
-            + icones.svg("barres", couleur=VERT_APRI, taille=20) + '</span>'
             '<div>'
             f'<div class="cad-fin-t">{_e(T("cad_band_t"))}</div>'
             f'<p class="cad-fin-x">{_e(T("cad_band_x"))}</p></div></div>')
@@ -1761,12 +1758,16 @@ def _v_indicateurs():
         st.info(T("cad_ind_rien"))
         return
 
-    pmax = max(x["poids"] for x in tous) or 1
+    # LA BARRE A SAUTÉ, ET L'ÉCHELLE EST ÉCRITE. Une barre de quatre-vingts
+    # pixels disait la même chose que le nombre à côté d'elle, en moins
+    # précis ; ce qui manquait vraiment, c'était de savoir sur quoi ce nombre
+    # se lit — il court de 1 à 5, et l'en-tête de colonne le dit maintenant.
     lignes = ['<table class="cad-it"><thead><tr>'
               f'<th>{_e(T("cad_ind_c_nom"))}</th>'
               f'<th>{_e(T("cad_ind_c_ech"))}</th>'
-              f'<th class="n">{_e(T("cad_ind_c_p"))}</th>'
-              '</tr></thead><tbody>']
+              f'<th class="n">{_e(T("cad_ind_c_p"))}'
+              f'<span class="cad-it-ech">{_e(T("cad_ind_c_p_ech"))}</span>'
+              '</th></tr></thead><tbody>']
     for x in vus:
         sens = (T("cad_ind_bas") if "bas" in x["sens"].split("=")[-1]
                 else T("cad_ind_haut") if x["sens"] else "")
@@ -1780,9 +1781,7 @@ def _v_indicateurs():
             f'{_e(court)}{" · " + _e(sens) if sens else ""}</div></td>'
             f'<td class="cad-it-e">{ech}</td>'
             '<td class="n"><div class="cad-it-p">'
-            f'{_fmt(x["poids"])}</div>'
-            '<div class="cad-it-b"><div style="width:'
-            f'{max(100 * x["poids"] / pmax, 4):.0f}%"></div></div></td></tr>')
+            f'{_fmt(x["poids"])}</div></td></tr>')
     lignes.append('</tbody></table>')
     st.markdown("".join(lignes), unsafe_allow_html=True)
 
