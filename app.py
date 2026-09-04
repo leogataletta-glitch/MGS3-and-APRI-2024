@@ -326,10 +326,18 @@ st.markdown(("""
      plus jamais de blanc. La page, elle, garde son blanc — il est posé sur
      le bloc principal, qui couvre tout le reste. */
   div[data-testid="stApp"], .stApp,
-  div[data-testid="stAppViewContainer"] { background: #1f5b46 !important; }
+  div[data-testid="stAppViewContainer"],
   section[data-testid="stMain"], div[data-testid="stMain"] {
-      background: #ffffff !important;
+      background: #1f5b46 !important;
   }
+  /* LE BLANC DE LA PAGE EST PORTÉ PAR LE BLOC DE CONTENU, PAS PAR LE CADRE.
+     Peint sur le bloc principal, le blanc s'arrêtait un pixel après la bande
+     verte et laissait un trait clair entre elle et le fond : le zoom de
+     quatre-vingt-quinze pour cent tombe entre deux pixels. Descendu d'un
+     cran, il ne va que jusqu'au bas du contenu, et tout ce qui suit — le
+     dernier pixel de la bande comme le bas de la fenêtre — est du même
+     vert. */
+  div[data-testid="stMainBlockContainer"] { background: #ffffff !important; }
   div[data-testid="stLayoutWrapper"]:has(> div[class*="st-key-zone_pied"]) {
       margin-top: auto !important; padding-top: 34px !important;
       /* SANS CELA, LE FLEX LE COMPRIME : la colonne rétrécit son dernier
@@ -340,7 +348,21 @@ st.markdown(("""
   /* L'ÉCART AU-DESSUS DU PIED EST PORTÉ PAR L'ENVELOPPE, PAS PAR LE PIED :
      une marge posée sur le pied lui-même sort de la boîte que le flex
      mesure. */
-  .pied { margin-top: 0 !important; }
+  .pied { margin-top: 0 !important;
+    /* ET SON VERT SE PROLONGE SOUS ELLE. Entre le bas de la bande et le bas
+       du bloc principal, il restait un filet de blanc — seize pixels, ceux
+       que Streamlit ne compte pas — et sous le bloc reprenait le vert du
+       fond : on lisait deux bandes vertes séparées par un trait clair.
+       L'ombre portée, sans flou ni étalement, peint une copie de la bande
+       cent pixels plus bas, élargie de six : l'élargissement fait remonter
+       la copie de six pixels sous la bande, ce qui recouvre le trait d'un
+       pixel que le zoom laissait à la jointure. Le vert est continu jusqu'au
+       bord de la fenêtre, et rien n'a bougé dans la mise en page. */
+    box-shadow: 0 100px 0 6px #1f5b46 !important;
+    /* ET QUATRE PIXELS DE BORD, DE LA MÊME COULEUR : la boîte descend
+       jusqu'au bas du bloc principal, et le trait blanc que le zoom laissait
+       à sa dernière ligne disparaît sous elle. */
+    border-bottom: 4px solid #1f5b46 !important; }
   /* ET SES ENVELOPPES LE MESURENT VRAIMENT. Streamlit centre le contenu d'un
      conteneur de markdown : la bande verte, plus haute que la ligne de texte
      qu'elle porte, débordait de sa boîte au lieu de l'agrandir. */

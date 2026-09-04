@@ -115,8 +115,26 @@ TEXTES = {
     # à l'attribut auquel il contribue — deux phrases de méthode, à l'endroit
     # où le lecteur cherche l'objet de la mesure. Il est dit en une ligne.
     "cad_attr_x": {
-        "en": "Resilience is measured through three attributes:",
-        "fr": "La résilience est mesurée à travers trois attributs :"},
+        "en": "Resilience is measured through three attributes and seven "
+              "dimensions.",
+        "fr": "La résilience est mesurée à travers trois attributs et sept "
+              "dimensions."},
+    "cad_h_attr": {"en": "Resilience attributes",
+                   "fr": "Attributs de résilience"},
+    "cad_h_attr_x": {
+        "en": "Three key attributes describe how a system faces disturbances.",
+        "fr": "Trois attributs décrivent la façon dont un système fait face "
+              "aux perturbations."},
+    "cad_h_dims": {"en": "Resilience dimensions",
+                   "fr": "Dimensions de résilience"},
+    "cad_h_dims_x": {
+        "en": "Resilience is assessed across seven dimensions.",
+        "fr": "La résilience est évaluée sur sept dimensions."},
+    "cad_bas_x": {
+        "en": "The three attributes express how resilience works. The seven "
+              "dimensions represent the key domains that shape it.",
+        "fr": "Les trois attributs disent comment la résilience fonctionne. "
+              "Les sept dimensions sont les domaines qui la composent."},
     "cad_a1_t": {"en": "Anticipate", "fr": "Anticiper"},
     "cad_a1": {"en": "Detect disturbances and prepare responses before they "
                      "arrive",
@@ -579,7 +597,7 @@ TEXTES = {
     # le titre court apparaît sous celui qu'on regarde. Le titre entier reste
     # celui des clés cad_o1 à cad_o7 — il n'a pas été remplacé, il est en
     # retrait.
-    "cad_c1": {"en": "What APRI measures", "fr": "Ce que mesure APRI"},
+    "cad_c1": {"en": "Resilience model", "fr": "Modèle de résilience"},
     "cad_c2": {"en": "Sources and data", "fr": "Sources et données"},
     "cad_c3": {"en": "Dimensions", "fr": "Dimensions"},
     "cad_c35": {"en": "Indicators and weights",
@@ -1016,6 +1034,13 @@ STYLE = """
      tiennent sur deux ou trois lignes ; le nom de l'indicateur, lui, tient
      sur une ou deux. C'est donc l'échelle qui commande la largeur. */
   .cad-it { width:100%; border-collapse:collapse; margin-top:14px; }
+  /* PAS DE TRAITS ENTRE LES COLONNES. Streamlit encadre toute cellule de
+     tableau écrite en markdown : trois colonnes se retrouvaient enfermées
+     dans une grille alors qu'un filet horizontal sous chaque ligne suffit à
+     les tenir. On ne laisse que celui-là. */
+  .cad-it th, .cad-it td {
+       border-left:0 !important; border-right:0 !important;
+       border-top:0 !important; }
   .cad-it th { font-size:10.5px; font-weight:700; letter-spacing:.09em;
        text-transform:uppercase; color:#8a93a5; text-align:left;
        padding:0 14px 8px 0; border-bottom:1px solid #e9eef4; }
@@ -1160,13 +1185,54 @@ STYLE = """
   .cad-aaa.vertical .cad-a { padding:0 0 2px !important; }
   .cad-aaa.vertical .cad-a + .cad-a { border-left:0 !important;
         padding-left:0 !important; }
-    /* EMPILÉS DANS UNE COLONNE ÉTROITE, les trois attributs se lisent l'un
-     sous l'autre ; le filet vert au-dessus de chaque titre les sépare. */
-  .cad-aaa.vertical { grid-template-columns:1fr !important; gap:18px !important; }
-  /* LE FILET VERTICAL EST LA SEULE SÉPARATION ENTRE LES DEUX MOITIÉS. */
-  .cad-colonne-dims { border-left:1px solid #e6ece8; padding-left:28px; }
+    /* --- LE MODÈLE DE RÉSILIENCE, EN DEUX MOITIÉS -------------------------
+     L'intitulé d'une moitié : un titre vert en petites capitales, un filet
+     qui court jusqu'au bord, une ligne qui dit ce qu'on va lire. */
+  .cad-moit { display:flex; align-items:center; gap:12px; margin:10px 0 6px; }
+  .cad-moit-t { font-size:12px; font-weight:700; letter-spacing:.09em;
+        text-transform:uppercase; color:#1a6b52; white-space:nowrap; }
+  .cad-moit-l { flex:1 1 auto; height:1.5px; background:#cfe0d6; }
+  p.cad-moit-x { font-size:12.5px !important; color:#6b7590 !important;
+        margin:0 0 14px !important; line-height:1.5 !important;
+        text-align:left !important; }
+
+  /* LES TROIS CARTES : un numéro, un filet, un titre, une phrase. */
+  .cad-cc { display:flex; flex-direction:column; gap:12px; }
+  .cad-c  { display:flex; align-items:stretch; gap:16px;
+        border:1px solid #e4eae6; border-radius:12px; background:#fff;
+        padding:16px 18px; }
+  .cad-c-n { font-size:22px; font-weight:700; color:#b9c6bf;
+        font-variant-numeric:tabular-nums; line-height:1.1;
+        padding-right:16px; border-right:1px solid #e9eef4;
+        display:flex; align-items:center; }
+  .cad-c-b { flex:1 1 auto; }
+  .cad-c-t { font-size:13px; font-weight:700; letter-spacing:.07em;
+        text-transform:uppercase; color:#1a6b52; margin-bottom:5px; }
+  p.cad-c-x { font-size:12.5px !important; color:#3c4761 !important;
+        line-height:1.5 !important; margin:0 !important;
+        text-align:left !important; }
+
+  /* LE TABLEAU DES SEPT DIMENSIONS. */
+  .cad-dt { border:1px solid #e9eef4; border-radius:12px; overflow:hidden; }
+  .cad-dh, .cad-dl { display:grid;
+        grid-template-columns:minmax(150px,1fr) 82px 82px;
+        gap:14px; align-items:center; padding:11px 16px; }
+  .cad-dh { background:#f5f7f6; font-size:10px; font-weight:700;
+        letter-spacing:.1em; text-transform:uppercase; color:#8a93a5;
+        line-height:1.3; }
+  .cad-dl { border-top:1px solid #eef2f7; }
+  .cad-dl-n { font-size:13px; color:#101728; font-weight:600;
+        line-height:1.35; }
+  .cad-dl-r { color:#1a6b52; font-weight:700; }
+  .cad-dl-v { font-size:12.5px; font-weight:600; color:#101728;
+        text-align:right; font-variant-numeric:tabular-nums; }
+
+  /* LA NOTE QUI ARTICULE LES DEUX MOITIÉS, sous les deux colonnes. */
+  .cad-bas { margin:22px 0 0; padding:13px 18px; border-radius:12px;
+        background:#f5f7f6; border:1px solid #eef2f7;
+        font-size:12.5px; color:#6b7590; line-height:1.55; }
   @media (max-width:1100px) {
-    .cad-colonne-dims { border-left:none; padding-left:0; margin-top:22px; }
+    .cad-dh, .cad-dl { grid-template-columns:1fr 70px 70px; }
   }
   p.cad-attr-x { font-size:15px !important; color:#3c4761 !important;
             line-height:1.55 !important; margin:2px 0 18px !important;
@@ -1297,8 +1363,6 @@ def _tableau_dimensions(stats):
     # pixels pour dire ce qu'un nombre dit en quatre caractères : elle
     # occupait la moitié de la largeur du tableau, et c'est cette largeur-là
     # qui empêchait de poser le tableau à côté d'autre chose.
-    col = ('grid-template-columns:minmax(170px,1fr) 76px 88px;'
-           'gap:18px;align-items:center;')
     lignes = []
     for cle in ORDRE:
         e = stats["dims"].get(cle)
@@ -1307,26 +1371,20 @@ def _tableau_dimensions(stats):
         nom = _e(T(cle))
         num, _, reste = nom.partition(". ")
         lignes.append(
-            f'<div style="display:grid;{col}padding:13px 0;'
-            f'border-bottom:1px solid #eef2f7">'
-            f'<div style="font-size:13.5px;line-height:1.35">'
-            f'<span style="color:{VERT_APRI};font-weight:700">{num}.</span> '
-            f'<span style="color:{ENCRE};font-weight:600">{reste}</span></div>'
-            f'<div style="font-size:12.5px;font-weight:600;color:{ENCRE};'
-            f'text-align:right;font-variant-numeric:tabular-nums">'
-            f'{_fmt(e["part"])}&thinsp;%</div>'
-            f'<div style="font-size:12.5px;font-weight:600;color:{ENCRE};'
-            f'text-align:right;font-variant-numeric:tabular-nums">'
-            f'{e["n"]}</div></div>')
+            '<div class="cad-dl">'
+            f'<div class="cad-dl-n"><span class="cad-dl-r">{num}.</span> '
+            f'{reste}</div>'
+            f'<div class="cad-dl-v">{_fmt(e["part"])}&thinsp;%</div>'
+            f'<div class="cad-dl-v">{e["n"]}</div></div>')
+    # L'EN-TÊTE EST UNE BANDE, PAS UNE LIGNE DE PLUS. Un aplat très pâle sous
+    # les trois intitulés sépare la légende des données mieux qu'un filet, et
+    # c'est le format de la maquette.
     entete = (
-        f'<div style="display:grid;{col}padding:0 0 9px;font-size:10.5px;'
-        f'letter-spacing:.1em;text-transform:uppercase;color:#8a93a5;'
-        f'font-weight:700">'
+        '<div class="cad-dh">'
         f'<div>{_e(T("cad_col_dim"))}</div>'
-        f'<div style="text-align:right">{_e(T("cad_col_poids"))}</div>'
-        f'<div style="text-align:right">{_e(T("cad_col_ind"))}</div></div>')
-    return ('<div style="margin-top:14px">' + entete + "".join(lignes)
-            + '</div>')
+        f'<div class="cad-dl-v">{_e(T("cad_col_poids"))}</div>'
+        f'<div class="cad-dl-v">{_e(T("cad_col_ind"))}</div></div>')
+    return '<div class="cad-dt">' + entete + "".join(lignes) + '</div>'
 
 
 def _flot(etapes):
@@ -1384,32 +1442,24 @@ def _titre_p(rang, cle, exemple=False):
                if exemple else "") + '</div>')
 
 
-def _attributs(vertical=False):
-    """Les trois attributs, en trois colonnes numérotées.
+def _attributs():
+    """Les trois attributs, en trois cartes numérotées.
 
-    C'EST LE SEUL CONTENU DU PREMIER ONGLET, et il porte donc toute la
-    définition. Les quatre cartouches d'ouverture et le schéma d'ensemble qui
-    l'entouraient ont été retirés : ils répondaient à quatre questions à la
-    fois, et aucune ne disait en une ligne ce qu'APRI mesure. La phrase le dit
-    maintenant, au-dessus ; ces trois colonnes la déplient, et rien d'autre.
-
-    NI NUMÉRO NI PICTOGRAMME. Un numéro promettrait un ordre obligatoire —
-    faites 01, puis 02, puis 03 — alors qu'un territoire anticipe, absorbe et
-    s'adapte en même temps, et que le même indicateur peut servir deux de ces
-    attributs. Quant au pictogramme, une loupe, un bouclier et une flèche
-    circulaire ne disent rien qu'« anticiper », « absorber » et « s'adapter »
-    ne disent déjà, en toutes lettres, juste en dessous. Le titre et le filet
-    tiennent la colonne.
+    NI ORDRE NI PICTOGRAMME. Le numéro sert de repère, pas d'étape : un
+    territoire anticipe, absorbe et s'adapte en même temps, et le même
+    indicateur peut servir deux de ces attributs. Quant au pictogramme, une
+    loupe, un bouclier et une flèche circulaire ne disent rien que les trois
+    verbes ne disent déjà, en toutes lettres, à côté d'eux.
     """
-    cols = []
-    for k in ("cad_a1", "cad_a2", "cad_a3"):
-        cols.append(
-            '<div class="cad-a">'
-            f'<div class="cad-a-t">{_e(T(k + "_t"))}</div>'
-            f'<p class="cad-a-x">{_e(T(k))}</p></div>')
-    classe = "cad-aaa vertical" if vertical else "cad-aaa"
-    return (f'<p class="cad-attr-x">{_e(T("cad_attr_x"))}</p>'
-            f'<div class="{classe}">' + "".join(cols) + '</div>')
+    cartes = []
+    for i, k in enumerate(("cad_a1", "cad_a2", "cad_a3"), start=1):
+        cartes.append(
+            '<div class="cad-c">'
+            f'<div class="cad-c-n">{i:02d}</div>'
+            '<div class="cad-c-b">'
+            f'<div class="cad-c-t">{_e(T(k + "_t"))}</div>'
+            f'<p class="cad-c-x">{_e(T(k))}</p></div></div>')
+    return '<div class="cad-cc">' + "".join(cartes) + '</div>'
 
 
 def _sources(extras=None):
@@ -1603,27 +1653,41 @@ def _titre(cle, note=None, marge=4):
 
 # --- 1 · ce que mesure APRI, et en quoi il le découpe -----------------------
 def _v_mesure(stats):
-    """La phrase, les trois attributs, et les sept dimensions à côté.
+    """La définition en deux moitiés : les attributs, et les dimensions.
 
-    DEUX MOITIÉS D'UNE MÊME DÉFINITION, CÔTE À CÔTE. « Ce que mesure APRI »
-    disait la résilience en trois attributs ; « Dimensions » disait en quoi
-    cette résilience se découpe et ce que pèse chaque part. Séparés en deux
-    onglets, il fallait cliquer pour passer de l'un à l'autre, et aucun des
-    deux ne remplissait l'écran. Le filet vertical dit « ceci n'est pas
-    cela » aussi bien qu'un onglet le disait, sans le clic.
+    LE FORMAT SUIT LA MAQUETTE FOURNIE. Deux colonnes, chacune ouverte par un
+    intitulé vert souligné d'un filet et une ligne qui dit ce qu'on va lire ;
+    à gauche trois cartes numérotées, à droite le tableau des sept
+    dimensions ; en dessous, une note qui articule les deux — les attributs
+    disent COMMENT la résilience fonctionne, les dimensions DE QUOI elle est
+    faite. C'est la seule chose que ni la colonne de gauche ni celle de
+    droite ne pouvaient dire seules.
 
-    LA DÉFINITION EST REMONTÉE À L'ACCUEIL, et elle n'a pas à être dite deux
-    fois : la phrase qui ouvre le site n'est pas l'en-tête d'un onglet de
-    documentation. Ne reste ici que ce que l'onglet apporte.
+    SANS PICTOGRAMME, ET C'EST LA CONSIGNE QUI TIENT. La maquette en porte un
+    par carte et un par dimension ; ils ont été retirés de cet écran deux
+    fois, parce qu'un œil, un bouclier et une pousse ne disent rien de plus
+    que « anticiper », « absorber » et « s'adapter » écrits juste à côté. Le
+    numéro et le filet tiennent la carte.
     """
-    g, d = st.columns([1, 1.25], gap="large")
+    st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>'
+                f'<p class="cad-attr-x">{_e(T("cad_attr_x"))}</p>',
+                unsafe_allow_html=True)
+    g, d = st.columns([1, 1.3], gap="large")
     with g:
-        st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>'
-                    + _attributs(vertical=True), unsafe_allow_html=True)
+        st.markdown(_entete_moitie("cad_h_attr", "cad_h_attr_x")
+                    + _attributs(), unsafe_allow_html=True)
     with d:
-        st.markdown('<div class="cad-colonne-dims">'
-                    + _tableau_dimensions(stats) + '</div>',
-                    unsafe_allow_html=True)
+        st.markdown(_entete_moitie("cad_h_dims", "cad_h_dims_x")
+                    + _tableau_dimensions(stats), unsafe_allow_html=True)
+    st.markdown(f'<div class="cad-bas">{_e(T("cad_bas_x"))}</div>',
+                unsafe_allow_html=True)
+
+
+def _entete_moitie(cle, cle_x):
+    """L'intitulé d'une moitié : un titre vert, un filet, une ligne."""
+    return (f'<div class="cad-moit"><span class="cad-moit-t">'
+            f'{_e(T(cle))}</span><span class="cad-moit-l"></span></div>'
+            f'<p class="cad-moit-x">{_e(T(cle_x))}</p>')
 
 
 # --- 2 · comment la résilience est mesurée ----------------------------------
