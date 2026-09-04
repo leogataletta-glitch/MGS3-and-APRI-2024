@@ -25,6 +25,8 @@ le groupe ; le traiter comme un score nul en ferait la première vulnérabilité
 du classement, qui serait un artefact.
 """
 
+import itertools
+
 import numpy as np
 import streamlit as st
 
@@ -138,6 +140,10 @@ TEXTES = {
               "there is nothing to map.",
         "fr": "Ce groupe est présent dans moins de deux sections communales : "
               "il n'y a rien à cartographier."},
+    "ec_quoi": {"en": "Show", "fr": "Afficher"},
+    "ec_quoi_profil": {"en": "Dimension profile", "fr": "Profil par dimension"},
+    "ec_quoi_indic": {"en": "Indicators", "fr": "Indicateurs"},
+    "ec_quoi_tout": {"en": "Both", "fr": "Les deux"},
     "ec_tri": {"en": "Rank indicators by", "fr": "Classer les indicateurs par"},
     "ec_tri_ecart": {"en": "Biggest gap with everyone else",
                      "fr": "Plus grand écart avec les autres"},
@@ -259,27 +265,22 @@ TEXTES = {
               "d'entrée des schémas de boucles causales."},
     "al_trier": {"en": "Sort by", "fr": "Trier par"},
     "al_t_score": {"en": "Lowest score", "fr": "Score le plus faible"},
+    "al_t_dmax": {"en": "Biggest gap with the best group",
+                  "fr": "Écart le plus grand avec le meilleur groupe"},
+    "al_col_best": {"en": "Best group", "fr": "Meilleur groupe"},
+    "al_col_dmax": {"en": "Gap with it", "fr": "Écart avec lui"},
+    "al_grain": {"en": "Group detail", "fr": "Finesse des groupes"},
+    "al_grain_simple": {"en": "One register", "fr": "Un registre"},
+    "al_grain_croise": {"en": "Two registers crossed",
+                        "fr": "Deux registres croisés"},
+    "al_grain_deux": {
+        "en": "Pick at least two registers to cross them.",
+        "fr": "Choisissez au moins deux registres pour les croiser."},
     "al_t_ecart": {"en": "Biggest gap", "fr": "Écart le plus important"},
     "al_t_dim": {"en": "Dimension", "fr": "Dimension"},
     "al_t_type": {"en": "Type of group", "fr": "Type de groupe"},
     "al_type": {"en": "Type of group", "fr": "Type de groupe"},
     "al_ref": {"en": "Compared with", "fr": "Score de comparaison"},
-    "al_emporter": {"en": "Carry a variable to the Feedback Loops",
-                    "fr": "Emporter une variable vers les boucles"},
-    "al_emporter_b": {"en": "Build its causal loop diagram",
-                      "fr": "Construire son schéma de boucle causale"},
-    "al_emporte": {
-        "en": "{v} is now the central variable of the Feedback Loops "
-              "section — open it to see its system.",
-        "fr": "{v} est désormais la variable centrale de la section Feedback "
-              "Loops — ouvrez-la pour voir son système."},
-    "al_suite": {
-        "en": "These variables are the entry point of the Feedback Loops "
-              "section: the first tab there builds a causal loop diagram "
-              "around any one of them.",
-        "fr": "Ces variables sont l'entrée de la section Feedback Loops : son "
-              "premier onglet construit un schéma de boucle causale autour de "
-              "l'une d'elles."},
     "al_par_groupe": {"en": "Variables per group", "fr": "Variables par groupe"},
     "al_registres": {"en": "Groups swept", "fr": "Registres balayés"},
     "al_col_groupe": {"en": "Group", "fr": "Groupe"},
@@ -846,70 +847,81 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False):
     st.markdown(_kpi(lib, n_g, ag_g["global"], ag_a["global"], lib_ref, n_a),
                 unsafe_allow_html=True)
 
+    # ---- ON NE DÉROULE PAS TOUT L'ÉCRAN D'UN COUP ------------------------
+    # La page donnait le profil par dimension, son tableau, puis les
+    # soixante-six indicateurs classés : trois écrans empilés dont on n'avait
+    # demandé qu'un. Le score du groupe reste toujours affiché — c'est la
+    # réponse à la question qu'on vient de poser ; le reste se demande.
+    quoi = st.radio(T("ec_quoi"), ["profil", "indic", "tout"],
+                    horizontal=True, key=f"ec_quoi_{titre}",
+                    format_func=lambda c: T("ec_quoi_" + c))
+
     # ---- le profil par dimension, dans la forme choisie -------------------
     axes = [T(c) for c in _DIMS]
     s_g = [ag_g["dimensions"].get(c) for c in _DIMS]
     s_a = [ag_a["dimensions"].get(c) for c in _DIMS]
-    st.markdown(f'<div class="titre-bloc">{_e(T("ec_profil"))}</div>',
-                unsafe_allow_html=True)
-    forme = st.selectbox(T("ec_format"), ["radar", "barres", "tableau",
-                                          "carte"],
-                         key=f"ec_forme_{titre}",
-                         format_func=lambda f: T("ec_" + f))
-    if forme == "radar" and sum(1 for v in s_g if v is not None) < 3:
-        st.info(T("ec_radar_court"))
-        forme = "barres"
-
-    if forme == "radar":
-        # LE RADAR PORTE LES DEUX SÉRIES, jamais le groupe seul : un profil
-        # sans terme de comparaison se lit comme une forme, pas comme un écart.
-        series = [(lib, s_g, VERT_APRI), (lib_ref, s_a, "#8a93a5")]
-        svg = radar.render_radar_svg(axes, series, taille=430)
-        st.markdown(f'<div style="max-width:820px;margin:4px auto 0">{svg}'
-                    f'</div>'
-                    f'<div style="text-align:center;margin-top:6px">'
-                    f'{radar.legende_html(series)}</div>',
+    if quoi in ("profil", "tout"):
+        st.markdown(f'<div class="titre-bloc">{_e(T("ec_profil"))}</div>',
                     unsafe_allow_html=True)
-    elif forme == "barres":
-        lignes = [{"axe": T("ec_profil"), "nom": T(c),
-                   "score": ag_g["dimensions"].get(c), "valeur": None,
-                   "n": n_g} for c in _DIMS]
-        st.markdown(
-            _barres(lignes, {"score": ag_a["global"], "n": n_g}),
-            unsafe_allow_html=True)
-    elif forme == "carte":
-        svg = _profil_carte(cat, masque)
-        if svg is None:
-            st.info(T("ec_carte_vide"))
-        else:
-            st.markdown(f'<div style="font-family:Inter,system-ui,sans-serif">'
-                        f'{svg}</div>'
-                        f'<p class="ec-note">{_e(T("ec_carte_grp"))}</p>',
+        forme = st.selectbox(T("ec_format"), ["radar", "barres", "tableau",
+                                              "carte"],
+                             key=f"ec_forme_{titre}",
+                             format_func=lambda f: T("ec_" + f))
+        if forme == "radar" and sum(1 for v in s_g if v is not None) < 3:
+            st.info(T("ec_radar_court"))
+            forme = "barres"
+
+        if forme == "radar":
+            # LE RADAR PORTE LES DEUX SÉRIES, jamais le groupe seul : un profil
+            # sans terme de comparaison se lit comme une forme, pas comme un écart.
+            series = [(lib, s_g, VERT_APRI), (lib_ref, s_a, "#8a93a5")]
+            svg = radar.render_radar_svg(axes, series, taille=430)
+            st.markdown(f'<div style="max-width:820px;margin:4px auto 0">{svg}'
+                        f'</div>'
+                        f'<div style="text-align:center;margin-top:6px">'
+                        f'{radar.legende_html(series)}</div>',
                         unsafe_allow_html=True)
-    st.markdown(_table_dims(ag_g, ag_a, lib, lib_ref),
+        elif forme == "barres":
+            lignes = [{"axe": T("ec_profil"), "nom": T(c),
+                       "score": ag_g["dimensions"].get(c), "valeur": None,
+                       "n": n_g} for c in _DIMS]
+            st.markdown(
+                _barres(lignes, {"score": ag_a["global"], "n": n_g}),
                 unsafe_allow_html=True)
-
-    # ---- les indicateurs, dans l'ordre demandé ---------------------------
-    st.markdown(f'<div class="titre-bloc" style="margin-top:22px">'
-                f'{_e(T("ec_ecarts"))}</div>', unsafe_allow_html=True)
-    tri = st.selectbox(T("ec_tri"), ["ecart", "haut", "bas"],
-                       key=f"ec_tri_{titre}",
-                       format_func=lambda c: T("ec_tri_" + c))
-    _x = {"ecart": "ec_ecarts_x", "haut": "ec_tri_haut_x",
-          "bas": "ec_tri_bas_x"}[tri]
-    st.markdown(f'<p class="ec-note" style="margin:0">{_e(T(_x))}</p>',
-                unsafe_allow_html=True)
-    classes = _classer(ecarts, tri)
-    if not classes:
-        st.info(T("ec_rien"))
-        return
-    combien = st.slider(T("ec_combien"), 5, min(40, len(classes)),
-                        min(12, len(classes)), key=f"ec_n_{titre}")
-    st.markdown(_table_ecarts(classes[:combien], lib, lib_ref),
-                unsafe_allow_html=True)
-    if any(x["n"] < N_MIN for x in classes[:combien]):
-        st.markdown(f'<p class="ec-note">{_e(T("ec_fragile", n=N_MIN))}</p>',
+        elif forme == "carte":
+            svg = _profil_carte(cat, masque)
+            if svg is None:
+                st.info(T("ec_carte_vide"))
+            else:
+                st.markdown(f'<div style="font-family:Inter,system-ui,sans-serif">'
+                            f'{svg}</div>'
+                            f'<p class="ec-note">{_e(T("ec_carte_grp"))}</p>',
+                            unsafe_allow_html=True)
+        st.markdown(_table_dims(ag_g, ag_a, lib, lib_ref),
                     unsafe_allow_html=True)
+
+    if quoi in ("indic", "tout"):
+        # ---- les indicateurs, dans l'ordre demandé ---------------------------
+        st.markdown(f'<div class="titre-bloc" style="margin-top:22px">'
+                    f'{_e(T("ec_ecarts"))}</div>', unsafe_allow_html=True)
+        tri = st.selectbox(T("ec_tri"), ["ecart", "haut", "bas"],
+                           key=f"ec_tri_{titre}",
+                           format_func=lambda c: T("ec_tri_" + c))
+        _x = {"ecart": "ec_ecarts_x", "haut": "ec_tri_haut_x",
+              "bas": "ec_tri_bas_x"}[tri]
+        st.markdown(f'<p class="ec-note" style="margin:0">{_e(T(_x))}</p>',
+                    unsafe_allow_html=True)
+        classes = _classer(ecarts, tri)
+        if not classes:
+            st.info(T("ec_rien"))
+            return
+        combien = st.slider(T("ec_combien"), 5, min(40, len(classes)),
+                            min(12, len(classes)), key=f"ec_n_{titre}")
+        st.markdown(_table_ecarts(classes[:combien], lib, lib_ref),
+                    unsafe_allow_html=True)
+        if any(x["n"] < N_MIN for x in classes[:combien]):
+            st.markdown(f'<p class="ec-note">{_e(T("ec_fragile", n=N_MIN))}</p>',
+                        unsafe_allow_html=True)
 
 
 def render_paysage(cat):
@@ -1007,8 +1019,60 @@ def _pire_case(ind, cat, axe):
     lib, m = scores[0]
     autres = [s[1]["score"] for s in scores[1:]]
     ref = sum(autres) / len(autres)
+    # LE MEILLEUR GROUPE EST RENVOYÉ AVEC LE PIRE, et c'est lui qui dit si le
+    # problème est soluble. Un indicateur bas partout est une contrainte de
+    # milieu ; un indicateur bas ici et haut à trente kilomètres de là est un
+    # écart que quelque chose produit, et que quelque chose peut donc réduire.
+    lib_b, mb = scores[-1]
     return {"nom_groupe": lib, "score": m["score"], "valeur": m["valeur"],
-            "n": m["n"], "ref": ref, "d": m["score"] - ref}
+            "n": m["n"], "ref": ref, "d": m["score"] - ref,
+            "nom_meilleur": lib_b, "meilleur": mb["score"],
+            "d_max": m["score"] - mb["score"]}
+
+
+def _cases_croisees(cat, axes):
+    """Les groupes du produit de deux registres, cases vides écartées."""
+    import itertools as _it
+    listes = []
+    for axe in axes:
+        listes.append([(lib, cat["groupes"].get(v))
+                       for v, lib in _cases(cat, axe)
+                       if cat["groupes"].get(v) is not None])
+    if not listes or any(not l for l in listes):
+        return []
+    out = []
+    for combo in _it.product(*listes):
+        m = combo[0][1].copy()
+        for _lib, g in combo[1:]:
+            m &= g
+        if m.sum() < N_MIN:
+            # UN GROUPE CROISÉ DE TROIS MÉNAGES N'EST PAS UN GROUPE. Le
+            # croisement divise l'effectif ; sous le seuil de lecture, la
+            # case est écartée du balayage plutôt que remontée comme la plus
+            # basse du territoire.
+            continue
+        out.append((" · ".join(c[0] for c in combo), m))
+    return out
+
+
+def _pire_case_croise(ind, cat, axes):
+    """La case la plus basse du produit de deux registres."""
+    scores = []
+    for lib, g in _cases_croisees(cat, axes):
+        m = _mesure(ind, g)
+        if m["n"] and m["score"] is not None:
+            scores.append((lib, m))
+    if len(scores) < 2:
+        return None
+    scores.sort(key=lambda x: (x[1]["score"], x[1]["valeur"]))
+    lib, m = scores[0]
+    autres = [x[1]["score"] for x in scores[1:]]
+    ref = sum(autres) / len(autres)
+    lib_b, mb = scores[-1]
+    return {"nom_groupe": lib, "score": m["score"], "valeur": m["valeur"],
+            "n": m["n"], "ref": ref, "d": m["score"] - ref,
+            "nom_meilleur": lib_b, "meilleur": mb["score"],
+            "d_max": m["score"] - mb["score"]}
 
 
 def _table_territoire(lignes):
@@ -1040,64 +1104,31 @@ def _table_critiques(lignes):
     r = ['<table class="ec-tab"><thead><tr>'
          f'<th>{_e(T("al_col_var"))}</th>'
          f'<th>{_e(T("al_col_groupe"))}</th>'
-         f'<th>{_e(T("al_type"))}</th>'
          f'<th class="n">{_e(T("al_col_sien"))}</th>'
-         f'<th class="n">{_e(T("al_ref"))}</th>'
+         f'<th>{_e(T("al_col_best"))}</th>'
+         f'<th class="n">{_e(T("al_col_dmax"))}</th>'
          f'<th class="n">{_e(T("ec_col_ecart"))}</th>'
          f'<th>{_e(T("al_alerte"))}</th></tr></thead><tbody>']
     for x in lignes:
         pale = ' class="pale"' if x["n"] < N_MIN else ""
+        best = (f'{_e(x.get("nom_meilleur") or "—")} '
+                f'<span style="color:#1a6b52;font-weight:700">'
+                f'{_f(x.get("meilleur"), 1)}</span>')
         r.append(f'<tr{pale}><td>{_e(x["nom"])}<br>'
                  f'<span style="font-size:11px;color:#8a93a5">'
                  f'{_e(x["dim"])}</span></td>'
-                 f'<td>{_e(x["groupe"])}</td>'
-                 f'<td style="color:#8a93a5;font-size:12px">'
-                 f'{_e(x["registre"])}</td>'
+                 f'<td>{_e(x["groupe"])}<br>'
+                 f'<span style="font-size:11px;color:#8a93a5">'
+                 f'{_e(x["registre"])} · n={x["n"]}</span></td>'
                  f'<td class="n v" style="color:{ROUGE}">'
                  f'{_f(x["score"], 1)}</td>'
-                 f'<td class="n">{_f(x["ref"], 1)}</td>'
+                 f'<td style="font-size:12px">{best}</td>'
                  f'<td class="n v" style="color:{ROUGE}">'
-                 f'{_f(x["d"], 1, True)}</td>'
+                 f'{_f(x.get("d_max"), 1, True)}</td>'
+                 f'<td class="n">{_f(x["d"], 1, True)}</td>'
                  f'<td>{_pastille(x["alerte"])}</td></tr>')
     r.append('</tbody></table>')
     return "".join(r)
-
-
-def _emporter(cat, bas):
-    """Le passage de main vers les boucles causales.
-
-    LES DEUX SECTIONS SONT UN SEUL PARCOURS, PAS DEUX PARTIES DU SITE. La
-    variable qu'on vient de désigner comme critique est celle autour de
-    laquelle on veut tracer le schéma ; la retrouver à la main dans une liste
-    de quarante-cinq nœuds, deux onglets plus loin, c'est refaire le travail.
-    Le nœud est donc mémorisé, et le premier onglet des boucles s'ouvre
-    dessus.
-
-    LA JOINTURE SE FAIT PAR NUMÉRO DE LIGNE DU RÉFÉRENTIEL, pas par nom : les
-    noms sont traduits et se réécrivent, la ligne ne bouge pas. Les
-    indicateurs que le graphe causal ne couvre pas ne sont donc pas proposés —
-    et c'est plus honnête que de proposer un nœud approchant.
-    """
-    try:
-        import boucles_moteur as B
-        graphe = B.charger()
-    except Exception:
-        return
-    par_ligne = {n.get("ligne"): n for n in graphe["noeuds"] if n.get("ligne")}
-    dispo = [(x, par_ligne[x["ligne"]]) for x in bas
-             if x.get("ligne") in par_ligne]
-    if not dispo:
-        return
-    st.markdown(f'<p class="ec-note" style="margin:14px 0 2px">'
-                f'{_e(T("al_suite"))}</p>', unsafe_allow_html=True)
-    k = st.selectbox(T("al_emporter"), list(range(len(dispo))),
-                     key="al_emp",
-                     format_func=lambda i: (f'{_f(dispo[i][0]["score"], 1)} · '
-                                            f'{dispo[i][0]["nom"]}'))
-    if st.button(T("al_emporter_b"), key="al_emp_b"):
-        st.session_state["bcl_centre"] = dispo[k][1]["id"]
-        st.session_state["bcl_levier"] = dispo[k][1]["id"]
-        st.success(T("al_emporte", v=dispo[k][0]["nom"]))
 
 
 def render_alarmes(cat):
@@ -1143,40 +1174,61 @@ def render_alarmes(cat):
                 f'{_e(T("al_synth"))}</div>'
                 f'<p class="ec-note" style="margin:0 0 4px">'
                 f'{_e(T("al_synth_x"))}</p>', unsafe_allow_html=True)
-    c1, c2, c3 = st.columns([1.6, 1.1, 0.7])
+    c1, c2, c3, c4 = st.columns([1.5, 0.95, 1.05, 0.6])
     with c1:
         registres = st.multiselect(
             T("al_registres"), [a for a, _l in AXES],
             default=[a for a, _l in AXES], key="al_reg",
             format_func=lambda a: T(dict(AXES)[a]))
     with c2:
-        tri = st.selectbox(T("al_trier"), ["score", "ecart", "dim", "type"],
+        # UN REGISTRE OU DEUX. « Les femmes » et « Trichet » sont deux groupes ;
+        # « les femmes de la montagne à Trichet » en est un troisième, et
+        # c'est souvent lui qui décroche. Le croisement est un choix, pas le
+        # défaut : il divise les effectifs, et les cases sous le seuil de
+        # lecture sont écartées du balayage.
+        grain = st.selectbox(T("al_grain"), ["simple", "croise"],
+                             key="al_grain",
+                             format_func=lambda c: T("al_grain_" + c))
+    with c3:
+        tri = st.selectbox(T("al_trier"),
+                           ["dmax", "score", "ecart", "dim", "type"],
                            key="al_tri",
                            format_func=lambda c: T("al_t_" + c))
-    with c3:
+    with c4:
         k2 = st.selectbox(T("al_combien"), [10, 20, 40], key="al_k2")
     if not registres:
         return
 
     ordre_reg = {a: i for i, (a, _l) in enumerate(AXES)}
+    if grain == "croise" and len(registres) < 2:
+        st.info(T("al_grain_deux"))
+        return
+    balayage = ([(a,) for a in registres] if grain == "simple"
+                else list(itertools.combinations(registres, 2)))
     critiques = []
     for ind in cat["indicateurs"]:
-        for axe in registres:
-            p = _pire_case(ind, cat, axe)
+        for combi in balayage:
+            p = (_pire_case(ind, cat, combi[0]) if len(combi) == 1
+                 else _pire_case_croise(ind, cat, list(combi)))
             # SEUL UN DÉCROCHAGE COMPTE : un groupe qui fait MIEUX que ses
             # comparables n'a rien à faire dans un tableau de vulnérabilités.
             if p is None or p["d"] >= -ECART_MIN:
                 continue
             critiques.append({
                 "nom": _nom(ind), "dim": T(ind["dim"]), "dim_code": ind["dim"],
-                "groupe": p["nom_groupe"], "registre": T(dict(AXES)[axe]),
-                "reg_code": axe, "score": p["score"], "ref": p["ref"],
+                "groupe": p["nom_groupe"],
+                "registre": " × ".join(T(dict(AXES)[a]) for a in combi),
+                "reg_code": combi[0], "score": p["score"], "ref": p["ref"],
                 "d": p["d"], "n": p["n"],
+                "nom_meilleur": p.get("nom_meilleur"),
+                "meilleur": p.get("meilleur"), "d_max": p.get("d_max"),
                 "alerte": _alerte(p["score"], p["d"])})
     if not critiques:
         st.info(T("al_vide"))
         return
-    cles = {"score": lambda x: (x["score"], x["d"]),
+    cles = {"dmax": lambda x: (x.get("d_max") if x.get("d_max") is not None
+                              else 0, x["score"]),
+            "score": lambda x: (x["score"], x["d"]),
             "ecart": lambda x: (x["d"], x["score"]),
             "dim": lambda x: (x["dim_code"], x["score"], x["d"]),
             "type": lambda x: (ordre_reg[x["reg_code"]], x["d"])}
@@ -1186,4 +1238,3 @@ def render_alarmes(cat):
         st.markdown(f'<p class="ec-note">{_e(T("ec_fragile", n=N_MIN))}</p>',
                     unsafe_allow_html=True)
 
-    _emporter(cat, bas)

@@ -2252,9 +2252,6 @@ with _c_contenu:
             # la seule place qui leur convienne : elles sont le résultat des
             # cinq écrans précédents, et l'entrée des boucles causales.
             analyse_ecarts.render_alarmes(_cat)
-            st.markdown('<div style="height:30px"></div>',
-                        unsafe_allow_html=True)
-            pistes_page.render()
 
     if app_mode == MODE_METHODO:
         # « Cadre de résilience » a remplacé la page de méthodologie : des schémas
@@ -2318,9 +2315,13 @@ with _c_contenu:
 
     if app_mode == MODE_ACTIONS:
         # Les fiches descendent des leviers calculés par l'analyse des boucles.
-        # Les anciennes pistes de travail, écrites avant cette analyse, ont été
-        # retirées : elles ne commandaient plus rien et brouillaient la page.
+        # LES PISTES D'ACTION LES SUIVENT, ET C'EST ICI QU'ELLES VONT. Elles
+        # fermaient l'écran des variables alarmantes, qui dit où le problème
+        # se trouve ; elles disent, elles, ce qu'on peut y faire — c'est la
+        # question de cette page-ci, pas de celle-là.
         interventions_page.render()
+        st.markdown('<div style="height:30px"></div>', unsafe_allow_html=True)
+        pistes_page.render()
 
     if app_mode == MODE_DONNEES:
         # LA PAGE NE PORTE QUE LES FICHIERS. Sous les sept documents venait

@@ -66,18 +66,18 @@ STYLE = """
   div[class*="st-key-ong_"] div[role="radiogroup"] > label > div > div {
       gap: 0 !important; width: 100% !important;
   }
-  /* LE LIBELLÉ EST FERRÉ À GAUCHE. Centré, un titre de deux lignes et sa
-     description formaient un bloc flottant au milieu de la case ; aligné à
-     gauche, l'œil descend la colonne des titres d'un seul mouvement, ce qui
-     est la façon dont on lit une barre de sept rubriques. */
+  /* LE LIBELLÉ EST CENTRÉ, HORIZONTALEMENT ET VERTICALEMENT. Les cases
+     s'étirent à la hauteur de la plus haute — celle dont la description
+     passe à la ligne — et un libellé collé en haut laissait un vide sous
+     lui dans toutes les autres. */
   div[class*="st-key-ong_"] div[role="radiogroup"] > label > div,
   div[class*="st-key-ong_"] div[role="radiogroup"] > label > div > div {
       height: 100% !important;
       display: flex !important; flex-direction: column !important;
-      justify-content: flex-start !important; align-items: flex-start !important;
+      justify-content: center !important; align-items: center !important;
   }
   div[class*="st-key-ong_"] div[role="radiogroup"] > label p {
-      margin: 0 !important; text-align: left !important;
+      margin: 0 !important; text-align: center !important;
   }
   /* La première ligne est le titre, la seconde la description : deux
      paragraphes dans le même libellé, et le CSS les distingue par leur rang

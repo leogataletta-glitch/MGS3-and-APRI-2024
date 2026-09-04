@@ -208,8 +208,26 @@ TEXTES = {
                       "({p} %)."},
     "ex_voir": {"en": "View as", "fr": "Afficher en"},
     "ex_theme": {"en": "Theme", "fr": "Thème"},
+    "ex_cond_t": {
+        "en": "You can also keep only the households that gave a given "
+              "answer to a second question — « both drinking water and "
+              "improved sanitation » is that, and the count is read on the "
+              "bars.",
+        "fr": "Vous pouvez aussi ne garder que les ménages ayant donné une "
+              "réponse à une seconde question — « à la fois l'eau potable et "
+              "des sanitaires améliorés », c'est cela, et le compte se lit "
+              "sur les barres."},
+    "ex_cond_q": {"en": "Second question", "fr": "Seconde question"},
+    "ex_cond_aucune": {"en": "No condition", "fr": "Aucune condition"},
+    "ex_cond_r": {"en": "Answers kept", "fr": "Réponses retenues"},
     "ex_theme_tous": {"en": "All themes", "fr": "Tous les thèmes"},
     "ex_croise": {"en": "Crossed groups", "fr": "Groupes croisés"},
+    "ex_s_comp": {"en": "Compare several indicators (optional)",
+                  "fr": "Comparer plusieurs indicateurs (facultatif)"},
+    "ex_s_comp_t": {"en": "The indicators compared, on the selected households",
+                    "fr": "Les indicateurs comparés, sur les ménages retenus"},
+    "ex_s_vent": {"en": "Break down by (optional)",
+                  "fr": "Ventiler par (facultatif)"},
     "ex_croise_x": {
         "en": "{k} crossed groups, out of {n} possible: the empty ones are "
               "left out. Crossing multiplies the groups and divides the "
@@ -535,6 +553,54 @@ def _etape(n, cle, aide=None, note=None):
         unsafe_allow_html=True)
 
 
+def _condition_question(cat, questions, filtre):
+    """Une seconde question posée comme condition sur la population.
+
+    POURQUOI UNE QUESTION PEUT ÊTRE UN FILTRE. « Combien de ménages ont à la
+    fois l'eau potable ET des sanitaires améliorés » n'est pas une question
+    de plus : c'est la première question posée sur la population de la
+    seconde. Les cinq registres du panneau ne savent filtrer que sur le
+    profil — section, sexe, âge, richesse, paysage — et aucune combinaison de
+    profils ne dit « ceux qui ont répondu Oui à l'eau ».
+
+    LE COMPTE DE L'INTERSECTION EST DÉJÀ À L'ÉCRAN. La barre affiche k/n : n
+    est l'effectif qui remplit la condition et a répondu à la question, k
+    ceux qui donnent en plus la réponse choisie. « À la fois l'un et
+    l'autre », c'est k.
+    """
+    st.markdown(f'<p class="ex-etape-x" style="margin:14px 0 2px 0 !important">'
+                f'{_e(T("ex_cond_t"))}</p>', unsafe_allow_html=True)
+    c1, c2, c3 = st.columns([1, 1.7, 1.3])
+    with c1:
+        themes = sorted({x.get("category") or "" for x in questions},
+                        key=lambda c: _nom_theme(c).lower())
+        th = st.selectbox(T("ex_theme"), [None] + themes, key="ex_c_th",
+                          format_func=lambda c: (T("ex_theme_tous")
+                                                 if c is None else _nom_theme(c)))
+    vues = [x for x in questions if th is None or (x.get("category") or "") == th]
+    with c2:
+        qi = st.selectbox(
+            T("ex_cond_q"), [None] + [x["i"] for x in vues],
+            key=f"ex_c_q_{th or 'tous'}",
+            format_func=lambda i: (T("ex_cond_aucune") if i is None
+                                   else _libelle_question(
+                                       next(x for x in vues if x["i"] == i),
+                                       avec_theme=th is None)))
+    if qi is None:
+        return filtre, None
+    q2 = next(x for x in vues if x["i"] == qi)
+    with c3:
+        reps = st.multiselect(T("ex_cond_r"), q2["modalites"],
+                              key=f"ex_c_r_{qi}",
+                              format_func=libelles_enquete.modalite)
+    if not reps:
+        return filtre, None
+    m = np.zeros(cat["n"], dtype=bool)
+    for r in reps:
+        m |= cat["bits"][q2["debut"] + q2["modalites"].index(r)]
+    return filtre & m, (q2, reps)
+
+
 def _panneau_filtres(cat, cle, registres, num, titre_cle, note=None):
     """Le panneau des filtres : un champ à choix multiples par registre.
 
@@ -832,19 +898,31 @@ def _filtrer(lignes, choix, ens=None):
     mesurees = [x for x in lignes if x["part"] is not None]
     if choix == "tous" or len(mesurees) <= 3:
         return lignes
+    # LE RANG EST POSÉ SUR LA LIGNE, ET C'EST LUI QUE LA COULEUR LIRA. Trois
+    # barres hautes et trois barres basses dans le même vert se ressemblent
+    # trop : le lecteur doit recompter les valeurs pour savoir lesquelles
+    # sont les meilleures. Le vert profond pour le haut, l'ambre pour le bas,
+    # et la valeur reste écrite au bout de la barre — la couleur ne remplace
+    # rien, elle prévient.
     if choix == "ecart":
         ref = (ens or {}).get("part")
         if ref is None:
             return lignes
         tri = sorted(mesurees, key=lambda x: -abs(x["part"] - ref))
         garder = {id(x) for x in tri[:3]}
+        for x in tri[:3]:
+            x["rang"] = "haut" if x["part"] >= ref else "bas"
         return [x for x in lignes if id(x) in garder]
     tri = sorted(mesurees, key=lambda x: x["part"])
     garder = set()
     if choix in ("top", "topflop"):
         garder |= {id(x) for x in tri[-3:]}
+        for x in tri[-3:]:
+            x["rang"] = "haut"
     if choix in ("flop", "topflop"):
         garder |= {id(x) for x in tri[:3]}
+        for x in tri[:3]:
+            x["rang"] = "bas"
     return [x for x in lignes if id(x) in garder]
 
 
@@ -885,6 +963,10 @@ def _barres(lignes, ens, mesure):
     for l in lignes:
         pale = mesure == "part" and l["n"] < N_FRAGILE
         coul = "#a8cbb6" if pale else VERT_APRI
+        if l.get("rang") == "bas":
+            coul = "#e6b98a" if pale else "#c2761a"
+        elif l.get("rang") == "haut" and not pale:
+            coul = "#1a6b52"
         # LE NOM DE L'AXE EST ÉCRIT AU-DESSUS DE SES RANGS, SUR SA PROPRE
         # LIGNE. Cumulées, dix sections et deux sexes se suivent sans rien qui
         # dise où l'on passe de l'un à l'autre ; posé dans la marge de la
@@ -936,7 +1018,16 @@ def _tableau(lignes, ens, mesure):
     r.append('</tr></thead><tbody>')
     for l in lignes:
         n = (f'{l["k"]} / {l["n"]}' if mesure == "part" else str(l["n"]))
-        r.append(f'<tr><td>{_e(l["nom"])}</td>'
+        # LE TABLEAU PORTE LE MÊME CODE QUE LES BARRES : une pastille verte
+        # devant les plus hauts, ambre devant les plus bas. Deux dessins du
+        # même écran ne peuvent pas dire la même chose de deux façons.
+        pt = ""
+        if l.get("rang") in ("haut", "bas"):
+            c = "#1a6b52" if l["rang"] == "haut" else "#c2761a"
+            pt = (f'<span style="display:inline-block;width:7px;height:7px;'
+                  f'border-radius:50%;background:{c};margin-right:8px;'
+                  f'vertical-align:middle"></span>')
+        r.append(f'<tr><td>{pt}{_e(l["nom"])}</td>'
                  f'<td class="n v">{_f(l["part"], dec)}{unite}</td>'
                  f'<td class="n">{n}</td></tr>')
     n = (f'{ens["k"]} / {ens["n"]}' if mesure == "part" else str(ens["n"]))
@@ -1109,6 +1200,10 @@ def render(cat, mode=None):
     # ---- 4 · les cinq registres, cumulables ------------------------------
     filtre, poses = _panneau_filtres(cat, "ex_pan", _REGISTRES_F,
                                      3, "ex_filtres_t", note="ex_filtres_opt")
+    if mesure == "part":
+        filtre, cond = _condition_question(cat, questions, filtre)
+    else:
+        cond = None
     n_f = int(filtre.sum())
     if n_f == 0:
         st.info(T("ex_filtre_vide"))
@@ -1252,12 +1347,21 @@ def _zone_cible(cat):
                 T("ex_s_tous_i" if dim else "ex_s_tous_i0") if i is None
                 else (_nom_ind(inds[i]) if dim
                       else f'{T(inds[i]["dim"])} · {_nom_ind(inds[i])}')))
+    # COMPARER PLUSIEURS INDICATEURS ENTRE EUX. Le menu du dessus n'en mesure
+    # qu'un ; mettre l'eau potable, l'assainissement et l'électricité côte à
+    # côte sur la même population est une autre question, et elle n'avait pas
+    # d'endroit. Vide, ce champ ne change rien.
+    compare = st.multiselect(
+        T("ex_s_comp"), list(range(len(inds))), key=f"exs_cmp_{dim}",
+        max_selections=8, format_func=lambda i: _nom_ind(inds[i]))
+    compares = [inds[i] for i in compare]
     if k is not None:
         ind = inds[k]
-        return f"i:{_inds_tries(cat).index(ind)}", _nom_ind(ind), ind, inds
+        return (f"i:{_inds_tries(cat).index(ind)}", _nom_ind(ind), ind, inds,
+                compares)
     if dim is not None:
-        return f"d:{dim}", T(dim), None, inds
-    return "global", T("ex_c_global"), None, inds
+        return f"d:{dim}", T(dim), None, inds, compares
+    return "global", T("ex_c_global"), None, inds, compares
 
 
 def _kpi_score(lib, sc, n, tot, sc_ech):
@@ -1276,6 +1380,29 @@ def _kpi_score(lib, sc, n, tot, sc_ech):
         f'{_e(T("ex_s_ecart_ech"))}</div>'
         f'<div class="ex-k-v" style="color:{coul}">{_f(ec, 2)}</div>'
         f'<div class="ex-k-s">{_e(T("ex_score"))}</div></div></div>')
+
+
+def _lignes_ventil(cat, axes, cible, ind, filtre):
+    """Le score de la cible sur les cases des registres retenus, croisées.
+
+    UN REGISTRE DONNE DES CASES, DEUX EN DONNENT LE PRODUIT. « Section » donne
+    dix lignes ; « section × sexe » en donne vingt, dont « les femmes de
+    Dumont » — le groupe qu'on veut comparer aux autres et qu'aucun registre
+    pris seul ne nomme.
+    """
+    axes = [a for a in axes if a]
+    if not axes:
+        return []
+    if len(axes) == 1:
+        return _lignes_axe(cat, axes[0], cible, ind, filtre)
+    axes = [a for a in axes if a != "dimension"]
+    out = []
+    for lib, cle, g in _croisements(cat, axes):
+        nb, sc = _score_cible(cat, g & filtre, cible, ind)
+        out.append({"nom": lib, "cle": cle, "axe": T("ex_croise"),
+                    "axe_code": "croisement", "n": nb, "k": None,
+                    "part": sc, "score": sc})
+    return [l for l in out if l["n"] > 0]
 
 
 def _lignes_axe(cat, axe, cible, ind, filtre):
@@ -1391,7 +1518,7 @@ def render_scores(cat):
 
     # ---- 1 · ce qu'on mesure ---------------------------------------------
     _etape(1, "ex_s_quoi")
-    cible, lib_cible, ind, inds = _zone_cible(cat)
+    cible, lib_cible, ind, inds, compares = _zone_cible(cat)
 
     # ---- 2 · sur qui -----------------------------------------------------
     filtre, poses = _zone_filtres(cat)
@@ -1405,22 +1532,19 @@ def render_scores(cat):
                     unsafe_allow_html=True)
 
     # ---- 3 · comment le lire ---------------------------------------------
+    # DEUX RÉGLAGES, PAS TROIS. La ventilation a quitté cette rangée : elle
+    # n'est pas une façon de lire, c'est une demande de plus, et elle est
+    # posée sous le score une fois qu'il est affiché. Le score, lui, paraît
+    # dès que l'indicateur est choisi — c'est la réponse à la question qu'on
+    # vient de poser, et elle ne doit pas attendre un troisième menu.
     _etape(3, "ex_s_comment")
-    c1, c2, c3 = st.columns([1.25, 1, 1.3])
+    c1, c2 = st.columns([1, 1.3])
     with c1:
-        axe = st.selectbox(
-            T("ex_s_axe"), [None] + [a for a, _l in _REGISTRES_S]
-            + (["dimension"] if ind is None else []),
-            key="exs_axe",
-            format_func=lambda a: (T("ex_s_aucun") if a is None
-                                   else T("ex_s_ax_dim") if a == "dimension"
-                                   else T(dict(_REGISTRES_S)[a])))
-    with c2:
         forme = st.selectbox(T("ex_format"),
                              ["barres", "radar", "tableau", "carte"],
                              key="exs_forme",
                              format_func=lambda f: T("ex_" + f))
-    with c3:
+    with c2:
         mode = st.selectbox(
             T("ex_s_mode"), ["actuel", "bas", "haut", "ecarts"],
             key="exs_mode", format_func=lambda m: T("ex_s_m_" + m))
@@ -1434,37 +1558,48 @@ def render_scores(cat):
                     f'{_e(T("ex_s_ec_x"))}</p>', unsafe_allow_html=True)
         combien = st.selectbox(T("ex_s_combien"), [5, 10, 20],
                                key="exs_k_ec")
-        paires = _paires_ecarts(cat, cible, ind, filtre,
-                                axe if axe not in (None, "dimension") else None)
+        paires = _paires_ecarts(cat, cible, ind, filtre, None)
         if not paires:
             st.info(T("ex_s_ec_rien"))
             return
         st.markdown(_table_paires(paires[:combien]), unsafe_allow_html=True)
         return
 
-    # ---- ce qui est mesuré, et sur quoi on le ventile ---------------------
+    # ---- 4 · le score, puis ce qu'on veut voir de plus ---------------------
     nb_sel, sc_sel = _score_cible(cat, filtre, cible, ind)
     _nb_e, sc_ech = _score_cible(cat, np.ones(cat["n"], dtype=bool),
                                  cible, ind)
-
-    if axe is None and mode == "actuel":
-        # RIEN N'A ÉTÉ DEMANDÉ DE PLUS QUE LE SCORE : on donne le score, et
-        # pas dix barres par-dessus.
-        if sc_sel is None:
-            st.info(T("ex_s_rien"))
-            return
-        _etape(4, "ex_res")
+    _etape(4, "ex_res")
+    if sc_sel is not None and mode == "actuel" and not compares:
+        # LE SCORE D'ABORD, ET SANS RIEN DEMANDER DE PLUS.
         st.markdown(_kpi_score(lib_cible, sc_sel, nb_sel, cat["n"], sc_ech),
                     unsafe_allow_html=True)
-        return
 
-    if axe is None:
+    # LA VENTILATION EST SOUS LE SCORE, ET ELLE EST FACULTATIVE. Vide, il n'y
+    # a que le score ; un registre, et il se décline ; deux ou trois, et les
+    # groupes se croisent — « les femmes de la montagne » contre « les hommes
+    # du littoral ».
+    dispo_v = [a for a, _l in _REGISTRES_S] + (["dimension"] if ind is None
+                                               else [])
+    axes = st.multiselect(
+        T("ex_s_vent"), dispo_v, key="exs_axes", max_selections=3,
+        format_func=lambda a: (T("ex_s_ax_dim") if a == "dimension"
+                               else T(dict(_REGISTRES_S)[a])))
+
+    if compares:
+        titre = T("ex_s_comp_t")
+        lignes = _lignes_indicateurs(cat, compares, filtre)
+    elif axes:
+        titre = (T("ex_s_bas_a") if mode == "bas"
+                 else T("ex_s_haut_a") if mode == "haut" else lib_cible)
+        lignes = _lignes_ventil(cat, axes, cible, ind, filtre)
+    elif mode in ("bas", "haut"):
         titre = T("ex_s_bas_i" if mode == "bas" else "ex_s_haut_i")
         lignes = _lignes_indicateurs(cat, inds, filtre)
     else:
-        titre = (T("ex_s_bas_a") if mode == "bas"
-                 else T("ex_s_haut_a") if mode == "haut" else lib_cible)
-        lignes = _lignes_axe(cat, axe, cible, ind, filtre)
+        if sc_sel is None:
+            st.info(T("ex_s_rien"))
+        return
     if not lignes:
         st.info(T("ex_s_rien"))
         return
@@ -1474,8 +1609,7 @@ def render_scores(cat):
         lignes = sorted(lignes, key=lambda x: x["score"],
                         reverse=(mode == "haut"))[:combien]
 
-    _etape(4, "ex_res")
-    st.markdown(f'<div class="ex-titre" style="margin-top:4px">'
+    st.markdown(f'<div class="ex-titre" style="margin-top:8px">'
                 f'{_e(titre)}</div>', unsafe_allow_html=True)
     ens = {"n": nb_sel, "k": None, "part": sc_sel, "score": sc_sel}
 
@@ -1483,7 +1617,7 @@ def render_scores(cat):
         st.info(T("ex_radar_court"))
         forme = "barres"
     if forme == "carte":
-        svg = _carte(lignes) if axe == "section" else None
+        svg = _carte(lignes) if axes == ["section"] else None
         if svg is None:
             st.info(T("ex_s_carte_sec"))
             forme = "barres"
