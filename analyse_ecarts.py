@@ -141,6 +141,13 @@ TEXTES = {
         "fr": "Ce groupe est présent dans moins de deux sections communales : "
               "il n'y a rien à cartographier."},
     "ec_quoi": {"en": "Show", "fr": "Afficher"},
+    "ec_quoi_rien": {"en": "Nothing yet", "fr": "Rien pour l'instant"},
+    "ec_rien_choix": {"en": "Choose a chart", "fr": "Choisir un graphique"},
+    "ec_rien_encore": {
+        "en": "Choose what to break down by and how to draw it: nothing is "
+              "shown until you ask for it.",
+        "fr": "Choisissez ce sur quoi ventiler et comment le dessiner : rien "
+              "ne s'affiche tant que vous ne l'avez pas demandé."},
     "ec_quoi_profil": {"en": "Dimension profile", "fr": "Profil par dimension"},
     "ec_quoi_indic": {"en": "Indicators", "fr": "Indicateurs"},
     "ec_quoi_tout": {"en": "Both", "fr": "Les deux"},
@@ -394,7 +401,7 @@ def render_indicateur(cat):
     ind = inds[pos]
     with d:
         axes = st.multiselect(T("ec_i_axes"), [a for a, _ in AXES],
-                              default=["section"], key="ec_i_axes",
+                              key="ec_i_axes",
                               format_func=lambda a: T(dict(AXES)[a]))
 
     # LE DESSIN ET LES EXTRÊMES SE CHOISISSENT ICI, comme sur les deux
@@ -402,9 +409,16 @@ def render_indicateur(cat):
     # à l'autre, sinon le lecteur réapprend l'outil à chaque page.
     c1, c2 = st.columns(2)
     with c1:
+        # RIEN NE SE DESSINE TANT QU'ON N'A PAS DIT COMMENT. L'écran s'ouvrait
+        # sur un histogramme des dix sections que personne n'avait demandé :
+        # le premier indicateur de la liste, sur le premier registre, dans le
+        # premier dessin. Trois défauts empilés font une réponse à une
+        # question qui n'a pas été posée.
         forme = st.selectbox(
-            T("ec_format"), ["barres", "radar", "tableau", "carte"],
-            key="ec_i_forme", format_func=lambda f: T("ec_" + f))
+            T("ec_format"), [None, "barres", "radar", "tableau", "carte"],
+            key="ec_i_forme",
+            format_func=lambda f: T("ec_rien_choix") if f is None
+            else T("ec_" + f))
     with c2:
         extremes = st.selectbox(
             T("ec_extremes"), ["tous", "top", "flop", "topflop"],
@@ -412,6 +426,11 @@ def render_indicateur(cat):
             format_func=lambda c: T({"tous": "ec_tous", "top": "ec_top",
                                      "flop": "ec_flop",
                                      "topflop": "ec_topflop"}[c]))
+
+    if forme is None or not axes:
+        st.markdown(f'<p class="ec-note" style="margin:8px 0 0">'
+                    f'{_e(T("ec_rien_encore"))}</p>', unsafe_allow_html=True)
+        return
 
     sens = T("ec_i_sens_bas") if ind.get("decroissant") else T("ec_i_sens_haut")
     st.markdown(f'<p class="ec-note" style="margin:0 0 6px">'
@@ -820,41 +839,52 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False):
     LE DESSIN SE CHOISIT, LE CALCUL NE CHANGE PAS. Radar, barres, tableau et
     carte montrent les mêmes sept chiffres ; ce qui change est ce qu'on veut
     en voir — une forme, un classement, des décimales, une géographie.
+
+    RETOURNE VRAI QUAND QUELQUE CHOSE A ÉTÉ DESSINÉ. L'appelant en a besoin :
+    la page qui prolonge cet écran ne doit pas s'ouvrir tant que l'écran
+    lui-même n'a rien à montrer.
     """
     if base is None:
         st.info(T("ec_rien"))
-        return
+        return False
     masque, bouts = _combiner(cat, base, titre, avec_paysage)
     if bouts:
         lib = " · ".join([lib] + bouts)
     n_g = int(masque.sum())
     if n_g == 0:
         st.info(T("ec_c_vide"))
-        return
+        return False
     # ---- par rapport à qui -----------------------------------------------
     ref, lib_ref = _terme(cat, titre)
     if ref is not None:
         ref = ref & ~masque
         if int(ref.sum()) == 0:
             st.info(T("ec_c_vide"))
-            return
+            return False
     n_a = int((~masque if ref is None else ref).sum())
-    st.markdown(f'<p class="ec-note" style="margin:2px 0 10px">'
-                f'{_e(T("ec_c_note2", n=n_g, m=n_a, q=lib_ref))}</p>',
-                unsafe_allow_html=True)
-
-    ag_g, ag_a, ecarts = _profil_compare(cat, masque, ref)
-    st.markdown(_kpi(lib, n_g, ag_g["global"], ag_a["global"], lib_ref, n_a),
-                unsafe_allow_html=True)
 
     # ---- ON NE DÉROULE PAS TOUT L'ÉCRAN D'UN COUP ------------------------
     # La page donnait le profil par dimension, son tableau, puis les
     # soixante-six indicateurs classés : trois écrans empilés dont on n'avait
     # demandé qu'un. Le score du groupe reste toujours affiché — c'est la
     # réponse à la question qu'on vient de poser ; le reste se demande.
-    quoi = st.radio(T("ec_quoi"), ["profil", "indic", "tout"],
+    quoi = st.radio(T("ec_quoi"), ["rien", "profil", "indic", "tout"],
                     horizontal=True, key=f"ec_quoi_{titre}",
                     format_func=lambda c: T("ec_quoi_" + c))
+    if quoi == "rien":
+        st.markdown(f'<p class="ec-note" style="margin:8px 0 0">'
+                    f'{_e(T("ec_rien_encore"))}</p>', unsafe_allow_html=True)
+        return False
+
+    # LE SCORE DU GROUPE ET SON TERME DE COMPARAISON VIENNENT APRÈS LE CHOIX,
+    # pas avant : c'est déjà un résultat, et l'écran ne doit rien répondre
+    # tant qu'on n'a pas dit ce qu'on voulait voir.
+    st.markdown(f'<p class="ec-note" style="margin:2px 0 10px">'
+                f'{_e(T("ec_c_note2", n=n_g, m=n_a, q=lib_ref))}</p>',
+                unsafe_allow_html=True)
+    ag_g, ag_a, ecarts = _profil_compare(cat, masque, ref)
+    st.markdown(_kpi(lib, n_g, ag_g["global"], ag_a["global"], lib_ref, n_a),
+                unsafe_allow_html=True)
 
     # ---- le profil par dimension, dans la forme choisie -------------------
     axes = [T(c) for c in _DIMS]
@@ -914,7 +944,7 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False):
         classes = _classer(ecarts, tri)
         if not classes:
             st.info(T("ec_rien"))
-            return
+            return True
         combien = st.slider(T("ec_combien"), 5, min(40, len(classes)),
                             min(12, len(classes)), key=f"ec_n_{titre}")
         st.markdown(_table_ecarts(classes[:combien], lib, lib_ref),
@@ -922,26 +952,27 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False):
         if any(x["n"] < N_MIN for x in classes[:combien]):
             st.markdown(f'<p class="ec-note">{_e(T("ec_fragile", n=N_MIN))}</p>',
                         unsafe_allow_html=True)
+    return True
 
 
 def render_paysage(cat):
     if not cat:
-        return
+        return False
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(f'<div class="titre-bloc">{_e(T("ec_p_titre"))}</div>',
                 unsafe_allow_html=True)
     vals = [v for v in _VALEURS["paysage"] if cat["groupes"].get(v) is not None]
     if not vals:
         st.info(T("ec_rien"))
-        return
+        return False
     v = st.selectbox(T("ec_p_choix"), vals, key="ec_p_sel",
                      format_func=_lib)
-    _rendre_profil(cat, cat["groupes"].get(v), _lib(v), "pay")
+    return _rendre_profil(cat, cat["groupes"].get(v), _lib(v), "pay")
 
 
 def render_groupe(cat):
     if not cat:
-        return
+        return False
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(f'<div class="titre-bloc">{_e(T("ec_g_titre"))}</div>',
                 unsafe_allow_html=True)
@@ -954,15 +985,15 @@ def render_groupe(cat):
             opts.append((val, f'{T(dict(AXES)[axe])} · {lib}', lib))
     if not opts:
         st.info(T("ec_rien"))
-        return
+        return False
     k = st.selectbox(T("ec_g_choix"), list(range(len(opts))), key="ec_g_sel",
                      format_func=lambda i: opts[i][1])
     # LE PAYSAGE EST OFFERT EN PLUS SUR CETTE PAGE, et pas sur la précédente :
     # « les femmes de la montagne » se pose ici, « la montagne des femmes » se
     # pose là-bas, et proposer deux fois le même croisement dans les deux sens
     # ferait deux chemins vers le même tableau.
-    _rendre_profil(cat, cat["groupes"].get(opts[k][0]), opts[k][2], "grp",
-                   avec_paysage=True)
+    return _rendre_profil(cat, cat["groupes"].get(opts[k][0]), opts[k][2],
+                          "grp", avec_paysage=True)
 
 # ============================== les variables les plus alarmantes
 # DEUX SORTES DE FAIBLESSE, DEUX TABLEAUX, ET LES CONFONDRE ENVOIE UNE

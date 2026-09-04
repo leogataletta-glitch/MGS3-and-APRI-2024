@@ -80,21 +80,7 @@ TEXTES = {
               "fr": "Tester des interventions"},
     "sx_o5": {"en": "See System-Wide Impacts",
               "fr": "Voir les impacts sur tout le système"},
-    "sx_k_perim": {"en": "System size", "fr": "Taille du système"},
-
-    "sx_t1": {"en": "A critical variable, and the system around it",
-              "fr": "Une variable critique, et le système autour d'elle"},
-    "sx_x1": {
-        "en": "Pick the variable the results flagged, and the population you "
-              "are looking at. The relations are the same for everyone; what "
-              "changes with the population is where each variable starts "
-              "from — and therefore what an intervention would move.",
-        "fr": "Choisissez la variable que les résultats ont signalée, et la "
-              "population regardée. Les relations sont les mêmes pour tous ; "
-              "ce que la population change, c'est le point de départ de "
-              "chaque variable — donc ce qu'une intervention déplacerait."},
     "sx_centre": {"en": "Central variable", "fr": "Variable centrale"},
-    "sx_pop": {"en": "Looked at on", "fr": "Regardé sur"},
     "sx_prof": {"en": "Depth", "fr": "Profondeur"},
     "sx_prof_x": {
         "en": "Depth 1 keeps only what touches the central variable "
@@ -105,8 +91,6 @@ TEXTES = {
               "variable centrale. Chaque pas de plus ajoute ce qui touche "
               "celles-là, et le schéma cesse d'être une étoile pour devenir "
               "un système : c'est là que les boucles apparaissent."},
-    "sx_etat": {"en": "Starting score of the central variable",
-                "fr": "Score de départ de la variable centrale"},
     "sx_non_mesure": {"en": "not measured", "fr": "non mesurée"},
     "sx_non_mesure_x": {
         "en": "This variable carries no measured score: it exists in the "
@@ -494,12 +478,14 @@ def _systeme(m, cle):
 
 
 def _rappel(m, s):
-    """Le bandeau qui redit, sur chaque onglet, quel système on regarde."""
-    pop = dict(POPULATIONS).get(s["pop"])
-    lib = T(pop) if pop else s["pop"]
+    """Le bandeau qui redit, sur chaque onglet, quel système on regarde.
+
+    LA POPULATION N'Y FIGURE PLUS, puisqu'elle ne se choisit plus : rappeler
+    « échantillon complet » sur chaque onglet ne rappelait rien.
+    """
     st.markdown(
         f'<p class="sx-note" style="margin:0 0 10px"><b>'
-        f'{_e(m["noms"][s["centre"]])}</b> · {_e(lib)} · '
+        f'{_e(m["noms"][s["centre"]])}</b> · '
         f'{_e(T("sx_prof"))} {s["prof"]}</p>', unsafe_allow_html=True)
 
 
@@ -665,20 +651,22 @@ def _lib_boucle(m, b):
 def render_construire():
     m = _modele(i18n.get_lang())
     st.markdown(STYLE, unsafe_allow_html=True)
-    st.markdown(f'<div class="titre-bloc">{_e(T("sx_t1"))}</div>'
-                f'<p class="sx-note" style="margin:0 0 10px">'
-                f'{_e(T("sx_x1"))}</p>', unsafe_allow_html=True)
+    # NI TITRE NI CHAPEAU : l'onglet du haut dit déjà où l'on est, et la
+    # phrase d'introduction expliquait surtout le menu de population qui vient
+    # d'être retiré.
     s = _systeme(m, "c")
 
-    c1, c2, c3 = st.columns([1.9, 1.1, 0.8])
+    # LE CHOIX DE POPULATION A ÉTÉ RETIRÉ D'ICI. Le graphe causal est le même
+    # pour tout le monde — ce sont ses états qui changent d'un groupe à
+    # l'autre, et cette lecture-là se fait dans les écrans d'écarts, qui
+    # savent croiser deux registres et écarter les effectifs trop minces. Un
+    # menu de plus au-dessus du système laissait croire que la structure des
+    # causes se redessinait par sexe ou par section, ce qui n'est pas le cas.
+    # `_systeme` retombe sur « Total », qui était déjà son défaut.
+    c1, c3 = st.columns([2.4, 0.8])
     with c1:
         st.selectbox(T("sx_centre"), s["ids"], key="bcl_centre",
                      format_func=lambda i: m["noms"][i])
-    with c2:
-        opts = [p for p, _l in POPULATIONS] + list(SECTIONS)
-        libs = {p: T(l) for p, l in POPULATIONS}
-        st.selectbox(T("sx_pop"), opts, key="bcl_pop",
-                     format_func=lambda p: libs.get(p, p))
     with c3:
         st.selectbox(T("sx_prof"), [1, 2, 3], key="bcl_prof")
     s = _systeme(m, "c")
@@ -687,24 +675,12 @@ def render_construire():
     v = etat.get(s["centre"])
     rang, aretes = _voisinage(m, s["centre"], s["prof"])
     bcls = _boucles_de(m, s["centre"], set(rang))
-    r_n = sum(1 for b in bcls if b["type"] == "renforcante")
 
-    val_c = (f'{_f(v, 1)}<span style="font-size:13px;color:#8a93a5">'
-             f' / 10</span>' if v is not None
-             else _e(T("sx_non_mesure")))
-    st.markdown(
-        '<div class="sx-kpi">'
-        f'<div class="sx-k"><div class="sx-k-l">{_e(T("sx_etat"))}</div>'
-        f'<div class="sx-k-v">{val_c}</div><div class="sx-k-s">{_e(m["noms"][s["centre"]])}</div></div>'
-        f'<div class="sx-k"><div class="sx-k-l">{_e(T("sx_k_perim"))}</div>'
-        f'<div class="sx-k-v">{len(rang)}<span style="font-size:13px;'
-        f'color:#8a93a5"> / {len(m["ids"])}</span></div>'
-        f'<div class="sx-k-s">{len(aretes)} / {len(m["aretes"])}</div></div>'
-        f'<div class="sx-k"><div class="sx-k-l">{_e(T("sx_boucles_c"))}</div>'
-        f'<div class="sx-k-v">{len(bcls)}</div>'
-        f'<div class="sx-k-s">{r_n} {_e(T("sx_r"))} · '
-        f'{len(bcls) - r_n} {_e(T("sx_b"))}</div></div></div>',
-        unsafe_allow_html=True)
+    # LES TROIS COMPTEURS SONT PARTIS. Le score de départ, la taille du
+    # périmètre et le décompte des boucles répétaient en chiffres ce que le
+    # schéma montre déjà — et le schéma est ce qu'on vient voir. Le score
+    # manquant continue d'être signalé, lui, parce qu'il change la lecture du
+    # dessin.
     if v is None:
         st.info(T("sx_non_mesure_x"))
 

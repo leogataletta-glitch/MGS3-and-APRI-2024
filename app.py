@@ -2236,16 +2236,20 @@ with _c_contenu:
             # LA FICHE PAYSAGE EXISTAIT DÉJÀ et se lit d'une traite ; l'écran
             # d'écarts la prolonge par ce qu'elle ne disait pas — quels
             # indicateurs, précisément, séparent un paysage de l'autre.
-            analyse_ecarts.render_paysage(_cat)
-            st.markdown('<div style="height:30px"></div>',
-                        unsafe_allow_html=True)
-            fiche_paysages.render(entete=False)
+            # LA FICHE NE SUIT QUE SI L'ÉCRAN DU HAUT A RÉPONDU. Tant qu'aucun
+            # mode d'affichage n'est choisi, la page doit rester vide : une
+            # fiche complète posée dessous — sa barre de filtres, son radar —
+            # annulerait la promesse faite deux lignes plus haut.
+            if analyse_ecarts.render_paysage(_cat):
+                st.markdown('<div style="height:30px"></div>',
+                            unsafe_allow_html=True)
+                fiche_paysages.render(entete=False)
 
         elif _ra == "groupe":
-            analyse_ecarts.render_groupe(_cat)
-            st.markdown('<div style="height:30px"></div>',
-                        unsafe_allow_html=True)
-            synthese_page.render(entete=False)
+            if analyse_ecarts.render_groupe(_cat):
+                st.markdown('<div style="height:30px"></div>',
+                            unsafe_allow_html=True)
+                synthese_page.render(entete=False)
 
         else:
             # LES VARIABLES ALARMANTES SE LISENT APRÈS LES ÉCARTS, et c'est
