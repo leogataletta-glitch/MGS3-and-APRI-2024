@@ -106,6 +106,10 @@ TRACES = {
               '<path d="M7.8 17h8.4"/>',
     # LA GOUTTE — la donnée brute de la chaîne de calcul est un temps de
     # collecte d'eau, et c'est le pictogramme que la maquette lui donne.
+    # L'ENVELOPPE — la rubrique « nous écrire ». Un rabat, un corps, rien de
+    # plus : à dix-sept pixels, tout détail de plus devient une tache.
+    "enveloppe": '<rect x="3" y="5.4" width="18" height="13.2" rx="2.2"/>'
+                 '<path d="M3.6 6.6L12 13l8.4-6.4"/>',
     "goutte": '<path d="M12 3.2c3.4 4 5.4 6.6 5.4 9.2a5.4 5.4 0 0 1-10.8 0'
               'c0-2.6 2-5.2 5.4-9.2z"/>',
 }

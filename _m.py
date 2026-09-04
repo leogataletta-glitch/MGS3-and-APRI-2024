@@ -4,7 +4,7 @@ import i18n, filtres, ondes_choc, systeme_page, rapport_donateur, si_je_change  
 
 # « rapport » ne figure plus : le rapport donateur n'est plus une entrée de
 # menu, et le harnais ne doit pas garantir un écran qui n'est plus atteignable.
-PAGES = ["portail","accueil","methodologie","dimensions","boucles","actions","donnees"]
+PAGES = ["portail","accueil","methodologie","dimensions","boucles","actions","donnees","apropos","contact"]
 # LES RUBRIQUES DEVENUES SOUS-ONGLETS RESTENT COUVERTES. Elles ne sont plus
 # des valeurs d'`app_mode` : on les adresse par leur page hôte plus le libellé
 # de la vue à sélectionner. Sans cela, quatre pages entières cesseraient

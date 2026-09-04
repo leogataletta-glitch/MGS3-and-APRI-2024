@@ -26,6 +26,7 @@ import streamlit.components.v1 as components
 
 # `accueil_page` n'est plus appelé : « Le territoire » ne porte plus que
 # ses deux cartes, et son rendu vit dans `territoire_page`.
+import a_propos_page
 import accueil_apri
 import actualites
 import assets
@@ -856,8 +857,41 @@ st.markdown(("""
        rubriques ne collent pas au bord. */
     border-left: none;
     border-radius: 0 14px 14px 0;
-    padding: 12px 12px 16px 16px;
+    padding: 12px 12px 0 16px;
     margin: 0 0 0 -2.6rem;
+    /* ELLE DESCEND JUSQU'EN BAS DE L'ÉCRAN. Le menu s'arrêtait sous sa
+       dernière rubrique : une colonne courte posée en haut d'une page
+       longue, avec du blanc dessous qui n'appartenait ni à la colonne ni à
+       la page. Une hauteur d'écran entière en fait un vrai bord gauche, et
+       ce qui remplit le bas n'est pas du vide mais le paysage et la
+       signature du site.
+
+       LE FACTEUR DE ZOOM EST INDISPENSABLE ICI. `section.stMain` porte un
+       `zoom: .95` que `100vh` ignore : sans la correction, la colonne
+       s'arrête à quatre-vingt-quinze pour cent de la fenêtre et le bas
+       manque. */
+    min-height: calc(100vh * var(--dz) - 20px);
+  }
+  /* LE PIED DE COLONNE EST POUSSÉ EN BAS. `margin-top: auto` dans un
+     conteneur en colonne renvoie l'élément contre le bord bas et absorbe
+     tout l'espace disponible : le menu reste en haut, le paysage se pose au
+     sol, et rien n'a besoin de connaître la hauteur de l'autre. */
+  div[class*="st-key-zone_nav"] div[data-testid="stElementContainer"]:has(
+      .nav-pied) {
+    margin-top: auto !important; flex: 0 0 auto !important;
+  }
+  /* LE PAYSAGE VA D'UN BORD À L'AUTRE, la phrase se pose dessous sur le fond
+     de la colonne. Les marges négatives annulent le rembourrage du menu :
+     une illustration de sol qui garderait douze pixels de blanc à sa gauche
+     ne serait pas un sol. Le coin bas droit est arrondi comme la colonne. */
+  .nav-pied { margin: 26px -12px 0 -16px; overflow: hidden;
+    border-radius: 0 0 13px 0; }
+  .nav-pied svg { display: block; width: 100%; height: 92px; }
+  .nav-pied p {
+    margin: 0; padding: 12px 14px 16px 16px;
+    font-size: 12px; font-weight: 700; line-height: 1.45;
+    color: #1f4b39; letter-spacing: -.01em;
+    background: #bcd5c6;
   }
   /* LES ENTRÉES RESPIRENT. Streamlit colle ses conteneurs d'élément les uns
      aux autres : le fond de survol d'une ligne venait alors toucher celui de
@@ -935,9 +969,13 @@ st.markdown(("""
   @media (max-width: 860px) {
     div[class*="st-key-zone_nav"] {
       flex-direction: row !important; flex-wrap: wrap !important;
-      position: static; border-right: 0;
+      position: static; border-right: 0; min-height: 0 !important;
       border-bottom: 1px solid #eef2f7; padding: 2px 0 6px;
     }
+    /* LE PAYSAGE NE SUIT PAS SUR TÉLÉPHONE. Le menu y est une rangée de
+       boutons, pas une colonne : une illustration au sol n'a plus de sol. */
+    div[class*="st-key-zone_nav"] div[data-testid="stElementContainer"]:has(
+        .nav-pied) { display: none !important; }
     div[class*="st-key-zone_nav"] div[data-testid="stElementContainer"],
     div[class*="st-key-zone_nav"] div[data-testid="stButton"] {
       width: auto !important;
@@ -1487,6 +1525,8 @@ st.markdown(("""
 # ---------------------------------------------------------------------------
 TEXTES_NAV = {
     "mode_accueil": {"en": "The territory", "fr": "Le territoire"},
+    "nav_pied": {"en": "Data for territories that hold.",
+                 "fr": "Des données pour des territoires plus résilients."},
     "mode_methodo": {"en": "Resilience Framework",
                      "fr": "Cadre de résilience"},
     "mode_dimensions": {"en": "Results Analysis",
@@ -1496,6 +1536,8 @@ TEXTES_NAV = {
     "mode_actions": {"en": "Intervention Profiles",
                      "fr": "Fiches d'intervention"},
     "mode_donnees": {"en": "Data", "fr": "Données"},
+    "mode_apropos": {"en": "About APRI", "fr": "À propos d'APRI"},
+    "mode_contact": {"en": "Contact us", "fr": "Nous contacter"},
     "dim1_carte": {
         "en": "Housing, water, sanitation, energy, roads, schools and health "
               "facilities",
@@ -1831,6 +1873,11 @@ def _changer_langue(code):
 MODE_ACCUEIL = "accueil"
 MODES_DIM = ["dim1", "dim2", "dim3", "dim4", "dim5", "dim6"]
 MODE_METHODO, MODE_DONNEES = "methodologie", "donnees"
+# DEUX RUBRIQUES QUI NE MONTRENT PAS DE CHIFFRES, et c'est leur raison d'être.
+# Un tableau de bord qui n'a ni page « à propos » ni adresse où écrire publie
+# des scores sur un territoire habité sans dire qui les a produits ni comment
+# les contester ; les deux manquaient.
+MODE_APROPOS, MODE_CONTACT = "apropos", "contact"
 MODE_ACTIONS = "actions"
 MODE_SYNTHESE = "synthese"
 MODE_BOUCLES = "boucles"
@@ -1852,6 +1899,8 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      "dimensions": T("mode_dimensions"),
                      MODE_METHODO: T("mode_methodo"),
                      MODE_DONNEES: T("mode_donnees"),
+                     MODE_APROPOS: T("mode_apropos"),
+                     MODE_CONTACT: T("mode_contact"),
                      MODE_ACTIONS: T("mode_actions"),
                      MODE_BOUCLES: T("mode_boucles"),
                      MODE_SYNTHESE: T("mode_synthese"),
@@ -1939,7 +1988,9 @@ _NAV_FAMILLES = [
     ("nav_g_analyser", [(MODE_DIMENSIONS, "barres"),
                         (MODE_BOUCLES, "boucle")]),
     ("nav_g_agir", [(MODE_ACTIONS, "fiche")]),
-    ("nav_g_ressources", [(MODE_DONNEES, "telecharger")]),
+    ("nav_g_ressources", [(MODE_DONNEES, "telecharger"),
+                          (MODE_APROPOS, "info"),
+                          (MODE_CONTACT, "enveloppe")]),
 ]
 # LA LISTE PLATE RESTE LA SOURCE UNIQUE dont d'autres vues se servent — elle
 # est dérivée des familles, jamais recopiée à côté d'elles : deux listes des
@@ -2098,6 +2149,34 @@ with _zone_nav:
                         unsafe_allow_html=True)
         for _mode, _icone in _entrees:
             _entree_nav(_mode, _icone)
+    # LE PIED DE LA COLONNE : un paysage et une phrase. Il ne remplit pas un
+    # vide décoratif, il le supprime — la colonne descend maintenant jusqu'au
+    # bas de la fenêtre, et son dernier tiers avait besoin d'appartenir à
+    # quelque chose. Trois crêtes qui s'éclaircissent en s'éloignant, dans le
+    # vert du site, et la phrase qui dit ce que le site fait.
+    #
+    # LE DESSIN EST DU SVG ÉCRIT ICI, PAS UNE IMAGE. Trois courbes pèsent
+    # quatre cents octets, se redessinent net à toutes les tailles, et
+    # prennent la couleur du site sans qu'on ait à régénérer un fichier le
+    # jour où elle change.
+    st.markdown(
+        '<div class="nav-pied">'
+        '<svg viewBox="0 0 240 92" preserveAspectRatio="none" '
+        'role="presentation" aria-hidden="true">'
+        '<defs><linearGradient id="npc" x1="0" y1="0" x2="0" y2="1">'
+        '<stop offset="0" stop-color="#ffffff" stop-opacity=".85"/>'
+        '<stop offset="1" stop-color="#ffffff" stop-opacity="0"/>'
+        '</linearGradient></defs>'
+        '<path d="M0,92 L0,50 C22,36 36,46 54,36 C72,26 86,42 106,33 '
+        'C126,24 142,40 164,31 C186,22 208,38 240,27 L240,92 Z" '
+        'fill="#e3ede6"/>'
+        '<path d="M0,92 L0,66 C26,55 46,62 68,53 C92,43 110,58 134,50 '
+        'C158,42 180,56 240,45 L240,92 Z" fill="#d2e1d8"/>'
+        '<path d="M0,92 L0,79 C30,72 62,77 94,70 C126,63 152,72 240,63 '
+        'L240,92 Z" fill="#bcd5c6"/>'
+        '<rect x="0" y="0" width="240" height="46" fill="url(#npc)"/>'
+        '</svg>'
+        f'<p>{T("nav_pied")}</p></div>', unsafe_allow_html=True)
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
 # l'aiguillage, pour que chaque page se dessine dedans sans avoir à savoir
@@ -2347,6 +2426,12 @@ with _c_contenu:
         # pas lire ce qui a été calculé cette semaine : chaque écran dit ce
         # qu'il a à dire, et celui-ci n'a que des documents à donner.
         telechargements_page.render()
+
+    if app_mode == MODE_APROPOS:
+        a_propos_page.render()
+
+    if app_mode == MODE_CONTACT:
+        a_propos_page.render_contact()
 
 
 # LE PIED EST RENDU HORS DE LA COLONNE DE DROITE, pour qu'il prenne toute la

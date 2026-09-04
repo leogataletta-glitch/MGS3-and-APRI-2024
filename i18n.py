@@ -2146,6 +2146,15 @@ DICO = {
     "d_contenu": {"en": "Contents", "fr": "Contenu"},
     "d_format": {"en": "Format", "fr": "Format"},
 
+    "d_source": {"en": "Household survey 2024",
+                 "fr": "Enquête ménage 2024"},
+    "d_v_questions": {"en": "{n} questions", "fr": "{n} questions"},
+    "d_v_indicateurs": {"en": "{n} indicators", "fr": "{n} indicateurs"},
+    "d_v_dimensions": {"en": "{n} dimensions", "fr": "{n} dimensions"},
+    "d_v_menages": {"en": "{n} households", "fr": "{n} ménages"},
+    "d_v_items": {"en": "{n} items", "fr": "{n} items"},
+    "d_v_organisations": {"en": "{n} organisations",
+                          "fr": "{n} organisations"},
     "d1_titre": {
         "en": "1 · Descriptive results, all 503 questions by sub-population",
         "fr": "1 · Résultats descriptifs, les 503 questions par sous-population"},
