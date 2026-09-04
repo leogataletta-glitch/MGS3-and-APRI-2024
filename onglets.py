@@ -35,19 +35,29 @@ STYLE = """
   div[class*="st-key-ong_"] div[data-testid="stRadio"] {
       width: 100% !important;
   }
+  /* UNE BANDE CONTINUE, PAS UNE RANGÉE DE CARTES. Sept cartes détachées, avec
+     leur bord, leur arrondi et leur ombre, faisaient sept objets à examiner
+     là où il n'y a qu'un seul réglage : la rubrique ouverte. Accolées,
+     séparées par un filet et posées sur une ligne de base commune, elles
+     redeviennent ce qu'elles sont — une barre d'onglets — et l'onglet ouvert
+     se lit à son filet vert et à son fond pâle, pas à sa forme. */
   div[class*="st-key-ong_"] div[role="radiogroup"] {
       display: flex !important; flex-wrap: wrap !important;
-      gap: 10px !important; width: 100% !important;
-      align-items: stretch; margin: 2px 0 16px;
+      gap: 0 !important; width: 100% !important;
+      align-items: stretch; margin: 2px 0 18px;
+      border-bottom: 1px solid #e4eae6;
   }
   div[class*="st-key-ong_"] div[role="radiogroup"] > label {
       flex: 1 1 150px !important; min-width: 0 !important;
       margin: 0 !important; cursor: pointer; position: relative;
       background: #fff !important;
-      border: 1px solid #e3eaf3 !important; border-radius: 12px !important;
-      padding: 13px 15px 14px !important;
-      transition: border-color .15s ease, background .15s ease,
-                  box-shadow .15s ease;
+      border: 0 !important; border-radius: 0 !important;
+      border-right: 1px solid #eef2f7 !important;
+      padding: 11px 16px 12px !important;
+      transition: background .15s ease, box-shadow .15s ease;
+  }
+  div[class*="st-key-ong_"] div[role="radiogroup"] > label:last-child {
+      border-right: 0 !important;
   }
   /* LA PASTILLE RONDE DU SÉLECTEUR EST ENFOUIE DE TROIS NIVEAUX et n'est ni le
      premier enfant du label ni un pseudo-élément — d'où le chemin complet. */
@@ -56,53 +66,50 @@ STYLE = """
   div[class*="st-key-ong_"] div[role="radiogroup"] > label > div > div {
       gap: 0 !important; width: 100% !important;
   }
-  /* La première ligne est le titre, la seconde la description : deux
-     paragraphes dans le même libellé, et le CSS les distingue par leur rang
-     plutôt que par une classe qu'on ne peut pas poser dans un libellé. */
-  /* LE LIBELLÉ EST CENTRÉ, EN PETITES CAPITALES, ET SANS GRAS. Le gras d'un
-     titre de carte le faisait lire comme un titre de section ; ce sont des
-     onglets, et une capitale espacée dit « rubrique » sans peser. Le
-     centrage vaut aussi verticalement — les cartes s'étirent à la hauteur de
-     la plus haute, et un libellé collé en haut d'une carte de deux lignes
-     laissait un vide sous lui. */
+  /* LE LIBELLÉ EST FERRÉ À GAUCHE. Centré, un titre de deux lignes et sa
+     description formaient un bloc flottant au milieu de la case ; aligné à
+     gauche, l'œil descend la colonne des titres d'un seul mouvement, ce qui
+     est la façon dont on lit une barre de sept rubriques. */
   div[class*="st-key-ong_"] div[role="radiogroup"] > label > div,
   div[class*="st-key-ong_"] div[role="radiogroup"] > label > div > div {
       height: 100% !important;
       display: flex !important; flex-direction: column !important;
-      justify-content: center !important; align-items: center !important;
+      justify-content: flex-start !important; align-items: flex-start !important;
   }
   div[class*="st-key-ong_"] div[role="radiogroup"] > label p {
-      margin: 0 !important; text-align: center !important;
+      margin: 0 !important; text-align: left !important;
   }
+  /* La première ligne est le titre, la seconde la description : deux
+     paragraphes dans le même libellé, et le CSS les distingue par leur rang
+     plutôt que par une classe qu'on ne peut pas poser dans un libellé. */
   div[class*="st-key-ong_"] div[role="radiogroup"] > label p:first-child {
-      font-size: 11.5px !important; font-weight: 500 !important;
-      letter-spacing: .09em !important; text-transform: uppercase !important;
-      color: #3c4761 !important; line-height: 1.35 !important;
+      font-size: 11px !important; font-weight: 700 !important;
+      letter-spacing: .08em !important; text-transform: uppercase !important;
+      color: #3c4761 !important; line-height: 1.3 !important;
   }
   div[class*="st-key-ong_"] div[role="radiogroup"] > label p:not(:first-child) {
-      font-size: 11.5px !important; font-weight: 400 !important;
-      color: #6b7590 !important; line-height: 1.45 !important;
-      margin-top: 5px !important;
+      font-size: 11px !important; font-weight: 400 !important;
+      color: #8a93a5 !important; line-height: 1.4 !important;
+      margin-top: 4px !important;
   }
   div[class*="st-key-ong_"] div[role="radiogroup"] > label:hover {
-      border-color: #c6d3c9 !important; background: #fbfdfc !important;
+      background: #fafcfb !important;
   }
-  /* L'ONGLET COURANT : un fond très pâle, un bord vert et un filet plein en
-     haut. Un fond saturé, sur une rangée de sept, aurait fait une tache ; le
-     filet dit la même chose sans peser, et il se lit même en niveaux de gris. */
+  /* L'ONGLET COURANT : un fond très pâle et un filet plein en haut. Un fond
+     saturé, sur une rangée de sept, aurait fait une tache ; le filet dit la
+     même chose sans peser, et il se lit même en niveaux de gris. */
   div[class*="st-key-ong_"] div[role="radiogroup"]
       > label:has(input:checked) {
-      background: #f4f9f6 !important;
-      border-color: #2a6b3f !important;
+      background: #f2f8f4 !important;
       box-shadow: inset 0 3px 0 0 #2a6b3f !important;
   }
   div[class*="st-key-ong_"] div[role="radiogroup"]
       > label:has(input:checked) p:first-child {
-      color: #1a6b52 !important; font-weight: 700 !important;
+      color: #1a6b52 !important;
   }
   div[class*="st-key-ong_"] div[role="radiogroup"]
       > label:has(input:checked) p:not(:first-child) {
-      color: #3c4761 !important;
+      color: #6b7590 !important;
   }
   /* SUR ÉCRAN ÉTROIT LES CASES SE METTENT À DEUX PAR RANGÉE. Sept cartes de
      cent cinquante pixels sur un téléphone donneraient sept lignes ; deux
@@ -116,9 +123,7 @@ STYLE = """
   }
 
   /* LES ONGLETS NATIFS DE STREAMLIT, LÀ OÙ IL EN RESTE, empruntent la même
-     famille : mêmes graisses, même vert, même filet. Ils vivent deux niveaux
-     plus bas que la barre de page et n'ont pas de description à porter ; ce
-     qui doit se ressembler, c'est la façon dont l'onglet courant se signale. */
+     famille : mêmes graisses, même vert, même filet. */
   div[data-testid="stTabs"] button[data-baseweb="tab"] p {
       font-size: 12.5px !important; font-weight: 600 !important;
       color: #6b7590 !important;
