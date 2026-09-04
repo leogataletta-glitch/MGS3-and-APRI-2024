@@ -1660,11 +1660,6 @@ TEXTES_NAV = {
     "ra_src": {"en": "Measured by", "fr": "Mesuré par"},
     "ra_e1_t": {"en": "Select your data source",
                 "fr": "Choisissez votre source de données"},
-    "ra_e1_x": {
-        "en": "Each source answers a different question, and none of them "
-              "measures the same thing.",
-        "fr": "Chaque source répond à une question différente, et aucune ne "
-              "mesure la même chose."},
     "ra_src_menages": {"en": "Household survey",
                        "fr": "Enquête ménage"},
     "ra_src_satellite": {"en": "Satellite", "fr": "Satellite"},
@@ -2195,8 +2190,7 @@ with _c_contenu:
             st.markdown(
                 f'<div class="ex-etape"><span class="n">1</span>'
                 f'<span class="t">{T("ra_e1_t")}</span>'
-                f'<span class="l"></span></div>'
-                f'<p class="ex-etape-x">{T("ra_e1_x")}</p>',
+                f'<span class="l"></span></div>',
                 unsafe_allow_html=True)
             _src = onglets.barre(
                 "ra_source",

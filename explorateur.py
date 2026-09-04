@@ -205,6 +205,8 @@ TEXTES = {
                 "fr": "{k} ménages correspondent à votre sélection, sur {n} "
                       "({p} %)."},
     "ex_voir": {"en": "View as", "fr": "Afficher en"},
+    "ex_theme": {"en": "Theme", "fr": "Thème"},
+    "ex_theme_tous": {"en": "All themes", "fr": "Tous les thèmes"},
     "ex_dl": {"en": "Download results", "fr": "Télécharger les résultats"},
     "ex_filtres_x": {
         "en": "Several options can be picked in the same field: they add up. "
@@ -908,8 +910,13 @@ def _csv(lignes, mesure):
     return tampon.getvalue().encode("utf-8-sig")
 
 
-def _libelle_question(q):
-    return libelles_enquete.libelle(q)
+def _nom_theme(cat):
+    """Le nom du module, sans son code de lettre."""
+    return libelles_enquete.module(cat or "").split(". ", 1)[-1]
+
+
+def _libelle_question(q, avec_theme=True):
+    return libelles_enquete.libelle(q, avec_module=avec_theme)
 
 
 def render(cat, mode=None):
@@ -962,16 +969,36 @@ def render(cat, mode=None):
                              format_func=lambda c: libs.get(c, c))
     if mesure == "part":
         # ---- 2 · la question, la réponse, la ventilation, le dessin ------
+        # LE THÈME D'ABORD, LA QUESTION ENSUITE. Quatre cent quatre-vingt-
+        # trois questions dans un seul menu se cherchent à l'aveugle : on
+        # déroulait une liste de la hauteur de six écrans en espérant
+        # reconnaître un intitulé au passage. Le questionnaire est déjà
+        # découpé en modules — l'eau, l'élevage, la migration, le foncier —
+        # et ce découpage-là est celui dans lequel on pense sa question. Un
+        # thème choisi, il reste une dizaine de lignes ; aucun thème choisi,
+        # la liste entière reste accessible pour qui sait ce qu'il cherche.
         _etape(2, "ex_e2_t", aide="ex_e2_x")
-        g, d = st.columns([1.55, 1])
-        with g:
+        _themes = sorted({x.get("category") or "" for x in questions},
+                         key=lambda c: _nom_theme(c).lower())
+        t1, t2, t3 = st.columns([1.15, 1.75, 1])
+        with t1:
+            theme = st.selectbox(
+                T("ex_theme"), [None] + _themes, key="ex_theme",
+                format_func=lambda c: (T("ex_theme_tous") if c is None
+                                       else _nom_theme(c)))
+        vues = [x for x in questions
+                if theme is None or (x.get("category") or "") == theme]
+        with t2:
+            # LA CLÉ DÉPEND DU THÈME : sans cela, changer de thème garderait
+            # la question du thème précédent, qui n'est plus dans la liste.
             qi = st.selectbox(
-                T("ex_question"), [x["i"] for x in questions],
-                key="ex_q",
+                T("ex_question"), [x["i"] for x in vues],
+                key=f"ex_q_{theme or 'tous'}",
                 format_func=lambda i: _libelle_question(
-                    next(x for x in questions if x["i"] == i)))
-        q = next(x for x in questions if x["i"] == qi)
-        with d:
+                    next(x for x in vues if x["i"] == i),
+                    avec_theme=theme is None))
+        q = next(x for x in vues if x["i"] == qi)
+        with t3:
             # LA CLÉ DE LA RÉPONSE DÉPEND DE LA QUESTION : sans cela, changer
             # de question garderait l'index de l'ancienne réponse et
             # afficherait une modalité qui n'a rien à voir.
