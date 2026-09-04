@@ -63,30 +63,6 @@
    "acteurs_fr": "Services de santé communaux, DINEPA, organisations communautaires de base, écoles",
    "risque_en": "Building latrines without maintenance arrangements produces facilities abandoned within a year. The survey already shows a third of latrines are pits without a slab.",
    "risque_fr": "Construire des latrines sans dispositif d'entretien produit des installations abandonnées en un an. L'enquête montre déjà qu'un tiers des latrines sont des fosses sans dalle."
-  },
-  {
-   "cle": "agriculture",
-   "constat": "agriculture",
-   "titre_en": "Farming without irrigation, in a territory naming drought first",
-   "titre_fr": "Cultiver sans irrigation, dans un territoire qui cite la sécheresse en premier",
-   "corps_en": "Agriculture is the first income source for close to six households in ten, more than half of those who farm have no water source to irrigate, and where yields fell drought is the reason given first, well ahead of disease or wind. Yields, food insecurity and charcoal income are linked in a single loop: a failed harvest pushes a household towards cutting wood, which degrades the watershed, which makes the next harvest more fragile. The hypothesis is that water retention at plot and watershed scale acts on several points of that loop at once, unlike an input subsidy which acts on one.",
-   "corps_fr": "L'agriculture est la première source de revenus pour près de six ménages sur dix, plus de la moitié de ceux qui cultivent n'ont aucune source d'eau pour irriguer, et là où les rendements ont baissé la sécheresse est citée en premier, loin devant les maladies ou le vent. Rendements, insécurité alimentaire et revenu du charbon tiennent dans une même boucle : une récolte manquée pousse un ménage à couper du bois, ce qui dégrade le bassin versant, ce qui fragilise la récolte suivante. L'hypothèse est que la rétention d'eau à l'échelle de la parcelle et du bassin versant agit sur plusieurs points de cette boucle à la fois, contrairement à une subvention d'intrants qui n'agit que sur un.",
-   "acteurs_en": "Agricultural cooperatives, Ministry of Agriculture, watershed committees",
-   "acteurs_fr": "Coopératives agricoles, Ministère de l'Agriculture, comités de bassin versant",
-   "risque_en": "Water schemes concentrate benefits on those holding land with title, 52 percent of respondents. Access arrangements for the others have to be part of the design.",
-   "risque_fr": "Les aménagements hydrauliques concentrent le bénéfice sur ceux qui détiennent un terrain avec titre, 52 % des répondants. Les modalités d'accès pour les autres doivent faire partie de la conception."
-  },
-  {
-   "cle": "mesure",
-   "constat": null,
-   "titre_en": "Close the measurement gaps before the next assessment",
-   "titre_fr": "Combler les trous de mesure avant la prochaine évaluation",
-   "corps_en": "Of the 128 indicators in the index, 51 are scored. The rest are missing for identifiable and mostly fixable reasons: satellite-derived environmental indicators have never been computed, the institutional forms on health, schools and CASEC exist but carry no communal-section identifier, and population denominators by section are absent, which blocks every rate per 100,000 inhabitants. This is not a finding about the territory, it is a finding about the assessment, and it is the cheapest thing on this page to act on.",
-   "corps_fr": "Sur les 128 indicateurs de l'indice, 51 sont scorés. Les autres manquent pour des raisons identifiables et le plus souvent réparables : les indicateurs environnementaux issus de l'imagerie satellitaire n'ont jamais été calculés, les formulaires institutionnels de santé, d'écoles et de CASEC existent mais ne portent aucun identifiant de section communale, et les dénominateurs de population par section sont absents, ce qui bloque tout taux pour 100 000 habitants. Ce n'est pas un constat sur le territoire, c'est un constat sur l'évaluation, et c'est la chose la moins coûteuse à traiter de cette page.",
-   "acteurs_en": "UNEP project team, field survey partners, KoBoToolbox administrators",
-   "acteurs_fr": "Équipe projet PNUE, partenaires d'enquête de terrain, administrateurs KoBoToolbox",
-   "risque_en": "A composite index carries a circularity risk the article itself names: resilience is defined by the variables assumed to produce it. Adding indicators does not by itself make the index more true.",
-   "risque_fr": "Un indice composite porte un risque de circularité que l'article nomme lui-même : la résilience est définie par les variables censées la produire. Ajouter des indicateurs ne rend pas l'indice plus vrai pour autant."
   }
  ]
 }
