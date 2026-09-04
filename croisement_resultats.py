@@ -43,6 +43,7 @@ import croisement_moteur as M
 # qu'on se pose en arrivant.
 import explorateur
 import i18n
+import libelles_enquete
 import map_render
 from i18n import T
 
@@ -328,8 +329,7 @@ def _options(cat):
         opts.append(lib)
         meta[lib] = ("groupe", nom)
     for q in cat["questions"]:
-        mod = (q.get("category") or "").split(". ", 1)[-1]
-        lib = f'{mod} · {q["question"]}'
+        lib = libelles_enquete.libelle(q)
         # Deux questions peuvent porter le même libellé dans deux modules :
         # on suffixe par l'indice pour que la clé reste unique et stable.
         if lib in meta:
@@ -401,6 +401,7 @@ def _constructeur(cat, cle, couleur, titre):
                 q = next(x for x in cat["questions"] if x["i"] == ref)
                 cl["modalites"] = st.multiselect(
                     T("cx_valeurs"), q["modalites"],
+                    format_func=libelles_enquete.modalite,
                     default=[m for m in cl.get("modalites", [])
                              if m in q["modalites"]],
                     key=f"cx_m_{cle}_{k}_{ref}_{i18n.get_lang()}",

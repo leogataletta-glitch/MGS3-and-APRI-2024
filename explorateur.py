@@ -32,6 +32,7 @@ import streamlit as st
 
 import croisement_moteur as M
 import i18n
+import libelles_enquete
 import map_render
 import radar
 from i18n import T
@@ -824,8 +825,7 @@ def _tableau(lignes, ens, mesure):
 
 
 def _libelle_question(q):
-    mod = (q.get("category") or "").split(". ", 1)[-1]
-    return f'{mod} · {q["question"]}'
+    return libelles_enquete.libelle(q)
 
 
 def render(cat, mode=None):
@@ -890,8 +890,11 @@ def render(cat, mode=None):
             # LA CLÉ DE LA RÉPONSE DÉPEND DE LA QUESTION : sans cela, changer
             # de question garderait l'index de l'ancienne réponse et
             # afficherait une modalité qui n'a rien à voir.
+            # LA VALEUR RETENUE RESTE LE LIBELLÉ FRANÇAIS : c'est lui qui
+            # indexe les masques binaires. Seul l'affichage est traduit.
             modalite = st.selectbox(f'2 · {T("ex_reponse")}', q["modalites"],
-                                    key=f"ex_m_{qi}")
+                                    key=f"ex_m_{qi}",
+                                    format_func=libelles_enquete.modalite)
 
     # ---- 2 · la ventilation, le format, les extrêmes ---------------------
     # UNE SEULE VENTILATION À LA FOIS, ET C'EST UN CHOIX, PAS UNE LIMITE. Le
@@ -967,7 +970,7 @@ def render(cat, mode=None):
         # sous le dessin plutôt que laissée à deviner.
         vals = [((l["part"] / 10 if mesure == "part" else l["part"])
                  if l["part"] is not None else None) for l in montrees]
-        nom = (_e(modalite) if mesure == "part"
+        nom = (_e(libelles_enquete.modalite(modalite)) if mesure == "part"
                else {c: l for c, l, _i in _cibles(cat)}.get(
                    cible or "global", T("ex_m_score")))
         svg = radar.render_radar_svg(

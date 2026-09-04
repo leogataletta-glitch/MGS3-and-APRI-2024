@@ -313,8 +313,17 @@ st.markdown(("""
      retirés sont ceux que Streamlit retire lui-même : l'enveloppe du dernier
      bloc est mesurée seize pixels plus courte que son contenu, et c'est
      constant, quelle que soit la fenêtre et quel que soit le zoom. */
+  /* LE BLOC PRINCIPAL EST ÉTIRÉ À LA HAUTEUR RÉELLE DE LA FENÊTRE. Réduit à
+     quatre-vingt-quinze pour cent par le zoom, il s'arrêtait un vingtième
+     d'écran trop haut : le pied se posait là, et les cinquante pixels qui
+     restaient dessous étaient remplis par le vert du fond. La bande verte
+     paraissait alors deux fois trop épaisse. Étiré de `--dz` — l'inverse du
+     facteur de zoom — il va jusqu'au bord, et le pied avec lui. */
+  section[data-testid="stMain"], div[data-testid="stMain"] {
+      min-height: calc(100vh * var(--dz));
+  }
   div[data-testid="stMainBlockContainer"] > div[data-testid="stVerticalBlock"] {
-      min-height: calc(100vh - 16px);
+      min-height: calc(100vh * var(--dz) - 16px);
   }
   /* ET LE FOND DE L'APPLICATION EST VERT, PARCE QUE LE ZOOM LAISSE UNE
      BANDE. Le bloc principal est réduit à quatre-vingt-quinze pour cent :
