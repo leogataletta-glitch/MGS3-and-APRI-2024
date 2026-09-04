@@ -34,6 +34,11 @@ DATA = os.path.join(APP_DIR, "data")
 
 ENCRE, ENCRE2, ENCRE3 = "#101728", "#3c4761", "#6b7590"
 VERT, VERT_PALE = "#1f5b46", "#eef4f0"
+# L'ADRESSE À LAQUELLE ON ÉCRIT, EN UN SEUL ENDROIT. Une adresse recopiée dans
+# deux libellés de langue se corrige un jour dans l'un et pas dans l'autre, et
+# la version anglaise du site continue d'envoyer le courrier au mauvais
+# endroit ; celle-ci ne se traduit pas, elle est la même partout.
+COURRIEL = "florent.leo@un.org"
 BORD = "#e4eae6"
 
 TEXTES = {
@@ -133,8 +138,6 @@ TEXTES = {
               "correction, ou une demande de données qui ne sont pas "
               "publiées ici."},
     "ap_c_mail": {"en": "By email", "fr": "Par courriel"},
-    "ap_c_mail_x": {"en": "Address to be added.",
-                    "fr": "Adresse à compléter."},
     "ap_c_qui": {"en": "Who answers", "fr": "Qui répond"},
     "ap_c_qui_x": {
         "en": "The UNEP project team in charge of the assessment.",
@@ -248,8 +251,9 @@ def render_contact():
     st.markdown(
         '<div class="ap-b">'
         f'<div class="ap-c"><div class="ap-c-t">{_e(T("ap_c_mail"))}</div>'
-        f'<div class="ap-c-x ap-todo" style="margin:0">'
-        f'{_e(T("ap_c_mail_x"))}</div></div>'
+        f'<div class="ap-c-x"><a href="mailto:{COURRIEL}" '
+        f'style="color:#1f5b46;font-weight:600;text-decoration:none">'
+        f'{COURRIEL}</a></div></div>'
         f'<div class="ap-c"><div class="ap-c-t">{_e(T("ap_c_qui"))}</div>'
         f'<div class="ap-c-x">{_e(T("ap_c_qui_x"))}</div></div>'
         f'<div class="ap-c"><div class="ap-c-t">{_e(T("ap_c_donnees"))}</div>'

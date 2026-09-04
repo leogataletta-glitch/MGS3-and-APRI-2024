@@ -829,12 +829,16 @@ st.markdown(("""
   div[class*="st-key-zone_nav"] {
     display: flex !important; flex-direction: column !important;
     align-items: stretch !important; gap: 1px !important;
-    /* COLLANTE, PAS FLOTTANTE. Elle suit la page quand on descend et
-       s'arrête d'elle-même en haut de la fenêtre ; elle ne recouvre jamais
-       le contenu, qui a sa propre colonne. `align-self: flex-start` est
-       indispensable : sans lui la colonne de Streamlit s'étire sur toute la
-       hauteur de la page et `sticky` n'a plus rien à quoi se coller. */
-    position: sticky; top: 10px; align-self: flex-start;
+    /* ELLE VA JUSQU'AU BAS DE LA PAGE, ET C'EST CE QUI LUI FAIT PERDRE SON
+       CARACTÈRE COLLANT. Les deux ne peuvent pas coexister : `sticky` exige
+       `align-self: flex-start`, qui empêche précisément la colonne de
+       s'étirer sur la hauteur de la rangée. Entre un menu qui suit le
+       défilement et un bord gauche qui descend jusqu'au pied vert, sans
+       bande blanche entre les deux, c'est le second qui a été demandé.
+       `stretch` laisse la colonne prendre toute la hauteur du contenu, et
+       la hauteur d'écran ne sert plus que de plancher pour les pages
+       courtes. */
+    align-self: stretch;
     border: 1px solid #e4e2de;
     /* LE FOND EST POSÉ SUR LA COLONNE, PAS DERRIÈRE ELLE. Un dégradé qui
        blanchit à mi-hauteur disparaissait avant le bas de la liste : la
@@ -856,7 +860,10 @@ st.markdown(("""
        elle, et le rembourrage gauche est augmenté d'autant pour que les
        rubriques ne collent pas au bord. */
     border-left: none;
-    border-radius: 0 14px 14px 0;
+    /* LE COIN BAS DROIT EST CARRÉ, PARCE QUE LA COLONNE NE S'ARRÊTE PLUS :
+       elle va rejoindre le pied vert. Un angle arrondi au-dessus d'un
+       bandeau plein dessinerait une marche. */
+    border-radius: 0 14px 0 0;
     padding: 12px 12px 0 16px;
     margin: 0 0 0 -2.6rem;
     /* ELLE DESCEND JUSQU'EN BAS DE L'ÉCRAN. Le menu s'arrêtait sous sa
@@ -884,13 +891,22 @@ st.markdown(("""
      de la colonne. Les marges négatives annulent le rembourrage du menu :
      une illustration de sol qui garderait douze pixels de blanc à sa gauche
      ne serait pas un sol. Le coin bas droit est arrondi comme la colonne. */
-  .nav-pied { margin: 26px -12px 0 -16px; overflow: hidden;
-    border-radius: 0 0 13px 0; }
-  .nav-pied svg { display: block; width: 100%; height: 92px; }
+  .nav-pied { margin: 26px -12px 0 -16px; }
+  .nav-pied svg { display: block; width: 100%; height: 108px; }
+  /* LE BANDEAU DE LA DEVISE DÉBORDE SOUS LA COLONNE, EXPRÈS. Entre le bas de
+     la colonne et le pied vert reste la marge haute du pied — une bande
+     blanche de trente à quarante pixels que la colonne, elle, ne peut pas
+     couvrir puisqu'elle s'arrête avant. Le bandeau descend donc plus bas que
+     sa boîte ; ce qui dépasse sous le pied vert est recouvert par lui, et il
+     vaut mieux dépasser que laisser paraître le blanc. */
   .nav-pied p {
-    margin: 0; padding: 12px 14px 16px 16px;
+    margin: 0 0 -44px; padding: 12px 14px 60px 16px;
     font-size: 12px; font-weight: 700; line-height: 1.45;
     color: #1f4b39; letter-spacing: -.01em;
+    /* LE TEXTE EST FERRÉ À GAUCHE, PAS JUSTIFIÉ. La feuille du site justifie
+       les paragraphes ; sur quatre mots dans une colonne étroite, la
+       justification creuse des rivières de blanc entre eux. */
+    text-align: left !important;
     background: #bcd5c6;
   }
   /* LES ENTRÉES RESPIRENT. Streamlit colle ses conteneurs d'élément les uns
@@ -969,7 +985,7 @@ st.markdown(("""
   @media (max-width: 860px) {
     div[class*="st-key-zone_nav"] {
       flex-direction: row !important; flex-wrap: wrap !important;
-      position: static; border-right: 0; min-height: 0 !important;
+      align-self: auto; border-right: 0; min-height: 0 !important;
       border-bottom: 1px solid #eef2f7; padding: 2px 0 6px;
     }
     /* LE PAYSAGE NE SUIT PAS SUR TÉLÉPHONE. Le menu y est une rangée de
@@ -1525,8 +1541,6 @@ st.markdown(("""
 # ---------------------------------------------------------------------------
 TEXTES_NAV = {
     "mode_accueil": {"en": "The territory", "fr": "Le territoire"},
-    "nav_pied": {"en": "Data for territories that hold.",
-                 "fr": "Des données pour des territoires plus résilients."},
     "mode_methodo": {"en": "Resilience Framework",
                      "fr": "Cadre de résilience"},
     "mode_dimensions": {"en": "Results Analysis",
@@ -2161,22 +2175,57 @@ with _zone_nav:
     # jour où elle change.
     st.markdown(
         '<div class="nav-pied">'
-        '<svg viewBox="0 0 240 92" preserveAspectRatio="none" '
+        '<svg viewBox="0 0 240 108" preserveAspectRatio="none" '
         'role="presentation" aria-hidden="true">'
-        '<defs><linearGradient id="npc" x1="0" y1="0" x2="0" y2="1">'
-        '<stop offset="0" stop-color="#ffffff" stop-opacity=".85"/>'
-        '<stop offset="1" stop-color="#ffffff" stop-opacity="0"/>'
-        '</linearGradient></defs>'
-        '<path d="M0,92 L0,50 C22,36 36,46 54,36 C72,26 86,42 106,33 '
-        'C126,24 142,40 164,31 C186,22 208,38 240,27 L240,92 Z" '
-        'fill="#e3ede6"/>'
-        '<path d="M0,92 L0,66 C26,55 46,62 68,53 C92,43 110,58 134,50 '
-        'C158,42 180,56 240,45 L240,92 Z" fill="#d2e1d8"/>'
-        '<path d="M0,92 L0,79 C30,72 62,77 94,70 C126,63 152,72 240,63 '
-        'L240,92 Z" fill="#bcd5c6"/>'
-        '<rect x="0" y="0" width="240" height="46" fill="url(#npc)"/>'
+        '<defs>'
+        # Le haut du dessin se fond dans la colonne : sans ce voile, la
+        # crête la plus lointaine se découpe net sur le vert pâle et
+        # ressemble à une bordure plutôt qu'à un horizon.
+        '<linearGradient id="npc" x1="0" y1="0" x2="0" y2="1">'
+        '<stop offset="0" stop-color="#f6faf7" stop-opacity="1"/>'
+        '<stop offset="1" stop-color="#f6faf7" stop-opacity="0"/>'
+        '</linearGradient>'
+        '<linearGradient id="npr" x1="0" y1="0" x2="0" y2="1">'
+        '<stop offset="0" stop-color="#eaf3ee"/>'
+        '<stop offset="1" stop-color="#cfe2d6"/>'
+        '</linearGradient>'
+        '</defs>'
+        # LES CRÊTES LOINTAINES, les plus pâles : elles ferment l'horizon
+        # au-dessus de la vallée.
+        '<path d="M0,108 L0,44 C18,32 30,38 44,30 C58,22 70,34 86,28 '
+        'C104,21 118,33 138,27 C158,21 176,32 200,26 C216,22 228,30 240,25 '
+        'L240,108 Z" fill="#e6efe9"/>'
+        # LE VERSANT DE GAUCHE ET CELUI DE DROITE, qui descendent l'un vers
+        # l'autre : c'est leur rencontre qui fait la vallée, et le fond de
+        # vallée passe entre les deux.
+        '<path d="M0,108 L0,52 C26,58 52,70 74,84 C88,93 96,100 102,108 Z" '
+        'fill="#cfe0d6"/>'
+        '<path d="M240,108 L240,48 C214,54 190,66 168,80 C152,90 144,100 '
+        '140,108 Z" fill="#cfe0d6"/>'
+        # LE FOND DE VALLÉE : une bande claire qui remonte entre les deux
+        # versants, et la rivière qui y serpente.
+        '<path d="M102,108 C108,96 118,86 121,74 C124,86 134,96 140,108 Z" '
+        'fill="url(#npr)"/>'
+        '<path d="M121,76 C119,86 126,92 122,100 C119,104 120,106 121,108" '
+        'fill="none" stroke="#a8c8b6" stroke-width="1.6" '
+        'stroke-linecap="round"/>'
+        # LES VERSANTS DU PREMIER PLAN, plus sombres, qui posent le sol.
+        '<path d="M0,108 L0,74 C22,78 44,88 60,100 C66,104 70,106 73,108 Z" '
+        'fill="#bcd5c6"/>'
+        '<path d="M240,108 L240,70 C216,75 194,86 178,99 C172,104 169,106 '
+        '166,108 Z" fill="#bcd5c6"/>'
+        # TROIS ARBRES sur le versant de gauche, à l'échelle du dessin : ils
+        # donnent au paysage une taille, ce qu'un profil de collines seul ne
+        # fait pas.
+        '<path d="M30,88 l4.5,9 h-9 z M30,82 l3.6,7.5 h-7.2 z" '
+        'fill="#9dbfab"/>'
+        '<path d="M44,95 l4,8 h-8 z M44,90 l3.2,6.6 h-6.4 z" '
+        'fill="#9dbfab"/>'
+        '<path d="M197,92 l4.2,8.6 h-8.4 z M197,86 l3.4,7 h-6.8 z" '
+        'fill="#9dbfab"/>'
+        '<rect x="0" y="0" width="240" height="34" fill="url(#npc)"/>'
         '</svg>'
-        f'<p>{T("nav_pied")}</p></div>', unsafe_allow_html=True)
+        f'<p>{T("pied_devise")}</p></div>', unsafe_allow_html=True)
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
 # l'aiguillage, pour que chaque page se dessine dedans sans avoir à savoir
