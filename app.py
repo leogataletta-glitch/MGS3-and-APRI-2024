@@ -1574,9 +1574,6 @@ TEXTES_NAV = {
         "en": "Open the interactive system — hold variables and watch it settle",
         "fr": "Ouvrir le système interactif — tenir des variables et le "
               "regarder se poser"},
-    "sx_deplier_onde": {
-        "en": "Watch the wave travel, step by step",
-        "fr": "Regarder la vague voyager, pas à pas"},
     # LA DESCRIPTION DE CHAQUE ONGLET, une ligne, sous son titre. Elle dit ce
     # qu'on y trouve plutôt que comment ça s'appelle : « Par paysage » oblige
     # à cliquer pour savoir, « ce qui distingue un paysage du reste » laisse
@@ -1610,6 +1607,9 @@ TEXTES_NAV = {
               "fr": "Pousser plusieurs variables à la fois"},
     "sx_d5": {"en": "Wave after wave, and what the loops add",
               "fr": "Vague après vague, et ce que les boucles ajoutent"},
+    "sx_d6": {"en": "Push a variable and watch the system move, live",
+              "fr": "Poussez une variable et regardez le système bouger, "
+                    "en direct"},
     "ra_srcd_menages": {"en": "1,211 households, 483 questions",
                         "fr": "1 211 ménages, 483 questions"},
     "ra_srcd_satellite": {"en": "Forest cover and vegetation indices",
@@ -2293,11 +2293,11 @@ with _c_contenu:
         # boucles et les propagations seraient calculées ensemble pour n'en
         # montrer qu'une. Un sélecteur ne rend que ce qu'on regarde.
         _CODES_SX = ["construire", "relations", "leviers", "simuler",
-                     "vagues"]
+                     "vagues", "direct"]
         _N_SX = dict(zip(_CODES_SX, ("sx_o1", "sx_o2", "sx_o3", "sx_o4",
-                                     "sx_o5")))
+                                     "sx_o5", "sx_o6")))
         _D_SX = dict(zip(_CODES_SX, ("sx_d1", "sx_d2", "sx_d3", "sx_d4",
-                                     "sx_d5")))
+                                     "sx_d5", "sx_d6")))
         _vue = onglets.barre("bcl_vue", _CODES_SX,
                              titre=lambda c: T(_N_SX[c]),
                              description=lambda c: T(_D_SX[c]),
@@ -2312,10 +2312,17 @@ with _c_contenu:
             systeme_complexe.render_simuler()
             with st.expander(T("sx_deplier_syst")):
                 systeme_page.render(entete=False)
-        else:
+        elif _vue == "vagues":
             systeme_complexe.render_vagues()
-            with st.expander(T("sx_deplier_onde")):
-                ondes_choc.render(entete=False)
+        else:
+            # L'ANIMATION SORT DU VOLET REPLIÉ ET DEVIENT UN ONGLET. Elle était
+            # rangée sous les tableaux de vagues, derrière un titre qu'il
+            # fallait déplier : personne ne trouvait le seul écran où le
+            # système bouge vraiment. C'est le contraire de ce qu'il fallait
+            # faire — voir l'onde partir d'une variable et traverser le
+            # graphe est ce qui rend une boucle causale compréhensible, et
+            # cela se met en avant, pas en annexe.
+            ondes_choc.render(entete=False)
 
     if app_mode == MODE_ACTIONS:
         # Les fiches descendent des leviers calculés par l'analyse des boucles.

@@ -80,6 +80,8 @@ TEXTES = {
               "fr": "Tester des interventions"},
     "sx_o5": {"en": "See System-Wide Impacts",
               "fr": "Voir les impacts sur tout le système"},
+    "sx_o6": {"en": "Run the System Live",
+              "fr": "Faire tourner le système en direct"},
     "sx_centre": {"en": "Central variable", "fr": "Variable centrale"},
     "sx_prof": {"en": "Depth", "fr": "Profondeur"},
     "sx_prof_x": {
@@ -952,11 +954,28 @@ def _scenario(m, s, dedans):
     d'entre elles. C'est exactement ce que le calcul fait ici.
     """
     dispo = sorted(dedans, key=lambda i: m["noms"][i])
-    defaut = [s["centre"]] if s["centre"] in dispo else []
+    # LA REMISE À ZÉRO SE FAIT ICI, AVANT LE WIDGET, ET NON DANS LE BOUTON.
+    # Streamlit refuse qu'on écrive la clé d'un widget déjà dessiné dans le
+    # même passage : le bouton, qui vient après le menu, ne peut donc que
+    # poser un drapeau et relancer la page — c'est au tour suivant, avant que
+    # le menu ne renaisse, que les choix se vident.
+    if st.session_state.pop("sx_raz_demande", False):
+        for k in [x for x in st.session_state if str(x).startswith("sx_d_")]:
+            del st.session_state[k]
+        st.session_state["sx_pousse_v"] = []
+    # UNE VARIABLE SORTIE DU PÉRIMÈTRE NE PEUT PAS RESTER SÉLECTIONNÉE. En
+    # réduisant la profondeur, on rétrécit la liste des options ; une valeur
+    # retenue qui n'y figure plus fait tomber le menu. On la retire d'abord.
+    if "sx_pousse_v" in st.session_state:
+        garde = [x for x in st.session_state["sx_pousse_v"] if x in dispo]
+        if garde != list(st.session_state["sx_pousse_v"]):
+            st.session_state["sx_pousse_v"] = garde
+        opt = {}
+    else:
+        opt = {"default": [s["centre"]] if s["centre"] in dispo else []}
     choisies = st.multiselect(
         T("sx_pousser"), dispo, key="sx_pousse_v",
-        default=st.session_state.get("sx_pousse_v", defaut),
-        format_func=lambda i: m["noms"][i])
+        format_func=lambda i: m["noms"][i], **opt)
     variations = {}
     if choisies:
         cols = st.columns(min(len(choisies), 3))
@@ -982,9 +1001,7 @@ def render_simuler():
     rang, _a = _voisinage(m, s["centre"], s["prof"])
     variations = _scenario(m, s, set(rang))
     if st.button(T("sx_remise"), key="sx_raz"):
-        for k in [x for x in st.session_state if str(x).startswith("sx_d_")]:
-            del st.session_state[k]
-        st.session_state["sx_pousse_v"] = []
+        st.session_state["sx_raz_demande"] = True
         st.rerun()
     if not variations:
         st.info(T("sx_pousser_0"))
