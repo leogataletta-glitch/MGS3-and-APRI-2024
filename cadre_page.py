@@ -120,22 +120,27 @@ TEXTES = {
               "dimensions.",
         "fr": "La résilience est mesurée à travers trois attributs et sept "
               "dimensions."},
+    "cad_ec_pct": {"en": "Percentage", "fr": "Pourcentage"},
+    "cad_ec_val": {"en": "Value", "fr": "Valeur"},
+    "cad_ec_cro": {"en": "rising", "fr": "croissante"},
+    "cad_ec_inv": {"en": "inverted", "fr": "inversée"},
+    "cad_ec_pct_x": {
+        "en": "The measure is a share of the population or of the cases.",
+        "fr": "La mesure est une part de la population ou des cas."},
+    "cad_ec_val_x": {
+        "en": "The measure is not a percentage: an index, a count or a rate.",
+        "fr": "La mesure n'est pas un pourcentage : un indice, un compte ou "
+              "un taux."},
+    "cad_ec_cro_x": {
+        "en": "The score rises with the measured value.",
+        "fr": "Le score monte avec la valeur mesurée."},
+    "cad_ec_inv_x": {
+        "en": "The score rises as the measured value falls.",
+        "fr": "Le score monte quand la valeur mesurée baisse."},
     "cad_h_attr": {"en": "Resilience attributes",
                    "fr": "Attributs de résilience"},
-    "cad_h_attr_x": {
-        "en": "Three key attributes describe how a system faces disturbances.",
-        "fr": "Trois attributs décrivent la façon dont un système fait face "
-              "aux perturbations."},
     "cad_h_dims": {"en": "Resilience dimensions",
                    "fr": "Dimensions de résilience"},
-    "cad_h_dims_x": {
-        "en": "Resilience is assessed across seven dimensions.",
-        "fr": "La résilience est évaluée sur sept dimensions."},
-    "cad_bas_x": {
-        "en": "The three attributes express how resilience works. The seven "
-              "dimensions represent the key domains that shape it.",
-        "fr": "Les trois attributs disent comment la résilience fonctionne. "
-              "Les sept dimensions sont les domaines qui la composent."},
     "cad_a1_t": {"en": "Anticipate", "fr": "Anticiper"},
     "cad_a1": {"en": "Detect disturbances and prepare responses before they "
                      "arrive",
@@ -772,6 +777,41 @@ def _teinte(t):
     return "#1a6b52"
 
 
+_RE_NOMBRE = re.compile(r"\d+(?:[.,]\d+)?")
+
+
+def _type_echelle(par):
+    """De quelle sorte de barème il s'agit : son unité et son sens.
+
+    DEUX BARÈMES DE MÊME FORME NE SE LISENT PAS PAREIL. « ≤ 15,8 % » pour le
+    zéro et « ≥ 97 % » pour le dix : le score monte avec la mesure. « ≥ 100 »
+    pour le zéro et « 0–9 » pour le dix : il monte quand elle baisse. Les
+    deux règles se ressemblent trait pour trait à l'écran, et rien ne disait
+    laquelle on lisait — d'où des indicateurs qu'on croyait mauvais alors
+    qu'ils sont bons.
+
+    LE SENS SE DÉDUIT DES BORNES, IL NE SE DÉCLARE PAS. Le fichier ne porte
+    pas de champ « sens » ; le comparer serait une saisie de plus à tenir à
+    jour. La borne du zéro et celle du dix suffisent : si la première est
+    numériquement plus haute que la seconde, le barème est inversé.
+    """
+    bas, haut = par[min(par)], par[max(par)]
+    unite = "pct" if "%" in bas + haut else "val"
+
+    def _n(t):
+        v = [float(x.replace(",", ".")) for x in _RE_NOMBRE.findall(t)]
+        return sum(v) / len(v) if v else None
+
+    a, b = _n(bas), _n(haut)
+    sens = None if a is None or b is None else ("inv" if a > b else "cro")
+    bouts = [(T("cad_ec_" + unite), T("cad_ec_" + unite + "_x"))]
+    if sens:
+        bouts.append((T("cad_ec_" + sens), T("cad_ec_" + sens + "_x")))
+    return (f'<span class="cad-ec-t" title="'
+            f'{_e(" ".join(x for _m, x in bouts))}">'
+            + " · ".join(_e(mot) for mot, _x in bouts) + '</span>')
+
+
 def _echelle_html(txt):
     """Le barème en règle glissante : on promène le curseur, le seuil suit.
 
@@ -817,7 +857,7 @@ def _echelle_html(txt):
               f'{bas}</b>{_e(par[bas])}</span>'
               f'<span class="cad-ec-u"><b style="background:{_teinte(1)}">'
               f'{haut}</b>{_e(par[haut])}</span></span>')
-    return (f'<span class="cad-ec">'
+    return (f'<span class="cad-ec">{_type_echelle(par)}'
             f'<span class="cad-ec-b"></span>{"".join(zones)}'
             f'<span class="cad-ec-l">{defaut}{"".join(lignes)}</span></span>')
 
@@ -1139,7 +1179,13 @@ STYLE = """
      onze. Chaque score porte donc sa borne, immédiatement à sa droite ; la
      couleur dit le sens, le chiffre dit le rang, le texte dit le seuil. */
   .cad-ec { position:relative; display:block; min-width:230px;
-       padding:9px 0 2px; }
+       padding:2px 0 2px; }
+  /* LE TYPE DE BARÈME, AU-DESSUS DE LA RÈGLE : son unité, puis son sens. Deux
+     règles de même forme ne se lisent pas pareil selon que le score monte
+     avec la mesure ou contre elle. */
+  .cad-ec-t { display:block; font-size:9.5px; font-weight:700;
+       letter-spacing:.07em; text-transform:uppercase; color:#a7b0be;
+       margin-bottom:5px; cursor:help; }
   .cad-ec-b { display:block; height:8px; border-radius:5px;
        background:linear-gradient(90deg,#9b2c2c 0%,#d18f2c 50%,#1a6b52 100%); }
   .cad-ec-z { position:absolute; top:2px; height:22px; cursor:ew-resize; }
@@ -1299,15 +1345,13 @@ STYLE = """
   .cad-aaa.vertical .cad-a + .cad-a { border-left:0 !important;
         padding-left:0 !important; }
     /* --- LE MODÈLE DE RÉSILIENCE, EN DEUX MOITIÉS -------------------------
-     L'intitulé d'une moitié : un titre vert en petites capitales, un filet
-     qui court jusqu'au bord, une ligne qui dit ce qu'on va lire. */
-  .cad-moit { display:flex; align-items:center; gap:12px; margin:10px 0 6px; }
+     L'intitulé d'une moitié : un titre vert en petites capitales et un filet
+     qui court jusqu'au bord. */
+  .cad-moit { display:flex; align-items:center; gap:12px;
+        margin:10px 0 14px; }
   .cad-moit-t { font-size:12px; font-weight:700; letter-spacing:.09em;
         text-transform:uppercase; color:#1a6b52; white-space:nowrap; }
   .cad-moit-l { flex:1 1 auto; height:1.5px; background:#cfe0d6; }
-  p.cad-moit-x { font-size:12.5px !important; color:#6b7590 !important;
-        margin:0 0 14px !important; line-height:1.5 !important;
-        text-align:left !important; }
 
   /* LES TROIS CARTES : un numéro, un filet, un titre, une phrase. */
   .cad-cc { display:flex; flex-direction:column; gap:12px; }
@@ -1340,10 +1384,6 @@ STYLE = """
   .cad-dl-v { font-size:12.5px; font-weight:600; color:#101728;
         text-align:right; font-variant-numeric:tabular-nums; }
 
-  /* LA NOTE QUI ARTICULE LES DEUX MOITIÉS, sous les deux colonnes. */
-  .cad-bas { margin:22px 0 0; padding:13px 18px; border-radius:12px;
-        background:#f5f7f6; border:1px solid #eef2f7;
-        font-size:12.5px; color:#6b7590; line-height:1.55; }
   @media (max-width:1100px) {
     .cad-dh, .cad-dl { grid-template-columns:1fr 70px 70px; }
   }
@@ -1790,20 +1830,26 @@ def _v_mesure(stats):
                 unsafe_allow_html=True)
     g, d = st.columns([1, 1.3], gap="large")
     with g:
-        st.markdown(_entete_moitie("cad_h_attr", "cad_h_attr_x")
+        st.markdown(_entete_moitie("cad_h_attr")
                     + _attributs(), unsafe_allow_html=True)
     with d:
-        st.markdown(_entete_moitie("cad_h_dims", "cad_h_dims_x")
+        st.markdown(_entete_moitie("cad_h_dims")
                     + _tableau_dimensions(stats), unsafe_allow_html=True)
-    st.markdown(f'<div class="cad-bas">{_e(T("cad_bas_x"))}</div>',
-                unsafe_allow_html=True)
+    # RIEN SOUS LES DEUX COLONNES. Le bandeau du bas redisait en une phrase ce
+    # que les deux moitiés viennent de montrer : les attributs disent comment,
+    # les dimensions disent quoi. Cette phrase-là se lit dans le dessin.
 
 
-def _entete_moitie(cle, cle_x):
-    """L'intitulé d'une moitié : un titre vert, un filet, une ligne."""
+def _entete_moitie(cle):
+    """L'intitulé d'une moitié : un titre vert et un filet, rien de plus.
+
+    LA LIGNE D'EXPLICATION EST PARTIE. « Trois attributs décrivent la façon
+    dont un système fait face aux perturbations » sous un titre « Attributs
+    de résilience », au-dessus de trois cartes qui portent chacune son
+    attribut : la phrase ne disait que ce que la colonne montrait déjà.
+    """
     return (f'<div class="cad-moit"><span class="cad-moit-t">'
-            f'{_e(T(cle))}</span><span class="cad-moit-l"></span></div>'
-            f'<p class="cad-moit-x">{_e(T(cle_x))}</p>')
+            f'{_e(T(cle))}</span><span class="cad-moit-l"></span></div>')
 
 
 # --- 2 · comment la résilience est mesurée ----------------------------------
