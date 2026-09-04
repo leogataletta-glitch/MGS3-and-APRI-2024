@@ -299,13 +299,51 @@ st.markdown(("""
         div[data-testid="stMarkdownContainer"] > style:only-child) {
       display: none !important;
   }
-  /* --- LE PIED SUIT LE CONTENU, ET RIEN NE L'ÉLOIGNE ---------------------
-     Il a été collé au bas de la fenêtre pendant une version : sur une page
-     courte, cela plaçait la bande verte à quatre cents pixels sous la
-     dernière ligne, et il fallait descendre les yeux jusque-là pour ne rien
-     y trouver entre les deux. Il ferme donc le contenu là où le contenu
-     s'arrête. Le blanc qui reste en dessous est celui de la page : rien ne
-     s'y voit, et rien ne s'y cherche. */
+  /* --- LE PIED FERME L'ÉCRAN, MÊME QUAND LA PAGE EST COURTE -------------
+     Il n'y a jamais de blanc sous la bande verte : la colonne principale
+     reçoit une hauteur minimale d'un écran, et le pied une marge haute
+     automatique. Il descend donc jusqu'au bas de la fenêtre quand le contenu
+     ne l'y pousse pas, et se laisse pousser plus bas quand la page est
+     longue.
+
+     LA HAUTEUR EST CORRIGÉE DU FACTEUR DE ZOOM. Le bloc principal porte un
+     `zoom: .95` ; une hauteur de 100vh y serait rendue à quatre-vingt-quinze
+     pour cent de l'écran. `--dz` est l'inverse de ce facteur — c'est déjà
+     lui qui rend le bandeau et le pied pleine largeur. Les seize pixels
+     retirés sont ceux que Streamlit retire lui-même : l'enveloppe du dernier
+     bloc est mesurée seize pixels plus courte que son contenu, et c'est
+     constant, quelle que soit la fenêtre et quel que soit le zoom. */
+  div[data-testid="stMainBlockContainer"] > div[data-testid="stVerticalBlock"] {
+      min-height: calc(100vh - 16px);
+  }
+  /* ET LE FOND DE L'APPLICATION EST VERT, PARCE QUE LE ZOOM LAISSE UNE
+     BANDE. Le bloc principal est réduit à quatre-vingt-quinze pour cent :
+     sa boîte ne couvre donc que quatre-vingt-quinze pour cent de la hauteur
+     de la fenêtre, et les cinq pour cent du bas ne lui appartiennent pas —
+     ni au pied, qui ne peut pas descendre plus bas que la boîte qui le
+     contient sans se faire couper. Peindre CE fond-là en vert ferme la
+     fenêtre pour de bon : sous la bande, c'est la même couleur, et il n'y a
+     plus jamais de blanc. La page, elle, garde son blanc — il est posé sur
+     le bloc principal, qui couvre tout le reste. */
+  div[data-testid="stApp"], .stApp,
+  div[data-testid="stAppViewContainer"] { background: #1f5b46 !important; }
+  section[data-testid="stMain"], div[data-testid="stMain"] {
+      background: #ffffff !important;
+  }
+  div[data-testid="stLayoutWrapper"]:has(> div[class*="st-key-zone_pied"]) {
+      margin-top: auto !important; padding-top: 34px !important;
+      /* SANS CELA, LE FLEX LE COMPRIME : la colonne rétrécit son dernier
+         bloc pour tenir la hauteur promise, et la bande verte dépassait de
+         sa boîte par le bas. Le pied ne se comprime pas. */
+      flex: 0 0 auto !important;
+  }
+  /* L'ÉCART AU-DESSUS DU PIED EST PORTÉ PAR L'ENVELOPPE, PAS PAR LE PIED :
+     une marge posée sur le pied lui-même sort de la boîte que le flex
+     mesure. */
+  .pied { margin-top: 0 !important; }
+  /* ET SES ENVELOPPES LE MESURENT VRAIMENT. Streamlit centre le contenu d'un
+     conteneur de markdown : la bande verte, plus haute que la ligne de texte
+     qu'elle porte, débordait de sa boîte au lieu de l'agrandir. */
   div[class*="st-key-zone_pied"],
   div[data-testid="stLayoutWrapper"]:has(> div[class*="st-key-zone_pied"]),
   div[class*="st-key-zone_pied"] div[data-testid="stElementContainer"],
