@@ -80,6 +80,10 @@ TEXTES = {
               "fr": "Tester des interventions"},
     "sx_o5": {"en": "See System-Wide Impacts",
               "fr": "Voir les impacts sur tout le système"},
+    "sx_c_rel": {"en": "Relation", "fr": "Relation"},
+    "sx_c_src": {"en": "Where the strength comes from",
+                 "fr": "D'où vient la force"},
+    "sx_c_accord": {"en": "Reading", "fr": "Lecture"},
     "sx_o6": {"en": "Run the System Live",
               "fr": "Faire tourner le système en direct"},
     "sx_centre": {"en": "Central variable", "fr": "Variable centrale"},
@@ -145,34 +149,16 @@ TEXTES = {
     "sx_t2": {"en": "Every relation of the system, and what backs it",
               "fr": "Chaque relation du système, et ce qui la fonde"},
     "sx_x2": {
-        "en": "Three different things are shown side by side and must not be "
-              "confused: the statistical correlation observed in the APRI "
-              "data when it can be computed at all, the causal mechanism the "
-              "model assumes, and the strength of the evidence behind that "
-              "mechanism. A correlation is never a proof of causation, and a "
-              "relation with no computable correlation is not a weaker "
-              "relation — it is a relation whose two ends are not both "
-              "measured on the same units.",
-        "fr": "Trois choses différentes sont montrées côte à côte et ne "
-              "doivent pas être confondues : la corrélation statistique "
-              "observée dans les données APRI quand elle est calculable, le "
-              "mécanisme causal supposé par le modèle, et la force de la "
-              "preuve derrière ce mécanisme. Une corrélation n'est jamais une "
-              "preuve de causalité, et une relation sans corrélation "
-              "calculable n'est pas une relation plus faible — c'est une "
-              "relation dont les deux bouts ne sont pas mesurés sur les mêmes "
-              "unités."},
+        "en": "The observed correlation, the strength posed in the model, and "
+              "the source that strength comes from. A correlation is never a "
+              "proof of causation.",
+        "fr": "La corrélation observée, la force posée dans le modèle, et la "
+              "source d'où sort cette force. Une corrélation n'est jamais une "
+              "preuve de causalité."},
     "sx_rel": {"en": "Relation", "fr": "Relation"},
     "sx_correl": {"en": "Correlation across the 10 sections",
                   "fr": "Corrélation sur les 10 sections"},
     "sx_correl_non": {"en": "not computable", "fr": "non calculable"},
-    "sx_correl_non_x": {
-        "en": "One of the two variables carries no value per communal "
-              "section — it is either unmeasured or measured on another "
-              "unit. Nothing is invented in its place.",
-        "fr": "L'une des deux variables ne porte pas de valeur par section "
-              "communale — elle est soit non mesurée, soit mesurée sur une "
-              "autre unité. Rien n'est inventé à sa place."},
     "sx_correl_x": {
         "en": "Spearman rank correlation across the ten communal sections. "
               "Ten points is very few: below |ρ| = {c} a correlation cannot "
@@ -189,7 +175,6 @@ TEXTES = {
                   "fr": "même sens que le modèle"},
     "sx_desaccord": {"en": "opposite direction to the model",
                      "fr": "sens opposé au modèle"},
-    "sx_mecanisme": {"en": "Assumed mechanism", "fr": "Mécanisme supposé"},
     "sx_preuve": {"en": "Level of evidence", "fr": "Niveau de preuve"},
     "sx_force": {"en": "Strength in the model", "fr": "Force dans le modèle"},
     "sx_reserve": {"en": "Reservation", "fr": "Réserve"},
@@ -779,6 +764,83 @@ def _classe(m, a):
     return j
 
 
+def _classe_courte(m, a):
+    """« Empirique », et non la phrase entière qui la définit.
+
+    La définition de la classe est la même sur les vingt-trois lignes : la
+    répéter en pleine largeur, c'est vingt-trois fois la même phrase à lire.
+    Le mot suffit dans une colonne ; la définition reste dans le menu de
+    filtre, où elle sert à choisir.
+    """
+    return _classe(m, a).split(" — ")[0].split(" - ")[0].strip()
+
+
+def _table_relations(m, aretes, lang):
+    """Une ligne par relation : sa corrélation, sa force, d'où sort le nombre.
+
+    UN TABLEAU PLUTÔT QU'UNE PILE DE FICHES. Chaque relation occupait une
+    carte de six lignes — mécanisme, réserve, citation — et il fallait faire
+    défiler vingt-trois cartes pour comparer deux coefficients. Ce qui se
+    compare se met en colonnes ; le mécanisme et la réserve, eux, ne se
+    comparent pas : ils restent attachés à la ligne, en infobulle, pour qui
+    conteste un chiffre précis.
+    """
+    r = [f'<table class="sx-tab"><thead><tr>'
+         f'<th>{_e(T("sx_c_rel"))}</th>'
+         f'<th class="n">{_e(T("sx_correl"))}</th>'
+         f'<th>{_e(T("sx_c_accord"))}</th>'
+         f'<th class="n">{_e(T("sx_force"))}</th>'
+         f'<th>{_e(T("sx_preuve"))}</th>'
+         f'<th>{_e(T("sx_c_src"))}</th></tr></thead><tbody>']
+    for a in aretes:
+        co = _correlation(m, a["de"], a["vers"])
+        if co is None:
+            rho, n_co, mot, coul = "—", "", T("sx_correl_non"), GRIS
+        else:
+            fort = abs(co["rho"]) >= RHO_CRITIQUE_10
+            meme = (co["rho"] > 0) == (a["signe"] > 0)
+            rho = _f(co["rho"], 2)
+            n_co = f' <span style="color:{GRIS};font-size:11px">'\
+                   f'n&nbsp;=&nbsp;{co["n"]}</span>'
+            mot = (T("sx_accord") if meme else T("sx_desaccord")) if fort \
+                else T("sx_faible")
+            coul = (ENCRE if meme else ROUGE) if fort else GRIS
+        fleche = "→" if a["signe"] > 0 else "⊣"
+        coul_f = VERT if a["signe"] > 0 else ROUGE
+        src = a.get("src") or {}
+        url = src.get("url")
+        cite = a.get(f"cite_{lang}") or a.get("cite_fr") or "—"
+        ref = a.get(f"ref_{lang}") or a.get("ref_fr") or ""
+        res = a.get(f"reserve_{lang}") or a.get("reserve_fr") or ""
+        bulle = " · ".join(x for x in (ref, res) if x)
+        lien = (f' <a href="{_e(url)}" target="_blank" '
+                f'style="color:{BLEU};text-decoration:none">↗</a>'
+                if url else "")
+        alerte = (f' <span style="color:{ROUGE}" title="'
+                  f'{_e(T("sx_conteste"))}">⚠</span>'
+                  if a.get("conteste") else "")
+        r.append(
+            f'<tr title="{_e(bulle)}">'
+            f'<td class="v" style="min-width:230px;text-align:left">'
+            f'{_e(m["noms"].get(a["de"], a["de"]))} '
+            f'<span style="color:{coul_f};font-weight:700">{fleche}</span> '
+            f'{_e(m["noms"].get(a["vers"], a["vers"]))}{alerte}</td>'
+            f'<td class="n" style="color:{coul};font-weight:700;'
+            f'white-space:nowrap">{rho}{n_co}</td>'
+            f'<td style="color:{coul};font-size:11.5px;'
+            f'text-align:left;white-space:nowrap">{_e(mot)}</td>'
+            f'<td class="n v">{_f(a.get("force"), 2)}</td>'
+            f'<td style="font-size:11.5px;text-align:left">'
+            f'{_e(_classe_courte(m, a))}</td>'
+            f'<td style="font-size:11px;color:{GRIS};line-height:1.45;'
+            f'text-align:left;max-width:330px" title="{_e(cite)}">'
+            f'<span style="display:-webkit-box;-webkit-line-clamp:2;'
+            f'-webkit-box-orient:vertical;overflow:hidden">{_e(cite)}</span>'
+            f'{lien}</td></tr>')
+    r.append("</tbody></table>")
+    return "".join(r)
+
+
 def render_relations():
     m = _modele(i18n.get_lang())
     st.markdown(STYLE, unsafe_allow_html=True)
@@ -814,60 +876,9 @@ def render_relations():
     # discussion se tient.
     gardees.sort(key=lambda a: (s["centre"] not in (a["de"], a["vers"]),
                                 -(a.get("force") or 0)))
-    for a in gardees:
-        co = _correlation(m, a["de"], a["vers"])
-        if co is None:
-            bloc_co = (f'<span style="color:{GRIS}">'
-                       f'{_e(T("sx_correl_non"))}</span>')
-        else:
-            fort = abs(co["rho"]) >= RHO_CRITIQUE_10
-            meme = (co["rho"] > 0) == (a["signe"] > 0)
-            coul = ENCRE if fort else GRIS
-            mot = (T("sx_accord") if meme else T("sx_desaccord")) if fort \
-                else T("sx_faible")
-            bloc_co = (f'<b style="color:{coul}">&rho; = {_f(co["rho"], 2)}'
-                       f'</b> <span style="color:{GRIS}">· n = {co["n"]} · '
-                       f'{_e(mot)}</span>')
-        fleche = ("→" if a["signe"] > 0 else "⊣")
-        coul_f = VERT if a["signe"] > 0 else ROUGE
-        src = a.get("src") or {}
-        url = src.get("url")
-        cite = a.get(f"cite_{lang}") or a.get("cite_fr") or ""
-        ref = a.get(f"ref_{lang}") or a.get("ref_fr") or ""
-        res = a.get(f"reserve_{lang}") or a.get("reserve_fr") or ""
-        bouts = [
-            f'<div class="sx-carte">'
-            f'<div style="font-size:13.5px;color:{ENCRE};font-weight:600">'
-            f'{_e(m["noms"].get(a["de"], a["de"]))} '
-            f'<span style="color:{coul_f};font-weight:700">{fleche}</span> '
-            f'{_e(m["noms"].get(a["vers"], a["vers"]))}</div>',
-            f'<div style="margin:7px 0 0;font-size:11.5px;color:{GRIS}">'
-            f'<b>{_e(T("sx_correl"))}</b> · {bloc_co}</div>',
-            f'<div style="margin:3px 0 0;font-size:11.5px;color:{GRIS}">'
-            f'<b>{_e(T("sx_preuve"))}</b> · {_e(_classe(m, a))} · '
-            f'<b>{_e(T("sx_force"))}</b> {_f(a.get("force"), 2)}</div>']
-        if ref:
-            bouts.append(f'<div style="margin:7px 0 0;font-size:12.5px;'
-                         f'color:{ENCRE2};line-height:1.55"><b>'
-                         f'{_e(T("sx_mecanisme"))}</b> · {_e(ref)}</div>')
-        if res:
-            bouts.append(f'<div style="margin:5px 0 0;font-size:11.5px;'
-                         f'color:{AMBRE};line-height:1.5">{_e(res)}</div>')
-        if a.get("conteste"):
-            bouts.append(f'<div style="margin:5px 0 0;font-size:11.5px;'
-                         f'color:{ROUGE}">⚠ {_e(T("sx_conteste"))}</div>')
-        if cite:
-            lien = (f' <a href="{_e(url)}" target="_blank" '
-                    f'style="color:{BLEU}">↗</a>' if url else "")
-            bouts.append(f'<div style="margin:6px 0 0;font-size:11px;'
-                         f'color:{GRIS};line-height:1.5">{_e(cite)}'
-                         f'{lien}</div>')
-        bouts.append('</div>')
-        st.markdown("".join(bouts), unsafe_allow_html=True)
-
-    regle = T("sx_correl_x", c=_f(RHO_CRITIQUE_10, 2))
-    st.markdown(f'<p class="sx-note">{_e(regle)}</p>'
-                f'<p class="sx-note">{_e(T("sx_correl_non_x"))}</p>',
+    st.markdown(_table_relations(m, gardees, lang), unsafe_allow_html=True)
+    st.markdown(f'<p class="sx-note">'
+                f'{_e(T("sx_correl_x", c=_f(RHO_CRITIQUE_10, 2)))}</p>',
                 unsafe_allow_html=True)
 
 

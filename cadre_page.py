@@ -773,34 +773,53 @@ def _teinte(t):
 
 
 def _echelle_html(txt):
-    """Le barème en onze cases colorées, du zéro rouge au dix vert.
+    """Le barème en règle glissante : on promène le curseur, le seuil suit.
 
-    POURQUOI UN DESSIN PLUTÔT QU'UNE LIGNE DE TEXTE. Le barème est une suite
-    de onze bornes ; écrit d'un trait, il faisait quatre lignes de chiffres
-    entre parenthèses dans lesquelles on ne trouvait ni le seuil du zéro ni
-    celui du dix sans les compter un par un. Dessiné, il se lit comme ce
-    qu'il est : une règle graduée, dont la couleur dit le sens.
+    ONZE BORNES NE TIENNENT PAS DANS UNE CELLULE DE TABLEAU. Écrites côte à
+    côte, elles débordaient sur quatre lignes et repoussaient la ligne
+    suivante ; réduites à trois repères, elles n'en montraient plus que trois.
+    La règle résout les deux : les onze seuils sont là, mais un seul à la
+    fois — celui du score que l'on désigne.
 
-    LE TEXTE N'EST PAS PERDU. Chaque case porte sa borne exacte en infobulle,
-    et les trois repères — zéro, cinq, dix — sont écrits sous la règle. Le
-    barème du fichier reste la référence ; on ne le réécrit pas, on le met en
-    forme.
+    ZÉRO ET DIX RESTENT ÉCRITS, PARCE QU'ILS SONT LA QUESTION QU'ON SE POSE.
+    « À partir de quand est-ce zéro, à partir de quand est-ce dix » est la
+    lecture qu'on fait d'un barème neuf fois sur dix ; elle ne doit pas
+    demander un geste. Les scores 1 à 9 se lisent en glissant dessus.
+
+    TOUT EST EN CSS, ET C'EST LA CONTRAINTE QUI COMMANDE. Le tableau est
+    rendu en HTML dans une page Streamlit, où aucun script ne s'exécute : le
+    survol est donc le seul geste disponible, et onze zones transparentes
+    posées sur la barre suffisent à le rendre continu comme un glissement.
     """
     if not txt:
         return f'<span style="color:#a7b0be">{_e(T("cad_ind_sans"))}</span>'
     bandes = _RE_BANDE.findall(txt)
     if len(bandes) < 3:
         return _e(txt)
-    nmax = max(int(n) for n, _b in bandes) or 1
-    cases = []
+    par = {}
     for n, borne in bandes:
-        i = int(n)
-        borne = " ".join(borne.split())
-        cases.append(
-            f'<span class="cad-ec-p">'
-            f'<b style="background:{_teinte(i / nmax)}">{i}</b>'
-            f'{_e(borne)}</span>')
-    return f'<span class="cad-ec">{"".join(cases)}</span>' 
+        par[int(n)] = " ".join(borne.split())
+    nmax = max(par) or 1
+    scores = sorted(par)
+
+    zones, lignes = [], []
+    for k, i in enumerate(scores):
+        g = 100.0 * k / len(scores)
+        zones.append(f'<span class="cad-ec-z" data-i="{i}" '
+                     f'style="left:{g:.3f}%;width:{100.0 / len(scores):.3f}%">'
+                     f'</span>')
+        lignes.append(f'<span class="cad-ec-v" data-i="{i}">'
+                      f'<b style="background:{_teinte(i / nmax)}">{i}</b>'
+                      f'{_e(par[i])}</span>')
+    bas, haut = scores[0], scores[-1]
+    defaut = (f'<span class="cad-ec-d">'
+              f'<span class="cad-ec-u"><b style="background:{_teinte(0)}">'
+              f'{bas}</b>{_e(par[bas])}</span>'
+              f'<span class="cad-ec-u"><b style="background:{_teinte(1)}">'
+              f'{haut}</b>{_e(par[haut])}</span></span>')
+    return (f'<span class="cad-ec">'
+            f'<span class="cad-ec-b"></span>{"".join(zones)}'
+            f'<span class="cad-ec-l">{defaut}{"".join(lignes)}</span></span>')
 
 
 @st.cache_data(show_spinner=False)
@@ -1119,13 +1138,43 @@ STYLE = """
      seuil, et les trois repères écrits dessous n'en donnaient que trois sur
      onze. Chaque score porte donc sa borne, immédiatement à sa droite ; la
      couleur dit le sens, le chiffre dit le rang, le texte dit le seuil. */
-  .cad-ec { display:flex; flex-wrap:wrap; gap:4px 10px; }
-  .cad-ec-p { display:inline-flex; align-items:center; gap:5px;
+  .cad-ec { position:relative; display:block; min-width:230px;
+       padding:9px 0 2px; }
+  .cad-ec-b { display:block; height:8px; border-radius:5px;
+       background:linear-gradient(90deg,#9b2c2c 0%,#d18f2c 50%,#1a6b52 100%); }
+  .cad-ec-z { position:absolute; top:2px; height:22px; cursor:ew-resize; }
+  .cad-ec-z:hover::before { content:""; position:absolute; left:50%;
+       transform:translateX(-50%); top:1px; width:4px; height:20px;
+       border-radius:3px; background:#101728;
+       box-shadow:0 0 0 2px #fff; }
+  .cad-ec-l { display:flex; flex-wrap:wrap; gap:3px 14px; margin-top:7px;
+       min-height:17px; }
+  .cad-ec-d { display:flex; gap:14px; flex-wrap:wrap; }
+  .cad-ec-u, .cad-ec-v { display:inline-flex; align-items:center; gap:5px;
        font-size:11px; color:#3c4761; white-space:nowrap;
        font-variant-numeric:tabular-nums; }
-  .cad-ec-p b { display:inline-flex; align-items:center;
+  .cad-ec-v { display:none; }
+  .cad-ec-u b, .cad-ec-v b { display:inline-flex; align-items:center;
        justify-content:center; width:17px; height:17px; border-radius:4px;
        color:#fff; font-size:9.5px; font-weight:700; flex:0 0 17px; }
+  /* ZÉRO ET DIX NE DISPARAISSENT PAS QUAND ON GLISSE. Ce sont les deux
+     bornes qu'on lit sans y penser ; le score désigné vient s'ajouter à
+     côté d'elles, il ne les remplace pas. Les deux seules exceptions sont
+     le survol du zéro et celui du dix, où la valeur serait écrite deux
+     fois. */
+  .cad-ec-z[data-i="0"]:hover ~ .cad-ec-l > .cad-ec-d,
+  .cad-ec-z[data-i="10"]:hover ~ .cad-ec-l > .cad-ec-d { display:none; }
+  .cad-ec-z[data-i="0"]:hover ~ .cad-ec-l > .cad-ec-v[data-i="0"] { display:inline-flex; }
+  .cad-ec-z[data-i="1"]:hover ~ .cad-ec-l > .cad-ec-v[data-i="1"] { display:inline-flex; }
+  .cad-ec-z[data-i="2"]:hover ~ .cad-ec-l > .cad-ec-v[data-i="2"] { display:inline-flex; }
+  .cad-ec-z[data-i="3"]:hover ~ .cad-ec-l > .cad-ec-v[data-i="3"] { display:inline-flex; }
+  .cad-ec-z[data-i="4"]:hover ~ .cad-ec-l > .cad-ec-v[data-i="4"] { display:inline-flex; }
+  .cad-ec-z[data-i="5"]:hover ~ .cad-ec-l > .cad-ec-v[data-i="5"] { display:inline-flex; }
+  .cad-ec-z[data-i="6"]:hover ~ .cad-ec-l > .cad-ec-v[data-i="6"] { display:inline-flex; }
+  .cad-ec-z[data-i="7"]:hover ~ .cad-ec-l > .cad-ec-v[data-i="7"] { display:inline-flex; }
+  .cad-ec-z[data-i="8"]:hover ~ .cad-ec-l > .cad-ec-v[data-i="8"] { display:inline-flex; }
+  .cad-ec-z[data-i="9"]:hover ~ .cad-ec-l > .cad-ec-v[data-i="9"] { display:inline-flex; }
+  .cad-ec-z[data-i="10"]:hover ~ .cad-ec-l > .cad-ec-v[data-i="10"] { display:inline-flex; }
   .cad-it-p { font-size:13px; font-weight:700; color:#101728;
        font-variant-numeric:tabular-nums; }
   /* --- la chaîne de calcul en cinq étapes ---------------------------------

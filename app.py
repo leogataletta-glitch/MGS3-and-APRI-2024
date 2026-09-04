@@ -48,6 +48,7 @@ import rapport_donateur
 import onglets
 import satellite_page
 import systeme_complexe
+import systeme_direct
 import resilience_page
 import saillants_page
 import si_je_change
@@ -1607,6 +1608,9 @@ TEXTES_NAV = {
               "fr": "Pousser plusieurs variables à la fois"},
     "sx_d5": {"en": "Wave after wave, and what the loops add",
               "fr": "Vague après vague, et ce que les boucles ajoutent"},
+    "sx_deplier_onde": {
+        "en": "The same wave, wave by wave, in columns",
+        "fr": "La même onde, vague par vague, en colonnes"},
     "sx_d6": {"en": "Push a variable and watch the system move, live",
               "fr": "Poussez une variable et regardez le système bouger, "
                     "en direct"},
@@ -2315,14 +2319,17 @@ with _c_contenu:
         elif _vue == "vagues":
             systeme_complexe.render_vagues()
         else:
-            # L'ANIMATION SORT DU VOLET REPLIÉ ET DEVIENT UN ONGLET. Elle était
-            # rangée sous les tableaux de vagues, derrière un titre qu'il
-            # fallait déplier : personne ne trouvait le seul écran où le
-            # système bouge vraiment. C'est le contraire de ce qu'il fallait
-            # faire — voir l'onde partir d'une variable et traverser le
-            # graphe est ce qui rend une boucle causale compréhensible, et
-            # cela se met en avant, pas en annexe.
-            ondes_choc.render(entete=False)
+            # L'ONDE SE REGARDE SUR LE SCHÉMA, PAS DANS DES COLONNES. Les
+            # colonnes de vagues disent combien et quand ; elles ne disent pas
+            # par où. Or c'est « par où » qui fait comprendre une boucle : on
+            # ne voit pas un effet revenir sur son point de départ dans un
+            # tableau, on le voit quand la bille repasse par la même flèche.
+            # Le dessin est donc celui du premier onglet, avec les mêmes
+            # positions, et il bouge. La lecture en colonnes reste dessous
+            # pour qui veut les chiffres vague par vague.
+            systeme_direct.render()
+            with st.expander(T("sx_deplier_onde")):
+                ondes_choc.render(entete=False)
 
     if app_mode == MODE_ACTIONS:
         # Les fiches descendent des leviers calculés par l'analyse des boucles.
