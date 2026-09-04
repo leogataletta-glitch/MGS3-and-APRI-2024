@@ -192,7 +192,20 @@ TEXTES = {
               "disponible quand la ventilation contient les sections "
               "communales."},
     "ex_filtre": {"en": "Restrict to", "fr": "Restreindre à"},
-    "ex_filtres_t": {"en": "Filters", "fr": "Filtres"},
+    "ex_filtres_t": {"en": "Refine the population", "fr": "Affiner la population"},
+    "ex_filtres_opt": {"en": "optional", "fr": "facultatif"},
+    "ex_e2_t": {"en": "What do you want to explore?",
+                "fr": "Qu'est-ce que vous voulez explorer ?"},
+    "ex_e2_x": {"en": "Pick a question, an answer, and how to break down the "
+                      "results.",
+                "fr": "Choisissez une question, une réponse, et la façon dont "
+                      "les résultats se ventilent."},
+    "ex_e4_x": {"en": "{k} households match your selection, out of {n} "
+                      "({p} %).",
+                "fr": "{k} ménages correspondent à votre sélection, sur {n} "
+                      "({p} %)."},
+    "ex_voir": {"en": "View as", "fr": "Afficher en"},
+    "ex_dl": {"en": "Download results", "fr": "Télécharger les résultats"},
     "ex_filtres_x": {
         "en": "Several options can be picked in the same field: they add up. "
               "Two different fields narrow one after the other.",
@@ -230,6 +243,9 @@ TEXTES = {
     # trous ; posé tel quel en tête de colonne, il s'affichait « {k} of {n}
     # respondents ». Une clé par usage.
     "ex_col_n": {"en": "respondents", "fr": "répondants"},
+    "ex_c_nom": {"en": "group", "fr": "groupe"},
+    "ex_c_k": {"en": "of which giving this answer",
+               "fr": "dont donnant cette réponse"},
     "ex_fragile": {
         "en": "Bars in pale green rest on fewer than {n} respondents: they "
               "move by several points if one household answers differently.",
@@ -286,12 +302,44 @@ STYLE = """
      de même graisse se lisaient comme un formulaire à remplir dans un ordre
      quelconque. Un numéro et un filet suffisent à dire l'ordre ; il n'y a
      ni pictogramme ni couleur de plus. */
-  .ex-etape { display:flex; align-items:center; gap:10px; margin:20px 0 7px; }
-  .ex-etape .n { font-size:11px; font-weight:700; color:#1a6b52;
-            font-variant-numeric:tabular-nums; }
-  .ex-etape .t { font-size:10.5px; font-weight:700; letter-spacing:.1em;
-            text-transform:uppercase; color:#3c4761; white-space:nowrap; }
-  .ex-etape .l { flex:1 1 auto; height:1px; background:#e6ece8; }
+  /* --- « AFFICHER EN » : QUATRE BOUTONS ACCOLÉS, PAS UN MENU ------------
+     Le format de dessin n'est pas un réglage qu'on va chercher : on en
+     change deux fois par lecture. Un menu déroulant demande d'ouvrir, viser
+     et choisir ; quatre boutons côte à côte se cliquent d'un geste, et le
+     format courant se voit sans être ouvert. */
+  div[class*="st-key-ex_forme"] div[role="radiogroup"] {
+      display:flex !important; gap:0 !important; flex-wrap:nowrap !important;
+      border:1px solid #cddbd2; border-radius:9px; overflow:hidden;
+      width:fit-content;
+  }
+  div[class*="st-key-ex_forme"] div[role="radiogroup"] > label {
+      margin:0 !important; padding:7px 15px !important; cursor:pointer;
+      background:#fff !important; border-right:1px solid #e4eae6 !important;
+      border-radius:0 !important;
+  }
+  div[class*="st-key-ex_forme"] div[role="radiogroup"] > label:last-child {
+      border-right:0 !important;
+  }
+  div[class*="st-key-ex_forme"] div[role="radiogroup"]
+      > label > div > div > div:first-child { display:none !important; }
+  div[class*="st-key-ex_forme"] div[role="radiogroup"] > label p {
+      font-size:12px !important; font-weight:600 !important;
+      color:#3c4761 !important; margin:0 !important; white-space:nowrap;
+  }
+  div[class*="st-key-ex_forme"] div[role="radiogroup"]
+      > label:has(input:checked) { background:#1a6b52 !important; }
+  div[class*="st-key-ex_forme"] div[role="radiogroup"]
+      > label:has(input:checked) p { color:#fff !important; }
+  div[class*="st-key-ex_forme"] div[role="radiogroup"] > label:hover {
+      background:#eef5f1 !important;
+  }
+  div[class*="st-key-ex_forme"] div[role="radiogroup"]
+      > label:has(input:checked):hover { background:#175c46 !important; }
+
+  /* La ligne qui ouvre les résultats : l'effectif retenu à gauche, le
+     téléchargement à droite. */
+  .ex-res-x { font-size:12.5px; color:#6b7590; line-height:1.5;
+            margin:0 0 10px 33px; }
 
   /* --- LE PANNEAU DES FILTRES --------------------------------------------
      Les menus se fondaient dans la page : rien ne disait où commençait la
@@ -454,15 +502,28 @@ def _masque_multi(cat, choix):
     return m
 
 
-def _etape(n, cle):
-    """Un numéro, un intitulé, un filet : le rang d'un moment dans l'écran."""
+def _etape(n, cle, aide=None, note=None):
+    """Un numéro cerclé, un intitulé, et la ligne qui dit quoi faire.
+
+    LE NUMÉRO EST DANS UN DISQUE, ET IL COMPTE. Quatre moments se suivent —
+    la source, la question, la population, le résultat — et un chiffre posé
+    à plat dans une rangée de libellés se lisait comme un rang de colonne.
+    Cerclé, il se lit comme une étape, et l'œil retrouve où il en est sans
+    relire les titres.
+
+    LA LIGNE D'AIDE EST SOUS LE TITRE, PAS DEDANS. Elle dit ce qu'on fait à
+    cette étape ; le titre dit ce qu'elle est. Les deux sur la même ligne
+    donnaient une phrase à rallonge dont on ne lisait que le début.
+    """
+    sup = (f'<span class="ex-etape-o">{_e(T(note))}</span>') if note else ""
     st.markdown(
         f'<div class="ex-etape"><span class="n">{n}</span>'
-        f'<span class="t">{_e(T(cle))}</span><span class="l"></span></div>',
+        f'<span class="t">{_e(T(cle))}</span>{sup}<span class="l"></span></div>'
+        + (f'<p class="ex-etape-x">{_e(T(aide))}</p>' if aide else ""),
         unsafe_allow_html=True)
 
 
-def _panneau_filtres(cat, cle, registres, num, titre_cle):
+def _panneau_filtres(cat, cle, registres, num, titre_cle, note=None):
     """Le panneau des filtres : un champ à choix multiples par registre.
 
     POURQUOI UN PANNEAU ET PLUS UNE RANGÉE DE MENUS. Les cinq menus vivaient
@@ -487,7 +548,9 @@ def _panneau_filtres(cat, cle, registres, num, titre_cle):
                 f'<div class="ex-etape" style="margin:0 0 3px">'
                 f'<span class="n">{num}</span>'
                 f'<span class="t">{_e(T(titre_cle))}</span>'
-                f'<span class="l"></span></div>'
+                + (f'<span class="ex-etape-o">{_e(T(note))}</span>'
+                   if note else "")
+                + f'<span class="l"></span></div>'
                 f'<p class="ex-pan-x">{_e(T("ex_filtres_x"))}</p>',
                 unsafe_allow_html=True)
         with h2:
@@ -824,6 +887,27 @@ def _tableau(lignes, ens, mesure):
     return "".join(r)
 
 
+def _csv(lignes, mesure):
+    """Ce qui est à l'écran, en une table à quatre colonnes.
+
+    LE FICHIER SUIT L'ÉCRAN, IL NE LE DÉBORDE PAS. Télécharger « tout » a
+    déjà sa page — les sept classeurs de la rubrique Données. Ici, on emporte
+    exactement ce qu'on a sous les yeux : la ventilation choisie, sur la
+    population choisie, avec les effectifs qui la portent.
+    """
+    import csv as _c
+    import io as _io
+    tampon = _io.StringIO()
+    plume = _c.writer(tampon, delimiter=";")
+    plume.writerow([T("ex_c_nom"), T("ex_part") if mesure == "part"
+                    else T("ex_score"), T("ex_col_n"), T("ex_c_k")])
+    for l in lignes:
+        plume.writerow([l["nom"],
+                        "" if l["part"] is None else f'{l["part"]:.2f}',
+                        l["n"], "" if l.get("k") is None else l["k"]])
+    return tampon.getvalue().encode("utf-8-sig")
+
+
 def _libelle_question(q):
     return libelles_enquete.libelle(q)
 
@@ -877,11 +961,12 @@ def render(cat, mode=None):
                              key="ex_cible_sel",
                              format_func=lambda c: libs.get(c, c))
     if mesure == "part":
-        # ---- 1 · la question, puis la réponse ----------------------------
+        # ---- 2 · la question, la réponse, la ventilation, le dessin ------
+        _etape(2, "ex_e2_t", aide="ex_e2_x")
         g, d = st.columns([1.55, 1])
         with g:
             qi = st.selectbox(
-                f'1 · {T("ex_question")}', [x["i"] for x in questions],
+                T("ex_question"), [x["i"] for x in questions],
                 key="ex_q",
                 format_func=lambda i: _libelle_question(
                     next(x for x in questions if x["i"] == i)))
@@ -892,7 +977,7 @@ def render(cat, mode=None):
             # afficherait une modalité qui n'a rien à voir.
             # LA VALEUR RETENUE RESTE LE LIBELLÉ FRANÇAIS : c'est lui qui
             # indexe les masques binaires. Seul l'affichage est traduit.
-            modalite = st.selectbox(f'2 · {T("ex_reponse")}', q["modalites"],
+            modalite = st.selectbox(T("ex_reponse"), q["modalites"],
                                     key=f"ex_m_{qi}",
                                     format_func=libelles_enquete.modalite)
 
@@ -904,17 +989,13 @@ def render(cat, mode=None):
     # d'un coup, dont dix-neuf que personne n'avait demandées. On regarde un
     # registre, on en change d'un geste, et les autres servent à restreindre.
     dispo = [a for a, _ in AXES]
-    c1, c2, c3 = st.columns([1.6, 1, 1.15])
+    c1, c2, c3 = st.columns([1.5, 1.1, 1.5], vertical_alignment="bottom")
     with c1:
         axe = st.selectbox(
-            f'3 · {T("ex_axe")}', dispo, key=f"ex_axe_{mesure}",
+            T("ex_axe"), dispo, key=f"ex_axe_{mesure}",
             format_func=lambda a: T(dict(AXES)[a]))
     axes = [axe]
     with c2:
-        formes = ["barres", "radar", "tableau", "carte"]
-        forme = st.selectbox(T("ex_format"), formes, key="ex_forme",
-                             format_func=lambda f: T("ex_" + f))
-    with c3:
         extremes = st.selectbox(
             T("ex_extremes"), ["tous", "top", "flop", "topflop", "ecart"],
             key="ex_ext",
@@ -922,10 +1003,19 @@ def render(cat, mode=None):
                                      "flop": "ex_flop",
                                      "topflop": "ex_topflop",
                                      "ecart": "ex_ecart"}[c]))
+    with c3:
+        # LE FORMAT SE CHOISIT D'UN CLIC, PAS D'UN MENU : quatre boutons
+        # accolés, celui qui est actif en vert. C'est le réglage qu'on change
+        # le plus souvent de tout l'écran.
+        formes = ["barres", "tableau", "carte", "radar"]
+        with st.container(key="ex_forme_zone"):
+            forme = st.radio(T("ex_voir"), formes, key="ex_forme",
+                             horizontal=True,
+                             format_func=lambda f: T("ex_" + f))
 
     # ---- 4 · les cinq registres, cumulables ------------------------------
     filtre, poses = _panneau_filtres(cat, "ex_pan", _REGISTRES_F,
-                                     4, "ex_filtres_t")
+                                     3, "ex_filtres_t", note="ex_filtres_opt")
     n_f = int(filtre.sum())
     if n_f == 0:
         st.info(T("ex_filtre_vide"))
@@ -943,8 +1033,25 @@ def render(cat, mode=None):
         return
     montrees = _filtrer(lignes, extremes, ens)
 
-    # ---- 5 · le dessin ---------------------------------------------------
-    _etape(5, "ex_res")
+    # ---- 4 · le dessin, et ce sur quoi il porte --------------------------
+    _etape(4, "ex_res")
+    # L'EFFECTIF RETENU EST ANNONCÉ AVANT LE DESSIN, PAS APRÈS. Une part de
+    # soixante pour cent ne veut pas dire la même chose sur mille deux cents
+    # ménages et sur soixante ; le lecteur doit savoir sur quoi il regarde
+    # avant de regarder. Le téléchargement est à côté : ce qui est à l'écran
+    # est ce qui part dans le fichier.
+    _g, _d = st.columns([3, 1], vertical_alignment="center")
+    with _g:
+        _p = 100.0 * n_f / cat["n"] if cat["n"] else 0
+        st.markdown(
+            f'<p class="ex-res-x">'
+            f'{_e(T("ex_e4_x", k=_n(n_f), n=_n(cat["n"]), p=_f(_p, 1)))}</p>',
+            unsafe_allow_html=True)
+    with _d:
+        st.download_button(
+            T("ex_dl"), data=_csv(montrees, mesure),
+            file_name="resultats_apri.csv", mime="text/csv",
+            key=f"ex_dl_{mesure}", use_container_width=True)
     # LE TABLEAU EST UN MODE, PAS UNE ANNEXE. Il était accroché sous chaque
     # dessin : on lisait la même colonne de chiffres deux fois, une fois au
     # bout des barres et une fois dessous, et l'écran doublait de hauteur pour

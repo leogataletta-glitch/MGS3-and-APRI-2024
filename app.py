@@ -299,6 +299,36 @@ st.markdown(("""
         div[data-testid="stMarkdownContainer"] > style:only-child) {
       display: none !important;
   }
+  /* --- LES ÉTAPES NUMÉROTÉES DES ÉCRANS DE RÉSULTATS ---------------------
+     La feuille est ici, et non dans l'explorateur, parce que la première
+     étape — le choix de la source — est rendue par l'aiguillage, avant que
+     l'explorateur n'ait posé la sienne. Deux feuilles pour un même objet
+     finissent toujours par diverger. */
+  .ex-etape { display:flex; align-items:center; gap:11px; margin:22px 0 3px; }
+  .ex-etape .n { flex:0 0 22px; width:22px; height:22px; border-radius:50%;
+            background:#1a6b52; color:#fff; font-size:11.5px; font-weight:700;
+            display:flex; align-items:center; justify-content:center;
+            font-variant-numeric:tabular-nums; }
+  .ex-etape .t { font-size:11px; font-weight:700; letter-spacing:.09em;
+            text-transform:uppercase; color:#101728; white-space:nowrap; }
+  .ex-etape-o { font-size:10.5px; color:#8a93a5; font-style:italic;
+            white-space:nowrap; }
+  .ex-etape .l { flex:1 1 auto; height:1px; background:#e6ece8; }
+  p.ex-etape-x { font-size:12.5px !important; color:#6b7590 !important;
+            margin:0 0 10px 33px !important; line-height:1.5 !important;
+            text-align:left !important; }
+
+
+  /* LA SOURCE RETENUE PORTE UNE COCHE. Sur une rangée de quatre cartes de
+     même forme, le filet vert du haut dit laquelle est ouverte, mais il se
+     confond avec le bord au premier coup d'œil ; la coche, elle, ne se
+     confond avec rien. */
+  div[class*="st-key-ra_source"] div[role="radiogroup"]
+      > label:has(input:checked)::after {
+      content: "✓"; position: absolute; top: 9px; right: 13px;
+      color: #1a6b52; font-size: 13px; font-weight: 700; line-height: 1;
+  }
+
   /* --- LE PIED FERME L'ÉCRAN, MÊME QUAND LA PAGE EST COURTE -------------
      Il n'y a jamais de blanc sous la bande verte : la colonne principale
      reçoit une hauteur minimale d'un écran, et le pied une marge haute
@@ -1580,8 +1610,8 @@ TEXTES_NAV = {
               "fr": "Pousser plusieurs variables à la fois"},
     "sx_d5": {"en": "Wave after wave, and what the loops add",
               "fr": "Vague après vague, et ce que les boucles ajoutent"},
-    "ra_srcd_menages": {"en": "483 questions, 1,200+ households",
-                        "fr": "483 questions, plus de 1 200 ménages"},
+    "ra_srcd_menages": {"en": "1,211 households, 483 questions",
+                        "fr": "1 211 ménages, 483 questions"},
     "ra_srcd_satellite": {"en": "Forest cover and vegetation indices",
                           "fr": "Couverture forestière et indices de "
                                 "végétation"},
@@ -1628,8 +1658,15 @@ TEXTES_NAV = {
         "fr": "© {a} Programme des Nations Unies pour l'environnement"},
 
     "ra_src": {"en": "Measured by", "fr": "Mesuré par"},
-    "ra_src_menages": {"en": "Household questionnaire",
-                       "fr": "Questionnaire ménage"},
+    "ra_e1_t": {"en": "Select your data source",
+                "fr": "Choisissez votre source de données"},
+    "ra_e1_x": {
+        "en": "Each source answers a different question, and none of them "
+              "measures the same thing.",
+        "fr": "Chaque source répond à une question différente, et aucune ne "
+              "mesure la même chose."},
+    "ra_src_menages": {"en": "Household survey",
+                       "fr": "Enquête ménage"},
     "ra_src_satellite": {"en": "Satellite", "fr": "Satellite"},
     "ra_src_institutions": {"en": "Institutional survey",
                             "fr": "Enquête institutionnelle"},
@@ -2150,6 +2187,17 @@ with _c_contenu:
             # interroge des ménages, et le satellite, qui regarde le sol. Un
             # seul des deux à la fois : ils ne se ventilent pas pareil, et
             # les empiler ferait deux écrans sur une page.
+            # L'ÉTAPE 1 COIFFE LES QUATRE SOURCES. La rangée de cartes ne
+            # disait pas ce qu'on attendait du lecteur : quatre objets de même
+            # rang, dont on ne savait pas s'il fallait en choisir un ou les
+            # lire tous. Numérotée et suivie d'une ligne d'aide, elle devient
+            # le premier geste d'un parcours en quatre temps.
+            st.markdown(
+                f'<div class="ex-etape"><span class="n">1</span>'
+                f'<span class="t">{T("ra_e1_t")}</span>'
+                f'<span class="l"></span></div>'
+                f'<p class="ex-etape-x">{T("ra_e1_x")}</p>',
+                unsafe_allow_html=True)
             _src = onglets.barre(
                 "ra_source",
                 ["menages", "institutions", "biodiversite", "satellite"],
