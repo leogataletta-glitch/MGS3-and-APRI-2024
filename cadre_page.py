@@ -1157,7 +1157,21 @@ STYLE = """
               margin-top:4px; }
   .cad-a    { padding:6px 30px 2px 0; }
   .cad-a + .cad-a { border-left:1px solid #e6ecf2; padding-left:30px; }
-  .cad-a-h  { display:flex; align-items:center; gap:14px; margin-bottom:24px; }
+  /* EMPILÉS, ILS N'ONT PLUS DE FILET VERTICAL ENTRE EUX : c'est le filet
+     vert au-dessus de chaque titre qui les sépare, et il est le même pour
+     les trois. Sans cette remise à zéro, le deuxième et le troisième
+     gardaient le bord gauche et le décalage prévus pour trois colonnes. */
+  .cad-aaa.vertical .cad-a { padding:0 0 2px !important; }
+  .cad-aaa.vertical .cad-a + .cad-a { border-left:0 !important;
+        padding-left:0 !important; }
+    /* EMPILÉS DANS UNE COLONNE ÉTROITE, les trois attributs se lisent l'un
+     sous l'autre ; le filet vert au-dessus de chaque titre les sépare. */
+  .cad-aaa.vertical { grid-template-columns:1fr !important; gap:18px !important; }
+  /* LE FILET VERTICAL EST LA SEULE SÉPARATION ENTRE LES DEUX MOITIÉS. */
+  .cad-colonne-dims { border-left:1px solid #e6ece8; padding-left:28px; }
+  @media (max-width:1100px) {
+    .cad-colonne-dims { border-left:none; padding-left:0; margin-top:22px; }
+  }
   p.cad-attr-x { font-size:15px !important; color:#3c4761 !important;
             line-height:1.55 !important; margin:2px 0 18px !important;
             max-width:96ch; }
@@ -1170,11 +1184,7 @@ STYLE = """
               flex:0 0 auto; }
   /* Le trait s'arrête sur un point : une ligne qui se termine dans le vide
      se lit comme une ligne coupée. */
-  .cad-a-l  { flex:1 1 auto; height:1px; background:#cfe0d6;
-              position:relative; min-width:24px; }
-  .cad-a-l::after { content:""; position:absolute; right:0; top:-2.5px;
-              width:6px; height:6px; border-radius:50%; background:#1b5e3a; }
-  .cad-a-t  { font-size:16px; font-weight:700; color:#1a6b52;
+      .cad-a-t  { font-size:16px; font-weight:700; color:#1a6b52;
               letter-spacing:.055em; text-transform:uppercase;
               margin:0 0 9px; }
   p.cad-a-x { font-size:14.5px !important; color:#3c4761 !important;
@@ -1195,13 +1205,13 @@ STYLE = """
               font-weight:400; color:#26364a !important;
               margin:2px 0 8px !important; max-width:none !important;
               border-left:3px solid #1a6b52; padding-left:20px;
-              text-align:left !important; white-space:nowrap;
-              overflow:hidden; text-overflow:ellipsis; }
-  /* SUR ÉCRAN ÉTROIT ELLE A LE DROIT DE PASSER À LA LIGNE. Une phrase tenue
-     de force sur une ligne dans huit cents pixels finirait tronquée par les
-     points de suspension, ce qui est pire que deux lignes. */
+              text-align:left !important; white-space:normal; }
+  /* ELLE PASSE À LA LIGNE, ET C'EST LA MOITIÉ DE LARGEUR QUI L'IMPOSE.
+     Tenue de force sur une ligne, elle se terminait par des points de
+     suspension dans une colonne de six cents pixels — une phrase tronquée
+     est pire que deux lignes. */
   @media (max-width: 1150px) {
-    p.cad-uma { white-space:normal; font-size:15.5px !important; }
+    p.cad-uma { font-size:15.5px !important; }
   }
 
   /* La barre d'onglets vient de `onglets.py`, comme sur les autres pages. */
@@ -1287,9 +1297,12 @@ def _tableau_dimensions(stats):
     dimension — et l'avancement du calcul est une autre question, qui se lit
     indicateur par indicateur dans l'analyse des résultats.
     """
-    pmax = max(e["part"] for e in stats["dims"].values()) or 1
-    col = ('grid-template-columns:minmax(190px,1.5fr) minmax(160px,3fr) '
-           '64px 96px;gap:22px;align-items:center;')
+    # LA BARRE A SAUTÉ, LE POURCENTAGE RESTE. Une barre longue de trois cents
+    # pixels pour dire ce qu'un nombre dit en quatre caractères : elle
+    # occupait la moitié de la largeur du tableau, et c'est cette largeur-là
+    # qui empêchait de poser le tableau à côté d'autre chose.
+    col = ('grid-template-columns:minmax(170px,1fr) 76px 88px;'
+           'gap:18px;align-items:center;')
     lignes = []
     for cle in ORDRE:
         e = stats["dims"].get(cle)
@@ -1303,10 +1316,6 @@ def _tableau_dimensions(stats):
             f'<div style="font-size:13.5px;line-height:1.35">'
             f'<span style="color:{VERT_APRI};font-weight:700">{num}.</span> '
             f'<span style="color:{ENCRE};font-weight:600">{reste}</span></div>'
-            f'<div style="background:#e4efe8;border-radius:99px;height:9px;'
-            f'overflow:hidden"><div style="height:100%;border-radius:99px;'
-            f'width:{max(100 * e["part"] / pmax, 1.5):.1f}%;'
-            f'background:{VERT_APRI}"></div></div>'
             f'<div style="font-size:12.5px;font-weight:600;color:{ENCRE};'
             f'text-align:right;font-variant-numeric:tabular-nums">'
             f'{_fmt(e["part"])}&thinsp;%</div>'
@@ -1318,8 +1327,8 @@ def _tableau_dimensions(stats):
         f'letter-spacing:.1em;text-transform:uppercase;color:#8a93a5;'
         f'font-weight:700">'
         f'<div>{_e(T("cad_col_dim"))}</div>'
-        f'<div style="grid-column:span 2">{_e(T("cad_col_poids"))}</div>'
-        f'<div>{_e(T("cad_col_ind"))}</div></div>')
+        f'<div style="text-align:right">{_e(T("cad_col_poids"))}</div>'
+        f'<div style="text-align:right">{_e(T("cad_col_ind"))}</div></div>')
     return ('<div style="margin-top:14px">' + entete + "".join(lignes)
             + '</div>')
 
@@ -1379,7 +1388,7 @@ def _titre_p(rang, cle, exemple=False):
                if exemple else "") + '</div>')
 
 
-def _attributs():
+def _attributs(vertical=False):
     """Les trois attributs, en trois colonnes numérotées.
 
     C'EST LE SEUL CONTENU DU PREMIER ONGLET, et il porte donc toute la
@@ -1402,8 +1411,9 @@ def _attributs():
             '<div class="cad-a">'
             f'<div class="cad-a-t">{_e(T(k + "_t"))}</div>'
             f'<p class="cad-a-x">{_e(T(k))}</p></div>')
+    classe = "cad-aaa vertical" if vertical else "cad-aaa"
     return (f'<p class="cad-attr-x">{_e(T("cad_attr_x"))}</p>'
-            '<div class="cad-aaa">' + "".join(cols) + '</div>')
+            f'<div class="{classe}">' + "".join(cols) + '</div>')
 
 
 def _sources(extras=None):
@@ -1513,14 +1523,20 @@ def _min_section():
 # une vue mémorisée par son libellé retomberait sur la première case au
 # premier changement de langue, et le harnais de rendu croirait couvrir sept
 # onglets en n'en rendant qu'un.
-VUES = ("mesure", "sources", "dimensions", "indicateurs", "score", "boucles",
+# LES ATTRIBUTS ET LES DIMENSIONS TIENNENT DANS UN SEUL ONGLET. Trois
+# colonnes de six lignes d'un côté, sept lignes de tableau de l'autre : ni
+# l'un ni l'autre ne remplissait un écran, et l'on cliquait pour passer de ce
+# qu'APRI mesure à ce en quoi il le découpe — deux moitiés de la même
+# définition. Depuis que le tableau a perdu sa barre, les deux tiennent côte
+# à côte, séparés par un filet.
+VUES = ("mesure", "sources", "indicateurs", "score", "boucles",
         "environnement", "document")
 # `_LIB` porte les intitulés longs ; ils ne sont plus rendus depuis que la
 # barre a pris les titres courts, mais la table reste la carte des sept vues.
-_LIB = {"mesure": "cad_o1", "sources": "cad_o2", "dimensions": "cad_o3",
+_LIB = {"mesure": "cad_o1", "sources": "cad_o2",
         "indicateurs": "cad_c35", "score": "cad_o4", "boucles": "cad_o5",
         "environnement": "cad_o6", "document": "cad_o7"}
-_COURT = {"mesure": "cad_c1", "sources": "cad_c2", "dimensions": "cad_c3",
+_COURT = {"mesure": "cad_c1", "sources": "cad_c2",
           "indicateurs": "cad_c35", "score": "cad_c4", "boucles": "cad_c5",
           "environnement": "cad_c6", "document": "cad_c7"}
 
@@ -1554,8 +1570,6 @@ def render(doc_complet=None):
 
     if vue == "sources":
         _v_sources()
-    elif vue == "dimensions":
-        _v_dimensions(stats)
     elif vue == "indicateurs":
         _v_indicateurs()
     elif vue == "score":
@@ -1567,7 +1581,7 @@ def render(doc_complet=None):
     elif vue == "document":
         _v_document(doc_complet)
     else:
-        _v_mesure()
+        _v_mesure(stats)
 
 
 def _titre(cle, note=None, marge=4):
@@ -1590,22 +1604,29 @@ def _titre(cle, note=None, marge=4):
     return h + (f'<p class="cad-note">{_e(T(note))}</p>' if note else "")
 
 
-# --- 1 · ce que mesure APRI -------------------------------------------------
-def _v_mesure():
-    """Une phrase, puis les trois attributs. Rien d'autre.
+# --- 1 · ce que mesure APRI, et en quoi il le découpe -----------------------
+def _v_mesure(stats):
+    """La phrase, les trois attributs, et les sept dimensions à côté.
 
-    L'ONGLET DISAIT TROP DE CHOSES À LA FOIS. Quatre cartouches d'ouverture,
-    les trois attributs, puis un schéma d'ensemble en quatre pavés chiffrés :
-    trois réponses empilées à la question « qu'est-ce qu'APRI mesure ? »,
-    dont aucune ne la donnait en une ligne. La phrase la donne, et les trois
-    attributs la déplient.
+    DEUX MOITIÉS D'UNE MÊME DÉFINITION, CÔTE À CÔTE. « Ce que mesure APRI »
+    disait la résilience en trois attributs ; « Dimensions » disait en quoi
+    cette résilience se découpe et ce que pèse chaque part. Séparés en deux
+    onglets, il fallait cliquer pour passer de l'un à l'autre, et aucun des
+    deux ne remplissait l'écran. Le filet vertical dit « ceci n'est pas
+    cela » aussi bien qu'un onglet le disait, sans le clic.
+
+    LA DÉFINITION EST REMONTÉE À L'ACCUEIL, et elle n'a pas à être dite deux
+    fois : la phrase qui ouvre le site n'est pas l'en-tête d'un onglet de
+    documentation. Ne reste ici que ce que l'onglet apporte.
     """
-    # LA DÉFINITION EST REMONTÉE À L'ACCUEIL, et elle n'a pas à être dite
-    # deux fois : c'est la phrase qui ouvre le site, pas l'en-tête d'un
-    # onglet de documentation. L'onglet commence donc directement par ce
-    # qu'il apporte — les trois attributs.
-    st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>' + _attributs(),
-                unsafe_allow_html=True)
+    g, d = st.columns([1, 1.25], gap="large")
+    with g:
+        st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>'
+                    + _attributs(vertical=True), unsafe_allow_html=True)
+    with d:
+        st.markdown('<div class="cad-colonne-dims">'
+                    + _tableau_dimensions(stats) + '</div>',
+                    unsafe_allow_html=True)
 
 
 # --- 2 · comment la résilience est mesurée ----------------------------------
@@ -1641,23 +1662,6 @@ def _v_sources():
         # annonce de ce qui vient juste après ne fait que retarder.
         _sources({"cad_so1": _compteurs(compteurs)})
         + _fin(), unsafe_allow_html=True)
-
-
-# --- 3 · les dimensions -----------------------------------------------------
-def _v_dimensions(stats):
-    """Le tableau des sept dimensions, et la note sur la septième.
-
-    LA NOTE N'EST PLUS UNE `st.caption`. Le composant de Streamlit la rendait
-    dans un gris et un corps qui ne sont ceux d'aucun autre texte de la page ;
-    elle prend maintenant le gris des notes du site, sous un filet qui la
-    rattache au tableau.
-    """
-    # LE TABLEAU SE SUFFIT. Les deux notes qui l'entouraient définissaient
-    # « pondération » et « couverture » au-dessus, et signalaient la septième
-    # dimension au-dessous : le tableau porte déjà ses intitulés de colonne,
-    # et la septième s'y lit à zéro indicateur calculé. Une définition écrite
-    # à côté d'une colonne qui la montre n'apprend rien de plus.
-    st.markdown(_tableau_dimensions(stats), unsafe_allow_html=True)
 
 
 # --- 4 · de la mesure brute au score ---------------------------------------

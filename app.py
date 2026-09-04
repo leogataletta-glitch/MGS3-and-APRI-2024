@@ -278,8 +278,57 @@ st.markdown(("""
      un tiers de la page restait blanc à droite pendant que les tableaux se
      serraient. La borne saute, deux gouttières suffisent à empêcher le texte
      de toucher les bords. */
-  .block-container { max-width: none; padding-top: 0; padding-bottom: 2.4rem;
+  .block-container { max-width: none; padding-top: 0; padding-bottom: 0;
                      padding-left: 2.6rem; padding-right: 2.6rem; }
+  /* --- LE PIED FERME L'ÉCRAN, MÊME QUAND LA PAGE EST COURTE -------------
+     Il était simplement le dernier bloc du flux : sur une page qui tient en
+     six cents pixels, il se posait à six cents pixels et laissait tout le
+     reste de l'écran en blanc, ce qui donnait une page interrompue plutôt
+     que terminée. La colonne principale reçoit donc une hauteur minimale
+     d'un écran, et le pied une marge haute automatique : il descend jusqu'au
+     bas de la fenêtre quand le contenu ne l'y pousse pas, et se laisse
+     pousser plus bas quand le contenu est long.
+
+     LA HAUTEUR EST CORRIGÉE DU FACTEUR DE ZOOM. Le bloc principal porte un
+     `zoom: .95` ; une hauteur de 100vh y serait rendue à quatre-vingt-quinze
+     pour cent de l'écran, et il manquerait toujours une bande blanche en
+     bas. `--dz` est l'inverse de ce facteur — c'est déjà lui qui rend le
+     bandeau et le pied pleine largeur. */
+  div[data-testid="stMainBlockContainer"] > div[data-testid="stVerticalBlock"] {
+      /* LES SEIZE PIXELS RETIRÉS SONT CEUX QUE STREAMLIT RETIRE LUI-MÊME.
+         L'enveloppe du dernier bloc est mesurée seize pixels plus courte que
+         son contenu — c'est constant, quelle que soit la taille de la
+         fenêtre et quel que soit le zoom, et c'est ce qui faisait dépasser
+         la bande verte sous le bord de l'écran. */
+      min-height: calc(100vh * var(--dz) - 16px);
+  }
+  div[data-testid="stLayoutWrapper"]:has(> div[class*="st-key-zone_pied"]) {
+      margin-top: auto !important; padding-top: 34px !important;
+      /* SANS CELA, LE FLEX LE COMPRIME. La colonne principale a une hauteur
+         minimale d'un écran ; quand le contenu est court, elle rétrécit le
+         dernier bloc pour tenir la promesse, et la bande verte dépassait de
+         sa boîte par le bas. Le pied ne se comprime pas. */
+      flex: 0 0 auto !important;
+  }
+  /* L'ÉCART AU-DESSUS DU PIED EST PORTÉ PAR L'ENVELOPPE, PAS PAR LE PIED.
+     Une marge posée sur le pied lui-même sortait de la boîte que le flex
+     mesure : le bloc s'arrêtait au bas de l'écran et la bande verte le
+     dépassait de trente-quatre pixels, dont on ne voyait plus la fin. */
+  .pied { margin-top: 0 !important; }
+  /* ET SES ENVELOPPES LE MESURENT VRAIMENT. Streamlit centre le contenu d'un
+     conteneur de markdown : la bande verte, plus haute que la ligne de texte
+     qu'elle contient, débordait de sa boîte au lieu de l'agrandir, et le
+     calcul de la hauteur d'écran comptait quatorze pixels de moins que ce
+     qui se dessine. */
+  div[class*="st-key-zone_pied"],
+  div[data-testid="stLayoutWrapper"]:has(> div[class*="st-key-zone_pied"]),
+  div[class*="st-key-zone_pied"] div[data-testid="stElementContainer"],
+  div[class*="st-key-zone_pied"] div[data-testid="stMarkdown"],
+  div[class*="st-key-zone_pied"] div[data-testid="stMarkdown"] > div,
+  div[class*="st-key-zone_pied"] div[data-testid="stMarkdownContainer"] {
+      height: auto !important; min-height: 0 !important;
+      display: block !important;
+  }
   /* LE BANDEAU TOUCHE LE HAUT DE LA PAGE. Il est la première chose du bloc
      principal ; le pouce de blanc que Streamlit réserve au-dessus le
      décollait du bord et faisait flotter l'illustration au lieu de la poser.
