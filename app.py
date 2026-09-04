@@ -2296,12 +2296,17 @@ with _c_contenu:
         # `st.tabs` rendrait les cinq à chaque affichage : l'énumération des
         # boucles et les propagations seraient calculées ensemble pour n'en
         # montrer qu'une. Un sélecteur ne rend que ce qu'on regarde.
-        _CODES_SX = ["construire", "relations", "leviers", "simuler",
-                     "vagues", "direct"]
-        _N_SX = dict(zip(_CODES_SX, ("sx_o1", "sx_o2", "sx_o3", "sx_o4",
-                                     "sx_o5", "sx_o6")))
-        _D_SX = dict(zip(_CODES_SX, ("sx_d1", "sx_d2", "sx_d3", "sx_d4",
-                                     "sx_d5", "sx_d6")))
+        # L'ANIMATION SUIT IMMÉDIATEMENT LA CONSTRUCTION, et c'est l'ordre
+        # naturel du parcours : on dessine le système, puis on le fait
+        # tourner. Les trois écrans d'analyse — relations, leviers,
+        # interventions — viennent après, quand on a vu le système bouger et
+        # qu'on sait quelles questions lui poser.
+        _CODES_SX = ["construire", "direct", "relations", "leviers",
+                     "simuler", "vagues"]
+        _N_SX = dict(zip(_CODES_SX, ("sx_o1", "sx_o6", "sx_o2", "sx_o3",
+                                     "sx_o4", "sx_o5")))
+        _D_SX = dict(zip(_CODES_SX, ("sx_d1", "sx_d6", "sx_d2", "sx_d3",
+                                     "sx_d4", "sx_d5")))
         _vue = onglets.barre("bcl_vue", _CODES_SX,
                              titre=lambda c: T(_N_SX[c]),
                              description=lambda c: T(_D_SX[c]),

@@ -88,6 +88,32 @@ TEXTES = {
                         "vague {k} : ce système est une boucle, pas une "
                         "chaîne."},
     "sd_non_mesure": {"en": "not measured", "fr": "non mesurée"},
+    "sd_delai": {"en": "Time per relay", "fr": "Délai par relais"},
+    "sd_delai_non": {"en": "not set", "fr": "non posé"},
+    "sd_mois": {"en": "months", "fr": "mois"},
+    "sd_ans": {"en": "years", "fr": "ans"},
+    "sd_temps_x": {
+        "en": "The delay is yours, not the model's: nothing in the framework "
+              "says how long one relay takes. Set it and the wave counter "
+              "reads as a rough horizon.",
+        "fr": "Le délai est le vôtre, pas celui du modèle : rien dans le "
+              "cadre ne dit combien de temps dure un relais. Une fois posé, "
+              "le compteur de vagues se lit comme un horizon approché."},
+    "sd_bilan": {"en": "Once the wave has died out",
+                 "fr": "Une fois l'onde éteinte"},
+    "sd_connect": {"en": "Most connected variables",
+                   "fr": "Variables les plus connectées"},
+    "sd_connect_x": {"en": "links in and out, inside this perimeter",
+                     "fr": "liens entrants et sortants, dans ce périmètre"},
+    "sd_passages": {"en": "Variables the wave went through most often",
+                    "fr": "Variables les plus retraversées par l'onde"},
+    "sd_passages_x": {
+        "en": "waves that moved them: more than one means a loop brought the "
+              "wave back",
+        "fr": "vagues qui les ont déplacées : au-delà d'une, c'est une boucle "
+              "qui a ramené l'onde"},
+    "sd_vagues_n": {"en": "waves", "fr": "vagues"},
+    "sd_liens_n": {"en": "links", "fr": "liens"},
     "sd_perim": {
         "en": "The wave is followed inside the drawn perimeter only: what "
               "leaves the picture is not tracked. Change the central "
@@ -200,14 +226,24 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
   .lg{display:flex;align-items:center;gap:6px}
   .pt{width:11px;height:11px;border-radius:50%}
   #mot{font-size:12.5px;color:#3c4761;min-height:17px;padding:3px 3px 0}
+  #kt{font-size:11px;color:#6b7590;font-variant-numeric:tabular-nums}
+  #fin{display:flex;gap:14px;flex-wrap:wrap;margin:6px 0 2px}
+  .fb{flex:1 1 300px;border:1px solid #e3eaf3;border-radius:12px;
+    padding:10px 14px;background:#fbfcfd}
+  .fh{font-size:10px;font-weight:700;letter-spacing:.07em;
+    text-transform:uppercase;color:#2a6b3f;margin-bottom:6px}
+  .fx{font-size:10.5px;color:#8a93a5;margin-top:6px;line-height:1.45}
+  .fl{display:flex;justify-content:space-between;gap:12px;font-size:12px;
+    color:#3c4761;padding:2px 0}
+  .fl b{font-variant-numeric:tabular-nums;color:#101728;white-space:nowrap}
   text{font-family:Inter,system-ui,sans-serif}
 </style></head><body><div id="tout">
 <div id="barre">
   <div class="ch"><label>__L_VAR__</label>
     <select id="src"></select></div>
   <div class="ch"><label>__L_AMP__ · <span id="ampv">+1,0</span></label>
-    <input id="amp" type="range" min="-3" max="3" step="0.5" value="1"
-           style="width:150px"></div>
+    <input id="amp" type="range" min="-10" max="10" step="0.5" value="1"
+           style="width:190px"></div>
   <button id="lire" class="p">__L_LIRE__</button>
   <button id="pas">__L_PAS__</button>
   <button id="raz">__L_RAZ__</button>
@@ -216,12 +252,28 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
       <option value="1.7">0,5×</option>
       <option value="1" selected>1×</option>
       <option value="0.55">2×</option>
+      <option value="0.3">4×</option>
+    </select></div>
+  <div class="ch"><label>__L_DEL__</label>
+    <select id="dl" title="__L_TPS__">
+      <option value="0" selected>__L_DEL0__</option>
+      <option value="1">1 __L_MOIS__</option>
+      <option value="3">3 __L_MOIS__</option>
+      <option value="6">6 __L_MOIS__</option>
+      <option value="12">12 __L_MOIS__</option>
     </select></div>
   <div id="compteur"><div id="kl">__L_VAGUE__</div>
-    <div id="kv">0</div><div id="kd">0 % __L_DIS__</div></div>
+    <div id="kv">0</div><div id="kd">0 % __L_DIS__</div>
+    <div id="kt"></div></div>
 </div>
 <div id="scene"><svg id="g" preserveAspectRatio="xMidYMid meet"></svg></div>
 <div id="mot"></div>
+<div id="fin" hidden>
+  <div class="fb"><div class="fh">__L_CON__</div><div id="fc"></div>
+    <div class="fx">__L_CONX__</div></div>
+  <div class="fb"><div class="fh">__L_PAS2__</div><div id="fp"></div>
+    <div class="fx">__L_PASX__</div></div>
+</div>
 <div id="bas">
   <span class="lg"><span class="pt" style="background:#1a8a4f"></span>
     __L_LH__</span>
@@ -235,8 +287,10 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
 const D = __DONNEES__, L = __LIBELLES__;
 const NO = D.noeuds, LI = D.liens;
 const IX = {}; NO.forEach((n,i)=>IX[n.id]=i);
-const SEUIL = 0.004;          /* sous 4 millièmes de point, plus rien ne bouge */
-const KMAX = 40;
+/* Sous deux millièmes de point sur dix, l'onde ne déplace plus rien de
+   lisible ; le seuil est bas pour qu'une grosse poussée puisse courir loin. */
+const SEUIL = 0.002;
+const KMAX = 80;
 const VERT = "#1a8a4f", ROUGE = "#c33a24", APRI = "#2a6b3f";
 
 /* ---------- la géométrie, celle du schéma fixe ------------------------- */
@@ -308,10 +362,19 @@ const vues = NO.map(n => {
 });
 
 /* ---------- l'état de la propagation ----------------------------------- */
-let src = D.centre, amp = 1, vitesse = 1;
+let src = D.centre, amp = 1, vitesse = 1, delai = 0;
 let vague = new Float64Array(NO.length);
 let cum = new Float64Array(NO.length);
 let total = 1, k = 0, joue = false, anim = null, retour = 0;
+/* Combien de vagues ont déplacé chaque nœud : au-delà d'une, c'est une
+   boucle qui a ramené l'onde dessus. */
+let passages = new Int32Array(NO.length);
+
+/* Le degré de chaque nœud DANS LE PÉRIMÈTRE DESSINÉ, entrant plus sortant.
+   C'est le nombre de liens qu'on voit à l'écran, pas celui du graphe entier :
+   annoncer un degré qui ne se compte pas sur l'image serait invérifiable. */
+const DEG = new Int32Array(NO.length);
+for (const l of LI){ DEG[IX[l.de]] += 1; DEG[IX[l.vers]] += 1; }
 
 function totalAbsolu(depart, a){
   let v = new Float64Array(NO.length), c = new Float64Array(NO.length);
@@ -331,6 +394,14 @@ function totalAbsolu(depart, a){
 function fmt(v, d){
   const s = (v>=0 && d ? "+" : "") + v.toFixed(d ? 2 : 1);
   return s.replace(".", "__VIRG__");
+}
+
+function horizon(){
+  const e = document.getElementById("kt");
+  if (!delai || !k){ e.textContent = ""; return; }
+  const mois = k*delai;
+  e.textContent = mois < 24 ? "≈ " + mois + " " + L.mois
+    : "≈ " + (mois/12).toFixed(1).replace(".", "__VIRG__") + " " + L.ans;
 }
 
 function peindre(){
@@ -358,6 +429,25 @@ function peindre(){
   document.getElementById("kv").textContent = k;
   document.getElementById("kd").textContent =
     Math.round(100*Math.min(1, total ? d/total : 0)) + " % " + L.dis;
+  horizon();
+}
+
+/* ---------- ce qu'on lit une fois l'onde éteinte ------------------------ */
+function bilan(montrer){
+  const e = document.getElementById("fin");
+  if (!montrer || !k){ e.hidden = true; return; }
+  const con = NO.map((n,i)=>({n, v: DEG[i]}))
+                .filter(x=>x.v>0).sort((a,b)=>b.v-a.v).slice(0,5);
+  const pas = NO.map((n,i)=>({n, v: passages[i], c: cum[i]}))
+                .filter(x=>x.v>0).sort((a,b)=>b.v-a.v || Math.abs(b.c)-Math.abs(a.c))
+                .slice(0,5);
+  const ligne = (x, u) => '<div class="fl"><span>' + x.n.nom
+    + '</span><b>' + x.v + ' ' + u + '</b></div>';
+  document.getElementById("fc").innerHTML =
+    con.map(x=>ligne(x, L.liens)).join("");
+  document.getElementById("fp").innerHTML =
+    pas.map(x=>ligne(x, L.vagues)).join("");
+  e.hidden = false;
 }
 
 function remise(){
@@ -365,12 +455,14 @@ function remise(){
   k = 0; retour = 0;
   cum = new Float64Array(NO.length);
   vague = new Float64Array(NO.length);
+  passages = new Int32Array(NO.length);
   vague[IX[src]] = amp;
   total = totalAbsolu(src, amp) || 1;
   gBilles.innerHTML = "";
   traits.forEach(p => { p.setAttribute("opacity", .34);
                         p.setAttribute("stroke-width", 1.5); });
   document.getElementById("mot").textContent = "";
+  bilan(false);
   peindre();
 }
 
@@ -383,9 +475,11 @@ function vaguesuivante(apres){
   for (let j=0;j<NO.length;j++) bouge += Math.abs(suivante[j]);
   if (bouge < SEUIL){
     document.getElementById("mot").textContent = L.fin;
-    arret(); if (apres) apres(false); return;
+    arret(); bilan(true); if (apres) apres(false); return;
   }
   k += 1;
+  for (let j=0;j<NO.length;j++)
+    if (Math.abs(suivante[j]) > SEUIL) passages[j] += 1;
   const duree = 950*vitesse, part = 0.82;
   const actifs = [];
   LI.forEach((l,i) => {
@@ -436,7 +530,7 @@ function arret(){
 }
 function boucler(ok){
   if (!joue) return;
-  if (!ok || k >= KMAX){ arret(); return; }
+  if (!ok || k >= KMAX){ arret(); bilan(true); return; }
   setTimeout(()=>{ if (joue) vaguesuivante(boucler); }, 120*vitesse);
 }
 
@@ -455,8 +549,13 @@ ia.oninput = () => {
   remise();
 };
 document.getElementById("vit").onchange = e => { vitesse = parseFloat(e.target.value); };
+document.getElementById("dl").onchange = e => {
+  delai = parseFloat(e.target.value) || 0; horizon();
+};
 document.getElementById("raz").onclick = remise;
-document.getElementById("pas").onclick = () => { arret(); vaguesuivante(null); };
+document.getElementById("pas").onclick = () => {
+  arret(); bilan(false); vaguesuivante(v => bilan(true));
+};
 document.getElementById("lire").onclick = () => {
   if (joue){ arret(); return; }
   if (anim) return;
@@ -474,7 +573,8 @@ remise();
 def _html(d, lang):
     lib = {"lire": T("sd_lire"), "pause": T("sd_pause"), "fin": T("sd_fin"),
            "ret": T("sd_retour"), "nm": T("sd_non_mesure"),
-           "dis": T("sd_distrib")}
+           "dis": T("sd_distrib"), "mois": T("sd_mois"), "ans": T("sd_ans"),
+           "liens": T("sd_liens_n"), "vagues": T("sd_vagues_n")}
     return (GABARIT
             .replace("__DONNEES__", json.dumps(d, ensure_ascii=False,
                                                separators=(",", ":")))
@@ -490,7 +590,15 @@ def _html(d, lang):
             .replace("__L_DIS__", _e(T("sd_distrib")))
             .replace("__L_LH__", _e(T("sd_leg_h")))
             .replace("__L_LB__", _e(T("sd_leg_b")))
-            .replace("__L_LE__", _e(T("sd_leg_e"))))
+            .replace("__L_LE__", _e(T("sd_leg_e")))
+            .replace("__L_DEL0__", _e(T("sd_delai_non")))
+            .replace("__L_DEL__", _e(T("sd_delai")))
+            .replace("__L_MOIS__", _e(T("sd_mois")))
+            .replace("__L_TPS__", _e(T("sd_temps_x")))
+            .replace("__L_CONX__", _e(T("sd_connect_x")))
+            .replace("__L_CON__", _e(T("sd_connect")))
+            .replace("__L_PASX__", _e(T("sd_passages_x")))
+            .replace("__L_PAS2__", _e(T("sd_passages"))))
 
 
 def render():
