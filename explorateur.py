@@ -28,6 +28,8 @@ a rien à cet endroit.
 """
 
 import numpy as np
+import itertools
+
 import streamlit as st
 
 import croisement_moteur as M
@@ -207,6 +209,14 @@ TEXTES = {
     "ex_voir": {"en": "View as", "fr": "Afficher en"},
     "ex_theme": {"en": "Theme", "fr": "Thème"},
     "ex_theme_tous": {"en": "All themes", "fr": "Tous les thèmes"},
+    "ex_croise": {"en": "Crossed groups", "fr": "Groupes croisés"},
+    "ex_croise_x": {
+        "en": "{k} crossed groups, out of {n} possible: the empty ones are "
+              "left out. Crossing multiplies the groups and divides the "
+              "numbers — read the count beside each bar.",
+        "fr": "{k} groupes croisés, sur {n} possibles : les groupes vides "
+              "sont écartés. Croiser multiplie les groupes et divise les "
+              "effectifs — lisez le compte à côté de chaque barre."},
     "ex_dl": {"en": "Download results", "fr": "Télécharger les résultats"},
     "ex_filtres_x": {
         "en": "Several options can be picked in the same field: they add up. "
@@ -657,6 +667,39 @@ def _cibles(cat):
     return opts
 
 
+def _croisements(cat, axes):
+    """Le produit des cases des registres retenus, cases vides écartées.
+
+    CROISER, C'EST MULTIPLIER LES GROUPES ET DIVISER LES EFFECTIFS. « Section
+    × sexe × âge » fait quatre-vingts groupes possibles sur mille deux cent
+    onze ménages : beaucoup sont vides, et parmi ceux qui ne le sont pas,
+    certains tiennent sur cinq répondants. Les vides sont écartés ici ; les
+    petits restent, signalés en vert pâle par le graphique, parce que les
+    cacher reviendrait à décider à la place du lecteur ce qu'il a le droit de
+    regarder.
+
+    L'ORDRE EST CELUI DES REGISTRES, dans l'ordre où ils ont été choisis : le
+    premier registre varie le plus lentement, si bien que les groupes d'une
+    même section restent groupés.
+    """
+    listes = []
+    for axe in axes:
+        cases = [(v, lib, cat["groupes"].get(v)) for v, lib in _cases(cat, axe)]
+        listes.append([c for c in cases if c[2] is not None])
+    if not listes or any(not l for l in listes):
+        return []
+    out = []
+    for combo in itertools.product(*listes):
+        m = combo[0][2].copy()
+        for _v, _lib, g in combo[1:]:
+            m &= g
+        if not m.any():
+            continue
+        out.append((" · ".join(c[1] for c in combo),
+                    "|".join(c[0] for c in combo), m))
+    return out
+
+
 def _ventiler(cat, mesure, q, modalite, axes, filtre=None, cible=None):
     """Une ligne par case, pour tous les axes retenus, dans leur ordre.
 
@@ -683,17 +726,25 @@ def _ventiler(cat, mesure, q, modalite, axes, filtre=None, cible=None):
     m_mod = cat["bits"][q["debut"] + q["modalites"].index(modalite)] & filtre
 
     out = []
-    for axe in axes:
-        for v, lib in _cases(cat, axe):
-            g = cat["groupes"].get(v)
-            if g is None:
-                continue
+    if len(axes) > 1:
+        for lib, cle, g in _croisements(cat, axes):
             base = int((m_rep & g).sum())
-            out.append({"nom": lib, "cle": v, "axe": T(dict(AXES)[axe]),
-                        "axe_code": axe,
-                        "n": base, "k": int((m_mod & g).sum()),
-                        "part": (100 * int((m_mod & g).sum()) / base)
-                                if base else None})
+            k = int((m_mod & g).sum())
+            out.append({"nom": lib, "cle": cle, "axe": T("ex_croise"),
+                        "axe_code": "croisement", "n": base, "k": k,
+                        "part": (100 * k / base) if base else None})
+    else:
+        for axe in axes:
+            for v, lib in _cases(cat, axe):
+                g = cat["groupes"].get(v)
+                if g is None:
+                    continue
+                base = int((m_rep & g).sum())
+                out.append({"nom": lib, "cle": v, "axe": T(dict(AXES)[axe]),
+                            "axe_code": axe,
+                            "n": base, "k": int((m_mod & g).sum()),
+                            "part": (100 * int((m_mod & g).sum()) / base)
+                                    if base else None})
     ens_base = int(m_rep.sum())
     ens = {"n": ens_base, "k": int(m_mod.sum()),
            "part": (100 * int(m_mod.sum()) / ens_base) if ens_base else None}
@@ -743,15 +794,22 @@ def _ventiler_score(cat, axes, filtre=None, cible=None):
             cible = "global"
 
     out = []
-    for axe in axes:
-        for v, lib in _cases(cat, axe):
-            g = cat["groupes"].get(v)
-            if g is None:
-                continue
+    if len(axes) > 1:
+        for lib, cle, g in _croisements(cat, axes):
             nb, sc = _score_cible(cat, g & tout, cible, ind)
-            out.append({"nom": lib, "cle": v, "axe": T(dict(AXES)[axe]),
-                        "axe_code": axe, "n": nb,
+            out.append({"nom": lib, "cle": cle, "axe": T("ex_croise"),
+                        "axe_code": "croisement", "n": nb,
                         "k": None, "part": sc, "score": sc})
+    else:
+        for axe in axes:
+            for v, lib in _cases(cat, axe):
+                g = cat["groupes"].get(v)
+                if g is None:
+                    continue
+                nb, sc = _score_cible(cat, g & tout, cible, ind)
+                out.append({"nom": lib, "cle": v, "axe": T(dict(AXES)[axe]),
+                            "axe_code": axe, "n": nb,
+                            "k": None, "part": sc, "score": sc})
     nb_t, sc_t = _score_cible(cat, tout, cible, ind)
     ens = {"n": nb_t, "k": None, "part": sc_t, "score": sc_t}
     return out, ens
@@ -1018,10 +1076,18 @@ def render(cat, mode=None):
     dispo = [a for a, _ in AXES]
     c1, c2, c3 = st.columns([1.5, 1.1, 1.5], vertical_alignment="bottom")
     with c1:
-        axe = st.selectbox(
-            T("ex_axe"), dispo, key=f"ex_axe_{mesure}",
+        # LES REGISTRES SE CUMULENT, ET ILS SE CROISENT. Un seul registre
+        # donne dix sections ou quatre tranches d'âge ; deux ou trois donnent
+        # « les femmes du littoral », « les soixante ans et plus de la
+        # montagne » — des groupes qu'aucun registre pris seul ne nomme, et
+        # qui sont précisément ceux qu'on veut comparer entre eux. Trois au
+        # maximum : au-delà, les effectifs tombent sous ce qu'on peut lire.
+        st.session_state.setdefault(f"ex_axes_{mesure}", [dispo[0]])
+        axes = st.multiselect(
+            T("ex_axe"), dispo, key=f"ex_axes_{mesure}", max_selections=3,
             format_func=lambda a: T(dict(AXES)[a]))
-    axes = [axe]
+        if not axes:
+            axes = [dispo[0]]
     with c2:
         extremes = st.selectbox(
             T("ex_extremes"), ["tous", "top", "flop", "topflop", "ecart"],
@@ -1070,10 +1136,19 @@ def render(cat, mode=None):
     _g, _d = st.columns([3, 1], vertical_alignment="center")
     with _g:
         _p = 100.0 * n_f / cat["n"] if cat["n"] else 0
-        st.markdown(
-            f'<p class="ex-res-x">'
-            f'{_e(T("ex_e4_x", k=_n(n_f), n=_n(cat["n"]), p=_f(_p, 1)))}</p>',
-            unsafe_allow_html=True)
+        _txt = _e(T("ex_e4_x", k=_n(n_f), n=_n(cat["n"]), p=_f(_p, 1)))
+        if len(axes) > 1:
+            # LE COMPTE DES GROUPES CROISÉS EST DIT, ET LE NOMBRE DE CASES
+            # POSSIBLES AVEC : la différence entre les deux, ce sont les
+            # combinaisons que personne n'habite — « les moins de 25 ans,
+            # catégorie A, à Blactote » n'existe pas, et c'est en soi un
+            # renseignement.
+            _poss = 1
+            for _a in axes:
+                _poss *= max(1, len(_cases(cat, _a)))
+            _txt += ('<br>' + _e(T("ex_croise_x", k=_n(len(lignes)),
+                                   n=_n(_poss))))
+        st.markdown(f'<p class="ex-res-x">{_txt}</p>', unsafe_allow_html=True)
     with _d:
         st.download_button(
             T("ex_dl"), data=_csv(montrees, mesure),
