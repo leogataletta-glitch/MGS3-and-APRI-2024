@@ -756,7 +756,6 @@ def _trouver(nom):
     return None
 
 
-_RE_BANDE = re.compile(r"(\d{1,2})\s*\(([^)]*)\)")
 
 # LE VERT DU HAUT, L'AMBRE DU MILIEU, LE ROUGE DU BAS — les trois teintes que
 # le site emploie déjà pour les niveaux d'alerte. Une échelle de score n'est
@@ -778,6 +777,37 @@ def _teinte(t):
 
 
 _RE_NOMBRE = re.compile(r"\d+(?:[.,]\d+)?")
+
+# UN BARÈME NE S'ÉCRIT PAS D'UNE SEULE FAÇON DANS LE RÉFÉRENTIEL, et la règle
+# graduée ne doit pas dépendre de la ponctuation qu'un rédacteur a choisie.
+# « 0 (≤5%), 1 (5–15%) », « 0: 0–5 % | 1: >5–15 % », « 0 (≥95,0%], 1
+# (85,0–95,0%] », « 0 = 0, 1 > 0–0,40 » et « 0(0) 1(1) 2(2) » disent tous la
+# même chose : un score, puis sa borne. Le repère est donc le SCORE lui-même
+# — un entier de 0 à 10 en tête de segment, suivi d'une borne — et tout ce
+# qui le sépare du suivant est cette borne, quelle qu'en soit la forme.
+_RE_BORNE = re.compile(
+    r"(?:^|[\s,;|:])\s*(10|\d)\s*[:=]?\s*(?=[(\[≥≤<>]|\s|$)")
+
+
+def _bandes(txt):
+    """Le barème lu comme une suite {score: borne}, quelle que soit sa forme.
+
+    CINQ SCORES AU MOINS, ET LA MOITIÉ AVEC UNE BORNE. En dessous, ce n'est
+    pas une règle graduée mais une définition en prose — « 0 : absence ou une
+    seule espèce très tolérante ; 10 : richesse spécifique élevée » — et une
+    prose ne se met pas en curseur : elle s'affiche telle quelle.
+    """
+    if not txt:
+        return {}
+    ms = list(_RE_BORNE.finditer(txt))
+    out = {}
+    for k, m in enumerate(ms):
+        fin = ms[k + 1].start() if k + 1 < len(ms) else len(txt)
+        out.setdefault(int(m.group(1)),
+                       " ".join(txt[m.end():fin].split()).strip(",;|").strip())
+    if len(out) < 5 or sum(1 for v in out.values() if v) < len(out) // 2:
+        return {}
+    return out
 
 
 def _type_echelle(par):
@@ -833,12 +863,9 @@ def _echelle_html(txt):
     """
     if not txt:
         return f'<span style="color:#a7b0be">{_e(T("cad_ind_sans"))}</span>'
-    bandes = _RE_BANDE.findall(txt)
-    if len(bandes) < 3:
+    par = _bandes(txt)
+    if not par:
         return _e(txt)
-    par = {}
-    for n, borne in bandes:
-        par[int(n)] = " ".join(borne.split())
     nmax = max(par) or 1
     scores = sorted(par)
 
@@ -1354,13 +1381,18 @@ STYLE = """
   .cad-moit-l { flex:1 1 auto; height:1.5px; background:#cfe0d6; }
 
   /* LES TROIS CARTES : un numéro, un filet, un titre, une phrase. */
-  .cad-cc { display:flex; flex-direction:column; gap:12px; }
+  /* NI CADRE NI FILET AUTOUR DU TEXTE. Trois cartes encadrées, un tableau
+     encadré et une ligne de séparation entre chaque dimension faisaient
+     quatre-vingts pixels de traits pour trois phrases et sept nombres. Le
+     texte se tient tout seul : ce qui sépare les blocs est le blanc entre
+     eux, et le numéro d'ordre suffit à ouvrir chaque attribut. */
+  .cad-cc { display:flex; flex-direction:column; gap:18px; }
   .cad-c  { display:flex; align-items:stretch; gap:16px;
-        border:1px solid #e4eae6; border-radius:12px; background:#fff;
-        padding:16px 18px; }
+        border:0; border-radius:0; background:transparent;
+        padding:0; }
   .cad-c-n { font-size:22px; font-weight:700; color:#b9c6bf;
         font-variant-numeric:tabular-nums; line-height:1.1;
-        padding-right:16px; border-right:1px solid #e9eef4;
+        padding-right:16px; border-right:0;
         display:flex; align-items:center; }
   .cad-c-b { flex:1 1 auto; }
   .cad-c-t { font-size:13px; font-weight:700; letter-spacing:.07em;
@@ -1370,14 +1402,14 @@ STYLE = """
         text-align:left !important; }
 
   /* LE TABLEAU DES SEPT DIMENSIONS. */
-  .cad-dt { border:1px solid #e9eef4; border-radius:12px; overflow:hidden; }
+  .cad-dt { border:0; border-radius:0; }
   .cad-dh, .cad-dl { display:grid;
         grid-template-columns:minmax(150px,1fr) 82px 82px;
-        gap:14px; align-items:center; padding:11px 16px; }
-  .cad-dh { background:#f5f7f6; font-size:10px; font-weight:700;
+        gap:14px; align-items:center; padding:9px 0; }
+  .cad-dh { background:transparent; font-size:10px; font-weight:700;
         letter-spacing:.1em; text-transform:uppercase; color:#8a93a5;
         line-height:1.3; }
-  .cad-dl { border-top:1px solid #eef2f7; }
+  .cad-dl { border-top:0; }
   .cad-dl-n { font-size:13px; color:#101728; font-weight:600;
         line-height:1.35; }
   .cad-dl-r { color:#1a6b52; font-weight:700; }

@@ -301,11 +301,16 @@ TEXTES = {
               "or what points to it is not measured.",
         "fr": "Aucun levier du modèle ne déplace cette cible : rien ne pointe "
               "vers elle, ou ce qui pointe vers elle n'est pas mesuré."},
-    "int_effet_cible": {"en": "Effect on the target",
-                        "fr": "Effet sur la cible"},
-    "int_par_ou": {"en": "How it gets there", "fr": "Par où ça passe"},
-    "int_idee_t": {"en": "What the model says about this lever",
-                   "fr": "Ce que le modèle dit de ce levier"},
+    "int_idee_t": {"en": "What could be done", "fr": "Ce qu'on pourrait faire"},
+    "int_prop_x": {
+        "en": "Proposals for discussion, drawn from the causal model and the "
+              "2024 survey and written for Sud and Grand'Anse. They are "
+              "validated by no one.",
+        "fr": "Propositions de travail, tirées du modèle causal et de "
+              "l'enquête 2024 et écrites pour le Sud et la Grand'Anse. Elles "
+              "ne sont validées par personne."},
+    "int_fiche_complete": {"en": "The full drafted profile",
+                           "fr": "La fiche rédigée complète"},
     "int_idee_x": {
         "en": "This lever carries no drafted profile yet: the activities, "
               "actors, calendar and risks remain to be written. What follows "
@@ -319,8 +324,6 @@ TEXTES = {
               "its dimension.",
         "fr": "La nature d'un levier sans fiche rédigée est déduite de sa "
               "dimension."},
-    "int_pousse": {"en": "Simulated push of +2 points on the lever",
-                   "fr": "Poussée simulée de +2 points sur le levier"},
     "int_o_fiches": {"en": "Intervention profiles",
                      "fr": "Fiches d'intervention"},
     "int_o_plans": {"en": "Community resilience plans",
@@ -1572,6 +1575,23 @@ POUSSEE = 2.0
 
 
 @st.cache_data(show_spinner=False)
+def _propositions():
+    """Les propositions d'intervention, une par levier, lues dans un fichier.
+
+    ELLES SONT DANS `data/`, PAS DANS LE CODE. Ce sont des phrases écrites
+    pour un territoire, elles se relisent et se corrigent sans toucher à une
+    ligne de Python — et elles doivent pouvoir l'être par quelqu'un qui n'en
+    écrit pas.
+    """
+    chemin = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                          "data", "interventions_leviers.json")
+    if not os.path.exists(chemin):
+        return {}
+    with open(chemin, encoding="utf-8") as f:
+        return (json.load(f) or {}).get("leviers") or {}
+
+
+@st.cache_data(show_spinner=False)
 def _effets_leviers():
     """L'effet d'une poussée de +2 sur chaque nœud, vers tous les autres.
 
@@ -1658,99 +1678,28 @@ def _plans():
                                    use_container_width=True)
 
 
-def _fiche_calculee(x, cible, effets, par_ligne, par_id, graphe, lst_boucles):
-    """Ce que le modèle sait d'un levier qui n'a pas encore de fiche rédigée.
+def _proposition(x):
+    """Ce qu'on pourrait faire sur ce levier, en quelques phrases.
 
-    CE N'EST PAS UNE FICHE AU RABAIS, C'EST CE QUI EST VRAI SANS ÊTRE ÉCRIT.
-    Les huit fiches du référentiel portent des activités, des acteurs, un
-    calendrier et des risques : cela s'écrit, cela ne se calcule pas. Le
-    reste — le point de départ mesuré, l'effet sur la cible, le chemin
-    emprunté, les boucles traversées, les lignes à surveiller — est déjà
-    dans le modèle et dans l'enquête, et le taire au motif que le texte
-    manque reviendrait à cacher la moitié des leviers du système.
+    PAS DE CHIFFRES ICI, ET C'EST DÉLIBÉRÉ. L'effet simulé, le nombre de
+    boucles traversées et la liste des lignes déplacées ont leur place dans
+    les écrans d'analyse ; sur une page qui sert à décider quoi faire, ils
+    occupaient la place de la seule chose qu'on vient y chercher — une idée
+    d'intervention. Le calcul reste ce qui a mis ce levier dans la liste ; il
+    n'a pas à être récité une fois qu'il l'a fait.
     """
-    cle = x["id"]
-    etat = M.etat_courant(graphe, par_ligne)
-    dep = etat.get(cle)
-    ei = M.effet_indice(graphe, effets, {cle: POUSSEE}, par_ligne)
-    dedans = [b for b in lst_boucles if cle in b["noeuds"]]
-    renf = sum(1 for b in dedans if b["type"] == "renforcante")
-
-    st.markdown(f'<div class="int-lab" style="margin-top:0">'
-                f'{_e(T("int_idee_t"))}</div>'
-                f'<p class="int-x" style="font-size:12.5px;color:{ENCRE3}">'
-                f'{_e(T("int_idee_x"))}</p>', unsafe_allow_html=True)
-    a, b, c = st.columns(3)
-    with a:
-        st.markdown(
-            f'<div class="int-lab">{_e(T("int_depart"))}</div>'
-            f'<div class="int-eff" style="color:{ENCRE}">'
-            f'{_e((_fmt(dep) + " / 10") if dep is not None else "—")}</div>',
-            unsafe_allow_html=True)
-    with b:
-        st.markdown(
-            f'<div class="int-lab">{_e(T("int_effet_cible"))}</div>'
-            f'<div class="int-eff" style="color:'
-            f'{HAUSSE if x["effet"] > 0 else BAISSE}">'
-            f'{_fmt(x["effet"], 2, True)}</div>', unsafe_allow_html=True)
-    with c:
-        st.markdown(
-            f'<div class="int-lab">{_e(T("int_effet"))}</div>'
-            f'<div class="int-eff" style="color:'
-            f'{HAUSSE if ei["delta"] > 0 else ENCRE3}">'
-            f'{_fmt(ei["delta"], 3, True)}</div>', unsafe_allow_html=True)
-    st.caption(T("int_pousse"))
-
-    # PAR OÙ ÇA PASSE : les liens directs du levier, avec leur signe. Un
-    # effet chiffré sans son chemin ne se discute pas ; avec son chemin, on
-    # peut contester le lien plutôt que le nombre.
-    liens = []
-    for e in graphe["aretes"]:
-        if e["de"] != cle:
-            continue
-        n2 = par_id.get(e["vers"])
-        if not n2:
-            continue
-        coul = HAUSSE if e["signe"] > 0 else BAISSE
-        liens.append(f'<span style="font-size:12.5px;color:{ENCRE2}">'
-                     f'<b style="color:{coul}">'
-                     f'{"→" if e["signe"] > 0 else "⊣"}</b> '
-                     f'{_e(_libelle(n2))}</span>')
-    if liens:
-        st.markdown(f'<div class="int-lab">{_e(T("int_par_ou"))}</div>'
-                    f'<div style="display:flex;flex-wrap:wrap;gap:5px 18px">'
-                    + "".join(liens) + '</div>', unsafe_allow_html=True)
-
-    suivi = []
-    for autre, d in sorted(effets.items(), key=lambda i: -abs(i[1])):
-        n = par_id.get(autre)
-        if not n or not n.get("ligne") or abs(d) <= M.SEUIL_NUL or autre == cle:
-            continue
-        r = par_ligne.get(n["ligne"])
-        if r:
-            suivi.append((r, d))
-        if len(suivi) >= 4:
-            break
-    if suivi:
-        st.markdown(f'<div class="int-lab">{_e(T("int_suivi"))}</div>'
-                    + "".join(
-            f'<div style="display:flex;gap:12px;align-items:baseline;'
-            f'padding:5px 0;border-bottom:1px solid #eef2f7">'
-            f'<div style="flex:1 1 auto;font-size:12.5px;color:{ENCRE}">'
-            f'L{r["ligne"]} · {_e(_nom_indic(r))}</div>'
-            f'<div class="int-num" style="font-size:12px;font-weight:700;'
-            f'color:{HAUSSE if dd > 0 else BAISSE};white-space:nowrap">'
-            f'{"↑" if dd > 0 else "↓"} {_fmt(dd, 2, True)}</div></div>'
-            for r, dd in suivi), unsafe_allow_html=True)
-
-    st.markdown(
-        f'<p class="int-x" style="font-size:11.5px;color:{ENCRE3};'
-        f'margin-top:8px">{_e(T("int_boucles"))} : {len(dedans)} '
-        f'<span style="color:{HAUSSE}">R{renf}</span> / '
-        f'<span style="color:{ALERTE}">B{len(dedans) - renf}</span>'
-        + (f' · <b style="color:#a8560a">{_e(T("int_bascule"))}</b>'
-           if renf and len(dedans) - renf else '')
-        + '</p>', unsafe_allow_html=True)
+    txt = (_propositions().get(x["id"]) or {}).get(i18n.get_lang()) \
+        or (_propositions().get(x["id"]) or {}).get("fr")
+    if not txt:
+        st.caption(T("int_idee_x"))
+        return
+    st.markdown(f'<p class="int-x">{_e(txt)}</p>', unsafe_allow_html=True)
+    if x["fiche"]:
+        # LA FICHE RÉDIGÉE N'EST PAS PERDUE, elle est repliée : huit leviers
+        # sur quarante-quatre portent un protocole complet, et qui le veut
+        # l'ouvre.
+        with st.expander(T("int_fiche_complete")):
+            _fiche(x["fiche"])
 
 
 def _render():
@@ -1840,13 +1789,12 @@ def _render():
             f'{_e(T("int_cat_" + cat + "_x"))}</span></div>',
             unsafe_allow_html=True)
         for x in part:
-            titre = (T("int_" + x["fiche"]["id"] + "_t") if x["fiche"]
-                     else _libelle(x["noeud"]))
-            with st.expander(f'{titre}   ·   {_fmt(x["effet"], 2, True)}'):
-                if x["fiche"]:
-                    _fiche(x["fiche"])
-                else:
-                    _fiche_calculee(x, cible, tous[x["id"]], par_ligne,
-                                    par_id, graphe, lst_boucles)
+            # LE TITRE EST LE NOM DU LEVIER, SANS SON CHIFFRE. « +0,54 »
+            # accolé à un intitulé faisait lire un classement là où il y a
+            # une liste de choses à faire ; l'ordre de la liste porte déjà
+            # cette information.
+            with st.expander(_libelle(x["noeud"])):
+                _proposition(x)
+    st.caption(T("int_prop_x"))
     if deduits:
         st.caption(T("int_nature_x"))

@@ -81,6 +81,16 @@ TEXTES = {
     "ex_reponse": {"en": "Answer", "fr": "Réponse"},
     "ex_axe": {"en": "Project results by", "fr": "Projeter les résultats par"},
     "ex_axe2": {"en": "Then by", "fr": "Puis par"},
+    "ex_dim_n": {"en": "Dimension {n}", "fr": "Dimension {n}"},
+    "ex_dim_cat": {"en": "Categories", "fr": "Catégories"},
+    "ex_dim_plus": {"en": "Add a dimension", "fr": "Ajouter une dimension"},
+    "ex_dim_oter": {"en": "Remove", "fr": "Retirer"},
+    "ex_dim_toutes": {"en": "All", "fr": "Toutes"},
+    "ex_croiser_q": {"en": "Cross with a second question",
+                     "fr": "Croiser avec une seconde question"},
+    "ex_croiser_plus": {"en": "Cross with another question",
+                        "fr": "Croiser avec une autre question"},
+    "ex_croiser_n": {"en": "{n} crossed", "fr": "{n} croisées"},
     "ex_axe_non": {"en": "None", "fr": "Aucun"},
     "ex_ax_section": {"en": "Communal section", "fr": "Section communale"},
     "ex_ax_sexe": {"en": "Sex", "fr": "Sexe"},
@@ -768,6 +778,67 @@ def _croisements(cat, axes):
         out.append((" · ".join(c[1] for c in combo),
                     "|".join(c[0] for c in combo), m))
     return out
+
+
+def _croisements_choisis(cat, dims):
+    """Le produit des CATÉGORIES RETENUES de chaque dimension, dans l'ordre.
+
+    C'EST LE MÊME CROISEMENT QU'AVANT, MAIS SUR CE QU'ON A DEMANDÉ. La
+    version précédente prenait toutes les cases de chaque registre : demander
+    « section × sexe » donnait les vingt combinaisons, et il n'y avait aucun
+    moyen de n'en garder que les femmes de deux sections. Les catégories
+    retenues sont filtrées AVANT le produit, ce qui revient exactement à
+    filtrer la population puis à grouper — dans cet ordre-là.
+
+    `dims` est une liste ordonnée de couples (registre, valeurs retenues). La
+    première dimension varie le plus lentement, si bien que les groupes d'une
+    même section restent groupés.
+    """
+    listes = []
+    for axe, gardees in dims:
+        cases = [(v, lib, cat["groupes"].get(v)) for v, lib in _cases(cat, axe)
+                 if not gardees or v in gardees]
+        listes.append([c for c in cases if c[2] is not None])
+    if not listes or any(not l for l in listes):
+        return []
+    out = []
+    for combo in itertools.product(*listes):
+        m = combo[0][2].copy()
+        for _v, _lib, g in combo[1:]:
+            m &= g
+        if not m.any():
+            continue
+        out.append((" · ".join(c[1] for c in combo),
+                    "|".join(c[0] for c in combo), m))
+    return out
+
+
+def _ventiler_dims(cat, q, modalite, dims, filtre):
+    """Une ligne par groupe demandé : les dimensions servent de groupby.
+
+    LE DÉNOMINATEUR EST LE NOMBRE DE RÉPONDANTS À LA QUESTION dans le groupe.
+    Sans lui, cent pour cent sur trois ménages et cent pour cent sur cent
+    quarante se liraient pareil.
+    """
+    m_rep = np.zeros(cat["n"], dtype=bool)
+    for j in range(len(q["modalites"])):
+        m_rep |= cat["bits"][q["debut"] + j]
+    m_rep &= filtre
+    m_mod = cat["bits"][q["debut"] + q["modalites"].index(modalite)] & filtre
+    lib_axe = (T(dict(AXES)[dims[0][0]]) if len(dims) == 1
+               else T("ex_croise"))
+    out = []
+    for lib, cle, g in _croisements_choisis(cat, dims):
+        base = int((m_rep & g).sum())
+        k = int((m_mod & g).sum())
+        out.append({"nom": lib, "cle": cle, "axe": lib_axe,
+                    "axe_code": dims[0][0] if len(dims) == 1 else "croisement",
+                    "n": base, "k": k,
+                    "part": (100 * k / base) if base else None})
+    ens_base = int(m_rep.sum())
+    return out, {"n": ens_base, "k": int(m_mod.sum()),
+                 "part": (100 * int(m_mod.sum()) / ens_base)
+                 if ens_base else None}
 
 
 def _ventiler(cat, mesure, q, modalite, axes, filtre=None, cible=None):
@@ -1778,11 +1849,10 @@ def raz_brut():
     LA QUESTION CHOISIE SURVIT. Réinitialiser veut dire « enlève mes filtres
     et remets l'affichage à plat », pas « oublie ce que je regardais ».
     """
-    for a, _l in _REGISTRES_F:
-        st.session_state.pop(f"exb_f_{a}", None)
     for k in [k for k in list(st.session_state)
-              if str(k).startswith(("exb_c_", "exb_axe", "exb_vue",
-                                    "exb_ext"))]:
+              if str(k).startswith(("exb_f_", "exb_c_", "exb_axe", "exb_vue",
+                                    "exb_ext", "exb_cat_", "exb_dim",
+                                    "exb_q2", "exb_dims"))]:
         st.session_state.pop(k, None)
 
 
@@ -1820,6 +1890,133 @@ def _projection(cle, dispo, libelle, facultatif=False):
                     key=f"{cle}_3", index=None, placeholder=T("ex_axe_non"),
                     format_func=lambda a: T(dict(AXES)[a]))
     return [a for a in (a1, a2, a3) if a is not None]
+
+
+def _zone_projection(cat):
+    """Les dimensions de projection, et pour chacune ses catégories.
+
+    DEUX GESTES DISTINCTS, ET C'EST TOUT L'OBJET DE CE BLOC. Choisir une
+    dimension dit COMMENT le résultat est découpé — une valeur par section,
+    puis une valeur par section et par sexe, et ainsi de suite. Choisir ses
+    catégories dit CE QU'ON GARDE avant le découpage. Les deux étaient
+    confondus : trois menus « puis par » empilaient des dimensions sans
+    jamais permettre de dire « seulement Barbois et Dumont », et les cinq
+    filtres de population, à côté, restreignaient sans découper. Une
+    dimension porte maintenant ses catégories, et une catégorie retenue
+    filtre avant le regroupement.
+
+    TOUTES LES CATÉGORIES SONT RETENUES À L'AJOUT. Ajouter « Section
+    communale » doit afficher les dix sections sans avoir à les cocher une à
+    une ; ne garder qu'une section est le geste supplémentaire, pas le geste
+    par défaut.
+
+    UNE DIMENSION NE SE CHOISIT QU'UNE FOIS : elle disparaît de la liste des
+    suivantes, faute de quoi « section × section » produirait des cases
+    vides.
+    """
+    dispo = [a for a, _l in AXES]
+    st.session_state.setdefault("exb_dims", [dispo[0]])
+    dims = [a for a in st.session_state["exb_dims"] if a in dispo]
+
+    st.markdown(f'<div class="exb-sec" style="margin:6px 0 2px">'
+                f'{_e(T("ex_axe"))}<span class="l"></span></div>',
+                unsafe_allow_html=True)
+    choisies = []
+    for i, axe in enumerate(list(dims)):
+        c1, c2, c3 = st.columns([1.3, 2.2, 0.5],
+                                vertical_alignment="bottom")
+        libres = [a for a in dispo if a == axe or a not in dims]
+        with c1:
+            nouveau = st.selectbox(
+                T("ex_dim_n", n=i + 1), libres, index=libres.index(axe),
+                key=f"exb_dim_{i}",
+                format_func=lambda a: T(dict(AXES)[a]))
+        if nouveau != axe:
+            # LE CHANGEMENT DE DIMENSION EMPORTE SES CATÉGORIES : celles de
+            # l'ancienne n'ont aucun sens sous la nouvelle.
+            st.session_state["exb_dims"][i] = nouveau
+            st.session_state.pop(f"exb_cat_{axe}", None)
+            st.rerun()
+        vals = [v for v, _lib in _cases(cat, axe)]
+        st.session_state.setdefault(f"exb_cat_{axe}", list(vals))
+        with c2:
+            gardees = st.multiselect(
+                T("ex_dim_cat"), vals, key=f"exb_cat_{axe}",
+                placeholder=T("ex_dim_toutes"), format_func=_lib)
+        with c3:
+            if len(dims) > 1 and st.button("✕", key=f"exb_dim_x_{i}",
+                                           type="tertiary",
+                                           help=T("ex_dim_oter")):
+                st.session_state["exb_dims"] = [
+                    a for a in st.session_state["exb_dims"] if a != axe]
+                st.session_state.pop(f"exb_cat_{axe}", None)
+                st.rerun()
+        choisies.append((axe, gardees or vals))
+
+    if len(dims) < len(dispo):
+        if st.button("＋ " + T("ex_dim_plus"), key="exb_dim_plus",
+                     type="tertiary"):
+            manque = [a for a in dispo if a not in dims]
+            st.session_state["exb_dims"] = list(dims) + [manque[0]]
+            st.rerun()
+    return choisies
+
+
+def _croisement_questions(cat, questions, filtre):
+    """Autant de secondes questions qu'on veut, croisées entre elles.
+
+    CE N'EST PAS UNE DIMENSION DE PROJECTION, C'EST UNE POPULATION. « Ceux
+    qui ont l'eau potable ET des sanitaires améliorés » se dit avec deux
+    questions du questionnaire, pas avec un registre de profil : aucune
+    combinaison de section, de sexe ou d'âge ne nomme ce groupe-là. Les
+    conditions se cumulent en ET entre elles, et en OU entre les réponses
+    d'une même question.
+    """
+    st.session_state.setdefault("exb_q2", [])
+    posees = [i for i in st.session_state["exb_q2"]
+              if any(x["i"] == i for x in questions)]
+    n = sum(1 for i in posees
+            if st.session_state.get(f"exb_q2_r_{i}"))
+    lib = T("ex_croiser_q") + (" · " + T("ex_croiser_n", n=n) if n else "")
+    with st.expander(lib, expanded=bool(posees)):
+        for rang, qi in enumerate(list(posees)):
+            q2 = next(x for x in questions if x["i"] == qi)
+            c1, c2, c3 = st.columns([2.2, 1.6, 0.5],
+                                    vertical_alignment="bottom")
+            with c1:
+                autres = [x["i"] for x in questions
+                          if x["i"] == qi or x["i"] not in posees]
+                nq = st.selectbox(
+                    T("ex_cond_q"), autres, index=autres.index(qi),
+                    key=f"exb_q2_s_{rang}",
+                    format_func=lambda i: _libelle_question(
+                        next(x for x in questions if x["i"] == i)))
+            if nq != qi:
+                st.session_state["exb_q2"][rang] = nq
+                st.session_state.pop(f"exb_q2_r_{qi}", None)
+                st.rerun()
+            with c2:
+                reps = st.multiselect(
+                    T("ex_cond_r"), q2["modalites"], key=f"exb_q2_r_{qi}",
+                    format_func=libelles_enquete.modalite)
+            with c3:
+                if st.button("✕", key=f"exb_q2_x_{rang}", type="tertiary",
+                             help=T("ex_dim_oter")):
+                    st.session_state["exb_q2"] = [
+                        i for i in st.session_state["exb_q2"] if i != qi]
+                    st.session_state.pop(f"exb_q2_r_{qi}", None)
+                    st.rerun()
+            if reps:
+                m = np.zeros(cat["n"], dtype=bool)
+                for r in reps:
+                    m |= cat["bits"][q2["debut"] + q2["modalites"].index(r)]
+                filtre = filtre & m
+        libres = [x["i"] for x in questions if x["i"] not in posees]
+        if libres and st.button("＋ " + T("ex_croiser_plus"),
+                                key="exb_q2_plus", type="tertiary"):
+            st.session_state["exb_q2"] = list(posees) + [libres[0]]
+            st.rerun()
+    return filtre
 
 
 def _filtres_population(cat, prefixe="exb_f_", registres=None,
@@ -1880,42 +2077,6 @@ def _filtres_population(cat, prefixe="exb_f_", registres=None,
     return _masque_multi(cat, choix), poses
 
 
-def _condition_repliee(cat, questions, filtre):
-    """La seconde question comme condition, repliée tant qu'on ne la veut pas.
-
-    C'EST UNE FONCTION AVANCÉE ET ELLE EST RANGÉE COMME TELLE. « Combien de
-    ménages ont à la fois l'eau potable et des sanitaires améliorés » est une
-    vraie question, mais une question sur dix ; dépliée en permanence, elle
-    occupait une rangée entière au milieu des commandes qu'on utilise à
-    chaque fois.
-    """
-    qi_pose = st.session_state.get("exb_c_q")
-    lib = T("ex_b_cond") if qi_pose is None else T("ex_b_cond_on")
-    with st.expander(lib, expanded=qi_pose is not None):
-        c1, c2 = st.columns([1.6, 1])
-        with c1:
-            qi = st.selectbox(
-                T("ex_cond_q"), [None] + [x["i"] for x in questions],
-                key="exb_c_q",
-                format_func=lambda i: (
-                    T("ex_cond_aucune") if i is None
-                    else _libelle_question(
-                        next(x for x in questions if x["i"] == i))))
-        if qi is None:
-            return filtre, None
-        q2 = next(x for x in questions if x["i"] == qi)
-        with c2:
-            reps = st.multiselect(T("ex_cond_r"), q2["modalites"],
-                                  key=f"exb_c_r_{qi}",
-                                  format_func=libelles_enquete.modalite)
-    if qi is None or not reps:
-        return filtre, None
-    m = np.zeros(cat["n"], dtype=bool)
-    for r in reps:
-        m |= cat["bits"][q2["debut"] + q2["modalites"].index(r)]
-    return filtre & m, (q2, reps)
-
-
 def _synthese(lignes, mesure):
     """Moyenne, extrêmes et écart, en une ligne de texte sous le graphique."""
     vals = [(l["nom"], l["part"]) for l in lignes if l["part"] is not None]
@@ -1963,8 +2124,8 @@ def _render_brut(cat):
         # — qui, elle, occupe le double de largeur et porte le seul libellé
         # en encre pleine de l'écran.
         with st.container(key="exb_q_zone"):
-            c1, c2, c0 = st.columns([1, 2.2, 0.55],
-                                    vertical_alignment="bottom")
+            c1, c2, c4, c0 = st.columns([1, 2.2, 1.1, 0.55],
+                                        vertical_alignment="bottom")
             with c0:
                 if st.button(T("ex_b_raz"), key="exb_raz", type="tertiary"):
                     st.session_state["ra_raz"] = True
@@ -1986,12 +2147,21 @@ def _render_brut(cat):
                         next(x for x in vues if x["i"] == i),
                         avec_theme=theme is None))
         q = next(x for x in vues if x["i"] == qi)
+        with c4:
+            # LA RÉPONSE APPARTIENT À LA QUESTION, PAS À LA POPULATION. Elle
+            # était rangée avec les filtres de profil ; elle revient à côté
+            # de la question dont elle est une modalité, vide par défaut —
+            # sans réponse choisie, l'écran montre la répartition complète.
+            modalite = st.selectbox(
+                T("ex_reponse"), list(q["modalites"]), key=f"exb_m_{qi}",
+                index=None, placeholder=T("ex_b_toutes"),
+                format_func=libelles_enquete.modalite)
 
-        axes = _projection("exb_axe", [a for a, _ in AXES], T("ex_axe"))
-
-        # ---- les deux volets facultatifs --------------------------------
-        filtre, poses, modalite = _filtres_population(cat, question=q)
-        filtre, cond = _condition_repliee(cat, questions, filtre)
+        # ---- comment le résultat est découpé, et sur quoi ---------------
+        dims = _zone_projection(cat)
+        axes = [a for a, _v in dims]
+        filtre = _croisement_questions(cat, questions,
+                                       np.ones(cat["n"], dtype=bool))
         n_f = int(filtre.sum())
         if n_f == 0:
             st.info(T("ex_filtre_vide"))
@@ -1999,13 +2169,11 @@ def _render_brut(cat):
 
         # SANS RÉPONSE CHOISIE, C'EST LA RÉPARTITION DE LA QUESTION QU'ON
         # DESSINE — une barre par modalité, sur la population retenue. La
-        # comparaison entre groupes suppose une réponse à comparer : elle
-        # attend donc qu'on en désigne une, et l'écran le dit.
+        # projection suppose une réponse à comparer entre groupes.
         if modalite is None:
             lignes, ens = _repartition(cat, q, filtre)
         else:
-            lignes, ens = _ventiler(cat, mesure, q, modalite, axes, filtre,
-                                    None)
+            lignes, ens = _ventiler_dims(cat, q, modalite, dims, filtre)
         lignes = [l for l in lignes if l["n"] > 0]
         if not lignes:
             st.info(T("ex_vide"))
