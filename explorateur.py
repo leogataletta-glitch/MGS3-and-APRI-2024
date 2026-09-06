@@ -816,6 +816,14 @@ def _croisements_choisis(cat, dims):
 def _ventiler_dims(cat, q, modalite, dims, filtre):
     """Une ligne par groupe demandé : les dimensions servent de groupby.
 
+    LA PROJECTION S'APPLIQUE MÊME SANS RÉPONSE CHOISIE, et c'est la seule
+    lecture cohérente. « Section communale + sexe » demande les résultats de
+    la question pour les femmes et pour les hommes DANS chaque section :
+    sans réponse désignée, le résultat d'une question est la répartition de
+    ses réponses, et c'est donc cette répartition qui est calculée dans
+    chaque groupe. Une réponse désignée ramène chaque groupe à un seul
+    chiffre — la part qui a répondu cela.
+
     LE DÉNOMINATEUR EST LE NOMBRE DE RÉPONDANTS À LA QUESTION dans le groupe.
     Sans lui, cent pour cent sur trois ménages et cent pour cent sur cent
     quarante se liraient pareil.
@@ -824,11 +832,28 @@ def _ventiler_dims(cat, q, modalite, dims, filtre):
     for j in range(len(q["modalites"])):
         m_rep |= cat["bits"][q["debut"] + j]
     m_rep &= filtre
+    groupes = _croisements_choisis(cat, dims)
+    out = []
+    if modalite is None:
+        # UNE BARRE PAR RÉPONSE ET PAR GROUPE, le groupe servant d'intertitre :
+        # dix sections et deux sexes donnent vingt blocs de deux barres, et
+        # l'on compare les réponses à l'intérieur d'un groupe autant que les
+        # groupes entre eux.
+        for lib, cle, g in groupes:
+            base = int((m_rep & g).sum())
+            for j, mod in enumerate(q["modalites"]):
+                k = int((cat["bits"][q["debut"] + j] & m_rep & g).sum())
+                out.append({"nom": libelles_enquete.modalite(mod),
+                            "cle": f"{cle}|{mod}", "axe": lib,
+                            "axe_code": "groupe", "n": base, "k": k,
+                            "part": (100 * k / base) if base else None})
+        ens_base = int(m_rep.sum())
+        return out, {"n": ens_base, "k": None, "part": None}
+
     m_mod = cat["bits"][q["debut"] + q["modalites"].index(modalite)] & filtre
     lib_axe = (T(dict(AXES)[dims[0][0]]) if len(dims) == 1
                else T("ex_croise"))
-    out = []
-    for lib, cle, g in _croisements_choisis(cat, dims):
+    for lib, cle, g in groupes:
         base = int((m_rep & g).sum())
         k = int((m_mod & g).sum())
         out.append({"nom": lib, "cle": cle, "axe": lib_axe,
@@ -890,34 +915,6 @@ def _ventiler(cat, mesure, q, modalite, axes, filtre=None, cible=None):
     ens = {"n": ens_base, "k": int(m_mod.sum()),
            "part": (100 * int(m_mod.sum()) / ens_base) if ens_base else None}
     return out, ens
-
-
-def _repartition(cat, q, filtre):
-    """Une ligne par réponse possible : la répartition de la question.
-
-    POURQUOI CHOISIR UNE RÉPONSE N'EST PLUS OBLIGATOIRE. « Quelle part
-    répond Oui » est une question ; « comment se répartissent les réponses »
-    en est une autre, et c'est souvent la première qu'on se pose devant une
-    question à cinq modalités. Il fallait, pour l'obtenir, choisir les
-    modalités une par une et retenir cinq chiffres de tête.
-
-    LE DÉNOMINATEUR EST LE MÊME QUE PARTOUT : les ménages qui ont répondu à
-    la question, dans la population retenue. Les parts somment donc à cent,
-    et une réponse manquante n'est pas comptée comme un « non ».
-    """
-    m_rep = np.zeros(cat["n"], dtype=bool)
-    for j in range(len(q["modalites"])):
-        m_rep |= cat["bits"][q["debut"] + j]
-    m_rep &= filtre
-    base = int(m_rep.sum())
-    out = []
-    for j, mod in enumerate(q["modalites"]):
-        k = int((cat["bits"][q["debut"] + j] & m_rep).sum())
-        out.append({"nom": libelles_enquete.modalite(mod), "cle": mod,
-                    "axe": T("ex_b_toutes"), "axe_code": "modalite",
-                    "n": base, "k": k,
-                    "part": (100 * k / base) if base else None})
-    return out, {"n": base, "k": None, "part": None}
 
 
 def _score_cible(cat, masque, cible, ind):
@@ -2167,13 +2164,7 @@ def _render_brut(cat):
             st.info(T("ex_filtre_vide"))
             return
 
-        # SANS RÉPONSE CHOISIE, C'EST LA RÉPARTITION DE LA QUESTION QU'ON
-        # DESSINE — une barre par modalité, sur la population retenue. La
-        # projection suppose une réponse à comparer entre groupes.
-        if modalite is None:
-            lignes, ens = _repartition(cat, q, filtre)
-        else:
-            lignes, ens = _ventiler_dims(cat, q, modalite, dims, filtre)
+        lignes, ens = _ventiler_dims(cat, q, modalite, dims, filtre)
         lignes = [l for l in lignes if l["n"] > 0]
         if not lignes:
             st.info(T("ex_vide"))

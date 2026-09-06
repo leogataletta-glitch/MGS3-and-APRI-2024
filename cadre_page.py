@@ -1213,8 +1213,18 @@ STYLE = """
   .cad-ec-t { display:block; font-size:9.5px; font-weight:700;
        letter-spacing:.07em; text-transform:uppercase; color:#a7b0be;
        margin-bottom:5px; cursor:help; }
-  .cad-ec-b { display:block; height:8px; border-radius:5px;
+  .cad-ec-b { position:relative; display:block; height:9px; border-radius:5px;
        background:linear-gradient(90deg,#9b2c2c 0%,#d18f2c 50%,#1a6b52 100%); }
+  /* ONZE SEGMENTS, DONC DIX TRAITS. Le dégradé seul ne dit pas où finit un
+     score et où commence le suivant : on voyait une couleur continue et il
+     fallait deviner que le curseur sautait par crans. Les traits blancs
+     découpent la barre en onze parts égales, une par score, et le geste de
+     glisser devient lisible avant même d'être fait. */
+  .cad-ec-b::after { content:""; position:absolute; inset:0;
+       border-radius:5px;
+       background:repeating-linear-gradient(90deg,
+           rgba(255,255,255,.92) 0 1.5px,
+           transparent 1.5px calc(100% / 11)); }
   .cad-ec-z { position:absolute; top:2px; height:22px; cursor:ew-resize; }
   .cad-ec-z:hover::before { content:""; position:absolute; left:50%;
        transform:translateX(-50%); top:1px; width:4px; height:20px;
@@ -1378,7 +1388,6 @@ STYLE = """
         margin:10px 0 14px; }
   .cad-moit-t { font-size:12px; font-weight:700; letter-spacing:.09em;
         text-transform:uppercase; color:#1a6b52; white-space:nowrap; }
-  .cad-moit-l { flex:1 1 auto; height:1.5px; background:#cfe0d6; }
 
   /* LES TROIS CARTES : un numéro, un filet, un titre, une phrase. */
   /* NI CADRE NI FILET AUTOUR DU TEXTE. Trois cartes encadrées, un tableau
@@ -1403,9 +1412,13 @@ STYLE = """
 
   /* LE TABLEAU DES SEPT DIMENSIONS. */
   .cad-dt { border:0; border-radius:0; }
+  /* LES DEUX COLONNES DE DROITE SONT ÉTROITES POUR LEUR INTITULÉ, PAS POUR
+     LEUR CONTENU. « Poids dans l'indice » et « Indicateurs » passaient à la
+     ligne dans quatre-vingt-deux pixels, et l'en-tête faisait trois lignes
+     au-dessus de nombres à trois caractères. */
   .cad-dh, .cad-dl { display:grid;
-        grid-template-columns:minmax(150px,1fr) 82px 82px;
-        gap:14px; align-items:center; padding:9px 0; }
+        grid-template-columns:minmax(140px,1fr) 130px 108px;
+        gap:16px; align-items:center; padding:9px 0; }
   .cad-dh { background:transparent; font-size:10px; font-weight:700;
         letter-spacing:.1em; text-transform:uppercase; color:#8a93a5;
         line-height:1.3; }
@@ -1417,7 +1430,7 @@ STYLE = """
         text-align:right; font-variant-numeric:tabular-nums; }
 
   @media (max-width:1100px) {
-    .cad-dh, .cad-dl { grid-template-columns:1fr 70px 70px; }
+    .cad-dh, .cad-dl { grid-template-columns:1fr 104px 88px; }
   }
   p.cad-attr-x { font-size:15px !important; color:#3c4761 !important;
             line-height:1.55 !important; margin:2px 0 18px !important;
@@ -1881,7 +1894,7 @@ def _entete_moitie(cle):
     attribut : la phrase ne disait que ce que la colonne montrait déjà.
     """
     return (f'<div class="cad-moit"><span class="cad-moit-t">'
-            f'{_e(T(cle))}</span><span class="cad-moit-l"></span></div>')
+            f'{_e(T(cle))}</span></div>')
 
 
 # --- 2 · comment la résilience est mesurée ----------------------------------
