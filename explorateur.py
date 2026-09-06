@@ -90,17 +90,8 @@ TEXTES = {
     "ex_m_score": {"en": "Resilience score", "fr": "Score de résilience"},
     # ---- l'explorateur de scores : filtres combinables, un seul dessin ----
     "ex_s_titre": {"en": "Resilience scores", "fr": "Scores de résilience"},
-    "ex_s_intro": {
-        "en": "Nothing is shown until you ask for it. Narrow the sample with "
-              "the filters, choose what to measure, then choose how to read "
-              "it: one chart at a time, on exactly the combination you built.",
-        "fr": "Rien ne s'affiche avant d'être demandé. Resserrez "
-              "l'échantillon avec les filtres, choisissez ce qu'on mesure, "
-              "puis comment le lire : un seul dessin à la fois, sur exactement "
-              "la combinaison que vous avez construite."},
-    "ex_s_quoi": {"en": "What is measured", "fr": "Ce qu'on mesure"},
-    "ex_s_qui": {"en": "On which households", "fr": "Sur quels ménages"},
-    "ex_s_comment": {"en": "How to read it", "fr": "Comment le lire"},
+    "ex_s_quoi": {"en": "What do you want to measure?",
+                  "fr": "Que voulez-vous mesurer ?"},
     "ex_s_dim": {"en": "Dimension", "fr": "Dimension"},
     "ex_s_ind": {"en": "Indicator", "fr": "Indicateur"},
     "ex_s_toutes": {"en": "All — overall index", "fr": "Toutes — indice global"},
@@ -1335,59 +1326,6 @@ _REGISTRES_S = [("section", "ex_ax_section"), ("sexe", "ex_ax_sexe"),
                 ("paysage", "ex_ax_paysage")]
 
 
-def _zone_filtres(cat):
-    """Les cinq restrictions des scores, dans le même panneau que les brutes.
-
-    ELLES SE CUMULENT, ET PLUSIEURS OPTIONS TIENNENT DANS UN MÊME CHAMP.
-    « Les femmes de 40 à 59 ans, catégorie C, en montagne, à Trichet OU
-    Barbois » est une question légitime et elle n'a pas de page à elle : un
-    panneau la pose. L'effectif restant est annoncé sous les champs, parce
-    qu'un score calculé sur onze ménages doit se lire en sachant qu'ils sont
-    onze.
-    """
-    return _panneau_filtres(cat, "exs_pan", _REGISTRES_S, 2, "ex_s_qui")
-
-
-def _zone_cible(cat):
-    """Dimension puis indicateur : deux menus, et le second suit le premier.
-
-    LA DIMENSION FILTRE LA LISTE DES INDICATEURS, elle ne la double pas.
-    Soixante-six indicateurs dans un seul menu déroulant se cherchent à
-    l'aveugle ; choisir d'abord la dimension en laisse une dizaine, et si l'on
-    n'en choisit aucun c'est le score de la dimension qui est mesuré. Les deux
-    menus vides mesurent l'indice global : on part du plus général et on
-    resserre, jamais l'inverse.
-    """
-    g, d = st.columns([1, 1.7])
-    with g:
-        dim = st.selectbox(
-            T("ex_s_dim"), [None] + _DIMS, key="exs_dim",
-            format_func=lambda c: T("ex_s_toutes") if c is None else T(c))
-    inds = [x for x in _inds_tries(cat) if dim is None or x["dim"] == dim]
-    with d:
-        k = st.selectbox(
-            T("ex_s_ind"), [None] + list(range(len(inds))), key=f"exs_ind_{dim}",
-            format_func=lambda i: (
-                T("ex_s_tous_i" if dim else "ex_s_tous_i0") if i is None
-                else (_nom_ind(inds[i]) if dim
-                      else f'{T(inds[i]["dim"])} · {_nom_ind(inds[i])}')))
-    # COMPARER PLUSIEURS INDICATEURS ENTRE EUX. Le menu du dessus n'en mesure
-    # qu'un ; mettre l'eau potable, l'assainissement et l'électricité côte à
-    # côte sur la même population est une autre question, et elle n'avait pas
-    # d'endroit. Vide, ce champ ne change rien.
-    compare = st.multiselect(
-        T("ex_s_comp"), list(range(len(inds))), key=f"exs_cmp_{dim}",
-        max_selections=8, format_func=lambda i: _nom_ind(inds[i]))
-    compares = [inds[i] for i in compare]
-    if k is not None:
-        ind = inds[k]
-        return (f"i:{_inds_tries(cat).index(ind)}", _nom_ind(ind), ind, inds,
-                compares)
-    if dim is not None:
-        return f"d:{dim}", T(dim), None, inds, compares
-    return "global", T("ex_c_global"), None, inds, compares
-
-
 def _kpi_score(lib, sc, n, tot, sc_ech):
     """Le score de la sélection, seul, quand on n'a rien demandé de plus."""
     ec = (sc - sc_ech) if (sc is not None and sc_ech is not None) else None
@@ -1527,137 +1465,207 @@ def _table_paires(lignes):
 
 
 def render_scores(cat):
-    """Les scores de résilience : on demande, puis on voit — et une chose."""
+    """Les scores de résilience : ce qu'on mesure, puis le résultat.
+
+    MÊME GRAMMAIRE QUE LES RÉSULTATS BRUTS, ET C'EST TOUT L'INTÉRÊT. Les deux
+    écrans posent la même question — qu'est-ce que je regarde, sur qui, et
+    comment je le lis — et les posaient jusqu'ici dans deux mises en page
+    différentes, l'une numérotée en quatre étapes, l'autre pas. Un lecteur
+    qui passe d'un onglet à l'autre ne doit pas réapprendre l'outil : les
+    décisions essentielles sont sur une rangée, ce qui est facultatif est
+    replié, et les réglages d'affichage vivent dans l'en-tête du résultat.
+    """
     if not cat or not cat.get("indicateurs"):
         return
+    # DEUX APPELS, PAS UNE CONCATÉNATION. La règle qui masque les blocs de
+    # style repose sur `style:only-child` : deux balises `<style>` dans le
+    # même bloc ne matchent plus, le bloc reste dans le flux et laisse
+    # soixante-dix pixels de blanc en tête d'écran.
     st.markdown(STYLE, unsafe_allow_html=True)
-    # PAS DE TITRE DE PAGE : l'onglet ouvert dit déjà « Scores de résilience »,
-    # et le répéter dessous ajoutait une ligne pour ne rien apprendre. La
-    # pastille avait de plus un effet de bord : la règle générale transforme
-    # en carte tout bloc qui porte un `titre-bloc` en enfant direct, et c'est
-    # la PAGE ENTIÈRE qui se retrouvait encadrée.
-    st.markdown(
-        f'<p class="ex-note" style="margin:0 0 12px;max-width:96ch">'
-        f'{_e(T("ex_s_intro"))}</p>', unsafe_allow_html=True)
+    st.markdown(_CSS_BRUT, unsafe_allow_html=True)
 
-    # ---- 1 · ce qu'on mesure ---------------------------------------------
-    _etape(1, "ex_s_quoi")
-    cible, lib_cible, ind, inds, compares = _zone_cible(cat)
+    with st.container(key="ex_brut_s"):
+        h1, h2 = st.columns([4, 1], vertical_alignment="center")
+        with h1:
+            st.markdown(f'<div class="exb-sec">{_e(T("ex_s_quoi"))}'
+                        f'<span class="l"></span></div>',
+                        unsafe_allow_html=True)
+        with h2:
+            if st.button(T("ex_b_raz"), key="exs_raz", type="tertiary"):
+                raz_scores()
+                st.rerun()
 
-    # ---- 2 · sur qui -----------------------------------------------------
-    filtre, poses = _zone_filtres(cat)
-    n_f = int(filtre.sum())
-    if n_f == 0:
-        st.info(T("ex_s_vide"))
-        return
-    if poses:
-        st.markdown(f'<p class="ex-note" style="margin:2px 0 0">'
-                    f'{_e(T("ex_s_n", n=_n(n_f), t=_n(cat["n"])))}</p>',
-                    unsafe_allow_html=True)
-
-    # ---- 3 · comment le lire ---------------------------------------------
-    # DEUX RÉGLAGES, PAS TROIS. La ventilation a quitté cette rangée : elle
-    # n'est pas une façon de lire, c'est une demande de plus, et elle est
-    # posée sous le score une fois qu'il est affiché. Le score, lui, paraît
-    # dès que l'indicateur est choisi — c'est la réponse à la question qu'on
-    # vient de poser, et elle ne doit pas attendre un troisième menu.
-    _etape(3, "ex_s_comment")
-    c1, c2 = st.columns([1, 1.3])
-    with c1:
-        forme = st.selectbox(T("ex_format"),
-                             ["barres", "radar", "tableau", "carte"],
-                             key="exs_forme",
-                             format_func=lambda f: T("ex_" + f))
-    with c2:
-        mode = st.selectbox(
-            T("ex_s_mode"), ["actuel", "bas", "haut", "ecarts"],
-            key="exs_mode", format_func=lambda m: T("ex_s_m_" + m))
-
-    # ---- les écarts entre groupes ont leur propre tableau -----------------
-    if mode == "ecarts":
-        _etape(4, "ex_res")
-        st.markdown(f'<div class="ex-titre" style="margin-top:16px">'
-                    f'{_e(T("ex_s_ec_t"))}</div>'
-                    f'<p class="ex-note" style="margin:0 0 4px">'
-                    f'{_e(T("ex_s_ec_x"))}</p>', unsafe_allow_html=True)
-        combien = st.selectbox(T("ex_s_combien"), [5, 10, 20],
-                               key="exs_k_ec")
-        paires = _paires_ecarts(cat, cible, ind, filtre, None)
-        if not paires:
-            st.info(T("ex_s_ec_rien"))
-            return
-        st.markdown(_table_paires(paires[:combien]), unsafe_allow_html=True)
-        return
-
-    # ---- 4 · le score, puis ce qu'on veut voir de plus ---------------------
-    nb_sel, sc_sel = _score_cible(cat, filtre, cible, ind)
-    _nb_e, sc_ech = _score_cible(cat, np.ones(cat["n"], dtype=bool),
-                                 cible, ind)
-    _etape(4, "ex_res")
-    if sc_sel is not None and mode == "actuel" and not compares:
-        # LE SCORE D'ABORD, ET SANS RIEN DEMANDER DE PLUS.
-        st.markdown(_kpi_score(lib_cible, sc_sel, nb_sel, cat["n"], sc_ech),
-                    unsafe_allow_html=True)
-
-    # LA VENTILATION EST SOUS LE SCORE, ET ELLE EST FACULTATIVE. Vide, il n'y
-    # a que le score ; un registre, et il se décline ; deux ou trois, et les
-    # groupes se croisent — « les femmes de la montagne » contre « les hommes
-    # du littoral ».
-    dispo_v = [a for a, _l in _REGISTRES_S] + (["dimension"] if ind is None
-                                               else [])
-    axes = st.multiselect(
-        T("ex_s_vent"), dispo_v, key="exs_axes", max_selections=3,
-        format_func=lambda a: (T("ex_s_ax_dim") if a == "dimension"
-                               else T(dict(_REGISTRES_S)[a])))
-
-    if compares:
-        titre = T("ex_s_comp_t")
-        lignes = _lignes_indicateurs(cat, compares, filtre)
-    elif axes:
-        titre = (T("ex_s_bas_a") if mode == "bas"
-                 else T("ex_s_haut_a") if mode == "haut" else lib_cible)
-        lignes = _lignes_ventil(cat, axes, cible, ind, filtre)
-    elif mode in ("bas", "haut"):
-        titre = T("ex_s_bas_i" if mode == "bas" else "ex_s_haut_i")
-        lignes = _lignes_indicateurs(cat, inds, filtre)
-    else:
-        if sc_sel is None:
-            st.info(T("ex_s_rien"))
-        return
-    if not lignes:
-        st.info(T("ex_s_rien"))
-        return
-
-    if mode in ("bas", "haut"):
-        combien = st.selectbox(T("ex_s_combien"), [5, 10, 20], key="exs_k")
-        lignes = sorted(lignes, key=lambda x: x["score"],
-                        reverse=(mode == "haut"))[:combien]
-
-    st.markdown(f'<div class="ex-titre" style="margin-top:8px">'
-                f'{_e(titre)}</div>', unsafe_allow_html=True)
-    ens = {"n": nb_sel, "k": None, "part": sc_sel, "score": sc_sel}
-
-    if forme == "radar" and len(lignes) < 3:
-        st.info(T("ex_radar_court"))
-        forme = "barres"
-    if forme == "carte":
-        svg = _carte(lignes) if axes == ["section"] else None
-        if svg is None:
-            st.info(T("ex_s_carte_sec"))
-            forme = "barres"
+        # ---- ce qu'on mesure, et ce qu'on compare -----------------------
+        with st.container(key="exb_q_zone_s"):
+            c1, c2, c3 = st.columns([1, 2, 1.3])
+            with c1:
+                dim = st.selectbox(
+                    T("ex_s_dim"), [None] + _DIMS, key="exs_dim",
+                    format_func=lambda c: (T("ex_s_toutes") if c is None
+                                           else T(c)))
+            inds = [x for x in _inds_tries(cat)
+                    if dim is None or x["dim"] == dim]
+            with c2:
+                k = st.selectbox(
+                    T("ex_s_ind"), [None] + list(range(len(inds))),
+                    key=f"exs_ind_{dim}",
+                    format_func=lambda i: (
+                        T("ex_s_tous_i" if dim else "ex_s_tous_i0")
+                        if i is None
+                        else (_nom_ind(inds[i]) if dim
+                              else f'{T(inds[i]["dim"])} · '
+                                   f'{_nom_ind(inds[i])}')))
+            with c3:
+                dispo_v = ([a for a, _l in _REGISTRES_S]
+                           + (["dimension"] if k is None else []))
+                axes = st.multiselect(
+                    T("ex_axe"), dispo_v, key="exs_axes", max_selections=3,
+                    format_func=lambda a: (
+                        T("ex_s_ax_dim") if a == "dimension"
+                        else T(dict(_REGISTRES_S)[a])))
+        if k is not None:
+            ind = inds[k]
+            cible = f"i:{_inds_tries(cat).index(ind)}"
+            lib_cible = _nom_ind(ind)
+        elif dim is not None:
+            ind, cible, lib_cible = None, f"d:{dim}", T(dim)
         else:
-            st.markdown(f'<div style="font-family:Inter,system-ui,sans-serif">'
+            ind, cible, lib_cible = None, "global", T("ex_c_global")
+
+        # ---- les deux volets facultatifs --------------------------------
+        filtre, poses = _filtres_population(cat, "exs_f_", _REGISTRES_S)
+        # COMPARER PLUSIEURS INDICATEURS EST UNE QUESTION DE PLUS, pas une
+        # façon de lire celle du dessus : mettre l'eau, l'assainissement et
+        # l'électricité côte à côte remplace le score unique par une série.
+        # Replié, ce champ ne coûte rien à qui ne s'en sert pas.
+        _cmp_cle = f"exs_cmp_{dim}"
+        _cmp_pose = bool(st.session_state.get(_cmp_cle))
+        with st.expander(T("ex_s_comp"), expanded=_cmp_pose):
+            compare = st.multiselect(
+                T("ex_s_comp"), list(range(len(inds))), key=_cmp_cle,
+                max_selections=8, label_visibility="collapsed",
+                format_func=lambda i: _nom_ind(inds[i]))
+        compares = [inds[i] for i in compare]
+
+        n_f = int(filtre.sum())
+        if n_f == 0:
+            st.info(T("ex_s_vide"))
+            return
+
+        # ---- le résultat, et ses seuls réglages d'affichage -------------
+        r1, r2, r3 = st.columns([1.1, 1.1, 2.2], vertical_alignment="center")
+        with r1:
+            st.markdown(f'<div class="exb-sec" style="margin:10px 0 0">'
+                        f'{_e(T("ex_res"))}</div>', unsafe_allow_html=True)
+        with r2:
+            mode = st.selectbox(
+                T("ex_s_mode"), ["actuel", "bas", "haut", "ecarts"],
+                key="exs_mode", label_visibility="collapsed",
+                format_func=lambda m: T("ex_s_m_" + m))
+        with r3:
+            with st.container(key="exb_vue_s"):
+                forme = st.segmented_control(
+                    T("ex_format"), ["barres", "carte", "radar", "tableau"],
+                    key="exs_forme", default="barres",
+                    label_visibility="collapsed",
+                    format_func=lambda f: T("ex_" + f)) or "barres"
+
+        # ---- les écarts entre groupes ont leur propre tableau ------------
+        if mode == "ecarts":
+            st.markdown(f'<p class="ex-note" style="margin:2px 0 6px">'
+                        f'{_e(T("ex_s_ec_x"))}</p>', unsafe_allow_html=True)
+            combien = st.selectbox(T("ex_s_combien"), [5, 10, 20],
+                                   key="exs_k_ec")
+            paires = _paires_ecarts(cat, cible, ind, filtre, None)
+            if not paires:
+                st.info(T("ex_s_ec_rien"))
+                return
+            st.markdown(_table_paires(paires[:combien]),
+                        unsafe_allow_html=True)
+            return
+
+        nb_sel, sc_sel = _score_cible(cat, filtre, cible, ind)
+        _nb_e, sc_ech = _score_cible(cat, np.ones(cat["n"], dtype=bool),
+                                     cible, ind)
+        if sc_sel is not None and mode == "actuel" and not compares:
+            st.markdown(
+                _kpi_score(lib_cible, sc_sel, nb_sel, cat["n"], sc_ech),
+                unsafe_allow_html=True)
+
+        if compares:
+            titre = T("ex_s_comp_t")
+            lignes = _lignes_indicateurs(cat, compares, filtre)
+        elif axes:
+            titre = (T("ex_s_bas_a") if mode == "bas"
+                     else T("ex_s_haut_a") if mode == "haut" else lib_cible)
+            lignes = _lignes_ventil(cat, axes, cible, ind, filtre)
+        elif mode in ("bas", "haut"):
+            titre = T("ex_s_bas_i" if mode == "bas" else "ex_s_haut_i")
+            lignes = _lignes_indicateurs(cat, inds, filtre)
+        else:
+            if sc_sel is None:
+                st.info(T("ex_s_rien"))
+            if poses:
+                st.markdown(f'<p class="ex-note" style="margin:8px 0 0">'
+                            f'{_e(T("ex_s_n", n=_n(n_f), t=_n(cat["n"])))}</p>',
+                            unsafe_allow_html=True)
+            return
+        if not lignes:
+            st.info(T("ex_s_rien"))
+            return
+
+        if mode in ("bas", "haut"):
+            combien = st.selectbox(T("ex_s_combien"), [5, 10, 20],
+                                   key="exs_k")
+            lignes = sorted(lignes, key=lambda x: x["score"],
+                            reverse=(mode == "haut"))[:combien]
+
+        st.markdown(f'<div class="ex-titre" style="margin-top:8px">'
+                    f'{_e(titre)}</div>', unsafe_allow_html=True)
+        ens = {"n": nb_sel, "k": None, "part": sc_sel, "score": sc_sel}
+
+        if forme == "radar" and len(lignes) < 3:
+            st.info(T("ex_radar_court"))
+            forme = "barres"
+        if forme == "carte":
+            svg = _carte(lignes) if axes == ["section"] else None
+            if svg is None:
+                st.info(T("ex_s_carte_sec"))
+                forme = "barres"
+            else:
+                st.markdown(
+                    f'<div style="font-family:Inter,system-ui,sans-serif">'
+                    f'{svg}</div>', unsafe_allow_html=True)
+        if forme == "radar":
+            svg = radar.render_radar_svg(
+                [l["nom"] for l in lignes],
+                [(lib_cible, [l["score"] for l in lignes], VERT_APRI)],
+                taille=430)
+            st.markdown(f'<div style="max-width:760px;margin:6px auto 0">'
                         f'{svg}</div>', unsafe_allow_html=True)
-    if forme == "radar":
-        svg = radar.render_radar_svg(
-            [l["nom"] for l in lignes],
-            [(lib_cible, [l["score"] for l in lignes], VERT_APRI)], taille=430)
-        st.markdown(f'<div style="max-width:760px;margin:6px auto 0">{svg}'
-                    f'</div>', unsafe_allow_html=True)
-    elif forme == "tableau":
-        st.markdown(_tableau(lignes, ens, "score"), unsafe_allow_html=True)
-    elif forme == "barres":
-        st.markdown(_barres(lignes, ens, "score"), unsafe_allow_html=True)
+        elif forme == "tableau":
+            st.markdown(_tableau(lignes, ens, "score"),
+                        unsafe_allow_html=True)
+        elif forme == "barres":
+            st.markdown(_barres(lignes, ens, "score"), unsafe_allow_html=True)
+
+        st.markdown(_synthese(lignes, "score"), unsafe_allow_html=True)
+        if poses:
+            st.markdown(f'<p class="ex-note" style="margin:6px 0 0">'
+                        f'{_e(T("ex_s_n", n=_n(n_f), t=_n(cat["n"])))}</p>',
+                        unsafe_allow_html=True)
+
+
+def raz_scores():
+    """Vide les filtres, la comparaison et l'affichage de l'écran des scores.
+
+    LA CIBLE MESURÉE SURVIT, comme la question survit sur les résultats
+    bruts : on enlève ses restrictions, on n'efface pas ce qu'on regardait.
+    """
+    for k in [k for k in list(st.session_state)
+              if str(k).startswith(("exs_f_", "exs_cmp_", "exs_axes",
+                                    "exs_forme", "exs_mode", "exs_k"))]:
+        st.session_state.pop(k, None)
 
 
 # ============================================================ résultats bruts
@@ -1766,7 +1774,7 @@ def raz_brut():
         st.session_state.pop(k, None)
 
 
-def _filtres_population(cat):
+def _filtres_population(cat, prefixe="exb_f_", registres=None):
     """Les cinq registres, repliés, cumulables, et vidables d'un geste.
 
     OU DANS UN REGISTRE, ET DANS L'AUTRE ENTRE REGISTRES. Deux sections
@@ -1774,7 +1782,8 @@ def _filtres_population(cat):
     sexe donnent ceux qui sont dans la section ET de ce sexe. C'est la seule
     lecture qui rende « les femmes pauvres du littoral » exprimable.
     """
-    cles = {a: f"exb_f_{a}" for a, _l in _REGISTRES_F}
+    registres = registres or _REGISTRES_F
+    cles = {a: f"{prefixe}{a}" for a, _l in registres}
     n_actifs = sum(len(st.session_state.get(k) or []) for k in cles.values())
     lib = T("ex_b_pop")
     if n_actifs:
@@ -1786,12 +1795,12 @@ def _filtres_population(cat):
         # LE BOUTON DE VIDAGE VIENT AVANT LES CHAMPS : posé après, il
         # écrirait dans l'état de widgets déjà construits, ce que Streamlit
         # refuse. Avant, il les vide pendant qu'ils n'existent pas encore.
-        if n_actifs and st.button(T("ex_raz"), key="exb_f_raz",
+        if n_actifs and st.button(T("ex_raz"), key=f"{prefixe}raz",
                                   type="tertiary"):
             for k in cles.values():
                 st.session_state[k] = []
-        cols = st.columns(len(_REGISTRES_F))
-        for (axe, lab), col in zip(_REGISTRES_F, cols):
+        cols = st.columns(len(registres))
+        for (axe, lab), col in zip(registres, cols):
             with col:
                 choix[axe] = st.multiselect(
                     T(lab), list(_VALEURS.get(axe, [])), key=cles[axe],
@@ -1861,7 +1870,12 @@ def _render_brut(cat):
     """Question → filtres facultatifs → résultat, sur un seul écran."""
     questions = cat["questions"]
     mesure = "part"
-    st.markdown(STYLE + _CSS_BRUT, unsafe_allow_html=True)
+    # DEUX APPELS, PAS UNE CONCATÉNATION. La règle qui masque les blocs de
+    # style repose sur `style:only-child` : deux balises `<style>` dans le
+    # même bloc ne matchent plus, le bloc reste dans le flux et laisse
+    # soixante-dix pixels de blanc en tête d'écran.
+    st.markdown(STYLE, unsafe_allow_html=True)
+    st.markdown(_CSS_BRUT, unsafe_allow_html=True)
 
     with st.container(key="ex_brut"):
         # ---- ce qu'on analyse -------------------------------------------

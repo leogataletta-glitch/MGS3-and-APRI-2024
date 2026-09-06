@@ -68,17 +68,6 @@ TEXTES = {
     "ec_ax_richesse": {"en": "Economic category",
                        "fr": "Catégorie économique"},
 
-    "ec_i_titre": {"en": "One indicator, across the territory",
-                   "fr": "Un indicateur, à travers le territoire"},
-    "ec_i_intro": {
-        "en": "Pick an indicator: its value and its 0–10 score are computed "
-              "for every communal section, landscape and social group. The "
-              "gap between the highest and the lowest is what an intervention "
-              "would have to close.",
-        "fr": "Choisissez un indicateur : sa valeur et son score sur 10 sont "
-              "calculés pour chaque section communale, chaque paysage et "
-              "chaque groupe social. L'écart entre le plus haut et le plus "
-              "bas est ce qu'une intervention aurait à combler."},
     "ec_i_choix": {"en": "Indicator", "fr": "Indicateur"},
     "ec_i_axes": {"en": "Compare across", "fr": "Comparer sur"},
     "ec_i_sens_haut": {"en": "Higher is better", "fr": "Plus, c'est mieux"},
@@ -140,8 +129,12 @@ TEXTES = {
               "there is nothing to map.",
         "fr": "Ce groupe est présent dans moins de deux sections communales : "
               "il n'y a rien à cartographier."},
+    "ec_sec_quoi": {"en": "What do you want to analyse?",
+                    "fr": "Que voulez-vous analyser ?"},
+    "ec_sec_res": {"en": "Results", "fr": "Résultats"},
+    "ec_raz": {"en": "Reset", "fr": "Réinitialiser"},
+    "ec_comb_n": {"en": "Combined", "fr": "Croisé"},
     "ec_quoi": {"en": "Show", "fr": "Afficher"},
-    "ec_quoi_rien": {"en": "Nothing yet", "fr": "Rien pour l'instant"},
     "ec_rien_choix": {"en": "Choose a chart", "fr": "Choisir un graphique"},
     "ec_rien_encore": {
         "en": "Choose what to break down by and how to draw it: nothing is "
@@ -175,10 +168,6 @@ TEXTES = {
               "indicateurs où son score est le plus faible, quoi que fasse le "
               "reste de l'échantillon."},
 
-    "ec_p_titre": {"en": "One landscape, and what sets it apart",
-                   "fr": "Un paysage, et ce qui le distingue"},
-    "ec_g_titre": {"en": "One social group, and what sets it apart",
-                   "fr": "Un groupe social, et ce qui le distingue"},
     "ec_p_choix": {"en": "Landscape", "fr": "Paysage"},
     "ec_g_choix": {"en": "Social group", "fr": "Groupe social"},
     "ec_vs": {"en": "compared with everyone else",
@@ -329,6 +318,40 @@ STYLE = """
   .ec-k-v { font-size:22px; font-weight:700; color:#101728; line-height:1.1;
        margin-top:4px; font-variant-numeric:tabular-nums; }
   .ec-k-s { font-size:11px; color:#8a93a5; margin-top:2px; }
+  /* LA MÊME GRAMMAIRE QUE LES DEUX PREMIERS ONGLETS : un intitulé de
+     section en petites capitales suivi d'un filet, des volets repliés sans
+     cadre, un sélecteur de dessin compact dans l'en-tête du résultat, et une
+     remise à zéro qui se lit comme un lien. Trois écrans qui posent la même
+     question ne doivent pas la poser dans trois mises en page. */
+  .ec-sec { display:flex; align-items:center; gap:12px; margin:2px 0 2px;
+       font-size:11.5px; font-weight:700; letter-spacing:.09em;
+       text-transform:uppercase; color:#1f5b46; }
+  .ec-sec span.l { flex:1 1 auto; height:1px; background:#e4eae6; }
+  div[class*="st-key-ec_ecran"] div[data-testid="stExpander"] details {
+       border:0 !important; border-top:1px solid #eef2f7 !important;
+       border-radius:0 !important; background:transparent !important;
+       box-shadow:none !important; }
+  div[class*="st-key-ec_ecran"] div[data-testid="stExpander"] summary {
+       padding:9px 2px !important; }
+  div[class*="st-key-ec_ecran"] div[data-testid="stExpander"] summary p {
+       font-size:12.5px !important; font-weight:600 !important;
+       color:#3c6b57 !important; }
+  div[class*="st-key-ec_ecran"]
+       button[data-testid="stBaseButton-tertiary"] {
+       border:0 !important; background:transparent !important;
+       box-shadow:none !important; padding:2px 0 !important;
+       min-height:0 !important; float:right; }
+  div[class*="st-key-ec_ecran"]
+       button[data-testid="stBaseButton-tertiary"] p {
+       font-size:12px !important; font-weight:600 !important;
+       color:#8a93a5 !important; }
+  div[class*="st-key-ec_ecran"]
+       button[data-testid="stBaseButton-tertiary"]:hover p {
+       color:#1f5b46 !important; text-decoration:underline; }
+  div[class*="st-key-ec_vue"] div[data-baseweb="button-group"] {
+       justify-content:flex-end !important; }
+  div[class*="st-key-ec_vue"] button {
+       font-size:12px !important; padding:3px 12px !important; }
   .ec-lab { font-size:10.5px; font-weight:700; letter-spacing:.09em;
        text-transform:uppercase; color:#8a93a5; margin:10px 0 2px; }
 </style>
@@ -387,100 +410,113 @@ def render_indicateur(cat):
     if not cat or not cat.get("indicateurs"):
         return
     st.markdown(STYLE, unsafe_allow_html=True)
-    st.markdown(f'<div class="titre-bloc">{_e(T("ec_i_titre"))}</div>'
-                f'<p class="ec-note" style="margin:0 0 12px">'
-                f'{_e(T("ec_i_intro"))}</p>', unsafe_allow_html=True)
-
     inds = sorted(cat["indicateurs"], key=lambda x: (x["dim"], _nom(x)))
-    g, d = st.columns([1.7, 1])
-    with g:
-        pos = st.selectbox(T("ec_i_choix"), list(range(len(inds))),
-                           key="ec_i_sel",
-                           format_func=lambda k: f'{T(inds[k]["dim"])} · '
-                                                 f'{_nom(inds[k])}')
-    ind = inds[pos]
-    with d:
-        axes = st.multiselect(T("ec_i_axes"), [a for a, _ in AXES],
-                              key="ec_i_axes",
-                              format_func=lambda a: T(dict(AXES)[a]))
 
-    # LE DESSIN ET LES EXTRÊMES SE CHOISISSENT ICI, comme sur les deux
-    # premiers onglets : un même geste doit donner un même résultat d'un écran
-    # à l'autre, sinon le lecteur réapprend l'outil à chaque page.
-    c1, c2 = st.columns(2)
-    with c1:
-        # RIEN NE SE DESSINE TANT QU'ON N'A PAS DIT COMMENT. L'écran s'ouvrait
-        # sur un histogramme des dix sections que personne n'avait demandé :
-        # le premier indicateur de la liste, sur le premier registre, dans le
-        # premier dessin. Trois défauts empilés font une réponse à une
-        # question qui n'a pas été posée.
-        forme = st.selectbox(
-            T("ec_format"), [None, "barres", "radar", "tableau", "carte"],
-            key="ec_i_forme",
-            format_func=lambda f: T("ec_rien_choix") if f is None
-            else T("ec_" + f))
-    with c2:
-        extremes = st.selectbox(
-            T("ec_extremes"), ["tous", "top", "flop", "topflop"],
-            key="ec_i_ext",
-            format_func=lambda c: T({"tous": "ec_tous", "top": "ec_top",
-                                     "flop": "ec_flop",
-                                     "topflop": "ec_topflop"}[c]))
+    with st.container(key="ec_ecran_i"):
+        h1, h2 = st.columns([4, 1], vertical_alignment="center")
+        with h1:
+            st.markdown(f'<div class="ec-sec">{_e(T("ec_sec_quoi"))}'
+                        f'<span class="l"></span></div>',
+                        unsafe_allow_html=True)
+        with h2:
+            if st.button(T("ec_raz"), key="ec_i_raz", type="tertiary"):
+                for k in ("ec_i_axes", "ec_i_ext", "ec_i_forme"):
+                    st.session_state.pop(k, None)
+                st.rerun()
 
-    if forme is None or not axes:
-        st.markdown(f'<p class="ec-note" style="margin:8px 0 0">'
-                    f'{_e(T("ec_rien_encore"))}</p>', unsafe_allow_html=True)
-        return
+        g, d2 = st.columns([2.2, 1.3])
+        with g:
+            pos = st.selectbox(T("ec_i_choix"), list(range(len(inds))),
+                               key="ec_i_sel",
+                               format_func=lambda k: f'{T(inds[k]["dim"])} · '
+                                                     f'{_nom(inds[k])}')
+        ind = inds[pos]
+        with d2:
+            axes = st.multiselect(T("ec_i_axes"), [a for a, _ in AXES],
+                                  key="ec_i_axes",
+                                  format_func=lambda a: T(dict(AXES)[a]))
 
-    sens = T("ec_i_sens_bas") if ind.get("decroissant") else T("ec_i_sens_haut")
-    st.markdown(f'<p class="ec-note" style="margin:0 0 6px">'
-                f'{_e(T(ind["dim"]))} · {_e(sens)}</p>',
-                unsafe_allow_html=True)
+        # ---- le résultat, et ses seuls réglages d'affichage -------------
+        r1, r2, r3 = st.columns([1.1, 1.1, 2.2], vertical_alignment="center")
+        with r1:
+            st.markdown(f'<div class="ec-sec" style="margin:10px 0 0">'
+                        f'{_e(T("ec_sec_res"))}</div>', unsafe_allow_html=True)
+        with r2:
+            extremes = st.selectbox(
+                T("ec_extremes"), ["tous", "top", "flop", "topflop"],
+                key="ec_i_ext", label_visibility="collapsed",
+                format_func=lambda c: T("ec_extremes") + " : " + T(
+                    {"tous": "ec_tous", "top": "ec_top", "flop": "ec_flop",
+                     "topflop": "ec_topflop"}[c]))
+        with r3:
+            # RIEN NE SE DESSINE TANT QU'ON N'A PAS DIT COMMENT. Aucun dessin
+            # n'est présélectionné : le sélecteur segmenté rend None tant
+            # qu'on n'a rien cliqué, ce qui remplace le « — » d'un menu
+            # déroulant sans coûter une ligne de plus.
+            with st.container(key="ec_vue_i"):
+                forme = st.segmented_control(
+                    T("ec_format"), ["barres", "carte", "radar", "tableau"],
+                    key="ec_i_forme", label_visibility="collapsed",
+                    format_func=lambda f: T("ec_" + f))
 
-    lignes = []
-    for axe in axes:
-        for v, lib in _cases(cat, axe):
-            m = _mesure(ind, cat["groupes"][v])
-            if m["n"]:
-                lignes.append({"axe": T(dict(AXES)[axe]), "nom": lib,
-                               "cle": v, "axe_code": axe, **m})
-    if not lignes:
-        st.info(T("ec_rien"))
-        return
+        if forme is None or not axes:
+            st.markdown(f'<p class="ec-note" style="margin:8px 0 0">'
+                        f'{_e(T("ec_rien_encore"))}</p>',
+                        unsafe_allow_html=True)
+            return
 
-    tout = _mesure(ind, np.ones(cat["n"], dtype=bool))
-    scores = [l["score"] for l in lignes if l["score"] is not None]
-    if len(scores) > 1:
-        st.markdown(f'<p class="ec-note" style="margin:0 0 8px">'
-                    f'{_e(T("ec_i_ecart", v=_f(max(scores) - min(scores), 1)))}'
-                    f'</p>', unsafe_allow_html=True)
+        lignes = []
+        for axe in axes:
+            for v, lib in _cases(cat, axe):
+                m = _mesure(ind, cat["groupes"][v])
+                if m["n"]:
+                    lignes.append({"axe": T(dict(AXES)[axe]), "nom": lib,
+                                   "cle": v, "axe_code": axe, **m})
+        if not lignes:
+            st.info(T("ec_rien"))
+            return
 
-    montrees = _extremes(lignes, extremes)
-    if forme == "radar" and len(montrees) < 3:
-        st.info(T("ec_radar_court"))
-        forme = "barres"
-    if forme == "carte":
-        svg = _carte(montrees)
-        if svg is None:
-            st.info(T("ec_carte_sec"))
+        tout = _mesure(ind, np.ones(cat["n"], dtype=bool))
+        montrees = _extremes(lignes, extremes)
+        if forme == "radar" and len(montrees) < 3:
+            st.info(T("ec_radar_court"))
             forme = "barres"
-        else:
-            st.markdown(f'<div style="font-family:Inter,system-ui,sans-serif">'
+        if forme == "carte":
+            svg = _carte(montrees)
+            if svg is None:
+                st.info(T("ec_carte_sec"))
+                forme = "barres"
+            else:
+                st.markdown(
+                    f'<div style="font-family:Inter,system-ui,sans-serif">'
+                    f'{svg}</div>', unsafe_allow_html=True)
+        if forme == "radar":
+            svg = radar.render_radar_svg(
+                [l["nom"] for l in montrees],
+                [(_nom(ind), [l["score"] for l in montrees], VERT_APRI)],
+                taille=430)
+            st.markdown(f'<div style="max-width:760px;margin:6px auto 0">'
                         f'{svg}</div>', unsafe_allow_html=True)
+        elif forme == "barres":
+            st.markdown(_barres(montrees, tout), unsafe_allow_html=True)
+        elif forme == "tableau":
+            st.markdown(_table_cases(montrees, tout), unsafe_allow_html=True)
 
-    if forme == "radar":
-        svg = radar.render_radar_svg(
-            [l["nom"] for l in montrees],
-            [(_nom(ind), [l["score"] for l in montrees], VERT_APRI)],
-            taille=430)
-        st.markdown(f'<div style="max-width:760px;margin:6px auto 0">{svg}'
-                    f'</div>', unsafe_allow_html=True)
-    elif forme == "barres":
-        st.markdown(_barres(montrees, tout), unsafe_allow_html=True)
-        st.markdown(f'<p class="ec-note">{_e(T("ec_i_pourcent"))}</p>',
-                    unsafe_allow_html=True)
-
-    st.markdown(_table_cases(montrees, tout), unsafe_allow_html=True)
+        # ---- ce que le dessin dit, sous le dessin ------------------------
+        # LE SENS DE LECTURE, L'ÉCART ET L'UNITÉ SONT PASSÉS SOUS LE
+        # GRAPHIQUE. Au-dessus, trois lignes de note repoussaient le seul
+        # objet qu'on vient voir ; en dessous, elles répondent aux questions
+        # qui se posent une fois la barre lue.
+        sens = (T("ec_i_sens_bas") if ind.get("decroissant")
+                else T("ec_i_sens_haut"))
+        notes = [f'{T(ind["dim"])} · {sens}']
+        scores = [l["score"] for l in lignes if l["score"] is not None]
+        if len(scores) > 1:
+            notes.append(T("ec_i_ecart", v=_f(max(scores) - min(scores), 1)))
+        if forme == "barres":
+            notes.append(T("ec_i_pourcent"))
+        st.markdown(f'<p class="ec-note" style="margin:8px 0 0">'
+                    f'{_e(" · ".join(notes))}</p>', unsafe_allow_html=True)
 
 
 def _extremes(lignes, choix):
@@ -727,45 +763,51 @@ def _combiner(cat, base, cle, avec_paysage=False):
     poser, et l'effectif restant est annoncé — un profil calculé sur trente
     ménages doit se lire en sachant qu'ils sont trente.
     """
-    st.markdown(f'<div class="ec-lab">{_e(T("ec_combiner"))}</div>',
-                unsafe_allow_html=True)
-    cols = st.columns(3 if avec_paysage else 2)
+    # LE CROISEMENT EST REPLIÉ TANT QU'ON NE S'EN SERT PAS. « Les femmes de
+    # la montagne » est une vraie question, mais une question sur dix : trois
+    # menus dépliés en permanence au-dessus du profil pesaient autant que le
+    # profil lui-même.
+    _cles = [f"ec_cg_{cle}", f"ec_cs_{cle}", f"ec_cp_{cle}"]
+    _pose = any(st.session_state.get(k) is not None for k in _cles)
+    _lib_v = T("ec_combiner") + (" · " + T("ec_comb_n") if _pose else "")
     masque, bouts = base.copy(), []
+    with st.expander(_lib_v, expanded=_pose):
+        cols = st.columns(3 if avec_paysage else 2)
 
-    soc = []
-    for axe in GROUPES_SOCIAUX:
-        for val, lib in _cases(cat, axe):
-            soc.append((val, f'{T(dict(AXES)[axe])} · {lib}', lib))
-    with cols[0]:
-        k = st.selectbox(
-            T("ec_c_groupe"), [None] + list(range(len(soc))),
-            key=f"ec_cg_{cle}",
-            format_func=lambda i: T("ec_c_tous") if i is None else soc[i][1])
-    if k is not None:
-        masque = masque & cat["groupes"][soc[k][0]]
-        bouts.append(soc[k][2])
+        soc = []
+        for axe in GROUPES_SOCIAUX:
+            for val, lib in _cases(cat, axe):
+                soc.append((val, f'{T(dict(AXES)[axe])} · {lib}', lib))
+        with cols[0]:
+            k = st.selectbox(
+                T("ec_c_groupe"), [None] + list(range(len(soc))),
+                key=f"ec_cg_{cle}",
+                format_func=lambda i: T("ec_c_tous") if i is None else soc[i][1])
+        if k is not None:
+            masque = masque & cat["groupes"][soc[k][0]]
+            bouts.append(soc[k][2])
 
-    with cols[1]:
-        sec = st.selectbox(
-            T("ec_c_section"),
-            [None] + [v for v, _l in _cases(cat, "section")],
-            key=f"ec_cs_{cle}",
-            format_func=lambda v: T("ec_c_tous") if v is None else v)
-    if sec is not None:
-        masque = masque & cat["groupes"][sec]
-        bouts.append(sec)
+        with cols[1]:
+            sec = st.selectbox(
+                T("ec_c_section"),
+                [None] + [v for v, _l in _cases(cat, "section")],
+                key=f"ec_cs_{cle}",
+                format_func=lambda v: T("ec_c_tous") if v is None else v)
+        if sec is not None:
+            masque = masque & cat["groupes"][sec]
+            bouts.append(sec)
 
-    if avec_paysage:
-        with cols[2]:
-            pay = st.selectbox(
-                T("ec_c_paysage"),
-                [None] + [v for v, _l in _cases(cat, "paysage")],
-                key=f"ec_cp_{cle}",
-                format_func=lambda v: T("ec_c_tous") if v is None
-                else _lib(v))
-        if pay is not None:
-            masque = masque & cat["groupes"][pay]
-            bouts.append(_lib(pay))
+        if avec_paysage:
+            with cols[2]:
+                pay = st.selectbox(
+                    T("ec_c_paysage"),
+                    [None] + [v for v, _l in _cases(cat, "paysage")],
+                    key=f"ec_cp_{cle}",
+                    format_func=lambda v: T("ec_c_tous") if v is None
+                    else _lib(v))
+            if pay is not None:
+                masque = masque & cat["groupes"][pay]
+                bouts.append(_lib(pay))
     return masque, bouts
 
 
@@ -833,7 +875,8 @@ def _table_dims(ag_g, ag_a, lib, lib_a=None):
     return "".join(r)
 
 
-def _rendre_profil(cat, base, lib, titre, avec_paysage=False):
+def _rendre_profil(cat, base, lib, titre, avec_paysage=False,
+                   col_terme=None):
     """Le profil d'un groupe : ses dimensions, puis ses indicateurs.
 
     LE DESSIN SE CHOISIT, LE CALCUL NE CHANGE PAS. Radar, barres, tableau et
@@ -847,6 +890,14 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False):
     if base is None:
         st.info(T("ec_rien"))
         return False
+    # LES DEUX DÉCISIONS PRINCIPALES SE SUIVENT : quel groupe, et par rapport
+    # à qui. Le croisement facultatif vient après, replié — placé entre les
+    # deux, il séparait une question de sa moitié.
+    if col_terme is not None:
+        with col_terme:
+            ref, lib_ref = _terme(cat, titre)
+    else:
+        ref, lib_ref = _terme(cat, titre)
     masque, bouts = _combiner(cat, base, titre, avec_paysage)
     if bouts:
         lib = " · ".join([lib] + bouts)
@@ -854,8 +905,6 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False):
     if n_g == 0:
         st.info(T("ec_c_vide"))
         return False
-    # ---- par rapport à qui -----------------------------------------------
-    ref, lib_ref = _terme(cat, titre)
     if ref is not None:
         ref = ref & ~masque
         if int(ref.sum()) == 0:
@@ -868,10 +917,17 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False):
     # soixante-six indicateurs classés : trois écrans empilés dont on n'avait
     # demandé qu'un. Le score du groupe reste toujours affiché — c'est la
     # réponse à la question qu'on vient de poser ; le reste se demande.
-    quoi = st.radio(T("ec_quoi"), ["rien", "profil", "indic", "tout"],
-                    horizontal=True, key=f"ec_quoi_{titre}",
-                    format_func=lambda c: T("ec_quoi_" + c))
-    if quoi == "rien":
+    r1, r2 = st.columns([1, 3], vertical_alignment="center")
+    with r1:
+        st.markdown(f'<div class="ec-sec" style="margin:10px 0 0">'
+                    f'{_e(T("ec_sec_res"))}</div>', unsafe_allow_html=True)
+    with r2:
+        with st.container(key=f"ec_vue_{titre}"):
+            quoi = st.segmented_control(
+                T("ec_quoi"), ["profil", "indic", "tout"],
+                key=f"ec_quoi_{titre}", label_visibility="collapsed",
+                format_func=lambda c: T("ec_quoi_" + c))
+    if quoi is None:
         st.markdown(f'<p class="ec-note" style="margin:8px 0 0">'
                     f'{_e(T("ec_rien_encore"))}</p>', unsafe_allow_html=True)
         return False
@@ -893,10 +949,12 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False):
     if quoi in ("profil", "tout"):
         st.markdown(f'<div class="titre-bloc">{_e(T("ec_profil"))}</div>',
                     unsafe_allow_html=True)
-        forme = st.selectbox(T("ec_format"), ["radar", "barres", "tableau",
-                                              "carte"],
-                             key=f"ec_forme_{titre}",
-                             format_func=lambda f: T("ec_" + f))
+        with st.container(key=f"ec_vue_f_{titre}"):
+            forme = st.segmented_control(
+                T("ec_format"), ["radar", "barres", "tableau", "carte"],
+                key=f"ec_forme_{titre}", default="radar",
+                label_visibility="collapsed",
+                format_func=lambda f: T("ec_" + f)) or "radar"
         if forme == "radar" and sum(1 for v in s_g if v is not None) < 3:
             st.info(T("ec_radar_court"))
             forme = "barres"
@@ -959,23 +1017,32 @@ def render_paysage(cat):
     if not cat:
         return False
     st.markdown(STYLE, unsafe_allow_html=True)
-    st.markdown(f'<div class="titre-bloc">{_e(T("ec_p_titre"))}</div>',
-                unsafe_allow_html=True)
     vals = [v for v in _VALEURS["paysage"] if cat["groupes"].get(v) is not None]
     if not vals:
         st.info(T("ec_rien"))
         return False
-    v = st.selectbox(T("ec_p_choix"), vals, key="ec_p_sel",
-                     format_func=_lib)
-    return _rendre_profil(cat, cat["groupes"].get(v), _lib(v), "pay")
+    with st.container(key="ec_ecran_p"):
+        h1, h2 = st.columns([4, 1], vertical_alignment="center")
+        with h1:
+            st.markdown(f'<div class="ec-sec">{_e(T("ec_sec_quoi"))}'
+                        f'<span class="l"></span></div>',
+                        unsafe_allow_html=True)
+        with h2:
+            if st.button(T("ec_raz"), key="ec_p_raz", type="tertiary"):
+                _raz_profil("pay")
+                st.rerun()
+        c1, c2 = st.columns([2.2, 1.6])
+        with c1:
+            v = st.selectbox(T("ec_p_choix"), vals, key="ec_p_sel",
+                             format_func=_lib)
+        return _rendre_profil(cat, cat["groupes"].get(v), _lib(v), "pay",
+                              col_terme=c2)
 
 
 def render_groupe(cat):
     if not cat:
         return False
     st.markdown(STYLE, unsafe_allow_html=True)
-    st.markdown(f'<div class="titre-bloc">{_e(T("ec_g_titre"))}</div>',
-                unsafe_allow_html=True)
     # LES TROIS REGISTRES SOCIAUX SONT APLATIS EN UNE SEULE LISTE, préfixée du
     # registre : « Sexe · Femmes » se choisit d'un geste, là où deux menus
     # emboîtés en demandent deux pour la même chose.
@@ -986,14 +1053,41 @@ def render_groupe(cat):
     if not opts:
         st.info(T("ec_rien"))
         return False
-    k = st.selectbox(T("ec_g_choix"), list(range(len(opts))), key="ec_g_sel",
-                     format_func=lambda i: opts[i][1])
-    # LE PAYSAGE EST OFFERT EN PLUS SUR CETTE PAGE, et pas sur la précédente :
-    # « les femmes de la montagne » se pose ici, « la montagne des femmes » se
-    # pose là-bas, et proposer deux fois le même croisement dans les deux sens
-    # ferait deux chemins vers le même tableau.
-    return _rendre_profil(cat, cat["groupes"].get(opts[k][0]), opts[k][2],
-                          "grp", avec_paysage=True)
+    with st.container(key="ec_ecran_g"):
+        h1, h2 = st.columns([4, 1], vertical_alignment="center")
+        with h1:
+            st.markdown(f'<div class="ec-sec">{_e(T("ec_sec_quoi"))}'
+                        f'<span class="l"></span></div>',
+                        unsafe_allow_html=True)
+        with h2:
+            if st.button(T("ec_raz"), key="ec_g_raz", type="tertiary"):
+                _raz_profil("grp")
+                st.rerun()
+        c1, c2 = st.columns([2.2, 1.6])
+        with c1:
+            k = st.selectbox(T("ec_g_choix"), list(range(len(opts))),
+                             key="ec_g_sel", format_func=lambda i: opts[i][1])
+        # LE PAYSAGE EST OFFERT EN PLUS SUR CETTE PAGE, et pas sur la
+        # précédente : « les femmes de la montagne » se pose ici, « la
+        # montagne des femmes » se pose là-bas, et proposer deux fois le même
+        # croisement dans les deux sens ferait deux chemins vers le même
+        # tableau.
+        return _rendre_profil(cat, cat["groupes"].get(opts[k][0]),
+                              opts[k][2], "grp", avec_paysage=True,
+                              col_terme=c2)
+
+
+def _raz_profil(titre):
+    """Vide le croisement et l'affichage d'un écran de profil.
+
+    LE GROUPE REGARDÉ SURVIT : réinitialiser enlève les restrictions et remet
+    l'écran au repos, il n'efface pas ce qu'on était en train de lire.
+    """
+    for k in (f"ec_cg_{titre}", f"ec_cs_{titre}", f"ec_cp_{titre}",
+              f"ec_quoi_{titre}", f"ec_forme_{titre}", f"ec_tri_{titre}",
+              f"ec_n_{titre}"):
+        st.session_state.pop(k, None)
+
 
 # ============================== les variables les plus alarmantes
 # DEUX SORTES DE FAIBLESSE, DEUX TABLEAUX, ET LES CONFONDRE ENVOIE UNE
