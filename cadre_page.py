@@ -1499,10 +1499,16 @@ STYLE = """
      quatre-vingts pixels de traits pour trois phrases et sept nombres. Le
      texte se tient tout seul : ce qui sépare les blocs est le blanc entre
      eux, et le numéro d'ordre suffit à ouvrir chaque attribut. */
-  .cad-cc { display:flex; flex-direction:column; gap:18px; }
+  /* UN FILET ENTRE DEUX ATTRIBUTS, ET UN SOUS LE DERNIER. Trois blocs posés
+     dans le blanc, à hauteur des sept lignes du tableau voisin, flottaient
+     sans qu'on sache où l'un finit et où l'autre commence ; le filet très
+     pâle qui sépare les lignes du tableau fait le même travail ici, et les
+     deux moitiés se lisent enfin au même rythme. */
+  .cad-cc { display:flex; flex-direction:column; gap:0; }
   .cad-c  { display:flex; align-items:stretch; gap:16px;
         border:0; border-radius:0; background:transparent;
-        padding:0; }
+        border-bottom:1px solid #eef2f0; padding:15px 0; }
+  .cad-c:first-child { padding-top:6px; }
   .cad-c-n { font-size:22px; font-weight:700; color:#b9c6bf;
         font-variant-numeric:tabular-nums; line-height:1.1;
         padding-right:16px; border-right:0;
@@ -1522,11 +1528,18 @@ STYLE = """
      au-dessus de nombres à trois caractères. */
   .cad-dh, .cad-dl { display:grid;
         grid-template-columns:minmax(140px,1fr) 130px 108px;
-        gap:16px; align-items:center; padding:9px 0; }
+        gap:16px; align-items:center; padding:11px 0; }
   .cad-dh { background:transparent; font-size:10px; font-weight:700;
         letter-spacing:.1em; text-transform:uppercase; color:#8a93a5;
         line-height:1.3; }
-  .cad-dl { border-top:0; }
+  /* LE FILET REVIENT ENTRE LES LIGNES, TRÈS PÂLE. Il avait été retiré avec
+     les bordures du tableau, et sept lignes de trois colonnes sans repère
+     horizontal obligeaient l'œil à traverser cent pixels de blanc pour
+     rattacher un pourcentage à sa dimension. Ce filet-là n'encadre rien : il
+     tient la ligne. */
+  .cad-dl { border-top:0; border-bottom:1px solid #eef2f0; }
+  .cad-dh { border-bottom:1px solid #dfe5e1; }
+  .cad-dl:last-child { border-bottom:1px solid #eef2f0; }
   .cad-dl-n { font-size:13px; color:#101728; font-weight:600;
         line-height:1.35; }
   .cad-dl-r { color:#1a6b52; font-weight:700; }
