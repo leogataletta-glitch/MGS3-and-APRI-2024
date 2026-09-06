@@ -1567,7 +1567,6 @@ TEXTES_NAV = {
     "ra_o_brut": {"en": "Raw Results", "fr": "Résultats bruts"},
     "ra_o_scores": {"en": "Resilience Scores",
                     "fr": "Scores de résilience"},
-    "ra_o_indic": {"en": "By Indicator", "fr": "Par indicateur"},
     "ra_o_paysage": {"en": "By Landscape", "fr": "Par paysage"},
     "ra_o_groupe": {"en": "By Social Group", "fr": "Par groupe social"},
     # L'ONGLET NE PROPOSE PLUS DES SOLUTIONS, IL DÉSIGNE DES CIBLES. Une
@@ -1588,9 +1587,6 @@ TEXTES_NAV = {
     "ra_d_scores": {
         "en": "The 0–10 index, on any combination of groups",
         "fr": "L'indice sur 10, sur n'importe quelle combinaison de groupes"},
-    "ra_d_indic": {
-        "en": "One indicator, read across the whole territory",
-        "fr": "Un indicateur, lu à travers tout le territoire"},
     "ra_d_paysage": {
         "en": "What sets a landscape apart from the rest",
         "fr": "Ce qui distingue un paysage du reste"},
@@ -1693,7 +1689,7 @@ _RENOMMEES = ("mode_accueil", "mode_methodo", "mode_dimensions",
               "mode_synthese", "mode_actions", "mode_donnees",
               "mode_boucles", "mode_croisement", "mode_rapport",
               "mode_levier", "mode_bailleurs", "ra_o_brut", "ra_o_scores",
-              "ra_o_indic", "ra_o_paysage", "ra_o_groupe", "ra_o_solutions")
+              "ra_o_paysage", "ra_o_groupe", "ra_o_solutions")
 for _c, _v in TEXTES_NAV.items():
     if _c in _RENOMMEES:
         i18n.DICO[_c] = _v
@@ -2170,8 +2166,11 @@ with _c_contenu:
         # Les trois écrans du milieu répondent à la même question sous trois
         # angles : où sont les écarts, et quels indicateurs les font. Ils
         # partagent donc un seul moteur de calcul.
-        _CODES_RA = ["brut", "scores", "indic", "paysage", "groupe",
-                     "solutions"]
+        # L'ÉCRAN « PAR INDICATEUR » A ÉTÉ RETIRÉ. Ce qu'il montrait — le
+        # détail d'un indicateur ventilé par un axe — se lit désormais dans
+        # « Scores de résilience », qui compare plusieurs indicateurs sur la
+        # même grille de filtres et de projection.
+        _CODES_RA = ["brut", "scores", "paysage", "groupe", "solutions"]
         # LA BARRE EST COMPACTE ICI, ET NULLE PART AILLEURS. Six cartes à
         # deux lignes occupaient quatre-vingts pixels de haut avant le
         # premier réglage, et pesaient autant que l'analyse qu'elles
@@ -2187,7 +2186,7 @@ with _c_contenu:
         # C'est le même fichier de réponses individuelles ; le charger dans
         # chaque module en ferait cinq copies en mémoire.
         _cat = croisement_resultats._catalogue() \
-            if _ra in ("brut", "scores", "indic", "paysage", "groupe",
+            if _ra in ("brut", "scores", "paysage", "groupe",
                        "solutions") \
             else None
 
@@ -2251,9 +2250,6 @@ with _c_contenu:
             # quoi tout déplier. Ce qui s'affiche ici, désormais, c'est le
             # mode d'affichage choisi et rien d'autre.
             explorateur.render_scores(_cat)
-
-        elif _ra == "indic":
-            analyse_ecarts.render_indicateur(_cat)
 
         elif _ra == "paysage":
             # LA FICHE PAYSAGE EXISTAIT DÉJÀ et se lit d'une traite ; l'écran

@@ -86,6 +86,16 @@ TEXTES = {
     "ex_dim_cat": {"en": "Categories", "fr": "Catégories"},
     "ex_dim_plus": {"en": "Add a criterion", "fr": "Ajouter un critère"},
     "ex_tout_ech": {"en": "Whole sample", "fr": "Tout l'échantillon"},
+    "ex_pourquoi_carte": {
+        "en": "Map: available with the single criterion Communal section and "
+              "one answer chosen.",
+        "fr": "Carte : disponible avec le seul critère Section communale et "
+              "une réponse choisie."},
+    "ex_pourquoi_radar": {
+        "en": "Radar: available with one answer chosen and at least three "
+              "groups.",
+        "fr": "Radar : disponible avec une réponse choisie et au moins trois "
+              "groupes."},
     "ex_tout_x": {
         "en": "No breakdown: the result covers every household kept.",
         "fr": "Aucune ventilation : le résultat porte sur tous les ménages "
@@ -2221,6 +2231,17 @@ def _render_brut(cat):
                     format_func=lambda f: T("ex_" + f)) or "barres"
         if forme not in formes:
             forme = "barres"
+        # POURQUOI UNE VUE MANQUE, PLUTÔT QUE SON ABSENCE SILENCIEUSE. Retirer
+        # la carte quand elle ne peut pas se dessiner évite un clic pour rien,
+        # mais laisse le lecteur devant un sélecteur qui a changé sans
+        # prévenir. Une ligne grise dit ce qu'il faut choisir pour la
+        # retrouver ; elle ne s'affiche que lorsqu'il manque quelque chose.
+        _manque = [T("ex_pourquoi_" + f) for f in ("carte", "radar")
+                   if f not in formes]
+        if _manque:
+            st.markdown(f'<p class="ex-note" style="margin:2px 0 6px">'
+                        f'{_e(" · ".join(_manque))}</p>',
+                        unsafe_allow_html=True)
 
         montrees = _filtrer(lignes, extremes, ens)
         if forme == "radar" and len(montrees) < 3:

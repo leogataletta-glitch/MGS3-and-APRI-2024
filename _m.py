@@ -21,7 +21,6 @@ SOUS_VUES = {
     # questionnaire.
     "ra_sat":     ("dimensions", "ra_source", "satellite"),
     "ra_scores":  ("dimensions", "ra_vue",  "scores"),
-    "ra_indic":   ("dimensions", "ra_vue",  "indic"),
     "ra_paysage": ("dimensions", "ra_vue",  "paysage"),
     "ra_groupe":  ("dimensions", "ra_vue",  "groupe"),
     "ra_solutions": ("dimensions", "ra_vue", "solutions"),

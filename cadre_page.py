@@ -789,6 +789,18 @@ _RE_BORNE = re.compile(
     r"(?:^|[\s,;|:])\s*(10|\d)\s*[:=]?\s*(?=[(\[≥≤<>]|\s|$)")
 
 
+def _bandes_css():
+    """Les onze aplats de la règle graduée, dans l'ordre des scores.
+
+    LA COULEUR EST CALCULÉE, PAS RECOPIÉE. Si les trois ancres changent un
+    jour, les pastilles et la barre changent ensemble ; deux listes de
+    couleurs séparées auraient divergé au premier ajustement.
+    """
+    p = 100.0 / 11
+    return ", ".join(f"{_teinte(i / 10)} {i * p:.4f}% {(i + 1) * p:.4f}%"
+                     for i in range(11))
+
+
 def _bandes(txt):
     """Le barème lu comme une suite {score: borne}, quelle que soit sa forme.
 
@@ -1213,8 +1225,14 @@ STYLE = """
   .cad-ec-t { display:block; font-size:9.5px; font-weight:700;
        letter-spacing:.07em; text-transform:uppercase; color:#a7b0be;
        margin-bottom:5px; cursor:help; }
+  /* ONZE APLATS, PAS UN DÉGRADÉ. Tant que la barre était continue, la
+     couleur sous le trait du cran 7 n'était pas celle de la pastille 7 : le
+     dégradé passait par des teintes intermédiaires qu'aucun score ne porte.
+     Depuis que les crans découpent la barre, chaque segment doit être
+     exactement la couleur de son score — c'est la même fonction `_teinte`
+     qui peint la pastille et la bande. */
   .cad-ec-b { position:relative; display:block; height:9px; border-radius:5px;
-       background:linear-gradient(90deg,#9b2c2c 0%,#d18f2c 50%,#1a6b52 100%); }
+       background:linear-gradient(90deg,__BANDES__); }
   /* ONZE SEGMENTS, DONC DIX TRAITS. Le dégradé seul ne dit pas où finit un
      score et où commence le suivant : on voyait une couleur continue et il
      fallait deviner que le curseur sautait par crans. Les traits blancs
@@ -1788,7 +1806,8 @@ _COURT = {"mesure": "cad_c1", "sources": "cad_c2",
 
 def render(doc_complet=None):
     stats = _stats()
-    st.markdown(STYLE, unsafe_allow_html=True)
+    st.markdown(STYLE.replace("__BANDES__", _bandes_css()),
+                unsafe_allow_html=True)
 
     # PAS DE TITRE DE PAGE. La colonne de menu marque déjà la rubrique
     # courante d'un filet vert et d'un mot en gras ; le répéter en gros

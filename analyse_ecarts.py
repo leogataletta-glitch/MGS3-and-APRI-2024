@@ -68,15 +68,6 @@ TEXTES = {
     "ec_ax_richesse": {"en": "Economic category",
                        "fr": "Catégorie économique"},
 
-    "ec_i_choix": {"en": "Indicator", "fr": "Indicateur"},
-    "ec_i_axes": {"en": "Project results by",
-                  "fr": "Projeter les résultats par"},
-    "ec_i_sens_haut": {"en": "Higher is better", "fr": "Plus, c'est mieux"},
-    "ec_i_sens_bas": {"en": "Lower is better", "fr": "Moins, c'est mieux"},
-    "ec_i_ecart": {"en": "Spread between the highest and the lowest: {v} "
-                         "points out of 10.",
-                   "fr": "Écart entre le plus haut et le plus bas : {v} "
-                         "points sur 10."},
     "ec_format": {"en": "Chart", "fr": "Graphique"},
     "ec_barres": {"en": "Bar chart", "fr": "Histogramme"},
     "ec_radar": {"en": "Radar chart", "fr": "Diagramme radar"},
@@ -99,12 +90,6 @@ TEXTES = {
     "ec_flop": {"en": "Worst three", "fr": "Les trois plus faibles"},
     "ec_topflop": {"en": "Best and worst three",
                    "fr": "Les trois meilleurs et les trois plus faibles"},
-    "ec_i_pourcent": {
-        "en": "Each bar carries its 0–10 score and, in grey, the raw value it "
-              "comes from — the share of households concerned.",
-        "fr": "Chaque barre porte son score sur 10 et, en gris, la valeur "
-              "brute dont il vient — la part des ménages concernés."},
-
     "ec_combiner": {"en": "Combine with", "fr": "Combiner avec"},
     "ec_c_groupe": {"en": "Social group", "fr": "Groupe social"},
     "ec_c_section": {"en": "Communal section", "fr": "Section communale"},
@@ -401,117 +386,6 @@ def _mesure(ind, masque):
 def _cases(cat, axe):
     return [(v, _lib(v)) for v in _VALEURS.get(axe, [])
             if cat["groupes"].get(v) is not None]
-
-
-# =========================================================== par indicateur
-def render_indicateur(cat):
-    """Un indicateur, lu sur les sections, les paysages et les groupes."""
-    if not cat or not cat.get("indicateurs"):
-        return
-    st.markdown(STYLE, unsafe_allow_html=True)
-    inds = sorted(cat["indicateurs"], key=lambda x: (x["dim"], _nom(x)))
-
-    with st.container(key="ec_ecran_i"):
-        _h1, h2 = st.columns([4, 1], vertical_alignment="center")
-        with h2:
-            if st.button(T("ec_raz"), key="ec_i_raz", type="tertiary"):
-                for k in ("ec_i_axes", "ec_i_ext", "ec_i_forme"):
-                    st.session_state.pop(k, None)
-                st.rerun()
-
-        g, d2 = st.columns([2.2, 1.3])
-        with g:
-            pos = st.selectbox(T("ec_i_choix"), list(range(len(inds))),
-                               key="ec_i_sel",
-                               format_func=lambda k: f'{T(inds[k]["dim"])} · '
-                                                     f'{_nom(inds[k])}')
-        ind = inds[pos]
-        with d2:
-            axes = st.multiselect(T("ec_i_axes"), [a for a, _ in AXES],
-                                  key="ec_i_axes",
-                                  format_func=lambda a: T(dict(AXES)[a]))
-
-        # ---- le résultat, et ses seuls réglages d'affichage -------------
-        r1, r2, r3 = st.columns([1.1, 1.1, 2.2], vertical_alignment="center")
-        with r1:
-            st.markdown(f'<div class="ec-sec" style="margin:10px 0 0">'
-                        f'{_e(T("ec_sec_res"))}</div>', unsafe_allow_html=True)
-        with r2:
-            extremes = st.selectbox(
-                T("ec_extremes"), ["tous", "top", "flop", "topflop"],
-                key="ec_i_ext", label_visibility="collapsed",
-                format_func=lambda c: T("ec_extremes") + " : " + T(
-                    {"tous": "ec_tous", "top": "ec_top", "flop": "ec_flop",
-                     "topflop": "ec_topflop"}[c]))
-        with r3:
-            # RIEN NE SE DESSINE TANT QU'ON N'A PAS DIT COMMENT. Aucun dessin
-            # n'est présélectionné : le sélecteur segmenté rend None tant
-            # qu'on n'a rien cliqué, ce qui remplace le « — » d'un menu
-            # déroulant sans coûter une ligne de plus.
-            with st.container(key="ec_vue_i"):
-                forme = st.segmented_control(
-                    T("ec_format"), ["barres", "carte", "radar", "tableau"],
-                    key="ec_i_forme", label_visibility="collapsed",
-                    format_func=lambda f: T("ec_" + f))
-
-        if forme is None or not axes:
-            st.markdown(f'<p class="ec-note" style="margin:8px 0 0">'
-                        f'{_e(T("ec_rien_encore"))}</p>',
-                        unsafe_allow_html=True)
-            return
-
-        lignes = []
-        for axe in axes:
-            for v, lib in _cases(cat, axe):
-                m = _mesure(ind, cat["groupes"][v])
-                if m["n"]:
-                    lignes.append({"axe": T(dict(AXES)[axe]), "nom": lib,
-                                   "cle": v, "axe_code": axe, **m})
-        if not lignes:
-            st.info(T("ec_rien"))
-            return
-
-        tout = _mesure(ind, np.ones(cat["n"], dtype=bool))
-        montrees = _extremes(lignes, extremes)
-        if forme == "radar" and len(montrees) < 3:
-            st.info(T("ec_radar_court"))
-            forme = "barres"
-        if forme == "carte":
-            svg = _carte(montrees)
-            if svg is None:
-                st.info(T("ec_carte_sec"))
-                forme = "barres"
-            else:
-                st.markdown(
-                    f'<div style="font-family:Inter,system-ui,sans-serif">'
-                    f'{svg}</div>', unsafe_allow_html=True)
-        if forme == "radar":
-            svg = radar.render_radar_svg(
-                [l["nom"] for l in montrees],
-                [(_nom(ind), [l["score"] for l in montrees], VERT_APRI)],
-                taille=430)
-            st.markdown(f'<div style="max-width:760px;margin:6px auto 0">'
-                        f'{svg}</div>', unsafe_allow_html=True)
-        elif forme == "barres":
-            st.markdown(_barres(montrees, tout), unsafe_allow_html=True)
-        elif forme == "tableau":
-            st.markdown(_table_cases(montrees, tout), unsafe_allow_html=True)
-
-        # ---- ce que le dessin dit, sous le dessin ------------------------
-        # LE SENS DE LECTURE, L'ÉCART ET L'UNITÉ SONT PASSÉS SOUS LE
-        # GRAPHIQUE. Au-dessus, trois lignes de note repoussaient le seul
-        # objet qu'on vient voir ; en dessous, elles répondent aux questions
-        # qui se posent une fois la barre lue.
-        sens = (T("ec_i_sens_bas") if ind.get("decroissant")
-                else T("ec_i_sens_haut"))
-        notes = [f'{T(ind["dim"])} · {sens}']
-        scores = [l["score"] for l in lignes if l["score"] is not None]
-        if len(scores) > 1:
-            notes.append(T("ec_i_ecart", v=_f(max(scores) - min(scores), 1)))
-        if forme == "barres":
-            notes.append(T("ec_i_pourcent"))
-        st.markdown(f'<p class="ec-note" style="margin:8px 0 0">'
-                    f'{_e(" · ".join(notes))}</p>', unsafe_allow_html=True)
 
 
 def _extremes(lignes, choix):
