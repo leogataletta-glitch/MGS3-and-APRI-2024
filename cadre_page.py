@@ -174,44 +174,27 @@ TEXTES = {
     # --- la chaîne en cinq étapes ------------------------------------------
     "cad_e1_t": {"en": "Raw data", "fr": "Donnée brute"},
     "cad_e1_v": {"en": "45 min", "fr": "45 min"},
-    "cad_e1_s": {"en": "Time to collect water",
-                 "fr": "Temps pour aller chercher l'eau"},
-    "cad_e1_x": {"en": "Observed value from surveys, spatial data or other "
-                       "sources.",
-                 "fr": "Valeur observée, issue des enquêtes, des données "
-                       "spatiales ou d'autres sources."},
+    "cad_e1_x": {"en": "Observed value, from surveys or spatial data.",
+                 "fr": "Valeur observée, issue des enquêtes ou des données "
+                       "spatiales."},
     "cad_e2_t": {"en": "Normalise", "fr": "Normaliser"},
     "cad_e2_v": {"en": "Convert to a 0–10 scale",
                  "fr": "Ramener sur une échelle de 0 à 10"},
-    "cad_e2_s": {"en": "(statistical or threshold-based)",
-                 "fr": "(statistique ou par seuils)"},
     "cad_e2_x": {"en": "The raw value is converted using statistical values "
                        "or reference thresholds.",
                  "fr": "La valeur brute est convertie à l'aide de valeurs "
                        "statistiques ou de seuils de référence."},
     "cad_e3_t": {"en": "Indicator score", "fr": "Score de l'indicateur"},
     "cad_e3_v": {"en": "3.5 / 10", "fr": "3,5 / 10"},
-    "cad_e3_s": {"en": "Indicator score", "fr": "Score de l'indicateur"},
-    "cad_e3_x": {"en": "Each indicator receives a comparable score from "
-                       "0 (lowest) to 10 (highest).",
-                 "fr": "Chaque indicateur reçoit un score comparable, de "
-                       "0 (le plus bas) à 10 (le plus haut)."},
+    "cad_e3_x": {"en": "Standardized score for this indicator.",
+                 "fr": "Score normalisé de cet indicateur."},
     "cad_e4_t": {"en": "Weight & combine", "fr": "Pondérer et agréger"},
-    "cad_e4_v": {"en": "Expert weighting", "fr": "Pondération d'experts"},
-    "cad_e4_s": {"en": "combines all indicators",
-                 "fr": "agrège tous les indicateurs"},
-    "cad_e4_x": {"en": "Indicators are weighted according to their importance "
-                       "and combined by dimension.",
-                 "fr": "Les indicateurs sont pondérés selon leur importance, "
-                       "puis agrégés par dimension."},
+    "cad_e4_x": {"en": "Relative importance of this indicator.",
+                 "fr": "Importance relative de cet indicateur."},
     "cad_e5_t": {"en": "Resilience score", "fr": "Score de résilience"},
     "cad_e5_v": {"en": "6.1 / 10", "fr": "6,1 / 10"},
-    "cad_e5_s": {"en": "Overall resilience score",
-                 "fr": "Score de résilience global"},
-    "cad_e5_x": {"en": "Dimension scores are combined into the final "
-                       "resilience score.",
-                 "fr": "Les scores de dimension sont agrégés en un score de "
-                       "résilience final."},
+    "cad_e5_x": {"en": "Weighted contribution to the dimension score.",
+                 "fr": "Contribution pondérée au score de la dimension."},
     "cad_p1_t": {"en": "From a raw measure to an indicator score",
                  "fr": "De la mesure brute au score d'un indicateur"},
     "cad_p1a_t": {"en": "Raw measure", "fr": "Mesure brute"},
@@ -230,8 +213,8 @@ TEXTES = {
 
     "cad_p2_t": {"en": "Two normalisation methods",
                  "fr": "Deux méthodes de normalisation"},
-    "cad_p2s_t": {"en": "Statistical normalisation",
-                  "fr": "Normalisation statistique"},
+    "cad_p2s_t": {"en": "Normalisation method",
+                  "fr": "Méthode de normalisation"},
     "cad_p2s_x": {"en": "Used when a continuous distribution of values is "
                         "available.",
                   "fr": "Utilisée quand on dispose d'une distribution "
@@ -622,21 +605,18 @@ TEXTES = {
     # manque : c'est un écran de départ, pas une erreur.
     "cad_ind_vide": {
         "en": "Pick an indicator to see its scale, its weight and the chain "
-              "that turns its raw measure into a score. Below, the same "
-              "chain on a worked example.",
+              "that turns its raw measure into a score.",
         "fr": "Choisissez un indicateur pour voir son barème, sa pondération "
-              "et la chaîne qui transforme sa mesure brute en score. "
-              "Ci-dessous, la même chaîne sur un exemple."},
+              "et la chaîne qui transforme sa mesure brute en score."},
     "cad_ind_ind": {"en": "Indicator", "fr": "Indicateur"},
     "cad_ind_tous": {"en": "Choose an indicator",
                      "fr": "Choisir un indicateur"},
     # LES CINQ ÉTAPES, DITES SUR L'INDICATEUR QU'ON REGARDE. Les mêmes
     # intitulés que la chaîne d'exemple ; seules les valeurs changent.
-    "cad_ex_brut": {"en": "measured value", "fr": "valeur mesurée"},
-    "cad_ex_seuils": {"en": "Threshold-based, 11 bands",
-                      "fr": "Par seuils, onze paliers"},
-    "cad_ex_stat": {"en": "Statistical, on the observed range",
-                    "fr": "Statistique, sur l'étendue observée"},
+    "cad_ex_seuils": {"en": "Using predefined thresholds.",
+                      "fr": "À partir de seuils prédéfinis."},
+    "cad_ex_stat": {"en": "Using the observed range of values.",
+                    "fr": "À partir de l'étendue des valeurs observées."},
     "cad_ex_sc_non": {"en": "not computed", "fr": "non calculé"},
     "cad_ex_sc_non_x": {
         "en": "This indicator is measured but its score is not yet in the "
@@ -644,18 +624,17 @@ TEXTES = {
         "fr": "Cet indicateur est mesuré, mais son score ne figure pas "
               "encore dans le fichier de référence."},
     "cad_ex_p": {"en": "Weight {p} out of 5", "fr": "Pondération {p} sur 5"},
-    "cad_ex_p_x": {
-        "en": "Its weight sets how much this indicator moves the score of "
-              "its dimension, alongside the others.",
-        "fr": "Sa pondération fixe le poids de cet indicateur dans le score "
-              "de sa dimension, aux côtés des autres."},
+    "cad_ex_p_x": {"en": "Relative importance of this indicator.",
+                   "fr": "Importance relative de cet indicateur."},
     "cad_ex_dim": {"en": "Score of the dimension",
                    "fr": "Score de la dimension"},
-    "cad_ex_dim_x": {
-        "en": "The weighted mean of the scored indicators of this "
-              "dimension, on the whole sample.",
-        "fr": "La moyenne pondérée des indicateurs notés de cette dimension, "
-              "sur tout l'échantillon."},
+    "cad_ex_dim_x": {"en": "Weighted contribution to the dimension score.",
+                     "fr": "Contribution pondérée au score de la "
+                           "dimension."},
+    "cad_ex_res": {"en": "Result:", "fr": "Résultat :"},
+    "cad_ex_c_val": {"en": "Raw value", "fr": "Valeur brute"},
+    "cad_ex_c_sc": {"en": "Score (0–10)", "fr": "Score (0–10)"},
+    "cad_ex_p_v": {"en": "{p} / 5", "fr": "{p} / 5"},
     "cad_ex_titre": {
         "en": "From this measure to a resilience score",
         "fr": "De cette mesure à un score de résilience"},
@@ -1357,23 +1336,46 @@ STYLE = """
      LE PICTOGRAMME EST DANS UN DISQUE PÂLE, ET LE DISQUE EST LE MÊME PARTOUT :
      c'est lui qui aligne les cinq colonnes à la même hauteur, quel que soit
      le nombre de lignes du texte au-dessus. */
-  .cad-ch { display:flex; align-items:stretch; gap:0; margin:8px 0 26px; }
+  /* LE NUMÉRO EST DANS LA LIGNE DE TITRE, ET LE FILET COURT SOUS LES DEUX.
+     Un intitulé centré, en petites capitales vertes, au-dessus d'un chiffre
+     centré : la colonne se lisait comme une pastille de tableau de bord, et
+     rien ne disait dans quel ordre les cinq se suivent. Le numéro dans sa
+     pastille, le titre à côté de lui, un filet clair sous la ligne : c'est un
+     en-tête d'étape, et l'ordre se lit sans compter les chevrons. */
+  .cad-ch { display:flex; align-items:stretch; gap:0; margin:8px 0 30px; }
   .cad-ch-e { flex:1 1 0; min-width:0; display:flex; flex-direction:column;
-              align-items:center; text-align:center; padding:0 10px; }
+              align-items:flex-start; text-align:left; padding:0 14px 0 0; }
   .cad-ch-fl { flex:0 0 44px; display:flex; align-items:flex-start;
-               justify-content:center; padding-top:52px; }
-  .cad-ch-t { font-size:12.5px; font-weight:700; letter-spacing:.09em;
-              text-transform:uppercase; color:#1a6b52; line-height:1.3;
-              min-height:32px; padding-bottom:14px; margin-bottom:14px;
-              border-bottom:2px solid #dbe7e0; width:74%; }
-  .cad-ch-v { font-size:21px; font-weight:700; color:#101728;
-              letter-spacing:-.02em; line-height:1.25; }
-  .cad-ch-s { font-size:12px; color:#5a6a80; line-height:1.45; margin-top:4px;
-              min-height:34px; }
-  .cad-ch-x { font-size:12px !important; color:#3c4761 !important;
-              line-height:1.5 !important; text-align:center !important;
-              background:#f5f6f7; border-radius:10px; padding:11px 13px;
-              margin:12px 0 0 !important; width:100%; }
+               justify-content:center; padding-top:46px; }
+  .cad-ch-h { display:flex; align-items:center; gap:9px; width:100%;
+              padding-bottom:11px; margin-bottom:15px;
+              border-bottom:1px solid #e4eae6; }
+  .cad-ch-n { width:22px; height:22px; flex:0 0 22px; border-radius:50%;
+              background:#eef3f0; color:#1a6b52; font-size:11.5px;
+              font-weight:700; display:flex; align-items:center;
+              justify-content:center; }
+  .cad-ch-t { font-size:13px; font-weight:700; color:#101728;
+              line-height:1.25; }
+  .cad-ch-v { font-size:25px; font-weight:700; color:#101728;
+              letter-spacing:-.02em; line-height:1.2; }
+  /* LA DEUXIÈME ÉTAPE N'A PAS DE CHIFFRE À MONTRER, ELLE A UNE OPÉRATION À
+     NOMMER. « Ramener sur une échelle de 0 à 10 » en corps vingt-cinq ferait
+     une phrase géante entre deux nombres ; en corps quatorze, gras, elle
+     tient le même rang sans crier. */
+  .cad-ch-o { font-size:14px; font-weight:700; color:#101728;
+              line-height:1.35; }
+  .cad-ch-s { font-size:12px; color:#7a8496; line-height:1.45; margin-top:3px; }
+  .cad-ch-x { font-size:12px !important; color:#5a6a80 !important;
+              line-height:1.5 !important; text-align:left !important;
+              margin:7px 0 0 !important; width:100%; }
+  /* LE RÉSULTAT DE LA NORMALISATION, DANS SA PASTILLE. Il est produit par
+     l'étape deux et lu par l'étape trois : posé à cheval, il montre que le
+     score de l'indicateur n'est pas une donnée de plus mais la sortie de
+     l'opération qui le précède. */
+  .cad-ch-r { font-size:12px; color:#3c4761; background:#f2f5f3;
+              border-radius:8px; padding:8px 12px; margin-top:12px; }
+  .cad-ch-r b { color:#101728; font-weight:700;
+              font-variant-numeric:tabular-nums; }
   /* SUR ÉCRAN ÉTROIT LA CHAÎNE SE PLIE EN DEUX RANGÉES, et les chevrons
      disparaissent : une flèche qui pointe vers le bord n'indique plus rien. */
   @media (max-width: 1150px) {
@@ -1406,17 +1408,33 @@ STYLE = """
   .cad-fr-n { display:block; padding:0 4px 2px;
               border-bottom:1px solid #101728; }
   .cad-fr-d { display:block; padding:2px 4px 0; }
-  .cad-seu  { display:grid; grid-template-columns:auto 18px auto;
-              justify-content:start; gap:5px 10px; align-items:center;
-              font-size:11.5px; color:#3c4761; }
-  .cad-seu i { color:#a7b0be; font-style:normal; text-align:center; }
-  .cad-seu b { color:#101728; font-weight:700;
+  /* LES PALIERS SONT UN TABLEAU, PAS UNE LISTE DE FLÈCHES. Onze lignes
+     « borne → score » se lisaient une par une ; en deux colonnes titrées, on
+     balaie la colonne de gauche jusqu'à la valeur qu'on cherche et on lit le
+     score en face. C'est ce que le lecteur vient faire. */
+  /* LA SPÉCIFICITÉ COMPTE ICI AUSSI : `.cad-duo > div` porte un
+     `max-width:100%` qui l'emporterait sur une classe simple, et le tableau
+     s'étirerait jusqu'au bord en emportant la note sous lui. */
+  .cad-duo > .cad-seu { display:grid; grid-template-columns:1fr auto;
+              gap:0 26px; align-items:center; font-size:11.5px;
+              color:#3c4761; flex:0 0 auto; width:270px; max-width:270px; }
+  .cad-seu > span, .cad-seu > b { padding:4px 0;
+              border-bottom:1px solid #f0f3f1; }
+  .cad-seu b { color:#101728; font-weight:600; text-align:right;
               font-variant-numeric:tabular-nums; }
+  .cad-seu-h { font-size:11px !important; font-weight:700; color:#5a6a80;
+              letter-spacing:.02em; border-bottom:1px solid #dfe5e1 !important;
+              padding-bottom:6px !important; }
   /* La spécificité compte : `.cad-duo > div` porte déjà un `max-width`, et
      un sélecteur de classe simple ne l'emporte pas sur un sélecteur d'enfant.
      La note est donc visée à travers son parent. */
-  .cad-duo > .cad-seu-n { font-size:11px; color:#1a6b52; line-height:1.5;
-              max-width:27ch; text-align:left !important; }
+  .cad-duo > .cad-seu-n { font-size:11px; color:#5a6a80; line-height:1.55;
+              max-width:24ch; text-align:left !important; font-style:italic;
+              padding-left:4px; }
+  /* LA PHRASE QUI DIT CE QUE LES FORMULES FONT, dans son aplat, sous elles. */
+  .cad-nrm-p { font-size:11.5px; color:#5a6a80; line-height:1.5;
+              background:#f7f8f8; border-radius:10px; padding:11px 14px;
+              margin-top:18px; }
 
   /* Le pied : pourquoi l'échelle est de 0 à 10, et combien d'indicateurs. */
   .cad-pied { display:flex; align-items:flex-start; gap:26px; flex-wrap:wrap;
@@ -1711,14 +1729,16 @@ def _formule(sens, haut):
             + _fraction(haut, bas) + '</div></div>')
 
 
-def _seuils(brut):
-    """Le tableau des paliers, écrit « borne → score » dans la traduction."""
-    lignes = []
+def _seuils(brut, unite=""):
+    """Le tableau des paliers : la valeur brute a gauche, le score a droite."""
+    tete = T("cad_ex_c_val") + (f" ({unite})" if unite else "")
+    lignes = [f'<span class="cad-seu-h">{_e(tete)}</span>'
+              f'<b class="cad-seu-h">{_e(T("cad_ex_c_sc"))}</b>']
     for p_ in brut.split("|"):
         if "→" not in p_:
             continue
         borne, _, val = p_.partition("→")
-        lignes.append(f'<span>{_e(borne.strip())}</span><i>&rarr;</i>'
+        lignes.append(f'<span>{_e(borne.strip())}</span>'
                       f'<b>{_e(val.strip())}</b>')
     return '<div class="cad-seu">' + "".join(lignes) + '</div>'
 
@@ -2037,13 +2057,28 @@ def _score_dimension(dim):
     return round(num / den, 2) if den else None
 
 
-def _case(titre, valeur, sous, phrase):
-    """Une des cinq cases de la chaîne : un intitulé, un chiffre, une phrase."""
-    return ('<div class="cad-ch-e">'
-            f'<div class="cad-ch-t">{_e(titre)}</div>'
-            f'<div class="cad-ch-v">{_e(valeur)}</div>'
-            f'<div class="cad-ch-s">{_e(sous)}</div>'
-            f'<p class="cad-ch-x">{_e(phrase)}</p></div>')
+def _case(rang, titre, valeur, phrase, sous=None, operation=False,
+          resultat=None):
+    """Une des cinq cases : un en-tete numerote, un chiffre, une phrase.
+
+    `operation` compose la valeur en corps reduit : c'est le cas de la
+    deuxieme case, qui nomme une operation la ou les autres portent un
+    nombre. `resultat` ajoute la pastille de sortie sous la case.
+    """
+    corps = "cad-ch-o" if operation else "cad-ch-v"
+    out = ['<div class="cad-ch-e">'
+           '<div class="cad-ch-h">'
+           f'<span class="cad-ch-n">{rang}</span>'
+           f'<span class="cad-ch-t">{_e(titre)}</span></div>'
+           f'<div class="{corps}">{_e(valeur)}</div>']
+    if sous:
+        out.append(f'<div class="cad-ch-s">{_e(sous)}</div>')
+    out.append(f'<p class="cad-ch-x">{_e(phrase)}</p>')
+    if resultat:
+        out.append(f'<div class="cad-ch-r">{_e(T("cad_ex_res"))} '
+                   f'<b>{_e(resultat)}</b></div>')
+    out.append('</div>')
+    return "".join(out)
 
 
 def _chaine(cases):
@@ -2060,9 +2095,14 @@ def _chaine(cases):
 
 def _chaine_generique():
     """La chaîne sur l'exemple des quarante-cinq minutes de marche."""
-    return _chaine([_case(T(k + "_t"), T(k + "_v"), T(k + "_s"), T(k + "_x"))
-                    for k in ("cad_e1", "cad_e2", "cad_e3", "cad_e4",
-                              "cad_e5")])
+    return _chaine([
+        _case(1, T("cad_e1_t"), T("cad_e1_v"), T("cad_e1_x")),
+        _case(2, T("cad_e2_t"), T("cad_e2_v"), T("cad_e2_x"),
+              sous=T("cad_ex_seuils"), operation=True,
+              resultat=T("cad_e3_v")),
+        _case(3, T("cad_e3_t"), T("cad_e3_v"), T("cad_e3_x")),
+        _case(4, T("cad_e4_t"), T("cad_ex_p_v", p="3,6"), T("cad_e4_x")),
+        _case(5, T("cad_e5_t"), T("cad_e5_v"), T("cad_e5_x"))])
 
 
 def _chaine_indicateur(x):
@@ -2083,24 +2123,23 @@ def _chaine_indicateur(x):
     pct = "%" in "".join(par.values()) if par else "%" in x["echelle"]
     val = ("—" if x["valeur"] is None
            else _fmt(x["valeur"], 1) + (" %" if pct else ""))
-    if par:
-        norme_v, norme_s = T("cad_e2_v"), T("cad_ex_seuils")
-    else:
-        norme_v, norme_s = T("cad_e2_v"), T("cad_ex_stat")
+    norme_s = T("cad_ex_seuils") if par else T("cad_ex_stat")
     if x["score"] is None:
         sc_v, sc_x = T("cad_ex_sc_non"), T("cad_ex_sc_non_x")
     else:
         sc_v, sc_x = _fmt(x["score"], 1) + " / 10", T("cad_e3_x")
     dsc = _score_dimension(x["dim"])
     return _chaine([
-        _case(T("cad_e1_t"), val, T("cad_ex_brut"), x["metrique"]),
-        _case(T("cad_e2_t"), norme_v, norme_s, T("cad_e2_x")),
-        _case(T("cad_e3_t"), sc_v, T("cad_e3_s"), sc_x),
-        _case(T("cad_e4_t"), T("cad_ex_p", p=_fmt(x["poids"], 1)),
-              T("cad_e4_s"), T("cad_ex_p_x")),
-        _case(T("cad_e5_t"),
+        _case(1, T("cad_e1_t"), val, x["metrique"]),
+        _case(2, T("cad_e2_t"), T("cad_e2_v"), T("cad_e2_x"),
+              sous=norme_s, operation=True,
+              resultat=None if x["score"] is None else sc_v),
+        _case(3, T("cad_e3_t"), sc_v, sc_x),
+        _case(4, T("cad_e4_t"), T("cad_ex_p_v", p=_fmt(x["poids"], 1)),
+              T("cad_ex_p_x")),
+        _case(5, T("cad_e5_t"),
               "—" if dsc is None else _fmt(dsc, 2) + " / 10",
-              T(x["dim"]), T("cad_ex_dim_x"))])
+              T("cad_ex_dim_x"), sous=T(x["dim"]))])
 
 
 def _normalisations(x=None):
@@ -2112,7 +2151,9 @@ def _normalisations(x=None):
     normalisation par seuils cesse d'être une notion pour devenir la sienne.
     """
     par = _bandes(x["echelle"]) if x else {}
+    unite = ""
     if par:
+        unite = "%" if "%" in "".join(par.values()) else ""
         # LES PARENTHÈSES DE SAISIE NE SE PUBLIENT PAS. Le référentiel écrit
         # ses bornes « (≤5%) » ; dans une colonne où chaque ligne est déjà un
         # palier, la parenthèse ne sépare plus rien.
@@ -2127,10 +2168,16 @@ def _normalisations(x=None):
             + '<div class="cad-duo">'
             + _formule(T("cad_p2h"), 'x<sub>i</sub> &minus; x<sub>min</sub>')
             + _formule(T("cad_p2l"), 'x<sub>max</sub> &minus; x<sub>i</sub>')
-            + '</div></div><div>'
+            + '</div>'
+            # LA PHRASE QUI DIT CE QUE LES DEUX FORMULES FONT, SOUS ELLES.
+            # Elle tenait dans la deuxième case de la chaîne, où elle
+            # expliquait une opération dont les formules sont juste en
+            # dessous ; la case y a gagné son sous-titre.
+            + f'<div class="cad-nrm-p">{_e(T("cad_e2_x"))}</div>'
+            + '</div><div>'
             + f'<div class="cad-nrm-t">{_e(titre_b)}</div>'
             + f'<div class="cad-nrm-x">{_e(sous_b)}</div>'
-            + '<div class="cad-duo">' + _seuils(brut)
+            + '<div class="cad-duo">' + _seuils(brut, unite)
             + f'<div class="cad-seu-n">{_e(T("cad_p2b_n"))}</div>'
             + '</div></div></div>')
 
