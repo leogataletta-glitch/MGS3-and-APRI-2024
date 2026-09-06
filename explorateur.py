@@ -81,9 +81,15 @@ TEXTES = {
     "ex_reponse": {"en": "Answer", "fr": "Réponse"},
     "ex_axe": {"en": "Project results by", "fr": "Projeter les résultats par"},
     "ex_axe2": {"en": "Then by", "fr": "Puis par"},
-    "ex_dim_n": {"en": "Dimension {n}", "fr": "Dimension {n}"},
+    "ex_dim_n": {"en": "Breakdown criterion {n}",
+                 "fr": "Critère de ventilation {n}"},
     "ex_dim_cat": {"en": "Categories", "fr": "Catégories"},
-    "ex_dim_plus": {"en": "Add a dimension", "fr": "Ajouter une dimension"},
+    "ex_dim_plus": {"en": "Add a criterion", "fr": "Ajouter un critère"},
+    "ex_tout_ech": {"en": "Whole sample", "fr": "Tout l'échantillon"},
+    "ex_tout_x": {
+        "en": "No breakdown: the result covers every household kept.",
+        "fr": "Aucune ventilation : le résultat porte sur tous les ménages "
+              "retenus."},
     "ex_dim_oter": {"en": "Remove", "fr": "Retirer"},
     "ex_dim_toutes": {"en": "All", "fr": "Toutes"},
     "ex_croiser_q": {"en": "Cross with a second question",
@@ -832,7 +838,9 @@ def _ventiler_dims(cat, q, modalite, dims, filtre):
     for j in range(len(q["modalites"])):
         m_rep |= cat["bits"][q["debut"] + j]
     m_rep &= filtre
-    groupes = _croisements_choisis(cat, dims)
+    groupes = (_croisements_choisis(cat, dims) if dims
+               else [(T("ex_tout_ech"), "tout",
+                      np.ones(cat["n"], dtype=bool))])
     out = []
     if modalite is None:
         # UNE BARRE PAR RÉPONSE ET PAR GROUPE, le groupe servant d'intertitre :
@@ -852,12 +860,13 @@ def _ventiler_dims(cat, q, modalite, dims, filtre):
 
     m_mod = cat["bits"][q["debut"] + q["modalites"].index(modalite)] & filtre
     lib_axe = (T(dict(AXES)[dims[0][0]]) if len(dims) == 1
-               else T("ex_croise"))
+               else T("ex_croise") if dims else T("ex_tout_ech"))
     for lib, cle, g in groupes:
         base = int((m_rep & g).sum())
         k = int((m_mod & g).sum())
         out.append({"nom": lib, "cle": cle, "axe": lib_axe,
-                    "axe_code": dims[0][0] if len(dims) == 1 else "croisement",
+                    "axe_code": (dims[0][0] if len(dims) == 1
+                                 else "croisement" if dims else "tout"),
                     "n": base, "k": k,
                     "part": (100 * k / base) if base else None})
     ens_base = int(m_rep.sum())
@@ -1941,15 +1950,21 @@ def _zone_projection(cat):
                 T("ex_dim_cat"), vals, key=f"exb_cat_{axe}",
                 placeholder=T("ex_dim_toutes"), format_func=_lib)
         with c3:
-            if len(dims) > 1 and st.button("✕", key=f"exb_dim_x_{i}",
-                                           type="tertiary",
-                                           help=T("ex_dim_oter")):
+            # LE DERNIER CRITÈRE S'ENLÈVE AUSSI, et c'est ce qui donne le
+            # résultat sur tout l'échantillon : sans critère, il n'y a pas de
+            # découpage, donc un seul groupe — tous les ménages retenus.
+            if st.button("✕", key=f"exb_dim_x_{i}", type="tertiary",
+                         help=T("ex_dim_oter")):
                 st.session_state["exb_dims"] = [
                     a for a in st.session_state["exb_dims"] if a != axe]
                 st.session_state.pop(f"exb_cat_{axe}", None)
                 st.rerun()
         choisies.append((axe, gardees or vals))
 
+    if not dims:
+        st.markdown(f'<p class="exb-x" style="margin:0 0 4px">'
+                    f'<b style="color:#101728">{_e(T("ex_tout_ech"))}</b> · '
+                    f'{_e(T("ex_tout_x"))}</p>', unsafe_allow_html=True)
     if len(dims) < len(dispo):
         if st.button("＋ " + T("ex_dim_plus"), key="exb_dim_plus",
                      type="tertiary"):
@@ -2171,6 +2186,21 @@ def _render_brut(cat):
             return
 
         # ---- le résultat, et ses seuls réglages d'affichage -------------
+        # UN DESSIN QUI NE PEUT PAS SE FAIRE N'EST PAS PROPOSÉ. La carte
+        # colorie des sections communales : elle n'a de sens que si le
+        # découpage EST la section et si une réponse est désignée, sans quoi
+        # il n'y a pas un chiffre par section à porter dessus. Le radar tient
+        # à partir de trois branches et demande lui aussi une réponse : sur
+        # une répartition, chaque groupe porte plusieurs barres et le radar
+        # n'a rien à tracer. Les proposer puis refuser de les dessiner avec
+        # un message d'erreur revenait à faire cliquer pour rien.
+        formes = ["barres"]
+        if (modalite is not None and len(dims) == 1
+                and dims[0][0] == "section"):
+            formes.append("carte")
+        if modalite is not None and len(lignes) >= 3:
+            formes.append("radar")
+        formes.append("tableau")
         r1, r2, r3 = st.columns([1.1, 1.1, 2.2],
                                 vertical_alignment="center")
         with r1:
@@ -2185,21 +2215,15 @@ def _render_brut(cat):
                      "topflop": "ex_topflop", "ecart": "ex_ecart"}[c]))
         with r3:
             with st.container(key="exb_vue"):
-                formes = ["barres", "carte", "radar", "tableau"]
                 forme = st.segmented_control(
                     T("ex_voir"), formes, key="exb_vue_sel",
                     default="barres", label_visibility="collapsed",
                     format_func=lambda f: T("ex_" + f)) or "barres"
+        if forme not in formes:
+            forme = "barres"
 
         montrees = _filtrer(lignes, extremes, ens)
-        if modalite is None and forme == "carte":
-            # UNE CARTE PORTE DES LIEUX, PAS DES MODALITÉS. Sans réponse
-            # choisie, les lignes sont les réponses de la question : il n'y a
-            # rien à colorier par section.
-            st.info(T("ex_carte_sec"))
-            forme = "barres"
         if forme == "radar" and len(montrees) < 3:
-            st.info(T("ex_radar_court"))
             forme = "barres"
         if forme == "carte":
             svg = _carte(montrees)
