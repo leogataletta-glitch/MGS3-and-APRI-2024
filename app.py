@@ -1662,8 +1662,6 @@ TEXTES_NAV = {
         "fr": "© {a} Programme des Nations Unies pour l'environnement"},
 
     "ra_src": {"en": "Measured by", "fr": "Mesuré par"},
-    "ra_e1_t": {"en": "Select your data source",
-                "fr": "Choisissez votre source de données"},
     "ra_src_menages": {"en": "Household survey",
                        "fr": "Enquête ménage"},
     "ra_src_satellite": {"en": "Satellite", "fr": "Satellite"},
@@ -2175,10 +2173,16 @@ with _c_contenu:
         # partagent donc un seul moteur de calcul.
         _CODES_RA = ["brut", "scores", "indic", "paysage", "groupe",
                      "solutions"]
+        # LA BARRE EST COMPACTE ICI, ET NULLE PART AILLEURS. Six cartes à
+        # deux lignes occupaient quatre-vingts pixels de haut avant le
+        # premier réglage, et pesaient autant que l'analyse qu'elles
+        # ouvrent. En compact, elles tiennent sur une ligne et l'onglet
+        # ouvert se signale par un filet vert. Les barres des autres pages
+        # gardent leur format à deux lignes.
         _ra = onglets.barre("ra_vue", _CODES_RA,
                             titre=lambda c: T("ra_o_" + c),
                             description=lambda c: T("ra_d_" + c),
-                            defaut="brut")
+                            defaut="brut", compact=True)
 
         # LE CATALOGUE EST CHARGÉ UNE FOIS POUR LES CINQ PREMIERS ONGLETS.
         # C'est le même fichier de réponses individuelles ; le charger dans
@@ -2195,21 +2199,31 @@ with _c_contenu:
             # interroge des ménages, et le satellite, qui regarde le sol. Un
             # seul des deux à la fois : ils ne se ventilent pas pareil, et
             # les empiler ferait deux écrans sur une page.
-            # L'ÉTAPE 1 COIFFE LES QUATRE SOURCES. La rangée de cartes ne
-            # disait pas ce qu'on attendait du lecteur : quatre objets de même
-            # rang, dont on ne savait pas s'il fallait en choisir un ou les
-            # lire tous. Numérotée et suivie d'une ligne d'aide, elle devient
-            # le premier geste d'un parcours en quatre temps.
-            st.markdown(
-                f'<div class="ex-etape"><span class="n">1</span>'
-                f'<span class="t">{T("ra_e1_t")}</span>'
-                f'<span class="l"></span></div>',
-                unsafe_allow_html=True)
-            _src = onglets.barre(
-                "ra_source",
-                ["menages", "institutions", "biodiversite", "satellite"],
-                titre=lambda c: T("ra_src_" + c),
-                description=lambda c: T("ra_srcd_" + c), defaut="menages")
+            # LA SOURCE EST UN RÉGLAGE SECONDAIRE, PAS UNE ÉTAPE. Quatre
+            # cartes en pleine largeur, avec leur description, annonçaient
+            # quatre objets de même rang dont on ne savait pas s'il fallait
+            # en choisir un ou les lire tous — et elles repoussaient la
+            # question à analyser sous la ligne de flottaison. Un sélecteur
+            # segmenté dit la même chose en une ligne.
+            if st.session_state.pop("ra_raz", False):
+                # LA REMISE À ZÉRO EST CONSOMMÉE ICI, avant que le sélecteur
+                # de source et l'écran ne soient dessinés : Streamlit refuse
+                # qu'on écrive la clé d'un widget déjà construit.
+                st.session_state["ra_source"] = "menages"
+                explorateur.raz_brut()
+            _srcs = ["menages", "institutions", "biodiversite", "satellite"]
+            _cs, _ct = st.columns([2.2, 2], vertical_alignment="center")
+            with _cs:
+                st.session_state.setdefault("ra_source", "menages")
+                _src = st.segmented_control(
+                    T("ex_b_source"), _srcs, key="ra_source",
+                    format_func=lambda c: T("ra_src_" + c)) or "menages"
+            with _ct:
+                st.markdown(
+                    f'<p style="font-size:12px;color:#8a93a5;margin:0;'
+                    f'text-align:left">{T("ra_srcd_" + _src)}</p>',
+                    unsafe_allow_html=True)
+
             if _src == "satellite":
                 satellite_page.render()
             elif _src in ("institutions", "biodiversite"):

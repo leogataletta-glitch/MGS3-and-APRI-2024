@@ -138,7 +138,37 @@ STYLE = """
 """
 
 
-def barre(cle, codes, titre, description=None, defaut=None):
+_CSS_COMPACT = """
+<style>
+  /* UNE BARRE DISCRÈTE : une ligne, pas deux. La description passe à la
+     trappe — c'est elle qui doublait la hauteur — le libellé maigrit, et
+     l'onglet ouvert se signale par un filet vert de deux pixels et une
+     encre verte, sans fond ni ombre. Une barre de navigation ne doit pas
+     peser plus que ce qu'elle ouvre. */
+  div[class*="st-key-KEY"] div[role="radiogroup"] {
+      margin: 0 0 14px !important; }
+  div[class*="st-key-KEY"] div[role="radiogroup"] > label {
+      flex: 0 1 auto !important; padding: 7px 15px 8px !important;
+      background: transparent !important; border-right: 0 !important; }
+  div[class*="st-key-KEY"] div[role="radiogroup"] > label p:first-child {
+      font-size: 12px !important; font-weight: 600 !important;
+      letter-spacing: .02em !important; text-transform: none !important;
+      color: #8a93a5 !important; }
+  div[class*="st-key-KEY"] div[role="radiogroup"] > label:hover {
+      background: transparent !important; }
+  div[class*="st-key-KEY"] div[role="radiogroup"] > label:hover p:first-child {
+      color: #3c4761 !important; }
+  div[class*="st-key-KEY"] div[role="radiogroup"] > label:has(input:checked) {
+      background: transparent !important;
+      box-shadow: inset 0 -2px 0 0 #1f5b46 !important; }
+  div[class*="st-key-KEY"] div[role="radiogroup"]
+      > label:has(input:checked) p:first-child {
+      color: #1f5b46 !important; font-weight: 700 !important; }
+</style>
+"""
+
+
+def barre(cle, codes, titre, description=None, defaut=None, compact=False):
     """Une barre d'onglets, et le code de celui qui est choisi.
 
     `titre` et `description` prennent un code et rendent une chaîne déjà
@@ -151,18 +181,21 @@ def barre(cle, codes, titre, description=None, defaut=None):
     un code stable retrouve toujours le même écran.
     """
     st.markdown(STYLE, unsafe_allow_html=True)
+    _k = cle if cle.startswith("ong_") else f"ong_{cle}"
+    if compact:
+        st.markdown(_CSS_COMPACT.replace("KEY", _k), unsafe_allow_html=True)
     if defaut and st.session_state.get(cle) not in codes:
         st.session_state[cle] = defaut
 
     def _lib(c):
         t = titre(c)
-        d = description(c) if description else None
+        d = description(c) if description and not compact else None
         # DEUX PARAGRAPHES, PAS UN SAUT DE LIGNE. Le libellé d'un radio est
         # rendu en markdown : une ligne vide y fait deux <p>, que la feuille
         # de style distingue par leur rang. Un <br> serait échappé.
         return f"**{t}**\n\n{d}" if d else f"**{t}**"
 
-    with st.container(key=cle if cle.startswith("ong_") else f"ong_{cle}"):
+    with st.container(key=_k):
         return st.radio(cle, codes, horizontal=True,
                         label_visibility="collapsed", key=cle,
                         format_func=_lib)

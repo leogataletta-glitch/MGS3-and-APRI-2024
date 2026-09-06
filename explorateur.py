@@ -79,7 +79,7 @@ TEXTES = {
               "répondu à la question, jamais sur l'échantillon entier."},
     "ex_question": {"en": "Question", "fr": "Question"},
     "ex_reponse": {"en": "Answer", "fr": "Réponse"},
-    "ex_axe": {"en": "Break down by", "fr": "Ventiler par"},
+    "ex_axe": {"en": "Compare by", "fr": "Comparer par"},
     "ex_ax_section": {"en": "Communal section", "fr": "Section communale"},
     "ex_ax_sexe": {"en": "Sex", "fr": "Sexe"},
     "ex_ax_age": {"en": "Age group", "fr": "Tranche d'âge"},
@@ -108,7 +108,7 @@ TEXTES = {
                     "fr": "Aucun — score de la dimension"},
     "ex_s_tous_i0": {"en": "None — overall index",
                      "fr": "Aucun — indice global"},
-    "ex_s_axe": {"en": "Break down by", "fr": "Ventiler par"},
+    "ex_s_axe": {"en": "Compare by", "fr": "Comparer par"},
     "ex_s_aucun": {"en": "Nothing — the selection alone",
                    "fr": "Rien — la sélection seule"},
     "ex_s_ax_dim": {"en": "Dimension", "fr": "Dimension"},
@@ -226,8 +226,8 @@ TEXTES = {
                   "fr": "Comparer plusieurs indicateurs (facultatif)"},
     "ex_s_comp_t": {"en": "The indicators compared, on the selected households",
                     "fr": "Les indicateurs comparés, sur les ménages retenus"},
-    "ex_s_vent": {"en": "Break down by (optional)",
-                  "fr": "Ventiler par (facultatif)"},
+    "ex_s_vent": {"en": "Compare by (optional)",
+                  "fr": "Comparer par (facultatif)"},
     "ex_croise_x": {
         "en": "{k} crossed groups, out of {n} possible: the empty ones are "
               "left out. Crossing multiplies the groups and divides the "
@@ -244,6 +244,25 @@ TEXTES = {
               "après l'autre."},
     "ex_raz": {"en": "Clear all", "fr": "Tout effacer"},
     "ex_res": {"en": "Results", "fr": "Résultats"},
+    "ex_b_quoi": {"en": "What do you want to analyse?",
+                  "fr": "Que voulez-vous analyser ?"},
+    "ex_b_intro": {
+        "en": "Explore the survey answers and compare populations.",
+        "fr": "Explorez les réponses de l'enquête et comparez les "
+              "populations."},
+    "ex_b_pop": {"en": "Population filters", "fr": "Filtres de population"},
+    "ex_b_pop_x": {
+        "en": "Communal section, sex, age, economic group, landscape",
+        "fr": "Section communale, sexe, âge, catégorie économique, paysage"},
+    "ex_b_pop_n": {"en": "{n} active", "fr": "{n} actifs"},
+    "ex_b_cond": {"en": "Add a condition", "fr": "Ajouter une condition"},
+    "ex_b_cond_on": {"en": "Condition applied", "fr": "Condition appliquée"},
+    "ex_b_raz": {"en": "Reset", "fr": "Réinitialiser"},
+    "ex_b_moy": {"en": "Average", "fr": "Moyenne"},
+    "ex_b_haut": {"en": "Highest", "fr": "Le plus haut"},
+    "ex_b_bas": {"en": "Lowest", "fr": "Le plus bas"},
+    "ex_b_ecart": {"en": "Widest gap", "fr": "Écart maximal"},
+    "ex_b_source": {"en": "Source", "fr": "Source"},
     "ex_aucun_f": {"en": "No filter", "fr": "Aucun filtre"},
     "ex_f_section": {"en": "Communal section", "fr": "Section communale"},
     "ex_f_paysage": {"en": "Landscape", "fr": "Paysage"},
@@ -1082,6 +1101,11 @@ def render(cat, mode=None):
     """
     if not cat or not cat.get("questions"):
         return
+    # LES RÉSULTATS BRUTS ONT LEUR PROPRE ÉCRAN. Ils partageaient celui-ci
+    # avec les scores, et la mise en page numérotée qui convenait à l'un
+    # noyait l'autre sous huit blocs de même poids. Voir `_render_brut`.
+    if mode == "brut":
+        return _render_brut(cat)
     st.markdown(STYLE, unsafe_allow_html=True)
 
     questions = cat["questions"]
@@ -1634,3 +1658,352 @@ def render_scores(cat):
         st.markdown(_tableau(lignes, ens, "score"), unsafe_allow_html=True)
     elif forme == "barres":
         st.markdown(_barres(lignes, ens, "score"), unsafe_allow_html=True)
+
+
+# ============================================================ résultats bruts
+# POURQUOI CET ÉCRAN A ÉTÉ REFAIT À PART.
+# `render()` servait deux mesures — les parts d'enquête et les scores — avec
+# un seul jeu de commandes numérotées. Sur les parts, cela donnait quatre
+# grands numéros verts, une rangée de quatre cartes de source, un panneau de
+# filtres encadré, une zone de seconde question toujours dépliée et un
+# sélecteur de dessin au milieu du formulaire : huit blocs de même poids
+# visuel avant le premier graphique. Un lecteur ne savait pas où regarder, et
+# la page se lisait comme un formulaire administratif à remplir dans l'ordre.
+#
+# CE N'EST PAS UN ASSISTANT, C'EST UN TABLEAU DE BORD. Trois décisions sont
+# toujours visibles — la question, la réponse, ce qu'on compare — et rien
+# n'impose de les prendre dans l'ordre : chacune se change à tout moment et
+# le graphique se redessine. Ce qui est avancé est replié : les cinq filtres
+# de population et la seconde condition. Ce qui est un réglage d'affichage
+# vit dans l'en-tête du résultat, pas dans le formulaire.
+#
+# AUCUNE CAPACITÉ N'A ÉTÉ RETIRÉE. Les cinq registres cumulables, le
+# croisement jusqu'à trois axes, la seconde question comme condition, les
+# extrêmes, les quatre dessins, le téléchargement : tout est là, rangé
+# autrement.
+
+_CSS_BRUT = """
+<style>
+  /* UN INTITULÉ DE SECTION, PAS UNE ÉTAPE NUMÉROTÉE. Deux mots en petites
+     capitales et un filet : assez pour découper l'écran en deux moments,
+     trop peu pour ressembler à un parcours imposé. */
+  div[class*="st-key-ex_brut"] .exb-sec {
+      display:flex; align-items:center; gap:12px; margin:2px 0 2px;
+      font-size:11.5px; font-weight:700; letter-spacing:.09em;
+      text-transform:uppercase; color:#1f5b46; }
+  div[class*="st-key-ex_brut"] .exb-sec span.l {
+      flex:1 1 auto; height:1px; background:#e4eae6; }
+  div[class*="st-key-ex_brut"] .exb-x {
+      font-size:12.5px; color:#8a93a5; margin:0 0 10px;
+      text-align:left !important; }
+  /* LA QUESTION EST LE CONTRÔLE PRINCIPAL, et son libellé le dit : il est le
+     seul de la page en encre pleine et en gras. Les autres commandes portent
+     le gris des étiquettes secondaires. */
+  div[class*="st-key-exb_q_zone"] label p {
+      font-size:12.5px !important; font-weight:700 !important;
+      color:#101728 !important; }
+  /* LES DEUX VOLETS REPLIABLES SONT DISCRETS : pas de cadre, pas de fond, un
+     simple filet haut. Ils annoncent une possibilité, ils ne réclament pas
+     l'attention. */
+  div[class*="st-key-ex_brut"] div[data-testid="stExpander"] details {
+      border:0 !important; border-top:1px solid #eef2f7 !important;
+      border-radius:0 !important; background:transparent !important;
+      box-shadow:none !important; }
+  div[class*="st-key-ex_brut"] div[data-testid="stExpander"] summary {
+      padding:9px 2px !important; }
+  div[class*="st-key-ex_brut"] div[data-testid="stExpander"] summary p {
+      font-size:12.5px !important; font-weight:600 !important;
+      color:#3c6b57 !important; }
+  div[class*="st-key-ex_brut"] div[data-testid="stExpander"] summary:hover p {
+      color:#1f5b46 !important; }
+  /* LE SÉLECTEUR DE DESSIN, DANS L'EN-TÊTE DU RÉSULTAT : compact, aligné à
+     droite, l'actif en vert plein. */
+  div[class*="st-key-exb_vue"] div[data-baseweb="button-group"] {
+      justify-content:flex-end !important; }
+  div[class*="st-key-exb_vue"] button {
+      font-size:12px !important; padding:3px 12px !important; }
+  /* LES QUATRE CHIFFRES DE SYNTHÈSE : une ligne de texte, pas quatre cartes.
+     Ils commentent le graphique, ils ne lui font pas concurrence. */
+  div[class*="st-key-ex_brut"] .exb-st {
+      display:flex; flex-wrap:wrap; gap:6px 26px; margin:12px 0 0;
+      font-size:12px; color:#8a93a5; }
+  div[class*="st-key-ex_brut"] .exb-st b {
+      color:#101728; font-weight:700; font-variant-numeric:tabular-nums; }
+  /* LA REMISE À ZÉRO EST UN LIEN, PAS UNE CARTE. Le style général du site
+     encadre les boutons ; posé en tête de la zone d'analyse, ce cadre-là
+     pesait plus que le titre à côté duquel il se trouve. */
+  div[class*="st-key-ex_brut"] button[data-testid="stBaseButton-tertiary"] {
+      border:0 !important; background:transparent !important;
+      box-shadow:none !important; padding:2px 0 !important;
+      min-height:0 !important; float:right; }
+  div[class*="st-key-ex_brut"] button[data-testid="stBaseButton-tertiary"] p {
+      font-size:12px !important; font-weight:600 !important;
+      color:#8a93a5 !important; }
+  div[class*="st-key-ex_brut"]
+      button[data-testid="stBaseButton-tertiary"]:hover p {
+      color:#1f5b46 !important; text-decoration:underline; }
+</style>
+"""
+
+
+def raz_brut():
+    """Remet l'écran des résultats bruts dans son état d'ouverture.
+
+    ELLE EST APPELÉE AVANT QUE LES WIDGETS N'EXISTENT, et c'est la seule
+    façon de faire : Streamlit refuse qu'on écrive la clé d'un widget déjà
+    dessiné dans la même passe. Le bouton pose donc un drapeau et relance la
+    page ; `app.py` consomme le drapeau en tête de la rubrique, avant le
+    sélecteur de source et avant cet écran.
+
+    LA QUESTION CHOISIE SURVIT. Réinitialiser veut dire « enlève mes filtres
+    et remets l'affichage à plat », pas « oublie ce que je regardais ».
+    """
+    for a, _l in _REGISTRES_F:
+        st.session_state.pop(f"exb_f_{a}", None)
+    for k in [k for k in list(st.session_state)
+              if str(k).startswith(("exb_c_", "exb_axes", "exb_vue",
+                                    "exb_ext"))]:
+        st.session_state.pop(k, None)
+
+
+def _filtres_population(cat):
+    """Les cinq registres, repliés, cumulables, et vidables d'un geste.
+
+    OU DANS UN REGISTRE, ET DANS L'AUTRE ENTRE REGISTRES. Deux sections
+    cochées donnent les ménages de l'une OU de l'autre ; une section et un
+    sexe donnent ceux qui sont dans la section ET de ce sexe. C'est la seule
+    lecture qui rende « les femmes pauvres du littoral » exprimable.
+    """
+    cles = {a: f"exb_f_{a}" for a, _l in _REGISTRES_F}
+    n_actifs = sum(len(st.session_state.get(k) or []) for k in cles.values())
+    lib = T("ex_b_pop")
+    if n_actifs:
+        lib += " · " + T("ex_b_pop_n", n=n_actifs)
+    choix = {}
+    with st.expander(lib, expanded=bool(n_actifs)):
+        st.markdown(f'<p class="exb-x" style="margin:0 0 8px">'
+                    f'{_e(T("ex_b_pop_x"))}</p>', unsafe_allow_html=True)
+        # LE BOUTON DE VIDAGE VIENT AVANT LES CHAMPS : posé après, il
+        # écrirait dans l'état de widgets déjà construits, ce que Streamlit
+        # refuse. Avant, il les vide pendant qu'ils n'existent pas encore.
+        if n_actifs and st.button(T("ex_raz"), key="exb_f_raz",
+                                  type="tertiary"):
+            for k in cles.values():
+                st.session_state[k] = []
+        cols = st.columns(len(_REGISTRES_F))
+        for (axe, lab), col in zip(_REGISTRES_F, cols):
+            with col:
+                choix[axe] = st.multiselect(
+                    T(lab), list(_VALEURS.get(axe, [])), key=cles[axe],
+                    placeholder=T("ex_f_tous"), format_func=_lib)
+    poses = [(a, v) for a, vs in choix.items() for v in (vs or [])]
+    return _masque_multi(cat, choix), poses
+
+
+def _condition_repliee(cat, questions, filtre):
+    """La seconde question comme condition, repliée tant qu'on ne la veut pas.
+
+    C'EST UNE FONCTION AVANCÉE ET ELLE EST RANGÉE COMME TELLE. « Combien de
+    ménages ont à la fois l'eau potable et des sanitaires améliorés » est une
+    vraie question, mais une question sur dix ; dépliée en permanence, elle
+    occupait une rangée entière au milieu des commandes qu'on utilise à
+    chaque fois.
+    """
+    qi_pose = st.session_state.get("exb_c_q")
+    lib = T("ex_b_cond") if qi_pose is None else T("ex_b_cond_on")
+    with st.expander(lib, expanded=qi_pose is not None):
+        c1, c2 = st.columns([1.6, 1])
+        with c1:
+            qi = st.selectbox(
+                T("ex_cond_q"), [None] + [x["i"] for x in questions],
+                key="exb_c_q",
+                format_func=lambda i: (
+                    T("ex_cond_aucune") if i is None
+                    else _libelle_question(
+                        next(x for x in questions if x["i"] == i))))
+        if qi is None:
+            return filtre, None
+        q2 = next(x for x in questions if x["i"] == qi)
+        with c2:
+            reps = st.multiselect(T("ex_cond_r"), q2["modalites"],
+                                  key=f"exb_c_r_{qi}",
+                                  format_func=libelles_enquete.modalite)
+    if qi is None or not reps:
+        return filtre, None
+    m = np.zeros(cat["n"], dtype=bool)
+    for r in reps:
+        m |= cat["bits"][q2["debut"] + q2["modalites"].index(r)]
+    return filtre & m, (q2, reps)
+
+
+def _synthese(lignes, mesure):
+    """Moyenne, extrêmes et écart, en une ligne de texte sous le graphique."""
+    vals = [(l["nom"], l["part"]) for l in lignes if l["part"] is not None]
+    if len(vals) < 2:
+        return ""
+    dec = 1 if mesure == "part" else 2
+    u = "&#8201;%" if mesure == "part" else ""
+    moy = sum(v for _n, v in vals) / len(vals)
+    haut = max(vals, key=lambda x: x[1])
+    bas = min(vals, key=lambda x: x[1])
+    return (
+        f'<div class="exb-st">'
+        f'<span>{_e(T("ex_b_moy"))} <b>{_f(moy, dec)}{u}</b></span>'
+        f'<span>{_e(T("ex_b_haut"))} <b>{_f(haut[1], dec)}{u}</b> '
+        f'{_e(haut[0])}</span>'
+        f'<span>{_e(T("ex_b_bas"))} <b>{_f(bas[1], dec)}{u}</b> '
+        f'{_e(bas[0])}</span>'
+        f'<span>{_e(T("ex_b_ecart"))} '
+        f'<b>{_f(haut[1] - bas[1], dec)}{u}</b></span></div>')
+
+
+def _render_brut(cat):
+    """Question → filtres facultatifs → résultat, sur un seul écran."""
+    questions = cat["questions"]
+    mesure = "part"
+    st.markdown(STYLE + _CSS_BRUT, unsafe_allow_html=True)
+
+    with st.container(key="ex_brut"):
+        # ---- ce qu'on analyse -------------------------------------------
+        h1, h2 = st.columns([4, 1], vertical_alignment="center")
+        with h1:
+            st.markdown(f'<div class="exb-sec">{_e(T("ex_b_quoi"))}'
+                        f'<span class="l"></span></div>',
+                        unsafe_allow_html=True)
+        with h2:
+            if st.button(T("ex_b_raz"), key="exb_raz", type="tertiary"):
+                st.session_state["ra_raz"] = True
+                st.rerun()
+
+        # LE THÈME RESTE, MAIS IL PASSE AU SECOND PLAN. Quatre cent
+        # quatre-vingt-trois questions dans un menu unique se cherchent à
+        # l'aveugle ; le module du questionnaire est le tri dans lequel on
+        # pense sa question. Il est donc gardé, étroit, à côté de la question
+        # — qui, elle, occupe le double de largeur et porte le seul libellé
+        # en encre pleine de l'écran.
+        with st.container(key="exb_q_zone"):
+            c1, c2 = st.columns([1, 2.2])
+            with c1:
+                themes = sorted({x.get("category") or "" for x in questions},
+                                key=lambda c: _nom_theme(c).lower())
+                theme = st.selectbox(
+                    T("ex_theme"), [None] + themes, key="exb_theme",
+                    format_func=lambda c: (T("ex_theme_tous") if c is None
+                                           else _nom_theme(c)))
+            vues = [x for x in questions
+                    if theme is None or (x.get("category") or "") == theme]
+            with c2:
+                qi = st.selectbox(
+                    T("ex_question"), [x["i"] for x in vues],
+                    key=f"exb_q_{theme or 'tous'}",
+                    format_func=lambda i: _libelle_question(
+                        next(x for x in vues if x["i"] == i),
+                        avec_theme=theme is None))
+        q = next(x for x in vues if x["i"] == qi)
+
+        c3, c4 = st.columns(2)
+        with c3:
+            modalite = st.selectbox(T("ex_reponse"), q["modalites"],
+                                    key=f"exb_m_{qi}",
+                                    format_func=libelles_enquete.modalite)
+        with c4:
+            dispo = [a for a, _ in AXES]
+            st.session_state.setdefault("exb_axes", [dispo[0]])
+            axes = st.multiselect(
+                T("ex_axe"), dispo, key="exb_axes", max_selections=3,
+                format_func=lambda a: T(dict(AXES)[a]))
+            if not axes:
+                axes = [dispo[0]]
+
+        # ---- les deux volets facultatifs --------------------------------
+        filtre, poses = _filtres_population(cat)
+        filtre, cond = _condition_repliee(cat, questions, filtre)
+        n_f = int(filtre.sum())
+        if n_f == 0:
+            st.info(T("ex_filtre_vide"))
+            return
+
+        lignes, ens = _ventiler(cat, mesure, q, modalite, axes, filtre, None)
+        lignes = [l for l in lignes if l["n"] > 0]
+        if not lignes:
+            st.info(T("ex_vide"))
+            return
+
+        # ---- le résultat, et ses seuls réglages d'affichage -------------
+        r1, r2, r3 = st.columns([1.1, 1.1, 2.2],
+                                vertical_alignment="center")
+        with r1:
+            st.markdown(f'<div class="exb-sec" style="margin:10px 0 0">'
+                        f'{_e(T("ex_res"))}</div>', unsafe_allow_html=True)
+        with r2:
+            extremes = st.selectbox(
+                T("ex_extremes"), ["tous", "top", "flop", "topflop", "ecart"],
+                key="exb_ext", label_visibility="collapsed",
+                format_func=lambda c: T("ex_extremes") + " : " + T(
+                    {"tous": "ex_tous", "top": "ex_top", "flop": "ex_flop",
+                     "topflop": "ex_topflop", "ecart": "ex_ecart"}[c]))
+        with r3:
+            with st.container(key="exb_vue"):
+                formes = ["barres", "carte", "radar", "tableau"]
+                forme = st.segmented_control(
+                    T("ex_voir"), formes, key="exb_vue_sel",
+                    default="barres", label_visibility="collapsed",
+                    format_func=lambda f: T("ex_" + f)) or "barres"
+
+        montrees = _filtrer(lignes, extremes, ens)
+        if forme == "radar" and len(montrees) < 3:
+            st.info(T("ex_radar_court"))
+            forme = "barres"
+        if forme == "carte":
+            svg = _carte(montrees)
+            if svg is None:
+                st.info(T("ex_carte_sec"))
+                forme = "barres"
+            else:
+                st.markdown(
+                    f'<div style="font-family:Inter,system-ui,sans-serif">'
+                    f'{svg}</div>', unsafe_allow_html=True)
+        if forme == "radar":
+            vals = [(l["part"] / 10 if l["part"] is not None else None)
+                    for l in montrees]
+            svg = radar.render_radar_svg(
+                [l["nom"] for l in montrees],
+                [(libelles_enquete.modalite(modalite), vals, VERT_APRI)],
+                taille=430)
+            st.markdown(f'<div style="max-width:760px;margin:6px auto 0">'
+                        f'{svg}</div>', unsafe_allow_html=True)
+            st.markdown('<p class="ex-note">'
+                        + _e(T("ex_radar_ech", p=_f(ens["part"], 0),
+                               v=_f((ens["part"] or 0) / 10, 1))) + '</p>',
+                        unsafe_allow_html=True)
+        elif forme == "tableau":
+            st.markdown(_tableau(montrees, ens, mesure),
+                        unsafe_allow_html=True)
+        else:
+            st.markdown(_barres(montrees, ens, mesure),
+                        unsafe_allow_html=True)
+
+        # ---- ce sur quoi porte le dessin, sous le dessin -----------------
+        # L'EFFECTIF PASSE SOUS LE GRAPHIQUE. Au-dessus, il retardait le seul
+        # objet qu'on vient voir ; en dessous, il répond à la question qui se
+        # pose une fois la barre lue — « sur combien de ménages ? ».
+        st.markdown(_synthese(montrees, mesure), unsafe_allow_html=True)
+        _p = 100.0 * n_f / cat["n"] if cat["n"] else 0
+        _txt = _e(T("ex_e4_x", k=_n(n_f), n=_n(cat["n"]), p=_f(_p, 1)))
+        if len(axes) > 1:
+            _poss = 1
+            for _a in axes:
+                _poss *= max(1, len(_cases(cat, _a)))
+            _txt += "<br>" + _e(T("ex_croise_x", k=_n(len(lignes)),
+                                  n=_n(_poss)))
+        if any(l["n"] < N_FRAGILE for l in montrees):
+            _txt += "<br>" + _e(T("ex_fragile", n=N_FRAGILE))
+        g, d = st.columns([3, 1], vertical_alignment="center")
+        with g:
+            st.markdown(f'<p class="ex-note" style="margin:6px 0 0">{_txt}</p>',
+                        unsafe_allow_html=True)
+        with d:
+            st.download_button(
+                T("ex_dl"), data=_csv(montrees, mesure),
+                file_name="resultats_apri.csv", mime="text/csv",
+                key="exb_dl", use_container_width=True)
