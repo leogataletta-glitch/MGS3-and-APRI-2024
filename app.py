@@ -2212,17 +2212,14 @@ with _c_contenu:
                 st.session_state["ra_source"] = "menages"
                 explorateur.raz_brut()
             _srcs = ["menages", "institutions", "biodiversite", "satellite"]
-            _cs, _ct = st.columns([2.2, 2], vertical_alignment="center")
-            with _cs:
-                st.session_state.setdefault("ra_source", "menages")
-                _src = st.segmented_control(
-                    T("ex_b_source"), _srcs, key="ra_source",
-                    format_func=lambda c: T("ra_src_" + c)) or "menages"
-            with _ct:
-                st.markdown(
-                    f'<p style="font-size:12px;color:#8a93a5;margin:0;'
-                    f'text-align:left">{T("ra_srcd_" + _src)}</p>',
-                    unsafe_allow_html=True)
+            # LA DESCRIPTION DE LA SOURCE A DISPARU DE LA LIGNE. « 1 211
+            # ménages, 483 questions » est un chiffre d'inventaire : il se
+            # lit une fois, sur la page « À propos », pas à chaque ouverture
+            # de l'écran d'analyse.
+            st.session_state.setdefault("ra_source", "menages")
+            _src = st.segmented_control(
+                T("ex_b_source"), _srcs, key="ra_source",
+                format_func=lambda c: T("ra_src_" + c)) or "menages"
 
             if _src == "satellite":
                 satellite_page.render()

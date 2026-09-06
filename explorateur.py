@@ -79,7 +79,9 @@ TEXTES = {
               "répondu à la question, jamais sur l'échantillon entier."},
     "ex_question": {"en": "Question", "fr": "Question"},
     "ex_reponse": {"en": "Answer", "fr": "Réponse"},
-    "ex_axe": {"en": "Compare by", "fr": "Comparer par"},
+    "ex_axe": {"en": "Project results by", "fr": "Projeter les résultats par"},
+    "ex_axe2": {"en": "Then by", "fr": "Puis par"},
+    "ex_axe_non": {"en": "— nothing", "fr": "— rien"},
     "ex_ax_section": {"en": "Communal section", "fr": "Section communale"},
     "ex_ax_sexe": {"en": "Sex", "fr": "Sexe"},
     "ex_ax_age": {"en": "Age group", "fr": "Tranche d'âge"},
@@ -90,8 +92,6 @@ TEXTES = {
     "ex_m_score": {"en": "Resilience score", "fr": "Score de résilience"},
     # ---- l'explorateur de scores : filtres combinables, un seul dessin ----
     "ex_s_titre": {"en": "Resilience scores", "fr": "Scores de résilience"},
-    "ex_s_quoi": {"en": "What do you want to measure?",
-                  "fr": "Que voulez-vous mesurer ?"},
     "ex_s_dim": {"en": "Dimension", "fr": "Dimension"},
     "ex_s_ind": {"en": "Indicator", "fr": "Indicateur"},
     "ex_s_toutes": {"en": "All — overall index", "fr": "Toutes — indice global"},
@@ -99,7 +99,8 @@ TEXTES = {
                     "fr": "Aucun — score de la dimension"},
     "ex_s_tous_i0": {"en": "None — overall index",
                      "fr": "Aucun — indice global"},
-    "ex_s_axe": {"en": "Compare by", "fr": "Comparer par"},
+    "ex_s_axe": {"en": "Project results by",
+                 "fr": "Projeter les résultats par"},
     "ex_s_aucun": {"en": "Nothing — the selection alone",
                    "fr": "Rien — la sélection seule"},
     "ex_s_ax_dim": {"en": "Dimension", "fr": "Dimension"},
@@ -217,8 +218,8 @@ TEXTES = {
                   "fr": "Comparer plusieurs indicateurs (facultatif)"},
     "ex_s_comp_t": {"en": "The indicators compared, on the selected households",
                     "fr": "Les indicateurs comparés, sur les ménages retenus"},
-    "ex_s_vent": {"en": "Compare by (optional)",
-                  "fr": "Comparer par (facultatif)"},
+    "ex_s_vent": {"en": "Project results by (optional)",
+                  "fr": "Projeter les résultats par (facultatif)"},
     "ex_croise_x": {
         "en": "{k} crossed groups, out of {n} possible: the empty ones are "
               "left out. Crossing multiplies the groups and divides the "
@@ -235,12 +236,6 @@ TEXTES = {
               "après l'autre."},
     "ex_raz": {"en": "Clear all", "fr": "Tout effacer"},
     "ex_res": {"en": "Results", "fr": "Résultats"},
-    "ex_b_quoi": {"en": "What do you want to analyse?",
-                  "fr": "Que voulez-vous analyser ?"},
-    "ex_b_intro": {
-        "en": "Explore the survey answers and compare populations.",
-        "fr": "Explorez les réponses de l'enquête et comparez les "
-              "populations."},
     "ex_b_pop": {"en": "Population filters", "fr": "Filtres de population"},
     "ex_b_pop_x": {
         "en": "Communal section, sex, age, economic group, landscape",
@@ -254,6 +249,19 @@ TEXTES = {
     "ex_b_bas": {"en": "Lowest", "fr": "Le plus bas"},
     "ex_b_ecart": {"en": "Widest gap", "fr": "Écart maximal"},
     "ex_b_source": {"en": "Source", "fr": "Source"},
+    "ex_b_toutes": {"en": "All answers", "fr": "Toutes les réponses"},
+    "ex_b_rep_x": {
+        "en": "Every answer to the question, on the households kept. Pick one "
+              "answer in the filters to compare it across groups.",
+        "fr": "Toutes les réponses à la question, sur les ménages retenus. "
+              "Choisissez une réponse dans les filtres pour la comparer "
+              "entre groupes."},
+    "ex_b_filtres": {"en": "Filters", "fr": "Filtres"},
+    "ex_b_filtres_x": {
+        "en": "One answer, communal section, sex, age, economic group, "
+              "landscape",
+        "fr": "Une réponse, section communale, sexe, âge, catégorie "
+              "économique, paysage"},
     "ex_aucun_f": {"en": "No filter", "fr": "Aucun filtre"},
     "ex_f_section": {"en": "Communal section", "fr": "Section communale"},
     "ex_f_paysage": {"en": "Landscape", "fr": "Paysage"},
@@ -825,6 +833,34 @@ def _ventiler(cat, mesure, q, modalite, axes, filtre=None, cible=None):
     ens = {"n": ens_base, "k": int(m_mod.sum()),
            "part": (100 * int(m_mod.sum()) / ens_base) if ens_base else None}
     return out, ens
+
+
+def _repartition(cat, q, filtre):
+    """Une ligne par réponse possible : la répartition de la question.
+
+    POURQUOI CHOISIR UNE RÉPONSE N'EST PLUS OBLIGATOIRE. « Quelle part
+    répond Oui » est une question ; « comment se répartissent les réponses »
+    en est une autre, et c'est souvent la première qu'on se pose devant une
+    question à cinq modalités. Il fallait, pour l'obtenir, choisir les
+    modalités une par une et retenir cinq chiffres de tête.
+
+    LE DÉNOMINATEUR EST LE MÊME QUE PARTOUT : les ménages qui ont répondu à
+    la question, dans la population retenue. Les parts somment donc à cent,
+    et une réponse manquante n'est pas comptée comme un « non ».
+    """
+    m_rep = np.zeros(cat["n"], dtype=bool)
+    for j in range(len(q["modalites"])):
+        m_rep |= cat["bits"][q["debut"] + j]
+    m_rep &= filtre
+    base = int(m_rep.sum())
+    out = []
+    for j, mod in enumerate(q["modalites"]):
+        k = int((cat["bits"][q["debut"] + j] & m_rep).sum())
+        out.append({"nom": libelles_enquete.modalite(mod), "cle": mod,
+                    "axe": T("ex_b_toutes"), "axe_code": "modalite",
+                    "n": base, "k": k,
+                    "part": (100 * k / base) if base else None})
+    return out, {"n": base, "k": None, "part": None}
 
 
 def _score_cible(cat, masque, cible, ind):
@@ -1485,11 +1521,7 @@ def render_scores(cat):
     st.markdown(_CSS_BRUT, unsafe_allow_html=True)
 
     with st.container(key="ex_brut_s"):
-        h1, h2 = st.columns([4, 1], vertical_alignment="center")
-        with h1:
-            st.markdown(f'<div class="exb-sec">{_e(T("ex_s_quoi"))}'
-                        f'<span class="l"></span></div>',
-                        unsafe_allow_html=True)
+        _h1, h2 = st.columns([4, 1], vertical_alignment="center")
         with h2:
             if st.button(T("ex_b_raz"), key="exs_raz", type="tertiary"):
                 raz_scores()
@@ -1516,13 +1548,17 @@ def render_scores(cat):
                               else f'{T(inds[i]["dim"])} · '
                                    f'{_nom_ind(inds[i])}')))
             with c3:
-                dispo_v = ([a for a, _l in _REGISTRES_S]
-                           + (["dimension"] if k is None else []))
-                axes = st.multiselect(
-                    T("ex_axe"), dispo_v, key="exs_axes", max_selections=3,
-                    format_func=lambda a: (
-                        T("ex_s_ax_dim") if a == "dimension"
-                        else T(dict(_REGISTRES_S)[a])))
+                # LA DIMENSION RESTE UN CHOIX À PART, hors de la cascade :
+                # elle ne se croise pas avec un registre social — « les
+                # femmes de la dimension environnementale » ne veut rien
+                # dire — et elle n'existe que sur l'indice ou une dimension.
+                _par_dim = k is None and st.checkbox(
+                    T("ex_s_ax_dim"), key="exs_dim_ax")
+        axes = ([] if _par_dim
+                else _projection("exs_axe", [a for a, _l in _REGISTRES_S],
+                                 T("ex_axe"), facultatif=True))
+        if _par_dim:
+            axes = ["dimension"]
         if k is not None:
             ind = inds[k]
             cible = f"i:{_inds_tries(cat).index(ind)}"
@@ -1663,7 +1699,7 @@ def raz_scores():
     bruts : on enlève ses restrictions, on n'efface pas ce qu'on regardait.
     """
     for k in [k for k in list(st.session_state)
-              if str(k).startswith(("exs_f_", "exs_cmp_", "exs_axes",
+              if str(k).startswith(("exs_f_", "exs_cmp_", "exs_axe",
                                     "exs_forme", "exs_mode", "exs_k"))]:
         st.session_state.pop(k, None)
 
@@ -1769,12 +1805,60 @@ def raz_brut():
     for a, _l in _REGISTRES_F:
         st.session_state.pop(f"exb_f_{a}", None)
     for k in [k for k in list(st.session_state)
-              if str(k).startswith(("exb_c_", "exb_axes", "exb_vue",
+              if str(k).startswith(("exb_c_", "exb_axe", "exb_vue",
                                     "exb_ext"))]:
         st.session_state.pop(k, None)
 
 
-def _filtres_population(cat, prefixe="exb_f_", registres=None):
+def _projection(cle, dispo, libelle, facultatif=False):
+    """Trois niveaux emboîtés : par quoi on projette, puis par quoi encore.
+
+    POURQUOI TROIS MENUS ORDONNÉS PLUTÔT QU'UN MENU À COCHER. Le champ à
+    cocher permettait déjà de croiser trois registres, mais il n'en disait
+    ni l'ordre ni le sens : trois cases cochées donnaient « les femmes de la
+    montagne de plus de soixante ans » sans qu'on ait jamais demandé un
+    emboîtement, et l'ordre des lignes dépendait de l'ordre de la liste, pas
+    de celui de la pensée. Trois menus disent exactement ce qu'ils font :
+    d'abord par paysage, PUIS par sexe — les hommes et les femmes DANS
+    chaque paysage, dans cet ordre-là.
+
+    UN NIVEAU NE PROPOSE JAMAIS CE QUI EST DÉJÀ PRIS au-dessus de lui : le
+    même registre deux fois ne croiserait rien, il produirait des cases
+    vides. Et le troisième niveau ne s'ouvre qu'une fois le deuxième posé,
+    parce qu'un emboîtement à trous n'existe pas.
+    """
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        # LE PREMIER NIVEAU EST FACULTATIF LÀ OÙ LE RÉSULTAT SE SUFFIT SANS
+        # LUI : sur les scores, un chiffre unique est une réponse complète,
+        # et projeter est une demande de plus.
+        a1 = st.selectbox(
+            libelle, ([None] + dispo) if facultatif else dispo,
+            key=f"{cle}_1",
+            format_func=lambda a: (T("ex_axe_non") if a is None
+                                   else T(dict(AXES)[a])))
+    reste2 = [a for a in dispo if a != a1]
+    with c2:
+        a2 = st.selectbox(
+            T("ex_axe2"), [None] + reste2, key=f"{cle}_2",
+            disabled=a1 is None,
+            format_func=lambda a: (T("ex_axe_non") if a is None
+                                   else T(dict(AXES)[a])))
+    with c3:
+        reste3 = [a for a in reste2 if a != a2]
+        a3 = st.selectbox(
+            T("ex_axe2"), [None] + reste3, key=f"{cle}_3",
+            label_visibility="hidden", disabled=a2 is None,
+            format_func=lambda a: (T("ex_axe_non") if a is None
+                                   else T(dict(AXES)[a])))
+    if a1 is None:
+        return []
+    return [a for a in (a1, a2, a3 if a2 is not None else None)
+            if a is not None]
+
+
+def _filtres_population(cat, prefixe="exb_f_", registres=None,
+                        question=None):
     """Les cinq registres, repliés, cumulables, et vidables d'un geste.
 
     OU DANS UN REGISTRE, ET DANS L'AUTRE ENTRE REGISTRES. Deux sections
@@ -1785,13 +1869,22 @@ def _filtres_population(cat, prefixe="exb_f_", registres=None):
     registres = registres or _REGISTRES_F
     cles = {a: f"{prefixe}{a}" for a, _l in registres}
     n_actifs = sum(len(st.session_state.get(k) or []) for k in cles.values())
-    lib = T("ex_b_pop")
+    # LA RÉPONSE EST UN FILTRE, PAS UNE ÉTAPE OBLIGÉE. Sans elle, l'écran
+    # montre la répartition complète de la question ; avec elle, il compare
+    # cette réponse-là entre groupes. C'est bien une restriction de plus,
+    # elle a donc sa place avec les cinq autres.
+    modalite = st.session_state.get(f"exb_m_{question['i']}") \
+        if question is not None else None
+    n_actifs += 1 if modalite else 0
+    lib = T("ex_b_filtres") if question is not None else T("ex_b_pop")
     if n_actifs:
         lib += " · " + T("ex_b_pop_n", n=n_actifs)
     choix = {}
     with st.expander(lib, expanded=bool(n_actifs)):
-        st.markdown(f'<p class="exb-x" style="margin:0 0 8px">'
-                    f'{_e(T("ex_b_pop_x"))}</p>', unsafe_allow_html=True)
+        st.markdown(
+            f'<p class="exb-x" style="margin:0 0 8px">'
+            f'{_e(T("ex_b_filtres_x" if question is not None else "ex_b_pop_x"))}'
+            f'</p>', unsafe_allow_html=True)
         # LE BOUTON DE VIDAGE VIENT AVANT LES CHAMPS : posé après, il
         # écrirait dans l'état de widgets déjà construits, ce que Streamlit
         # refuse. Avant, il les vide pendant qu'ils n'existent pas encore.
@@ -1799,6 +1892,12 @@ def _filtres_population(cat, prefixe="exb_f_", registres=None):
                                   type="tertiary"):
             for k in cles.values():
                 st.session_state[k] = []
+        if question is not None:
+            modalite = st.selectbox(
+                T("ex_reponse"), [None] + list(question["modalites"]),
+                key=f"exb_m_{question['i']}",
+                format_func=lambda m: (T("ex_b_toutes") if m is None
+                                       else libelles_enquete.modalite(m)))
         cols = st.columns(len(registres))
         for (axe, lab), col in zip(registres, cols):
             with col:
@@ -1806,6 +1905,8 @@ def _filtres_population(cat, prefixe="exb_f_", registres=None):
                     T(lab), list(_VALEURS.get(axe, [])), key=cles[axe],
                     placeholder=T("ex_f_tous"), format_func=_lib)
     poses = [(a, v) for a, vs in choix.items() for v in (vs or [])]
+    if question is not None:
+        return _masque_multi(cat, choix), poses, modalite
     return _masque_multi(cat, choix), poses
 
 
@@ -1878,16 +1979,12 @@ def _render_brut(cat):
     st.markdown(_CSS_BRUT, unsafe_allow_html=True)
 
     with st.container(key="ex_brut"):
-        # ---- ce qu'on analyse -------------------------------------------
-        h1, h2 = st.columns([4, 1], vertical_alignment="center")
-        with h1:
-            st.markdown(f'<div class="exb-sec">{_e(T("ex_b_quoi"))}'
-                        f'<span class="l"></span></div>',
-                        unsafe_allow_html=True)
-        with h2:
-            if st.button(T("ex_b_raz"), key="exb_raz", type="tertiary"):
-                st.session_state["ra_raz"] = True
-                st.rerun()
+        # PAS DE TITRE DE SECTION AU-DESSUS DES COMMANDES. « Que voulez-vous
+        # analyser ? » posait une question dont la réponse était juste en
+        # dessous, en toutes lettres, dans le menu des questions : une ligne
+        # de plus avant le premier réglage, qui n'apprenait rien. La remise à
+        # zéro n'a donc plus de rangée à elle : elle se range au bout de la
+        # première, à hauteur du menu des questions.
 
         # LE THÈME RESTE, MAIS IL PASSE AU SECOND PLAN. Quatre cent
         # quatre-vingt-trois questions dans un menu unique se cherchent à
@@ -1896,7 +1993,12 @@ def _render_brut(cat):
         # — qui, elle, occupe le double de largeur et porte le seul libellé
         # en encre pleine de l'écran.
         with st.container(key="exb_q_zone"):
-            c1, c2 = st.columns([1, 2.2])
+            c1, c2, c0 = st.columns([1, 2.2, 0.55],
+                                    vertical_alignment="bottom")
+            with c0:
+                if st.button(T("ex_b_raz"), key="exb_raz", type="tertiary"):
+                    st.session_state["ra_raz"] = True
+                    st.rerun()
             with c1:
                 themes = sorted({x.get("category") or "" for x in questions},
                                 key=lambda c: _nom_theme(c).lower())
@@ -1915,29 +2017,25 @@ def _render_brut(cat):
                         avec_theme=theme is None))
         q = next(x for x in vues if x["i"] == qi)
 
-        c3, c4 = st.columns(2)
-        with c3:
-            modalite = st.selectbox(T("ex_reponse"), q["modalites"],
-                                    key=f"exb_m_{qi}",
-                                    format_func=libelles_enquete.modalite)
-        with c4:
-            dispo = [a for a, _ in AXES]
-            st.session_state.setdefault("exb_axes", [dispo[0]])
-            axes = st.multiselect(
-                T("ex_axe"), dispo, key="exb_axes", max_selections=3,
-                format_func=lambda a: T(dict(AXES)[a]))
-            if not axes:
-                axes = [dispo[0]]
+        axes = _projection("exb_axe", [a for a, _ in AXES], T("ex_axe"))
 
         # ---- les deux volets facultatifs --------------------------------
-        filtre, poses = _filtres_population(cat)
+        filtre, poses, modalite = _filtres_population(cat, question=q)
         filtre, cond = _condition_repliee(cat, questions, filtre)
         n_f = int(filtre.sum())
         if n_f == 0:
             st.info(T("ex_filtre_vide"))
             return
 
-        lignes, ens = _ventiler(cat, mesure, q, modalite, axes, filtre, None)
+        # SANS RÉPONSE CHOISIE, C'EST LA RÉPARTITION DE LA QUESTION QU'ON
+        # DESSINE — une barre par modalité, sur la population retenue. La
+        # comparaison entre groupes suppose une réponse à comparer : elle
+        # attend donc qu'on en désigne une, et l'écran le dit.
+        if modalite is None:
+            lignes, ens = _repartition(cat, q, filtre)
+        else:
+            lignes, ens = _ventiler(cat, mesure, q, modalite, axes, filtre,
+                                    None)
         lignes = [l for l in lignes if l["n"] > 0]
         if not lignes:
             st.info(T("ex_vide"))
@@ -1965,6 +2063,12 @@ def _render_brut(cat):
                     format_func=lambda f: T("ex_" + f)) or "barres"
 
         montrees = _filtrer(lignes, extremes, ens)
+        if modalite is None and forme == "carte":
+            # UNE CARTE PORTE DES LIEUX, PAS DES MODALITÉS. Sans réponse
+            # choisie, les lignes sont les réponses de la question : il n'y a
+            # rien à colorier par section.
+            st.info(T("ex_carte_sec"))
+            forme = "barres"
         if forme == "radar" and len(montrees) < 3:
             st.info(T("ex_radar_court"))
             forme = "barres"
@@ -1982,7 +2086,8 @@ def _render_brut(cat):
                     for l in montrees]
             svg = radar.render_radar_svg(
                 [l["nom"] for l in montrees],
-                [(libelles_enquete.modalite(modalite), vals, VERT_APRI)],
+                [(libelles_enquete.modalite(modalite) if modalite
+                  else T("ex_b_toutes"), vals, VERT_APRI)],
                 taille=430)
             st.markdown(f'<div style="max-width:760px;margin:6px auto 0">'
                         f'{svg}</div>', unsafe_allow_html=True)
@@ -2004,7 +2109,13 @@ def _render_brut(cat):
         st.markdown(_synthese(montrees, mesure), unsafe_allow_html=True)
         _p = 100.0 * n_f / cat["n"] if cat["n"] else 0
         _txt = _e(T("ex_e4_x", k=_n(n_f), n=_n(cat["n"]), p=_f(_p, 1)))
-        if len(axes) > 1:
+        if modalite is None:
+            # SANS RÉPONSE CHOISIE, LA PROJECTION NE S'APPLIQUE PAS : les
+            # barres sont les réponses de la question, pas des groupes. On le
+            # dit plutôt que de laisser croire que le menu du haut n'a rien
+            # fait.
+            _txt = _e(T("ex_b_rep_x")) + "<br>" + _txt
+        elif len(axes) > 1:
             _poss = 1
             for _a in axes:
                 _poss *= max(1, len(_cases(cat, _a)))

@@ -69,7 +69,8 @@ TEXTES = {
                        "fr": "Catégorie économique"},
 
     "ec_i_choix": {"en": "Indicator", "fr": "Indicateur"},
-    "ec_i_axes": {"en": "Compare across", "fr": "Comparer sur"},
+    "ec_i_axes": {"en": "Project results by",
+                  "fr": "Projeter les résultats par"},
     "ec_i_sens_haut": {"en": "Higher is better", "fr": "Plus, c'est mieux"},
     "ec_i_sens_bas": {"en": "Lower is better", "fr": "Moins, c'est mieux"},
     "ec_i_ecart": {"en": "Spread between the highest and the lowest: {v} "
@@ -129,8 +130,6 @@ TEXTES = {
               "there is nothing to map.",
         "fr": "Ce groupe est présent dans moins de deux sections communales : "
               "il n'y a rien à cartographier."},
-    "ec_sec_quoi": {"en": "What do you want to analyse?",
-                    "fr": "Que voulez-vous analyser ?"},
     "ec_sec_res": {"en": "Results", "fr": "Résultats"},
     "ec_raz": {"en": "Reset", "fr": "Réinitialiser"},
     "ec_comb_n": {"en": "Combined", "fr": "Croisé"},
@@ -413,11 +412,7 @@ def render_indicateur(cat):
     inds = sorted(cat["indicateurs"], key=lambda x: (x["dim"], _nom(x)))
 
     with st.container(key="ec_ecran_i"):
-        h1, h2 = st.columns([4, 1], vertical_alignment="center")
-        with h1:
-            st.markdown(f'<div class="ec-sec">{_e(T("ec_sec_quoi"))}'
-                        f'<span class="l"></span></div>',
-                        unsafe_allow_html=True)
+        _h1, h2 = st.columns([4, 1], vertical_alignment="center")
         with h2:
             if st.button(T("ec_raz"), key="ec_i_raz", type="tertiary"):
                 for k in ("ec_i_axes", "ec_i_ext", "ec_i_forme"):
@@ -1022,11 +1017,7 @@ def render_paysage(cat):
         st.info(T("ec_rien"))
         return False
     with st.container(key="ec_ecran_p"):
-        h1, h2 = st.columns([4, 1], vertical_alignment="center")
-        with h1:
-            st.markdown(f'<div class="ec-sec">{_e(T("ec_sec_quoi"))}'
-                        f'<span class="l"></span></div>',
-                        unsafe_allow_html=True)
+        _h1, h2 = st.columns([4, 1], vertical_alignment="center")
         with h2:
             if st.button(T("ec_raz"), key="ec_p_raz", type="tertiary"):
                 _raz_profil("pay")
@@ -1054,11 +1045,7 @@ def render_groupe(cat):
         st.info(T("ec_rien"))
         return False
     with st.container(key="ec_ecran_g"):
-        h1, h2 = st.columns([4, 1], vertical_alignment="center")
-        with h1:
-            st.markdown(f'<div class="ec-sec">{_e(T("ec_sec_quoi"))}'
-                        f'<span class="l"></span></div>',
-                        unsafe_allow_html=True)
+        _h1, h2 = st.columns([4, 1], vertical_alignment="center")
         with h2:
             if st.button(T("ec_raz"), key="ec_g_raz", type="tertiary"):
                 _raz_profil("grp")
