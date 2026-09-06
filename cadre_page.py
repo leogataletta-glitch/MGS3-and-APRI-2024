@@ -583,8 +583,6 @@ TEXTES = {
                "fr": "Comment la résilience est mesurée : sources et données"},
     "cad_o3": {"en": "The Dimensions of Resilience",
                "fr": "Les dimensions de la résilience"},
-    "cad_o4": {"en": "From Raw Measures to Resilience Scores",
-               "fr": "Des mesures brutes aux scores de résilience"},
     "cad_o5": {"en": "Understanding Resilience Through Feedback Loops and "
                      "Complex Systems",
                "fr": "Comprendre la résilience par les boucles de rétroaction "
@@ -603,8 +601,11 @@ TEXTES = {
     "cad_c1": {"en": "Resilience model", "fr": "Modèle de résilience"},
     "cad_c2": {"en": "Sources and data", "fr": "Sources et données"},
     "cad_c3": {"en": "Dimensions", "fr": "Dimensions"},
-    "cad_c35": {"en": "Indicators and weights",
-                "fr": "Indicateurs et pondérations"},
+    # L'ONGLET PORTE LE NOM DU CHEMIN, PAS CELUI DE SON INVENTAIRE. Depuis
+    # qu'il déroule la chaîne de calcul sur l'indicateur ouvert, « Indicateurs
+    # et pondérations » n'annonçait plus que la moitié de ce qu'on y trouve.
+    "cad_c35": {"en": "From Indicators to Resilience Scores",
+                "fr": "Des indicateurs aux scores de résilience"},
     "cad_ind_dim": {"en": "Dimension", "fr": "Dimension"},
     "cad_ind_all": {"en": "All seven", "fr": "Toutes les sept"},
     "cad_ind_q": {"en": "Search an indicator", "fr": "Chercher un indicateur"},
@@ -676,8 +677,6 @@ TEXTES = {
               "groupe d'experts, et la pondération d'une dimension est la "
               "somme de celles de ses indicateurs — aucune dimension n'a été "
               "pondérée directement."},
-    "cad_c4": {"en": "Raw measures to resilience scores",
-               "fr": "De la mesure brute au score de résilience"},
     "cad_c5": {"en": "Feedback loops", "fr": "Boucles de rétroaction"},
     "cad_c6": {"en": "Environmental data", "fr": "Données environnementales"},
     "cad_c7": {"en": "The full framework", "fr": "Le cadre complet"},
@@ -1226,6 +1225,12 @@ STYLE = """
        grid-template-columns:1fr 1.15fr 1fr; }
   .cad-bl-g > div:nth-child(2) { border-left:1px solid #e9eef4;
        border-right:1px solid #e9eef4; padding:0 26px; }
+  /* LA TROISIÈME CASE PORTE LA DÉFINITION. Elle était vide depuis que la
+     grille compte trois colonnes ; la phrase qui ouvrait l'onglet s'y lit
+     maintenant, en gris et en italique, comme la conclusion des deux
+     dessins qui la précèdent. */
+  .cad-bl-u { font-size:13.5px; color:#3c4761; line-height:1.6;
+       font-style:italic; padding-left:4px; }
   @media (max-width: 1000px) {
     .cad-bl-g { grid-template-columns:1fr; row-gap:26px; }
     .cad-bl-g > div:nth-child(2) { border:0; padding:0; }
@@ -1853,15 +1858,20 @@ MIN_SECTION = 120
 # qu'APRI mesure à ce en quoi il le découpe — deux moitiés de la même
 # définition. Depuis que le tableau a perdu sa barre, les deux tiennent côte
 # à côte, séparés par un filet.
-VUES = ("mesure", "sources", "indicateurs", "score", "boucles",
+# L'ONGLET DES MESURES BRUTES A ÉTÉ REPLIÉ DANS CELUI DES INDICATEURS. Il
+# déroulait la chaîne de calcul sur un exemple — quarante-cinq minutes de
+# marche pour aller chercher l'eau — pendant que l'onglet voisin montrait les
+# barèmes réels sans dire ce qu'ils produisent. Les deux se lisent maintenant
+# au même endroit, et la chaîne tourne sur l'indicateur qu'on a ouvert.
+VUES = ("mesure", "sources", "indicateurs", "boucles",
         "environnement", "document")
 # `_LIB` porte les intitulés longs ; ils ne sont plus rendus depuis que la
 # barre a pris les titres courts, mais la table reste la carte des sept vues.
 _LIB = {"mesure": "cad_o1", "sources": "cad_o2",
-        "indicateurs": "cad_c35", "score": "cad_o4", "boucles": "cad_o5",
+        "indicateurs": "cad_c35", "boucles": "cad_o5",
         "environnement": "cad_o6", "document": "cad_o7"}
 _COURT = {"mesure": "cad_c1", "sources": "cad_c2",
-          "indicateurs": "cad_c35", "score": "cad_c4", "boucles": "cad_c5",
+          "indicateurs": "cad_c35", "boucles": "cad_c5",
           "environnement": "cad_c6", "document": "cad_c7"}
 
 
@@ -1897,8 +1907,6 @@ def render(doc_complet=None):
         _v_sources()
     elif vue == "indicateurs":
         _v_indicateurs()
-    elif vue == "score":
-        _v_score(stats)
     elif vue == "boucles":
         _v_boucles()
     elif vue == "environnement":
@@ -2127,35 +2135,6 @@ def _normalisations(x=None):
             + '</div></div></div>')
 
 
-def _v_score(stats):
-    """La chaîne de calcul en cinq étapes, puis les deux normalisations.
-
-    UNE OPÉRATION PAR COLONNE, ET LA FLÈCHE ENTRE DEUX. « Métrique ›
-    barème › pondération › agrégation » nommait les opérations sans en
-    exécuter une seule : le lecteur savait qu'un barème existe, pas ce qu'il
-    fait à quarante-cinq minutes de marche pour aller chercher l'eau. Les
-    cinq colonnes déroulent la même donnée d'un bout à l'autre — une durée
-    devient un score, le score devient un indice — et chacune porte son
-    pictogramme, son chiffre et sa phrase.
-
-    LES VALEURS SONT UN EXEMPLE, ET LA MENTION EST PORTÉE PAR L'ÉTAPE. Elles
-    sont choisies pour que la chaîne se suive ; le score global réel n'est pas
-    6,1, et sans la mention elles se liraient comme un résultat.
-
-    LES DEUX NORMALISATIONS SONT SOUS LA CHAÎNE, PAS DEDANS. Elles ne sont pas
-    une sixième étape : elles disent COMMENT la deuxième s'exécute, et une
-    formule posée dans la rangée aurait cassé la lecture d'un bout à l'autre.
-    """
-    # PAS DE PICTOGRAMME SUR CETTE CHAÎNE. Une goutte, une jauge, un
-    # histogramme, un groupe et un bouclier illustraient cinq opérations de
-    # calcul : ils décoraient sans rien dire de plus que les intitulés, et le
-    # disque qui les portait coûtait cent pixels de hauteur sur une rangée qui
-    # doit se lire d'un seul coup d'œil. Le chiffre est ce qui compte ici, et
-    # il monte d'autant.
-    st.markdown(_chaine_generique() + _normalisations(),
-                unsafe_allow_html=True)
-
-
 # --- les indicateurs, leur échelle et leur pondération ----------------------
 def _v_indicateurs():
     """La liste du référentiel : un indicateur, son barème, son poids.
@@ -2318,15 +2297,13 @@ def _v_boucles():
     # PAS DE TITRE : l'onglet ouvert dit déjà « Boucles de rétroaction », et
     # « Diagrammes de boucles causales » juste en dessous nommait la même
     # chose une seconde fois. La ligne qui suit, elle, apprend quelque chose.
-    # LA DÉFINITION OUVRE CET ONGLET-CI. Elle annonce un paysage « compris
-    # comme un système complexe adaptatif » : c'est exactement ce que les
-    # boucles montrent, et c'est ici qu'elle apprend quelque chose.
-    # LA SECONDE PHRASE EST PARTIE. « Voir comment les causes et les effets
-    # se répondent » annonçait le parcours en quatre temps qui se lit juste
-    # en dessous, et la définition qui la précède dit déjà de quel objet on
-    # parle : deux annonces avant la première chose à regarder.
-    st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>',
-                unsafe_allow_html=True)
+    # LA DÉFINITION A QUITTÉ LE HAUT DE LA PAGE POUR LA TROISIÈME CASE. Elle
+    # annonce un paysage « compris comme un système complexe adaptatif » ;
+    # posée avant le parcours en quatre temps, elle était une seconde annonce
+    # là où le lecteur cherchait la première chose à regarder. La grille du
+    # bas comptait trois colonnes pour deux contenus, et sa case de droite
+    # restait vide : la définition s'y lit après les signes et les deux
+    # boucles, comme la conclusion de ce qu'ils viennent de montrer.
 
     # UN SEUL VERT POUR LES QUATRE. Rouge, ambre, bleu, vert : quatre teintes
     # pour quatre étapes du MÊME parcours laissaient croire à quatre natures
@@ -2383,10 +2360,10 @@ def _v_boucles():
         f'<div class="cad-bl-n" style="color:#d1730c">'
         f'{_e(T("cad_bl_b"))}</div>'
         f'<div class="cad-bl-s">{_e(T("cad_bl_b_x"))}</div></div></div>'
-        # L'AVERTISSEMENT EST PARTI. « + ne veut pas dire bon » posé sous
-        # deux pastilles qui portent chacune sa phrase — « si A augmente, B
-        # augmente », « si A augmente, B diminue » — redisait en négatif ce
-        # que les deux disaient déjà en clair.
+        # L'AVERTISSEMENT EST PARTI, LA DÉFINITION PREND SA PLACE. « + ne veut
+        # pas dire bon » posé sous deux pastilles qui portent chacune sa
+        # phrase redisait en négatif ce que les deux disaient déjà en clair.
+        f'<div class="cad-bl-u">{_e(T("cad_uma"))}</div>'
         '</div></div>', unsafe_allow_html=True)
 
 

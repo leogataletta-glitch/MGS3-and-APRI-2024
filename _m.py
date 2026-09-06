@@ -36,7 +36,6 @@ SOUS_VUES = {
     # ne seraient jamais rendus une seule fois par le harnais.
     "cad_sources": ("methodologie", "cad_vue", "sources"),
     "cad_ind":     ("methodologie", "cad_vue", "indicateurs"),
-    "cad_score":   ("methodologie", "cad_vue", "score"),
     "cad_boucles": ("methodologie", "cad_vue", "boucles"),
     "cad_env":     ("methodologie", "cad_vue", "environnement"),
     "cad_doc":     ("methodologie", "cad_vue", "document"),
