@@ -57,6 +57,7 @@ import streamlit as st
 
 import boucles_moteur as M
 import i18n
+import onglets
 from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -284,6 +285,24 @@ TEXTES = {
     "int_cat_t": {"en": "b) Categorisation of the levers",
                   "fr": "b) Catégorisation des leviers"},
     "int_cat": {"en": "Category", "fr": "Catégorie"},
+    "int_sur_quoi": {"en": "What do you want to act on?",
+                     "fr": "Sur quoi voulez-vous intervenir ?"},
+    "int_sur_rien": {"en": "— choose a dimension",
+                     "fr": "— choisissez une dimension"},
+    "int_rien_encore": {
+        "en": "Choose what to act on: the levers available on that "
+              "dimension appear below, sorted by kind.",
+        "fr": "Choisissez sur quoi intervenir : les leviers disponibles sur "
+              "cette dimension apparaissent ci-dessous, classés par nature."},
+    "int_o_fiches": {"en": "Intervention profiles",
+                     "fr": "Fiches d'intervention"},
+    "int_o_plans": {"en": "Community resilience plans",
+                    "fr": "Plans de résilience communautaires"},
+    "int_plans_vide": {
+        "en": "The community resilience plans are not loaded on the platform "
+              "yet. They will be downloadable from here.",
+        "fr": "Les plans de résilience communautaires ne sont pas encore "
+              "chargés sur la plateforme. Ils seront téléchargeables ici."},
     "int_cat_structurel": {"en": "Structural", "fr": "Structurel"},
     "int_cat_technique": {"en": "Technical", "fr": "Technique"},
     "int_cat_organisationnel": {"en": "Organisational", "fr": "Organisationnel"},
@@ -1282,175 +1301,6 @@ STYLE = """
 """
 
 
-def _bloc_reperage(fiches, par_ligne, dims, ref):
-    """a) Le repérage des leviers, ses trois critères, et leurs chiffres."""
-    with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc">{_e(T("int_rep"))}</div>',
-                    unsafe_allow_html=True)
-
-        # --- critère 1 : agir sur plusieurs causes
-        st.markdown(
-            f'<div class="int-lab" style="margin-top:2px">1 · '
-            f'{_e(T("int_rep1"))}</div>'
-            f'<p class="int-x" style="font-size:12.5px">{_gras(T("int_rep1_x"))}</p>',
-            unsafe_allow_html=True)
-        rangs = sorted(fiches, key=lambda x: (not x["bascule"], -x["boucles"],
-                                              -(x["sortant"] + x["entrant"])))
-        st.markdown("".join(
-            f'<div style="display:grid;grid-template-columns:minmax(150px,2fr) '
-            f'110px 130px 1fr;gap:10px;align-items:center;padding:5px 0;'
-            f'border-bottom:1px solid #eef2f7;font-size:12px">'
-            f'<div style="font-weight:600;color:{ENCRE}">'
-            f'{_e(_libelle(f["noeud"]))}</div>'
-            f'<div class="int-num" style="color:{ENCRE2}">'
-            f'{f["sortant"]} → · {f["entrant"]} ←</div>'
-            f'<div class="int-num" style="color:{ENCRE2}">{f["boucles"]} '
-            f'<span style="color:{HAUSSE}">R{f["renforcantes"]}</span>/'
-            f'<span style="color:{ALERTE}">B{f["equilibrantes"]}</span></div>'
-            + (f'<div><span class="int-chip" style="background:#fdf3e3;'
-               f'color:#a8560a;margin:0">{_e(T("int_bascule"))}</span></div>'
-               if f["bascule"] else '<div></div>')
-            + '</div>' for f in rangs), unsafe_allow_html=True)
-
-        # --- critère 2 : dimensions faibles
-        st.markdown(
-            f'<div class="int-lab">2 · {_e(T("int_rep2"))}</div>'
-            f'<p class="int-x" style="font-size:12.5px">{_gras(T("int_rep2_x"))}</p>',
-            unsafe_allow_html=True)
-        barres = []
-        for d in sorted(dims, key=lambda k: dims[k]):
-            v = dims[d]
-            faible = v < ref
-            c = BAISSE if faible else ENCRE3
-            barres.append(
-                f'<div style="display:grid;grid-template-columns:minmax(150px,'
-                f'2fr) 3fr 54px 70px;gap:10px;align-items:center;padding:5px 0;'
-                f'border-bottom:1px solid #eef2f7;font-size:12px">'
-                f'<div style="font-weight:600;color:{ENCRE}">'
-                f'{_e(T(d))}</div>'
-                f'<div style="background:#f1f4f9;border-radius:5px;height:12px;'
-                f'overflow:hidden"><div style="height:100%;border-radius:5px;'
-                f'width:{max(v * 10, 1):.0f}%;background:{c}"></div></div>'
-                f'<div class="int-num" style="text-align:right;font-weight:700;'
-                f'color:{c}">{_fmt(v, 2)}</div>'
-                + (f'<div style="font-size:11px;font-weight:700;color:{BAISSE};'
-                   f'text-transform:uppercase;letter-spacing:.06em">'
-                   f'{_e(T("int_dim_faible"))}</div>' if faible
-                   else '<div></div>') + '</div>')
-        st.markdown("".join(barres), unsafe_allow_html=True)
-        st.caption(T("int_rep2_ref").replace("{v}", _fmt(ref, 2)))
-
-        # --- critère 3 : mobilisation
-        st.markdown(
-            f'<div class="int-lab">3 · {_e(T("int_rep3"))}</div>',
-            unsafe_allow_html=True)
-        st.markdown(T("int_rep3_x"))
-        mob = []
-        for lg in LIGNES_MOBILISATION:
-            r = par_ligne.get(lg)
-            if not r:
-                continue
-            s = (r.get("scores_corriges") or {}).get("Total")
-            if s is None:
-                continue
-            s = float(s)
-            c = BAISSE if s <= 3 else (ALERTE if s < 6 else HAUSSE)
-            mob.append(
-                f'<div style="display:grid;grid-template-columns:1fr 3fr 44px;'
-                f'gap:10px;align-items:center;padding:5px 0;'
-                f'border-bottom:1px solid #eef2f7;font-size:12px">'
-                f'<div style="color:{ENCRE}">L{lg} · '
-                f'{_e(_nom_indic(r))}</div>'
-                f'<div style="background:#f1f4f9;border-radius:5px;height:12px;'
-                f'overflow:hidden"><div style="height:100%;border-radius:5px;'
-                f'width:{max(s * 10, 1):.0f}%;background:{c}"></div></div>'
-                f'<div class="int-num" style="text-align:right;font-weight:700;'
-                f'color:{c}">{_fmt(s, 0)}/10</div></div>')
-        st.markdown("".join(mob), unsafe_allow_html=True)
-        st.markdown(T("int_rep3_lect"))
-
-
-def _bloc_categories(fiches):
-    """b) La catégorisation, en quatre colonnes."""
-    with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc">{_e(T("int_cat_t"))}</div>',
-                    unsafe_allow_html=True)
-        cols = st.columns(4)
-        for col, cat in zip(cols, ("structurel", "technique",
-                                   "organisationnel", "comportemental")):
-            c = CAT_COULEUR[cat]
-            dedans = [f for f in fiches if f["cat"] == cat]
-            with col:
-                st.markdown(
-                    f'<div style="border-top:3px solid {c};padding-top:8px">'
-                    f'<div style="font-size:12.5px;font-weight:700;color:{c}">'
-                    f'{_e(T("int_cat_" + cat))}</div>'
-                    f'<div style="font-size:11.5px;color:{ENCRE3};'
-                    f'margin-bottom:8px">{_e(T("int_cat_" + cat + "_x"))}</div>'
-                    + "".join(
-                        f'<div style="font-size:12px;color:{ENCRE};'
-                        f'padding:4px 0;border-top:1px solid #eef2f7">'
-                        f'{_e(T("int_" + f["id"] + "_t"))}</div>'
-                        for f in dedans)
-                    + '</div>', unsafe_allow_html=True)
-
-
-def _bloc_tableau(fiches, par_id):
-    """c) Le livrable : Problème → Score → Boucle → Levier."""
-    with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc">{_e(T("int_tab"))}</div>',
-                    unsafe_allow_html=True)
-        gab = ("minmax(190px,2.6fr) 78px minmax(190px,2.6fr) "
-               "minmax(140px,1.6fr) 86px")
-        li = [f'<div style="display:grid;grid-template-columns:{gab};gap:12px;'
-              f'padding:0 0 6px;font-size:11px;letter-spacing:.09em;'
-              f'text-transform:uppercase;color:#8a93a5;font-weight:700">'
-              f'<div>{_e(T("int_c_probleme"))}</div>'
-              f'<div style="text-align:right">{_e(T("int_c_score"))}</div>'
-              f'<div>{_e(T("int_c_boucle"))}</div>'
-              f'<div>{_e(T("int_c_levier"))}</div>'
-              f'<div style="text-align:right">{_e(T("int_c_impact"))}</div>'
-              f'</div>']
-        for f in fiches:
-            r = f["r_probleme"]
-            nom = _nom_indic(r) if r else "—"
-            s = f["score_probleme"]
-            cs = ENCRE3 if s is None else (
-                BAISSE if float(s) <= 3 else
-                (ALERTE if float(s) < 6 else HAUSSE))
-            b = f["boucle_forte"]
-            if b:
-                ch = " → ".join(_libelle(par_id[x]) for x in b["noeuds"][:3])
-                if len(b["noeuds"]) > 3:
-                    ch += " → …"
-                lettre = "R" if b["type"] == "renforcante" else "B"
-                cb = HAUSSE if lettre == "R" else ALERTE
-                bloc = (f'<div style="font-size:11.5px;color:{ENCRE2}">'
-                        f'<span style="font-weight:700;color:{cb}">{lettre}</span> '
-                        f'{_e(ch)}</div>')
-            else:
-                bloc = (f'<div style="font-size:11.5px;color:{ENCRE3};'
-                        f'font-style:italic">{_e(T("int_hors_boucle"))}</div>')
-            cc = CAT_COULEUR[f["cat"]]
-            li.append(
-                f'<div style="display:grid;grid-template-columns:{gab};'
-                f'gap:12px;align-items:center;padding:8px 0;'
-                f'border-bottom:1px solid #eef2f7">'
-                f'<div style="font-size:12px;color:{ENCRE}">L'
-                f'{f["ligne_probleme"]} · {_e(nom)}</div>'
-                f'<div class="int-num" style="text-align:right;font-weight:700;'
-                f'font-size:13px;color:{cs}">'
-                f'{"—" if s is None else _fmt(float(s), 0) + "/10"}</div>'
-                + bloc +
-                f'<div style="font-size:12px;font-weight:600;color:{cc}">'
-                f'{_e(T("int_" + f["id"] + "_t"))}</div>'
-                f'<div class="int-num" style="text-align:right;font-size:12px;'
-                f'font-weight:700;color:{HAUSSE}">'
-                f'{_fmt(f["delta"], 3, True)}</div></div>')
-        st.markdown("".join(li), unsafe_allow_html=True)
-        st.caption(T("int_tab_note"))
-
-
 def _bloc_justification(f):
     """D'où vient le chiffre — le calcul déplié, pas un ordre de grandeur."""
     d = f["dec"]
@@ -1533,221 +1383,247 @@ def render(anciennes=None):
     return _render()
 
 
-def _render():
-    graphe, par_ligne = _charger()
-    par_id = {n["id"]: n for n in graphe["noeuds"]}
-    st.markdown(STYLE, unsafe_allow_html=True)
-    # PAS DE TITRE DE PAGE : la colonne de menu marque déjà la rubrique
-    # courante. Le sous-titre part avec lui — il paraphrasait le titre.
-    st.info(T("int_intro"))
+def _fiche(f):
+    """Une fiche d'intervention intégrée, telle que le protocole la demande.
 
+    ELLE EST LA MÊME QU'AVANT, AU MOT PRÈS : problème, objectif, activités
+    techniques et sociales, indicateurs de performance et de suivi, acteurs,
+    calendrier, risques et boucle visée. Seul son emplacement a changé — elle
+    ne se lit plus dans une liste de huit, mais sous le levier qu'on a
+    choisi.
+    """
+    with st.container(border=True):
+        niv = f["meadows"]
+        coul = NIVEAU_COULEUR[niv]
+        cc = CAT_COULEUR[f["cat"]]
+        g, d = st.columns([3.1, 1])
+        with g:
+            st.markdown(
+                f'<div class="int-t">{_e(T("int_" + f["id"] + "_t"))}</div>'
+                f'<div style="margin-top:8px">'
+                f'<span class="int-chip" style="background:{cc}1a;'
+                f'color:{cc}">{_e(T("int_cat_" + f["cat"]))}</span>'
+                f'<span class="int-chip" style="background:{coul}1a;'
+                f'color:{coul}">{niv} · {_e(T("int_n%d" % niv))}</span>'
+                f'<span class="int-chip" style="background:#f1f4f9;'
+                f'color:{ENCRE2}">{_e(T("int_faisabilite"))} : '
+                f'{_e(T("int_f_" + f["faisabilite"]))}</span>'
+                f'<span class="int-chip" style="background:#f1f4f9;'
+                f'color:{ENCRE2}">{_e(T("int_horizon"))} : '
+                f'{_e(T("int_h_" + f["horizon"]))}</span>'
+                f'<span class="int-chip" style="background:#f1f4f9;'
+                f'color:{ENCRE2}">{_e(T("int_mob"))} : '
+                f'{_e(T("int_mob_" + f["mobilisation"]))}</span>'
+                + (f'<span class="int-chip" style="background:#fdf3e3;'
+                   f'color:#a8560a">{_e(T("int_bascule"))}</span>'
+                   if f["bascule"] else '')
+                + '</div>', unsafe_allow_html=True)
+        with d:
+            c = HAUSSE if f["delta"] > 0 else ENCRE3
+            st.markdown(
+                f'<div style="text-align:right">'
+                f'<div class="int-eff" style="color:{c}">'
+                f'{_fmt(f["delta"], 3, True)}</div>'
+                f'<div style="font-size:11.5px;color:{ENCRE3};'
+                f'margin-top:3px">{_e(T("int_effet"))}</div></div>',
+                unsafe_allow_html=True)
+
+        _bloc_justification(f)
+
+        st.markdown(
+            f'<div class="int-lab">{_e(T("int_probleme"))}</div>',
+            unsafe_allow_html=True)
+        st.markdown(T("int_" + f["id"] + "_p"))
+        st.markdown(
+            f'<div class="int-lab">{_e(T("int_objectif"))}</div>'
+            f'<p class="int-x">{_e(T("int_" + f["id"] + "_o"))}</p>',
+            unsafe_allow_html=True)
+
+        # ACTIVITÉS TECHNIQUES ET SOCIALES, dans deux encadrés distincts.
+        # Le protocole demande les deux ; les fondre dans un même
+        # paragraphe reviendrait à n'en montrer qu'une.
+        at, asoc = st.columns(2)
+        with at:
+            st.markdown(
+                f'<div class="int-box" style="border-left-color:#2166ac">'
+                f'<div class="int-box-t" style="color:#2166ac">⚙ '
+                f'{_e(T("int_act_tech"))}</div>'
+                f'<p>{_e(T("int_" + f["id"] + "_at"))}</p></div>',
+                unsafe_allow_html=True)
+        with asoc:
+            st.markdown(
+                f'<div class="int-box" style="border-left-color:#0f8fa8">'
+                f'<div class="int-box-t" style="color:#0f8fa8">◍ '
+                f'{_e(T("int_act_soc"))}</div>'
+                f'<p>{_e(T("int_" + f["id"] + "_as"))}</p></div>',
+                unsafe_allow_html=True)
+
+        # INDICATEURS DE PERFORMANCE : la cible chiffrée sur le levier, et
+        # les lignes déjà mesurées qui la constateront.
+        # INDICATEURS DE PERFORMANCE : l'objectif de score chiffré, en
+        # gros, avec le point de départ mesuré et le point visé. C'est le
+        # livrable du protocole ; il ne doit pas se lire comme une note.
+        dep = (_fmt(f["depart"]) + " / 10") if f["depart"] is not None \
+            else "—"
+        vise = (_fmt(min(10.0, f["depart"] + f["cible"])) + " / 10") \
+            if f["depart"] is not None else "—"
+        st.markdown(
+            f'<div class="int-perf">'
+            f'<div class="int-box-t" style="color:{HAUSSE}">◎ '
+            f'{_e(T("int_perf"))}</div>'
+            f'<div style="display:flex;gap:28px;flex-wrap:wrap;'
+            f'align-items:baseline">'
+            f'<div><span class="int-num" style="font-size:24px;'
+            f'font-weight:800;letter-spacing:-.02em;color:{HAUSSE}">'
+            f'{_fmt(f["cible"], 1, True)} pt</span>'
+            f'<span style="font-size:11.5px;color:{ENCRE2};'
+            f'margin-left:9px">{_e(T("int_perf_cible"))} : '
+            f'{_e(_libelle(f["noeud"]))}</span></div>'
+            f'<div style="font-size:14px;color:{ENCRE2};font-weight:600" '
+            f'class="int-num">{_e(dep)} → <b style="color:{ENCRE}">'
+            f'{_e(vise)}</b></div></div></div>',
+            unsafe_allow_html=True)
+        if f["suivi"]:
+            st.markdown("".join(
+                f'<div style="display:flex;gap:12px;align-items:baseline;'
+                f'padding:5px 0;border-bottom:1px solid #eef2f7">'
+                f'<div style="flex:1 1 auto;font-size:12.5px;'
+                f'color:{ENCRE}">L{r["ligne"]} · {_e(_nom_indic(r))}</div>'
+                f'<div class="int-num" style="font-size:12px;'
+                f'font-weight:700;color:{HAUSSE if dd > 0 else BAISSE};'
+                f'white-space:nowrap">'
+                f'{"↑" if dd > 0 else "↓"} {_fmt(dd, 2, True)}</div></div>'
+                for n, r, dd in f["suivi"]), unsafe_allow_html=True)
+        st.caption(T("int_suivi_note"))
+
+        ga, dr = st.columns(2)
+        with ga:
+            st.markdown(
+                f'<div class="int-lab">{_e(T("int_acteurs"))}</div>'
+                f'<p class="int-x" style="font-size:12.5px">'
+                f'{_e(T("int_" + f["id"] + "_ac"))}</p>',
+                unsafe_allow_html=True)
+        with dr:
+            st.markdown(
+                f'<div class="int-lab">{_e(T("int_calendrier"))} · '
+                f'{_e(T("int_h_" + f["horizon"]))}</div>'
+                f'<p class="int-x" style="font-size:12.5px">'
+                f'{_e(T("int_" + f["id"] + "_cal"))}</p>',
+                unsafe_allow_html=True)
+
+        st.markdown(
+            f'<div class="int-lab">{_e(T("int_risques"))}</div>'
+            f'<p class="int-x" style="font-size:12.5px">'
+            f'<b style="color:{BAISSE}">{_e(T("int_risque"))}</b> : '
+            f'{_e(T("int_" + f["id"] + "_r"))}</p>'
+            f'<p class="int-x" style="font-size:12.5px;margin-top:6px">'
+            f'<b style="color:{HAUSSE}">{_e(T("int_attenuation"))}</b> : '
+            f'{_e(T("int_" + f["id"] + "_m"))}</p>'
+            f'<div class="int-lab">{_e(T("int_boucle_visee"))}</div>'
+            f'<p class="int-x">{_e(T("int_" + f["id"] + "_b"))}</p>'
+            f'<p class="int-x" style="font-size:11.5px;color:{ENCRE3};'
+            f'margin-top:6px">{_e(T("int_depart"))} : '
+            f'{_e(_libelle(f["noeud"]))} : <b>{_e(dep)}</b> · '
+            f'{_e(T("int_boucles"))} : {f["boucles"]} '
+            f'<span style="color:{HAUSSE}">R{f["renforcantes"]}</span> / '
+            f'<span style="color:{ALERTE}">B{f["equilibrantes"]}</span>'
+            f'</p>', unsafe_allow_html=True)
+
+
+
+def _plans():
+    """Les plans de résilience communautaires, à télécharger.
+
+    LE DOSSIER EST LU, IL N'EST PAS SUPPOSÉ. Tant que `data/plans/` n'existe
+    pas ou reste vide, l'écran le dit ; le jour où les plans y sont déposés,
+    ils apparaissent sans qu'une ligne de code change.
+    """
+    dossier = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           "data", "plans")
+    fichiers = []
+    if os.path.isdir(dossier):
+        fichiers = sorted(f for f in os.listdir(dossier)
+                          if not f.startswith("."))
+    if not fichiers:
+        st.info(T("int_plans_vide"))
+        return
+    for nom in fichiers:
+        chemin = os.path.join(dossier, nom)
+        g, d = st.columns([3.4, 1], vertical_alignment="center")
+        with g:
+            st.markdown(f'<div class="int-t" style="font-size:14.5px">'
+                        f'{_e(os.path.splitext(nom)[0].replace("_", " "))}'
+                        f'</div>', unsafe_allow_html=True)
+        with d:
+            with open(chemin, "rb") as fh:
+                st.download_button(T("d_bouton"), data=fh.read(),
+                                   file_name=nom, key=f"plan_{nom}",
+                                   use_container_width=True)
+
+
+def _render():
+    """Sur quoi intervenir, puis les leviers, puis la fiche de chacun.
+
+    LA PAGE NE DÉROULE PLUS SON PROTOCOLE AVANT DE RÉPONDRE. Elle s'ouvrait
+    sur le protocole en quatre temps, le repérage des leviers et ses trois
+    critères, la catégorisation, un tableau problème → score → boucle →
+    levier, un avertissement, un récapitulatif à barres, puis les huit fiches
+    en entier, dépliées les unes sous les autres. Tout cela dit comment les
+    fiches ont été produites ; aucun de ces blocs ne dit sur quoi intervenir,
+    qui est la seule question qu'on se pose en arrivant ici.
+
+    L'ORDRE EST DEVENU CELUI DE LA DÉCISION : on choisit une dimension, on
+    voit les leviers qu'elle offre, rangés par nature — structurel,
+    technique, organisationnel, comportemental — et chaque levier ouvre sa
+    fiche. Les fiches sont inchangées ; c'est le chemin pour y arriver qui a
+    été retiré de devant elles.
+    """
+    graphe, par_ligne = _charger()
+    st.markdown(STYLE, unsafe_allow_html=True)
     lst_boucles = M.boucles(graphe)
     fiches = calculer(graphe, par_ligne, lst_boucles)
-    dims = scores_dimensions(par_ligne)
-    ref = moyenne_ponderee(par_ligne)
 
-    # LE PROTOCOLE, dit en tête : le lecteur doit savoir dans quel ordre les
-    # fiches ont été produites avant de lire la première.
-    with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc">{_e(T("int_proto"))}</div>',
-                    unsafe_allow_html=True)
-        cols = st.columns(4)
-        for col, (let, cle) in zip(cols, (("a", "a"), ("b", "b"),
-                                          ("c", "c"), ("d", "d"))):
-            with col:
-                st.markdown(
-                    f'<div style="border-top:3px solid #d7dee9;padding-top:8px">'
-                    f'<div style="font-size:11px;font-weight:700;color:#8a93a5;'
-                    f'letter-spacing:.09em">{let.upper()}</div>'
-                    f'<div style="font-size:12.5px;font-weight:700;'
-                    f'color:{ENCRE};margin-top:2px">'
-                    f'{_e(T("int_proto_" + cle))}</div>'
-                    f'<div style="font-size:11px;color:{ENCRE3};margin-top:4px;'
-                    f'line-height:1.5">{_e(T("int_proto_" + cle + "_x"))}</div>'
-                    f'</div>', unsafe_allow_html=True)
+    _vue = onglets.barre("int_vue", ["fiches", "plans"],
+                         titre=lambda c: T("int_o_" + c), defaut="fiches",
+                         compact=True)
+    if _vue == "plans":
+        return _plans()
 
-    _bloc_reperage(fiches, par_ligne, dims, ref)
-    _bloc_categories(fiches)
-    _bloc_tableau(fiches, par_id)
-
-    # LA TENSION EST LE CŒUR DE LA PAGE, pas une nuance de bas de page : les
-    # fiches à effet immédiat et les leviers de basculement ne sont pas les
-    # mêmes, et un programme qui ne retiendrait que les premières laisserait
-    # la structure intacte.
-    st.warning(T("int_tension"))
-
-    with st.container(border=True):
-        st.markdown(f'<div class="titre-bloc">{T("int_recap")}</div>',
-                    unsafe_allow_html=True)
-        emax = max((abs(f["delta"]) for f in fiches), default=1) or 1
-        recap = [
-            f'<div style="display:grid;grid-template-columns:'
-            f'minmax(180px,3fr) 3fr 76px 150px;gap:12px;padding:0 0 6px;'
-            f'font-size:11px;letter-spacing:.09em;text-transform:uppercase;'
-            f'color:#8a93a5;font-weight:700">'
-            f'<div>{_e(T("int_c_fiche"))}</div>'
-            f'<div style="grid-column:span 2">{_e(T("int_c_effet"))}</div>'
-            f'<div>{_e(T("int_c_portee"))}</div></div>']
-        for f in fiches:
-            recap.append(
-                f'<div style="display:grid;grid-template-columns:'
-                f'minmax(180px,3fr) 3fr 76px 150px;gap:12px;align-items:center;'
-                f'padding:7px 0;border-bottom:1px solid #eef2f7">'
-                f'<div style="font-size:12.5px;font-weight:600;color:{ENCRE}">'
-                f'{_e(T("int_" + f["id"] + "_t"))}</div>'
-                f'<div style="background:#f1f4f9;border-radius:5px;height:14px;'
-                f'overflow:hidden"><div style="height:100%;border-radius:5px;'
-                f'width:{max(100 * f["delta"] / emax, 1):.0f}%;'
-                f'background:{HAUSSE}"></div></div>'
-                f'<div class="int-num" style="font-size:12px;font-weight:600;'
-                f'color:{ENCRE};text-align:right">'
-                f'{_fmt(f["delta"], 3, True)}</div>'
-                + (f'<div><span class="int-chip" style="background:#fdf3e3;'
-                   f'color:#a8560a;margin:0">{_e(T("int_bascule"))}</span>'
-                   f'</div>' if f["bascule"] else
-                   f'<div style="font-size:11px;color:{ENCRE3}">'
-                   f'{f["boucles"]} {_e(T("int_boucles")).lower()}</div>')
-                + '</div>')
-        st.markdown("".join(recap), unsafe_allow_html=True)
-
+    dims = []
     for f in fiches:
-        with st.container(border=True):
-            niv = f["meadows"]
-            coul = NIVEAU_COULEUR[niv]
-            cc = CAT_COULEUR[f["cat"]]
-            g, d = st.columns([3.1, 1])
-            with g:
-                st.markdown(
-                    f'<div class="int-t">{_e(T("int_" + f["id"] + "_t"))}</div>'
-                    f'<div style="margin-top:8px">'
-                    f'<span class="int-chip" style="background:{cc}1a;'
-                    f'color:{cc}">{_e(T("int_cat_" + f["cat"]))}</span>'
-                    f'<span class="int-chip" style="background:{coul}1a;'
-                    f'color:{coul}">{niv} · {_e(T("int_n%d" % niv))}</span>'
-                    f'<span class="int-chip" style="background:#f1f4f9;'
-                    f'color:{ENCRE2}">{_e(T("int_faisabilite"))} : '
-                    f'{_e(T("int_f_" + f["faisabilite"]))}</span>'
-                    f'<span class="int-chip" style="background:#f1f4f9;'
-                    f'color:{ENCRE2}">{_e(T("int_horizon"))} : '
-                    f'{_e(T("int_h_" + f["horizon"]))}</span>'
-                    f'<span class="int-chip" style="background:#f1f4f9;'
-                    f'color:{ENCRE2}">{_e(T("int_mob"))} : '
-                    f'{_e(T("int_mob_" + f["mobilisation"]))}</span>'
-                    + (f'<span class="int-chip" style="background:#fdf3e3;'
-                       f'color:#a8560a">{_e(T("int_bascule"))}</span>'
-                       if f["bascule"] else '')
-                    + '</div>', unsafe_allow_html=True)
-            with d:
-                c = HAUSSE if f["delta"] > 0 else ENCRE3
-                st.markdown(
-                    f'<div style="text-align:right">'
-                    f'<div class="int-eff" style="color:{c}">'
-                    f'{_fmt(f["delta"], 3, True)}</div>'
-                    f'<div style="font-size:11.5px;color:{ENCRE3};'
-                    f'margin-top:3px">{_e(T("int_effet"))}</div></div>',
-                    unsafe_allow_html=True)
+        if f["dim_probleme"] and f["dim_probleme"] not in dims:
+            dims.append(f["dim_probleme"])
+    dims.sort()
+    g, _d = st.columns([2, 1.4])
+    with g:
+        cible = st.selectbox(
+            T("int_sur_quoi"), [None] + dims, key="int_cible",
+            format_func=lambda c: (T("int_sur_rien") if c is None else T(c)))
+    if cible is None:
+        st.markdown(f'<p class="int-x" style="color:{ENCRE3};margin-top:8px">'
+                    f'{_e(T("int_rien_encore"))}</p>', unsafe_allow_html=True)
+        return
 
-            _bloc_justification(f)
-
-            st.markdown(
-                f'<div class="int-lab">{_e(T("int_probleme"))}</div>',
-                unsafe_allow_html=True)
-            st.markdown(T("int_" + f["id"] + "_p"))
-            st.markdown(
-                f'<div class="int-lab">{_e(T("int_objectif"))}</div>'
-                f'<p class="int-x">{_e(T("int_" + f["id"] + "_o"))}</p>',
-                unsafe_allow_html=True)
-
-            # ACTIVITÉS TECHNIQUES ET SOCIALES, dans deux encadrés distincts.
-            # Le protocole demande les deux ; les fondre dans un même
-            # paragraphe reviendrait à n'en montrer qu'une.
-            at, asoc = st.columns(2)
-            with at:
-                st.markdown(
-                    f'<div class="int-box" style="border-left-color:#2166ac">'
-                    f'<div class="int-box-t" style="color:#2166ac">⚙ '
-                    f'{_e(T("int_act_tech"))}</div>'
-                    f'<p>{_e(T("int_" + f["id"] + "_at"))}</p></div>',
-                    unsafe_allow_html=True)
-            with asoc:
-                st.markdown(
-                    f'<div class="int-box" style="border-left-color:#0f8fa8">'
-                    f'<div class="int-box-t" style="color:#0f8fa8">◍ '
-                    f'{_e(T("int_act_soc"))}</div>'
-                    f'<p>{_e(T("int_" + f["id"] + "_as"))}</p></div>',
-                    unsafe_allow_html=True)
-
-            # INDICATEURS DE PERFORMANCE : la cible chiffrée sur le levier, et
-            # les lignes déjà mesurées qui la constateront.
-            # INDICATEURS DE PERFORMANCE : l'objectif de score chiffré, en
-            # gros, avec le point de départ mesuré et le point visé. C'est le
-            # livrable du protocole ; il ne doit pas se lire comme une note.
-            dep = (_fmt(f["depart"]) + " / 10") if f["depart"] is not None \
-                else "—"
-            vise = (_fmt(min(10.0, f["depart"] + f["cible"])) + " / 10") \
-                if f["depart"] is not None else "—"
-            st.markdown(
-                f'<div class="int-perf">'
-                f'<div class="int-box-t" style="color:{HAUSSE}">◎ '
-                f'{_e(T("int_perf"))}</div>'
-                f'<div style="display:flex;gap:28px;flex-wrap:wrap;'
-                f'align-items:baseline">'
-                f'<div><span class="int-num" style="font-size:24px;'
-                f'font-weight:800;letter-spacing:-.02em;color:{HAUSSE}">'
-                f'{_fmt(f["cible"], 1, True)} pt</span>'
-                f'<span style="font-size:11.5px;color:{ENCRE2};'
-                f'margin-left:9px">{_e(T("int_perf_cible"))} : '
-                f'{_e(_libelle(f["noeud"]))}</span></div>'
-                f'<div style="font-size:14px;color:{ENCRE2};font-weight:600" '
-                f'class="int-num">{_e(dep)} → <b style="color:{ENCRE}">'
-                f'{_e(vise)}</b></div></div></div>',
-                unsafe_allow_html=True)
-            if f["suivi"]:
-                st.markdown("".join(
-                    f'<div style="display:flex;gap:12px;align-items:baseline;'
-                    f'padding:5px 0;border-bottom:1px solid #eef2f7">'
-                    f'<div style="flex:1 1 auto;font-size:12.5px;'
-                    f'color:{ENCRE}">L{r["ligne"]} · {_e(_nom_indic(r))}</div>'
-                    f'<div class="int-num" style="font-size:12px;'
-                    f'font-weight:700;color:{HAUSSE if dd > 0 else BAISSE};'
-                    f'white-space:nowrap">'
-                    f'{"↑" if dd > 0 else "↓"} {_fmt(dd, 2, True)}</div></div>'
-                    for n, r, dd in f["suivi"]), unsafe_allow_html=True)
-            st.caption(T("int_suivi_note"))
-
-            ga, dr = st.columns(2)
-            with ga:
-                st.markdown(
-                    f'<div class="int-lab">{_e(T("int_acteurs"))}</div>'
-                    f'<p class="int-x" style="font-size:12.5px">'
-                    f'{_e(T("int_" + f["id"] + "_ac"))}</p>',
-                    unsafe_allow_html=True)
-            with dr:
-                st.markdown(
-                    f'<div class="int-lab">{_e(T("int_calendrier"))} · '
-                    f'{_e(T("int_h_" + f["horizon"]))}</div>'
-                    f'<p class="int-x" style="font-size:12.5px">'
-                    f'{_e(T("int_" + f["id"] + "_cal"))}</p>',
-                    unsafe_allow_html=True)
-
-            st.markdown(
-                f'<div class="int-lab">{_e(T("int_risques"))}</div>'
-                f'<p class="int-x" style="font-size:12.5px">'
-                f'<b style="color:{BAISSE}">{_e(T("int_risque"))}</b> : '
-                f'{_e(T("int_" + f["id"] + "_r"))}</p>'
-                f'<p class="int-x" style="font-size:12.5px;margin-top:6px">'
-                f'<b style="color:{HAUSSE}">{_e(T("int_attenuation"))}</b> : '
-                f'{_e(T("int_" + f["id"] + "_m"))}</p>'
-                f'<div class="int-lab">{_e(T("int_boucle_visee"))}</div>'
-                f'<p class="int-x">{_e(T("int_" + f["id"] + "_b"))}</p>'
-                f'<p class="int-x" style="font-size:11.5px;color:{ENCRE3};'
-                f'margin-top:6px">{_e(T("int_depart"))} : '
-                f'{_e(_libelle(f["noeud"]))} : <b>{_e(dep)}</b> · '
-                f'{_e(T("int_boucles"))} : {f["boucles"]} '
-                f'<span style="color:{HAUSSE}">R{f["renforcantes"]}</span> / '
-                f'<span style="color:{ALERTE}">B{f["equilibrantes"]}</span>'
-                f'</p>', unsafe_allow_html=True)
-
-    st.caption(T("int_perf_note"))
-    st.caption(T("int_effet_note"))
-    st.caption(T("int_n_note"))
+    retenues = [f for f in fiches if f["dim_probleme"] == cible]
+    if not retenues:
+        st.info(T("int_rien_encore"))
+        return
+    # LES QUATRE NATURES DANS UN ORDRE FIXE, du plus structurel au plus
+    # comportemental : un programme qui ne toucherait qu'à la dernière
+    # colonne laisserait la structure intacte, et l'ordre le rappelle.
+    for cat in ("structurel", "technique", "organisationnel",
+                "comportemental"):
+        lot = [f for f in retenues if f["cat"] == cat]
+        if not lot:
+            continue
+        cc = CAT_COULEUR[cat]
+        st.markdown(
+            f'<div class="int-lab" style="color:{cc};margin:18px 0 4px">'
+            f'{_e(T("int_cat_" + cat))} · '
+            f'<span style="text-transform:none;letter-spacing:0;'
+            f'font-weight:500;color:{ENCRE3}">'
+            f'{_e(T("int_cat_" + cat + "_x"))}</span></div>',
+            unsafe_allow_html=True)
+        for f in lot:
+            with st.expander(T("int_" + f["id"] + "_t")):
+                _fiche(f)

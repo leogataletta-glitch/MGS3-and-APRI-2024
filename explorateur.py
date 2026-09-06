@@ -993,7 +993,13 @@ def _barres(lignes, ens, mesure):
     n_axes = len({l.get("axe") for l in lignes if l.get("axe")})
     H = (MG_H + len(lignes) * (H_L + GAP)
          + max(n_axes - 1, 0) * H_AXE + MG_B)
-    utile = LARG - MG_G - 96
+    # DEUX NOMBRES QUI SE TOUCHENT SE LISENT COMME UN SEUL. « 89 % » et
+    # « 363/1208 » se suivaient à trois pixels : le pourcentage et son
+    # effectif formaient une bouillie de chiffres. La réserve de droite passe
+    # de quatre-vingt-seize à cent soixante pixels, la part se pose au bout de
+    # la barre et l'effectif tient le bord droit ; entre les deux, du blanc.
+    RESERVE, X_N = 160, LARG - 2
+    utile = LARG - MG_G - RESERVE
     parts, axe_vu, y = [], None, MG_H
 
     if ens["part"] is not None:
@@ -1035,12 +1041,12 @@ def _barres(lignes, ens, mesure):
             parts.append(
                 f'<rect x="{MG_G}" y="{y + 3}" width="{w:.1f}" height="16" '
                 f'rx="8" fill="{coul}"/>'
-                f'<text x="{MG_G + utile + 12}" y="{y + 15}" font-size="12.5" '
+                f'<text x="{MG_G + utile + 14}" y="{y + 15}" font-size="12.5" '
                 f'font-weight="700" fill="{ENCRE}">'
                 f'{_f(l["part"], dec)}{unite}</text>')
         if mesure == "part":
             parts.append(
-                f'<text x="{LARG - 4}" y="{y + 15}" font-size="11" '
+                f'<text x="{X_N}" y="{y + 15}" font-size="11" '
                 f'fill="{GRIS}" text-anchor="end">{l["k"]}/{l["n"]}</text>')
         y += H_L + GAP
 
@@ -1362,24 +1368,6 @@ _REGISTRES_S = [("section", "ex_ax_section"), ("sexe", "ex_ax_sexe"),
                 ("paysage", "ex_ax_paysage")]
 
 
-def _kpi_score(lib, sc, n, tot, sc_ech):
-    """Le score de la sélection, seul, quand on n'a rien demandé de plus."""
-    ec = (sc - sc_ech) if (sc is not None and sc_ech is not None) else None
-    coul = VERT if (ec or 0) > 0 else ROUGE if (ec or 0) < 0 else ENCRE3
-    return (
-        '<div class="ex-kpi">'
-        f'<div class="ex-k"><div class="ex-k-l">{_e(T("ex_s_sel"))}</div>'
-        f'<div class="ex-k-v">{_f(sc, 2)}<span class="ex-k-u"> / 10</span>'
-        f'</div><div class="ex-k-s">{_e(lib)}</div></div>'
-        f'<div class="ex-k"><div class="ex-k-l">{_e(T("ex_s_ech"))}</div>'
-        f'<div class="ex-k-v">{_f(sc_ech, 2)}<span class="ex-k-u"> / 10</span>'
-        f'</div><div class="ex-k-s">{_e(T("ex_s_n", n=_n(n), t=_n(tot)))}</div></div>'
-        f'<div class="ex-k"><div class="ex-k-l">'
-        f'{_e(T("ex_s_ecart_ech"))}</div>'
-        f'<div class="ex-k-v" style="color:{coul}">{_f(ec, 2)}</div>'
-        f'<div class="ex-k-s">{_e(T("ex_score"))}</div></div></div>')
-
-
 def _lignes_ventil(cat, axes, cible, ind, filtre):
     """Le score de la cible sur les cases des registres retenus, croisées.
 
@@ -1623,10 +1611,12 @@ def render_scores(cat):
         nb_sel, sc_sel = _score_cible(cat, filtre, cible, ind)
         _nb_e, sc_ech = _score_cible(cat, np.ones(cat["n"], dtype=bool),
                                      cible, ind)
-        if sc_sel is not None and mode == "actuel" and not compares:
-            st.markdown(
-                _kpi_score(lib_cible, sc_sel, nb_sel, cat["n"], sc_ech),
-                unsafe_allow_html=True)
+        # LES TROIS CARTES DE TÊTE SONT PARTIES. « Sélection 3,32 / 10 »,
+        # « Échantillon entier 3,32 / 10 » et « Écart 0,00 » disaient trois
+        # fois le même chiffre tant qu'aucun filtre n'était posé, et
+        # occupaient toute la largeur au-dessus du graphique qu'on vient
+        # voir. Le score de la sélection est déjà au bout de sa barre, et la
+        # référence de l'ensemble est le trait pointillé du graphique.
 
         if compares:
             titre = T("ex_s_comp_t")

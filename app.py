@@ -53,7 +53,6 @@ import resilience_page
 import saillants_page
 import si_je_change
 import systeme_page
-import pistes_page
 import synthese_page
 import telechargements_page
 import territoire_page
@@ -2360,9 +2359,12 @@ with _c_contenu:
         # fermaient l'écran des variables alarmantes, qui dit où le problème
         # se trouve ; elles disent, elles, ce qu'on peut y faire — c'est la
         # question de cette page-ci, pas de celle-là.
+        # LES PISTES D'ACTION NE SUIVENT PLUS LES FICHES. La page répond
+        # maintenant à une question — sur quoi intervenir, avec quels leviers
+        # — et cinq pistes rédigées posées dessous rouvraient un second
+        # sujet sous le premier. Le module reste en place ; il n'a plus
+        # d'appelant.
         interventions_page.render()
-        st.markdown('<div style="height:30px"></div>', unsafe_allow_html=True)
-        pistes_page.render()
 
     if app_mode == MODE_DONNEES:
         # LA PAGE NE PORTE QUE LES FICHIERS. Sous les sept documents venait
