@@ -120,6 +120,12 @@ TEXTES = {
               "dimensions.",
         "fr": "La résilience est mesurée à travers trois attributs et sept "
               "dimensions."},
+    # LES DEUX FRAGMENTS QUE LA PHRASE MET EN AVANT. Ils sont écrits à part
+    # pour être retrouvés dans la phrase et habillés de vert : les recopier
+    # dans une chaîne HTML aurait fait deux versions du même texte à
+    # maintenir, et la traduction aurait divergé au premier ajustement.
+    "cad_attr_f1": {"en": "three attributes", "fr": "trois attributs"},
+    "cad_attr_f2": {"en": "seven dimensions", "fr": "sept dimensions"},
     "cad_ec_pct": {"en": "Percentage", "fr": "Pourcentage"},
     "cad_ec_val": {"en": "Value", "fr": "Valeur"},
     "cad_ec_cro": {"en": "rising", "fr": "croissante"},
@@ -137,10 +143,6 @@ TEXTES = {
     "cad_ec_inv_x": {
         "en": "The score rises as the measured value falls.",
         "fr": "Le score monte quand la valeur mesurée baisse."},
-    "cad_h_attr": {"en": "Resilience attributes",
-                   "fr": "Attributs de résilience"},
-    "cad_h_dims": {"en": "Resilience dimensions",
-                   "fr": "Dimensions de résilience"},
     "cad_a1_t": {"en": "Anticipate", "fr": "Anticiper"},
     "cad_a1": {"en": "Detect disturbances and prepare responses before they "
                      "arrive",
@@ -454,25 +456,31 @@ TEXTES = {
         "fr": "Informations recueillies directement auprès des ménages sur "
               "les moyens d'existence, les biens, la perception du risque, "
               "la préparation et l'accès aux services."},
+    # DEUX PHRASES, ET NON SIX PUCES. « Questionnaires structurés », « Données
+    # socio-économiques et institutionnelles », « Perceptions et
+    # comportements » sont trois morceaux d'une seule et même phrase : ce que
+    # le questionnaire couvre. « Quatre strates croisées », le tirage dans la
+    # base de bâtiments et la justification de l'absence de redressement en
+    # sont trois d'une autre : comment l'échantillon a été construit. Six
+    # puces obligeaient le lecteur à faire lui-même ce raccord ; deux phrases
+    # le lui donnent, et la seconde garde la réponse à la question que tout
+    # lecteur averti pose, celle du redressement.
     "cad_so1_p": {
-        "en": "Structured questionnaires|Random draw within strata from a "
-              "georeferenced building base (OpenStreetMap)|Four crossed "
-              "strata: landscape, age, sex, economic category|"
-              "Socio-economic and institutional data|Perceptions and "
-              "behaviours",
-        "fr": "Questionnaires structurés|Tirage aléatoire dans chaque strate "
-              "à partir d'une base de bâtiments géoréférencés "
-              "(OpenStreetMap)|Quatre strates croisées : paysage, âge, sexe, "
-              "catégorie économique|Données socio-économiques et "
-              "institutionnelles|Perceptions et comportements"},
-    # LA PHRASE QUI JUSTIFIE L'ABSENCE DE REDRESSEMENT. Elle n'est pas un
-    # détail de méthode : sans elle, un lecteur averti se demande pourquoi les
-    # moyennes par profil ne sont pas repondérées, et doute du reste.
-    "cad_so1_note": {
-        "en": "Strata reproduce the population structure: means by profile "
-              "are unbiased, with no post-stratification weighting.",
-        "fr": "Les strates reproduisent la structure de la population : les "
-              "moyennes par profil sont sans biais, sans redressement."},
+        "en": "Structured questionnaires covering socio-economic and "
+              "institutional data, perceptions and behaviours."
+              "|Four crossed strata (landscape, age, sex, economic "
+              "category), drawn at random from a georeferenced building base "
+              "(OpenStreetMap); the strata reproduce the population "
+              "structure, so means by profile are unbiased and need no "
+              "post-stratification weighting.",
+        "fr": "Questionnaires structurés portant sur les données "
+              "socio-économiques et institutionnelles, les perceptions et "
+              "les comportements."
+              "|Quatre strates croisées (paysage, âge, sexe, catégorie "
+              "économique), tirées au hasard dans une base de bâtiments "
+              "géoréférencés (OpenStreetMap) ; les strates reproduisent la "
+              "structure de la population, si bien que les moyennes par "
+              "profil sont sans biais et n'appellent aucun redressement."},
 
     "cad_so2_t": {"en": "Geospatial data", "fr": "Données géospatiales"},
     "cad_so2_x": {
@@ -620,6 +628,14 @@ TEXTES = {
     "cad_ind_bas": {"en": "lower is better", "fr": "moins, c'est mieux"},
     "cad_ind_sans": {"en": "no scale written in the reference file",
                      "fr": "aucune échelle écrite dans le référentiel"},
+    # RIEN TANT QU'ON N'A RIEN DEMANDÉ. La ligne dit quoi faire, pas ce qui
+    # manque : c'est un écran de départ, pas une erreur.
+    "cad_ind_vide": {
+        "en": "Pick a dimension or type a word to see the indicators, their "
+              "normalisation scale and their weight.",
+        "fr": "Choisissez une dimension ou tapez un mot pour voir les "
+              "indicateurs, leur barème de normalisation et leur "
+              "pondération."},
     "cad_ind_rien": {"en": "No indicator matches this search.",
                      "fr": "Aucun indicateur ne correspond à cette recherche."},
     "cad_ind_n": {"en": "{k} of {n} indicators shown.",
@@ -757,23 +773,43 @@ def _trouver(nom):
 
 
 
-# LE VERT DU HAUT, L'AMBRE DU MILIEU, LE ROUGE DU BAS — les trois teintes que
-# le site emploie déjà pour les niveaux d'alerte. Une échelle de score n'est
-# pas une grandeur neutre : zéro est mauvais, dix est bon, et la couleur doit
-# le dire du premier coup d'œil.
-_ANCRES = ((0.0, (0x9b, 0x2c, 0x2c)), (0.5, (0xd1, 0x8f, 0x2c)),
-           (1.0, (0x1a, 0x6b, 0x52)))
+# LE CODE COULEUR DU RÉFÉRENTIEL, RECOPIÉ SCORE PAR SCORE. La planche des
+# scénarios comparatifs internationaux pose onze aplats nommés, du rouge vif
+# pour zéro au vert sombre pour dix, en passant par l'orange, le jaune et le
+# tilleul. C'est ce nuancier-là que les lecteurs de la méthode ont sous les
+# yeux ; une interpolation entre trois ancres en donnait une version plus
+# terne, sans jaune franc au milieu, et la barre du site ne disait plus tout
+# à fait la même chose que la planche. Les onze valeurs sont donc écrites
+# telles quelles, dans l'ordre des scores.
+_ECHELLE = ("#e92720", "#f45b1f", "#f9ac23", "#fdd019", "#fce829",
+            "#c7db33", "#6fc63a", "#43932f", "#336b2b", "#2b5626",
+            "#1f4019")
 
 
 def _teinte(t):
-    """La couleur d'une bande, du rouge au vert en passant par l'ambre."""
+    """La couleur d'un score, du rouge au vert sombre.
+
+    L'ARGUMENT EST UNE FRACTION, PAS UN SCORE. Tous les barèmes ne vont pas
+    jusqu'à dix — certains s'arrêtent à trois ou à cinq — et l'appelant
+    divise déjà par son maximum. La fraction est ramenée sur les onze crans
+    du nuancier, ce qui donne le rouge en bas, le vert sombre en haut, et les
+    teintes intermédiaires réparties entre les deux quel que soit le nombre
+    de crans du barème.
+    """
     t = max(0.0, min(1.0, t))
-    for (t0, c0), (t1, c1) in zip(_ANCRES, _ANCRES[1:]):
-        if t <= t1:
-            u = 0 if t1 == t0 else (t - t0) / (t1 - t0)
-            r, v, b = (int(round(a + (b_ - a) * u)) for a, b_ in zip(c0, c1))
-            return f"#{r:02x}{v:02x}{b:02x}"
-    return "#1a6b52"
+    return _ECHELLE[int(round(t * (len(_ECHELLE) - 1)))]
+
+
+def _encre(couleur):
+    """L'encre lisible sur un aplat : blanche sur le sombre, sombre sur le clair.
+
+    LE BLANC NE TIENT PAS SUR LE JAUNE. Les pastilles portaient leur chiffre
+    en blanc quelle que soit la bande ; sur le rouge et les verts, cela se
+    lit, mais sur l'orange clair, le jaune et le tilleul — les scores 2 à 5 —
+    le chiffre disparaissait. La luminance décide, et non le rang.
+    """
+    r, v, b = (int(couleur[i:i + 2], 16) for i in (1, 3, 5))
+    return "#22261a" if (0.299 * r + 0.587 * v + 0.114 * b) > 150 else "#fff"
 
 
 _RE_NOMBRE = re.compile(r"\d+(?:[.,]\d+)?")
@@ -792,13 +828,13 @@ _RE_BORNE = re.compile(
 def _bandes_css():
     """Les onze aplats de la règle graduée, dans l'ordre des scores.
 
-    LA COULEUR EST CALCULÉE, PAS RECOPIÉE. Si les trois ancres changent un
-    jour, les pastilles et la barre changent ensemble ; deux listes de
-    couleurs séparées auraient divergé au premier ajustement.
+    LA BARRE ET LES PASTILLES LISENT LE MÊME NUANCIER. Si `_ECHELLE` change
+    un jour, les deux changent ensemble ; deux listes de couleurs séparées
+    auraient divergé au premier ajustement.
     """
-    p = 100.0 / 11
-    return ", ".join(f"{_teinte(i / 10)} {i * p:.4f}% {(i + 1) * p:.4f}%"
-                     for i in range(11))
+    p = 100.0 / len(_ECHELLE)
+    return ", ".join(f"{c} {i * p:.4f}% {(i + 1) * p:.4f}%"
+                     for i, c in enumerate(_ECHELLE))
 
 
 def _bandes(txt):
@@ -887,14 +923,18 @@ def _echelle_html(txt):
         zones.append(f'<span class="cad-ec-z" data-i="{i}" '
                      f'style="left:{g:.3f}%;width:{100.0 / len(scores):.3f}%">'
                      f'</span>')
+        _c = _teinte(i / nmax)
         lignes.append(f'<span class="cad-ec-v" data-i="{i}">'
-                      f'<b style="background:{_teinte(i / nmax)}">{i}</b>'
+                      f'<b style="background:{_c};color:{_encre(_c)}">{i}</b>'
                       f'{_e(par[i])}</span>')
     bas, haut = scores[0], scores[-1]
+    _c0, _c1 = _teinte(0), _teinte(1)
     defaut = (f'<span class="cad-ec-d">'
-              f'<span class="cad-ec-u"><b style="background:{_teinte(0)}">'
+              f'<span class="cad-ec-u"><b style="background:{_c0};'
+              f'color:{_encre(_c0)}">'
               f'{bas}</b>{_e(par[bas])}</span>'
-              f'<span class="cad-ec-u"><b style="background:{_teinte(1)}">'
+              f'<span class="cad-ec-u"><b style="background:{_c1};'
+              f'color:{_encre(_c1)}">'
               f'{haut}</b>{_e(par[haut])}</span></span>')
     return (f'<span class="cad-ec">{_type_echelle(par)}'
             f'<span class="cad-ec-b"></span>{"".join(zones)}'
@@ -1067,8 +1107,12 @@ STYLE = """
               line-height:1.55 !important; margin:0 0 12px !important;
               text-align:left !important; }
   .cad-so-l { list-style:none; padding:0; margin:10px 0 0; }
+  /* AU FIL DE L'EAU, ET NON JUSTIFIÉ. Une phrase de quatre lignes dans une
+     colonne de quatre creusait des rivières blanches entre les mots ; la
+     colonne est trop étroite pour que la justification tienne. */
   .cad-so-l li { position:relative; padding-left:16px; margin-bottom:7px;
-              font-size:12px; color:#3c4761; line-height:1.45; }
+              font-size:12px; color:#3c4761; line-height:1.45;
+              text-align:left; }
   .cad-so-l li::before { content:"–"; position:absolute; left:0;
               color:#8a93a5; }
   .cad-so-k { margin:0 0 9px; }
@@ -1241,8 +1285,8 @@ STYLE = """
   .cad-ec-b::after { content:""; position:absolute; inset:0;
        border-radius:5px;
        background:repeating-linear-gradient(90deg,
-           rgba(255,255,255,.92) 0 1.5px,
-           transparent 1.5px calc(100% / 11)); }
+           #fff 0 2px,
+           transparent 2px calc(100% / 11)); }
   .cad-ec-z { position:absolute; top:2px; height:22px; cursor:ew-resize; }
   .cad-ec-z:hover::before { content:""; position:absolute; left:50%;
        transform:translateX(-50%); top:1px; width:4px; height:20px;
@@ -1399,13 +1443,11 @@ STYLE = """
   .cad-aaa.vertical .cad-a { padding:0 0 2px !important; }
   .cad-aaa.vertical .cad-a + .cad-a { border-left:0 !important;
         padding-left:0 !important; }
-    /* --- LE MODÈLE DE RÉSILIENCE, EN DEUX MOITIÉS -------------------------
-     L'intitulé d'une moitié : un titre vert en petites capitales et un filet
-     qui court jusqu'au bord. */
-  .cad-moit { display:flex; align-items:center; gap:12px;
-        margin:10px 0 14px; }
-  .cad-moit-t { font-size:12px; font-weight:700; letter-spacing:.09em;
-        text-transform:uppercase; color:#1a6b52; white-space:nowrap; }
+    /* --- LE MODÈLE DE RÉSILIENCE, EN DEUX MOITIÉS ----------------------- */
+  /* LES DEUX NOMBRES DE LA PHRASE D'OUVERTURE, en vert : ils annoncent la
+     colonne de gauche et celle de droite, à la place des deux sous-titres
+     qui les redisaient. */
+  .cad-attr-f { color:#1a6b52; font-weight:700; }
 
   /* LES TROIS CARTES : un numéro, un filet, un titre, une phrase. */
   /* NI CADRE NI FILET AUTOUR DU TEXTE. Trois cartes encadrées, un tableau
@@ -1744,29 +1786,23 @@ def _fin():
     que les quatre sources. Le compte reste dit — et détaillé dimension par
     dimension — dans l'onglet des dimensions.
     """
+    # LA SECONDE PHRASE EST DESCENDUE D'UN ONGLET. « Ces indicateurs sont
+    # normalisés puis agrégés pour produire les scores » annonce, sous la
+    # liste des sources, une opération que la page ne montre pas encore ;
+    # écrite sous la liste des indicateurs, elle dit ce qu'il advient de ce
+    # qu'on vient de lire.
     return ('<div class="cad-fin">'
             '<div>'
             f'<div class="cad-fin-t">{_e(T("cad_band_t"))}</div>'
-            f'<p class="cad-fin-x">{_e(T("cad_band_x"))}</p></div></div>')
+            '</div></div>')
 
 
-def _min_section():
-    """Le plus petit effectif enquêté parmi les sections communales.
-
-    LE CHIFFRE EST COMPTÉ, PAS ANNONCÉ. Un plan de sondage qui promet un
-    minimum par section et qu'on ne recompte jamais finit par décrire un
-    protocole plutôt que la collecte réellement faite.
-    """
-    p = _trouver("ventilation.json")
-    if not p:
-        return None
-    try:
-        with open(p, encoding="utf-8") as f:
-            eff = (json.load(f) or {}).get("effectifs") or {}
-        vals = [v for v in ((d or {}).get("Total") for d in eff.values()) if v]
-        return min(vals) if vals else None
-    except Exception:
-        return None
+# LE MINIMUM PAR SECTION EST CELUI DU PLAN DE SONDAGE. Le compteur affichait
+# le plus petit effectif effectivement atteint, soit cent seize à Quentin ;
+# les neuf autres sections sont à cent vingt ou au-delà. Cent seize décrit un
+# incident de collecte dans une section, pas la règle sur laquelle l'enquête a
+# été construite, et c'est la règle que le lecteur cherche à cet endroit.
+MIN_SECTION = 120
 
 
 # ---------------------------------------------------------------------------
@@ -1890,30 +1926,28 @@ def _v_mesure(stats):
     # un système complexe adaptatif » ne dit rien des attributs ni des
     # dimensions : elle annonce un système qui se répond à lui-même, ce qui
     # est le sujet de l'onglet des boucles. Elle y est maintenant, en tête.
-    st.markdown(f'<p class="cad-attr-x">{_e(T("cad_attr_x"))}</p>',
+    # LES DEUX SOUS-TITRES SONT PARTIS. « Attributs de résilience » au-dessus
+    # de trois cartes qui portent chacune son attribut, « Dimensions de
+    # résilience » au-dessus d'un tableau dont la première colonne s'appelle
+    # « Dimension » : la phrase d'ouverture annonce déjà les trois et les
+    # sept, et les deux colonnes se reconnaissent d'elles-mêmes. Ce sont les
+    # deux nombres de cette phrase qui portent maintenant le repérage, en
+    # vert : l'œil saute de « trois attributs » à la colonne de gauche et de
+    # « sept dimensions » à celle de droite.
+    _phrase = _e(T("cad_attr_x"))
+    for _f in (T("cad_attr_f1"), T("cad_attr_f2")):
+        _phrase = _phrase.replace(_e(_f),
+                                  f'<b class="cad-attr-f">{_e(_f)}</b>', 1)
+    st.markdown(f'<p class="cad-attr-x">{_phrase}</p>',
                 unsafe_allow_html=True)
     g, d = st.columns([1, 1.3], gap="large")
     with g:
-        st.markdown(_entete_moitie("cad_h_attr")
-                    + _attributs(), unsafe_allow_html=True)
+        st.markdown(_attributs(), unsafe_allow_html=True)
     with d:
-        st.markdown(_entete_moitie("cad_h_dims")
-                    + _tableau_dimensions(stats), unsafe_allow_html=True)
+        st.markdown(_tableau_dimensions(stats), unsafe_allow_html=True)
     # RIEN SOUS LES DEUX COLONNES. Le bandeau du bas redisait en une phrase ce
     # que les deux moitiés viennent de montrer : les attributs disent comment,
     # les dimensions disent quoi. Cette phrase-là se lit dans le dessin.
-
-
-def _entete_moitie(cle):
-    """L'intitulé d'une moitié : un titre vert et un filet, rien de plus.
-
-    LA LIGNE D'EXPLICATION EST PARTIE. « Trois attributs décrivent la façon
-    dont un système fait face aux perturbations » sous un titre « Attributs
-    de résilience », au-dessus de trois cartes qui portent chacune son
-    attribut : la phrase ne disait que ce que la colonne montrait déjà.
-    """
-    return (f'<div class="cad-moit"><span class="cad-moit-t">'
-            f'{_e(T(cle))}</span></div>')
 
 
 # --- 2 · comment la résilience est mesurée ----------------------------------
@@ -1938,7 +1972,7 @@ def _v_sources():
         compteurs.append((_fmt(menages, 0), T("cad_s1_t"), T("cad_s1")))
     if n_sections:
         compteurs.append((str(n_sections), T("cad_s2_t"), T("cad_s2")))
-    mini = _min_section()
+    mini = MIN_SECTION
     if mini:
         compteurs.append((_fmt(mini, 0), T("cad_s4_t"), T("cad_s4")))
 
@@ -2028,6 +2062,13 @@ def _v_indicateurs():
     UN FILTRE ET UNE RECHERCHE, PARCE QU'IL Y EN A CENT VINGT-HUIT. Une liste
     de cent vingt-huit lignes sans moyen d'y entrer n'est pas une liste, c'est
     un mur.
+
+    ET RIEN TANT QUE LE FILTRE N'A PAS RÉPONDU. Les cent vingt-huit lignes
+    s'ouvraient d'elles-mêmes, chacune avec sa règle graduée : quatre écrans
+    de défilement avant d'atteindre les deux contrôles qui, seuls,
+    permettaient d'y entrer, et le lecteur venu vérifier UN indicateur devait
+    d'abord traverser les cent vingt-sept autres. La liste ne se dessine
+    maintenant qu'une fois la dimension choisie ou le mot tapé.
     """
     tous = _referentiel()
     if not tous:
@@ -2040,6 +2081,11 @@ def _v_indicateurs():
                                                   else T(c)))
     with d:
         q = st.text_input(T("cad_ind_q"), key="cad_i_q").strip().lower()
+
+    if dim is None and not q:
+        st.markdown(f'<p class="cad-attr-x" style="margin-top:10px">'
+                    f'{_e(T("cad_ind_vide"))}</p>', unsafe_allow_html=True)
+        return
 
     vus = [x for x in tous
            if (dim is None or x["dim"] == dim)
@@ -2077,10 +2123,13 @@ def _v_indicateurs():
     lignes.append('</tbody></table>')
     st.markdown("".join(lignes), unsafe_allow_html=True)
 
-    # RIEN SOUS LE TABLEAU. « 128 sur 128 affichés » ne dit quelque chose que
-    # lorsqu'on filtre, et le filtre est juste au-dessus ; la note sur les
-    # bornes des pondérations répétait l'échelle que l'en-tête de colonne
-    # porte désormais.
+    # CE QU'IL ADVIENT DE CES INDICATEURS, SOUS LA LISTE. La phrase fermait
+    # l'onglet des sources, où elle annonçait une opération sur des
+    # indicateurs qui n'avaient pas encore été montrés. Ici, elle dit ce que
+    # devient ce qu'on vient de lire : chacune de ces règles graduées produit
+    # un score, et les scores s'agrègent sur les sept dimensions.
+    st.markdown(f'<p class="cad-attr-x" style="margin:16px 0 0">'
+                f'{_e(T("cad_band_x"))}</p>', unsafe_allow_html=True)
 
 
 # --- 5 · les boucles de rétroaction ----------------------------------------

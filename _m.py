@@ -53,6 +53,9 @@ COMBOS = [
 # n'était jamais rendu, et c'est justement celui qui porte la carte du
 # territoire et son lien. Trois combinaisons pour quatre écrans, on tourne.
 ETAPE = [1, 2]
+# LES SEPT DIMENSIONS, DANS L'ORDRE DU RÉFÉRENTIEL : le filtre de l'onglet des
+# indicateurs en retient une, et le harnais les fait tourner.
+from cadre_page import ORDRE as ORDRE_DIMS
 n = 0; probs = []
 for lang in ("fr", "en"):
     for page in PAGES:
@@ -98,6 +101,12 @@ for lang in ("fr", "en"):
                                                              2.0, 0.5)[i]
             if page == "boucles":
                 at.session_state["bcl_vue"] = "construire"
+            # LA LISTE DES INDICATEURS NE S'OUVRE PLUS D'ELLE-MÊME. Sans
+            # dimension choisie, l'onglet ne rend que sa ligne d'invite et
+            # le tableau — cent vingt-huit règles graduées — ne serait plus
+            # jamais dessiné par le harnais.
+            if page == "cad_ind":
+                at.session_state["cad_i_dim"] = ORDRE_DIMS[i % len(ORDRE_DIMS)]
             for k, v in c.items():
                 at.session_state[k] = v
             at.run()
