@@ -250,12 +250,6 @@ TEXTES = {
     "ex_b_ecart": {"en": "Widest gap", "fr": "Écart maximal"},
     "ex_b_source": {"en": "Source", "fr": "Source"},
     "ex_b_toutes": {"en": "All answers", "fr": "Toutes les réponses"},
-    "ex_b_rep_x": {
-        "en": "Every answer to the question, on the households kept. Pick one "
-              "answer in the filters to compare it across groups.",
-        "fr": "Toutes les réponses à la question, sur les ménages retenus. "
-              "Choisissez une réponse dans les filtres pour la comparer "
-              "entre groupes."},
     "ex_b_filtres": {"en": "Filters", "fr": "Filtres"},
     "ex_b_filtres_x": {
         "en": "One answer, communal section, sex, age, economic group, "
@@ -2097,26 +2091,26 @@ def _render_brut(cat):
         # objet qu'on vient voir ; en dessous, il répond à la question qui se
         # pose une fois la barre lue — « sur combien de ménages ? ».
         st.markdown(_synthese(montrees, mesure), unsafe_allow_html=True)
-        _p = 100.0 * n_f / cat["n"] if cat["n"] else 0
-        _txt = _e(T("ex_e4_x", k=_n(n_f), n=_n(cat["n"]), p=_f(_p, 1)))
-        if modalite is None:
-            # SANS RÉPONSE CHOISIE, LA PROJECTION NE S'APPLIQUE PAS : les
-            # barres sont les réponses de la question, pas des groupes. On le
-            # dit plutôt que de laisser croire que le menu du haut n'a rien
-            # fait.
-            _txt = _e(T("ex_b_rep_x")) + "<br>" + _txt
-        elif len(axes) > 1:
+        # NI RAPPEL DE L'EFFECTIF NI MODE D'EMPLOI SOUS LE GRAPHIQUE. « 1 211
+        # ménages sur 1 211 » se lit déjà au bout de chaque barre, où
+        # l'effectif de la case est écrit ; et une phrase qui explique ce que
+        # les commandes viennent de faire est un mode d'emploi, pas un
+        # résultat. Ne restent que les deux avertissements qui changent la
+        # lecture : le croisement, et les effectifs trop minces.
+        _txt = ""
+        if modalite is not None and len(axes) > 1:
             _poss = 1
             for _a in axes:
                 _poss *= max(1, len(_cases(cat, _a)))
-            _txt += "<br>" + _e(T("ex_croise_x", k=_n(len(lignes)),
-                                  n=_n(_poss)))
+            _txt = _e(T("ex_croise_x", k=_n(len(lignes)), n=_n(_poss)))
         if any(l["n"] < N_FRAGILE for l in montrees):
-            _txt += "<br>" + _e(T("ex_fragile", n=N_FRAGILE))
+            _txt += ("<br>" if _txt else "") + _e(T("ex_fragile",
+                                                    n=N_FRAGILE))
         g, d = st.columns([3, 1], vertical_alignment="center")
         with g:
-            st.markdown(f'<p class="ex-note" style="margin:6px 0 0">{_txt}</p>',
-                        unsafe_allow_html=True)
+            if _txt:
+                st.markdown(f'<p class="ex-note" style="margin:6px 0 0">'
+                            f'{_txt}</p>', unsafe_allow_html=True)
         with d:
             st.download_button(
                 T("ex_dl"), data=_csv(montrees, mesure),

@@ -287,13 +287,40 @@ TEXTES = {
     "int_cat": {"en": "Category", "fr": "Catégorie"},
     "int_sur_quoi": {"en": "What do you want to act on?",
                      "fr": "Sur quoi voulez-vous intervenir ?"},
-    "int_sur_rien": {"en": "— choose a dimension",
-                     "fr": "— choisissez une dimension"},
+    "int_sur_rien": {"en": "— a dimension, a theme or an indicator",
+                     "fr": "— une dimension, une thématique ou un indicateur"},
+    "int_sur_dim": {"en": "Dimension", "fr": "Dimension"},
     "int_rien_encore": {
-        "en": "Choose what to act on: the levers available on that "
-              "dimension appear below, sorted by kind.",
-        "fr": "Choisissez sur quoi intervenir : les leviers disponibles sur "
-              "cette dimension apparaissent ci-dessous, classés par nature."},
+        "en": "Choose what to act on: the levers that move it appear below, "
+              "sorted by kind, each with its profile.",
+        "fr": "Choisissez sur quoi intervenir : les leviers qui le déplacent "
+              "apparaissent ci-dessous, classés par nature, chacun avec sa "
+              "fiche."},
+    "int_aucun_levier": {
+        "en": "No lever in the model moves this target: nothing points to it, "
+              "or what points to it is not measured.",
+        "fr": "Aucun levier du modèle ne déplace cette cible : rien ne pointe "
+              "vers elle, ou ce qui pointe vers elle n'est pas mesuré."},
+    "int_effet_cible": {"en": "Effect on the target",
+                        "fr": "Effet sur la cible"},
+    "int_par_ou": {"en": "How it gets there", "fr": "Par où ça passe"},
+    "int_idee_t": {"en": "What the model says about this lever",
+                   "fr": "Ce que le modèle dit de ce levier"},
+    "int_idee_x": {
+        "en": "This lever carries no drafted profile yet: the activities, "
+              "actors, calendar and risks remain to be written. What follows "
+              "is what the causal model and the survey already say about it.",
+        "fr": "Ce levier ne porte pas encore de fiche rédigée : les "
+              "activités, les acteurs, le calendrier et les risques restent "
+              "à écrire. Ce qui suit est ce que le modèle causal et "
+              "l'enquête en disent déjà."},
+    "int_nature_x": {
+        "en": "The kind of a lever with no drafted profile is deduced from "
+              "its dimension.",
+        "fr": "La nature d'un levier sans fiche rédigée est déduite de sa "
+              "dimension."},
+    "int_pousse": {"en": "Simulated push of +2 points on the lever",
+                   "fr": "Poussée simulée de +2 points sur le levier"},
     "int_o_fiches": {"en": "Intervention profiles",
                      "fr": "Fiches d'intervention"},
     "int_o_plans": {"en": "Community resilience plans",
@@ -1531,6 +1558,76 @@ def _fiche(f):
 
 
 
+# LA NATURE D'UN LEVIER SANS FICHE SE DÉDUIT DE SA DIMENSION, et c'est dit à
+# l'écran. Les huit fiches rédigées portent leur nature dans le référentiel ;
+# les autres leviers du graphe n'en ont pas, et les ranger sans le dire
+# reviendrait à publier un classement qui n'existe nulle part. La règle est
+# grossière et assumée : la gouvernance et l'économie relèvent des règles,
+# l'infrastructure et l'environnement des techniques, le social des
+# organisations, l'humain et le culturel des comportements.
+CAT_DE_DIM = {"dim1": "technique", "dim2": "structurel", "dim3": "technique",
+              "dim4": "structurel", "dim5": "organisationnel",
+              "dim6": "comportemental", "dim7": "comportemental"}
+POUSSEE = 2.0
+
+
+@st.cache_data(show_spinner=False)
+def _effets_leviers():
+    """L'effet d'une poussée de +2 sur chaque nœud, vers tous les autres.
+
+    QUARANTE-CINQ RÉSOLUTIONS, FAITES UNE FOIS. Le graphe ne change pas d'un
+    affichage à l'autre : la matrice des effets croisés est calculée à la
+    première ouverture et sert ensuite à toutes les cibles, quel que soit
+    l'indicateur choisi.
+    """
+    graphe, _pl = _charger()
+    sortant = set(e["de"] for e in graphe["aretes"])
+    out = {}
+    for n in graphe["noeuds"]:
+        if n["id"] not in sortant:
+            continue          # un nœud sans lien sortant ne déplace rien
+        out[n["id"]] = M.propager(graphe, {n["id"]: POUSSEE})
+    return out
+
+
+def _cibles(graphe):
+    """Ce sur quoi on peut vouloir intervenir : les sept dimensions, puis
+    chaque variable mesurée du modèle.
+
+    UNE DIMENSION EST UN DOMAINE, UN INDICATEUR EST UN PROBLÈME. « Agir sur
+    la dimension économique » et « agir sur l'accès à l'eau de boisson » ne
+    sont pas la même demande, et la seconde est celle qu'on formule le plus
+    souvent en sortant de l'analyse des résultats. Les deux sont donc dans la
+    même liste, les dimensions d'abord.
+    """
+    out = [("d:" + d, f'{T("int_sur_dim")} · {T(d)}') for d in
+           ("dim1", "dim2", "dim3", "dim4", "dim5", "dim6", "dim7")]
+    noeuds = sorted((n for n in graphe["noeuds"] if n.get("ligne")),
+                    key=lambda n: (n.get("dim") or "", _libelle(n)))
+    for n in noeuds:
+        out.append(("n:" + n["id"],
+                    f'{T(n.get("dim") or "")} · {_libelle(n)}'))
+    return out
+
+
+def _effet_sur(cible, effets, par_id, graphe):
+    """De combien une poussée sur ce levier déplace la cible choisie.
+
+    SUR UN INDICATEUR, C'EST L'EFFET SUR SON NŒUD. Sur une dimension, c'est
+    la moyenne des effets sur ses variables mesurées : une dimension n'est
+    pas un nœud du graphe, elle est un ensemble de lignes, et ce qui la
+    déplace est ce qui déplace ses lignes.
+    """
+    if cible.startswith("n:"):
+        c = cible[2:]
+        return effets.get(c, 0.0)
+    d = cible[2:]
+    lignes = [n["id"] for n in graphe["noeuds"]
+              if n.get("ligne") and n.get("dim") == d]
+    vals = [effets.get(x, 0.0) for x in lignes]
+    return sum(vals) / len(vals) if vals else 0.0
+
+
 def _plans():
     """Les plans de résilience communautaires, à télécharger.
 
@@ -1561,6 +1658,101 @@ def _plans():
                                    use_container_width=True)
 
 
+def _fiche_calculee(x, cible, effets, par_ligne, par_id, graphe, lst_boucles):
+    """Ce que le modèle sait d'un levier qui n'a pas encore de fiche rédigée.
+
+    CE N'EST PAS UNE FICHE AU RABAIS, C'EST CE QUI EST VRAI SANS ÊTRE ÉCRIT.
+    Les huit fiches du référentiel portent des activités, des acteurs, un
+    calendrier et des risques : cela s'écrit, cela ne se calcule pas. Le
+    reste — le point de départ mesuré, l'effet sur la cible, le chemin
+    emprunté, les boucles traversées, les lignes à surveiller — est déjà
+    dans le modèle et dans l'enquête, et le taire au motif que le texte
+    manque reviendrait à cacher la moitié des leviers du système.
+    """
+    cle = x["id"]
+    etat = M.etat_courant(graphe, par_ligne)
+    dep = etat.get(cle)
+    ei = M.effet_indice(graphe, effets, {cle: POUSSEE}, par_ligne)
+    dedans = [b for b in lst_boucles if cle in b["noeuds"]]
+    renf = sum(1 for b in dedans if b["type"] == "renforcante")
+
+    st.markdown(f'<div class="int-lab" style="margin-top:0">'
+                f'{_e(T("int_idee_t"))}</div>'
+                f'<p class="int-x" style="font-size:12.5px;color:{ENCRE3}">'
+                f'{_e(T("int_idee_x"))}</p>', unsafe_allow_html=True)
+    a, b, c = st.columns(3)
+    with a:
+        st.markdown(
+            f'<div class="int-lab">{_e(T("int_depart"))}</div>'
+            f'<div class="int-eff" style="color:{ENCRE}">'
+            f'{_e((_fmt(dep) + " / 10") if dep is not None else "—")}</div>',
+            unsafe_allow_html=True)
+    with b:
+        st.markdown(
+            f'<div class="int-lab">{_e(T("int_effet_cible"))}</div>'
+            f'<div class="int-eff" style="color:'
+            f'{HAUSSE if x["effet"] > 0 else BAISSE}">'
+            f'{_fmt(x["effet"], 2, True)}</div>', unsafe_allow_html=True)
+    with c:
+        st.markdown(
+            f'<div class="int-lab">{_e(T("int_effet"))}</div>'
+            f'<div class="int-eff" style="color:'
+            f'{HAUSSE if ei["delta"] > 0 else ENCRE3}">'
+            f'{_fmt(ei["delta"], 3, True)}</div>', unsafe_allow_html=True)
+    st.caption(T("int_pousse"))
+
+    # PAR OÙ ÇA PASSE : les liens directs du levier, avec leur signe. Un
+    # effet chiffré sans son chemin ne se discute pas ; avec son chemin, on
+    # peut contester le lien plutôt que le nombre.
+    liens = []
+    for e in graphe["aretes"]:
+        if e["de"] != cle:
+            continue
+        n2 = par_id.get(e["vers"])
+        if not n2:
+            continue
+        coul = HAUSSE if e["signe"] > 0 else BAISSE
+        liens.append(f'<span style="font-size:12.5px;color:{ENCRE2}">'
+                     f'<b style="color:{coul}">'
+                     f'{"→" if e["signe"] > 0 else "⊣"}</b> '
+                     f'{_e(_libelle(n2))}</span>')
+    if liens:
+        st.markdown(f'<div class="int-lab">{_e(T("int_par_ou"))}</div>'
+                    f'<div style="display:flex;flex-wrap:wrap;gap:5px 18px">'
+                    + "".join(liens) + '</div>', unsafe_allow_html=True)
+
+    suivi = []
+    for autre, d in sorted(effets.items(), key=lambda i: -abs(i[1])):
+        n = par_id.get(autre)
+        if not n or not n.get("ligne") or abs(d) <= M.SEUIL_NUL or autre == cle:
+            continue
+        r = par_ligne.get(n["ligne"])
+        if r:
+            suivi.append((r, d))
+        if len(suivi) >= 4:
+            break
+    if suivi:
+        st.markdown(f'<div class="int-lab">{_e(T("int_suivi"))}</div>'
+                    + "".join(
+            f'<div style="display:flex;gap:12px;align-items:baseline;'
+            f'padding:5px 0;border-bottom:1px solid #eef2f7">'
+            f'<div style="flex:1 1 auto;font-size:12.5px;color:{ENCRE}">'
+            f'L{r["ligne"]} · {_e(_nom_indic(r))}</div>'
+            f'<div class="int-num" style="font-size:12px;font-weight:700;'
+            f'color:{HAUSSE if dd > 0 else BAISSE};white-space:nowrap">'
+            f'{"↑" if dd > 0 else "↓"} {_fmt(dd, 2, True)}</div></div>'
+            for r, dd in suivi), unsafe_allow_html=True)
+
+    st.markdown(
+        f'<p class="int-x" style="font-size:11.5px;color:{ENCRE3};'
+        f'margin-top:8px">{_e(T("int_boucles"))} : {len(dedans)} '
+        f'<span style="color:{HAUSSE}">R{renf}</span> / '
+        f'<span style="color:{ALERTE}">B{len(dedans) - renf}</span>'
+        + (f' · <b style="color:#a8560a">{_e(T("int_bascule"))}</b>'
+           if renf and len(dedans) - renf else '')
+        + '</p>', unsafe_allow_html=True)
+
+
 def _render():
     """Sur quoi intervenir, puis les leviers, puis la fiche de chacun.
 
@@ -1589,32 +1781,55 @@ def _render():
     if _vue == "plans":
         return _plans()
 
-    dims = []
-    for f in fiches:
-        if f["dim_probleme"] and f["dim_probleme"] not in dims:
-            dims.append(f["dim_probleme"])
-    dims.sort()
-    g, _d = st.columns([2, 1.4])
+    par_id = {n["id"]: n for n in graphe["noeuds"]}
+    par_levier = {f["levier"]: f for f in fiches}
+    opts = _cibles(graphe)
+    libs = dict(opts)
+    g, _d = st.columns([2.4, 1])
     with g:
         cible = st.selectbox(
-            T("int_sur_quoi"), [None] + dims, key="int_cible",
-            format_func=lambda c: (T("int_sur_rien") if c is None else T(c)))
+            T("int_sur_quoi"), [None] + [c for c, _l in opts],
+            key="int_cible",
+            format_func=lambda c: (T("int_sur_rien") if c is None
+                                   else libs.get(c, c)))
     if cible is None:
         st.markdown(f'<p class="int-x" style="color:{ENCRE3};margin-top:8px">'
                     f'{_e(T("int_rien_encore"))}</p>', unsafe_allow_html=True)
         return
 
-    retenues = [f for f in fiches if f["dim_probleme"] == cible]
-    if not retenues:
-        st.info(T("int_rien_encore"))
+    # ---- les leviers qui déplacent cette cible, et de combien -------------
+    # LA LISTE N'EST PAS ÉCRITE, ELLE EST CALCULÉE. Pour chaque nœud qui a un
+    # lien sortant, on pousse de deux points et on regarde ce que la cible
+    # bouge ; ceux qui ne la bougent pas ne sont pas des leviers pour elle,
+    # aussi centraux soient-ils ailleurs. La cible ne se propose jamais
+    # elle-même comme levier.
+    tous = _effets_leviers()
+    cle_cible = cible[2:] if cible.startswith("n:") else None
+    lot = []
+    for lev, effets in tous.items():
+        if lev == cle_cible:
+            continue
+        d_c = _effet_sur(cible, effets, par_id, graphe)
+        if abs(d_c) <= M.SEUIL_NUL:
+            continue
+        f = par_levier.get(lev)
+        n = par_id.get(lev)
+        if n is None:
+            continue
+        lot.append({"id": lev, "noeud": n, "fiche": f, "effet": d_c,
+                    "cat": (f["cat"] if f
+                            else CAT_DE_DIM.get(n.get("dim") or "",
+                                                "structurel"))})
+    if not lot:
+        st.info(T("int_aucun_levier"))
         return
-    # LES QUATRE NATURES DANS UN ORDRE FIXE, du plus structurel au plus
-    # comportemental : un programme qui ne toucherait qu'à la dernière
-    # colonne laisserait la structure intacte, et l'ordre le rappelle.
+    lot.sort(key=lambda x: -abs(x["effet"]))
+
+    deduits = any(x["fiche"] is None for x in lot)
     for cat in ("structurel", "technique", "organisationnel",
                 "comportemental"):
-        lot = [f for f in retenues if f["cat"] == cat]
-        if not lot:
+        part = [x for x in lot if x["cat"] == cat]
+        if not part:
             continue
         cc = CAT_COULEUR[cat]
         st.markdown(
@@ -1624,6 +1839,14 @@ def _render():
             f'font-weight:500;color:{ENCRE3}">'
             f'{_e(T("int_cat_" + cat + "_x"))}</span></div>',
             unsafe_allow_html=True)
-        for f in lot:
-            with st.expander(T("int_" + f["id"] + "_t")):
-                _fiche(f)
+        for x in part:
+            titre = (T("int_" + x["fiche"]["id"] + "_t") if x["fiche"]
+                     else _libelle(x["noeud"]))
+            with st.expander(f'{titre}   ·   {_fmt(x["effet"], 2, True)}'):
+                if x["fiche"]:
+                    _fiche(x["fiche"])
+                else:
+                    _fiche_calculee(x, cible, tous[x["id"]], par_ligne,
+                                    par_id, graphe, lst_boucles)
+    if deduits:
+        st.caption(T("int_nature_x"))
