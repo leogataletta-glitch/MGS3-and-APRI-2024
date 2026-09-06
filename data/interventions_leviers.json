@@ -1,0 +1,180 @@
+{
+ "leviers": {
+  "eau": {
+   "fr": "Réhabiliter les points d'eau existants avant d'en créer : dans la plupart des sections, le problème n'est pas l'absence d'ouvrage mais l'ouvrage cassé. Captage et protection des sources en tête de bassin, traitement à domicile là où la source reste éloignée, et un comité d'usagers par point avec un fonds d'entretien alimenté chaque mois. Aucun ouvrage remis sans réparateur formé sur place et sans pièces détachées disponibles au niveau communal.",
+   "en": "Rehabilitate the existing water points before building new ones: in most sections the problem is not the absence of a structure but the broken structure. Capping and protecting upstream springs, household treatment where the source stays distant, and a user committee per point with a maintenance fund topped up monthly. No handover without a trained local repairer and spare parts held at communal level."
+  },
+  "assain": {
+   "fr": "Sortir de la défécation à l'air libre par l'assainissement piloté par la communauté plutôt que par la distribution de latrines : un tiers des ménages pratique encore la défécation à l'air libre et un tiers des latrines existantes sont des fosses sans dalle. Financer la dalle et la ventilation, pas la superstructure, que les ménages construisent, et lier chaque campagne aux points d'eau du même bassin versant.",
+   "en": "Move away from open defecation through community-led sanitation rather than latrine handouts: a third of households still practise open defecation and a third of existing latrines are pits without a slab. Fund the slab and the ventilation, not the superstructure, which households build, and tie each campaign to the water points of the same watershed."
+  },
+  "cuisson": {
+   "fr": "Rompre le lien entre pauvreté et charbon en agissant sur les deux bouts : foyers améliorés produits localement et vendus à crédit court, et revenu de substitution pour ceux qui coupent le bois pour vivre. Une campagne de foyers sans alternative de revenu déplace la coupe, elle ne la réduit pas.",
+   "en": "Break the poverty-charcoal link at both ends: improved stoves produced locally and sold on short credit, and substitute income for those who cut wood to live. A stove campaign with no income alternative moves the cutting, it does not reduce it."
+  },
+  "elec": {
+   "fr": "Privilégier le solaire domestique et les mini-réseaux communautaires : l'extension du réseau national n'est pas à l'horizon de ces sections. Cibler d'abord les points collectifs — centre de santé, école, point d'eau motorisé — dont l'électrification bénéficie à toute la section plutôt qu'à un ménage.",
+   "en": "Favour household solar and community mini-grids: extending the national grid is not on the horizon for these sections. Target collective points first — health centre, school, motorised water point — where electrification benefits the whole section rather than one household."
+  },
+  "logement": {
+   "fr": "Renforcer l'existant plutôt que reconstruire : ancrage des toitures, contreventement, reprise des maçonneries, sur des maisons qui tiennent debout mais ne tiennent pas au vent. Former les maçons locaux aux quelques gestes qui font la différence en cyclone, et les rendre identifiables dans chaque section.",
+   "en": "Strengthen what stands rather than rebuild: roof anchoring, bracing, masonry repair, on houses that stand but do not hold in wind. Train local masons in the few practices that make the difference in a hurricane, and make them identifiable in each section."
+  },
+  "ecole": {
+   "fr": "Là où l'école est à plus de trente minutes, agir sur le chemin autant que sur le bâtiment : passages busés, points de traversée sécurisés en saison des pluies, et cantine, qui pèse davantage sur l'assiduité que la distance elle-même.",
+   "en": "Where school is more than thirty minutes away, act on the road as much as on the building: culverted crossings, safe crossing points in the rainy season, and a canteen, which weighs more on attendance than distance itself."
+  },
+  "sante_acces": {
+   "fr": "Compléter le maillage par des agents de santé communautaires plutôt que par de nouveaux centres : un agent formé et approvisionné par section couvre le premier recours, le suivi des femmes enceintes et l'orientation. Prévoir le transport d'urgence, qui est le vrai point de rupture en montagne.",
+   "en": "Complete the network with community health workers rather than new centres: one trained and supplied worker per section covers first recourse, antenatal follow-up and referral. Plan for emergency transport, which is the real breaking point in the mountains."
+  },
+  "mobile": {
+   "fr": "Utiliser la couverture mobile existante comme infrastructure d'alerte et de transfert : elle est le seul réseau qui atteint déjà la plupart des ménages. Négocier avec les opérateurs la diffusion gratuite des messages d'alerte et l'accès aux services financiers mobiles dans les sections les moins couvertes.",
+   "en": "Use existing mobile coverage as alert and transfer infrastructure: it is the only network that already reaches most households. Negotiate free broadcast of alert messages with operators and access to mobile financial services in the least covered sections."
+  },
+  "temps_eau": {
+   "fr": "Rapprocher l'eau du foyer libère d'abord du temps de femme : chaque point d'eau supplémentaire rend des heures qui repartent vers le jardin, l'école et l'activité. Mesurer ce temps avant et après, section par section, en fait un résultat visible plutôt qu'un effet supposé.",
+   "en": "Bringing water closer to the home first frees women's time: each additional water point returns hours that go back to the garden, to school and to activity. Measuring that time before and after, section by section, turns it into a visible result rather than an assumed effect."
+  },
+  "alerte": {
+   "fr": "Boucler la chaîne d'alerte jusqu'au dernier kilomètre : le message existe, il n'arrive pas. Relais par SMS, par radio communautaire et par un référent nommé dans chaque localité, avec un exercice par saison pour vérifier que le message circule vraiment.",
+   "en": "Close the alert chain to the last kilometre: the message exists, it does not arrive. Relay by SMS, by community radio and by a named focal point in each locality, with one drill per season to check that the message truly travels."
+  },
+  "comites": {
+   "fr": "Consolider les comités locaux de gestion des risques là où ils existent et les créer là où ils manquent, avec un mandat écrit, un plan de contingence par section et un petit budget d'entretien. Un comité sans moyens propres redevient une liste de noms en dix-huit mois.",
+   "en": "Consolidate local risk management committees where they exist and create them where they are missing, with a written mandate, a contingency plan per section and a small maintenance budget. A committee with no resources of its own becomes a list of names again within eighteen months."
+  },
+  "prepa": {
+   "fr": "Faire de la préparation un exercice collectif plutôt qu'une formation : simulation annuelle avant la saison cyclonique, cartographie des abris et des personnes à évacuer en priorité, faite par les habitants eux-mêmes et affichée dans la section.",
+   "en": "Make preparedness a collective exercise rather than a training: an annual drill before the hurricane season, mapping of shelters and of people to evacuate first, drawn by residents themselves and posted in the section."
+  },
+  "controle": {
+   "fr": "Le contrôle forestier ne tiendra pas par la répression : appuyer les accords locaux d'usage négociés entre habitants, propriétaires et autorités communales, avec des surveillants issus des sections et une compensation pour les terres mises en défens.",
+   "en": "Forest control will not hold through enforcement: support locally negotiated use agreements between residents, landowners and communal authorities, with monitors from the sections themselves and compensation for land put under protection."
+  },
+  "etat_civil": {
+   "fr": "Organiser des audiences foraines d'enregistrement dans les sections éloignées plutôt que d'attendre les déplacements vers le chef-lieu, et coupler l'enregistrement des naissances à la vaccination et à l'inscription scolaire, qui amènent déjà les familles.",
+   "en": "Run mobile registration sessions in remote sections rather than waiting for trips to the town centre, and couple birth registration with vaccination and school enrolment, which already bring families in."
+  },
+  "identite": {
+   "fr": "La carte d'identité conditionne le compte, les transferts et les services : organiser sa délivrance sur place, en une journée par section, avec l'appui des autorités communales. C'est la formalité la moins coûteuse à lever et celle qui débloque le plus de choses en aval.",
+   "en": "The identity card conditions the account, the transfers and the services: organise its issuance on site, one day per section, with communal authorities. It is the cheapest formality to remove and the one that unlocks the most downstream."
+  },
+  "services": {
+   "fr": "La satisfaction envers les services publics se construit par la présence et la redevabilité : affichage de ce qui est prévu, réunion trimestrielle de restitution dans chaque section, et traitement visible des plaintes. Ce qui se voit se croit.",
+   "en": "Satisfaction with public services is built through presence and accountability: posting what is planned, a quarterly feedback meeting in each section, and visible handling of complaints. What is seen is believed."
+  },
+  "foret": {
+   "fr": "Restaurer le couvert par des essences utiles aux ménages, fruitiers et bois d'œuvre, plantées sur des parcelles dont l'usage est sécurisé : personne ne plante un arbre sur une terre qu'il peut perdre. Associer la mise en défens à une compensation en nature la première année.",
+   "en": "Restore cover with species useful to households, fruit and timber trees, planted on plots whose use is secured: nobody plants a tree on land they may lose. Pair protected areas with in-kind compensation for the first year."
+  },
+  "abondance_bois": {
+   "fr": "Produire du bois plutôt que d'en interdire la coupe : bosquets villageois à rotation courte, haies vives et agroforesterie sur les parcelles cultivées. La ressource se reconstitue là où elle rapporte à celui qui l'entretient.",
+   "en": "Grow wood rather than ban its cutting: short-rotation village woodlots, live hedges and agroforestry on cultivated plots. The resource comes back where it pays the person who tends it."
+  },
+  "pression_bois": {
+   "fr": "Réduire la pression sur le bois-énergie en agissant sur la demande — foyers améliorés, charbon densifié — et sur le revenu de ceux qui en vivent. Tant que couper reste le revenu de dernier recours, la pression revient après chaque campagne.",
+   "en": "Reduce pressure on fuelwood by acting on demand — improved stoves, densified charcoal — and on the income of those who live from it. As long as cutting remains the income of last resort, pressure returns after every campaign."
+  },
+  "erosion": {
+   "fr": "Traiter les ravines par des ouvrages simples et nombreux plutôt que par quelques ouvrages lourds : seuils en pierres sèches, fascines, bandes enherbées, réalisés en haute intensité de main-d'œuvre pendant la saison creuse, ce qui apporte aussi du revenu.",
+   "en": "Treat gullies with many simple structures rather than a few heavy ones: dry-stone check dams, fascines, grass strips, built labour-intensively during the lean season, which also brings income."
+  },
+  "infiltration": {
+   "fr": "Retenir l'eau là où elle tombe : rigoles d'infiltration, citernes familiales, mares aménagées en tête de bassin. C'est la réponse la moins coûteuse à une sécheresse citée comme première cause de baisse des rendements.",
+   "en": "Hold the water where it falls: infiltration ditches, family cisterns, ponds developed at the head of the watershed. It is the cheapest answer to a drought named as the first cause of falling yields."
+  },
+  "fertilite": {
+   "fr": "Reconstituer la fertilité par la matière organique disponible sur place : compost, fumier, engrais verts et paillage, plutôt que par des intrants achetés que la campagne suivante ne permet pas de racheter.",
+   "en": "Rebuild fertility with the organic matter available on site: compost, manure, green manure and mulching, rather than bought inputs that the next season cannot afford to buy again."
+  },
+  "agro_durable": {
+   "fr": "Diffuser les pratiques conservatrices par les champs-écoles et les paysans relais plutôt que par des sessions théoriques : plus de la moitié de ceux qui cultivent n'ont aucune source d'eau pour irriguer, et c'est autour de la rétention d'eau à la parcelle que la démonstration convainc.",
+   "en": "Spread conservation practices through farmer field schools and lead farmers rather than classroom sessions: more than half of those who farm have no water source to irrigate, and it is around plot-level water retention that the demonstration convinces."
+  },
+  "prod_agri": {
+   "fr": "Sécuriser la campagne avant d'augmenter les rendements : semences adaptées au cycle court, stockage qui limite les pertes après récolte, et accès à l'eau à la parcelle. Un gain de rendement perdu au stockage n'est pas un gain.",
+   "en": "Secure the season before raising yields: seed adapted to short cycles, storage that limits post-harvest losses, and water access at plot level. A yield gain lost in storage is not a gain."
+  },
+  "biodiv": {
+   "fr": "Protéger les milieux qui rendent un service visible aux habitants — mangroves, têtes de source, zones de pêche — par des accords de gestion locale assortis d'un droit d'usage clair, plutôt que par des périmètres imposés de l'extérieur.",
+   "en": "Protect the environments that render a visible service to residents — mangroves, spring heads, fishing areas — through local management agreements with a clear use right, rather than perimeters imposed from outside."
+  },
+  "vegetation": {
+   "fr": "La santé de la végétation se lit par satellite mais se joue à la parcelle : couverture du sol en saison sèche, haies brise-vent et arbres dans les cultures. Le suivi satellitaire sert alors à vérifier ce que les parcelles ont fait, pas à le remplacer.",
+   "en": "Vegetation health is read by satellite but decided at plot level: soil cover in the dry season, windbreak hedges and trees within crops. Satellite monitoring then serves to verify what the plots did, not to replace it."
+  },
+  "aridite": {
+   "fr": "On ne pilote pas l'aridité, on s'y prépare : calendriers culturaux ajustés, variétés à cycle court, réserves d'eau et stocks alimentaires constitués avant la saison sèche. L'indicateur sert d'alerte, pas de cible.",
+   "en": "Aridity is not steered, it is prepared for: adjusted cropping calendars, short-cycle varieties, water reserves and food stocks built before the dry season. The indicator serves as an alert, not as a target."
+  },
+  "pluie": {
+   "fr": "La pluie ne se pilote pas : ce qui se pilote est ce qu'on en retient et ce qu'on en anticipe. Coupler l'information saisonnière diffusée par radio aux décisions de semis, et retenir l'eau des épisodes intenses plutôt que la subir.",
+   "en": "Rainfall is not steered: what is steered is what is retained from it and what is anticipated. Couple radio-broadcast seasonal information with sowing decisions, and hold the water of intense episodes rather than endure it."
+  },
+  "foncier": {
+   "fr": "La sécurité foncière conditionne tout investissement de long terme : appuyer la reconnaissance des droits d'usage au niveau communal, l'écrit entre parties devant témoins, et le règlement des conflits par la médiation locale avant le recours judiciaire.",
+   "en": "Land tenure security conditions every long-term investment: support the recognition of use rights at communal level, written agreements between parties before witnesses, and conflict settlement through local mediation before judicial recourse."
+  },
+  "compte": {
+   "fr": "S'appuyer sur les mutuelles de solidarité déjà nommées par les répondants plutôt que d'importer un dispositif : appui aux caisses existantes, comptes mobiles adossés à la carte d'identité, et éducation financière portée par les groupes de femmes qui les animent déjà.",
+   "en": "Build on the savings mutuals already named by respondents rather than importing a scheme: support to existing groups, mobile accounts backed by the identity card, and financial education carried by the women's groups that already run them."
+  },
+  "reserve": {
+   "fr": "Constituer une réserve avant la crise plutôt qu'un secours après : épargne de groupe à objectif saisonnier, stock alimentaire communautaire, et assurance indicielle si le produit devient disponible. Sept ménages sur dix n'ont aucun matelas hors la terre.",
+   "en": "Build a reserve before the crisis rather than relief after it: group savings with a seasonal target, a community food stock, and index insurance if the product becomes available. Seven in ten households have no cushion outside land."
+  },
+  "revenu": {
+   "fr": "Diversifier hors de la seule agriculture pluviale : transformation des produits locaux, petit élevage, métiers de la réparation liés aux ouvrages qu'on installe. Chaque ouvrage financé devrait laisser derrière lui un métier dans la section.",
+   "en": "Diversify beyond rainfed farming alone: processing of local products, small livestock, repair trades tied to the structures being installed. Every funded structure should leave a trade behind it in the section."
+  },
+  "emploi": {
+   "fr": "Créer de l'emploi par les travaux à haute intensité de main-d'œuvre qui construisent aussi la résilience : traitement des ravines, pistes, reboisement, planifiés en saison creuse et payés à temps, ce qui compte autant que le montant.",
+   "en": "Create employment through labour-intensive works that also build resilience: gully treatment, tracks, reforestation, planned in the lean season and paid on time, which matters as much as the amount."
+  },
+  "transferts": {
+   "fr": "Les transferts existent et arrivent mal : faciliter l'accès aux points de retrait et aux comptes mobiles pour que l'argent envoyé ne soit pas amputé par le déplacement. C'est un gain sans nouveau financement.",
+   "en": "Transfers exist and arrive badly: ease access to withdrawal points and mobile accounts so that money sent is not eaten by the journey. It is a gain with no new funding."
+  },
+  "alimentaire": {
+   "fr": "Traiter la privation alimentaire par le revenu et le stock plutôt que par la distribution : deux ménages sur trois ont sauté un repas, et l'écart entre catégories économiques est net. Greniers communautaires, épargne saisonnière, et distribution réservée aux pics.",
+   "en": "Address food deprivation through income and stock rather than distribution: two households in three skipped a meal, and the gap between economic groups is stark. Community granaries, seasonal savings, and distribution reserved for peaks."
+  },
+  "sante": {
+   "fr": "La santé se joue ici sur l'eau, l'assainissement et la distance au soin : agir sur les trois ensemble dans les mêmes sections plutôt que séparément dans trois programmes, et relier la couverture obtenue aux cas enregistrés par les formations sanitaires.",
+   "en": "Health here turns on water, sanitation and distance to care: act on the three together in the same sections rather than separately in three programmes, and connect the coverage achieved to the cases recorded by health facilities."
+  },
+  "travail": {
+   "fr": "La capacité de travail est le produit de la santé, de l'eau et de l'alimentation : elle ne se cible pas directement, elle se récolte. Elle est en revanche le bon indicateur pour vérifier qu'un ensemble d'interventions a produit autre chose que des ouvrages.",
+   "en": "Capacity to work is the product of health, water and food: it is not targeted directly, it is harvested. It is, however, the right indicator to check that a set of interventions produced something other than structures."
+  },
+  "education": {
+   "fr": "L'achèvement du primaire tient à la cantine, au coût des fournitures et à la distance : agir sur les trois, et suivre les filles séparément, car c'est là que la sortie précoce se joue.",
+   "en": "Primary completion turns on the canteen, the cost of supplies and the distance: act on the three, and track girls separately, because that is where early exit happens."
+  },
+  "ocb": {
+   "fr": "Le tissu associatif est mince là où il serait le plus utile : appuyer les organisations existantes avant d'en créer, par un petit fonds d'animation, un local et une formation à la tenue des comptes, et faire de leur présence un critère de ciblage.",
+   "en": "The associational fabric is thin where it would be most useful: support existing organisations before creating new ones, with a small running fund, a place to meet and bookkeeping training, and make their presence a targeting criterion."
+  },
+  "entraide": {
+   "fr": "L'entraide existe déjà et ne se décrète pas : la reconnaître en confiant aux groupes locaux la gestion d'un ouvrage, d'un stock ou d'un fonds, ce qui lui donne un objet plutôt qu'un discours.",
+   "en": "Mutual aid already exists and cannot be decreed: recognise it by entrusting local groups with a structure, a stock or a fund, which gives it an object rather than a discourse."
+  },
+  "passerelle": {
+   "fr": "Le capital de passerelle est ce qui relie une section à l'extérieur : appuyer les fédérations d'organisations, les liens avec les autorités communales et les échanges entre sections, qui font circuler ce qui marche.",
+   "en": "Bridging capital is what connects a section to the outside: support federations of organisations, links with communal authorities and exchanges between sections, which circulate what works."
+  },
+  "securite": {
+   "fr": "Le sentiment de sécurité conditionne l'investissement et la mobilité : éclairage des points collectifs, médiation des conflits fonciers et présence visible des autorités locales pèsent davantage ici que les dispositifs formels.",
+   "en": "The sense of safety conditions investment and mobility: lighting of collective points, mediation of land conflicts and the visible presence of local authorities weigh more here than formal arrangements."
+  },
+  "sensib": {
+   "fr": "La sensibilisation ne change les pratiques que si elle est portée par des pairs et adossée à un moyen : coupler chaque message à l'accès au matériel ou au crédit qui rend le changement possible, sinon on informe sans permettre.",
+   "en": "Awareness changes practices only if it is carried by peers and backed by a means: couple each message with access to the equipment or the credit that makes the change possible, otherwise you inform without enabling."
+  },
+  "ancrage": {
+   "fr": "Le maintien sur place ne se décrète pas, il se déduit : c'est le résultat de l'eau, du revenu et de l'école. Il sert d'indicateur de synthèse pour vérifier qu'un programme a rendu le lieu vivable, pas de cible à atteindre.",
+   "en": "Staying in place cannot be decreed, it is derived: it is the result of water, income and school. It serves as a summary indicator to check that a programme made the place liveable, not as a target to hit."
+  }
+ }
+}
