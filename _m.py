@@ -55,7 +55,8 @@ COMBOS = [
 ETAPE = [1, 2]
 # LES SEPT DIMENSIONS, DANS L'ORDRE DU RÉFÉRENTIEL : le filtre de l'onglet des
 # indicateurs en retient une, et le harnais les fait tourner.
-from cadre_page import ORDRE as ORDRE_DIMS
+from cadre_page import ORDRE as ORDRE_DIMS, _referentiel as _REF
+REFERENTIEL = _REF()
 n = 0; probs = []
 for lang in ("fr", "en"):
     for page in PAGES:
@@ -105,8 +106,17 @@ for lang in ("fr", "en"):
             # dimension choisie, l'onglet ne rend que sa ligne d'invite et
             # le tableau — cent vingt-huit règles graduées — ne serait plus
             # jamais dessiné par le harnais.
+            # LA LISTE DES INDICATEURS NE DÉPLIE QU'UN INDICATEUR À LA
+            # FOIS. Sans dimension ni indicateur choisis, l'onglet ne rend
+            # que sa chaîne d'exemple ; on fait donc tourner les deux, de
+            # sorte que la ligne de l'indicateur, sa règle graduée et la
+            # chaîne déroulée sur ses chiffres soient vues à chaque passe.
             if page == "cad_ind":
-                at.session_state["cad_i_dim"] = ORDRE_DIMS[i % len(ORDRE_DIMS)]
+                _d = ORDRE_DIMS[i % len(ORDRE_DIMS)]
+                at.session_state["cad_i_dim"] = _d
+                _l = [x["ligne"] for x in REFERENTIEL if x["dim"] == _d]
+                if _l and i % 2:
+                    at.session_state["cad_i_ind"] = _l[0]
             for k, v in c.items():
                 at.session_state[k] = v
             at.run()

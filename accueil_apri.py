@@ -697,7 +697,12 @@ def _comprendre(m):
     # découpent la ligne. Plus la ligne est longue, plus les blancs se
     # répartissent. La carte perd la largeur correspondante et rétrécit
     # d'autant en hauteur : la page y gagne même de l'air.
-    g, d = st.columns([1.42, 1.5], gap="medium")
+    # LA CARTE A REPRIS UN PEU DE LARGEUR. Le dessin se met à l'échelle de la
+    # largeur de sa colonne — sa hauteur suit ses proportions — et à parts
+    # presque égales il restait petit au milieu d'une page qui, elle, ne l'est
+    # pas. La colonne de gauche cède la vingtaine de pixels qui la sépare de
+    # la limite où la justification se creuse ; la carte les prend.
+    g, d = st.columns([1.2, 1.8], gap="medium")
     with g:
         st.markdown(f'<div class="uma-socle">'
                     f'<div class="uma-sur">{_e(T("po_socle_sur"))}</div>'

@@ -360,11 +360,6 @@ TEXTES = {
     # --- les diagrammes de boucles causales, en quatre temps
     "cad_bt": {"en": "Causal loop diagrams",
                "fr": "Diagrammes de boucles causales"},
-    "cad_bt_x": {
-        "en": "See how causes and effects feed back into each other — and "
-              "where action can change the system.",
-        "fr": "Voir comment les causes et les effets se répondent — et où "
-              "l'action peut changer le système."},
     "cad_b1_t": {"en": "The symptom", "fr": "Le symptôme"},
     "cad_b1_x": {"en": "Start from a critical indicator",
                  "fr": "Partir d'un indicateur critique"},
@@ -397,12 +392,6 @@ TEXTES = {
     "cad_bl_b": {"en": "B — Balancing", "fr": "B — Équilibrante"},
     "cad_bl_b_x": {"en": "Counteracts change",
                    "fr": "Contrarie le changement"},
-    "cad_bl_i_t": {"en": "Important", "fr": "Important"},
-    "cad_bl_i_x": {
-        "en": "“+” does not mean good and “−” does not mean bad. They "
-              "indicate the direction of the relationship.",
-        "fr": "« + » ne veut pas dire bon et « − » ne veut pas dire mauvais. "
-              "Ils indiquent le sens de la relation."},
     "cad_lecture": {"en": "How to read a loop", "fr": "Comment lire une boucle"},
     "cad_lecture_x": {
         "en": "Each arrow carries a polarity. **+** the two variables move "
@@ -631,11 +620,50 @@ TEXTES = {
     # RIEN TANT QU'ON N'A RIEN DEMANDÉ. La ligne dit quoi faire, pas ce qui
     # manque : c'est un écran de départ, pas une erreur.
     "cad_ind_vide": {
-        "en": "Pick a dimension or type a word to see the indicators, their "
-              "normalisation scale and their weight.",
-        "fr": "Choisissez une dimension ou tapez un mot pour voir les "
-              "indicateurs, leur barème de normalisation et leur "
-              "pondération."},
+        "en": "Pick an indicator to see its scale, its weight and the chain "
+              "that turns its raw measure into a score. Below, the same "
+              "chain on a worked example.",
+        "fr": "Choisissez un indicateur pour voir son barème, sa pondération "
+              "et la chaîne qui transforme sa mesure brute en score. "
+              "Ci-dessous, la même chaîne sur un exemple."},
+    "cad_ind_ind": {"en": "Indicator", "fr": "Indicateur"},
+    "cad_ind_tous": {"en": "Choose an indicator",
+                     "fr": "Choisir un indicateur"},
+    # LES CINQ ÉTAPES, DITES SUR L'INDICATEUR QU'ON REGARDE. Les mêmes
+    # intitulés que la chaîne d'exemple ; seules les valeurs changent.
+    "cad_ex_brut": {"en": "measured value", "fr": "valeur mesurée"},
+    "cad_ex_seuils": {"en": "Threshold-based, 11 bands",
+                      "fr": "Par seuils, onze paliers"},
+    "cad_ex_stat": {"en": "Statistical, on the observed range",
+                    "fr": "Statistique, sur l'étendue observée"},
+    "cad_ex_sc_non": {"en": "not computed", "fr": "non calculé"},
+    "cad_ex_sc_non_x": {
+        "en": "This indicator is measured but its score is not yet in the "
+              "reference file.",
+        "fr": "Cet indicateur est mesuré, mais son score ne figure pas "
+              "encore dans le fichier de référence."},
+    "cad_ex_p": {"en": "Weight {p} out of 5", "fr": "Pondération {p} sur 5"},
+    "cad_ex_p_x": {
+        "en": "Its weight sets how much this indicator moves the score of "
+              "its dimension, alongside the others.",
+        "fr": "Sa pondération fixe le poids de cet indicateur dans le score "
+              "de sa dimension, aux côtés des autres."},
+    "cad_ex_dim": {"en": "Score of the dimension",
+                   "fr": "Score de la dimension"},
+    "cad_ex_dim_x": {
+        "en": "The weighted mean of the scored indicators of this "
+              "dimension, on the whole sample.",
+        "fr": "La moyenne pondérée des indicateurs notés de cette dimension, "
+              "sur tout l'échantillon."},
+    "cad_ex_titre": {
+        "en": "From this measure to a resilience score",
+        "fr": "De cette mesure à un score de résilience"},
+    "cad_ex_gen": {
+        "en": "From a raw measure to a resilience score, on an example",
+        "fr": "De la mesure brute au score de résilience, sur un exemple"},
+    "cad_ex_seuils_i": {
+        "en": "The eleven bands of this indicator",
+        "fr": "Les onze paliers de cet indicateur"},
     "cad_ind_rien": {"en": "No indicator matches this search.",
                      "fr": "Aucun indicateur ne correspond à cette recherche."},
     "cad_ind_n": {"en": "{k} of {n} indicators shown.",
@@ -973,6 +1001,13 @@ def _referentiel():
             "poids": float(r.get("ponderation") or 1),
             "echelle": ech,
             "sens": r.get("sens") or "",
+            # LA VALEUR ET LE SCORE PUBLIÉS SUIVENT L'INDICATEUR. La chaîne
+            # de calcul ne s'explique bien que sur un cas : sans eux, elle
+            # resterait l'exemple des quarante-cinq minutes de marche.
+            "valeur": (r.get("valeurs") or {}).get("Total"),
+            "score": (r.get("scores_corriges") or {}).get("Total"),
+            "metrique_fr": (r.get("expl_fr") or "").strip(),
+            "nom_fr": (r.get("indicateur_fr") or "").strip(),
             "calcule": (r.get("scores_corriges") or {}).get("Total")
                        is not None})
     out.sort(key=lambda x: (ORDRE.index(x["dim"]) if x["dim"] in ORDRE else 99,
@@ -1166,9 +1201,6 @@ STYLE = """
   .cad-bt { font-size:27px; font-weight:700; color:#1a4d3a;
        font-family:Georgia,"Times New Roman",serif; letter-spacing:-.01em;
        margin:2px 0 4px; }
-  p.cad-bt-x { font-size:13.5px !important; color:#3c4761 !important;
-       line-height:1.5 !important; margin:0 0 26px !important;
-       text-align:left !important; }
   .cad-bp { display:flex; align-items:flex-start; gap:0; margin:0 0 8px; }
   .cad-bp-e { flex:1 1 0; min-width:0; display:flex; flex-direction:column;
        align-items:center; text-align:center; padding:0 12px; }
@@ -1176,10 +1208,8 @@ STYLE = """
        padding-top:44px; }
   .cad-bp-i { width:96px; height:96px; border-radius:50%; flex:0 0 96px;
        display:flex; align-items:center; justify-content:center; }
-  .cad-bp-fi { width:34px; height:2.5px; border-radius:2px; margin:2px 0 14px;
-       opacity:.85; }
   .cad-bp-t { font-size:13px; font-weight:700; letter-spacing:.06em;
-       line-height:1.3; }
+       line-height:1.3; margin-top:4px; }
   .cad-bp-x { font-size:13px; color:#101728; line-height:1.45; margin-top:9px;
        max-width:26ch; }
   .cad-bp-ex { font-size:12.5px; color:#5a6a80; font-style:italic;
@@ -1213,15 +1243,6 @@ STYLE = """
   .cad-bl-d > div { flex:1 1 0; text-align:center; }
   .cad-bl-n { font-size:13px; font-weight:700; margin-top:6px; }
   .cad-bl-s { font-size:12px; color:#5a6a80; margin-top:3px; }
-  .cad-bl-i { display:flex; gap:13px; align-items:flex-start;
-       background:#f4f6f5; border-radius:12px; padding:14px 16px; }
-  .cad-bl-ii { width:32px; height:32px; flex:0 0 32px; border-radius:50%;
-       background:#fff; display:flex; align-items:center;
-       justify-content:center; }
-  .cad-bl-it { font-size:13px; font-weight:700; color:#101728; }
-  p.cad-bl-ix { font-size:12.5px !important; color:#3c4761 !important;
-       line-height:1.55 !important; margin:4px 0 0 !important;
-       text-align:left !important; }
 
   /* --- la liste des indicateurs -------------------------------------------
      L'ÉCHELLE PREND LA COLONNE LA PLUS LARGE. Onze paliers écrits à la suite
@@ -1492,6 +1513,10 @@ STYLE = """
   @media (max-width:1100px) {
     .cad-dh, .cad-dl { grid-template-columns:1fr 104px 88px; }
   }
+  /* L'INTITULÉ QUI OUVRE LA CHAÎNE : il dit de quoi les cinq cases parlent,
+     de l'indicateur ouvert ou de l'exemple. */
+  .cad-ex-t { font-size:12px; font-weight:700; letter-spacing:.09em;
+        text-transform:uppercase; color:#1a6b52; margin:14px 0 10px; }
   p.cad-attr-x { font-size:15px !important; color:#3c4761 !important;
             line-height:1.55 !important; margin:2px 0 18px !important;
             max-width:96ch; }
@@ -1986,6 +2011,122 @@ def _v_sources():
 
 
 # --- 4 · de la mesure brute au score ---------------------------------------
+def _score_dimension(dim):
+    """Le score publié d'une dimension : moyenne pondérée de ses indicateurs.
+
+    C'EST LA RÈGLE DU RÉFÉRENTIEL, PAS UNE MOYENNE DE PLUS. Les indicateurs
+    notés d'une dimension sont moyennés en pesant chacun de sa pondération —
+    exactement ce que fait la page des scores publiés. Les indicateurs sans
+    score n'entrent pas au dénominateur : les compter pour zéro reviendrait à
+    pénaliser une dimension pour une mesure qui n'a pas été faite.
+    """
+    num = den = 0.0
+    for x in _referentiel():
+        if x["dim"] != dim or x["score"] is None:
+            continue
+        num += x["poids"] * x["score"]
+        den += x["poids"]
+    return round(num / den, 2) if den else None
+
+
+def _case(titre, valeur, sous, phrase):
+    """Une des cinq cases de la chaîne : un intitulé, un chiffre, une phrase."""
+    return ('<div class="cad-ch-e">'
+            f'<div class="cad-ch-t">{_e(titre)}</div>'
+            f'<div class="cad-ch-v">{_e(valeur)}</div>'
+            f'<div class="cad-ch-s">{_e(sous)}</div>'
+            f'<p class="cad-ch-x">{_e(phrase)}</p></div>')
+
+
+def _chaine(cases):
+    """Les cinq cases mises bout à bout, un chevron entre deux."""
+    out = []
+    for i, c in enumerate(cases):
+        if i:
+            out.append('<div class="cad-ch-fl">'
+                       + icones.svg("chevron", couleur="#8fb39c", taille=22)
+                       + '</div>')
+        out.append(c)
+    return f'<div class="cad-ch">{"".join(out)}</div>'
+
+
+def _chaine_generique():
+    """La chaîne sur l'exemple des quarante-cinq minutes de marche."""
+    return _chaine([_case(T(k + "_t"), T(k + "_v"), T(k + "_s"), T(k + "_x"))
+                    for k in ("cad_e1", "cad_e2", "cad_e3", "cad_e4",
+                              "cad_e5")])
+
+
+def _chaine_indicateur(x):
+    """La même chaîne, déroulée sur l'indicateur que le lecteur regarde.
+
+    LA CHAÎNE NE S'EXPLIQUE QUE SUR UN CAS. Cinq cases avec « 45 min » et
+    « 3,5 / 10 » disent la mécanique sur une donnée qui n'est pas dans le
+    fichier ; le lecteur venu vérifier UN indicateur devait faire lui-même la
+    transposition. Les mêmes cinq cases, remplies de la mesure de cet
+    indicateur, de son score, de sa pondération et du score de sa dimension,
+    la lui donnent faite.
+
+    CE QUI MANQUE EST DIT, JAMAIS INVENTÉ. Un indicateur mesuré dont le score
+    n'est pas encore au fichier affiche « non calculé » : écrire un score
+    plausible à cet endroit serait publier un chiffre qui n'a pas tourné.
+    """
+    par = _bandes(x["echelle"])
+    pct = "%" in "".join(par.values()) if par else "%" in x["echelle"]
+    val = ("—" if x["valeur"] is None
+           else _fmt(x["valeur"], 1) + (" %" if pct else ""))
+    if par:
+        norme_v, norme_s = T("cad_e2_v"), T("cad_ex_seuils")
+    else:
+        norme_v, norme_s = T("cad_e2_v"), T("cad_ex_stat")
+    if x["score"] is None:
+        sc_v, sc_x = T("cad_ex_sc_non"), T("cad_ex_sc_non_x")
+    else:
+        sc_v, sc_x = _fmt(x["score"], 1) + " / 10", T("cad_e3_x")
+    dsc = _score_dimension(x["dim"])
+    return _chaine([
+        _case(T("cad_e1_t"), val, T("cad_ex_brut"), x["metrique"]),
+        _case(T("cad_e2_t"), norme_v, norme_s, T("cad_e2_x")),
+        _case(T("cad_e3_t"), sc_v, T("cad_e3_s"), sc_x),
+        _case(T("cad_e4_t"), T("cad_ex_p", p=_fmt(x["poids"], 1)),
+              T("cad_e4_s"), T("cad_ex_p_x")),
+        _case(T("cad_e5_t"),
+              "—" if dsc is None else _fmt(dsc, 2) + " / 10",
+              T(x["dim"]), T("cad_ex_dim_x"))])
+
+
+def _normalisations(x=None):
+    """Les deux façons de normaliser, sous la chaîne.
+
+    LES PALIERS SONT CEUX DE L'INDICATEUR QUAND IL Y EN A UN. La colonne de
+    droite montrait les cinq seuils de l'exemple ; quand un indicateur est
+    ouvert, ce sont ses onze paliers à lui qui s'y écrivent, et la
+    normalisation par seuils cesse d'être une notion pour devenir la sienne.
+    """
+    par = _bandes(x["echelle"]) if x else {}
+    if par:
+        # LES PARENTHÈSES DE SAISIE NE SE PUBLIENT PAS. Le référentiel écrit
+        # ses bornes « (≤5%) » ; dans une colonne où chaque ligne est déjà un
+        # palier, la parenthèse ne sépare plus rien.
+        brut = "|".join(f"{par[i].strip('()[] ')}→{i}"
+                        for i in sorted(par) if par[i])
+        titre_b, sous_b = T("cad_p2b_t"), T("cad_ex_seuils_i")
+    else:
+        brut, titre_b, sous_b = T("cad_p2b_r"), T("cad_p2b_t"), T("cad_p2b_x")
+    return ('<div class="cad-nrm"><div>'
+            + f'<div class="cad-nrm-t">{_e(T("cad_p2s_t"))}</div>'
+            + f'<div class="cad-nrm-x">{_e(T("cad_p2s_x"))}</div>'
+            + '<div class="cad-duo">'
+            + _formule(T("cad_p2h"), 'x<sub>i</sub> &minus; x<sub>min</sub>')
+            + _formule(T("cad_p2l"), 'x<sub>max</sub> &minus; x<sub>i</sub>')
+            + '</div></div><div>'
+            + f'<div class="cad-nrm-t">{_e(titre_b)}</div>'
+            + f'<div class="cad-nrm-x">{_e(sous_b)}</div>'
+            + '<div class="cad-duo">' + _seuils(brut)
+            + f'<div class="cad-seu-n">{_e(T("cad_p2b_n"))}</div>'
+            + '</div></div></div>')
+
+
 def _v_score(stats):
     """La chaîne de calcul en cinq étapes, puis les deux normalisations.
 
@@ -2011,36 +2152,8 @@ def _v_score(stats):
     # disque qui les portait coûtait cent pixels de hauteur sur une rangée qui
     # doit se lire d'un seul coup d'œil. Le chiffre est ce qui compte ici, et
     # il monte d'autant.
-    ETAPES = ("cad_e1", "cad_e2", "cad_e3", "cad_e4", "cad_e5")
-    cases = []
-    for i, k in enumerate(ETAPES):
-        if i:
-            cases.append('<div class="cad-ch-fl">'
-                         + icones.svg("chevron", couleur="#8fb39c", taille=22)
-                         + '</div>')
-        cases.append(
-            '<div class="cad-ch-e">'
-            f'<div class="cad-ch-t">{_e(T(k + "_t"))}</div>'
-            f'<div class="cad-ch-v">{_e(T(k + "_v"))}</div>'
-            f'<div class="cad-ch-s">{_e(T(k + "_s"))}</div>'
-            f'<p class="cad-ch-x">{_e(T(k + "_x"))}</p></div>')
-    st.markdown(f'<div class="cad-ch">{"".join(cases)}</div>',
+    st.markdown(_chaine_generique() + _normalisations(),
                 unsafe_allow_html=True)
-
-    # ---- les deux façons de normaliser, sous la chaîne --------------------
-    st.markdown(
-        '<div class="cad-nrm"><div>'
-        + f'<div class="cad-nrm-t">{_e(T("cad_p2s_t"))}</div>'
-        + f'<div class="cad-nrm-x">{_e(T("cad_p2s_x"))}</div>'
-        + '<div class="cad-duo">'
-        + _formule(T("cad_p2h"), 'x<sub>i</sub> &minus; x<sub>min</sub>')
-        + _formule(T("cad_p2l"), 'x<sub>max</sub> &minus; x<sub>i</sub>')
-        + '</div></div><div>'
-        + f'<div class="cad-nrm-t">{_e(T("cad_p2b_t"))}</div>'
-        + f'<div class="cad-nrm-x">{_e(T("cad_p2b_x"))}</div>'
-        + '<div class="cad-duo">' + _seuils(T("cad_p2b_r"))
-        + f'<div class="cad-seu-n">{_e(T("cad_p2b_n"))}</div>'
-        + '</div></div></div>', unsafe_allow_html=True)
 
 
 # --- les indicateurs, leur échelle et leur pondération ----------------------
@@ -2059,40 +2172,54 @@ def _v_indicateurs():
     barème qui n'est pas celui qui a tourné. Le seul retrait est le préfixe de
     saisie.
 
-    UN FILTRE ET UNE RECHERCHE, PARCE QU'IL Y EN A CENT VINGT-HUIT. Une liste
-    de cent vingt-huit lignes sans moyen d'y entrer n'est pas une liste, c'est
-    un mur.
+    UN INDICATEUR À LA FOIS, ET LA DIMENSION NE SERT QU'À LE TROUVER. Cent
+    vingt-huit lignes s'ouvraient d'elles-mêmes, chacune avec sa règle
+    graduée : quatre écrans de défilement avant d'atteindre les contrôles
+    qui, seuls, permettaient d'y entrer, et le lecteur venu vérifier UN
+    indicateur devait d'abord traverser les cent vingt-sept autres. La
+    dimension restreint la liste déroulante ; c'est l'indicateur choisi qui
+    se déplie, et lui seul.
 
-    ET RIEN TANT QUE LE FILTRE N'A PAS RÉPONDU. Les cent vingt-huit lignes
-    s'ouvraient d'elles-mêmes, chacune avec sa règle graduée : quatre écrans
-    de défilement avant d'atteindre les deux contrôles qui, seuls,
-    permettaient d'y entrer, et le lecteur venu vérifier UN indicateur devait
-    d'abord traverser les cent vingt-sept autres. La liste ne se dessine
-    maintenant qu'une fois la dimension choisie ou le mot tapé.
+    ET LA CHAÎNE DE CALCUL LE SUIT. Savoir qu'un indicateur porte tel barème
+    et telle pondération ne dit pas encore ce qu'il devient : les cinq étapes
+    qui mènent de sa mesure à un score de dimension se déroulent juste en
+    dessous, sur ses chiffres à lui. Tant qu'aucun indicateur n'est ouvert,
+    les mêmes cinq étapes se lisent sur un exemple, de sorte que l'onglet
+    enseigne la méthode même à qui ne cherche rien de précis.
     """
     tous = _referentiel()
     if not tous:
         st.info(T("e_absent"))
         return
-    g, d = st.columns([1, 1.6])
+    g, d = st.columns([1, 2])
     with g:
         dim = st.selectbox(T("cad_ind_dim"), [None] + ORDRE, key="cad_i_dim",
                            format_func=lambda c: (T("cad_ind_all") if c is None
                                                   else T(c)))
+    # LA LISTE SUIT LA DIMENSION, ET LA SÉLECTION NE SURVIT PAS À UN
+    # CHANGEMENT DE DIMENSION. Streamlit garde la valeur d'un selectbox même
+    # quand elle a quitté ses options ; sans ce nettoyage, choisir une
+    # dimension après un indicateur laissait à l'écran un indicateur qui n'en
+    # fait pas partie.
+    choix = [x for x in tous if dim is None or x["dim"] == dim]
+    cles = [x["ligne"] for x in choix]
+    if st.session_state.get("cad_i_ind") not in cles:
+        st.session_state["cad_i_ind"] = None
+    par_cle = {x["ligne"]: x for x in choix}
     with d:
-        q = st.text_input(T("cad_ind_q"), key="cad_i_q").strip().lower()
+        cle = st.selectbox(T("cad_ind_ind"), cles, key="cad_i_ind",
+                           index=None, placeholder=T("cad_ind_tous"),
+                           format_func=lambda k: par_cle[k]["nom"])
 
-    if dim is None and not q:
-        st.markdown(f'<p class="cad-attr-x" style="margin-top:10px">'
+    if cle is None:
+        st.markdown(f'<p class="cad-attr-x" style="margin:10px 0 18px">'
                     f'{_e(T("cad_ind_vide"))}</p>', unsafe_allow_html=True)
+        st.markdown(f'<div class="cad-ex-t">{_e(T("cad_ex_gen"))}</div>'
+                    + _chaine_generique() + _normalisations(),
+                    unsafe_allow_html=True)
         return
 
-    vus = [x for x in tous
-           if (dim is None or x["dim"] == dim)
-           and (not q or q in x["nom"].lower() or q in x["metrique"].lower())]
-    if not vus:
-        st.info(T("cad_ind_rien"))
-        return
+    vus = [par_cle[cle]]
 
     # LA BARRE A SAUTÉ, ET L'ÉCHELLE EST ÉCRITE. Une barre de quatre-vingts
     # pixels disait la même chose que le nombre à côté d'elle, en moins
@@ -2123,13 +2250,15 @@ def _v_indicateurs():
     lignes.append('</tbody></table>')
     st.markdown("".join(lignes), unsafe_allow_html=True)
 
-    # CE QU'IL ADVIENT DE CES INDICATEURS, SOUS LA LISTE. La phrase fermait
+    # CE QU'IL ADVIENT DE CET INDICATEUR, SOUS SA LIGNE. La phrase fermait
     # l'onglet des sources, où elle annonçait une opération sur des
-    # indicateurs qui n'avaient pas encore été montrés. Ici, elle dit ce que
-    # devient ce qu'on vient de lire : chacune de ces règles graduées produit
-    # un score, et les scores s'agrègent sur les sept dimensions.
-    st.markdown(f'<p class="cad-attr-x" style="margin:16px 0 0">'
-                f'{_e(T("cad_band_x"))}</p>', unsafe_allow_html=True)
+    # indicateurs qui n'avaient pas encore été montrés. Ici, elle ouvre les
+    # cinq étapes qui l'exécutent, sur les chiffres de l'indicateur ouvert.
+    st.markdown(f'<p class="cad-attr-x" style="margin:16px 0 4px">'
+                f'{_e(T("cad_band_x"))}</p>'
+                f'<div class="cad-ex-t">{_e(T("cad_ex_titre"))}</div>'
+                + _chaine_indicateur(vus[0])
+                + _normalisations(vus[0]), unsafe_allow_html=True)
 
 
 # --- 5 · les boucles de rétroaction ----------------------------------------
@@ -2192,8 +2321,11 @@ def _v_boucles():
     # LA DÉFINITION OUVRE CET ONGLET-CI. Elle annonce un paysage « compris
     # comme un système complexe adaptatif » : c'est exactement ce que les
     # boucles montrent, et c'est ici qu'elle apprend quelque chose.
-    st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>'
-                f'<p class="cad-bt-x">{_e(T("cad_bt_x"))}</p>',
+    # LA SECONDE PHRASE EST PARTIE. « Voir comment les causes et les effets
+    # se répondent » annonçait le parcours en quatre temps qui se lit juste
+    # en dessous, et la définition qui la précède dit déjà de quel objet on
+    # parle : deux annonces avant la première chose à regarder.
+    st.markdown(f'<p class="cad-uma">{_e(T("cad_uma"))}</p>',
                 unsafe_allow_html=True)
 
     # UN SEUL VERT POUR LES QUATRE. Rouge, ambre, bleu, vert : quatre teintes
@@ -2202,6 +2334,10 @@ def _v_boucles():
     # — là où il n'y a qu'un ordre de lecture. Le numéro le donne déjà. La
     # couleur, elle, redevient ce qu'elle est ailleurs sur le site : celle du
     # site, et rien de plus.
+    # LE FILET AU-DESSUS DE CHAQUE TEMPS EST PARTI. Quatre traits verts en
+    # tête de colonne dessinaient quatre en-têtes de tableau au-dessus d'un
+    # parcours qui n'en est pas un : le numéro et le chevron disent déjà
+    # l'ordre, et le titre vert dit déjà où commence chaque temps.
     ETAPES = ("cad_b1", "cad_b2", "cad_b3", "cad_b4")
     VERT = "#1a6b52"
     cases = []
@@ -2213,7 +2349,6 @@ def _v_boucles():
                          + '</div>')
         cases.append(
             '<div class="cad-bp-e">'
-            f'<div class="cad-bp-fi" style="background:{coul}"></div>'
             f'<div class="cad-bp-t" style="color:{coul}">'
             f'{i}. {_e(T(k + "_t")).upper()}</div>'
             f'<div class="cad-bp-x">{_e(T(k + "_x"))}</div>'
@@ -2248,9 +2383,10 @@ def _v_boucles():
         f'<div class="cad-bl-n" style="color:#d1730c">'
         f'{_e(T("cad_bl_b"))}</div>'
         f'<div class="cad-bl-s">{_e(T("cad_bl_b_x"))}</div></div></div>'
-        '<div class="cad-bl-i"><div>'
-        f'<div class="cad-bl-it">{_e(T("cad_bl_i_t"))}</div>'
-        f'<p class="cad-bl-ix">{_e(T("cad_bl_i_x"))}</p></div></div>'
+        # L'AVERTISSEMENT EST PARTI. « + ne veut pas dire bon » posé sous
+        # deux pastilles qui portent chacune sa phrase — « si A augmente, B
+        # augmente », « si A augmente, B diminue » — redisait en négatif ce
+        # que les deux disaient déjà en clair.
         '</div></div>', unsafe_allow_html=True)
 
 
