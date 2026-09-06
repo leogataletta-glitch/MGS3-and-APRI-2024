@@ -81,7 +81,7 @@ TEXTES = {
     "ex_reponse": {"en": "Answer", "fr": "Réponse"},
     "ex_axe": {"en": "Project results by", "fr": "Projeter les résultats par"},
     "ex_axe2": {"en": "Then by", "fr": "Puis par"},
-    "ex_axe_non": {"en": "— nothing", "fr": "— rien"},
+    "ex_axe_non": {"en": "None", "fr": "Aucun"},
     "ex_ax_section": {"en": "Communal section", "fr": "Section communale"},
     "ex_ax_sexe": {"en": "Sex", "fr": "Sexe"},
     "ex_ax_age": {"en": "Age group", "fr": "Tranche d'âge"},
@@ -237,9 +237,6 @@ TEXTES = {
     "ex_raz": {"en": "Clear all", "fr": "Tout effacer"},
     "ex_res": {"en": "Results", "fr": "Résultats"},
     "ex_b_pop": {"en": "Population filters", "fr": "Filtres de population"},
-    "ex_b_pop_x": {
-        "en": "Communal section, sex, age, economic group, landscape",
-        "fr": "Section communale, sexe, âge, catégorie économique, paysage"},
     "ex_b_pop_n": {"en": "{n} active", "fr": "{n} actifs"},
     "ex_b_cond": {"en": "Add a condition", "fr": "Ajouter une condition"},
     "ex_b_cond_on": {"en": "Condition applied", "fr": "Condition appliquée"},
@@ -251,11 +248,6 @@ TEXTES = {
     "ex_b_source": {"en": "Source", "fr": "Source"},
     "ex_b_toutes": {"en": "All answers", "fr": "Toutes les réponses"},
     "ex_b_filtres": {"en": "Filters", "fr": "Filtres"},
-    "ex_b_filtres_x": {
-        "en": "One answer, communal section, sex, age, economic group, "
-              "landscape",
-        "fr": "Une réponse, section communale, sexe, âge, catégorie "
-              "économique, paysage"},
     "ex_aucun_f": {"en": "No filter", "fr": "Aucun filtre"},
     "ex_f_section": {"en": "Communal section", "fr": "Section communale"},
     "ex_f_paysage": {"en": "Landscape", "fr": "Paysage"},
@@ -1795,50 +1787,39 @@ def raz_brut():
 
 
 def _projection(cle, dispo, libelle, facultatif=False):
-    """Trois niveaux emboîtés : par quoi on projette, puis par quoi encore.
+    """Un niveau, puis le suivant s'il est demandé : jamais de case orpheline.
 
-    POURQUOI TROIS MENUS ORDONNÉS PLUTÔT QU'UN MENU À COCHER. Le champ à
-    cocher permettait déjà de croiser trois registres, mais il n'en disait
-    ni l'ordre ni le sens : trois cases cochées donnaient « les femmes de la
-    montagne de plus de soixante ans » sans qu'on ait jamais demandé un
-    emboîtement, et l'ordre des lignes dépendait de l'ordre de la liste, pas
-    de celui de la pensée. Trois menus disent exactement ce qu'ils font :
-    d'abord par paysage, PUIS par sexe — les hommes et les femmes DANS
-    chaque paysage, dans cet ordre-là.
+    LE MENU SUIVANT N'EXISTE QUE SI LE PRÉCÉDENT EST POSÉ. Trois cases
+    alignées dont la troisième n'avait pas d'intitulé et affichait « choisir
+    une option » ne disaient pas ce qu'elles attendaient : on voyait trois
+    réglages de même rang là où il y a un emboîtement. Le deuxième niveau
+    n'apparaît qu'une fois le premier choisi, le troisième qu'une fois le
+    deuxième choisi, et chacun porte son intitulé.
 
     UN NIVEAU NE PROPOSE JAMAIS CE QUI EST DÉJÀ PRIS au-dessus de lui : le
-    même registre deux fois ne croiserait rien, il produirait des cases
-    vides. Et le troisième niveau ne s'ouvre qu'une fois le deuxième posé,
-    parce qu'un emboîtement à trous n'existe pas.
+    même registre deux fois ne croiserait rien.
     """
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        # LE PREMIER NIVEAU EST FACULTATIF LÀ OÙ LE RÉSULTAT SE SUFFIT SANS
-        # LUI : sur les scores, un chiffre unique est une réponse complète,
-        # et projeter est une demande de plus.
+    cols = st.columns(3)
+    with cols[0]:
         a1 = st.selectbox(
-            libelle, ([None] + dispo) if facultatif else dispo,
-            key=f"{cle}_1",
-            format_func=lambda a: (T("ex_axe_non") if a is None
-                                   else T(dict(AXES)[a])))
-    reste2 = [a for a in dispo if a != a1]
-    with c2:
-        a2 = st.selectbox(
-            T("ex_axe2"), [None] + reste2, key=f"{cle}_2",
-            disabled=a1 is None,
-            format_func=lambda a: (T("ex_axe_non") if a is None
-                                   else T(dict(AXES)[a])))
-    with c3:
-        reste3 = [a for a in reste2 if a != a2]
-        a3 = st.selectbox(
-            T("ex_axe2"), [None] + reste3, key=f"{cle}_3",
-            label_visibility="hidden", disabled=a2 is None,
-            format_func=lambda a: (T("ex_axe_non") if a is None
-                                   else T(dict(AXES)[a])))
-    if a1 is None:
-        return []
-    return [a for a in (a1, a2, a3 if a2 is not None else None)
-            if a is not None]
+            libelle, dispo, key=f"{cle}_1",
+            index=None if facultatif else 0,
+            placeholder=T("ex_axe_non"),
+            format_func=lambda a: T(dict(AXES)[a]))
+    a2 = a3 = None
+    if a1 is not None:
+        with cols[1]:
+            a2 = st.selectbox(
+                T("ex_axe2"), [a for a in dispo if a != a1], key=f"{cle}_2",
+                index=None, placeholder=T("ex_axe_non"),
+                format_func=lambda a: T(dict(AXES)[a]))
+        if a2 is not None:
+            with cols[2]:
+                a3 = st.selectbox(
+                    T("ex_axe2"), [a for a in dispo if a not in (a1, a2)],
+                    key=f"{cle}_3", index=None, placeholder=T("ex_axe_non"),
+                    format_func=lambda a: T(dict(AXES)[a]))
+    return [a for a in (a1, a2, a3) if a is not None]
 
 
 def _filtres_population(cat, prefixe="exb_f_", registres=None,
@@ -1865,10 +1846,9 @@ def _filtres_population(cat, prefixe="exb_f_", registres=None,
         lib += " · " + T("ex_b_pop_n", n=n_actifs)
     choix = {}
     with st.expander(lib, expanded=bool(n_actifs)):
-        st.markdown(
-            f'<p class="exb-x" style="margin:0 0 8px">'
-            f'{_e(T("ex_b_filtres_x" if question is not None else "ex_b_pop_x"))}'
-            f'</p>', unsafe_allow_html=True)
+        # PAS DE LIGNE QUI ÉNUMÈRE CE QUI SUIT. « Une réponse, section
+        # communale, sexe, âge, catégorie économique, paysage » listait, en
+        # gris, les intitulés des six champs posés juste dessous.
         # LE BOUTON DE VIDAGE VIENT AVANT LES CHAMPS : posé après, il
         # écrirait dans l'état de widgets déjà construits, ce que Streamlit
         # refuse. Avant, il les vide pendant qu'ils n'existent pas encore.
@@ -1877,11 +1857,17 @@ def _filtres_population(cat, prefixe="exb_f_", registres=None,
             for k in cles.values():
                 st.session_state[k] = []
         if question is not None:
-            modalite = st.selectbox(
-                T("ex_reponse"), [None] + list(question["modalites"]),
-                key=f"exb_m_{question['i']}",
-                format_func=lambda m: (T("ex_b_toutes") if m is None
-                                       else libelles_enquete.modalite(m)))
+            # LA RÉPONSE EST UN FILTRE COMME LES AUTRES, et elle en a la
+            # forme : un champ de la même largeur que les cinq registres,
+            # vide par défaut, avec « toutes les réponses » écrit en gris
+            # dedans plutôt qu'une valeur qui aurait l'air d'être un choix.
+            cr = st.columns(len(registres))
+            with cr[0]:
+                modalite = st.selectbox(
+                    T("ex_reponse"), list(question["modalites"]),
+                    key=f"exb_m_{question['i']}", index=None,
+                    placeholder=T("ex_b_toutes"),
+                    format_func=libelles_enquete.modalite)
         cols = st.columns(len(registres))
         for (axe, lab), col in zip(registres, cols):
             with col:
