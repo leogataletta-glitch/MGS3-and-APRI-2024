@@ -368,55 +368,16 @@ st.markdown(("""
      fenêtre pour de bon : sous la bande, c'est la même couleur, et il n'y a
      plus jamais de blanc. La page, elle, garde son blanc — il est posé sur
      le bloc principal, qui couvre tout le reste. */
+  /* LE CADRE EST BLANC, COMME LA PAGE. Il était vert pour que le bandeau du
+     bas puisse prolonger sa couleur jusqu'au bord de la fenêtre ; sans
+     bandeau, ce vert-là ne fermait plus rien, il posait une bande sous le
+     contenu. La seule zone verte du site est désormais la colonne de gauche,
+     qui porte sa couleur elle-même. */
   div[data-testid="stApp"], .stApp,
   div[data-testid="stAppViewContainer"],
-  section[data-testid="stMain"], div[data-testid="stMain"] {
-      background: #1f5b46 !important;
-  }
-  /* LE BLANC DE LA PAGE EST PORTÉ PAR LE BLOC DE CONTENU, PAS PAR LE CADRE.
-     Peint sur le bloc principal, le blanc s'arrêtait un pixel après la bande
-     verte et laissait un trait clair entre elle et le fond : le zoom de
-     quatre-vingt-quinze pour cent tombe entre deux pixels. Descendu d'un
-     cran, il ne va que jusqu'au bas du contenu, et tout ce qui suit — le
-     dernier pixel de la bande comme le bas de la fenêtre — est du même
-     vert. */
-  div[data-testid="stMainBlockContainer"] { background: #ffffff !important; }
-  div[data-testid="stLayoutWrapper"]:has(> div[class*="st-key-zone_pied"]) {
-      margin-top: auto !important; padding-top: 34px !important;
-      /* SANS CELA, LE FLEX LE COMPRIME : la colonne rétrécit son dernier
-         bloc pour tenir la hauteur promise, et la bande verte dépassait de
-         sa boîte par le bas. Le pied ne se comprime pas. */
-      flex: 0 0 auto !important;
-  }
-  /* L'ÉCART AU-DESSUS DU PIED EST PORTÉ PAR L'ENVELOPPE, PAS PAR LE PIED :
-     une marge posée sur le pied lui-même sort de la boîte que le flex
-     mesure. */
-  .pied { margin-top: 0 !important;
-    /* ET SON VERT SE PROLONGE SOUS ELLE. Entre le bas de la bande et le bas
-       du bloc principal, il restait un filet de blanc — seize pixels, ceux
-       que Streamlit ne compte pas — et sous le bloc reprenait le vert du
-       fond : on lisait deux bandes vertes séparées par un trait clair.
-       L'ombre portée, sans flou ni étalement, peint une copie de la bande
-       cent pixels plus bas, élargie de six : l'élargissement fait remonter
-       la copie de six pixels sous la bande, ce qui recouvre le trait d'un
-       pixel que le zoom laissait à la jointure. Le vert est continu jusqu'au
-       bord de la fenêtre, et rien n'a bougé dans la mise en page. */
-    box-shadow: 0 100px 0 6px #1f5b46 !important;
-    /* ET QUATRE PIXELS DE BORD, DE LA MÊME COULEUR : la boîte descend
-       jusqu'au bas du bloc principal, et le trait blanc que le zoom laissait
-       à sa dernière ligne disparaît sous elle. */
-    border-bottom: 4px solid #1f5b46 !important; }
-  /* ET SES ENVELOPPES LE MESURENT VRAIMENT. Streamlit centre le contenu d'un
-     conteneur de markdown : la bande verte, plus haute que la ligne de texte
-     qu'elle porte, débordait de sa boîte au lieu de l'agrandir. */
-  div[class*="st-key-zone_pied"],
-  div[data-testid="stLayoutWrapper"]:has(> div[class*="st-key-zone_pied"]),
-  div[class*="st-key-zone_pied"] div[data-testid="stElementContainer"],
-  div[class*="st-key-zone_pied"] div[data-testid="stMarkdown"],
-  div[class*="st-key-zone_pied"] div[data-testid="stMarkdown"] > div,
-  div[class*="st-key-zone_pied"] div[data-testid="stMarkdownContainer"] {
-      height: auto !important; min-height: 0 !important;
-      display: block !important;
+  section[data-testid="stMain"], div[data-testid="stMain"],
+  div[data-testid="stMainBlockContainer"] {
+      background: #ffffff !important;
   }
   div[data-testid="stVerticalBlock"] { gap: .65rem; }
   div[data-testid="stElementContainer"] { margin-bottom: 0; }
@@ -966,6 +927,25 @@ st.markdown(("""
   /* LE TITRE DE FAMILLE : petit, en capitales espacées, vert sourd. Il ne
      doit pas peser autant que les rubriques qu'il coiffe — c'est une
      étiquette de rangement, pas une destination. */
+  /* LE PIED DE LA COLONNE : la devise, puis le crédit, tous deux en vert
+     clair sur le vert de la bande, séparés des rubriques par un filet. */
+  div[class*="st-key-zone_nav"] .nav-pied {
+    margin: 28px 0 4px; padding: 16px 10px 0;
+    border-top: 1px solid rgba(255,255,255,.16);
+  }
+  div[class*="st-key-zone_nav"] .nav-pied svg { display: block;
+    margin-bottom: 8px; }
+  /* AU FIL DE L'EAU, LES DEUX. La feuille de l'application justifie les
+     blocs de texte ; sur une colonne de deux cents pixels, la justification
+     creuse des rivières entre les mots. */
+  div[class*="st-key-zone_nav"] .nav-devise {
+    font-size: 12px; line-height: 1.5; color: #cfe3d8;
+    font-style: italic; text-align: left !important;
+  }
+  div[class*="st-key-zone_nav"] .nav-credit {
+    font-size: 10.5px; line-height: 1.45; color: #8fbfa8; margin-top: 10px;
+    text-align: left !important;
+  }
   div[class*="st-key-zone_nav"] .nav-famille {
     font-size: 10px; font-weight: 700; letter-spacing: .11em;
     /* SUR FOND VERT, L'ÉTIQUETTE PASSE EN VERT CLAIR. Elle garde son rôle —
@@ -1166,21 +1146,6 @@ st.markdown(("""
      `object-fit: scale-down` : l'illustration se réduisait alors pour tenir
      entière dans le bandeau, et se retrouvait posée en petit au milieu d'une
      bande blanche au lieu de la remplir. */
-  /* LE PIED DE PAGE, EN PLEINE LARGEUR ET EN VERT PROFOND. Il ferme la page
-     comme le bandeau l'ouvre : deux barres de la même largeur, l'une claire
-     et l'autre foncée, entre lesquelles le contenu tient. Sans lui, la page
-     s'arrêtait sur du blanc et rien ne disait qu'on était arrivé au bout. */
-  .pied {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 20px; flex-wrap: wrap;
-    background: #1f5b46; color: #e6f0ea;
-    padding: 13px calc(2.6rem * var(--dz)); margin-top: 34px;
-    font-size: 12px; line-height: 1.5;
-  }
-  .pied .pd-g { display: flex; align-items: center; gap: 10px; }
-  .pied .pd-devise { color: #cfe3d8; }
-  .pied .pd-credit { color: #a9c7b8; }
-  @media (max-width: 700px) { .pied { justify-content: flex-start; } }
 
   /* L'ILLUSTRATION OCCUPE TOUTE LA LARGEUR, ET SON VOILE EST DANS LE FICHIER.
      Le dégradé blanc qui éclaircit le tiers gauche a été composé dans l'image
@@ -1191,21 +1156,6 @@ st.markdown(("""
      `object-fit: scale-down` : l'illustration se réduisait alors pour tenir
      entière dans le bandeau, et se retrouvait posée en petit au milieu d'une
      bande blanche au lieu de la remplir. */
-  /* LE PIED DE PAGE, EN PLEINE LARGEUR ET EN VERT PROFOND. Il ferme la page
-     comme le bandeau l'ouvre : deux barres de la même largeur, l'une claire
-     et l'autre foncée, entre lesquelles le contenu tient. Sans lui, la page
-     s'arrêtait sur du blanc et rien ne disait qu'on était arrivé au bout. */
-  .pied {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 20px; flex-wrap: wrap;
-    background: #1f5b46; color: #e6f0ea;
-    padding: 13px calc(2.6rem * var(--dz)); margin-top: 34px;
-    font-size: 12px; line-height: 1.5;
-  }
-  .pied .pd-g { display: flex; align-items: center; gap: 10px; }
-  .pied .pd-devise { color: #cfe3d8; }
-  .pied .pd-credit { color: #a9c7b8; }
-  @media (max-width: 700px) { .pied { justify-content: flex-start; } }
 
 
   /* LE LOGO DU PNUE EST UN CALQUE, PAS UN MORCEAU DE LA PHOTOGRAPHIE. Le
@@ -1903,9 +1853,9 @@ _zone_nav = _col_nav.container(key="zone_nav")
 # l'ordre de création des conteneurs qui fixe l'ordre à l'écran, pas celui
 # des appels qui les remplissent.
 _ruban = _col_page.container(key="zone_ruban")
-# Réservé maintenant, peint tout en bas : il doit venir après les deux
-# colonnes dans le flux, et son contenu n'est connu qu'une fois la page rendue.
-_pied = st.container(key="zone_pied")
+# LE CONTENEUR DU PIED A DISPARU AVEC LUI. Un conteneur vide en fin de flux
+# n'est pas neutre : la feuille de style lui donne une hauteur minimale et une
+# marge automatique, et il laissait une bande blanche sous la page.
 _zone_barre = st.container()
 
 # LA LANGUE EST LUE ICI, AVANT TOUT APPEL À T(), ET CHANGÉE DANS LE BANDEAU.
@@ -2211,6 +2161,15 @@ with _zone_nav:
                         unsafe_allow_html=True)
         for _mode, _icone in _entrees:
             _entree_nav(_mode, _icone)
+    # LA DEVISE FERME LA COLONNE. Un filet la sépare de la dernière rubrique :
+    # sans lui, elle se lirait comme une entrée de menu qui ne mène nulle part.
+    st.markdown(
+        '<div class="nav-pied">'
+        + icones.svg("pousse", couleur="#8fc4a8", taille=15)
+        + f'<div class="nav-devise">{T("pied_devise")}</div>'
+        f'<div class="nav-credit">'
+        f'{T("pied_credit", a=datetime.date.today().year)}</div></div>',
+        unsafe_allow_html=True)
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
 # l'aiguillage, pour que chaque page se dessine dedans sans avoir à savoir
@@ -2482,16 +2441,10 @@ with _c_contenu:
         a_propos_page.render_contact()
 
 
-# LE PIED EST RENDU HORS DE LA COLONNE DE DROITE, pour qu'il prenne toute la
-# largeur — colonne de menu comprise. Rendu dedans, il se serait arrêté au
-# bord du contenu et aurait laissé un angle blanc sous le menu.
-with _pied:
-    st.markdown(
-        f'<div class="bandeau-haut pied">'
-        f'<div class="pd-g">'
-        + icones.svg("pousse", couleur="#8fc4a8", taille=16)
-        + f'<span class="pd-devise">{T("pied_devise")}</span></div>'
-        f'<span class="pd-credit">'
-        f'{T("pied_credit", a=datetime.date.today().year)}</span>'
-        f'</div>', unsafe_allow_html=True)
+# LE BANDEAU DU BAS A ÉTÉ RETIRÉ, ET SA DEVISE EST DESCENDUE DANS LA COLONNE.
+# Depuis que la colonne de gauche est verte et court du haut au bas de la
+# fenêtre, le bandeau du bas répétait le même vert sur toute la largeur : deux
+# bandes de la même couleur qui se rejoignent dans l'angle, et une page prise
+# en tenaille. La devise et le crédit tiennent au pied de la colonne, où ils
+# ferment la liste des rubriques sans coûter une bande de plus.
 

@@ -101,13 +101,20 @@ STYLE = """
      un texte posé dessus sans voile passe de lisible à illisible au fil de
      l'image. Le voile part du blanc à gauche, où vit le texte, et s'efface
      à droite, où l'image doit rester nette. */
+  /* LE DESSIN EST PÂLE ET S'ÉTEINT DÉJÀ EN BLANC SUR SA GAUCHE : le voile
+     n'a donc plus à couvrir la moitié du cadre, il lui suffit d'assurer le
+     tiers où vit le texte. Et comme l'image est une frise très large, elle
+     est cadrée sur sa droite — le champ, le chemin et la maison — plutôt
+     qu'étirée sur une hauteur qu'elle n'a pas. */
   .a2-hero { position:relative; border-radius:0; overflow:hidden;
-        min-height:440px; display:flex; align-items:center;
-        background-size:cover; background-position:center right; }
+        min-height:370px; display:flex; align-items:center;
+        background-color:#ffffff;
+        background-size:cover; background-position:right center;
+        background-repeat:no-repeat; }
   .a2-hero::before { content:""; position:absolute; inset:0;
         background:linear-gradient(90deg,
-            rgba(252,253,252,.97) 0%, rgba(252,253,252,.92) 34%,
-            rgba(252,253,252,.55) 56%, rgba(252,253,252,0) 78%); }
+            rgba(255,255,255,.96) 0%, rgba(255,255,255,.88) 30%,
+            rgba(255,255,255,.42) 48%, rgba(255,255,255,0) 66%); }
   .a2-hero-c { position:relative; padding:52px 40px 48px 46px;
         max-width:640px; }
   .a2-kick { font-size:11.5px; font-weight:700; letter-spacing:.19em;
@@ -122,8 +129,10 @@ STYLE = """
   p.a2-intro { font-size:15.5px !important; color:#3c4761 !important;
         line-height:1.62 !important; margin:0 0 26px !important;
         max-width:44ch; text-align:left !important; }
+  /* LE CRÉDIT PASSE EN ENCRE SOMBRE. En blanc, il était posé sur un dessin
+     clair et ne se voyait plus. */
   .a2-credit { position:absolute; right:18px; bottom:14px; font-size:11.5px;
-        color:#ffffff; text-shadow:0 1px 3px rgba(0,0,0,.45); }
+        color:#5a6a80; }
 
   /* --- LES QUATRE NOMBRES, SUR UNE RANGÉE ------------------------------
      Séparés par un filet plutôt que par des cartes : ce sont quatre mesures
@@ -237,16 +246,24 @@ def _trouver(nom):
 
 
 @st.cache_data(show_spinner=False)
-def _photo_b64():
-    """La photographie du bandeau, encodée une fois pour toutes.
+def _photo_b64(lang="fr"):
+    """L'illustration du bandeau, celle du premier accueil, encodée une fois.
 
-    LA VERSION PHOTOGRAPHIQUE, PAS LE DESSIN. Le dessin au crayon a été choisi
-    pour l'autre accueil parce qu'il se fond dans le blanc de la page ; ici
-    l'image occupe tout le cadre et porte le titre, donc c'est la photographie
-    qu'il faut.
+    LE DESSIN, ET NON LA PHOTOGRAPHIE. Le dessin au crayon tient sur le même
+    blanc que la page : le titre s'y pose sans avoir besoin d'un voile épais,
+    et le bandeau ne dépose pas un rectangle de couleur en haut de l'écran. Le
+    premier accueil l'avait choisi pour cette raison, et les deux pages
+    d'entrée du même site n'ont pas à porter deux images différentes.
+
+    UNE COMPOSITION PAR LANGUE. Le titre est peint DANS l'image ; la version
+    anglaise est cherchée d'abord quand la langue servie est l'anglais, et la
+    française reprend sa place si elle manque.
     """
-    for nom in ("bandeau_apri_site.jpg", "bandeau_apri_large.jpg",
-                "bandeau_apri.jpg", "bandeau_apri_dessin.jpg"):
+    noms = ["bandeau_apri_dessin.jpg", "bandeau_apri_site.jpg",
+            "bandeau_apri_large.jpg", "bandeau_apri.jpg"]
+    if lang == "en":
+        noms.insert(0, "bandeau_apri_dessin_en.jpg")
+    for nom in noms:
         p = _trouver(nom)
         if p:
             with open(p, "rb") as f:
@@ -304,7 +321,7 @@ def render():
     st.markdown(_CSS_ICONES, unsafe_allow_html=True)
 
     # ---- 1 · la photographie, le titre, l'appel ------------------------
-    photo = _photo_b64()
+    photo = _photo_b64(i18n.get_lang())
     # LES GUILLEMETS SIMPLES SONT LOAD-BEARING. L'URL vit dans un attribut
     # `style` délimité par des guillemets doubles ; en réutiliser à
     # l'intérieur ferme l'attribut au milieu de l'image, et le navigateur
