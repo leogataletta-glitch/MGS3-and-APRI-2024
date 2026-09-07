@@ -218,7 +218,6 @@ TEXTES = {
     "sx_conteste": {
         "en": "Part of the literature contradicts the direction used here.",
         "fr": "Une partie de la littérature contredit le sens retenu ici."},
-    "sx_filtre_p": {"en": "Keep only", "fr": "Ne garder que"},
     "sx_p_toutes": {"en": "All levels of evidence",
                     "fr": "Tous les niveaux de preuve"},
     "sx_rel_0": {"en": "No relation in this system matches the filter.",
@@ -1038,13 +1037,12 @@ def render_relations():
         f'<p class="sx-note" style="margin:2px 0 0">'
         f'{_e(T("sx_rel_n", n=len(aretes), s=n_sort, e=len(aretes) - n_sort))}'
         f'</p>', unsafe_allow_html=True)
-    classes = sorted({a.get("just") or "hypothese" for a in aretes})
-    lib_c = {c: _classe(m, {"just": c}) for c in classes}
-    choix = st.multiselect(T("sx_filtre_p"), classes, default=classes,
-                           key="sx_f_preuve",
-                           format_func=lambda c: lib_c[c])
-    gardees = [a for a in aretes
-               if (a.get("just") or "hypothese") in choix]
+    # LE FILTRE PAR NIVEAU DE PREUVE A ÉTÉ RETIRÉ. Trier ses propres relations
+    # par la solidité de leur source est un geste d'auteur, pas de lecteur :
+    # celui qui ouvre la page veut voir TOUTES les relations d'une variable,
+    # et le niveau de chacune est écrit dans sa colonne. Le décompte, lui,
+    # reste — il dit d'un coup d'œil sur quoi repose l'ensemble.
+    gardees = list(aretes)
     cpt = {c: sum(1 for a in aretes if (a.get("just") or "hypothese") == c)
            for c in ("empirique", "documentee", "structurel", "theorique",
                      "hypothese")}
