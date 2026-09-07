@@ -112,8 +112,11 @@ TEXTES = {
     "ex_c_branches_ph": {
         "en": "Dimensions or indicators — three or more draw a radar",
         "fr": "Dimensions ou indicateurs — à partir de trois, un radar"},
-    "ex_c_branches_r": {"en": "Answers to compare on",
-                        "fr": "Réponses à comparer"},
+    "ex_c_ajouter_q": {
+        "en": "Also compare on survey answers",
+        "fr": "Comparer aussi sur des réponses d'enquête"},
+    "ex_c_q_n": {"en": "Question {n}", "fr": "Question {n}"},
+    "ex_c_q_plus": {"en": "Add a question", "fr": "Ajouter une question"},
     "ex_c_radar_pct": {
         "en": "The radar canvas runs from 0 to 10: shares are read at a "
               "tenth of their value.",
@@ -2528,6 +2531,53 @@ def _cibles_possibles(cat):
     return out
 
 
+def _branches_questions(cat):
+    """Les branches tirées du questionnaire : une question, une réponse.
+
+    UNE BRANCHE EST UN COUPLE, PAS UNE QUESTION. « Mode d'élimination des
+    déchets » n'est pas une mesure : « collecte régulière » en est une. Chaque
+    ligne pose donc sa question et la réponse qu'on suit, et les lignes
+    s'ajoutent — comparer trois profils sur l'accès à l'eau, l'électricité et
+    l'assainissement demande trois lignes, pas trois écrans.
+    """
+    questions = cat["questions"]
+    st.session_state.setdefault("exc_qs", [None])
+    out = []
+    for i, _ in enumerate(list(st.session_state["exc_qs"])):
+        c1, c2, c3 = st.columns([2.2, 1.4, 0.45],
+                                vertical_alignment="bottom")
+        with c1:
+            qi = st.selectbox(
+                T("ex_c_q_n", n=i + 1), [x["i"] for x in questions],
+                key=f"exc_q_{i}", index=None,
+                placeholder=T("ex_b_choisir_q"),
+                format_func=lambda k: _libelle_question(
+                    next(x for x in questions if x["i"] == k),
+                    avec_theme=True))
+        q = next((x for x in questions if x["i"] == qi), None)
+        with c2:
+            mod = (st.selectbox(
+                T("ex_reponse"), list(q["modalites"]), key=f"exc_r_{i}_{qi}",
+                index=None, placeholder=T("ex_c_choisir_r"),
+                format_func=libelles_enquete.modalite)
+                if q is not None else None)
+        with c3:
+            if st.button("✕", key=f"exc_q_x_{i}", type="tertiary",
+                         help=T("ex_dim_oter")):
+                del st.session_state["exc_qs"][i]
+                if not st.session_state["exc_qs"]:
+                    st.session_state["exc_qs"] = [None]
+                st.rerun()
+        if q is not None and mod is not None:
+            out.append((f'{libelles_enquete.modalite(mod)}', ("q", q, mod),
+                        None))
+    if st.button("＋ " + T("ex_c_q_plus"), key="exc_q_plus",
+                 type="tertiary"):
+        st.session_state["exc_qs"].append(None)
+        st.rerun()
+    return out
+
+
 def render_comparaison(cat):
     """Des profils, des thématiques, et le dessin qui les croise.
 
@@ -2538,6 +2588,13 @@ def render_comparaison(cat):
     d'œil, ce qu'aucune liste de barres ne montre aussi vite. En barres, le
     même tableau se relit thématique par thématique, avec les profils les uns
     sous les autres.
+
+    LES DEUX SOURCES SE MÉLANGENT SUR LA MÊME ÉTOILE. Une branche peut être
+    une dimension, un indicateur, ou une réponse du questionnaire, et les
+    trois peuvent coexister : « accès à l'eau, score environnemental, part de
+    ménages ayant un plan d'évacuation » est une comparaison légitime. Les
+    parts sont ramenées au dixième pour tenir sur la toile de 0 à 10, et la
+    note le dit.
 
     TROIS PROFILS AU PLUS, PARCE QUE LE DESSIN NE TIENT PAS AU-DELÀ. Quatre
     aires superposées sur la même étoile ne se distinguent plus, et la
@@ -2555,69 +2612,31 @@ def render_comparaison(cat):
                 raz_comparaison()
                 st.rerun()
 
-        # ---- 1. les thématiques, qui deviendront les branches -----------
+        # ---- 1. les branches -------------------------------------------
         with st.container(key="exb_q_zone_c"):
             st.markdown(f'<div class="exb-sec" style="margin:0 0 2px">'
                         f'{_e(T("ex_c_sur"))}<span class="l"></span></div>',
                         unsafe_allow_html=True)
-            source = st.segmented_control(
-                T("ex_c_sur"), ["scores", "brut"], key="exc_source",
-                default="scores", label_visibility="collapsed",
-                format_func=lambda c: T("ex_c_" + c)) or "scores"
+            opts = _cibles_possibles(cat)
+            par_cle = {c: (lib, ind) for c, lib, ind in opts}
+            choix = st.multiselect(
+                T("ex_c_branches"), [c for c, _l, _i in opts],
+                key="exc_cibles", max_selections=12,
+                placeholder=T("ex_c_branches_ph"),
+                format_func=lambda c: par_cle[c][0])
+            branches = [(par_cle[c][0], ("s", c), par_cle[c][1])
+                        for c in choix]
 
-            q = None
-            branches = []          # [(libellé, cible, ind)] ou [(lib, mod)]
-            if source == "brut":
-                questions = cat["questions"]
-                c1, c2 = st.columns([1, 2.4])
-                with c1:
-                    themes = sorted({x.get("category") or ""
-                                     for x in questions},
-                                    key=lambda c: _nom_theme(c).lower())
-                    theme = st.selectbox(
-                        T("ex_theme"), [None] + themes, key="exc_theme",
-                        format_func=lambda c: (T("ex_theme_tous")
-                                               if c is None
-                                               else _nom_theme(c)))
-                vues = [x for x in questions
-                        if theme is None or (x.get("category") or "") == theme]
-                with c2:
-                    qi = st.selectbox(
-                        T("ex_question"), [x["i"] for x in vues],
-                        key=f"exc_q_{theme or 'tous'}",
-                        index=None, placeholder=T("ex_b_choisir_q"),
-                        format_func=lambda i: _libelle_question(
-                            next(x for x in vues if x["i"] == i),
-                            avec_theme=theme is None))
-                q = next((x for x in vues if x["i"] == qi), None)
-                if q is None:
-                    st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'
-                                f'{_e(T("ex_c_vide_b"))}</p>',
-                                unsafe_allow_html=True)
-                    return
-                # LES BRANCHES SONT LES RÉPONSES DE LA QUESTION. Chaque
-                # profil dessine alors la forme de ses réponses, et deux
-                # profils se comparent sur la répartition entière plutôt
-                # que sur une seule modalité.
-                st.session_state.setdefault(f"exc_mods_{qi}",
-                                            list(q["modalites"]))
-                mods = st.multiselect(
-                    T("ex_c_branches_r"), list(q["modalites"]),
-                    key=f"exc_mods_{qi}",
-                    format_func=libelles_enquete.modalite)
-                branches = [(libelles_enquete.modalite(m), m, None)
-                            for m in mods]
-                lib_mesure = _libelle_question(q, avec_theme=False)
-            else:
-                opts = _cibles_possibles(cat)
-                par_cle = {c: (lib, ind) for c, lib, ind in opts}
-                choix = st.multiselect(
-                    T("ex_c_branches"), [c for c, _l, _i in opts],
-                    key="exc_cibles", max_selections=12,
-                    placeholder=T("ex_c_branches_ph"),
-                    format_func=lambda c: par_cle[c][0])
-                branches = [(par_cle[c][0], c, par_cle[c][1]) for c in choix]
-                lib_mesure = T("ex_c_scores")
+            # LES RÉPONSES D'ENQUÊTE SONT UN VOLET REPLIÉ, pas une seconde
+            # page : elles complètent les scores sur la même étoile, et qui
+            # ne s'en sert pas ne les voit pas.
+            # LE VOLET S'OUVRE DE LUI-MÊME DÈS QU'ON S'EN EST SERVI : une
+            # ligne de question ajoutée puis repliée hors de vue serait un
+            # réglage actif que rien ne signale.
+            _q_pose = len(st.session_state.get("exc_qs") or []) > 1
+            with st.expander(T("ex_c_ajouter_q"), expanded=_q_pose):
+                branches += _branches_questions(cat)
+
             if not branches:
                 st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'
                             f'{_e(T("ex_c_vide_s"))}</p>',
@@ -2632,39 +2651,37 @@ def render_comparaison(cat):
         profils = [(n, m) for n, m in profils if int(m.sum()) > 0]
 
         # ---- 3. la valeur de chaque profil sur chaque branche -----------
-        mesure = "part" if source == "brut" else "score"
-        if source == "brut":
-            m_rep = np.zeros(cat["n"], dtype=bool)
-            for j in range(len(q["modalites"])):
-                m_rep |= cat["bits"][q["debut"] + j]
-
-        def _valeur(masque, cle):
-            if source == "brut":
+        def _valeur(masque, cible):
+            if cible[0] == "q":
+                _q, mod = cible[1], cible[2]
+                m_rep = np.zeros(cat["n"], dtype=bool)
+                for j in range(len(_q["modalites"])):
+                    m_rep |= cat["bits"][_q["debut"] + j]
                 base = int((m_rep & masque).sum())
-                k = int((cat["bits"][q["debut"] + q["modalites"].index(cle)]
+                k = int((cat["bits"][_q["debut"]
+                                     + _q["modalites"].index(mod)]
                          & m_rep & masque).sum())
-                return base, k, (100.0 * k / base) if base else None
-            nb, sc = _score_cible(cat, masque, cle, None)
-            return nb, None, sc
+                return base, k, ((100.0 * k / base) if base else None), True
+            nb, sc = _score_cible(cat, masque, cible[1], None)
+            return nb, None, sc, False
 
-        lignes = []
-        for lib_b, cle, _ind in branches:
+        lignes, pct = [], False
+        for lib_b, cible, _ind in branches:
             for nom_p, masque in profils:
-                nb, k, v = _valeur(masque, cle)
+                nb, k, v, est_pct = _valeur(masque, cible)
+                pct = pct or est_pct
                 if nb <= 0:
                     continue
-                lignes.append({"nom": nom_p, "cle": f"{cle}|{nom_p}",
-                               "axe": lib_b, "axe_code": str(cle),
-                               "n": nb, "k": k, "part": v, "score": v})
+                lignes.append({"nom": nom_p, "cle": f"{lib_b}|{nom_p}",
+                               "axe": lib_b, "axe_code": lib_b,
+                               "n": nb, "k": k, "part": v, "score": v,
+                               "pct": est_pct})
 
         # ---- 4. la forme -----------------------------------------------
         r1, r3 = st.columns([1.6, 2.4], vertical_alignment="center")
         with r1:
             st.markdown(f'<div class="exb-sec" style="margin:14px 0 0">'
                         f'{_e(T("ex_res"))}</div>', unsafe_allow_html=True)
-        # LE RADAR DEMANDE TROIS BRANCHES, PAS TROIS PROFILS : ce sont les
-        # branches qui font les sommets de l'étoile. Une seule thématique se
-        # lit en barres, et rien d'autre.
         formes = ["barres"] + (["radar"] if len(branches) >= 3 else [])
         with r3:
             with st.container(key="exb_vue_c"):
@@ -2680,38 +2697,42 @@ def render_comparaison(cat):
             st.info(T("ex_s_rien"))
             return
 
-        st.markdown(f'<div class="ex-titre" style="margin-top:8px">'
-                    f'{_e(lib_mesure)}</div>', unsafe_allow_html=True)
         if forme == "radar":
-            # LA TOILE DU RADAR EST GRADUÉE DE 0 À 10 : une part de
-            # pourcentage y est ramenée au dixième, et la note le dit. Sans
-            # cela, toutes les aires seraient plaquées contre le bord.
-            div = 10.0 if source == "brut" else 1.0
+            # LA TOILE VA DE 0 À 10 : une part de pourcentage y est ramenée
+            # au dixième, un score y entre tel quel. Mélanger les deux sans
+            # cette conversion plaquerait toutes les parts contre le bord.
             par_axe = {b[0]: {} for b in branches}
             for l in lignes:
-                par_axe[l["axe"]][l["nom"]] = l[mesure]
+                v = l["part"]
+                par_axe[l["axe"]][l["nom"]] = (
+                    None if v is None else (v / 10.0 if l["pct"] else v))
             axes = [b[0] for b in branches]
-            series = [(nom, [(par_axe[a].get(nom) / div
-                              if par_axe[a].get(nom) is not None else None)
-                             for a in axes], coul)
+            series = [(nom, [par_axe[a].get(nom) for a in axes], coul)
                       for (nom, _m), coul in zip(profils, _COULEURS_PROFILS)]
             st.markdown(
                 '<div style="max-width:860px;margin:6px auto 0">'
                 + radar.render_radar_svg(axes, series, taille=470)
                 + '</div>', unsafe_allow_html=True)
-            if source == "brut":
+            if pct:
                 st.markdown(f'<p class="ex-note" style="margin:6px 0 0">'
                             f'{_e(T("ex_c_radar_pct"))}</p>',
                             unsafe_allow_html=True)
         else:
-            st.markdown(_barres(lignes, None, mesure),
-                        unsafe_allow_html=True)
-        st.markdown(_synthese(lignes, mesure), unsafe_allow_html=True)
+            # EN BARRES, CHAQUE BRANCHE GARDE SON ÉCHELLE. Une part court de
+            # zéro à cent, un score de zéro à dix : les mettre sur la même
+            # règle écraserait les scores sur le premier dixième. Les deux
+            # familles sont donc dessinées l'une après l'autre.
+            for est_pct in (False, True):
+                bloc = [l for l in lignes if l["pct"] is est_pct]
+                if bloc:
+                    st.markdown(_barres(bloc, None,
+                                        "part" if est_pct else "score"),
+                                unsafe_allow_html=True)
 
 
 def raz_comparaison():
     for k in [k for k in list(st.session_state)
               if str(k).startswith(("exc_p1_", "exc_p2_", "exc_p3_",
-                                    "exc_cibles", "exc_mods_", "exc_theme",
-                                    "exc_q_", "exc_forme", "exc_source"))]:
+                                    "exc_cibles", "exc_qs", "exc_q_",
+                                    "exc_r_", "exc_forme"))]:
         st.session_state.pop(k, None)

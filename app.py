@@ -28,6 +28,10 @@ import streamlit.components.v1 as components
 # ses deux cartes, et son rendu vit dans `territoire_page`.
 import a_propos_page
 import accueil_apri
+# À L'ESSAI, ET SÉPARÉE POUR CELA. La seconde page d'entrée vit dans son
+# propre module et sous sa propre entrée de menu : la retirer, si elle ne
+# convient pas, ne touche à rien d'autre.
+import accueil2_page
 import actualites
 import assets
 import cadre_page
@@ -1946,6 +1950,7 @@ MODE_LEVIER = "levier"
 # territoire, on apprenait comment on le mesure. C'est l'ordre d'un rapport,
 # pas celui d'un tableau de bord.
 MODE_PORTAIL = "portail"
+MODE_PORTAIL2 = "portail2"
 # LE TEMPS, ENFIN MONTRÉ COMME DU TEMPS. Trois jeux satellitaires sont des
 # séries — la forêt depuis 2000, la pluie depuis 1981, la température depuis
 # 2001 — et le site les lisait comme des instantanés.
@@ -1965,6 +1970,7 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      MODE_RAPPORT: T("mode_rapport"),
                      MODE_LEVIER: T("mode_levier"),
                      MODE_PORTAIL: T("mode_portail"),
+                     MODE_PORTAIL2: T("a2_nav"),
                      MODE_TRAJECTOIRES: T("mode_trajectoires")})
 
 # L'état de navigation doit exister AVANT la barre du haut, qui affiche le nom
@@ -2034,7 +2040,7 @@ MODE_DIMENSIONS = "dimensions"
 # L'ACCUEIL N'A PAS DE FAMILLE, et il ne doit pas en avoir une : il est le
 # point d'où l'on part, pas une des choses qu'on y fait.
 _NAV_FAMILLES = [
-    (None, [(MODE_PORTAIL, "maison")]),
+    (None, [(MODE_PORTAIL, "maison"), (MODE_PORTAIL2, "maison")]),
     # LE CADRE PASSE DEVANT LE TERRITOIRE. On dit d'abord ce qu'on mesure,
     # ensuite où on l'a mesuré : une carte de dix sections ne dit rien tant
     # qu'on ne sait pas ce qui y est compté, alors que la définition de
@@ -2226,7 +2232,10 @@ app_mode = st.session_state["app_mode"]
 # Chaque page reste écrite comme avant ; c'est le contexte qui change, en un
 # seul endroit, plutôt que quarante modules qui devraient savoir où ils sont.
 with _c_contenu:
-    if app_mode == MODE_PORTAIL:
+    if app_mode == MODE_PORTAIL2:
+        accueil2_page.render()
+
+    elif app_mode == MODE_PORTAIL:
         # Quatre écrans : où, ce qu'on a mesuré, ce qu'on a trouvé, quoi faire.
         accueil_apri.render()
 
