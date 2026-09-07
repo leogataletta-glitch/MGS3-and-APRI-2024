@@ -95,8 +95,8 @@
    "id": "etat_civil",
    "ligne": 24,
    "dim": "dim2",
-   "fr": "Enregistrement des naissances",
-   "en": "Birth registration"
+   "fr": "Naissances enregistrées à l'état civil",
+   "en": "Births registered with the civil registry"
   },
   {
    "id": "foret",
@@ -116,8 +116,8 @@
    "id": "aridite",
    "ligne": 44,
    "dim": "dim3",
-   "fr": "Absence d'aridité anormale",
-   "en": "Absence of abnormal aridity"
+   "fr": "Conditions d'humidité normales",
+   "en": "Normal moisture conditions"
   },
   {
    "id": "vegetation",
@@ -235,8 +235,8 @@
    "id": "temps_eau",
    "ligne": null,
    "dim": "dim1",
-   "fr": "Temps libéré de la corvée d'eau",
-   "en": "Time freed from water collection"
+   "fr": "Temps disponible hors corvée d'eau",
+   "en": "Time available outside water collection"
   },
   {
    "id": "prod_agri",
@@ -256,8 +256,8 @@
    "id": "pression_bois",
    "ligne": null,
    "dim": "dim3",
-   "fr": "Faible pression sur le bois-énergie",
-   "en": "Low pressure on fuelwood"
+   "fr": "Faible recours au bois-énergie",
+   "en": "Low reliance on fuelwood"
   },
   {
    "id": "abondance_bois",
@@ -305,15 +305,15 @@
    "id": "sensib",
    "ligne": null,
    "dim": "dim5",
-   "fr": "Sensibilisation et adaptation des pratiques",
-   "en": "Awareness and practice change"
+   "fr": "Sensibilisation aux enjeux environnementaux",
+   "en": "Awareness of environmental issues"
   },
   {
    "id": "ancrage",
    "ligne": null,
    "dim": "dim6",
-   "fr": "Maintien de la population sur place",
-   "en": "People staying in place"
+   "fr": "Ancrage de la population sur le territoire",
+   "en": "Population anchored in the territory"
   }
  ],
  "aretes": [
