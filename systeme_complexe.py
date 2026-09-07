@@ -626,6 +626,26 @@ def _svg_cld(m, rang, aretes, centre, boucle=None):
                 f'<text x="{x:.0f}" y="{y0 + i * 13:.0f}" font-size="10.5" '
                 f'text-anchor="middle" fill="{encre}" opacity="{op}" '
                 f'font-weight="{700 if est_c else 400}">{_e(l)}</text>')
+    # LA LETTRE AU CENTRE DE LA BOUCLE ISOLÉE : R ou B, dans un disque blanc.
+    # C'est la notation des diagrammes de boucles causales, celle que la page
+    # du cadre enseigne deux écrans plus tôt ; sans elle, on isolait une
+    # boucle sans savoir si elle amplifiait ou si elle freinait, alors que
+    # c'est la seule chose qu'on veuille savoir d'une boucle. Elle est posée
+    # au barycentre de ses pastilles, avec un liseré blanc pour tenir même
+    # au-dessus d'une flèche.
+    if boucle:
+        _xy = [pos[n] for n in boucle["noeuds"] if n in pos]
+        if _xy:
+            bx = sum(x for x, _y in _xy) / len(_xy)
+            by = sum(y for _x, y in _xy) / len(_xy)
+            _r = boucle["type"] == "renforcante"
+            _c = VERT_APRI if _r else AMBRE
+            parts.append(
+                f'<circle cx="{bx:.0f}" cy="{by:.0f}" r="15" fill="#fff" '
+                f'stroke="{_c}" stroke-width="1.6"/>'
+                f'<text x="{bx:.0f}" y="{by + 5:.0f}" font-size="15" '
+                f'font-weight="800" text-anchor="middle" fill="{_c}">'
+                f'{"R" if _r else "B"}</text>')
     fleches = (
         f'<defs>'
         f'<marker id="fv" viewBox="0 0 10 10" refX="9" refY="5" '

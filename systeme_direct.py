@@ -293,8 +293,8 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
     __L_LB__</span>
   <span class="lg"><span style="display:inline-block;width:26px;height:5px;
     border-radius:3px;background:#cfe0d6"></span> __L_LE__</span>
-  <span class="lg"><span class="pt lum" style="background:#f0b73f"></span>
-    __L_LJ__</span>
+  <span class="lg" id="lgj" hidden><span class="pt lum"
+    style="background:#f0b73f"></span> __L_LJ__</span>
   <span class="lg"><span class="pt cli" style="background:#2a6b3f"></span>
     __L_LC__</span>
 </div>
@@ -384,16 +384,26 @@ const vues = NO.map(n => {
 });
 
 /* ---------- LE HALO JAUNE : LES VARIABLES LES PLUS CONNECTÉES ------------
-   La connectivité ne dépend pas de la poussée : elle est une propriété du
-   périmètre dessiné, et se marque donc dès l'ouverture, avant toute course.
+   IL N'APPARAÎT QU'UNE FOIS LE SYSTÈME LANCÉ. La connectivité est bien une
+   propriété du périmètre et non de la poussée, mais posée à l'ouverture elle
+   désignait trois pastilles avant qu'on ait vu quoi que ce soit bouger : on
+   lisait un verdict avant la démonstration, et le dessin s'ouvrait avec un
+   accent qu'aucune image ne justifiait encore. Il vient donc à la première
+   vague, quand l'onde a commencé à passer, et il repart à la remise à zéro
+   avec le reste. Sa ligne de légende suit — une légende pour un signe absent
+   est une devinette.
+
    Trois pastilles au plus, pour que le signal reste un signal. */
-function poserHalo(){
+function poserHalo(on){
   const tri = NO.map((n,i)=>({i, v: DEG[i]})).sort((a,b)=>b.v-a.v);
-  const cles = new Set(tri.filter((x,r)=> r < 3 && x.v >= 2).map(x=>x.i));
+  const cles = new Set(on ? tri.filter((x,r)=> r < 3 && x.v >= 2)
+                              .map(x=>x.i) : []);
   vues.forEach((u,i)=>{
     if (cles.has(i)) u.rect.classList.add("lum");
     else u.rect.classList.remove("lum");
   });
+  const lg = document.getElementById("lgj");
+  if (lg) lg.hidden = !cles.size;
 }
 
 /* ---------- l'état de la propagation ----------------------------------- */
@@ -511,6 +521,7 @@ function remise(){
   traits.forEach(p => { p.setAttribute("opacity", .34);
                         p.setAttribute("stroke-width", 1.5); });
   document.getElementById("mot").textContent = "";
+  poserHalo(false);
   bilan(false);
   peindre();
 }
@@ -527,6 +538,7 @@ function vaguesuivante(apres){
     arret(); bilan(true); if (apres) apres(false); return;
   }
   k += 1;
+  if (k === 1) poserHalo(true);
   for (let j=0;j<NO.length;j++)
     if (Math.abs(suivante[j]) > SEUIL) passages[j] += 1;
   const duree = 950*vitesse, part = 0.82;
@@ -615,7 +627,6 @@ document.getElementById("lire").onclick = () => {
 };
 
 document.getElementById("ampv").textContent = fmt(amp, 1);
-poserHalo();
 remise();
 </script></body></html>"""
 

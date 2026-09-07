@@ -422,6 +422,53 @@ TEXTES = {
                  "fr": "Traduire le levier en intervention"},
     "cad_b4_e": {"en": "Action sheet + monitoring",
                  "fr": "Fiche d'action + suivi"},
+    # LA MÉTHODE N'EST PAS DE NOUS, ET C'EST TOUT L'INTÉRÊT. Un diagramme de
+    # boucles causales est un outil d'évaluation documenté, que le PNUD range
+    # parmi ses méthodes ; le dire, références à l'appui, vaut mieux que de
+    # laisser croire à une invention maison. Les quatre entrées sont celles qui
+    # commandent réellement ce que fait cette page : la définition de la
+    # méthode, la référence de construction, la construction à partir de
+    # matériaux textuels, et un cas d'évaluation de politique publique.
+    "cad_bm_t": {"en": "The method, and where it comes from",
+                 "fr": "La méthode, et d'où elle vient"},
+    "cad_bm_x": {
+        "en": "A causal loop diagram is a documented evaluation method, not "
+              "a house convention: UNDP lists it among the methods of its "
+              "evaluation methods centre. Here it is built from relationships "
+              "that each carry their source, not from opinions collected in a "
+              "workshop.",
+        "fr": "Un diagramme de boucles causales est une méthode d'évaluation "
+              "documentée, et non une convention maison : le PNUD la range "
+              "parmi les méthodes de son centre de méthodes d'évaluation. "
+              "Elle est construite ici à partir de relations qui portent "
+              "chacune leur source, et non d'avis recueillis en atelier."},
+    # Chaque référence : auteur et année | ce qu'elle apporte | lien.
+    "cad_bm_r": {
+        "en": "UNDP, Causal Loop Diagrams, Evaluation Methods Centre|the "
+              "method in an evaluation setting, and the questions it "
+              "answers|https://erc.undp.org/methods-center/methods/"
+              "evaluation-methods/causal-loop-diagrams"
+              "@@Sterman (2000), Business Dynamics, McGraw-Hill|system "
+              "boundary, time horizon, reading a loop|"
+              "@@Kim and Andersen (2012), System Dynamics Review 28(3), "
+              "311-328|building a causal map from textual material|"
+              "https://doi.org/10.1002/sdr.1480"
+              "@@Crabolu, Font and Eker (2023), Annals of Tourism Research "
+              "100, 103572|a policy instrument evaluated with a causal loop "
+              "diagram|https://doi.org/10.1016/j.annals.2023.103572",
+        "fr": "PNUD, Causal Loop Diagrams, Centre de méthodes d'évaluation|"
+              "la méthode en situation d'évaluation, et les questions "
+              "auxquelles elle répond|https://erc.undp.org/methods-center/"
+              "methods/evaluation-methods/causal-loop-diagrams"
+              "@@Sterman (2000), Business Dynamics, McGraw-Hill|périmètre du "
+              "système, horizon de temps, lecture d'une boucle|"
+              "@@Kim et Andersen (2012), System Dynamics Review 28(3), "
+              "311-328|construire une carte causale à partir de matériaux "
+              "textuels|https://doi.org/10.1002/sdr.1480"
+              "@@Crabolu, Font et Eker (2023), Annals of Tourism Research "
+              "100, 103572|un instrument de politique publique évalué par un "
+              "diagramme de boucles causales|"
+              "https://doi.org/10.1016/j.annals.2023.103572"},
     "cad_bl_t": {"en": "How to read a loop", "fr": "Comment lire une boucle"},
     "cad_bl_p_t": {"en": "Same direction", "fr": "Même sens"},
     "cad_bl_p_x": {"en": "If A increases, B increases.",
@@ -1284,6 +1331,23 @@ STYLE = """
      dessins qui la précèdent. */
   .cad-bl-u { font-size:13.5px; color:#3c4761; line-height:1.6;
        font-style:italic; padding-left:4px; }
+  /* LES RÉFÉRENCES DE LA MÉTHODE. Un filet les sépare de la lecture d'une
+     boucle : ce n'est plus le mode d'emploi, c'est ce sur quoi il s'appuie.
+     Deux colonnes tant que la page est large — quatre lignes empilées se
+     lisent comme une bibliographie, deux colonnes comme un appui. */
+  .cad-bm { border-top:1px solid #e9eef4; margin-top:24px; padding-top:18px; }
+  .cad-bm-h { font-size:11.5px; font-weight:700; letter-spacing:.13em;
+       text-transform:uppercase; color:#1a4d3a; margin-bottom:8px; }
+  .cad-bm-x { font-size:13.5px; color:#3c4761; line-height:1.62;
+       margin:0 0 14px; max-width:96ch; text-align:left !important; }
+  .cad-bm-l { display:grid; grid-template-columns:1fr 1fr; gap:10px 32px; }
+  .cad-bm-e { font-size:12.5px; line-height:1.5; color:#6b7590;
+       padding-left:12px; border-left:2px solid #dbe6df; }
+  .cad-bm-e b { display:block; font-weight:600; color:#101728;
+       font-size:13px; }
+  .cad-bm-e a { color:#1a6b52; text-decoration:none; }
+  .cad-bm-e a:hover { text-decoration:underline; }
+  @media (max-width: 1000px) { .cad-bm-l { grid-template-columns:1fr; } }
   @media (max-width: 1000px) {
     .cad-bl-g { grid-template-columns:1fr; row-gap:26px; }
     .cad-bl-g > div:nth-child(2) { border:0; padding:0; }
@@ -2550,6 +2614,26 @@ def _v_boucles():
         # phrase redisait en négatif ce que les deux disaient déjà en clair.
         f'<div class="cad-bl-u">{_e(T("cad_uma"))}</div>'
         '</div></div>', unsafe_allow_html=True)
+
+    # ---- la méthode, et ses références -----------------------------------
+    refs = []
+    for bloc in T("cad_bm_r").split("@@"):
+        parts = (bloc.split("|") + ["", "", ""])[:3]
+        titre, apport, lien = (p.strip() for p in parts)
+        if not titre:
+            continue
+        # LE LIEN EST POSÉ SUR LE TITRE QUAND IL Y EN A UN. Un ouvrage
+        # imprimé n'a pas d'URL, et une URL inventée pour faire nombre est
+        # pire que pas d'URL du tout.
+        nom = (f'<a href="{_e(lien)}" target="_blank" rel="noopener">'
+               f'{_e(titre)}</a>') if lien else _e(titre)
+        refs.append(f'<div class="cad-bm-e"><b>{nom}</b>{_e(apport)}</div>')
+    st.markdown(
+        '<div class="cad-bm">'
+        f'<div class="cad-bm-h">{_e(T("cad_bm_t")).upper()}</div>'
+        f'<p class="cad-bm-x">{_e(T("cad_bm_x"))}</p>'
+        f'<div class="cad-bm-l">{"".join(refs)}</div></div>',
+        unsafe_allow_html=True)
 
 
 # --- 6 · le cas de l'environnement -----------------------------------------
