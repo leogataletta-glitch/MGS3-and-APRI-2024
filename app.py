@@ -644,7 +644,15 @@ st.markdown(("""
 
   /* --- barre latérale --- */
   section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #f4f8f5 0%, #fafcfb 100%); border-right: 1px solid var(--bord);
+    /* LA COLONNE EST VERTE, ET C'EST LE MÊME VERT QUE LE PIED DE PAGE. Un
+       vert dilué jusqu'à l'imperceptible ne se distinguait du blanc de la
+       page que par son bord : la colonne se lisait comme une marge, pas
+       comme une zone. En vert plein, elle tient le site entre deux bandes de
+       la même couleur — celle du haut quand elle existe, celle du bas
+       toujours — et la page blanche du milieu y gagne son cadre. Le dégradé
+       fonce très légèrement vers le bas : c'est ce qui empêche un aplat de
+       cette hauteur de paraître plat. */
+    background: linear-gradient(180deg, #23664e 0%, #1a4f3d 100%); border-right: 1px solid var(--bord);
   }
   section[data-testid="stSidebar"] h2 {
     font-size: 1.15rem !important; margin-top: .3rem !important;
@@ -834,7 +842,7 @@ st.markdown(("""
        indispensable : sans lui la colonne de Streamlit s'étire sur toute la
        hauteur de la page et `sticky` n'a plus rien à quoi se coller. */
     position: sticky; top: 10px; align-self: flex-start;
-    border: 1px solid #e4e2de;
+    border: none;
     /* LE FOND EST POSÉ SUR LA COLONNE, PAS DERRIÈRE ELLE. Un dégradé qui
        blanchit à mi-hauteur disparaissait avant le bas de la liste : la
        moitié inférieure du menu était sur le même blanc que la page, et la
@@ -845,7 +853,15 @@ st.markdown(("""
        seul son bord la signalait, et un bord ne fait pas une zone. Le vert
        est celui du site, dilué jusqu'à la limite du perceptible, et il
        s'éclaircit vers le bas pour ne pas peser sous la dernière rubrique. */
-    background: linear-gradient(180deg, #f4f8f5 0%, #fafcfb 100%);
+    /* LA COLONNE EST VERTE, ET C'EST LE MÊME VERT QUE LE PIED DE PAGE. Un
+       vert dilué jusqu'à l'imperceptible ne se distinguait du blanc de la
+       page que par son bord : la colonne se lisait comme une marge, pas
+       comme une zone. En vert plein, elle tient le site entre deux bandes de
+       la même couleur — celle du haut quand elle existe, celle du bas
+       toujours — et la page blanche du milieu y gagne son cadre. Le dégradé
+       fonce très légèrement vers le bas : c'est ce qui empêche un aplat de
+       cette hauteur de paraître plat. */
+    background: linear-gradient(180deg, #23664e 0%, #1a4f3d 100%);
     /* ELLE TOUCHE LE BORD GAUCHE DE L'ÉCRAN. La gouttière du bloc principal
        — 2,6 rem — laissait une bande blanche entre le bord de la fenêtre et
        la colonne, alors que le bandeau au-dessus, lui, va d'un bord à
@@ -877,11 +893,10 @@ st.markdown(("""
      étiquette de rangement, pas une destination. */
   div[class*="st-key-zone_nav"] .nav-famille {
     font-size: 10px; font-weight: 700; letter-spacing: .11em;
-    /* EXACTEMENT LE VERT DU PIED DE PAGE. Deux verts proches sur la même
-       page se lisent comme une erreur d'impression plutôt que comme une
-       nuance : la colonne et le bandeau du bas portent maintenant le
-       même. */
-    text-transform: uppercase; color: #1f5b46;
+    /* SUR FOND VERT, L'ÉTIQUETTE PASSE EN VERT CLAIR. Elle garde son rôle —
+       moins de poids que les rubriques qu'elle coiffe — mais du côté clair
+       du contraste. */
+    text-transform: uppercase; color: #93c4ac;
     margin: 20px 0 7px; padding-left: 10px;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button {
@@ -891,6 +906,11 @@ st.markdown(("""
     padding: 8px 10px !important; border-radius: 8px !important;
     border: none !important;
     background: transparent !important; box-shadow: none !important;
+    /* L'ICÔNE EST PEINTE EN `currentColor` SUR LE BOUTON LUI-MÊME : sa
+       couleur se règle donc ici, et non sur le paragraphe du libellé. Sans
+       cette ligne, les pictogrammes seraient restés dans l'encre sombre du
+       thème, invisibles sur le vert. */
+    color: #cfe3d8 !important;
     transition: background .15s ease, color .15s ease;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button > div,
@@ -903,34 +923,43 @@ st.markdown(("""
     font-family: "Inter", system-ui, sans-serif !important;
     font-size: 12.5px !important; font-weight: 500 !important;
     line-height: 1.3 !important;
-    color: var(--encre-2) !important;
+    color: #dceae3 !important;
     text-align: left !important; margin: 0 !important;
   }
+  /* LE SURVOL ÉCLAIRCIT LE FOND PLUTÔT QUE DE LE COLORER. Un blanc à neuf
+     pour cent tient sur n'importe quel vert de la colonne, y compris là où
+     le dégradé a foncé ; un aplat fixe se serait décalé en bas de liste. */
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button:hover {
-    background: #f1f6f4 !important; transform: none !important;
+    background: rgba(255,255,255,.10) !important; transform: none !important;
+    color: #ffffff !important;
   }
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button:hover p {
-    color: var(--encre) !important;
+    color: #ffffff !important;
   }
   /* L'ENTRÉE ACTIVE : un filet vert à gauche, un fond très pâle, le mot en
      gras vert. Dans une colonne, le filet se pose au bord d'attaque de la
      ligne — c'est là que l'œil descend, et il n'a rien à chercher. */
+  /* L'ENTRÉE ACTIVE PASSE EN BLANC, SUR UN FOND ÉCLAIRCI. Sur fond clair
+     c'était le vert du site qui la désignait ; sur fond vert, c'est
+     l'inverse — le blanc est ce que la colonne n'a nulle part ailleurs, et
+     le filet de gauche prend le vert clair du site. */
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"] {
-    background: #f1f6f4 !important;
+    background: rgba(255,255,255,.16) !important;
     border: none !important; box-shadow: none !important;
-    border-left: 3px solid var(--accent) !important;
+    border-left: 3px solid #9fd4b6 !important;
     border-radius: 0 8px 8px 0 !important;
     padding-left: 9px !important;
+    color: #ffffff !important;
   }
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"] p {
-    color: var(--accent) !important; font-weight: 700 !important;
+    color: #ffffff !important; font-weight: 700 !important;
   }
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"]:hover {
-    background: #e8f1ec !important;
+    background: rgba(255,255,255,.22) !important;
   }
 
   /* SUR ÉCRAN ÉTROIT LA COLONNE REDEVIENT UNE RANGÉE. Une colonne de menu
@@ -940,7 +969,8 @@ st.markdown(("""
     div[class*="st-key-zone_nav"] {
       flex-direction: row !important; flex-wrap: wrap !important;
       position: static; border-right: 0;
-      border-bottom: 1px solid #eef2f7; padding: 2px 0 6px;
+      border-bottom: 0; border-radius: 0 0 14px 14px;
+      padding: 8px 12px 10px;
     }
 
     div[class*="st-key-zone_nav"] div[data-testid="stElementContainer"],
@@ -1203,14 +1233,14 @@ st.markdown(("""
   div[class*="st-key-zone_langue"] {
     width: auto !important; margin: 2px 0 10px 2px !important;
     padding-bottom: 10px !important;
-    border-bottom: 1px solid #edecea !important;
+    border-bottom: 1px solid rgba(255,255,255,.16) !important;
   }
   /* LE GLOBE, PEINT EN MASQUE DEVANT LES DEUX CODES. On ne peut rien écrire
      dans le contenu d'un bouton Streamlit ; le tracé est donc posé en
      `::before` sur le conteneur, où il devient une case de la rangée. */
   div[class*="st-key-zone_langue"]::before {
     content: ""; width: 15px; height: 15px; flex: 0 0 15px;
-    margin-right: 9px; background-color: #6b7590;
+    margin-right: 9px; background-color: #8fbfa8;
     -webkit-mask: MASQUE center/contain no-repeat;
     mask: MASQUE center/contain no-repeat;
   }
@@ -1242,23 +1272,23 @@ st.markdown(("""
   div[data-testid="stButton"] > button p {
     font-size: 11.5px !important; font-weight: 600 !important;
     letter-spacing: .08em !important; text-transform: uppercase;
-    color: #6b7590 !important; text-align: left !important;
+    color: #a8cbb9 !important; text-align: left !important;
     transition: color .15s ease;
   }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button:hover { background: transparent !important; }
   div[class*="st-key-lang_"]
-  div[data-testid="stButton"] > button:hover p { color: #1a6b52 !important; }
+  div[data-testid="stButton"] > button:hover p { color: #ffffff !important; }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] p {
-    color: #1a6b52 !important; font-weight: 800 !important;
+    color: #ffffff !important; font-weight: 800 !important;
   }
   div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
   div[class*="st-key-lang_"] { position: relative; padding-left: 13px; }
   div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
   div[class*="st-key-lang_"]::before {
     content: "/"; position: absolute; left: 2px; top: 2px;
-    font-size: 11.5px; color: #b6bdc9;
+    font-size: 11.5px; color: rgba(255,255,255,.42);
   }
   div[class*="st-key-zone_langue"] {
     display: flex !important; flex-direction: row !important;
@@ -2182,16 +2212,15 @@ with _c_contenu:
         # une mesure, quels que soient les critères qui les définissent ;
         # Profil prend un groupe et déroule ses forces et ses faiblesses.
         _CODES_RA = ["brut", "scores", "comparer", "profil", "solutions"]
-        # LA BARRE EST COMPACTE ICI, ET NULLE PART AILLEURS. Six cartes à
-        # deux lignes occupaient quatre-vingts pixels de haut avant le
-        # premier réglage, et pesaient autant que l'analyse qu'elles
-        # ouvrent. En compact, elles tiennent sur une ligne et l'onglet
-        # ouvert se signale par un filet vert. Les barres des autres pages
-        # gardent leur format à deux lignes.
+        # TOUTES LES BARRES DU SITE SONT AU MÊME FORMAT, celui à deux
+        # lignes. Celle-ci avait été mise en compact pour gagner de la
+        # hauteur ; elle était alors la seule à ne pas dire ce que ses
+        # onglets contiennent, et un lecteur qui passait de la page des
+        # boucles à celle-ci changeait d'outil sans changer de site.
         _ra = onglets.barre("ra_vue", _CODES_RA,
                             titre=lambda c: T("ra_o_" + c),
                             description=lambda c: T("ra_d_" + c),
-                            defaut="brut", compact=True)
+                            defaut="brut")
 
         # LE CATALOGUE EST CHARGÉ UNE FOIS POUR LES CINQ PREMIERS ONGLETS.
         # C'est le même fichier de réponses individuelles ; le charger dans

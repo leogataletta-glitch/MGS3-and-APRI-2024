@@ -264,8 +264,12 @@ STYLE = """
   /* AU FIL DE L'EAU, ET NON JUSTIFIÉ. La feuille de l'application justifie
      les paragraphes ; sur une colonne de vingt-six signes, le mot d'après
      d'une marche se retrouvait étiré en trois blocs séparés par des vides. */
+  /* DEUX LIGNES, PAS CINQ. « of biodiversity measurements and spatial
+     analysis » se cassait en cinq lignes dans vingt-six signes, et la marche
+     de l'escalier prenait trois fois la hauteur des autres. Trente-huit
+     signes lui en donnent deux, et la colonne les tient. */
   .uma-ap { font-size:13px; color:#33455c; line-height:1.35;
-            max-width:26ch; text-align:left; }
+            max-width:38ch; text-align:left; }
 
   /* LA CARTE N'A NI CADRE NI FOND, ET LA MER EST TRANSPARENTE.
      Encadrée sur un aplat bleu, elle formait une vignette collée au milieu

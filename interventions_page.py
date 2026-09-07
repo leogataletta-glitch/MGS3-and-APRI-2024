@@ -328,6 +328,10 @@ TEXTES = {
                      "fr": "Fiches d'intervention"},
     "int_o_plans": {"en": "Community resilience plans",
                     "fr": "Plans de résilience communautaires"},
+    "int_d_fiches": {"en": "What to act on, and with which levers",
+                     "fr": "Sur quoi agir, et avec quels leviers"},
+    "int_d_plans": {"en": "The plans drawn up with the communities",
+                    "fr": "Les plans établis avec les communautés"},
     "int_plans_vide": {
         "en": "The community resilience plans are not loaded on the platform "
               "yet. They will be downloadable from here.",
@@ -1725,8 +1729,9 @@ def _render():
     fiches = calculer(graphe, par_ligne, lst_boucles)
 
     _vue = onglets.barre("int_vue", ["fiches", "plans"],
-                         titre=lambda c: T("int_o_" + c), defaut="fiches",
-                         compact=True)
+                         titre=lambda c: T("int_o_" + c),
+                         description=lambda c: T("int_d_" + c),
+                         defaut="fiches")
     if _vue == "plans":
         return _plans()
 

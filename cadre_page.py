@@ -639,8 +639,8 @@ TEXTES = {
         "en": "From this measure to a resilience score",
         "fr": "De cette mesure à un score de résilience"},
     "cad_ex_gen": {
-        "en": "From a raw measure to a resilience score, on an example",
-        "fr": "De la mesure brute au score de résilience, sur un exemple"},
+        "en": "From a raw measure to a resilience score",
+        "fr": "De la mesure brute au score de résilience"},
     "cad_ex_seuils_i": {
         "en": "The eleven bands of this indicator",
         "fr": "Les onze paliers de cet indicateur"},
@@ -659,6 +659,21 @@ TEXTES = {
     "cad_c5": {"en": "Feedback loops", "fr": "Boucles de rétroaction"},
     "cad_c6": {"en": "Environmental data", "fr": "Données environnementales"},
     "cad_c7": {"en": "The full framework", "fr": "Le cadre complet"},
+    # LA LIGNE SOUS CHAQUE ONGLET DIT CE QU'ON Y TROUVE, pas comment il
+    # s'appelle : « Sources et données » oblige à cliquer pour savoir,
+    # « d'où viennent les mesures » laisse choisir depuis la barre.
+    "cad_d1": {"en": "Three attributes, seven dimensions",
+               "fr": "Trois attributs, sept dimensions"},
+    "cad_d2": {"en": "Where the measures come from",
+               "fr": "D'où viennent les mesures"},
+    "cad_d35": {"en": "One indicator, its scale and what it becomes",
+                "fr": "Un indicateur, son barème et ce qu'il devient"},
+    "cad_d5": {"en": "Reading a system that answers itself",
+               "fr": "Lire un système qui se répond à lui-même"},
+    "cad_d6": {"en": "The dimension no household can answer for",
+               "fr": "La dimension qu'aucun ménage ne peut décrire"},
+    "cad_d7": {"en": "The reference document, in full",
+               "fr": "Le document de référence, en entier"},
 }
 
 for _c, _v in TEXTES.items():
@@ -1358,6 +1373,10 @@ STYLE = """
               line-height:1.25; }
   .cad-ch-v { font-size:25px; font-weight:700; color:#101728;
               letter-spacing:-.02em; line-height:1.2; }
+  /* LA CASE EN ATTENTE. Le tiret occupe la place du chiffre pour que la
+     rangée garde sa hauteur, en gris pâle pour qu'on ne le lise pas comme
+     une valeur mesurée. */
+  .cad-ch-vide { color:#c3cbd4 !important; }
   /* LA DEUXIÈME ÉTAPE N'A PAS DE CHIFFRE À MONTRER, ELLE A UNE OPÉRATION À
      NOMMER. « Ramener sur une échelle de 0 à 10 » en corps vingt-cinq ferait
      une phrase géante entre deux nombres ; en corps quatorze, gras, elle
@@ -1504,7 +1523,12 @@ STYLE = """
      sans qu'on sache où l'un finit et où l'autre commence ; le filet très
      pâle qui sépare les lignes du tableau fait le même travail ici, et les
      deux moitiés se lisent enfin au même rythme. */
-  .cad-cc { display:flex; flex-direction:column; gap:0; }
+  /* LA COLONNE DES ATTRIBUTS DESCEND À HAUTEUR DE LA PREMIÈRE DIMENSION.
+     Le tableau de droite ouvre par une ligne d'en-têtes ; sans décalage, le
+     premier attribut se posait en face de cette ligne-là plutôt qu'en face
+     de la première dimension, et les deux moitiés démarraient à deux
+     hauteurs différentes pour aucune raison lisible. */
+  .cad-cc { display:flex; flex-direction:column; gap:0; margin-top:40px; }
   .cad-c  { display:flex; align-items:stretch; gap:16px;
         border:0; border-radius:0; background:transparent;
         border-bottom:1px solid #eef2f0; padding:15px 0; }
@@ -1909,6 +1933,11 @@ _LIB = {"mesure": "cad_o1", "sources": "cad_o2",
 _COURT = {"mesure": "cad_c1", "sources": "cad_c2",
           "indicateurs": "cad_c35", "boucles": "cad_c5",
           "environnement": "cad_c6", "document": "cad_c7"}
+# LA LIGNE DE DESCRIPTION DE CHAQUE ONGLET, dans le format à deux lignes que
+# portent désormais toutes les barres du site.
+_DESC = {"mesure": "cad_d1", "sources": "cad_d2",
+         "indicateurs": "cad_d35", "boucles": "cad_d5",
+         "environnement": "cad_d6", "document": "cad_d7"}
 
 
 def render(doc_complet=None):
@@ -1937,6 +1966,7 @@ def render(doc_complet=None):
     # pondérations ». Le composant accepte de n'en pas avoir.
     vue = onglets.barre("cad_vue", list(VUES),
                         titre=lambda c: T(_COURT[c]),
+                        description=lambda c: T(_DESC[c]),
                         defaut=VUES[0])
 
     if vue == "sources":
@@ -2082,6 +2112,8 @@ def _case(rang, titre, valeur, phrase, sous=None, operation=False,
     nombre. `resultat` ajoute la pastille de sortie sous la case.
     """
     corps = "cad-ch-o" if operation else "cad-ch-v"
+    if valeur == "—":
+        corps += " cad-ch-vide"
     out = ['<div class="cad-ch-e">'
            '<div class="cad-ch-h">'
            f'<span class="cad-ch-n">{rang}</span>'
@@ -2110,15 +2142,24 @@ def _chaine(cases):
 
 
 def _chaine_generique():
-    """La chaîne sur l'exemple des quarante-cinq minutes de marche."""
+    """Les cinq étapes, sans chiffres, tant qu'aucun indicateur n'est ouvert.
+
+    UN CHIFFRE AFFICHÉ EST UN RÉSULTAT, MÊME QUAND C'EST UN EXEMPLE. « 45
+    min », « 3,5 / 10 » et « 6,1 / 10 » sur un écran où rien n'a été choisi
+    se lisaient comme la mesure de quelque chose : la mention « sur un
+    exemple », en petites capitales au-dessus, ne suffisait pas à les
+    désamorcer — on lit les grands nombres avant les titres. Les cases
+    gardent donc leur intitulé et leur phrase, qui enseignent la méthode, et
+    montrent un tiret à la place de la valeur, qui ne dirait rien de vrai.
+    """
+    RIEN = "—"
     return _chaine([
-        _case(1, T("cad_e1_t"), T("cad_e1_v"), T("cad_e1_x")),
+        _case(1, T("cad_e1_t"), RIEN, T("cad_e1_x")),
         _case(2, T("cad_e2_t"), T("cad_e2_v"), T("cad_e2_x"),
-              sous=T("cad_ex_seuils"), operation=True,
-              resultat=T("cad_e3_v")),
-        _case(3, T("cad_e3_t"), T("cad_e3_v"), T("cad_e3_x")),
-        _case(4, T("cad_e4_t"), T("cad_ex_p_v", p="3,6"), T("cad_e4_x")),
-        _case(5, T("cad_e5_t"), T("cad_e5_v"), T("cad_e5_x"))])
+              operation=True),
+        _case(3, T("cad_e3_t"), RIEN, T("cad_e3_x")),
+        _case(4, T("cad_e4_t"), RIEN, T("cad_e4_x")),
+        _case(5, T("cad_e5_t"), RIEN, T("cad_e5_x"))])
 
 
 def _chaine_indicateur(x):
