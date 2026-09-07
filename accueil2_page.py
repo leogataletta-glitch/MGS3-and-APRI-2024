@@ -112,8 +112,18 @@ STYLE = """
      ELLE EST CADRÉE SUR SA DROITE. Le lit de la rivière et les mornes
      occupent la moitié droite du cliché ; centrée, l'image aurait mis sous
      le titre le talus de galets du premier plan. */
+  /* ELLE VA D'UN BORD À L'AUTRE. Le bloc de contenu garde sa gouttière de
+     2,6 rem à droite et l'écart de 2 rem qui le sépare de la colonne de
+     gauche : une photographie posée dedans laissait donc une bande blanche
+     sur trois côtés, comme une image collée dans une page plutôt qu'une
+     couverture. Les deux marges négatives annulent exactement ces deux
+     écarts — l'image touche le bord droit de la fenêtre et vient au contact
+     du vert à gauche — et le haut n'avait rien à annuler, le bloc principal
+     n'ayant pas de rembourrage haut. Les valeurs sont dites dans l'unité de
+     la mise en page, pas en pixels : elles suivent le facteur de zoom. */
   .a2-hero { position:relative; border-radius:0; overflow:hidden;
         min-height:420px; display:flex; align-items:center;
+        margin:0 -2.6rem 0 -2rem;
         background-color:#eef3f0;
         background-size:cover; background-position:62% 40%;
         background-repeat:no-repeat; }
@@ -122,8 +132,11 @@ STYLE = """
             rgba(255,255,255,.97) 0%, rgba(255,255,255,.93) 28%,
             rgba(255,255,255,.62) 44%, rgba(255,255,255,.12) 62%,
             rgba(255,255,255,0) 74%); }
-  .a2-hero-c { position:relative; padding:52px 40px 48px 46px;
-        max-width:640px; }
+  /* LE TEXTE, LUI, GARDE SA MARGE. L'image a débordé de deux rem à gauche ;
+     le bloc de texte les reprend en rembourrage, sinon le sur-titre se
+     collerait au vert de la colonne. */
+  .a2-hero-c { position:relative; padding:52px 40px 48px calc(2rem + 46px);
+        max-width:680px; }
   /* LE TITRE INSTITUTIONNEL : le même romain à empattements que le grand
      titre, en corps réduit et en encre plus claire — il annonce l'institution
      avant que la page annonce son sujet. */
