@@ -78,7 +78,6 @@ TEINTES = {"dim1": "#d1730c", "dim2": "#2166ac", "dim3": "#1a8a4f",
 # rangée d'onglets, la borne du bouton Suivant et le sommaire des écrans.
 TEXTES = {
     "mode_portail": {"en": "Home", "fr": "Accueil"},
-    "mode_portail_b": {"en": "Home 2", "fr": "Accueil 2"},
     "po_titre": {"en": "Landscape resilience observatory",
                  "fr": "Observatoire de la résilience des paysages"},
     "po_sous": {"en": "Sud and Grand'Anse, Haiti · survey 2024",

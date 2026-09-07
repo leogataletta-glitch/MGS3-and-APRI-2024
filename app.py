@@ -877,8 +877,17 @@ st.markdown(("""
      la dernière d'entre elles. La marge négative annule la gouttière du
      bloc principal pour que le vert touche le bord de la fenêtre, et le
      rembourrage la rend au contenu. */
+  /* ELLE EST GRIS-VERT CLAIR, ET NON PLUS VERT PLEIN. Le vert foncé tenait la
+     colonne, mais il la faisait peser : une bande sombre du haut au bas de
+     l'écran devient le premier objet de la page, alors qu'un menu doit être
+     le second. Dans un gris teinté de vert, la colonne se distingue encore du
+     blanc de la page — c'est tout ce qu'on lui demande — et les rubriques y
+     reprennent l'encre sombre du reste du site, où elles se lisent mieux
+     qu'en blanc sur vert. Le filet de droite fait le reste : sans lui, deux
+     tons aussi proches se touchent sans frontière. */
   div[data-testid="stColumn"]:has(div[class*="st-key-zone_nav"]) {
-    background: linear-gradient(180deg, #23664e 0%, #1a4f3d 100%);
+    background: linear-gradient(180deg, #eef2ed 0%, #e3eae4 100%);
+    border-right: 1px solid #d9e1da;
     margin-left: -2.6rem !important;
     /* LE REMBOURRAGE NE REND PLUS TOUTE LA GOUTTIÈRE. Il rendait au contenu
        les 2,6 rem que la marge négative venait de reprendre, si bien que les
@@ -927,8 +936,11 @@ st.markdown(("""
   /* LE TITRE DE FAMILLE : petit, en capitales espacées, vert sourd. Il ne
      doit pas peser autant que les rubriques qu'il coiffe — c'est une
      étiquette de rangement, pas une destination. */
-  /* LA MARQUE EN TÊTE DE COLONNE. Elle est posée sur le vert, sans cadre ni
-     fond : le fichier est détouré, et le disque du logo suffit à la tenir. */
+  /* LA MARQUE EN TÊTE DE COLONNE. Elle est posée à même la colonne, sans
+     cadre ni fond : le fichier est détouré et le disque du logo suffit à la
+     tenir. Sur le gris-vert clair, l'emblème retrouve le fond pâle pour
+     lequel il a été dessiné — sur le vert plein, son détourage laissait un
+     halo autour du cercle et ses trois couleurs juraient avec la bande. */
   div[class*="st-key-zone_nav"] .nav-marque {
     display: flex; align-items: center; gap: 11px;
     padding: 4px 0 18px 8px; margin: 0;
@@ -938,13 +950,13 @@ st.markdown(("""
   }
   div[class*="st-key-zone_nav"] .nav-marque span {
     font-size: 21px; font-weight: 800; letter-spacing: .09em;
-    color: #ffffff; line-height: 1;
+    color: #14503a; line-height: 1;
   }
   /* LE PIED DE LA COLONNE : la devise, puis le crédit, tous deux en vert
      clair sur le vert de la bande, séparés des rubriques par un filet. */
   div[class*="st-key-zone_nav"] .nav-pied {
     margin: 28px 0 4px; padding: 16px 10px 0;
-    border-top: 1px solid rgba(255,255,255,.16);
+    border-top: 1px solid #d3ddd5;
   }
   div[class*="st-key-zone_nav"] .nav-pied svg { display: block;
     margin-bottom: 8px; }
@@ -952,19 +964,19 @@ st.markdown(("""
      blocs de texte ; sur une colonne de deux cents pixels, la justification
      creuse des rivières entre les mots. */
   div[class*="st-key-zone_nav"] .nav-devise {
-    font-size: 12px; line-height: 1.5; color: #cfe3d8;
+    font-size: 12px; line-height: 1.5; color: #4d5c53;
     font-style: italic; text-align: left !important;
   }
   div[class*="st-key-zone_nav"] .nav-credit {
-    font-size: 10.5px; line-height: 1.45; color: #8fbfa8; margin-top: 10px;
+    font-size: 10.5px; line-height: 1.45; color: #87958c; margin-top: 10px;
     text-align: left !important;
   }
   div[class*="st-key-zone_nav"] .nav-famille {
     font-size: 10px; font-weight: 700; letter-spacing: .11em;
-    /* SUR FOND VERT, L'ÉTIQUETTE PASSE EN VERT CLAIR. Elle garde son rôle —
-       moins de poids que les rubriques qu'elle coiffe — mais du côté clair
-       du contraste. */
-    text-transform: uppercase; color: #93c4ac;
+    /* SUR FOND CLAIR, L'ÉTIQUETTE REDESCEND DU CÔTÉ SOMBRE DU CONTRASTE,
+       mais en gris-vert éteint : elle garde son rôle, qui est de peser moins
+       que les rubriques qu'elle coiffe. */
+    text-transform: uppercase; color: #7d8d83;
     margin: 20px 0 7px; padding-left: 10px;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button {
@@ -975,10 +987,10 @@ st.markdown(("""
     border: none !important;
     background: transparent !important; box-shadow: none !important;
     /* L'ICÔNE EST PEINTE EN `currentColor` SUR LE BOUTON LUI-MÊME : sa
-       couleur se règle donc ici, et non sur le paragraphe du libellé. Sans
-       cette ligne, les pictogrammes seraient restés dans l'encre sombre du
-       thème, invisibles sur le vert. */
-    color: #cfe3d8 !important;
+       couleur se règle donc ici, et non sur le paragraphe du libellé. Elle
+       est un ton plus claire que le libellé — un pictogramme aussi appuyé que
+       le mot qu'il accompagne les met en concurrence. */
+    color: #55665c !important;
     transition: background .15s ease, color .15s ease;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button > div,
@@ -991,43 +1003,43 @@ st.markdown(("""
     font-family: "Inter", system-ui, sans-serif !important;
     font-size: 12.5px !important; font-weight: 500 !important;
     line-height: 1.3 !important;
-    color: #dceae3 !important;
+    color: #26332c !important;
     text-align: left !important; margin: 0 !important;
   }
-  /* LE SURVOL ÉCLAIRCIT LE FOND PLUTÔT QUE DE LE COLORER. Un blanc à neuf
-     pour cent tient sur n'importe quel vert de la colonne, y compris là où
-     le dégradé a foncé ; un aplat fixe se serait décalé en bas de liste. */
+  /* LE SURVOL FONCE LE FOND PLUTÔT QUE DE LE COLORER. Un vert à huit pour
+     cent tient sur les deux extrémités du dégradé de la colonne ; un aplat
+     fixe se serait décalé en bas de liste. */
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button:hover {
-    background: rgba(255,255,255,.10) !important; transform: none !important;
-    color: #ffffff !important;
+    background: rgba(26,79,61,.085) !important; transform: none !important;
+    color: #14503a !important;
   }
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button:hover p {
-    color: #ffffff !important;
+    color: #14503a !important;
   }
   /* L'ENTRÉE ACTIVE : un filet vert à gauche, un fond très pâle, le mot en
      gras vert. Dans une colonne, le filet se pose au bord d'attaque de la
      ligne — c'est là que l'œil descend, et il n'a rien à chercher. */
-  /* L'ENTRÉE ACTIVE PASSE EN BLANC, SUR UN FOND ÉCLAIRCI. Sur fond clair
-     c'était le vert du site qui la désignait ; sur fond vert, c'est
-     l'inverse — le blanc est ce que la colonne n'a nulle part ailleurs, et
-     le filet de gauche prend le vert clair du site. */
+  /* L'ENTRÉE ACTIVE REPREND LE VERT DU SITE, sur une pastille verte pâle.
+     C'est la seule couleur saturée de la colonne : rien d'autre n'a besoin
+     d'être désigné, et le filet du bord d'attaque suffit à la trouver sans
+     la chercher. */
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"] {
-    background: rgba(255,255,255,.16) !important;
+    background: #d7e6db !important;
     border: none !important; box-shadow: none !important;
-    border-left: 3px solid #9fd4b6 !important;
+    border-left: 3px solid #1f7a4d !important;
     border-radius: 0 8px 8px 0 !important;
     padding-left: 9px !important;
-    color: #ffffff !important;
+    color: #14503a !important;
   }
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"] p {
-    color: #ffffff !important; font-weight: 700 !important;
+    color: #14503a !important; font-weight: 700 !important;
   }
   div[class*="st-key-zone_nav"]
     div[data-testid="stButton"] > button[kind="primary"]:hover {
-    background: rgba(255,255,255,.22) !important;
+    background: #cfe1d4 !important;
   }
 
   /* SUR ÉCRAN ÉTROIT LA COLONNE REDEVIENT UNE RANGÉE. Une colonne de menu
@@ -1271,14 +1283,14 @@ st.markdown(("""
   div[class*="st-key-zone_langue"] {
     width: auto !important; margin: 2px 0 10px 2px !important;
     padding-bottom: 10px !important;
-    border-bottom: 1px solid rgba(255,255,255,.16) !important;
+    border-bottom: 1px solid #d3ddd5 !important;
   }
   /* LE GLOBE, PEINT EN MASQUE DEVANT LES DEUX CODES. On ne peut rien écrire
      dans le contenu d'un bouton Streamlit ; le tracé est donc posé en
      `::before` sur le conteneur, où il devient une case de la rangée. */
   div[class*="st-key-zone_langue"]::before {
     content: ""; width: 15px; height: 15px; flex: 0 0 15px;
-    margin-right: 9px; background-color: #8fbfa8;
+    margin-right: 9px; background-color: #7d8d83;
     -webkit-mask: MASQUE center/contain no-repeat;
     mask: MASQUE center/contain no-repeat;
   }
@@ -1287,11 +1299,10 @@ st.markdown(("""
      et la pastille se ferme en rond. La classe à clé est posée SUR le
      conteneur d'élément, pas sur un parent : elle se sélectionne donc
      directement. */
-  /* DEUX MOTS EN BLANC, PAS DEUX PASTILLES. Une pastille est un bouton
-     d'action ; la langue n'est pas une action, c'est un état du site. Posés
-     sur l'herbe du bandeau, les deux codes sont blancs, et une ombre portée
-     les détache là où le vert passe clair — une plaque translucide, elle,
-     découperait un rectangle net dans la photographie. */
+  /* DEUX MOTS, PAS DEUX PASTILLES. Une pastille est un bouton d'action ; la
+     langue n'est pas une action, c'est un état du site. Les deux codes sont
+     donc écrits en gris-vert, et celui qui est servi passe en vert du site :
+     l'état se lit sans que rien ne soit encadré. */
   div[class*="st-key-lang_"],
   div[class*="st-key-lang_"] div[data-testid="stButton"] {
     width: auto !important;
@@ -1310,23 +1321,45 @@ st.markdown(("""
   div[data-testid="stButton"] > button p {
     font-size: 11.5px !important; font-weight: 600 !important;
     letter-spacing: .08em !important; text-transform: uppercase;
-    color: #a8cbb9 !important; text-align: left !important;
+    color: #6f8177 !important; text-align: left !important;
     transition: color .15s ease;
   }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button:hover { background: transparent !important; }
+  /* NI CADRE NI PLAQUE APRÈS LE CLIC. Streamlit garde le focus sur le bouton
+     qu'on vient d'actionner et lui pose son fond gris : sur la colonne
+     claire, le code de langue servi se retrouvait dans une boîte, alors qu'il
+     ne doit être qu'un mot en vert. */
   div[class*="st-key-lang_"]
-  div[data-testid="stButton"] > button:hover p { color: #ffffff !important; }
+  div[data-testid="stButton"] > button:focus,
+  div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button:focus-visible,
+  div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button:active,
+  /* LA RÈGLE DE SURVOL DES RUBRIQUES ATTRAPAIT AUSSI LA LANGUE. Les deux
+     codes vivent dans la colonne, donc dans la portée du menu : sous le
+     pointeur, le code servi reprenait la pastille verte de l'entrée active.
+     Il faut le redire ici avec l'état, sinon la règle du menu — plus précise
+     d'un cran — l'emporte. */
+  div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button[kind="primary"]:hover,
+  div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button[kind="primary"]:focus {
+    background: transparent !important; box-shadow: none !important;
+    outline: none !important; border: none !important;
+  }
+  div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button:hover p { color: #14503a !important; }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] p {
-    color: #ffffff !important; font-weight: 800 !important;
+    color: #14503a !important; font-weight: 800 !important;
   }
   div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
   div[class*="st-key-lang_"] { position: relative; padding-left: 13px; }
   div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
   div[class*="st-key-lang_"]::before {
     content: "/"; position: absolute; left: 2px; top: 2px;
-    font-size: 11.5px; color: rgba(255,255,255,.42);
+    font-size: 11.5px; color: rgba(20,80,58,.38);
   }
   div[class*="st-key-zone_langue"] {
     display: flex !important; flex-direction: row !important;
@@ -1913,12 +1946,6 @@ MODE_LEVIER = "levier"
 # territoire, on apprenait comment on le mesure. C'est l'ordre d'un rapport,
 # pas celui d'un tableau de bord.
 MODE_PORTAIL = "portail"
-# LA MÊME PAGE, UNE AUTRE PHOTOGRAPHIE. Une image d'ouverture ne se juge pas
-# sur un fichier ouvert à côté : elle se juge sous le titre, avec le voile
-# blanc dessus et la colonne verte contre son bord. Cette seconde entrée sert
-# à trancher entre deux clichés, et se retire en supprimant sa ligne de menu,
-# sa constante et son aiguillage.
-MODE_PORTAIL_B = "portail_b"
 # LE TEMPS, ENFIN MONTRÉ COMME DU TEMPS. Trois jeux satellitaires sont des
 # séries — la forêt depuis 2000, la pluie depuis 1981, la température depuis
 # 2001 — et le site les lisait comme des instantanés.
@@ -1938,7 +1965,6 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      MODE_RAPPORT: T("mode_rapport"),
                      MODE_LEVIER: T("mode_levier"),
                      MODE_PORTAIL: T("mode_portail"),
-                     MODE_PORTAIL_B: T("mode_portail_b"),
                      MODE_TRAJECTOIRES: T("mode_trajectoires")})
 
 # L'état de navigation doit exister AVANT la barre du haut, qui affiche le nom
@@ -2008,7 +2034,7 @@ MODE_DIMENSIONS = "dimensions"
 # L'ACCUEIL N'A PAS DE FAMILLE, et il ne doit pas en avoir une : il est le
 # point d'où l'on part, pas une des choses qu'on y fait.
 _NAV_FAMILLES = [
-    (None, [(MODE_PORTAIL, "maison"), (MODE_PORTAIL_B, "maison")]),
+    (None, [(MODE_PORTAIL, "maison")]),
     # LE CADRE PASSE DEVANT LE TERRITOIRE. On dit d'abord ce qu'on mesure,
     # ensuite où on l'a mesuré : une carte de dix sections ne dit rien tant
     # qu'on ne sait pas ce qui y est compté, alors que la définition de
@@ -2215,7 +2241,7 @@ with _zone_nav:
     # sans lui, elle se lirait comme une entrée de menu qui ne mène nulle part.
     st.markdown(
         '<div class="nav-pied">'
-        + icones.svg("pousse", couleur="#8fc4a8", taille=15)
+        + icones.svg("pousse", couleur="#6d9683", taille=15)
         + f'<div class="nav-devise">{T("pied_devise")}</div>'
         f'<div class="nav-credit">'
         f'{T("pied_credit", a=datetime.date.today().year)}</div></div>',
@@ -2229,8 +2255,7 @@ _c_contenu = _col_page.container(key="zone_page")
 # Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par
 # la colonne de gauche qu'on vient de rendre.
-_rendre_ruban(st.session_state["app_mode"]
-              not in (MODE_PORTAIL, MODE_PORTAIL_B))
+_rendre_ruban(st.session_state["app_mode"] != MODE_PORTAIL)
 
 app_mode = st.session_state["app_mode"]
 
@@ -2249,15 +2274,6 @@ with _c_contenu:
         # celui-ci lui emprunte sa carte du territoire, avec son carton de
         # localisation et ses étiquettes.
         accueil2_page.render()
-
-    if app_mode == MODE_PORTAIL_B:
-        # LA MÊME PAGE, AU CLICHÉ PRÈS. Elle n'est pas recopiée : c'est le même
-        # module, appelé avec une autre photographie et son propre cadrage.
-        # Le panorama est plus large que le bandeau, donc coupé en hauteur ;
-        # le point de fuite est mis un peu bas pour garder la grève et les
-        # voiliers, plutôt que du ciel.
-        accueil2_page.render(photo_essai="accueil2_hero_b.jpg",
-                             cadrage="50% 62%")
 
     if app_mode == MODE_ACCUEIL:
         territoire_page.render()

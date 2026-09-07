@@ -48,6 +48,15 @@ PORTES = [
     ("actions", "fiche", "a2_p4_t", "a2_p4_x", "#f2f6f3"),
 ]
 
+# LA PHOTOGRAPHIE SUIT LA LANGUE, ET CE N'EST PAS UN CAPRICE. Deux clichés du
+# terrain valaient l'ouverture ; les départager revenait à en perdre un. Le
+# site est lu dans deux langues par deux publics, il ouvre donc sur deux
+# scènes : le port et sa flottille de voiliers pour la version française, la
+# vallée et sa rivière pour l'anglaise. Chacune vient avec son cadrage, car
+# les deux panoramas ne portent pas leur sujet à la même hauteur.
+PHOTOS = {"fr": ("accueil2_hero_b.jpg", "50% 62%"),
+          "en": ("accueil2_hero.jpg", "62% 40%")}
+
 TEXTES = {
     "a2_nav": {"en": "Home 2", "fr": "Accueil 2"},
     # LE TITRE INSTITUTIONNEL, EN DEUX LIGNES SÉPARÉES PAR UNE BARRE. La
@@ -287,10 +296,10 @@ def _photo_b64(lang="fr", prefere=None):
     porte aucun mot — mais il reste dans la signature pour que les replis,
     eux, retrouvent leur version linguistique.
 
-    `prefere` NOMME UN CLICHÉ D'ESSAI, ET NE FAIT QUE PASSER DEVANT. C'est le
-    seul écart entre les deux entrées d'accueil : même page, même texte,
-    même carte, une autre photographie. Si le fichier manque, la liste
-    ordinaire reprend la main et la page s'affiche quand même.
+    `prefere` NOMME LE CLICHÉ DE LA LANGUE SERVIE, et ne fait que passer
+    devant la liste ordinaire. Si le fichier manque dans un déploiement, les
+    replis reprennent la main et la page s'affiche quand même — une image
+    d'ouverture absente ne doit pas emporter la page d'ouverture.
     """
     noms = ([prefere] if prefere else []) + [
             "accueil2_hero.jpg", "bandeau_apri_site.jpg",
@@ -348,20 +357,15 @@ def _fmt(n):
     return f"{n:,}".replace(",", " ")
 
 
-def render(photo_essai=None, cadrage=None):
-    """La page d'entrée : annoncer, chiffrer, orienter.
-
-    LES DEUX PARAMÈTRES NE SERVENT QU'À ESSAYER UNE AUTRE PHOTOGRAPHIE. La
-    page reste unique — un second module aurait dédoublé le texte, la carte et
-    les quatre destinations, et les deux copies auraient divergé au premier
-    changement. `photo_essai` nomme le cliché à préférer, `cadrage` dit où le
-    couper quand il ne remplit pas le bandeau dans les mêmes proportions.
-    """
+def render():
+    """La page d'entrée : annoncer, chiffrer, orienter."""
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(_CSS_ICONES, unsafe_allow_html=True)
 
     # ---- 1 · la photographie, le titre, l'appel ------------------------
-    photo = _photo_b64(i18n.get_lang(), photo_essai)
+    _lang = i18n.get_lang()
+    _nom, cadrage = PHOTOS.get(_lang, PHOTOS["en"])
+    photo = _photo_b64(_lang, _nom)
     # LE TITRE INSTITUTIONNEL SORT DE L'IMAGE. Il y était peint, donc figé
     # dans une langue et invisible à un lecteur d'écran ; écrit en texte, il
     # se traduit et se sélectionne.
