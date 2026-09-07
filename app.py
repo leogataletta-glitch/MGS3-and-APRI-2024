@@ -652,7 +652,13 @@ st.markdown(("""
        toujours — et la page blanche du milieu y gagne son cadre. Le dégradé
        fonce très légèrement vers le bas : c'est ce qui empêche un aplat de
        cette hauteur de paraître plat. */
-    background: linear-gradient(180deg, #23664e 0%, #1a4f3d 100%); border-right: 1px solid var(--bord);
+    /* LE VERT N'EST PLUS PEINT ICI, MAIS SUR LA COLONNE QUI PORTE CE BLOC.
+       Peint sur le bloc lui-même, il s'arrêtait à la dernière rubrique :
+       Streamlit fixe la hauteur du bloc vertical sur son contenu, et aucune
+       hauteur imposée — même en `!important` — ne l'en fait démordre. La
+       colonne, elle, a la hauteur de la page ; c'est donc elle qui porte la
+       bande, et le bloc collant y navigue. */
+    background: transparent; border-right: 1px solid var(--bord);
   }
   section[data-testid="stSidebar"] h2 {
     font-size: 1.15rem !important; margin-top: .3rem !important;
@@ -841,7 +847,23 @@ st.markdown(("""
        le contenu, qui a sa propre colonne. `align-self: flex-start` est
        indispensable : sans lui la colonne de Streamlit s'étire sur toute la
        hauteur de la page et `sticky` n'a plus rien à quoi se coller. */
-    position: sticky; top: 10px; align-self: flex-start;
+    /* ELLE VA D'UN BORD À L'AUTRE DE LA FENÊTRE, ET ELLE Y RESTE. Collée à
+       dix pixels du haut et haute de son seul contenu, la colonne laissait
+       sous elle une longue bande blanche dès que la page dépassait la
+       hauteur d'un écran : le vert s'arrêtait à « Nous contacter » et le
+       reste de la marge gauche redevenait du blanc, ce qui la faisait
+       paraître flottante. Haute d'une fenêtre entière et collée au bord du
+       haut, elle devient le bord gauche du site — elle accompagne le
+       défilement au lieu de le subir, et si les rubriques dépassent un jour
+       la hauteur de la fenêtre, c'est elle qui défile pour son compte. */
+    position: sticky; top: 0; align-self: flex-start;
+    /* LE BLOC GARDE LA HAUTEUR DE SES RUBRIQUES, l'enveloppe prend celle de
+       la colonne : c'est la différence entre les deux qui donne au bloc sa
+       course de collage. Sans `flex: 0 0 auto`, il s'étire avec elle et il
+       n'y a plus de course du tout. Le plafond d'une fenêtre le fait défiler
+       pour son compte le jour où les rubriques dépasseront l'écran. */
+    flex: 0 0 auto !important; height: auto !important;
+    max-height: 100vh; overflow-y: auto; overscroll-behavior: contain;
     border: none;
     /* LE FOND EST POSÉ SUR LA COLONNE, PAS DERRIÈRE ELLE. Un dégradé qui
        blanchit à mi-hauteur disparaissait avant le bas de la liste : la
@@ -861,7 +883,13 @@ st.markdown(("""
        toujours — et la page blanche du milieu y gagne son cadre. Le dégradé
        fonce très légèrement vers le bas : c'est ce qui empêche un aplat de
        cette hauteur de paraître plat. */
-    background: linear-gradient(180deg, #23664e 0%, #1a4f3d 100%);
+    /* LE VERT N'EST PLUS PEINT ICI, MAIS SUR LA COLONNE QUI PORTE CE BLOC.
+       Peint sur le bloc lui-même, il s'arrêtait à la dernière rubrique :
+       Streamlit fixe la hauteur du bloc vertical sur son contenu, et aucune
+       hauteur imposée — même en `!important` — ne l'en fait démordre. La
+       colonne, elle, a la hauteur de la page ; c'est donc elle qui porte la
+       bande, et le bloc collant y navigue. */
+    background: transparent;
     /* ELLE TOUCHE LE BORD GAUCHE DE L'ÉCRAN. La gouttière du bloc principal
        — 2,6 rem — laissait une bande blanche entre le bord de la fenêtre et
        la colonne, alors que le bandeau au-dessus, lui, va d'un bord à
@@ -871,9 +899,36 @@ st.markdown(("""
        elle, et le rembourrage gauche est augmenté d'autant pour que les
        rubriques ne collent pas au bord. */
     border-left: none;
-    border-radius: 0 14px 14px 0;
-    padding: 12px 12px 16px 16px;
-    margin: 0 0 0 -2.6rem;
+    /* PLUS D'ANGLES ARRONDIS À DROITE. Ils dessinaient une carte posée sur
+       la page ; une bande qui court du haut au bas de la fenêtre n'est pas
+       une carte, c'est un bord. */
+    border-radius: 0;
+    padding: 18px 12px 24px 16px;
+    margin: 0;
+  }
+  /* LA BANDE VERTE VA DU HAUT DE LA PAGE À SON BAS. Elle est posée sur la
+     colonne de gauche, dont la hauteur est celle de la rangée — donc celle
+     de la page entière — et non sur le bloc des rubriques, qui s'arrête à
+     la dernière d'entre elles. La marge négative annule la gouttière du
+     bloc principal pour que le vert touche le bord de la fenêtre, et le
+     rembourrage la rend au contenu. */
+  div[data-testid="stColumn"]:has(div[class*="st-key-zone_nav"]) {
+    background: linear-gradient(180deg, #23664e 0%, #1a4f3d 100%);
+    margin-left: -2.6rem !important;
+    padding-left: 2.6rem !important;
+    min-height: 100vh;
+  }
+  /* SANS CETTE RÈGLE, LE BLOC COLLANT N'A NULLE PART OÙ COLLER. Streamlit
+     interpose entre la colonne et le bloc des rubriques une enveloppe dont
+     la hauteur est exactement celle de son contenu : un élément `sticky`
+     dont le parent fait sa propre taille n'a aucune course à parcourir, et
+     il défile avec la page comme s'il n'était pas collant. L'enveloppe
+     s'étire donc sur toute la colonne, et la course apparaît. */
+  div[data-testid="stColumn"]:has(div[class*="st-key-zone_nav"])
+    > div[data-testid="stVerticalBlock"],
+  div[data-testid="stLayoutWrapper"]:has(> div[class*="st-key-zone_nav"]) {
+    height: 100% !important; flex: 1 1 auto !important;
+    align-self: stretch !important;
   }
   /* LES ENTRÉES RESPIRENT. Streamlit colle ses conteneurs d'élément les uns
      aux autres : le fond de survol d'une ligne venait alors toucher celui de

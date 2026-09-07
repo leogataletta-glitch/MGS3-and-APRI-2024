@@ -177,6 +177,14 @@ TEXTES = {
     "cad_e1_x": {"en": "Observed value, from surveys or spatial data.",
                  "fr": "Valeur observée, issue des enquêtes ou des données "
                        "spatiales."},
+    # LA VALEUR EST CELLE DE TOUT L'ÉCHANTILLON, ET IL FAUT LE DIRE ICI.
+    # « 72,8 % » posé seul sous « Donnée brute » se lit comme la valeur de
+    # quelque chose qu'on aurait sélectionné ; c'est la mesure sur les mille
+    # deux cent onze ménages, et l'écran ne porte aucun filtre qui pourrait
+    # la restreindre.
+    "cad_ex_ech": {
+        "en": "Measured on the whole sample, {n} households.",
+        "fr": "Mesurée sur tout l'échantillon, {n} ménages."},
     "cad_e2_t": {"en": "Normalise", "fr": "Normaliser"},
     "cad_e2_v": {"en": "Convert to a 0–10 scale",
                  "fr": "Ramener sur une échelle de 0 à 10"},
@@ -213,29 +221,78 @@ TEXTES = {
 
     "cad_p2_t": {"en": "Two normalisation methods",
                  "fr": "Deux méthodes de normalisation"},
-    "cad_p2s_t": {"en": "Normalisation method",
-                  "fr": "Méthode de normalisation"},
-    "cad_p2s_x": {"en": "Used when a continuous distribution of values is "
-                        "available.",
-                  "fr": "Utilisée quand on dispose d'une distribution "
-                        "continue de valeurs."},
+    # LES DEUX LOGIQUES SONT CELLES DU CADRE, ET PAS UNE MISE À L'ÉCHELLE
+    # QUELCONQUE. Cette colonne affichait la formule du min-max — le score
+    # comme position entre la plus petite et la plus grande valeur observées
+    # — que le référentiel n'emploie nulle part. Il en emploie deux autres,
+    # et le choix entre elles tient à une seule chose : existe-t-il une
+    # distribution empirique de référence à l'échelle internationale ? Si
+    # oui, la valeur se situe dans cette distribution, par quantiles ; sinon,
+    # deux scénarios locaux — l'optimal et le critique — bornent l'échelle,
+    # découpée en neuf classes équidistantes.
+    "cad_p2s_t": {"en": "Two normalisation logics",
+                  "fr": "Deux logiques de normalisation"},
+    "cad_p2s_x": {
+        "en": "Which one applies depends on whether a robust comparative "
+              "reference exists for the indicator.",
+        "fr": "Laquelle s'applique dépend de l'existence, ou non, d'un cadre "
+              "de référence comparatif robuste pour l'indicateur."},
+    "cad_p2q_t": {"en": "Quantile-based discretization",
+                  "fr": "Discrétisation par quantiles"},
+    "cad_p2q_x": {
+        "en": "When reliable empirical distributions exist at international "
+              "or regional scale, the thresholds come from the indicator's "
+              "empirical cumulative distribution at global level. The "
+              "observed value becomes an ordinal score reflecting its "
+              "position within that distribution, whatever its original "
+              "unit.",
+        "fr": "Quand des distributions empiriques fiables existent à "
+              "l'échelle internationale ou régionale, les seuils viennent de "
+              "la distribution cumulative empirique de l'indicateur au "
+              "niveau mondial. La valeur observée devient un score ordinal "
+              "qui dit sa position dans cette distribution, quelle qu'ait "
+              "été son unité de départ."},
+    "cad_p2n_t": {"en": "Local normative benchmark",
+                  "fr": "Repère normatif local"},
+    "cad_p2n_x": {
+        "en": "When the attribute is highly context-specific and has no "
+              "robust comparative reference, two locally defined scenarios "
+              "bound the scale: the one considered optimal and the one "
+              "considered critical for the socio-ecological system. The "
+              "interval between them is cut into nine equidistant classes, "
+              "which makes eleven ordinal scenarios.",
+        "fr": "Quand l'attribut est très dépendant du contexte et n'a pas de "
+              "cadre de référence comparatif robuste, deux scénarios définis "
+              "localement bornent l'échelle : celui qu'on tient pour optimal "
+              "et celui qu'on tient pour critique dans le système "
+              "socio-écologique étudié. L'intervalle entre les deux est "
+              "découpé en neuf classes équidistantes, ce qui fait onze "
+              "scénarios ordinaux."},
+    "cad_p2_sens": {
+        "en": "A high score means a condition considered favourable or "
+              "optimal in the local context; a low score, a condition likely "
+              "to increase vulnerability.",
+        "fr": "Un score élevé signale une situation tenue pour favorable ou "
+              "optimale dans le contexte local ; un score bas, une situation "
+              "de nature à accroître la vulnérabilité."},
     "cad_p2h": {"en": "Higher is better", "fr": "Plus, c'est mieux"},
     "cad_p2l": {"en": "Lower is better", "fr": "Moins, c'est mieux"},
-    "cad_p2b_t": {"en": "Threshold-based normalisation",
-                  "fr": "Normalisation par seuils"},
-    "cad_p2b_x": {"en": "Used when clear benchmarks or standards exist.",
-                  "fr": "Utilisée quand il existe des repères ou des normes "
-                        "clairs."},
+    "cad_p2b_t": {"en": "The eleven ordinal scenarios",
+                  "fr": "Les onze scénarios ordinaux"},
+    "cad_p2b_x": {"en": "The scale this indicator is read against.",
+                  "fr": "L'échelle sur laquelle cet indicateur se lit."},
     # Les paliers sont écrits « borne → score », séparés par des barres.
     "cad_p2b_r": {"en": "≥ 120 min→0|60–120 min→2.5|30–60 min→5|"
                         "15–30 min→7.5|≤ 15 min→10",
                   "fr": "≥ 120 min→0|60–120 min→2,5|30–60 min→5|"
                         "15–30 min→7,5|≤ 15 min→10"},
-    "cad_p2b_n": {"en": "Thresholds may come from international standards, "
-                        "national norms or expert consensus.",
-                  "fr": "Les seuils peuvent venir de standards "
-                        "internationaux, de normes nationales ou d'un "
-                        "consensus d'experts."},
+    "cad_p2b_n": {
+        "en": "Thresholds come either from the international empirical "
+              "distribution or from the locally defined optimal and critical "
+              "scenarios.",
+        "fr": "Les seuils viennent soit de la distribution empirique "
+              "internationale, soit des scénarios optimal et critique "
+              "définis localement."},
 
     "cad_p3_t": {"en": "From indicator scores to overall resilience",
                  "fr": "Des scores d'indicateurs à la résilience d'ensemble"},
@@ -1454,6 +1511,15 @@ STYLE = """
   .cad-nrm-p { font-size:11.5px; color:#5a6a80; line-height:1.5;
               background:#f7f8f8; border-radius:10px; padding:11px 14px;
               margin-top:18px; }
+  /* CHACUNE DES DEUX LOGIQUES : son nom en vert, sa condition d'emploi en
+     dessous. Un filet très pâle les sépare, comme partout ailleurs. */
+  .cad-log { padding:12px 0; border-bottom:1px solid #eef2f0; }
+  .cad-log:first-of-type { padding-top:4px; }
+  .cad-log-t { font-size:12.5px; font-weight:700; color:#1a6b52;
+              margin:0 0 5px; }
+  p.cad-log-x { font-size:12px !important; color:#3c4761 !important;
+              line-height:1.55 !important; margin:0 !important;
+              text-align:left !important; max-width:60ch; }
 
   /* Le pied : pourquoi l'échelle est de 0 à 10, et combien d'indicateurs. */
   .cad-pied { display:flex; align-items:flex-start; gap:26px; flex-wrap:wrap;
@@ -2186,8 +2252,11 @@ def _chaine_indicateur(x):
     else:
         sc_v, sc_x = _fmt(x["score"], 1) + " / 10", T("cad_e3_x")
     dsc = _score_dimension(x["dim"])
+    _n_ech = _menages()[0]
+    _sous1 = (T("cad_ex_ech", n=_fmt(_n_ech, 0)) if _n_ech
+              else T("cad_e1_x"))
     return _chaine([
-        _case(1, T("cad_e1_t"), val, x["metrique"]),
+        _case(1, T("cad_e1_t"), val, x["metrique"], sous=_sous1),
         _case(2, T("cad_e2_t"), T("cad_e2_v"), T("cad_e2_x"),
               sous=norme_s, operation=True,
               resultat=None if x["score"] is None else sc_v),
@@ -2222,15 +2291,17 @@ def _normalisations(x=None):
     return ('<div class="cad-nrm"><div>'
             + f'<div class="cad-nrm-t">{_e(T("cad_p2s_t"))}</div>'
             + f'<div class="cad-nrm-x">{_e(T("cad_p2s_x"))}</div>'
-            + '<div class="cad-duo">'
-            + _formule(T("cad_p2h"), 'x<sub>i</sub> &minus; x<sub>min</sub>')
-            + _formule(T("cad_p2l"), 'x<sub>max</sub> &minus; x<sub>i</sub>')
-            + '</div>'
-            # LA PHRASE QUI DIT CE QUE LES DEUX FORMULES FONT, SOUS ELLES.
-            # Elle tenait dans la deuxième case de la chaîne, où elle
-            # expliquait une opération dont les formules sont juste en
-            # dessous ; la case y a gagné son sous-titre.
-            + f'<div class="cad-nrm-p">{_e(T("cad_e2_x"))}</div>'
+            # LES DEUX LOGIQUES, L'UNE SOUS L'AUTRE, CHACUNE AVEC SA
+            # CONDITION D'EMPLOI. Elles ne sont pas deux variantes de goût :
+            # c'est la disponibilité d'une distribution de référence qui
+            # décide, et la phrase de chacune commence donc par « quand ».
+            + f'<div class="cad-log"><div class="cad-log-t">'
+            f'{_e(T("cad_p2q_t"))}</div>'
+            f'<p class="cad-log-x">{_e(T("cad_p2q_x"))}</p></div>'
+            + f'<div class="cad-log"><div class="cad-log-t">'
+            f'{_e(T("cad_p2n_t"))}</div>'
+            f'<p class="cad-log-x">{_e(T("cad_p2n_x"))}</p></div>'
+            + f'<div class="cad-nrm-p">{_e(T("cad_p2_sens"))}</div>'
             + '</div><div>'
             + f'<div class="cad-nrm-t">{_e(titre_b)}</div>'
             + f'<div class="cad-nrm-x">{_e(sous_b)}</div>'
