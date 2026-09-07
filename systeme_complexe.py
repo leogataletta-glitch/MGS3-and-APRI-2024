@@ -197,6 +197,23 @@ TEXTES = {
               "comme résultat mesuré, ou bien elle s'observe à une autre "
               "échelle. La relation n'en est pas plus faible ; elle n'est "
               "simplement pas recoupable avec nos propres données."},
+    # CHAQUE COLONNE DIT CE QU'ELLE EST, SOUS SON PROPRE INTITULÉ. Le
+    # paragraphe d'ouverture l'expliquait déjà, et il n'était pas lu : trois
+    # colonnes de chiffres côte à côte se lisent en diagonale, pas après un
+    # texte. Une ligne sous chaque titre coûte trois lignes et supprime la
+    # question.
+    "sx_c_rel_x": {"en": "the arrow, and its direction",
+                   "fr": "la flèche, et son sens"},
+    "sx_correl_s": {"en": "measured on our data, n = 10",
+                    "fr": "mesurée sur nos données, n = 10"},
+    "sx_c_accord_x": {"en": "what that correlation is worth at n = 10",
+                      "fr": "ce que vaut cette corrélation à n = 10"},
+    "sx_force_x": {"en": "what actually propagates, from the source",
+                   "fr": "ce qui se propage vraiment, tiré de la source"},
+    "sx_preuve_x": {"en": "what that strength rests on",
+                    "fr": "ce sur quoi cette force repose"},
+    "sx_c_src_x": {"en": "the study, open it to check",
+                   "fr": "l'étude, à ouvrir pour vérifier"},
     "sx_leg_f": {"en": "What the strength means", "fr": "Ce que dit la force"},
     "sx_leg_f_x": {
         "en": "the share of a change that passes along the arrow, on the "
@@ -436,6 +453,12 @@ STYLE = """
        padding:3px 0 3px 11px; border-left:2px solid #e3eaf3; }
   .sx-leg-e b { color:#101728; font-weight:600; }
   @media (max-width: 900px) { .sx-leg { grid-template-columns:1fr; } }
+  /* LA LIGNE SOUS L'INTITULÉ DE COLONNE : en romain, en gris, sans
+     capitales, pour qu'on la lise comme une explication et non comme un
+     second titre. */
+  .sx-th-x { display:block; font-weight:400; letter-spacing:0;
+       text-transform:none; font-size:10.5px; color:#a2aab8;
+       margin-top:3px; line-height:1.35; }
   .sx-tab { width:100%; border-collapse:collapse; margin-top:12px; }
   .sx-tab th { font-size:10.5px; font-weight:700; letter-spacing:.09em;
        text-transform:uppercase; color:#8a93a5; text-align:left;
@@ -951,13 +974,19 @@ def _table_relations(m, aretes, lang):
     comparent pas : ils restent attachés à la ligne, en infobulle, pour qui
     conteste un chiffre précis.
     """
-    r = [f'<table class="sx-tab"><thead><tr>'
-         f'<th>{_e(T("sx_c_rel"))}</th>'
-         f'<th class="n">{_e(T("sx_correl"))}</th>'
-         f'<th>{_e(T("sx_c_accord"))}</th>'
-         f'<th class="n">{_e(T("sx_force"))}</th>'
-         f'<th>{_e(T("sx_preuve"))}</th>'
-         f'<th>{_e(T("sx_c_src"))}</th></tr></thead><tbody>']
+    def _t(cle, sous, droite=False):
+        cls = ' class="n"' if droite else ''
+        return ('<th' + cls + '>' + _e(T(cle))
+                + '<span class="sx-th-x">' + _e(T(sous)) + '</span></th>')
+
+    r = ['<table class="sx-tab"><thead><tr>'
+         + _t("sx_c_rel", "sx_c_rel_x")
+         + _t("sx_correl", "sx_correl_s", True)
+         + _t("sx_c_accord", "sx_c_accord_x")
+         + _t("sx_force", "sx_force_x", True)
+         + _t("sx_preuve", "sx_preuve_x")
+         + _t("sx_c_src", "sx_c_src_x")
+         + '</tr></thead><tbody>']
     for a in aretes:
         co = _correlation(m, a["de"], a["vers"])
         if co is None:
