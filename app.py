@@ -1730,8 +1730,8 @@ TEXTES_NAV = {
               "fr": "Où une poussée voyage le plus loin"},
     "sx_d4": {"en": "Push several variables at once",
               "fr": "Pousser plusieurs variables à la fois"},
-    "sx_d5": {"en": "Wave after wave, and what the loops add",
-              "fr": "Vague après vague, et ce que les boucles ajoutent"},
+    "sx_d5": {"en": "Relay after relay, and what the loops add",
+              "fr": "Relais après relais, et ce que les boucles ajoutent"},
     "sx_d6": {"en": "Push a variable and watch the system move, live",
               "fr": "Poussez une variable et regardez le système bouger, "
                     "en direct"},

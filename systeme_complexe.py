@@ -24,8 +24,8 @@ Un système se définit donc par trois choses, et une seule fois :
 
 Ces trois choses sont retenues, et les cinq onglets travaillent dessus. Le
 premier le construit, le deuxième justifie ses relations, le troisième cherche
-où appuyer, le quatrième appuie, le cinquième regarde ce que ça fait vague
-après vague. Refaire la sélection à chaque onglet en ferait cinq outils
+où appuyer, le quatrième appuie, le cinquième regarde ce que ça fait relais
+après relais. Refaire la sélection à chaque onglet en ferait cinq outils
 séparés ; c'est un seul.
 
 CE QUE LE MODULE NE FAIT PAS, ET LE DIT.
@@ -284,27 +284,32 @@ TEXTES = {
               "peut réellement gagner."},
 
     # ---------------------------------------------------- onglet 5
-    "sx_t5": {"en": "Wave after wave, and what the loops add",
-              "fr": "Vague après vague, et ce que les boucles ajoutent"},
+    "sx_t5": {"en": "Relay after relay, and what the loops add",
+              "fr": "Relais après relais, et ce que les boucles ajoutent"},
     "sx_x5": {
-        "en": "An intervention does not stop at what it touches. The first "
-              "wave is what the pushed variables move directly; the second is "
-              "what those move in turn; and a variable that sits in a "
-              "reinforcing loop keeps receiving on every later wave, because "
-              "the effect comes back to it. The columns below separate those "
-              "waves instead of showing one lump.",
-        "fr": "Une intervention ne s'arrête pas à ce qu'elle touche. La "
-              "première vague est ce que les variables poussées déplacent "
-              "directement ; la deuxième est ce que celles-là déplacent à "
-              "leur tour ; et une variable prise dans une boucle renforçante "
-              "continue de recevoir à chaque vague suivante, parce que "
-              "l'effet lui revient. Les colonnes ci-dessous séparent ces "
-              "vagues au lieu d'en montrer la somme."},
+        "en": "An intervention does not stop at what it touches. One push "
+              "is one shock wave, which crosses the system and comes back "
+              "through the loops; the columns below cut it into relays. The "
+              "first relay is what the pushed variables move directly; the "
+              "second is what those move in turn; and a variable that sits "
+              "in a reinforcing loop keeps receiving at every later relay, "
+              "because the effect comes back to it. Separating the relays "
+              "shows where an effect comes from, which one lump cannot.",
+        "fr": "Une intervention ne s'arrête pas à ce qu'elle touche. Une "
+              "poussée est une onde de choc, qui traverse le système et "
+              "revient par les boucles ; les colonnes ci-dessous la "
+              "découpent en relais. Le premier relais est ce que les "
+              "variables poussées déplacent directement ; le deuxième est ce "
+              "que celles-là déplacent à leur tour ; et une variable prise "
+              "dans une boucle renforçante continue de recevoir à chaque "
+              "relais suivant, parce que l'effet lui revient. Séparer les "
+              "relais montre d'où vient un effet, ce qu'une somme ne fait "
+              "pas."},
     "sx_v_dep": {"en": "Start", "fr": "Départ"},
     "sx_v_pousse": {"en": "Pushed by", "fr": "Poussée de"},
-    "sx_v1": {"en": "Wave 1", "fr": "Vague 1"},
-    "sx_v2": {"en": "Wave 2", "fr": "Vague 2"},
-    "sx_v3": {"en": "Waves 3+", "fr": "Vagues 3+"},
+    "sx_v1": {"en": "Relay 1", "fr": "Relais 1"},
+    "sx_v2": {"en": "Relay 2", "fr": "Relais 2"},
+    "sx_v3": {"en": "Relays 3+", "fr": "Relais 3+"},
     "sx_v_tot": {"en": "Cumulative", "fr": "Cumulé"},
     "sx_v_sens": {"en": "Direction", "fr": "Sens"},
     "sx_v_par": {"en": "Mainly through", "fr": "Principalement par"},
@@ -312,26 +317,26 @@ TEXTES = {
     "sx_baisse": {"en": "down", "fr": "baisse"},
     "sx_nul": {"en": "flat", "fr": "nul"},
     "sx_conv": {
-        "en": "Waves stop being counted when the whole wave moves less than "
-              "{s} points, or after {k} waves — whichever comes first. "
+        "en": "Relays stop being counted when a whole relay moves less than "
+              "{s} points, or after {k} relays — whichever comes first. "
               "Without such a rule a reinforcing loop would go round for "
               "ever, and the number printed would depend on when the "
               "computation was stopped rather than on the system.",
-        "fr": "Les vagues cessent d'être comptées quand la vague entière "
-              "déplace moins de {s} points, ou après {k} vagues — le premier "
+        "fr": "Les relais cessent d'être comptés quand un relais entier "
+              "déplace moins de {s} points, ou après {k} relais — le premier "
               "des deux. Sans cette règle une boucle renforçante tournerait "
               "indéfiniment, et le chiffre affiché dépendrait du moment où "
               "l'on a arrêté le calcul plutôt que du système."},
     "sx_conv_fait": {
-        "en": "Converged after {k} waves: the following waves together move "
+        "en": "Settled after {k} relays: the following relays together move "
               "less than {s} points.",
-        "fr": "Convergé après {k} vagues : les vagues suivantes déplacent "
+        "fr": "Stabilisé après {k} relais : les relais suivants déplacent "
               "ensemble moins de {s} points."},
     "sx_conv_non": {
-        "en": "Still moving after {k} waves. The model is scaled down so it "
+        "en": "Still moving after {k} relays. The model is scaled down so it "
               "converges; read the cumulative column as an order of "
               "magnitude, not as a forecast.",
-        "fr": "Bouge encore après {k} vagues. Le modèle est mis à l'échelle "
+        "fr": "Bouge encore après {k} relais. Le modèle est mis à l'échelle "
               "pour converger ; lisez la colonne cumulée comme un ordre de "
               "grandeur, pas comme une prévision."},
     "sx_echelle": {
@@ -1129,17 +1134,23 @@ SEUIL_VAGUE = 0.01
 
 
 def _vagues(m, variations):
-    """La décomposition vague par vague, avec une règle d'arrêt écrite.
+    """La décomposition relais par relais, avec une règle d'arrêt écrite.
+
+    UNE POUSSÉE EST UNE ONDE DE CHOC, ET CE QU'ON DÉCOUPE ICI CE SONT SES
+    RELAIS. Le premier relais est ce que la poussée déplace directement, le
+    deuxième ce que ceux-là déplacent à leur tour, et ainsi de suite jusqu'à
+    stabilisation. Les deux niveaux portaient le même nom — « vague » — et le
+    compteur ne disait plus s'il comptait des chocs ou des tours de relais.
 
     LA RÈGLE D'ARRÊT EST LA MOITIÉ DU RÉSULTAT. Une boucle renforçante renvoie
     l'effet à son point de départ, qui le renvoie de nouveau : sans critère, on
     tourne indéfiniment et le chiffre affiché ne dit plus que le moment où l'on
-    a arrêté de compter. On s'arrête donc quand une vague entière déplace moins
+    a arrêté de compter. On s'arrête donc quand un relais entier déplace moins
     de {SEUIL_VAGUE} point, ou à la douzième — et on dit lequel des deux est
     arrivé.
 
     LE TOTAL N'EST PAS LA SOMME DES VAGUES CALCULÉES : c'est la solution exacte
-    de la série, obtenue en résolvant (I − A)·x = e₀. Les vagues servent à voir
+    de la série, obtenue en résolvant (I − A)·x = e₀. Les relais servent à voir
     par où l'effet passe ; le total, lui, ne dépend d'aucune troncature.
     """
     A, ids, idx = m["A"], m["ids"], m["idx"]

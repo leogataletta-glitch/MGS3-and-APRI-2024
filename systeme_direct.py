@@ -4,7 +4,7 @@ CE QUE CET ÉCRAN AJOUTE AUX QUATRE AUTRES.
 Le premier onglet dessine le système et s'arrête là : des pastilles, des
 flèches signées, une image fixe. Le quatrième pose une poussée et donne le
 résultat une fois tout distribué. Le cinquième range la même propagation en
-colonnes de vagues. Aucun des trois ne montre le mouvement lui-même — et
+colonnes de relais. Aucun des trois ne montre le mouvement lui-même — et
 c'est pourtant le mouvement qui explique ce qu'est une boucle : on ne
 comprend pas qu'un effet revienne sur son point de départ en lisant un
 tableau, on le comprend en voyant l'onde repasser par là.
@@ -16,19 +16,26 @@ appuie sur Lecture, et des billes partent le long des flèches : vertes quand
 elles portent une amélioration, rouges quand elles portent une dégradation,
 grosses quand elles portent beaucoup. Quand une bille arrive, la variable
 qu'elle atteint monte ou descend, sa jauge se déplace, son chiffre change.
-La vague suivante repart de là.
+Le relais suivant repart de là.
+
+DEUX NIVEAUX, ET UN SEUL MOT POUR CHACUN. Une poussée est UNE ONDE DE CHOC :
+elle traverse le système entier, revient par les boucles et se stabilise.
+Ce que compte l'écran, ce sont les RELAIS qui la composent — un tour de
+transmission de proche en proche. Les deux portaient le même nom, « vague »,
+et l'on ne savait plus si le compteur disait le choc ou son pas.
 
 TOUT SE CALCULE DANS LE NAVIGATEUR, ET C'EST OBLIGATOIRE.
 Une animation à soixante images par seconde ne peut pas faire un aller-retour
 serveur par image. Le module envoie donc une fois le sous-graphe affiché —
 positions comprises, poids déjà mis à l'échelle par le moteur — et le
-navigateur fait tourner la récurrence vague_{k+1} = A · vague_k, exactement
+navigateur fait tourner la récurrence relais_{k+1} = A · relais_k, exactement
 celle que `boucles_moteur` résout d'un bloc par inversion.
 
 CE QUE L'ÉCRAN NE DIT PAS.
-Le rang d'une vague est un ordre de relais, pas un calendrier : rien ici ne
-dit qu'une vague dure un mois ou dix ans. Et la propagation s'arrête au bord
-du périmètre dessiné : ce qui sort du schéma n'est pas suivi, ce qui est le
+Le rang d'un relais est un ordre de transmission, pas un calendrier : rien
+ici ne dit qu'un relais dure un mois ou dix ans. Et la propagation s'arrête
+au bord du périmètre dessiné : ce qui sort du schéma n'est pas suivi, ce
+qui est le
 prix à payer pour que l'onde reste visible sur une image lisible. La taille
 du périmètre se règle dans le premier onglet, et l'effet total, lui, se lit
 dans « Tester des interventions ».
@@ -62,35 +69,43 @@ TEXTES = {
               "variable atteinte monte ou descend sous vos yeux. Le vert "
               "porte une amélioration, le rouge une dégradation, et plus la "
               "bille est grosse plus elle porte."},
-    # CE QU'EST UNE VAGUE, DIT AVANT QU'ON EN COMPTE HUIT. Le compteur, le
-    # bouton « une vague », le tableau des retraversées et le délai par relais
-    # parlaient tous de vagues sans qu'aucun écran ne dise ce que c'est. Un
-    # rang de relais n'est pas une durée, et c'est le seul contresens possible.
+    # DEUX NIVEAUX, DEUX MOTS. Une poussée est une ONDE DE CHOC : elle
+    # traverse le système entier et revient par les boucles. Ce que compte
+    # l'écran, ce sont les RELAIS qui la composent. Les deux portaient le
+    # même nom — « vague » — et l'on ne savait plus si le compteur disait le
+    # choc ou son pas. Un rang de relais n'est pas non plus une durée, et
+    # c'est l'autre contresens que la phrase ferme.
     "sd_vague_x": {
-        "en": "A wave is one round of relays, not a length of time. At each "
-              "wave, every variable that has just moved passes its change to "
-              "its direct neighbours, and those pass it on at the next wave. "
-              "The wave dies out when there is nothing left worth passing "
-              "on; when a loop closes, it comes back to the variable it "
-              "started from. You can cap the number of waves, or let it run "
-              "until it dies out on its own.",
-        "fr": "Une vague est un tour de relais, pas une durée. À chaque "
-              "vague, chaque variable qui vient de bouger transmet son "
-              "changement à ses voisines directes, qui le transmettront à la "
-              "vague suivante. L'onde s'éteint quand il n'y a plus rien qui "
-              "vaille d'être transmis ; quand une boucle se referme, elle "
-              "revient sur la variable de départ. Vous pouvez borner le "
-              "nombre de vagues, ou la laisser s'éteindre d'elle-même."},
-    "sd_nb": {"en": "Waves", "fr": "Vagues"},
-    "sd_nb_auto": {"en": "until it dies out", "fr": "jusqu'à extinction"},
+        "en": "One push is one shock wave: it spreads through the whole "
+              "system, comes back through the loops, and settles. What is "
+              "counted here are the relays inside it. At each relay, every "
+              "variable that has just moved passes its change to its direct "
+              "neighbours, and those pass it on at the next relay. The shock "
+              "wave dies out when there is nothing left worth passing on, "
+              "and when a loop closes it comes back to the variable it "
+              "started from. A relay is an order of transmission, not a "
+              "length of time. You can cap the number of relays, or let the "
+              "shock wave run until it settles.",
+        "fr": "Une poussée est une onde de choc : elle traverse tout le "
+              "système, revient par les boucles, puis se stabilise. Ce qui "
+              "est compté ici, ce sont les relais qui la composent. À chaque "
+              "relais, chaque variable qui vient de bouger transmet son "
+              "changement à ses voisines directes, qui le transmettront au "
+              "relais suivant. L'onde s'éteint quand il n'y a plus rien qui "
+              "vaille d'être transmis, et quand une boucle se referme elle "
+              "revient sur la variable de départ. Un relais est un ordre de "
+              "transmission, pas une durée. Vous pouvez borner le nombre de "
+              "relais, ou laisser l'onde aller jusqu'à sa stabilisation."},
+    "sd_nb": {"en": "Relays", "fr": "Relais"},
+    "sd_nb_auto": {"en": "until it settles", "fr": "jusqu'à stabilisation"},
     "sd_var": {"en": "Variable pushed", "fr": "Variable poussée"},
     "sd_ampleur": {"en": "Change applied", "fr": "Changement appliqué"},
     "sd_lire": {"en": "Play", "fr": "Lecture"},
     "sd_pause": {"en": "Pause", "fr": "Pause"},
-    "sd_pas": {"en": "One wave", "fr": "Une vague"},
+    "sd_pas": {"en": "One relay", "fr": "Un relais"},
     "sd_raz": {"en": "Reset", "fr": "Remise à zéro"},
     "sd_vitesse": {"en": "Speed", "fr": "Vitesse"},
-    "sd_vague": {"en": "Wave", "fr": "Vague"},
+    "sd_vague": {"en": "Relay", "fr": "Relais"},
     "sd_distrib": {"en": "of the effect already distributed",
                    "fr": "de l'effet déjà distribué"},
     "sd_leg_h": {"en": "carries an improvement",
@@ -99,14 +114,14 @@ TEXTES = {
                  "fr": "porte une dégradation"},
     "sd_leg_e": {"en": "score out of 10, and how far it has moved",
                  "fr": "score sur 10, et de combien il a bougé"},
-    "sd_fin": {"en": "The wave has died out: everything it could move has "
-                     "moved.",
-               "fr": "La vague s'est éteinte : tout ce qu'elle pouvait "
-                     "déplacer a bougé."},
-    "sd_retour": {"en": "The wave came back to its starting variable at wave "
-                        "{k}: this system is a loop, not a chain.",
-                  "fr": "La vague est revenue sur sa variable de départ à la "
-                        "vague {k} : ce système est une boucle, pas une "
+    "sd_fin": {"en": "The shock wave has settled: everything it could move "
+                     "has moved.",
+               "fr": "L'onde de choc s'est stabilisée : tout ce qu'elle "
+                     "pouvait déplacer a bougé."},
+    "sd_retour": {"en": "The shock came back to its starting variable at "
+                        "relay {k}: this system is a loop, not a chain.",
+                  "fr": "Le choc est revenu sur sa variable de départ au "
+                        "relais {k} : ce système est une boucle, pas une "
                         "chaîne."},
     "sd_non_mesure": {"en": "not measured", "fr": "non mesurée"},
     "sd_delai": {"en": "Time per relay", "fr": "Délai par relais"},
@@ -115,40 +130,39 @@ TEXTES = {
     "sd_ans": {"en": "years", "fr": "ans"},
     "sd_temps_x": {
         "en": "The delay is yours, not the model's: nothing in the framework "
-              "says how long one relay takes. Set it and the wave counter "
+              "says how long one relay takes. Set it and the relay counter "
               "reads as a rough horizon.",
         "fr": "Le délai est le vôtre, pas celui du modèle : rien dans le "
               "cadre ne dit combien de temps dure un relais. Une fois posé, "
-              "le compteur de vagues se lit comme un horizon approché."},
-    "sd_bilan": {"en": "Once the wave has died out",
-                 "fr": "Une fois l'onde éteinte"},
+              "le compteur de relais se lit comme un horizon approché."},
+    "sd_bilan": {"en": "Once the shock wave has settled",
+                 "fr": "Une fois l'onde de choc stabilisée"},
     "sd_connect": {"en": "Most connected variables",
                    "fr": "Variables les plus connectées"},
     "sd_connect_x": {"en": "links in and out, inside this perimeter",
                      "fr": "liens entrants et sortants, dans ce périmètre"},
-    "sd_passages": {"en": "Variables the wave went through most often",
+    "sd_passages": {"en": "Variables the shock went through most often",
                     "fr": "Variables les plus retraversées par l'onde"},
     "sd_passages_x": {
-        "en": "waves that moved them: more than one means a loop brought the "
-              "wave back",
-        "fr": "vagues qui les ont déplacées : au-delà d'une, c'est une boucle "
+        "en": "relays that moved them: more than one means a loop brought "
+              "the shock back",
+        "fr": "relais qui les ont déplacées : au-delà d'un, c'est une boucle "
               "qui a ramené l'onde"},
-    "sd_vagues_n": {"en": "waves", "fr": "vagues"},
+    "sd_vagues_n": {"en": "relays", "fr": "relais"},
     "sd_leg_j": {"en": "the most connected variables",
                  "fr": "les variables les plus connectées"},
-    "sd_leg_c": {"en": "the ones the wave went through most often",
+    "sd_leg_c": {"en": "the ones the shock went through most often",
                  "fr": "celles que l'onde a le plus retraversées"},
     "sd_liens_n": {"en": "links", "fr": "liens"},
     "sd_perim": {
-        "en": "The wave is followed inside the drawn perimeter only: what "
-              "leaves the picture is not tracked. Change the central "
+        "en": "The shock wave is followed inside the drawn perimeter only: "
+              "what leaves the picture is not tracked. Change the central "
               "variable or ask for more variables in the first tab to widen "
-              "it. The rank of a wave is an order of relays, not a calendar.",
+              "it.",
         "fr": "L'onde n'est suivie qu'à l'intérieur du périmètre dessiné : "
               "ce qui sort de l'image n'est pas suivi. La variable centrale "
-              "et le nombre de variables se règlent dans le premier onglet. "
-              "Le rang d'une vague est un ordre de relais, pas un "
-              "calendrier."},
+              "et le nombre de variables se règlent dans le premier "
+              "onglet."},
     "sd_court": {
         "en": "This perimeter has no outgoing link to follow: ask for more "
               "variables in the first tab.",
@@ -418,10 +432,10 @@ const vues = NO.map(n => {
    propriété du périmètre et non de la poussée, mais posée à l'ouverture elle
    désignait trois pastilles avant qu'on ait vu quoi que ce soit bouger : on
    lisait un verdict avant la démonstration, et le dessin s'ouvrait avec un
-   accent qu'aucune image ne justifiait encore. Il vient donc à la première
-   vague, quand l'onde a commencé à passer, et il repart à la remise à zéro
-   avec le reste. Sa ligne de légende suit — une légende pour un signe absent
-   est une devinette.
+   accent qu'aucune image ne justifiait encore. Il vient donc avec le bilan,
+   quand l'onde s'est stabilisée ou qu'on l'a bornée, et il repart avec lui à
+   la remise à zéro. Sa ligne de légende suit — une légende pour un signe
+   absent est une devinette.
 
    Trois pastilles au plus, pour que le signal reste un signal. */
 function poserHalo(on){
@@ -441,7 +455,7 @@ let src = D.centre, amp = 1, vitesse = 1, delai = 0, vmax = 0;
 let vague = new Float64Array(NO.length);
 let cum = new Float64Array(NO.length);
 let total = 1, k = 0, joue = false, anim = null, retour = 0;
-/* Combien de vagues ont déplacé chaque nœud : au-delà d'une, c'est une
+/* Combien de relais ont déplacé chaque nœud : au-delà d'un, c'est une
    boucle qui a ramené l'onde dessus. */
 let passages = new Int32Array(NO.length);
 
@@ -515,7 +529,7 @@ function bilan(montrer){
   /* LE HALO DORÉ APPARTIENT AU BILAN. Il marque les variables les plus
      connectées du périmètre : une propriété de la structure, vraie avant la
      course comme après. Mais posé à l'ouverture il désignait trois pastilles
-     avant qu'on ait rien vu bouger, et allumé dès la première vague il
+     avant qu'on ait rien vu bouger, et allumé dès le premier relais il
      annonçait sa conclusion au milieu de la démonstration. Il arrive donc
      avec le reste du bilan, quand l'onde s'est éteinte ou qu'on l'a bornée,
      et il repart avec lui à la remise à zéro. */
@@ -536,7 +550,7 @@ function bilan(montrer){
     + '</span><b>' + x.v + ' ' + u + '</b></div>';
   /* LES TROIS PLUS RETRAVERSÉES SE METTENT À CLIGNOTER SUR LE SCHÉMA. Le
      tableau les nomme, le clignotement les montre : lire « sécurité
-     alimentaire, huit vagues » ne dit pas où elle est dans le dessin. */
+     alimentaire, huit relais » ne dit pas où elle est dans le dessin. */
   const chef = new Set(pas.slice(0, 3).map(x => x.n.id));
   vues.forEach(u => {
     const on = chef.has(u.n.id);
@@ -566,7 +580,7 @@ function remise(){
   peindre();
 }
 
-/* ---------- une vague : les billes partent, puis les scores bougent ---- */
+/* ---------- un relais : les billes partent, puis les scores bougent ---- */
 function vaguesuivante(apres){
   const flux = LI.map(l => l.w * vague[IX[l.de]]);
   const suivante = new Float64Array(NO.length);
