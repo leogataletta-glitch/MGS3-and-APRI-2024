@@ -43,6 +43,204 @@ BORD = "#e4eae6"
 
 TEXTES = {
     "ap_titre": {"en": "About APRI", "fr": "À propos d'APRI"},
+
+    # ---- L'INITIATIVE, AVANT L'INDICE. La page ouvrait sur « ce qu'est cet
+    # indice » : elle expliquait l'instrument de mesure à qui ne savait pas
+    # encore ce qu'on mesurait ni pour qui. Le texte institutionnel d'APRI
+    # passe donc devant, et la partie technique reste dessous, à sa place.
+    "ap_q_t": {"en": "What is APRI?", "fr": "Qu'est-ce qu'APRI ?"},
+    "ap_q_x": {
+        "en": "The Integrated Resilient Landscape Approach (APRI) is an "
+              "initiative led by the United Nations Environment Programme "
+              "(UNEP) which aims to establish effective models of "
+              "multi-dimensional resilience against household vulnerability. "
+              "This integrated approach rests on harmonising ecological, "
+              "human and productive dynamics, so as to foster a balanced and "
+              "resilient development of the territories concerned. In line "
+              "with the UNSDCF, that integration also runs through better "
+              "coordination between humanitarian and development actors "
+              "alongside local actors, in order to align and multiply their "
+              "actions, and to create operational synergies and concrete "
+              "leverage.",
+        "fr": "L'Approche Paysages Résilients Intégrée (APRI) est une "
+              "initiative portée par le Programme des Nations unies pour "
+              "l'environnement (PNUE) qui vise à établir des modèles "
+              "efficaces de résilience multidimensionnelle face à la "
+              "vulnérabilité des ménages. Cette approche intégrée repose sur "
+              "une harmonisation des dynamiques écologiques, humaines et "
+              "productives afin de favoriser un développement équilibré et "
+              "résilient des territoires ciblés. En alignement avec l'UNSDCF, "
+              "cette intégration passe aussi par une meilleure coordination "
+              "des actions des acteurs humanitaires et de développement "
+              "auprès des acteurs locaux, pour aligner et multiplier les "
+              "actions afin de créer des synergies opérationnelles et des "
+              "effets de levier concrets."},
+
+    "ap_p_t": {"en": "Why APRI?", "fr": "Pourquoi APRI ?"},
+    "ap_p_x": {
+        "en": "The communities we work with face a singular combination of "
+              "socio-economic vulnerability, environmental degradation and "
+              "fragile governance systems. Recurrent natural disasters and "
+              "climate change compound these challenges, which often traps "
+              "these communities in cycles of poverty. The interconnected "
+              "nature of these problems is at the heart of the case for "
+              "APRI: fragmented approaches, each focused on one issue in "
+              "isolation, fail to address the root causes of those "
+              "vulnerabilities. Integration makes it possible to answer "
+              "several challenges at once, and so to produce lasting impact.",
+        "fr": "Les communautés avec lesquelles nous travaillons sont "
+              "confrontées à une combinaison unique de vulnérabilités "
+              "socio-économiques, de dégradation environnementale et de "
+              "systèmes de gouvernance fragiles. Les catastrophes naturelles "
+              "récurrentes et les changements climatiques exacerbent ces "
+              "défis, ce qui piège souvent ces communautés dans des cycles de "
+              "pauvreté. La nature interconnectée de ces problèmes est au "
+              "cœur de la justification d'APRI : les approches fragmentées, "
+              "qui se concentrent sur des problématiques isolées, échouent à "
+              "traiter les causes profondes de ces vulnérabilités. "
+              "L'intégration permet de répondre simultanément aux défis, "
+              "créant ainsi un impact durable."},
+
+    "ap_y_t": {"en": "Which pilot landscapes", "fr": "Quels paysages pilotes"},
+    "ap_y_x": {
+        "en": "The approach is piloted by UNEP in two territories, called "
+              "landscapes, of the Grand-Sud region, designated as priority "
+              "areas in the Integrated Recovery Plan for the Southern "
+              "Peninsula (PRIPS). These landlocked territories, highly "
+              "exposed to climate hazards, hold one of the country's last "
+              "biodiversity hotspots and offer a diversity of ecosystems "
+              "suited to integrated solutions for sustainable, resilient "
+              "development. That the selected communes appear on the target "
+              "list of the 2024 Humanitarian Response Plan testifies to the "
+              "urgent needs of local communities. Rich in environmental "
+              "services, these landscapes offer the opportunity to develop "
+              "and scale up endogenous solutions fitted to local realities. "
+              "The presence of several development and humanitarian partners "
+              "active in the region is a further asset for mobilising "
+              "complementary resources and expertise.",
+        "fr": "Cette approche est pilotée par le PNUE dans deux territoires "
+              "dits « paysages » de la région du Grand-Sud, désignés comme "
+              "zones prioritaires dans le Plan de relèvement intégré de la "
+              "péninsule sud (PRIPS). Ces territoires enclavés, très exposés "
+              "aux aléas climatiques, abritent l'un des derniers points "
+              "chauds de biodiversité du pays et offrent une diversité "
+              "d'écosystèmes propice à des solutions intégrées pour un "
+              "développement durable et résilient. La présence des communes "
+              "sélectionnées sur la liste des zones cibles du Plan de réponse "
+              "humanitaire 2024 témoigne des besoins urgents des communautés "
+              "locales. Riches en services environnementaux, ces paysages "
+              "offrent l'opportunité de développer et de mettre à l'échelle "
+              "des solutions endogènes adaptées aux réalités locales. La "
+              "présence de plusieurs partenaires de développement et "
+              "humanitaires actifs dans la région constitue un atout majeur "
+              "pour mobiliser des ressources et des expertises "
+              "complémentaires."},
+    # Les deux paysages : superficie, arrondissements, communes. Le format
+    # « titre | surface | détail » est découpé au rendu.
+    "ap_y_ga": {
+        "en": "Grand'Anse landscape|767 km²|The arrondissement of Corail and "
+              "four communes: Roseaux, Corail, Beaumont, Pestel (including "
+              "the Cayemites islands).",
+        "fr": "Paysage Grand'Anse|767 km²|L'arrondissement de Corail et "
+              "quatre communes : Roseaux, Corail, Beaumont, Pestel (y compris "
+              "les îles des Cayemites)."},
+    "ap_y_sud": {
+        "en": "Sud landscape|740 km²|Three arrondissements — Port-Salut, "
+              "Coteaux, Chardonnières — and nine communes: Tiburon, "
+              "Chardonnières, Les Anglais, Port-à-Piment, Les Coteaux, "
+              "Roche-à-Bateaux, Arniquet, Port-Salut, Saint-Jean-du-Sud.",
+        "fr": "Paysage Sud|740 km²|Trois arrondissements — Port-Salut, "
+              "Coteaux, Chardonnières — et neuf communes : Tiburon, "
+              "Chardonnières, Les Anglais, Port-à-Piment, Les Coteaux, "
+              "Roche-à-Bateaux, Arniquet, Port-Salut, Saint-Jean-du-Sud."},
+
+    "ap_k_t": {"en": "A capital-based approach to resilience",
+               "fr": "Une approche de la résilience fondée sur les capitaux"},
+    "ap_k_x": {
+        "en": "APRI embodies this vision by adopting a definition of "
+              "resilience built on seven dimensions. This multidimensional "
+              "framework brings together the tangible and the intangible "
+              "factors that shape how communities adapt and recover. Each "
+              "dimension carries its own indicators, its own scales and its "
+              "own weights, all of them set out in the Resilience Framework.",
+        "fr": "APRI incarne cette vision en adoptant une définition de la "
+              "résilience fondée sur sept dimensions. Ce cadre "
+              "multidimensionnel intègre à la fois les facteurs tangibles et "
+              "intangibles qui influencent l'adaptabilité et la capacité de "
+              "récupération des communautés. Chaque dimension porte ses "
+              "indicateurs, ses barèmes et ses pondérations, tous exposés "
+              "dans le cadre de résilience."},
+
+    "ap_pi_t": {"en": "Four pillars for effective implementation",
+                "fr": "Quatre piliers pour une mise en œuvre efficace"},
+    "ap_pi_x": {
+        "en": "Implementing APRI rests on four strategic axes, at national "
+              "and local level.",
+        "fr": "La mise en œuvre d'APRI s'appuie sur quatre axes stratégiques, "
+              "au niveau national et local."},
+    "ap_pi_todo": {
+        "en": "The four axes themselves are still to be filled in: they were "
+              "not in the text this page was written from, and naming them "
+              "wrongly would be worse than leaving the slot open.",
+        "fr": "Les quatre axes eux-mêmes restent à renseigner : ils ne "
+              "figuraient pas dans le texte d'où vient cette page, et les "
+              "nommer de travers serait pire que de laisser la place vide."},
+
+    "ap_r_t": {"en": "Milestones reached", "fr": "Réalisations"},
+    "ap_r_x": {
+        "en": "Since it began, APRI has already reached several milestones.",
+        "fr": "Depuis son lancement, la mise en œuvre d'APRI a déjà atteint "
+              "plusieurs jalons importants."},
+    "ap_r_l": {
+        "en": "An APRI steering committee has been set up, currently "
+              "bringing together 16 members, of which 10 are UN agencies."
+              "@@A baseline study has been carried out in 10 communal "
+              "sections, providing the data needed to steer interventions."
+              "@@An indicator matrix has been drawn up for an APRI "
+              "monitoring framework; consultations with partners are under "
+              "way for its finalisation and validation."
+              "@@An innovative project has been approved to pilot payment "
+              "for environmental services (PES) mechanisms, jointly with "
+              "UNEP, WFP, ILO and The Nature Conservancy.",
+        "fr": "Lancement d'un comité de pilotage APRI, qui rassemble "
+              "actuellement 16 membres, dont 10 agences des Nations unies."
+              "@@Réalisation d'une étude de ligne de base dans 10 sections "
+              "communales, fournissant des données essentielles pour orienter "
+              "les interventions."
+              "@@Élaboration d'une matrice d'indicateurs pour l'établissement "
+              "d'un cadre de suivi APRI ; les consultations avec les "
+              "partenaires sont en cours pour sa finalisation et sa "
+              "validation."
+              "@@Approbation d'un projet novateur pour piloter des mécanismes "
+              "de paiement pour services environnementaux (PSE), en "
+              "collaboration entre le PNUE, le PAM, l'OIT et The Nature "
+              "Conservancy."},
+
+    "ap_o_t": {"en": "2025 objectives", "fr": "Objectifs 2025"},
+    "ap_o_l": {
+        "en": "Setting up an APRI information system."
+              "@@Drawing up a harmonised methodology for community resilience "
+              "planning."
+              "@@Establishing multisectoral governance platforms in 10 pilot "
+              "communal sections."
+              "@@Drawing up 10 resilience plans, one for each pilot communal "
+              "section."
+              "@@Establishing an APRI operational committee in each landscape."
+              "@@Extending the baseline study."
+              "@@Launching an economic study on blue, green and circular "
+              "potential in the landscapes.",
+        "fr": "Mise en place d'un système d'information APRI."
+              "@@Élaboration d'une méthodologie harmonisée pour une "
+              "planification communautaire de la résilience."
+              "@@Établissement de plateformes de gouvernance multisectorielles "
+              "dans 10 sections communales pilotes."
+              "@@Élaboration de 10 plans de résilience, un par section "
+              "communale pilote."
+              "@@Établissement d'un comité opérationnel APRI dans chaque "
+              "paysage."
+              "@@Expansion de l'étude de ligne de base."
+              "@@Lancement d'une étude économique sur les potentialités "
+              "bleues, vertes et circulaires dans les paysages."},
     "ap_t1": {"en": "What this index is",
               "fr": "Ce qu'est cet indice"},
     "ap_x1": {
@@ -173,6 +371,29 @@ _STYLE = """
   .ap-c-t { font-size:11px; font-weight:700; letter-spacing:.07em;
        text-transform:uppercase; color:#1f5b46; margin-bottom:5px; }
   .ap-c-x { font-size:13.5px; line-height:1.55; color:#3c4761; }
+  /* LES JALONS ET LES OBJECTIFS SE LISENT EN LISTE NUMÉROTÉE. Ce sont des
+     éléments de même rang qu'on parcourt, pas un récit : le numéro donne le
+     compte d'un coup d'œil, ce qu'un point ne fait pas. */
+  .ap-l { list-style:none; padding:0; margin:12px 0 0; max-width:82ch; }
+  .ap-l li { display:flex; gap:12px; align-items:flex-start;
+       font-size:14px; line-height:1.6; color:#3c4761; padding:7px 0;
+       border-top:1px solid #eef2ef; text-align:left; }
+  .ap-l li:first-child { border-top:0; }
+  .ap-l b { flex:0 0 auto; font-family:Georgia,"Times New Roman",serif;
+       font-size:14px; font-weight:400; color:#7d9c8c; min-width:18px; }
+  /* LES DEUX PAYSAGES, CÔTE À CÔTE : ils se comparent, donc ils se posent
+     l'un à côté de l'autre plutôt que l'un sous l'autre. */
+  .ap-pay { display:grid; grid-template-columns:1fr 1fr; gap:14px;
+       margin:14px 0 0; }
+  .ap-pay > div { border:1px solid #e4eae6; border-radius:12px;
+       background:#f7faf8; padding:14px 16px; }
+  .ap-pay .t { font-size:15px; font-weight:600; color:#101728;
+       font-family:Georgia,"Times New Roman",serif; }
+  .ap-pay .s { font-size:12px; font-weight:700; letter-spacing:.06em;
+       color:#1f7a4d; margin:2px 0 7px; }
+  .ap-pay .x { font-size:13px; line-height:1.55; color:#3c4761;
+       text-align:left !important; }
+  @media (max-width: 900px) { .ap-pay { grid-template-columns:1fr; } }
   /* CE QUI RESTE À COMPLÉTER LE DIT, en ambre, plutôt que de se faire passer
      pour du contenu. Un bloc vide qu'on oublie de remplir se publie ; un
      bloc qui se signale, non. */
@@ -226,10 +447,56 @@ def _section(cle_t, cle_x, **kw):
                 unsafe_allow_html=True)
 
 
+def _liste(cle):
+    """Une liste numérotée, écrite en une chaîne et coupée aux doubles arobases.
+
+    UN SEUL LIBELLÉ POUR TOUTE LA LISTE. Sept clés pour sept objectifs
+    auraient fait sept entrées de dictionnaire à tenir alignées entre deux
+    langues ; une chaîne coupée garde la liste entière sous les yeux du
+    traducteur, dans son ordre.
+    """
+    lignes = [x.strip() for x in T(cle).split("@@") if x.strip()]
+    return ('<ul class="ap-l">' + "".join(
+        f'<li><b>{i:02d}</b><span>{_e(x)}</span></li>'
+        for i, x in enumerate(lignes, start=1)) + '</ul>')
+
+
+def _paysages():
+    """Les deux paysages pilotes, côte à côte : nom, superficie, communes."""
+    cases = []
+    for cle in ("ap_y_ga", "ap_y_sud"):
+        parts = (T(cle).split("|") + ["", "", ""])[:3]
+        nom, surface, detail = (p.strip() for p in parts)
+        cases.append(f'<div><div class="t">{_e(nom)}</div>'
+                     f'<div class="s">{_e(surface)}</div>'
+                     f'<div class="x">{_e(detail)}</div></div>')
+    return '<div class="ap-pay">' + "".join(cases) + '</div>'
+
+
 def render():
-    """La page « À propos » : l'histoire, le cadre, l'enquête, l'équipe."""
+    """La page « À propos » : l'initiative, ses paysages, puis l'indice.
+
+    L'INITIATIVE PASSE DEVANT L'INSTRUMENT. La page ouvrait sur « ce qu'est
+    cet indice » : elle décrivait un outil de mesure à qui ne savait pas
+    encore ce qu'on mesurait, où, ni pour qui. APRI est d'abord un programme
+    du PNUE sur deux paysages du Grand-Sud ; l'indice vient après, et il en
+    est le bras de mesure.
+    """
     st.markdown(_STYLE, unsafe_allow_html=True)
     n = _chiffres()
+    _section("ap_q_t", "ap_q_x")
+    _section("ap_p_t", "ap_p_x")
+    _section("ap_y_t", "ap_y_x")
+    st.markdown(_paysages(), unsafe_allow_html=True)
+    _section("ap_k_t", "ap_k_x")
+    _section("ap_pi_t", "ap_pi_x")
+    st.markdown(f'<div class="ap-todo">{_e(T("ap_pi_todo"))}</div>',
+                unsafe_allow_html=True)
+    _section("ap_r_t", "ap_r_x")
+    st.markdown(_liste("ap_r_l"), unsafe_allow_html=True)
+    st.markdown(f'<div class="ap-h">{_e(T("ap_o_t"))}<span></span></div>',
+                unsafe_allow_html=True)
+    st.markdown(_liste("ap_o_l"), unsafe_allow_html=True)
     _section("ap_t1", "ap_x1", i=_nb(n["i"]))
     _section("ap_t2", "ap_x2")
     _section("ap_t3", "ap_x3", s=_nb(n["s"]), m=_nb(n["m"]), q=_nb(n["q"]),
