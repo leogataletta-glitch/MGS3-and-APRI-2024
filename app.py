@@ -868,7 +868,11 @@ st.markdown(("""
        la page ; une bande qui court du haut au bas de la fenêtre n'est pas
        une carte, c'est un bord. */
     border-radius: 0;
-    padding: 18px 10px 24px 6px;
+    /* LA COLONNE OUVRE SUR SA PREMIÈRE RUBRIQUE, et il lui faut de l'air. La
+       marque tenait cette place et donnait cette respiration ; elle est
+       passée dans l'image, et sans ce rembourrage la première entrée se
+       collait au bord haut de la fenêtre. */
+    padding: 34px 10px 24px 6px;
     margin: 0;
   }
   /* LA BANDE VERTE VA DU HAUT DE LA PAGE À SON BAS. Elle est posée sur la
@@ -936,22 +940,6 @@ st.markdown(("""
   /* LE TITRE DE FAMILLE : petit, en capitales espacées, vert sourd. Il ne
      doit pas peser autant que les rubriques qu'il coiffe — c'est une
      étiquette de rangement, pas une destination. */
-  /* LA MARQUE EN TÊTE DE COLONNE. Elle est posée à même la colonne, sans
-     cadre ni fond : le fichier est détouré et le disque du logo suffit à la
-     tenir. Sur le gris-vert clair, l'emblème retrouve le fond pâle pour
-     lequel il a été dessiné — sur le vert plein, son détourage laissait un
-     halo autour du cercle et ses trois couleurs juraient avec la bande. */
-  div[class*="st-key-zone_nav"] .nav-marque {
-    display: flex; align-items: center; gap: 11px;
-    padding: 4px 0 18px 8px; margin: 0;
-  }
-  div[class*="st-key-zone_nav"] .nav-marque img {
-    height: 40px; width: auto; display: block; flex: 0 0 auto;
-  }
-  div[class*="st-key-zone_nav"] .nav-marque span {
-    font-size: 21px; font-weight: 800; letter-spacing: .09em;
-    color: #14503a; line-height: 1;
-  }
   /* LE PIED DE LA COLONNE : la devise, puis le crédit, tous deux en vert
      clair sur le vert de la bande, séparés des rubriques par un filet. */
   div[class*="st-key-zone_nav"] .nav-pied {
@@ -2113,22 +2101,6 @@ _CSS_ICONES_NAV = "<style>" + "".join(
     for _m, _ic in _NAV) + "</style>"
 
 
-@st.cache_data(show_spinner=False)
-def _logo_b64():
-    """La marque APRI, en tête de la colonne, encodée une fois pour toutes.
-
-    LE FOND DU FICHIER EST TRANSPARENT, ET IL LE FAUT : posé sur le vert de
-    la colonne, un logo sur carré blanc y découperait une vignette.
-    """
-    import base64 as _b64
-    for base in (os.path.join(APP_DIR, "data"), APP_DIR):
-        c = os.path.join(base, "logo_apri.png")
-        if os.path.exists(c):
-            with open(c, "rb") as f:
-                return _b64.b64encode(f.read()).decode()
-    return None
-
-
 def _entree_nav(mode, icone):
     actif = st.session_state["app_mode"] == mode
     st.button(LIBELLE_MODE[mode], key=f"nav_{mode}",
@@ -2237,20 +2209,11 @@ with _zone_nav:
     # l'écran quand la page défile — c'est ce qui la rend « toujours
     # disponible » sans qu'elle ait à flotter par-dessus le contenu.
     st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
-    # LA MARQUE OUVRE LA COLONNE. Le site portait son logo dans l'image du
-    # bandeau, donc sur la seule page qui l'affichait ; en tête de la colonne
-    # il est sur les seize pages, à la place où l'on va le chercher.
-    _lg = _logo_b64()
-    if _lg:
-        # L'EMBLÈME SEUL, ET LE MOT ÉCRIT À CÔTÉ. Le fichier d'origine porte
-        # « APRI » en vert foncé sous le disque : sur le vert de la colonne,
-        # ce mot-là disparaissait. Écrit en blanc, en texte, il se lit — et
-        # il se traduit le jour où la marque changerait de graphie.
-        st.markdown(
-            f'<div class="nav-marque">'
-            f'<img src="data:image/png;base64,{_lg}" alt="APRI"/>'
-            f'<span>APRI</span></div>',
-            unsafe_allow_html=True)
+    # LA MARQUE N'OUVRE PLUS LA COLONNE. Elle a rejoint l'image, en tête de
+    # page, où elle est en entier — l'emblème, le mot et la ligne
+    # institutionnelle — plutôt qu'en réduction dans une colonne de deux cents
+    # pixels. Deux marques à l'écran, l'une sous l'autre, disaient deux fois
+    # la même chose et la colonne était la moins bien placée pour le dire.
     for _fam, _entrees in _NAV_FAMILLES:
         if _fam:
             st.markdown(f'<div class="nav-famille">{T(_fam)}</div>',

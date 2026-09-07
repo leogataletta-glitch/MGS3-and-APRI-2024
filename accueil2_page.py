@@ -149,12 +149,25 @@ STYLE = """
      il se serait couché sur la dernière ligne du paragraphe. */
   .a2-hero-c { position:relative; padding:52px 40px 104px calc(2rem + 46px);
         max-width:680px; }
+  /* LE BLOC DE MARQUE : l'emblème, un filet, la ligne institutionnelle. Les
+     trois sont alignés sur leur milieu, comme dans le fichier de la charte,
+     et le filet monte et descend avec le texte plutôt qu'avec l'image — c'est
+     lui qui sépare la marque de ce qu'elle nomme. */
+  .a2-marque { display:flex; align-items:center; gap:20px; margin:0 0 30px; }
+  .a2-marque img { height:78px; width:auto; display:block; flex:0 0 auto; }
+  .a2-filet { width:1px; align-self:stretch; margin:4px 0;
+        background:#a9bcc6; flex:0 0 1px; }
   /* LE TITRE INSTITUTIONNEL : le même romain à empattements que le grand
-     titre, en corps réduit et en encre plus claire — il annonce l'institution
-     avant que la page annonce son sujet. */
-  .a2-inst { font-family:Georgia,"Times New Roman",serif; font-size:20px;
-        line-height:1.35; color:#2b4a3c; margin:0 0 30px;
+     titre, en corps réduit — il annonce l'institution avant que la page
+     annonce son sujet. Les deux lignes n'ont pas la même encre : la première
+     nomme l'observatoire et prend le vert de la marque, la seconde dit sur
+     quoi il porte et passe au bleu ardoise. */
+  .a2-inst { font-family:Georgia,"Times New Roman",serif; margin:0;
         text-align:left !important; }
+  .a2-inst b { display:block; font-weight:400; font-size:22px;
+        line-height:1.24; color:#17563f; }
+  .a2-inst span { display:block; font-size:19px; line-height:1.3;
+        color:#3d5c74; }
   .a2-kick { font-size:11.5px; font-weight:700; letter-spacing:.19em;
         text-transform:uppercase; color:#3f8f66; margin:0 0 18px; }
   /* AU FIL DE L'EAU, ET NON JUSTIFIÉ. La feuille de l'application justifie
@@ -327,6 +340,27 @@ def _photo_b64(lang="fr", prefere=None):
 
 
 @st.cache_data(show_spinner=False)
+def _marque_b64():
+    """L'emblème et le mot APRI, tels que la charte les dessine.
+
+    C'EST LE FICHIER DE LA MARQUE, PAS UNE RECOMPOSITION. Le disque, le mot
+    sous lui et l'espacement entre les deux sont réglés dans le fichier
+    d'origine ; les redessiner en HTML aurait donné une marque presque juste,
+    ce qui est le seul degré de faux qui se voie.
+
+    LA LIGNE INSTITUTIONNELLE, ELLE, RESTE DU TEXTE. Elle est peinte dans le
+    fichier d'origine, donc figée en anglais : sur la version française elle
+    aurait annoncé l'observatoire dans la mauvaise langue. Elle est donc
+    écrite à côté du bloc, dans le même romain, et elle se traduit.
+    """
+    p = _trouver("logo_apri_bloc.png")
+    if not p:
+        return None
+    with open(p, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+
+@st.cache_data(show_spinner=False)
 def _chiffres():
     """Les deux nombres comptés dans les fichiers, et rien d'écrit en dur.
 
@@ -380,7 +414,17 @@ def render():
     # LE TITRE INSTITUTIONNEL SORT DE L'IMAGE. Il y était peint, donc figé
     # dans une langue et invisible à un lecteur d'écran ; écrit en texte, il
     # se traduit et se sélectionne.
-    inst = "<br>".join(_e(x) for x in T("a2_inst").split("|"))
+    _l = [_e(x) for x in T("a2_inst").split("|")]
+    _bloc = _marque_b64()
+    inst = ('<div class="a2-inst"><b>' + _l[0] + '</b>'
+            + "".join(f'<span>{x}</span>' for x in _l[1:]) + '</div>')
+    # LA MARQUE, PUIS UN FILET, PUIS LA LIGNE INSTITUTIONNELLE : c'est le bloc
+    # de la charte, à ceci près que sa moitié droite est du texte. Sans le
+    # fichier, il ne reste que le texte — une page d'entrée sans logo vaut
+    # mieux qu'une page d'entrée avec un cadre vide.
+    marque = (f'<div class="a2-marque">'
+              f'<img src="data:image/png;base64,{_bloc}" alt="APRI"/>'
+              f'<div class="a2-filet"></div>{inst}</div>') if _bloc else inst
     # LES GUILLEMETS SIMPLES SONT LOAD-BEARING. L'URL vit dans un attribut
     # `style` délimité par des guillemets doubles ; en réutiliser à
     # l'intérieur ferme l'attribut au milieu de l'image, et le navigateur
@@ -391,7 +435,7 @@ def render():
         fond += f"background-position:{cadrage};"
     st.markdown(
         f'<div class="a2-hero" style="{fond}"><div class="a2-hero-c">'
-        f'<div class="a2-inst">{inst}</div>'
+        f'{marque}'
         f'<div class="a2-kick">{_e(T("a2_kicker"))}</div>'
         f'<div class="a2-titre">{_e(T("a2_titre"))}</div>'
         f'<p class="a2-intro">{_e(T("a2_intro"))}</p>'
