@@ -14,7 +14,13 @@ Un système se définit donc par trois choses, et une seule fois :
       critique ;
     · la population regardée — l'ensemble, un sexe, une tranche d'âge, une
       catégorie économique, un paysage, une section communale ;
-    · la profondeur — jusqu'à combien de relations de distance on va.
+    · la taille — combien de variables on veut voir en interaction autour
+      d'elle. On demandait ici une distance en nombre de relations : « deux
+      crans » donnait quatre variables autour d'une entrée du système et
+      trente autour d'un carrefour, si bien que le même réglage produisait
+      deux écrans sans rapport. Un effectif se choisit en sachant ce qu'on
+      obtient, et le voisinage est parcouru par distance croissante jusqu'à
+      l'atteindre — les plus liées d'abord.
 
 Ces trois choses sont retenues, et les cinq onglets travaillent dessus. Le
 premier le construit, le deuxième justifie ses relations, le troisième cherche
@@ -62,8 +68,12 @@ SECTIONS = M.SECTIONS
 # que laissée à deviner.
 RHO_CRITIQUE_10 = 0.648
 # Au-delà de ce nombre de nœuds, un schéma de boucle causale cesse d'être
-# lisible : on le dit et on propose de réduire la profondeur.
+# lisible : on le dit et on propose d'en retirer.
 NOEUDS_LISIBLES = 26
+# LES TAILLES PROPOSÉES. Cinq variables tiennent le noyau d'un mécanisme,
+# trente portent un sous-système entier ; entre les deux, le pas de cinq est
+# assez fin pour qu'on voie ce qu'on gagne à chaque cran.
+TAILLES = [5, 10, 15, 20, 25, 30]
 
 TEXTES = {
     "sx_p_total": {"en": "Everyone", "fr": "Tout le monde"},
@@ -87,7 +97,21 @@ TEXTES = {
     "sx_o6": {"en": "Run the System Live",
               "fr": "Faire tourner le système en direct"},
     "sx_centre": {"en": "Central variable", "fr": "Variable centrale"},
-    "sx_prof": {"en": "Depth", "fr": "Profondeur"},
+    "sx_prof": {"en": "Variables in play", "fr": "Variables en jeu"},
+    "sx_n_var": {"en": "variables", "fr": "variables"},
+    # LA CONVENTION DE NOMMAGE, DITE UNE FOIS SOUS LE RÉGLAGE. Le modèle
+    # mélangeait des états mesurés — « couvert forestier » — et des mouvements
+    # — « déforestation », « baisse des rendements » : la même chose y portait
+    # deux noms selon l'écran, et une flèche entre un état et une action ne se
+    # lit pas. Tout est désormais un état, nommé dans le sens favorable, et la
+    # phrase l'annonce plutôt que de laisser le lecteur le déduire.
+    "sx_sens": {
+        "en": "Every variable is a measured state, named in the favourable "
+              "direction: higher is better. An arrow therefore reads between "
+              "two states, never between an action and a state.",
+        "fr": "Chaque variable est un état mesuré, nommé dans le sens "
+              "favorable : plus, c'est mieux. Une flèche se lit donc entre "
+              "deux états, jamais entre une action et un état."},
     "sx_non_mesure": {"en": "not measured", "fr": "non mesurée"},
     "sx_non_mesure_x": {
         "en": "This variable carries no measured score: it exists in the "
@@ -98,21 +122,21 @@ TEXTES = {
               "poussée dans une simulation, mais elle n'a pas d'état de "
               "départ auquel se comparer."},
     "sx_trop": {
-        "en": "At this depth the diagram carries {n} variables and stops "
-              "being readable. It is drawn anyway; reduce the depth to read "
-              "it.",
-        "fr": "À cette profondeur le schéma porte {n} variables et cesse "
-              "d'être lisible. Il est tout de même dessiné ; réduisez la "
-              "profondeur pour le lire."},
+        "en": "With {n} variables the diagram stops being readable. It is "
+              "drawn anyway; ask for fewer to read it.",
+        "fr": "À {n} variables le schéma cesse d'être lisible. Il est tout "
+              "de même dessiné ; demandez-en moins pour le lire."},
     "sx_boucles_c": {"en": "The loops running through the central variable",
                      "fr": "Les boucles qui passent par la variable centrale"},
     "sx_boucles_0": {
-        "en": "No loop runs through this variable at this depth: what "
-              "happens to it does not come back to it. Either it is an entry "
-              "point of the system, or the depth is too short.",
-        "fr": "Aucune boucle ne passe par cette variable à cette profondeur : "
+        "en": "No loop runs through this variable within this perimeter: "
+              "what happens to it does not come back to it. Either it is an "
+              "entry point of the system, or the perimeter is too narrow — "
+              "ask for more variables.",
+        "fr": "Aucune boucle ne passe par cette variable dans ce périmètre : "
               "ce qui lui arrive ne lui revient pas. Ou bien elle est une "
-              "entrée du système, ou bien la profondeur est trop courte."},
+              "entrée du système, ou bien le périmètre est trop étroit — "
+              "demandez plus de variables."},
     "sx_r": {"en": "Reinforcing", "fr": "Renforçante"},
     "sx_b": {"en": "Balancing", "fr": "Équilibrante"},
     "sx_x2": {
@@ -422,13 +446,13 @@ def _systeme(m, cle):
     pop = st.session_state.get("bcl_pop", "Total")
     if pop not in [p for p, _l in POPULATIONS] + list(SECTIONS):
         pop = "Total"
-    if "bcl_prof" not in st.session_state:
-        # LA PROFONDEUR 2 EST LE DÉFAUT, ET C'EST UN CHOIX DE FOND : à la
-        # profondeur 1 un système n'a jamais de boucle — une étoile ne boucle
-        # pas — et la section s'ouvrirait donc sur « aucune boucle ».
-        st.session_state["bcl_prof"] = 2
-    prof = int(st.session_state["bcl_prof"])
-    return {"centre": centre, "pop": pop, "prof": prof, "ids": ids}
+    if st.session_state.get("bcl_n") not in TAILLES:
+        # DIX VARIABLES PAR DÉFAUT, ET C'EST UN CHOIX DE FOND : à cinq, un
+        # système n'a souvent aucune boucle — il faut de quoi revenir à son
+        # point de départ — et la section s'ouvrirait sur « aucune boucle ».
+        st.session_state["bcl_n"] = 10
+    n = int(st.session_state["bcl_n"])
+    return {"centre": centre, "pop": pop, "n": n, "ids": ids}
 
 
 def _rappel(m, s):
@@ -440,30 +464,52 @@ def _rappel(m, s):
     st.markdown(
         f'<p class="sx-note" style="margin:0 0 10px"><b>'
         f'{_e(m["noms"][s["centre"]])}</b> · '
-        f'{_e(T("sx_prof"))} {s["prof"]}</p>', unsafe_allow_html=True)
+        f'{s["n"]} {_e(T("sx_n_var"))}</p>', unsafe_allow_html=True)
 
 
-def _voisinage(m, centre, prof):
-    """Les nœuds à `prof` relations ou moins du centre, et leur rang.
+def _voisinage(m, centre, n_max):
+    """Les `n_max` variables les plus liées au centre, et leur rang.
 
-    ON REMONTE ET ON DESCEND. Un système autour de la déforestation qui ne
-    garderait que ce que la déforestation influence laisserait dehors ce qui
-    la cause — et c'est précisément là qu'on veut intervenir. Les deux sens
-    comptent donc pour la distance.
+    ON REMONTE ET ON DESCEND. Un système autour du couvert forestier qui ne
+    garderait que ce que le couvert influence laisserait dehors ce qui le
+    fait reculer — et c'est précisément là qu'on veut intervenir. Les deux
+    sens comptent donc pour la distance.
+
+    L'EFFECTIF EST DEMANDÉ, LA DISTANCE EST DÉDUITE. On avance couronne par
+    couronne depuis le centre et on s'arrête dès qu'on a le compte : les
+    variables retenues sont donc toujours les plus proches, et le rang qui
+    sert à les placer sur le dessin reste une vraie distance.
+
+    QUAND UNE COURONNE DÉBORDE, ON PREND LES PLUS LIÉES. Il reste souvent
+    trois places pour huit candidates ; sont retenues celles qui tiennent au
+    système déjà retenu par les liens les plus forts, à somme égale par ordre
+    alphabétique — un départage stable, sans quoi le même réglage donnerait
+    deux dessins d'un affichage à l'autre.
     """
     voisins = {}
-    for (de, vers) in m["aretes"]:
-        voisins.setdefault(de, set()).add(vers)
-        voisins.setdefault(vers, set()).add(de)
+    for (de, vers), a in m["aretes"].items():
+        f = abs(float(a.get("force") or 0.5))
+        for x, y in ((de, vers), (vers, de)):
+            voisins.setdefault(x, {})
+            voisins[x][y] = voisins[x].get(y, 0.0) + f
     rang = {centre: 0}
     front = [centre]
-    for r in range(1, prof + 1):
-        suiv = []
+    r = 0
+    while len(rang) < n_max and front:
+        r += 1
+        cand = {}
         for x in front:
-            for y in voisins.get(x, ()):
+            for y, f in voisins.get(x, {}).items():
                 if y not in rang:
-                    rang[y] = r
-                    suiv.append(y)
+                    cand[y] = cand.get(y, 0.0) + f
+        if not cand:
+            break
+        suiv = []
+        for y in sorted(cand, key=lambda z: (-cand[z], m["noms"].get(z, z))):
+            if len(rang) >= n_max:
+                break
+            rang[y] = r
+            suiv.append(y)
         front = suiv
     dedans = set(rang)
     aretes = [a for (de, vers), a in m["aretes"].items()
@@ -490,16 +536,26 @@ def _positions(rang, centre):
 
     LE RANG EST UNE DISTANCE, ET LE DESSIN LE DIT. Un placement par force
     donnerait un joli nuage où l'on ne sait plus ce qui touche le centre ; des
-    couronnes rendent la profondeur lisible d'un coup d'œil — première
+    couronnes rendent la distance lisible d'un coup d'œil — première
     couronne : ce qui le touche ; deuxième : ce qui touche celles-là.
+
+    LA COURONNE S'ÉLARGIT AVEC CE QU'ELLE PORTE. Un carrefour peut avoir
+    quatorze voisins directs ; posés sur le rayon d'une couronne taillée pour
+    six, ils se chevauchaient. Le rayon suit donc l'effectif — vingt-deux
+    pixels par pastille, ce qui laisse à chacune la largeur de son cadre — et
+    chaque couronne garde au moins quatre-vingts pixels d'écart avec la
+    précédente, sans quoi deux rangs se confondraient.
     """
     LARG, HAUT = 1120, 700
     cx, cy = LARG / 2, HAUT / 2
     rayons = {0: 0, 1: 150, 2: 268, 3: 340}
     pos = {centre: (cx, cy)}
+    prec = 0
     for r in sorted({v for v in rang.values() if v > 0}):
         cases = sorted([n for n, v in rang.items() if v == r])
-        R = rayons.get(r, 340 + 40 * (r - 3))
+        R = max(rayons.get(r, 340 + 40 * (r - 3)),
+                26 * len(cases), prec + 88)
+        prec = R
         # Un décalage d'un demi-pas par couronne évite que les nœuds du rang 2
         # se cachent derrière ceux du rang 1 sur le même rayon.
         d = math.pi / max(len(cases), 1) if r % 2 == 0 else 0
@@ -578,8 +634,8 @@ def _svg_cld(m, rang, aretes, centre, boucle=None):
         f'<marker id="fr" viewBox="0 0 10 10" refX="9" refY="5" '
         f'markerWidth="5" markerHeight="5" orient="auto-start-reverse">'
         f'<path d="M0,1 L9,5 L0,9 z" fill="{ROUGE}"/></marker></defs>')
-    # LA BOÎTE ÉPOUSE LE CONTENU, ELLE N'EST PAS FIXE. À la profondeur 1 un
-    # système tient dans quatre pastilles ; une boîte taillée pour trente
+    # LA BOÎTE ÉPOUSE LE CONTENU, ELLE N'EST PAS FIXE. À cinq variables un
+    # système tient dans cinq pastilles ; une boîte taillée pour trente
     # laissait six cents pixels de blanc autour d'elles, et il fallait faire
     # défiler pour trouver la suite de la page.
     xs = [x for x, _y in pos.values()]
@@ -622,12 +678,14 @@ def render_construire():
         st.selectbox(T("sx_centre"), s["ids"], key="bcl_centre",
                      format_func=lambda i: m["noms"][i])
     with c3:
-        st.selectbox(T("sx_prof"), [1, 2, 3], key="bcl_prof")
+        st.selectbox(T("sx_prof"), TAILLES, key="bcl_n")
+    st.markdown(f'<p class="sx-note" style="margin:-4px 0 10px">'
+                f'{T("sx_sens")}</p>', unsafe_allow_html=True)
     s = _systeme(m, "c")
 
     etat = M.etat_courant(m["g"], m["par_ligne"], s["pop"])
     v = etat.get(s["centre"])
-    rang, aretes = _voisinage(m, s["centre"], s["prof"])
+    rang, aretes = _voisinage(m, s["centre"], s["n"])
     bcls = _boucles_de(m, s["centre"], set(rang))
 
     # LES TROIS COMPTEURS SONT PARTIS. Le score de départ, la taille du
@@ -651,7 +709,7 @@ def render_construire():
     st.markdown(_svg_cld(m, rang, aretes, s["centre"], isoler),
                 unsafe_allow_html=True)
     # QUATRE NOTES SOUS LE SCHÉMA, ET PLUS AUCUNE. La lecture des flèches,
-    # l'effet de la profondeur, le décompte des variables et la différence
+    # l'effet du périmètre, le décompte des variables et la différence
     # entre boucle renforçante et boucle équilibrante faisaient un paragraphe
     # de mode d'emploi sous chaque dessin — lu une fois, sauté ensuite, mais
     # occupant l'écran à chaque changement de variable. Les signes sont sur
@@ -816,7 +874,7 @@ def render_relations():
     st.markdown(f'<p class="sx-note" style="margin:0 0 8px">'
                 f'{_e(T("sx_x2"))}</p>', unsafe_allow_html=True)
 
-    rang, aretes = _voisinage(m, s["centre"], s["prof"])
+    rang, aretes = _voisinage(m, s["centre"], s["n"])
     classes = sorted({a.get("just") or "hypothese" for a in aretes})
     lib_c = {c: _classe(m, {"just": c}) for c in classes}
     choix = st.multiselect(T("sx_filtre_p"), classes, default=classes,
@@ -858,7 +916,7 @@ def render_leviers():
     st.markdown(f'<p class="sx-note" style="margin:0 0 6px">'
                 f'{_e(T("sx_x3"))}</p>', unsafe_allow_html=True)
 
-    rang, _a = _voisinage(m, s["centre"], s["prof"])
+    rang, _a = _voisinage(m, s["centre"], s["n"])
     dedans = set(rang)
     # LA PORTÉE EST UNE PROPAGATION, PAS UN DEGRÉ. C'est le seul chiffre qui
     # répond à « si je bouge ça, qu'est-ce qui bouge » ; le degré répond à
@@ -940,7 +998,7 @@ def _scenario(m, s, dedans):
             del st.session_state[k]
         st.session_state["sx_pousse_v"] = []
     # UNE VARIABLE SORTIE DU PÉRIMÈTRE NE PEUT PAS RESTER SÉLECTIONNÉE. En
-    # réduisant la profondeur, on rétrécit la liste des options ; une valeur
+    # réduisant le périmètre, on rétrécit la liste des options ; une valeur
     # retenue qui n'y figure plus fait tomber le menu. On la retire d'abord.
     if "sx_pousse_v" in st.session_state:
         garde = [x for x in st.session_state["sx_pousse_v"] if x in dispo]
@@ -974,7 +1032,7 @@ def render_simuler():
     st.markdown(f'<p class="sx-note" style="margin:0 0 8px">'
                 f'{_e(T("sx_x4"))}</p>', unsafe_allow_html=True)
 
-    rang, _a = _voisinage(m, s["centre"], s["prof"])
+    rang, _a = _voisinage(m, s["centre"], s["n"])
     variations = _scenario(m, s, set(rang))
     if st.button(T("sx_remise"), key="sx_raz"):
         st.session_state["sx_raz_demande"] = True
@@ -1111,7 +1169,7 @@ def render_vagues():
     # LE SCÉNARIO EST CELUI DE L'ONGLET PRÉCÉDENT. Le redemander ici ferait
     # deux scénarios pour une seule intervention, et le tableau récapitulatif
     # ne récapitulerait plus rien.
-    rang, _a = _voisinage(m, s["centre"], s["prof"])
+    rang, _a = _voisinage(m, s["centre"], s["n"])
     variations = {}
     for n in st.session_state.get("sx_pousse_v", []) or []:
         v = st.session_state.get(f"sx_d_{n}")

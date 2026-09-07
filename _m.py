@@ -92,7 +92,7 @@ for lang in ("fr", "en"):
                                                   "revenu")[i]
                 at.session_state["bcl_pop"] = ("Total", "Femme", "Montagne",
                                                "Cat A")[i]
-                at.session_state["bcl_prof"] = (2, 1, 3, 2)[i]
+                at.session_state["bcl_n"] = (10, 5, 20, 15)[i]
                 at.session_state["sx_pousse_v"] = [("foret", "eau", "elec",
                                                     "revenu")[i]]
                 at.session_state["sx_d_" + ("foret", "eau", "elec",

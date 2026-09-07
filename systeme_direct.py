@@ -10,7 +10,7 @@ comprend pas qu'un effet revienne sur son point de départ en lisant un
 tableau, on le comprend en voyant l'onde repasser par là.
 
 Ici, le schéma est CELUI DU PREMIER ONGLET — mêmes pastilles, mêmes
-positions, mêmes flèches, même variable centrale et même profondeur, prises
+positions, mêmes flèches, même variable centrale et même périmètre, pris
 dans le même état de session. On pose une variation sur une variable, on
 appuie sur Lecture, et des billes partent le long des flèches : vertes quand
 elles portent une amélioration, rouges quand elles portent une dégradation,
@@ -29,8 +29,8 @@ CE QUE L'ÉCRAN NE DIT PAS.
 Le rang d'une vague est un ordre de relais, pas un calendrier : rien ici ne
 dit qu'une vague dure un mois ou dix ans. Et la propagation s'arrête au bord
 du périmètre dessiné : ce qui sort du schéma n'est pas suivi, ce qui est le
-prix à payer pour que l'onde reste visible sur une image lisible. La
-profondeur se règle dans le premier onglet, et l'effet total, lui, se lit
+prix à payer pour que l'onde reste visible sur une image lisible. La taille
+du périmètre se règle dans le premier onglet, et l'effet total, lui, se lit
 dans « Tester des interventions ».
 """
 
@@ -121,17 +121,18 @@ TEXTES = {
     "sd_perim": {
         "en": "The wave is followed inside the drawn perimeter only: what "
               "leaves the picture is not tracked. Change the central "
-              "variable or the depth in the first tab to widen it. The "
-              "rank of a wave is an order of relays, not a calendar.",
+              "variable or ask for more variables in the first tab to widen "
+              "it. The rank of a wave is an order of relays, not a calendar.",
         "fr": "L'onde n'est suivie qu'à l'intérieur du périmètre dessiné : "
               "ce qui sort de l'image n'est pas suivi. La variable centrale "
-              "et la profondeur se règlent dans le premier onglet. Le rang "
-              "d'une vague est un ordre de relais, pas un calendrier."},
+              "et le nombre de variables se règlent dans le premier onglet. "
+              "Le rang d'une vague est un ordre de relais, pas un "
+              "calendrier."},
     "sd_court": {
-        "en": "This perimeter has no outgoing link to follow: raise the "
-              "depth in the first tab.",
-        "fr": "Ce périmètre n'a aucun lien à suivre : augmentez la "
-              "profondeur dans le premier onglet."},
+        "en": "This perimeter has no outgoing link to follow: ask for more "
+              "variables in the first tab.",
+        "fr": "Ce périmètre n'a aucun lien à suivre : demandez plus de "
+              "variables dans le premier onglet."},
 }
 for _c, _v in TEXTES.items():
     i18n.DICO.setdefault(_c, _v)
@@ -158,7 +159,7 @@ def _lignes(nom, larg=17, maxi=2):
     return out
 
 
-def _donnees(m, centre, prof):
+def _donnees(m, centre, n):
     """Le sous-graphe affiché, positions et poids compris, prêt pour le JS.
 
     LES POIDS SONT CEUX DU MOTEUR, DÉJÀ MIS À L'ÉCHELLE. Le graphe brut a un
@@ -166,7 +167,7 @@ def _donnees(m, centre, prof):
     en produirait quinze ailleurs. La mise à l'échelle appartient au moteur ;
     on la lui demande plutôt que de la refaire ici.
     """
-    rang, aretes = SX._voisinage(m, centre, prof)
+    rang, aretes = SX._voisinage(m, centre, n)
     pos, larg, haut = SX._positions(rang, centre)
     etat = M.etat_courant(m["g"], m["par_ligne"], "Total")
     A, ids, idx = m["A"], m["ids"], m["idx"]
@@ -658,7 +659,7 @@ def render():
     m = SX._modele(lang)
     st.markdown(SX.STYLE, unsafe_allow_html=True)
     s = SX._systeme(m, "d")
-    d = _donnees(m, s["centre"], s["prof"])
+    d = _donnees(m, s["centre"], s["n"])
     if not d["liens"]:
         st.info(T("sd_court"))
         return
