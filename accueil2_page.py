@@ -29,7 +29,6 @@ import streamlit as st
 
 import accueil_apri
 import i18n
-import icones
 from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -42,10 +41,10 @@ SECTIONS = ["Anse à Drick", "Barbois", "Beaulieu", "Blactote", "Dalmette",
 # menu : la carte y conduit par le même chemin que la colonne de gauche, sans
 # quoi deux routes vers la même page finiraient par diverger.
 PORTES = [
-    ("dimensions", "barres", "a2_p1_t", "a2_p1_x", "#f2f6f3"),
-    ("accueil", "epingle", "a2_p2_t", "a2_p2_x", "#eef3f6"),
-    ("boucles", "boucle", "a2_p3_t", "a2_p3_x", "#faf6f0"),
-    ("actions", "fiche", "a2_p4_t", "a2_p4_x", "#f2f6f3"),
+    ("dimensions", "a2_p1_t", "a2_p1_x", "#f2f6f3"),
+    ("accueil", "a2_p2_t", "a2_p2_x", "#eef3f6"),
+    ("boucles", "a2_p3_t", "a2_p3_x", "#faf6f0"),
+    ("actions", "a2_p4_t", "a2_p4_x", "#f2f6f3"),
 ]
 
 # LA PHOTOGRAPHIE SUIT LA LANGUE, ET CE N'EST PAS UN CAPRICE. Deux clichés du
@@ -224,12 +223,17 @@ STYLE = """
   .a2-portes-t { font-size:11.5px; font-weight:700; letter-spacing:.15em;
         text-transform:uppercase; color:#1a4d3a; margin:26px 0 4px; }
   .a2-portes-f { width:44px; height:2px; background:#9fc7b3; margin:0 0 14px; }
+  /* PLUS DE PICTOGRAMME, ET LE TEXTE AU MILIEU. Quatre cartons pâles coiffés
+     chacun d'une petite icône ronde, c'est la vignette que toutes les pages
+     d'accueil produites à la chaîne portent depuis deux ans ; le dessin
+     n'ajoutait rien que le titre ne disait déjà. Reste le titre, sa ligne
+     d'explication et la flèche qui dit que ça mène quelque part. */
   div[class*="st-key-a2_porte_"] div[data-testid="stButton"] > button {
       display:flex !important; flex-direction:column !important;
-      align-items:flex-start !important; justify-content:flex-start !important;
-      text-align:left !important; width:100% !important;
-      min-height:104px !important; height:100% !important;
-      padding:18px 20px !important; border-radius:14px !important;
+      align-items:center !important; justify-content:center !important;
+      text-align:center !important; width:100% !important;
+      min-height:118px !important; height:100% !important;
+      padding:22px 22px 18px !important; border-radius:14px !important;
       border:1px solid transparent !important; box-shadow:none !important;
       transition:border-color .15s ease, transform .15s ease;
   }
@@ -237,7 +241,7 @@ STYLE = """
       border-color:#bcd6c8 !important; transform:none !important;
   }
   div[class*="st-key-a2_porte_"] div[data-testid="stButton"] > button p {
-      text-align:left !important; margin:0 !important;
+      text-align:center !important; margin:0 !important;
       font-size:15px !important; font-weight:600 !important;
       color:#101728 !important; line-height:1.35 !important;
       font-family:Georgia,"Times New Roman",serif !important;
@@ -245,12 +249,19 @@ STYLE = """
   div[class*="st-key-a2_porte_"] div[data-testid="stButton"] > button
       p em { display:block; font-family:Inter,system-ui,sans-serif;
       font-style:normal; font-size:12.5px; font-weight:400; color:#5a6a80;
-      margin-top:7px; line-height:1.45; }
-  /* L'ICÔNE EST PEINTE EN MASQUE AU-DESSUS DU TITRE : le bouton est en
-     colonne, elle devient donc sa première ligne. */
-  div[class*="st-key-a2_porte_"] div[data-testid="stButton"] > button::before {
-      margin:0 0 12px 0 !important;
-  }
+      margin-top:7px; line-height:1.45;
+      /* DEUX LIGNES RÉSERVÉES, QU'IL Y EN AIT UNE OU DEUX. Les descriptions
+         n'ont pas la même longueur, et les quatre flèches se retrouvaient à
+         quatre hauteurs différentes dans quatre cartes de même taille. */
+      min-height:36px; }
+  /* LA FLÈCHE FERME LA CARTE. Elle est écrite dans le libellé, en gras, ce
+     qui est la seule façon de lui donner sa propre ligne dans un bouton de
+     Streamlit ; la graisse est aussitôt reprise ici — c'est une flèche, pas
+     une insistance. */
+  div[class*="st-key-a2_porte_"] div[data-testid="stButton"] > button
+      p strong { display:block; margin-top:15px; font-weight:400;
+      font-family:Inter,system-ui,sans-serif; font-size:17px;
+      line-height:1; color:#1f7a4d; }
 
   /* --- LE BOUTON D'APPEL DU BANDEAU ------------------------------------ */
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button {
@@ -284,13 +295,9 @@ STYLE = """
 </style>
 """
 
-# Les pictogrammes des quatre cartes, peints en masque comme ceux du menu.
-_CSS_ICONES = "<style>" + "".join(
-    icones.regle_masque(
-        f'div[class*="st-key-a2_porte_{code}"] '
-        f'div[data-testid="stButton"] > button',
-        ic, taille=22, marge=0)
-    for code, ic, _t, _x, _f in PORTES) + "</style>"
+# LES QUATRE CARTES N'ONT PLUS DE PICTOGRAMME. Le jeu d'icônes reste celui du
+# menu, où une liste de seize entrées en a besoin pour se parcourir de l'œil ;
+# quatre cartes, elles, se lisent par leur titre.
 
 
 def _e(t):
@@ -405,7 +412,6 @@ def _fmt(n):
 def render():
     """La page d'entrée : annoncer, chiffrer, orienter."""
     st.markdown(STYLE, unsafe_allow_html=True)
-    st.markdown(_CSS_ICONES, unsafe_allow_html=True)
 
     # ---- 1 · la photographie, le titre, l'appel ------------------------
     _lang = i18n.get_lang()
@@ -491,7 +497,7 @@ def render():
             f'<div class="a2-portes-f"></div>', unsafe_allow_html=True)
         for rang in (0, 2):
             c1, c2 = st.columns(2, gap="medium")
-            for col, (code, _ic, cle_t, cle_x, fond_c) in zip(
+            for col, (code, cle_t, cle_x, fond_c) in zip(
                     (c1, c2), PORTES[rang:rang + 2]):
                 with col:
                     with st.container(key=f"a2_porte_{code}"):
@@ -500,7 +506,8 @@ def render():
                             f'div[data-testid="stButton"] > button '
                             f'{{ background:{fond_c} !important; }}</style>',
                             unsafe_allow_html=True)
-                        if st.button(f'{T(cle_t)}  \n*{T(cle_x)}*',
+                        if st.button(f'{T(cle_t)}  \n*{T(cle_x)}*'
+                                     f'  \n**\u2192**',
                                      key=f"a2_b_{code}",
                                      use_container_width=True):
                             st.session_state["app_mode"] = code
