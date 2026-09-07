@@ -223,7 +223,8 @@ TEXTES = {
               "figuraient pas dans le texte d'où vient cette page, et les "
               "nommer de travers serait pire que de laisser la place vide."},
 
-    "ap_r_t": {"en": "Milestones reached", "fr": "Réalisations"},
+    "ap_r_t": {"en": "Milestones since the launch",
+               "fr": "Réalisations depuis le lancement"},
     "ap_r_x": {
         "en": "Since it began, APRI has already reached several milestones.",
         "fr": "Depuis son lancement, la mise en œuvre d'APRI a déjà atteint "
@@ -253,7 +254,11 @@ TEXTES = {
               "collaboration entre le PNUE, le PAM, l'OIT et The Nature "
               "Conservancy."},
 
-    "ap_o_t": {"en": "2025 objectives", "fr": "Objectifs 2025"},
+    # CE SONT DES CHOSES FAITES, PAS DES CHOSES VOULUES. La liste était
+    # intitulée « objectifs 2025 » et se lisait donc comme une promesse ;
+    # elle porte des réalisations de 2025 et 2026.
+    "ap_o_t": {"en": "Delivered in 2025 and 2026",
+               "fr": "Réalisations 2025 et 2026"},
     "ap_o_l": {
         "en": "Setting up an APRI information system."
               "@@Drawing up a harmonised methodology for community resilience "
@@ -313,8 +318,12 @@ _STYLE = """
        text-transform:uppercase; color:#1f5b46; margin:26px 0 8px;
        display:flex; align-items:center; gap:12px; }
   .ap-h span { flex:1 1 auto; height:1.5px; background:#cfe0d6; }
+  /* LE TEXTE PREND LA LARGEUR DE LA PAGE. Il se coupait à quatre-vingt-deux
+     signes, ce qui laissait la moitié droite de l'écran vide sur un grand
+     moniteur et faisait paraître la page inachevée. Justifié, le bord droit
+     referme le bloc au lieu de s'effilocher. */
   .ap-p { font-size:14.5px; line-height:1.65; color:#3c4761;
-       max-width:82ch; margin:0; text-align:left !important; }
+       max-width:none; margin:0; text-align:justify !important; }
   .ap-b { display:flex; gap:14px; flex-wrap:wrap; margin:14px 0 0; }
   .ap-c { flex:1 1 260px; border:1px solid #e4eae6; border-radius:12px;
        background:#fff; padding:13px 16px; }
@@ -324,7 +333,7 @@ _STYLE = """
   /* LES JALONS ET LES OBJECTIFS SE LISENT EN LISTE NUMÉROTÉE. Ce sont des
      éléments de même rang qu'on parcourt, pas un récit : le numéro donne le
      compte d'un coup d'œil, ce qu'un point ne fait pas. */
-  .ap-l { list-style:none; padding:0; margin:12px 0 0; max-width:82ch; }
+  .ap-l { list-style:none; padding:0; margin:12px 0 0; max-width:none; }
   .ap-l li { display:flex; gap:12px; align-items:flex-start;
        font-size:14px; line-height:1.6; color:#3c4761; padding:7px 0;
        border-top:1px solid #eef2ef; text-align:left; }

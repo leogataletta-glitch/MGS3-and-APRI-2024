@@ -74,23 +74,20 @@ TEXTES = {
     "a2_titre": {"en": "Data for a more resilient Haiti",
                  "fr": "Des données pour une Haïti plus résiliente"},
     "a2_intro": {
-        "en": "The APRI approach seeks to assess how a given landscape can "
-              "maintain and improve its essential functions while facing "
-              "constant pressures and extreme events. This integrated "
-              "analytical model, a diagnostic tool in its own right, "
-              "measures the resilience of a given landscape and explores, "
-              "through a set of indicators, specific levers for action — "
-              "either by making the most of the capacities already there, or "
-              "by identifying those that need strengthening.",
-        "fr": "L'approche APRI cherche à évaluer comment une entité "
-              "paysagère spécifique peut maintenir et améliorer ses "
-              "fonctions essentielles en répondant à des défis constants et "
-              "à des événements extrêmes. Ce modèle analytique intégré, "
-              "véritable outil de diagnostic, permet de mesurer la résilience "
-              "d'un paysage donné et d'explorer, au travers d'un ensemble "
-              "d'indicateurs, des leviers d'action spécifiques, soit en "
-              "tirant parti au mieux des compétences disponibles, soit en "
-              "identifiant celles à améliorer."},
+        "en": "The APRI approach assesses how a landscape maintains and "
+              "improves its essential functions in the face of constant "
+              "pressures and extreme events. This integrated model, a "
+              "diagnostic tool, measures the resilience of a landscape and "
+              "explores, through a set of indicators, specific levers for "
+              "action: making the most of the capacities available, or "
+              "identifying those to be strengthened.",
+        "fr": "L'approche APRI évalue comment un paysage maintient et "
+              "améliore ses fonctions essentielles face à des défis "
+              "constants et à des événements extrêmes. Ce modèle intégré, "
+              "outil de diagnostic, mesure la résilience d'un paysage et "
+              "explore, au travers d'un ensemble d'indicateurs, des leviers "
+              "d'action spécifiques : tirer parti au mieux des compétences "
+              "disponibles, ou identifier celles à améliorer."},
     "a2_cta": {"en": "Explore the results", "fr": "Explorer les résultats"},
     "a2_credit": {"en": "Grand'Anse, Haiti", "fr": "Grand'Anse, Haïti"},
     "a2_c1_x": {"en": "household surveys", "fr": "enquêtes ménage"},
@@ -191,12 +188,19 @@ STYLE = """
         margin:0 0 20px; font-weight:400; text-align:left !important;
         max-width:13ch; }
   /* LA LARGEUR SUIT LA LONGUEUR. Le chapeau tenait en une phrase et se
-     coupait à quarante-quatre signes ; il en fait maintenant quatre-vingts,
-     et la même colonne étroite en aurait fait douze lignes sous le titre.
-     Il prend donc la largeur du bloc, en corps légèrement réduit. */
+     coupait à quarante-quatre signes ; il en fait maintenant plusieurs, et
+     la même colonne étroite en aurait fait dix lignes sous le titre. Il
+     prend donc la largeur du bloc, en corps légèrement réduit.
+
+     ET IL EST JUSTIFIÉ. C'est le seul bloc de la page qui le soit, et il le
+     supporte : quatre lignes pleines sur une colonne large ne creusent pas
+     de rivières entre les mots, là où le titre en cinquante-deux points, lui,
+     en creusait. Le bord droit net referme le bloc de texte contre la
+     photographie. */
   p.a2-intro { font-size:14.5px !important; color:#3c4761 !important;
         line-height:1.6 !important; margin:0 0 26px !important;
-        max-width:none; text-align:left !important; }
+        max-width:none; text-align:justify !important;
+        text-justify:inter-word; }
   /* LE CRÉDIT EST BLANC, SUR LA PHOTOGRAPHIE. Une ombre portée le détache
      là où le cliché passe clair — une plaque translucide, elle, découperait
      un rectangle net dans l'image. */
