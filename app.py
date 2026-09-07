@@ -1274,26 +1274,61 @@ st.markdown(("""
      colonne de droite commence donc au même pixel que le menu. */
   div[class*="st-key-zone_page"] { margin-top: 0 !important; }
   div[class*="st-key-zone_ruban"] { margin: 0 0 14px !important; }
-  /* LE SÉLECTEUR OUVRE LA COLONNE DE MENU. Il était posé en absolu dans
-     l'angle du bandeau ; le bandeau ne paraît plus que sur l'accueil, et un
-     réglage qui change de place selon la page n'est plus un réglage. Il
-     prend donc sa place dans le flux, en tête de la colonne, séparé de la
-     première rubrique par un filet — au-dessus de la table des matières,
-     sans en faire partie. */
+  /* LE SÉLECTEUR EST POSÉ DANS L'IMAGE, EN HAUT. Il a vécu dans l'angle du
+     bandeau, puis en tête de la colonne de menu ; l'image est redevenue le
+     seul élément présent en haut de toutes les pages, et c'est là qu'un site
+     institutionnel range ses langues. Les deux boutons sont des enfants de la
+     colonne de droite — Streamlit ne sait pas les écrire dans un bloc HTML —
+     et sont déplacés en absolu par-dessus l'illustration.
+
+     LA COLONNE DEVIENT LE REPÈRE DE POSITION. Sans elle, le bloc se placerait
+     par rapport à la fenêtre et glisserait au défilement. */
+  div[data-testid="stColumn"]:has(div[class*="st-key-zone_page"]) {
+    position: relative;
+  }
   div[class*="st-key-zone_langue"] {
-    width: auto !important; margin: 2px 0 10px 2px !important;
-    padding-bottom: 10px !important;
-    border-bottom: 1px solid #d3ddd5 !important;
+    position: absolute; z-index: 8;
+    width: auto !important; margin: 0 !important;
+    padding: 0 !important; border: 0 !important;
   }
-  /* LE GLOBE, PEINT EN MASQUE DEVANT LES DEUX CODES. On ne peut rien écrire
-     dans le contenu d'un bouton Streamlit ; le tracé est donc posé en
-     `::before` sur le conteneur, où il devient une case de la rangée. */
-  div[class*="st-key-zone_langue"]::before {
-    content: ""; width: 15px; height: 15px; flex: 0 0 15px;
-    margin-right: 9px; background-color: #7d8d83;
-    -webkit-mask: MASQUE center/contain no-repeat;
-    mask: MASQUE center/contain no-repeat;
+  /* L'IMAGE DÉBORDE DE LA COLONNE À DROITE — c'est ce qui la fait toucher le
+     bord de la fenêtre — et le sélecteur doit déborder avec elle, sans quoi il
+     se poserait deux centimètres et demi trop à gauche. L'écart est dit dans
+     l'unité de la mise en page, comme celui de l'image : les deux suivent
+     ensemble le facteur de zoom. */
+  div[class*="st-key-zone_langue_h"] { top: 24px; right: calc(30px - 2.6rem); }
+  /* SUR LES AUTRES PAGES, LE MÊME ANGLE EST PRIS. Le bandeau dessiné y porte
+     l'emblème du Programme des Nations unies pour l'environnement ; les codes
+     de langue s'arrêtent avant lui, dans le ciel du dessin. */
+  div[class*="st-key-zone_langue_r"] { top: 16px; right: calc(126px - 2.6rem); }
+  /* ET LÀ, UNE PASTILLE SOMBRE. Sur l'accueil les deux codes tombent dans le
+     ciel de la photographie, où l'encre suffit ; sur les autres pages le même
+     angle du bandeau dessiné est occupé par des frondaisons, et deux mots
+     d'encre avec leur halo blanc s'y perdaient. La pastille ne dépasse pas les
+     mots, et le vert du site s'y lit encore : c'est une couleur du dessin, pas
+     une plaque posée dessus. */
+  div[class*="st-key-zone_langue_r"] {
+    background: rgba(16,40,29,.46); border-radius: 999px;
+    padding: 3px 13px 4px !important;
+    backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
   }
+  /* LA CLÉ DU BOUTON EST REPRISE DANS LE CHEMIN. Sans elle, ces règles ont
+     exactement le poids de celles qui donnent leur encre aux deux codes plus
+     bas dans la feuille, et c'est l'ordre d'écriture qui tranche — contre
+     elles. Un segment de plus, et la pastille l'emporte. */
+  div[class*="st-key-zone_langue_r"] div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button p {
+    color: rgba(255,255,255,.74) !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,.4) !important;
+  }
+  div[class*="st-key-zone_langue_r"] div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button:hover p,
+  div[class*="st-key-zone_langue_r"] div[class*="st-key-lang_"]
+  div[data-testid="stButton"] > button[kind="primary"] p {
+    color: #ffffff !important;
+  }
+  div[class*="st-key-zone_langue_r"] div[data-testid="stColumn"]:last-child
+  div[class*="st-key-lang_"]::before { background: rgba(255,255,255,.45); }
   /* Streamlit donne au conteneur du bouton la largeur de son mot : sans ces
      deux lignes, le `width:100%` du bouton vaut 100 % de vingt-cinq pixels,
      et la pastille se ferme en rond. La classe à clé est posée SUR le
@@ -1319,9 +1354,14 @@ st.markdown(("""
   }
   div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button p {
-    font-size: 11.5px !important; font-weight: 600 !important;
-    letter-spacing: .08em !important; text-transform: uppercase;
-    color: #6f8177 !important; text-align: left !important;
+    font-size: 12px !important; font-weight: 700 !important;
+    letter-spacing: .1em !important; text-transform: uppercase;
+    /* SUR UNE PHOTOGRAPHIE, DEUX MOTS D'ENCRE NE SUFFISENT PAS. Le halo blanc
+       les tient là où le cliché passe sombre — un nuage, une crête boisée —
+       sans découper la plaque nette qu'un fond translucide aurait posée. */
+    color: #24352c !important; text-align: left !important;
+    text-shadow: 0 1px 7px rgba(255,255,255,.9),
+                 0 0 2px rgba(255,255,255,.85);
     transition: color .15s ease;
   }
   div[class*="st-key-lang_"]
@@ -1355,11 +1395,11 @@ st.markdown(("""
     color: #14503a !important; font-weight: 800 !important;
   }
   div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
-  div[class*="st-key-lang_"] { position: relative; padding-left: 13px; }
+  div[class*="st-key-lang_"] { position: relative; padding-left: 17px; }
   div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
   div[class*="st-key-lang_"]::before {
-    content: "/"; position: absolute; left: 2px; top: 2px;
-    font-size: 11.5px; color: rgba(20,80,58,.38);
+    content: ""; position: absolute; left: 7px; top: 4px;
+    width: 1px; height: 12px; background: rgba(20,50,38,.34);
   }
   div[class*="st-key-zone_langue"] {
     display: flex !important; flex-direction: row !important;
@@ -1567,10 +1607,7 @@ st.markdown(("""
 """).replace("__ICONE_RESET__", icones.regle_masque(
     'section[data-testid="stSidebar"] div[class*="st-key-f_reset_global"] '
     'div[data-testid="stButton"] > button', "rafraichir", 16, 10))
-   # LE GLOBE DU SÉLECTEUR DE LANGUE. Le tracé est injecté ici plutôt
-   # qu'écrit dans la feuille : il vient du même jeu d'icônes que le reste du
-   # site, et une URL de données recopiée à la main dériverait du tracé.
-   .replace("MASQUE", icones.masque("monde")),
+   ,
     unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------------
@@ -2214,23 +2251,6 @@ with _zone_nav:
             f'<img src="data:image/png;base64,{_lg}" alt="APRI"/>'
             f'<span>APRI</span></div>',
             unsafe_allow_html=True)
-    # LA LANGUE OUVRE LA COLONNE. Elle vivait dans l'angle du bandeau, qui
-    # n'existe plus que sur l'accueil : sur les quinze autres pages, le
-    # réglage se serait trouvé ailleurs qu'à l'endroit où on l'avait laissé.
-    # En tête de la colonne, il est au même endroit partout, au-dessus de la
-    # table des matières sans en faire partie — un réglage du site, pas une
-    # destination.
-    with st.container(key="zone_langue"):
-        _cl = st.columns(2)
-        # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie est en tête.
-        _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
-        for _col, _code in zip(_cl, _ordre):
-            with _col:
-                st.button(_code.upper(), key=f"lang_{_code}",
-                          on_click=_changer_langue, args=(_code,),
-                          type=("primary"
-                                if st.session_state["choix_langue"] == _code
-                                else "secondary"))
     for _fam, _entrees in _NAV_FAMILLES:
         if _fam:
             st.markdown(f'<div class="nav-famille">{T(_fam)}</div>',
@@ -2251,6 +2271,38 @@ with _zone_nav:
 # l'aiguillage, pour que chaque page se dessine dedans sans avoir à savoir
 # où elle est.
 _c_contenu = _col_page.container(key="zone_page")
+
+# LA LANGUE EST POSÉE DANS L'IMAGE, EN HAUT. Elle a vécu dans l'angle du
+# bandeau, puis en tête de la colonne de menu ; elle revient sur l'image, qui
+# est maintenant la même sur toutes les pages — la photographie sur l'accueil,
+# le bandeau dessiné ailleurs. C'est la place où un site institutionnel range
+# ses langues, et c'est la seule qui ne bouge pas d'une page à l'autre.
+#
+# ELLE EST DANS LA COLONNE DE LA PAGE, PAS DANS L'IMAGE ELLE-MÊME. Streamlit ne
+# sait pas poser un widget à l'intérieur d'un bloc HTML qu'on a écrit soi-même :
+# les deux boutons sont donc des enfants de la colonne, et la feuille de style
+# les déplace en absolu par-dessus l'image. Deux faux liens dessinés dans le
+# HTML ne changeraient aucune langue.
+#
+# DEUX CLÉS POUR DEUX PLACES. Sur l'accueil, l'angle haut-droit de la
+# photographie est libre. Sur les autres pages, le même angle du bandeau porte
+# déjà l'emblème du Programme des Nations unies pour l'environnement : le
+# sélecteur s'arrête donc avant lui. Une seule clé aurait fait passer les
+# codes de langue par-dessus le logo quinze fois sur seize.
+_zone_langue = _col_page.container(
+    key=("zone_langue_h" if st.session_state["app_mode"] == MODE_PORTAIL
+         else "zone_langue_r"))
+with _zone_langue:
+    _cl = st.columns(2)
+    # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie est en tête.
+    _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
+    for _col, _code in zip(_cl, _ordre):
+        with _col:
+            st.button(_code.upper(), key=f"lang_{_code}",
+                      on_click=_changer_langue, args=(_code,),
+                      type=("primary"
+                            if st.session_state["choix_langue"] == _code
+                            else "secondary"))
 
 # Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par

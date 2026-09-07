@@ -144,7 +144,10 @@ STYLE = """
   /* LE TEXTE, LUI, GARDE SA MARGE. L'image a débordé de deux rem à gauche ;
      le bloc de texte les reprend en rembourrage, sinon le sur-titre se
      collerait au vert de la colonne. */
-  .a2-hero-c { position:relative; padding:52px 40px 48px calc(2rem + 46px);
+  /* LE REMBOURRAGE BAS EST UNE BANDE RÉSERVÉE, PAS UNE RESPIRATION. C'est là
+     que le bouton d'appel vient se poser, remonté depuis le flux : sans elle,
+     il se serait couché sur la dernière ligne du paragraphe. */
+  .a2-hero-c { position:relative; padding:52px 40px 104px calc(2rem + 46px);
         max-width:680px; }
   /* LE TITRE INSTITUTIONNEL : le même romain à empattements que le grand
      titre, en corps réduit et en encre plus claire — il annonce l'institution
@@ -189,7 +192,7 @@ STYLE = """
   }
 
   /* --- LA CARTE, DANS SON CARTON PÂLE ---------------------------------- */
-  .a2-carte { background:#f4f7f5; border-radius:14px; padding:20px 22px 14px; }
+  .a2-carte { background:#f4f7f5; border-radius:14px; padding:14px 22px 10px; }
   .a2-carte-t { font-size:11.5px; font-weight:700; letter-spacing:.15em;
         text-transform:uppercase; color:#1a4d3a; margin:0 0 4px; }
   .a2-carte-f { width:44px; height:2px; background:#9fc7b3; margin:0 0 10px; }
@@ -249,6 +252,14 @@ STYLE = """
   div[class*="st-key-a2_cta"] div[data-testid="stElementContainer"],
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] {
       width:auto !important;
+  }
+  /* IL REMONTE DANS L'IMAGE, calé sur la même marge gauche que le texte du
+     bandeau. La marge basse rend au flux la hauteur que la marge haute lui a
+     prise : sans elle, la rangée de chiffres remonterait d'autant et viendrait
+     toucher le bas de la photographie. */
+  div[class*="st-key-a2_cta"] {
+      position:relative; z-index:6;
+      margin:-39px 0 24px calc(2rem + 46px) !important;
   }
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button:hover {
       background:#186340 !important; transform:none !important;
@@ -386,16 +397,18 @@ def render():
         f'<p class="a2-intro">{_e(T("a2_intro"))}</p>'
         f'</div><div class="a2-credit">{_e(T("a2_credit"))}</div></div>',
         unsafe_allow_html=True)
-    # LE BOUTON EST SOUS LA PHOTOGRAPHIE, PAS DEDANS. Streamlit ne sait pas
-    # poser un widget à l'intérieur d'un bloc HTML qu'on a écrit soi-même ;
-    # un faux bouton dessiné dans le HTML serait un lien qui ne mène nulle
-    # part. Il est donc juste dessous, calé à gauche sur la même marge.
-    _b, _r = st.columns([1, 3])
-    with _b:
-        with st.container(key="a2_cta"):
-            if st.button(T("a2_cta") + "  →", key="a2_cta_b"):
-                st.session_state["app_mode"] = "dimensions"
-                st.rerun()
+    # LE BOUTON EST DANS LA PHOTOGRAPHIE, ET IL Y ENTRE PAR LE HAUT. Streamlit
+    # ne sait pas poser un widget à l'intérieur d'un bloc HTML qu'on a écrit
+    # soi-même, et un faux bouton dessiné dans le HTML serait un lien qui ne
+    # mène nulle part. Il est donc écrit juste après l'image, puis remonté
+    # dedans par une marge négative. Une marge, et non un placement absolu :
+    # la hauteur du bandeau change avec la langue — le titre français tient
+    # sur trois lignes, l'anglais sur deux — et une position comptée depuis le
+    # haut aurait glissé de l'une à l'autre.
+    with st.container(key="a2_cta"):
+        if st.button(T("a2_cta") + "  →", key="a2_cta_b"):
+            st.session_state["app_mode"] = "dimensions"
+            st.rerun()
 
     # ---- 2 · les quatre nombres ----------------------------------------
     menages, sections = _chiffres()
@@ -416,11 +429,17 @@ def render():
     # ---- 3 · la carte, et les quatre destinations -----------------------
     g, d = st.columns([1, 1.15], gap="large")
     with g:
+        # LE TITRE EST SORTI DU CARTON. Il y était enfermé, si bien que le
+        # rectangle pâle de gauche commençait soixante pixels plus haut que
+        # ceux de droite, dont le titre, lui, est au-dessus : deux blocs de
+        # même nature, décalés d'une demi-ligne, et la page penchait. Écrit
+        # avec la classe des destinations, il s'aligne au pixel avec elles, et
+        # la carte commence à la hauteur de la première rangée de cartes.
         st.markdown(
             accueil_apri.STYLE
-            + f'<div class="a2-carte">'
-            f'<div class="a2-carte-t">{_e(T("a2_carte_t"))}</div>'
-            f'<div class="a2-carte-f"></div>{_carte_svg()}</div>',
+            + f'<div class="a2-portes-t">{_e(T("a2_carte_t"))}</div>'
+            f'<div class="a2-portes-f"></div>'
+            f'<div class="a2-carte">{_carte_svg()}</div>',
             unsafe_allow_html=True)
     with d:
         st.markdown(
