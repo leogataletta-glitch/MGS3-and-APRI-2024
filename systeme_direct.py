@@ -62,6 +62,27 @@ TEXTES = {
               "variable atteinte monte ou descend sous vos yeux. Le vert "
               "porte une amélioration, le rouge une dégradation, et plus la "
               "bille est grosse plus elle porte."},
+    # CE QU'EST UNE VAGUE, DIT AVANT QU'ON EN COMPTE HUIT. Le compteur, le
+    # bouton « une vague », le tableau des retraversées et le délai par relais
+    # parlaient tous de vagues sans qu'aucun écran ne dise ce que c'est. Un
+    # rang de relais n'est pas une durée, et c'est le seul contresens possible.
+    "sd_vague_x": {
+        "en": "A wave is one round of relays, not a length of time. At each "
+              "wave, every variable that has just moved passes its change to "
+              "its direct neighbours, and those pass it on at the next wave. "
+              "The wave dies out when there is nothing left worth passing "
+              "on; when a loop closes, it comes back to the variable it "
+              "started from. You can cap the number of waves, or let it run "
+              "until it dies out on its own.",
+        "fr": "Une vague est un tour de relais, pas une durée. À chaque "
+              "vague, chaque variable qui vient de bouger transmet son "
+              "changement à ses voisines directes, qui le transmettront à la "
+              "vague suivante. L'onde s'éteint quand il n'y a plus rien qui "
+              "vaille d'être transmis ; quand une boucle se referme, elle "
+              "revient sur la variable de départ. Vous pouvez borner le "
+              "nombre de vagues, ou la laisser s'éteindre d'elle-même."},
+    "sd_nb": {"en": "Waves", "fr": "Vagues"},
+    "sd_nb_auto": {"en": "until it dies out", "fr": "jusqu'à extinction"},
     "sd_var": {"en": "Variable pushed", "fr": "Variable poussée"},
     "sd_ampleur": {"en": "Change applied", "fr": "Changement appliqué"},
     "sd_lire": {"en": "Play", "fr": "Lecture"},
@@ -266,6 +287,15 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
       <option value="0.55">2×</option>
       <option value="0.3">4×</option>
     </select></div>
+  <div class="ch"><label>__L_NB__</label>
+    <select id="nv">
+      <option value="0" selected>__L_NBA__</option>
+      <option value="3">3</option>
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="40">40</option>
+    </select></div>
   <div class="ch"><label>__L_DEL__</label>
     <select id="dl" title="__L_TPS__">
       <option value="0" selected>__L_DEL0__</option>
@@ -407,7 +437,7 @@ function poserHalo(on){
 }
 
 /* ---------- l'état de la propagation ----------------------------------- */
-let src = D.centre, amp = 1, vitesse = 1, delai = 0;
+let src = D.centre, amp = 1, vitesse = 1, delai = 0, vmax = 0;
 let vague = new Float64Array(NO.length);
 let cum = new Float64Array(NO.length);
 let total = 1, k = 0, joue = false, anim = null, retour = 0;
@@ -471,7 +501,9 @@ function peindre(){
     u.rect.setAttribute("stroke-width", c && !u.n.c ? 1.8 : 1);
   }
   let d = 0; for (let j=0;j<NO.length;j++) d += Math.abs(cum[j]);
-  document.getElementById("kv").textContent = k;
+  /* LE COMPTEUR DIT LA BORNE QUAND IL Y EN A UNE : « 3 / 5 » se lit comme
+     une course qui a un terme, « 3 » comme une course qui n'en a pas. */
+  document.getElementById("kv").textContent = vmax ? (k + " / " + vmax) : k;
   document.getElementById("kd").textContent =
     Math.round(100*Math.min(1, total ? d/total : 0)) + " % " + L.dis;
   horizon();
@@ -480,12 +512,21 @@ function peindre(){
 /* ---------- ce qu'on lit une fois l'onde éteinte ------------------------ */
 function bilan(montrer){
   const e = document.getElementById("fin");
+  /* LE HALO DORÉ APPARTIENT AU BILAN. Il marque les variables les plus
+     connectées du périmètre : une propriété de la structure, vraie avant la
+     course comme après. Mais posé à l'ouverture il désignait trois pastilles
+     avant qu'on ait rien vu bouger, et allumé dès la première vague il
+     annonçait sa conclusion au milieu de la démonstration. Il arrive donc
+     avec le reste du bilan, quand l'onde s'est éteinte ou qu'on l'a bornée,
+     et il repart avec lui à la remise à zéro. */
   if (!montrer || !k){
     e.hidden = true;
+    poserHalo(false);
     vues.forEach(u => { u.anneau.setAttribute("opacity", 0);
                         u.anneau.classList.remove("cli"); });
     return;
   }
+  poserHalo(true);
   const con = NO.map((n,i)=>({n, v: DEG[i]}))
                 .filter(x=>x.v>0).sort((a,b)=>b.v-a.v).slice(0,5);
   const pas = NO.map((n,i)=>({n, v: passages[i], c: cum[i]}))
@@ -521,7 +562,6 @@ function remise(){
   traits.forEach(p => { p.setAttribute("opacity", .34);
                         p.setAttribute("stroke-width", 1.5); });
   document.getElementById("mot").textContent = "";
-  poserHalo(false);
   bilan(false);
   peindre();
 }
@@ -538,7 +578,6 @@ function vaguesuivante(apres){
     arret(); bilan(true); if (apres) apres(false); return;
   }
   k += 1;
-  if (k === 1) poserHalo(true);
   for (let j=0;j<NO.length;j++)
     if (Math.abs(suivante[j]) > SEUIL) passages[j] += 1;
   const duree = 950*vitesse, part = 0.82;
@@ -591,7 +630,11 @@ function arret(){
 }
 function boucler(ok){
   if (!joue) return;
-  if (!ok || k >= KMAX){ arret(); bilan(true); return; }
+  /* TROIS FAÇONS DE S'ARRÊTER : l'onde s'éteint d'elle-même, elle atteint la
+     borne demandée, ou elle touche le plafond de sécurité. La borne est un
+     réglage de lecture — on veut voir ce que trois relais font, pas trente —
+     et non une propriété du système. */
+  if (!ok || k >= KMAX || (vmax && k >= vmax)){ arret(); bilan(true); return; }
   setTimeout(()=>{ if (joue) vaguesuivante(boucler); }, 120*vitesse);
 }
 
@@ -610,6 +653,10 @@ ia.oninput = () => {
   remise();
 };
 document.getElementById("vit").onchange = e => { vitesse = parseFloat(e.target.value); };
+document.getElementById("nv").onchange = e => {
+  vmax = parseInt(e.target.value, 10) || 0;
+  peindre();
+};
 document.getElementById("dl").onchange = e => {
   delai = parseFloat(e.target.value) || 0; horizon();
 };
@@ -660,6 +707,8 @@ def _html(d, lang):
             .replace("__L_CON__", _e(T("sd_connect")))
             .replace("__L_PASX__", _e(T("sd_passages_x")))
             .replace("__L_PAS2__", _e(T("sd_passages")))
+            .replace("__L_NB__", _e(T("sd_nb")))
+            .replace("__L_NBA__", _e(T("sd_nb_auto")))
             .replace("__L_LJ__", _e(T("sd_leg_j")))
             .replace("__L_LC__", _e(T("sd_leg_c"))))
 
@@ -679,7 +728,15 @@ def render():
         f'<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
         f'solid {VERT_APRI};border-radius:14px;padding:12px 16px;'
         f'font-size:14px;color:{ENCRE2};line-height:1.6;margin:2px 0 8px;'
-        f'max-width:96ch">{T("sd_intro")}</div>', unsafe_allow_html=True)
+        f'max-width:96ch">{T("sd_intro")}'
+        # LA DÉFINITION D'UNE VAGUE VIENT AVEC LE MODE D'EMPLOI, dans le même
+        # cadre et détachée par un filet : c'est la clé de lecture de tout ce
+        # qui suit — le compteur, le bouton d'un pas, le tableau des
+        # retraversées et le délai par relais comptent tous des vagues.
+        f'<div style="margin-top:10px;padding-top:10px;'
+        f'border-top:1px solid #eef2f7;color:{ENCRE3}">'
+        f'{T("sd_vague_x")}</div>'
+        f'</div>', unsafe_allow_html=True)
 
     # LA HAUTEUR SUIT LE DESSIN. Un périmètre de quatre pastilles n'a pas
     # besoin de neuf cents pixels, et un périmètre de vingt-six ne tient pas
