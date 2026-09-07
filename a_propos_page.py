@@ -14,23 +14,18 @@ détail, avec ses sept dimensions, ses barèmes et ses pondérations. Elle
 raconte l'histoire et nomme les responsables, ce qu'aucun autre écran ne
 fait.
 
-LES NOMBRES SONT LUS DANS LES FICHIERS, PAS ÉCRITS DANS LA PHRASE.
-« Cent vingt-huit indicateurs » saisi en toutes lettres devient faux le jour
-où le référentiel en gagne un, et rien ne le signale. Ils sont donc comptés
-à l'ouverture, dans les mêmes fichiers que le reste du site.
+CE QU'ELLE DIT, ET CE QU'ELLE LAISSE AU CADRE.
+Elle présente l'initiative : ce qu'est APRI, pourquoi elle existe, sur quels
+paysages elle travaille, ce qu'elle a déjà fait et ce qu'elle vise. La
+méthode de mesure — les sept dimensions, les barèmes, les pondérations, ce
+que l'indice ne prétend pas — appartient au cadre de résilience, qui l'expose
+onglet par onglet. Deux exposés de la même méthode divergent toujours.
 """
-
-import csv
-import json
-import os
 
 import streamlit as st
 
 import i18n
 from i18n import T
-
-APP_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA = os.path.join(APP_DIR, "data")
 
 ENCRE, ENCRE2, ENCRE3 = "#101728", "#3c4761", "#6b7590"
 VERT, VERT_PALE = "#1f5b46", "#eef4f0"
@@ -76,6 +71,48 @@ TEXTES = {
               "actions afin de créer des synergies opérationnelles et des "
               "effets de levier concrets."},
 
+    # LES DEUX MOTS DU TITRE, DÉFINIS AVANT D'ÊTRE EMPLOYÉS. « Paysage » et
+    # « résilience » sont pris ici dans une acception précise, empruntée, et
+    # qui n'est pas celle du langage courant : un paysage n'est pas un point
+    # de vue, la résilience n'est ni la stabilité ni l'inverse de la
+    # vulnérabilité. Les définir en tête coûte deux encadrés et évite deux
+    # malentendus qui portent sur tout le reste du site.
+    "ap_d_t": {"en": "The two words, as they are used here",
+               "fr": "Les deux mots, au sens où ils sont pris ici"},
+    "ap_d_pay": {
+        "en": "A landscape|Beyond a mosaic, or a group of local ecosystems "
+              "repeating in a similar form, a landscape is a particular "
+              "configuration of topography, vegetation, land use and "
+              "settlement pattern which marks out a certain coherence of "
+              "natural, historical and cultural processes and activities."
+              "|After McNeely and Scherr (2003), p. 275",
+        "fr": "Un paysage|Au-delà d'une mosaïque ou d'un groupe d'écosystèmes "
+              "locaux qui se répète sous une forme similaire, il s'agit d'une "
+              "configuration particulière de topographie, de végétation, "
+              "d'utilisation des terres et de schéma d'implantation qui "
+              "délimite une certaine cohérence des processus et activités "
+              "naturels, historiques et culturels."
+              "|D'après McNeely et Scherr (2003), p. 275"},
+    "ap_d_res": {
+        "en": "Resilience|A holistic concept, rooted in Holling's founding "
+              "work of 1973, distinct from stability and from vulnerability, "
+              "and one that includes social principles. It is to be "
+              "understood as the ability of a system exposed to hazards to "
+              "resist, absorb, adapt to and recover from the effects of a "
+              "hazard in a timely and efficient manner, including through "
+              "the preservation, restoration and improvement of its "
+              "essential basic structures and functions."
+              "|UNDRR, building on Holling (1973)",
+        "fr": "La résilience|Un concept holistique, issu des travaux "
+              "fondateurs de Holling (1973), distinct de la stabilité comme "
+              "de la vulnérabilité, et qui inclut des principes sociaux. Il "
+              "faut l'entendre comme la capacité d'un système exposé aux "
+              "risques à résister aux effets d'un aléa, à les absorber, à "
+              "s'y adapter et à s'en remettre de manière opportune et "
+              "efficace, y compris par la préservation, la restauration et "
+              "l'amélioration de ses structures et fonctions de base "
+              "essentielles."
+              "|UNDRR, sur les travaux de Holling (1973)"},
     "ap_p_t": {"en": "Why APRI?", "fr": "Pourquoi APRI ?"},
     "ap_p_x": {
         "en": "The communities we work with face a singular combination of "
@@ -241,93 +278,6 @@ TEXTES = {
               "@@Expansion de l'étude de ligne de base."
               "@@Lancement d'une étude économique sur les potentialités "
               "bleues, vertes et circulaires dans les paysages."},
-    "ap_t1": {"en": "What this index is",
-              "fr": "Ce qu'est cet indice"},
-    "ap_x1": {
-        "en": "APRI turns what a landscape and its households can be observed "
-              "doing into a score out of ten, on {i} indicators grouped in "
-              "seven dimensions. It does not rank places for the sake of "
-              "ranking them: a score is only useful next to the measurement "
-              "it comes from, which is why every indicator on this site "
-              "carries its raw value, its scale and its weight.",
-        "fr": "APRI transforme ce qu'on peut observer d'un paysage et de ses "
-              "ménages en un score sur dix, sur {i} indicateurs répartis en "
-              "sept dimensions. Il ne classe pas des lieux pour le plaisir de "
-              "les classer : un score ne vaut qu'à côté de la mesure dont il "
-              "sort, et c'est pourquoi chaque indicateur du site porte sa "
-              "valeur brute, son barème et sa pondération."},
-    "ap_t2": {"en": "Where it comes from", "fr": "D'où il vient"},
-    "ap_x2": {
-        "en": "APRI is the measurement arm of the Integrated Resilient "
-              "Landscape Approach (IRLA), a framework that reads a landscape "
-              "as a system rather than as a list of sectors. IRLA sets the "
-              "seven dimensions, the three attributes — anticipate, absorb, "
-              "adapt — and the rule that a resilience score must be traceable "
-              "back to a field measurement. APRI is what happens when that "
-              "framework is applied to a real territory and has to produce "
-              "numbers.",
-        "fr": "APRI est le bras de mesure de l'approche intégrée des paysages "
-              "résilients (IRLA), un cadre qui lit un paysage comme un "
-              "système plutôt que comme une liste de secteurs. IRLA pose les "
-              "sept dimensions, les trois attributs — anticiper, absorber, "
-              "s'adapter — et la règle qu'un score de résilience doit pouvoir "
-              "être remonté jusqu'à une mesure de terrain. APRI est ce que "
-              "devient ce cadre quand on l'applique à un territoire réel et "
-              "qu'il faut produire des chiffres."},
-    "ap_t3": {"en": "The 2024 assessment", "fr": "L'évaluation de 2024"},
-    "ap_x3": {
-        "en": "The figures on this site come from a household survey carried "
-              "out in 2024 across {s} communal sections of Sud and "
-              "Grand'Anse, in Haiti: {m} households, {q} questions each. "
-              "Three other sources complete it — structured interviews with "
-              "communal health, education and political authorities, "
-              "identity records for {o} community-based organisations, and "
-              "satellite series on forest cover, rainfall and land surface "
-              "temperature.",
-        "fr": "Les chiffres de ce site viennent d'une enquête ménage conduite "
-              "en 2024 dans {s} sections communales du Sud et de la "
-              "Grand'Anse, en Haïti : {m} ménages, {q} questions chacun. "
-              "Trois autres sources la complètent — des entretiens "
-              "structurés avec les autorités sanitaires, éducatives et "
-              "politiques communales, les fiches d'identité de {o} "
-              "organisations communautaires de base, et des séries "
-              "satellitaires sur le couvert forestier, la pluie et la "
-              "température de surface."},
-    "ap_t4": {"en": "What it does not claim", "fr": "Ce qu'il ne prétend pas"},
-    "ap_x4": {
-        "en": "A composite index carries a circularity it should say out "
-              "loud: resilience is defined by the variables assumed to "
-              "produce it. The causal links this site draws are posed by the "
-              "framework and the literature, not estimated on the survey — "
-              "and they are shown with their evidence and their source so "
-              "that they can be argued with. Of the {i} indicators, some "
-              "carry no measured value yet, and the site says so where the "
-              "number is missing rather than filling the gap.",
-        "fr": "Un indice composite porte une circularité qu'il vaut mieux "
-              "dire tout haut : la résilience y est définie par les "
-              "variables supposées la produire. Les liens causaux dessinés "
-              "sur ce site sont posés par le cadre et la littérature, non "
-              "estimés sur l'enquête — et ils sont montrés avec leur niveau "
-              "de preuve et leur source, pour qu'on puisse les discuter. Sur "
-              "les {i} indicateurs, certains ne portent pas encore de valeur "
-              "mesurée, et le site le dit là où le nombre manque plutôt que "
-              "de combler le trou."},
-    "ap_t5": {"en": "Who is behind it", "fr": "Qui le porte"},
-    "ap_x5": {
-        "en": "The assessment is carried out by the United Nations "
-              "Environment Programme (UNEP) with its field partners in Sud "
-              "and Grand'Anse. The survey was administered on the ground by "
-              "local enumerators; the framework, the index and this site are "
-              "produced by the project team.",
-        "fr": "L'évaluation est conduite par le Programme des Nations unies "
-              "pour l'environnement (PNUE) avec ses partenaires de terrain "
-              "du Sud et de la Grand'Anse. L'enquête a été administrée sur "
-              "place par des enquêteurs locaux ; le cadre, l'indice et ce "
-              "site sont produits par l'équipe du projet."},
-    "ap_equipe": {"en": "The team", "fr": "L'équipe"},
-    "ap_equipe_x": {
-        "en": "Names and roles to be added.",
-        "fr": "Noms et fonctions à compléter."},
     "ap_c_titre": {"en": "Contact us", "fr": "Nous contacter"},
     "ap_c_x": {
         "en": "For a question on the method, a figure you want to check, a "
@@ -381,6 +331,19 @@ _STYLE = """
   .ap-l li:first-child { border-top:0; }
   .ap-l b { flex:0 0 auto; font-family:Georgia,"Times New Roman",serif;
        font-size:14px; font-weight:400; color:#7d9c8c; min-width:18px; }
+  /* LES DEUX DÉFINITIONS : un mot, sa définition, sa source. Le fond pâle et
+     le filet vert à gauche disent qu'on cite plutôt qu'on affirme. */
+  .ap-def { display:grid; grid-template-columns:1fr 1fr; gap:14px;
+       margin:14px 0 0; }
+  .ap-def > div { border-left:3px solid #9fc7b3; background:#f7faf8;
+       border-radius:0 12px 12px 0; padding:12px 16px; }
+  .ap-def .m { font-family:Georgia,"Times New Roman",serif; font-size:16px;
+       color:#101728; margin-bottom:5px; }
+  .ap-def .x { font-size:13.5px; line-height:1.6; color:#3c4761;
+       text-align:left !important; }
+  .ap-def .s { font-size:11.5px; color:#7d8c84; margin-top:8px;
+       font-style:italic; }
+  @media (max-width: 900px) { .ap-def { grid-template-columns:1fr; } }
   /* LES DEUX PAYSAGES, CÔTE À CÔTE : ils se comparent, donc ils se posent
      l'un à côté de l'autre plutôt que l'un sous l'autre. */
   .ap-pay { display:grid; grid-template-columns:1fr 1fr; gap:14px;
@@ -409,36 +372,6 @@ def _e(t):
             .replace(">", "&gt;"))
 
 
-@st.cache_data(show_spinner=False)
-def _chiffres():
-    """Les cinq nombres de la page, comptés dans les fichiers du site."""
-    def _j(nom):
-        c = os.path.join(DATA, nom)
-        if not os.path.exists(c):
-            return None
-        with open(c, encoding="utf-8") as f:
-            return json.load(f)
-
-    n = {}
-    r = _j("resultats.json") or []
-    n["i"] = len(r["indicateurs"] if isinstance(r, dict) else r)
-    n["q"] = len(_j("questions_index.json") or [])
-    n["o"] = len((_j("ocb.json") or {}).get("fiches") or [])
-    try:
-        with open(os.path.join(DATA, "donnees_anonymisees.csv"),
-                  encoding="utf-8", errors="replace") as f:
-            n["m"] = max(0, sum(1 for _ in csv.reader(f)) - 1)
-    except Exception:
-        n["m"] = None
-    n["s"] = 10
-    return n
-
-
-def _nb(v):
-    if v is None:
-        return "—"
-    return (f"{v:,}".replace(",", " ") if i18n.get_lang() == "fr"
-            else f"{v:,}")
 
 
 def _section(cle_t, cle_x, **kw):
@@ -459,6 +392,18 @@ def _liste(cle):
     return ('<ul class="ap-l">' + "".join(
         f'<li><b>{i:02d}</b><span>{_e(x)}</span></li>'
         for i, x in enumerate(lignes, start=1)) + '</ul>')
+
+
+def _definitions():
+    """Les deux mots du titre, définis et attribués."""
+    cases = []
+    for cle in ("ap_d_pay", "ap_d_res"):
+        parts = (T(cle).split("|") + ["", "", ""])[:3]
+        mot, texte, source = (p.strip() for p in parts)
+        cases.append(f'<div><div class="m">{_e(mot)}</div>'
+                     f'<div class="x">{_e(texte)}</div>'
+                     f'<div class="s">{_e(source)}</div></div>')
+    return '<div class="ap-def">' + "".join(cases) + '</div>'
 
 
 def _paysages():
@@ -483,8 +428,10 @@ def render():
     est le bras de mesure.
     """
     st.markdown(_STYLE, unsafe_allow_html=True)
-    n = _chiffres()
     _section("ap_q_t", "ap_q_x")
+    st.markdown(f'<div class="ap-h">{_e(T("ap_d_t"))}<span></span></div>',
+                unsafe_allow_html=True)
+    st.markdown(_definitions(), unsafe_allow_html=True)
     _section("ap_p_t", "ap_p_x")
     _section("ap_y_t", "ap_y_x")
     st.markdown(_paysages(), unsafe_allow_html=True)
@@ -497,17 +444,12 @@ def render():
     st.markdown(f'<div class="ap-h">{_e(T("ap_o_t"))}<span></span></div>',
                 unsafe_allow_html=True)
     st.markdown(_liste("ap_o_l"), unsafe_allow_html=True)
-    _section("ap_t1", "ap_x1", i=_nb(n["i"]))
-    _section("ap_t2", "ap_x2")
-    _section("ap_t3", "ap_x3", s=_nb(n["s"]), m=_nb(n["m"]), q=_nb(n["q"]),
-             o=_nb(n["o"]))
-    _section("ap_t4", "ap_x4", i=_nb(n["i"]))
-    _section("ap_t5", "ap_x5")
-    st.markdown(f'<div class="ap-b"><div class="ap-c">'
-                f'<div class="ap-c-t">{_e(T("ap_equipe"))}</div>'
-                f'<div class="ap-c-x ap-todo" style="margin:0">'
-                f'{_e(T("ap_equipe_x"))}</div></div></div>',
-                unsafe_allow_html=True)
+    # LES CINQ SECTIONS SUR L'INDICE ONT ÉTÉ RETIRÉES. Ce qu'est le score,
+    # d'où vient le cadre, ce que l'enquête a couvert et ce que l'indice ne
+    # prétend pas : tout cela est exposé en entier dans « Cadre de
+    # résilience », onglet par onglet, avec les barèmes et les pondérations.
+    # Le redire ici en cinq paragraphes faisait de la page « À propos » un
+    # résumé de méthode plutôt que la présentation de l'initiative.
 
 
 def render_contact():
