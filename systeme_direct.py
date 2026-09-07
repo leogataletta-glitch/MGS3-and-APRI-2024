@@ -96,6 +96,18 @@ TEXTES = {
               "revient sur la variable de départ. Un relais est un ordre de "
               "transmission, pas une durée. Vous pouvez borner le nombre de "
               "relais, ou laisser l'onde aller jusqu'à sa stabilisation."},
+    # LE RASSEMBLEMENT. Une fois l'onde stabilisée, le schéma a fait son
+    # travail : il a montré le chemin. Ce qu'on veut garder tient en cinq ou
+    # six variables — les mieux reliées et les plus retraversées — et les
+    # trente autres pastilles, avec leurs quatre-vingt-douze flèches, ne font
+    # plus que les cacher. Elles s'alignent donc à gauche, avec leur compte,
+    # et le reste du dessin s'efface. Le mouvement est ce qui fait le lien
+    # entre les deux images : sans lui, on croirait à un autre écran.
+    "sd_ess": {"en": "Keep the essentials", "fr": "Ne garder que l'essentiel"},
+    "sd_ess_non": {"en": "Show the whole diagram",
+                   "fr": "Revoir le schéma entier"},
+    "sd_ess_t": {"en": "What the run singled out",
+                 "fr": "Ce que la course a désigné"},
     "sd_nb": {"en": "Relays", "fr": "Relais"},
     "sd_nb_auto": {"en": "until it settles", "fr": "jusqu'à stabilisation"},
     "sd_var": {"en": "Variable pushed", "fr": "Variable poussée"},
@@ -282,6 +294,13 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
      parce que la connectivité ne dépend pas de la course, le clignotement
      n'apparaît qu'à la fin parce qu'il compte ce que la course a fait. */
   .lum{filter:drop-shadow(0 0 4px #f0b73f) drop-shadow(0 0 9px rgba(240,183,63,.75))}
+  /* LE GLISSEMENT DES PASTILLES ET L'EFFACEMENT DU RESTE. Une seconde, en
+     décélération : assez lent pour qu'on suive une pastille des yeux depuis
+     sa place dans le système jusqu'à sa ligne, assez court pour qu'on
+     n'attende pas. */
+  .nd{transition:transform .95s cubic-bezier(.4,0,.2,1),opacity .55s ease}
+  .det{transition:opacity .4s ease .55s}
+  #gl{transition:opacity .5s ease}
   @keyframes cli{0%,100%{opacity:1}50%{opacity:.12}}
   .cli{animation:cli 1.05s ease-in-out infinite}
 </style></head><body><div id="tout">
@@ -294,6 +313,7 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
   <button id="lire" class="p">__L_LIRE__</button>
   <button id="pas">__L_PAS__</button>
   <button id="raz">__L_RAZ__</button>
+  <button id="ess" hidden>__L_ESS__</button>
   <div class="ch"><label>__L_VIT__</label>
     <select id="vit">
       <option value="1.7">0,5×</option>
@@ -377,7 +397,14 @@ for (const [id,c] of [["fv",VERT],["fr",ROUGE]]){
 }
 svg.appendChild(defs);
 const gLiens = el("g"), gBilles = el("g"), gNoeuds = el("g");
+gLiens.setAttribute("id", "gl");
 svg.appendChild(gLiens); svg.appendChild(gNoeuds); svg.appendChild(gBilles);
+/* L'INTITULÉ DU REGROUPEMENT, muet tant que le schéma est entier. */
+const ttl = el("text",{id:"ttl", x:D.vb[0]+52, y:D.vb[1]+34,
+  "font-size":"12", "font-weight":"700", "letter-spacing":"1.4",
+  fill:"#6b7590", opacity:"0"});
+ttl.textContent = (L.ess_t || "").toUpperCase();
+svg.appendChild(ttl);
 
 const traits = LI.map(l => {
   const a = NO[IX[l.de]], b = NO[IX[l.vers]], g = bords(a,b);
@@ -395,7 +422,7 @@ const traits = LI.map(l => {
 /* Les pastilles : le libellé, le score courant, une jauge sur 10. */
 const vues = NO.map(n => {
   const h = 15 + 13*n.lig.length + 19;
-  const g = el("g");
+  const g = el("g", {"class": "nd"});
   const r = el("rect",{x:n.x-76, y:n.y-h/2, width:152, height:h, rx:9,
     fill: n.c ? APRI : (n.r===1 ? "#eef3f0" : "#f6f8fb"),
     stroke: n.c ? APRI : "#dbe3ec", "stroke-width":"1"});
@@ -422,9 +449,16 @@ const vues = NO.map(n => {
     "text-anchor":"middle", "font-weight":"700",
     fill: n.c ? "#fff" : "#3c4761"});
   g.appendChild(val);
+  /* LE DÉTAIL VOYAGE AVEC SA PASTILLE. Écrit dans le même groupe, à droite
+     du cadre, il suit la translation sans qu'on ait à le replacer ; il reste
+     transparent tant que le schéma est entier, où il ferait trente lignes de
+     chiffres par-dessus les flèches. */
+  const dt = el("text",{x:n.x+88, y:n.y+4, "font-size":"11.5",
+    "text-anchor":"start", fill:"#3c4761", opacity:"0", "class":"det"});
+  g.appendChild(dt);
   g.appendChild(an);
   gNoeuds.appendChild(g);
-  return {n, rect:r, jauge:jv, val, anneau:an, h, yb};
+  return {n, rect:r, jauge:jv, val, anneau:an, det:dt, grp:g, h, yb};
 });
 
 /* ---------- LE HALO JAUNE : LES VARIABLES LES PLUS CONNECTÉES ------------
@@ -448,6 +482,70 @@ function poserHalo(on){
   });
   const lg = document.getElementById("lgj");
   if (lg) lg.hidden = !cles.size;
+}
+
+/* ---------- LE RASSEMBLEMENT : LE SCHÉMA SE RÉDUIT À SA CONCLUSION ------
+   Les variables que la course a désignées — les mieux reliées du périmètre
+   et les plus retraversées par l'onde — glissent en colonne à gauche, avec
+   leur compte à droite ; toutes les autres pastilles et toutes les flèches
+   s'effacent. On garde ainsi l'image du système ET sa conclusion dans le
+   même cadre, reliées par un mouvement plutôt que par un renvoi.
+
+   ELLES GARDENT LEUR PASTILLE, leur jauge et leur chiffre : c'est ce qui
+   permet de reconnaître celle qu'on suivait des yeux. Une liste réécrite,
+   elle, aurait obligé à la retrouver par son nom. */
+let regroupe = false;
+
+function _elus(){
+  const con = NO.map((n,i)=>({i, v: DEG[i]})).filter(x=>x.v > 0)
+                .sort((a,b)=>b.v - a.v).slice(0, 3).map(x=>x.i);
+  const pas = NO.map((n,i)=>({i, v: passages[i], c: Math.abs(cum[i])}))
+                .filter(x=>x.v > 0)
+                .sort((a,b)=>b.v - a.v || b.c - a.c).slice(0, 3).map(x=>x.i);
+  const vus = new Set();
+  const out = [];
+  for (const i of [...pas, ...con]) if (!vus.has(i)){ vus.add(i); out.push(i); }
+  return out.sort((a,b)=> (passages[b] - passages[a])
+                          || (DEG[b] - DEG[a]));
+}
+
+function rassembler(on){
+  regroupe = !!on;
+  const elus = on ? _elus() : [];
+  const dedans = new Set(elus);
+  const x0 = D.vb[0], y0 = D.vb[1], h = D.vb[3];
+  /* La colonne est centrée en hauteur : une liste de trois collée en haut
+     d'un cadre taillé pour trente laisserait le bas vide. */
+  const pas = 74, haut = Math.max(1, elus.length) * pas;
+  const depart = y0 + Math.max(30, (h - haut) / 2);
+  vues.forEach((u, i) => {
+    const g = u.grp;
+    if (!on){
+      g.style.transform = "";
+      g.style.opacity = "";
+      u.det.setAttribute("opacity", "0");
+      return;
+    }
+    if (!dedans.has(i)){ g.style.opacity = "0"; return; }
+    const rang = elus.indexOf(i);
+    const cx = x0 + 128, cy = depart + rang * pas + pas / 2;
+    g.style.opacity = "1";
+    g.style.transform = `translate(${(cx - u.n.x).toFixed(1)}px,`
+                      + `${(cy - u.n.y).toFixed(1)}px)`;
+    const e = cum[i];
+    const bouts = [DEG[i] + " " + L.liens, passages[i] + " " + L.vagues];
+    /* fmt() pose déjà le signe sur les valeurs à deux décimales : le
+       redoubler donnait « ++0,27 ». */
+    if (Math.abs(e) > 0.005) bouts.push(fmt(e, 2));
+    u.det.textContent = bouts.join("  ·  ");
+    u.det.setAttribute("opacity", "1");
+  });
+  const gl = document.getElementById("gl");
+  if (gl) gl.style.opacity = on ? "0" : "1";
+  const t = document.getElementById("ttl");
+  if (t) t.setAttribute("opacity", on ? "1" : "0");
+  const b = document.getElementById("ess");
+  b.textContent = on ? L.ess_non : L.ess;
 }
 
 /* ---------- l'état de la propagation ----------------------------------- */
@@ -576,6 +674,9 @@ function remise(){
   traits.forEach(p => { p.setAttribute("opacity", .34);
                         p.setAttribute("stroke-width", 1.5); });
   document.getElementById("mot").textContent = "";
+  rassembler(false);
+  const be = document.getElementById("ess");
+  if (be) be.hidden = true;
   bilan(false);
   peindre();
 }
@@ -589,7 +690,7 @@ function vaguesuivante(apres){
   for (let j=0;j<NO.length;j++) bouge += Math.abs(suivante[j]);
   if (bouge < SEUIL){
     document.getElementById("mot").textContent = L.fin;
-    arret(); bilan(true); if (apres) apres(false); return;
+    arret(); fini(); if (apres) apres(false); return;
   }
   k += 1;
   for (let j=0;j<NO.length;j++)
@@ -636,6 +737,18 @@ function vaguesuivante(apres){
   anim = requestAnimationFrame(pas);
 }
 
+/* LA FIN DE COURSE, EN UN SEUL ENDROIT. L'onde s'éteint d'elle-même ou
+   atteint la borne : dans les deux cas le bilan se peint, le bouton du
+   regroupement apparaît, et le schéma se réduit de lui-même une seconde
+   plus tard. Un pas manuel, lui, ne déclenche rien : on est en train de
+   regarder le chemin, ce n'est pas le moment de l'effacer. */
+function fini(){
+  bilan(true);
+  const b = document.getElementById("ess");
+  if (b) b.hidden = false;
+  setTimeout(() => { if (!regroupe && !joue) rassembler(true); }, 900);
+}
+
 function arret(){
   joue = false;
   if (anim){ cancelAnimationFrame(anim); anim = null; }
@@ -648,7 +761,7 @@ function boucler(ok){
      borne demandée, ou elle touche le plafond de sécurité. La borne est un
      réglage de lecture — on veut voir ce que trois relais font, pas trente —
      et non une propriété du système. */
-  if (!ok || k >= KMAX || (vmax && k >= vmax)){ arret(); bilan(true); return; }
+  if (!ok || k >= KMAX || (vmax && k >= vmax)){ arret(); fini(); return; }
   setTimeout(()=>{ if (joue) vaguesuivante(boucler); }, 120*vitesse);
 }
 
@@ -675,12 +788,17 @@ document.getElementById("dl").onchange = e => {
   delai = parseFloat(e.target.value) || 0; horizon();
 };
 document.getElementById("raz").onclick = remise;
+document.getElementById("ess").onclick = () => { rassembler(!regroupe); };
 document.getElementById("pas").onclick = () => {
+  if (regroupe) rassembler(false);
   arret(); bilan(false); vaguesuivante(v => bilan(true));
 };
 document.getElementById("lire").onclick = () => {
   if (joue){ arret(); return; }
   if (anim) return;
+  /* On ne fait pas courir une onde sur un schéma réduit à six pastilles :
+     reprendre la lecture, c'est vouloir revoir le chemin. */
+  if (regroupe) rassembler(false);
   joue = true;
   document.getElementById("lire").textContent = L.pause;
   document.getElementById("lire").classList.remove("p");
@@ -696,7 +814,9 @@ def _html(d, lang):
     lib = {"lire": T("sd_lire"), "pause": T("sd_pause"), "fin": T("sd_fin"),
            "ret": T("sd_retour"), "nm": T("sd_non_mesure"),
            "dis": T("sd_distrib"), "mois": T("sd_mois"), "ans": T("sd_ans"),
-           "liens": T("sd_liens_n"), "vagues": T("sd_vagues_n")}
+           "liens": T("sd_liens_n"), "vagues": T("sd_vagues_n"),
+           "ess": T("sd_ess"), "ess_non": T("sd_ess_non"),
+           "ess_t": T("sd_ess_t")}
     return (GABARIT
             .replace("__DONNEES__", json.dumps(d, ensure_ascii=False,
                                                separators=(",", ":")))
@@ -721,6 +841,7 @@ def _html(d, lang):
             .replace("__L_CON__", _e(T("sd_connect")))
             .replace("__L_PASX__", _e(T("sd_passages_x")))
             .replace("__L_PAS2__", _e(T("sd_passages")))
+            .replace("__L_ESS__", _e(T("sd_ess")))
             .replace("__L_NB__", _e(T("sd_nb")))
             .replace("__L_NBA__", _e(T("sd_nb_auto")))
             .replace("__L_LJ__", _e(T("sd_leg_j")))
