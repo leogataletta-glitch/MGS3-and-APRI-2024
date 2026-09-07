@@ -87,7 +87,37 @@ TEXTES = {
     "ex_dim_plus": {"en": "Add a criterion", "fr": "Ajouter un critère"},
     "ex_tout_ech": {"en": "Whole sample", "fr": "Tout l'échantillon"},
     # --- comparer, et profiler
+    "ex_b_choisir_q": {"en": "Choose a question",
+                       "fr": "Choisir une question"},
+    "ex_b_vide": {
+        "en": "Pick a question to see how households answered it, and how "
+              "the answers split across groups.",
+        "fr": "Choisissez une question pour voir ce que les ménages y ont "
+              "répondu, et comment les réponses se répartissent entre "
+              "groupes."},
+    "ex_s_vide_choix": {
+        "en": "Pick a dimension or an indicator to see its score, and how it "
+              "splits across groups.",
+        "fr": "Choisissez une dimension ou un indicateur pour voir son "
+              "score, et comment il se répartit entre groupes."},
     "ex_c_sur": {"en": "Compare on", "fr": "Comparer sur"},
+    "ex_c_profil": {"en": "Profile {n}", "fr": "Profil {n}"},
+    "ex_c_choisir_r": {"en": "Choose an answer", "fr": "Choisir une réponse"},
+    "ex_c_vide_b": {
+        "en": "Pick a question and one of its answers, then define the "
+              "profiles to compare.",
+        "fr": "Choisissez une question et l'une de ses réponses, puis "
+              "définissez les profils à comparer."},
+    "ex_c_vide_s": {
+        "en": "Pick a dimension or an indicator, then define the profiles to "
+              "compare.",
+        "fr": "Choisissez une dimension ou un indicateur, puis définissez "
+              "les profils à comparer."},
+    "ex_c_radar_3": {
+        "en": "The radar needs three profiles; define the missing ones to "
+              "unlock it.",
+        "fr": "Le radar demande trois profils ; renseignez ceux qui manquent "
+              "pour l'obtenir."},
     "ex_c_scores": {"en": "Resilience scores", "fr": "Scores de résilience"},
     "ex_c_brut": {"en": "A survey answer", "fr": "Une réponse d'enquête"},
     "ex_c_sans_critere": {
@@ -95,12 +125,7 @@ TEXTES = {
               "groups to put side by side.",
         "fr": "Ajoutez au moins un critère de ventilation : une comparaison "
               "demande des groupes à mettre côte à côte."},
-    "ex_p_qui": {"en": "Whose profile", "fr": "Le profil de qui"},
     "ex_p_tous": {"en": "All", "fr": "Tous"},
-    "ex_p_forts": {"en": "Highest scores", "fr": "Les meilleurs scores"},
-    "ex_p_faibles": {"en": "Lowest scores", "fr": "Les plus faibles scores"},
-    "ex_p_n": {"en": "{n} households · overall index {s} / 10",
-               "fr": "{n} ménages · indice global {s} / 10"},
     "ex_pourquoi_carte": {
         "en": "Map: available with the single criterion Communal section and "
               "one answer chosen.",
@@ -1671,6 +1696,12 @@ def render_scores(cat):
         # garder que deux sections. Les critères de ventilation, chacun avec
         # ses catégories, font ici ce qu'ils font là-bas.
         dims = _zone_projection(cat, prefixe="exs")
+        # RIEN TANT QUE LA CIBLE N'EST PAS DÉSIGNÉE. L'indice d'ensemble
+        # s'affichait par défaut, et l'écran s'ouvrait sur un score de
+        # 3,32 / 10 que personne n'avait demandé : un chiffre lu avant
+        # d'avoir été appelé est un chiffre qu'on retient sans savoir de
+        # quoi il parle. Une dimension ou un indicateur, au choix, et alors
+        # le résultat se dessine.
         if k is not None:
             ind = inds[k]
             cible = f"i:{_inds_tries(cat).index(ind)}"
@@ -1678,7 +1709,10 @@ def render_scores(cat):
         elif dim is not None:
             ind, cible, lib_cible = None, f"d:{dim}", T(dim)
         else:
-            ind, cible, lib_cible = None, "global", T("ex_c_global")
+            st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'
+                        f'{_e(T("ex_s_vide_choix"))}</p>',
+                        unsafe_allow_html=True)
+            return
 
         # ---- les deux volets facultatifs --------------------------------
         filtre, poses = _filtres_population(cat, "exs_f_", _REGISTRES_S)
@@ -2229,12 +2263,22 @@ def _render_brut(cat):
             vues = [x for x in questions
                     if theme is None or (x.get("category") or "") == theme]
             with c2:
+                # AUCUNE QUESTION N'EST CHOISIE D'AVANCE. La première de la
+                # liste s'ouvrait toute seule, et l'écran affichait donc,
+                # dès l'arrivée, la ventilation complète d'une question que
+                # personne n'avait demandée : dix sections, vingt barres, et
+                # un lecteur qui croit lire un résultat.
                 qi = st.selectbox(
                     T("ex_question"), [x["i"] for x in vues],
                     key=f"exb_q_{theme or 'tous'}",
+                    index=None, placeholder=T("ex_b_choisir_q"),
                     format_func=lambda i: _libelle_question(
                         next(x for x in vues if x["i"] == i),
                         avec_theme=theme is None))
+        if qi is None:
+            st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'
+                        f'{_e(T("ex_b_vide"))}</p>', unsafe_allow_html=True)
+            return
         q = next(x for x in vues if x["i"] == qi)
         with c4:
             # LA RÉPONSE APPARTIENT À LA QUESTION, PAS À LA POPULATION. Elle
@@ -2412,27 +2456,61 @@ def _cible_scores(cat, prefixe):
         return ind, f"i:{_inds_tries(cat).index(ind)}", _nom_ind(ind)
     if dim is not None:
         return None, f"d:{dim}", T(dim)
-    return None, "global", T("ex_c_global")
+    # RIEN N'EST CHOISI : l'appelant décide quoi en dire. Rendre l'indice
+    # d'ensemble par défaut ferait apparaître un score que personne n'a
+    # demandé, ce qui est précisément ce qu'on a retiré ailleurs.
+    return None, None, None
+
+
+def _profil_choix(cat, prefixe, titre):
+    """Un profil : un ET de registres, chacun facultatif.
+
+    UN PROFIL EST UNE INTERSECTION, PAS UNE CASE. « Les femmes de la montagne
+    en catégorie A » ne se trouve dans aucun registre pris seul ; il faut
+    pouvoir poser un critère par registre et les croiser. Un registre laissé
+    sur « Tous » ne restreint rien, si bien qu'un profil dont aucun champ
+    n'est rempli est l'échantillon entier — et c'est une comparaison utile
+    en soi : un groupe contre l'ensemble.
+    """
+    st.markdown(f'<div class="exb-sec" style="margin:12px 0 2px">'
+                f'{_e(titre)}<span class="l"></span></div>',
+                unsafe_allow_html=True)
+    masque = np.ones(cat["n"], dtype=bool)
+    nom = []
+    cols = st.columns(len(_REGISTRES_S))
+    for col, (axe, lab) in zip(cols, _REGISTRES_S):
+        cases = _cases(cat, axe)
+        with col:
+            v = st.selectbox(
+                T(lab), [None] + [c[0] for c in cases],
+                key=f"{prefixe}_{axe}", index=0,
+                format_func=lambda x: (T("ex_p_tous") if x is None
+                                       else _lib(x)))
+        if v is not None and cat["groupes"].get(v) is not None:
+            masque &= cat["groupes"][v]
+            nom.append(_lib(v))
+    return masque, (" · ".join(nom) if nom else None)
 
 
 def render_comparaison(cat):
-    """Comparer des groupes : sur quoi, lesquels, et sous quelle forme.
+    """Trois profils, une mesure, et la forme sous laquelle on les lit.
 
-    TROIS DÉCISIONS, DANS L'ORDRE OÙ ELLES SE POSENT. Sur quoi on compare —
-    une réponse du questionnaire ou un score de résilience ; quels groupes on
-    met côte à côte — les critères de ventilation, cumulables ; et sous
-    quelle forme on les lit — des barres, qui classent, ou un radar, qui
-    donne la silhouette d'un groupe d'un coup d'œil.
+    COMPARER, C'EST METTRE DES GROUPES NOMMÉS CÔTE À CÔTE SUR UNE MESURE. La
+    version précédente demandait des critères de ventilation et produisait
+    toutes les cases de leur croisement : dix sections, vingt barres, et le
+    lecteur cherchait les deux qui l'intéressaient. Ici c'est lui qui nomme
+    les groupes — trois au plus, composés registre par registre — et l'écran
+    ne dessine que ceux-là.
+
+    LA MESURE SE CHOISIT D'ABORD, ET ELLE EST UNE. Une réponse d'enquête, ou
+    un score de résilience : dans les deux cas un seul chiffre par profil,
+    sans quoi il n'y a pas de comparaison mais une superposition.
     """
     if not cat:
         return
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(_CSS_BRUT, unsafe_allow_html=True)
 
-    # LA CLÉ COMMENCE PAR « ex_brut_ », ET C'EST LOAD-BEARING : la feuille de
-    # style de l'écran vise `st-key-ex_brut`, et un conteneur nommé autrement
-    # n'hériterait ni des intitulés de section, ni du bouton de remise à zéro
-    # sans cadre, ni de la ligne de synthèse.
     with st.container(key="ex_brut_c"):
         _h1, h2 = st.columns([4, 1], vertical_alignment="center")
         with h2:
@@ -2440,6 +2518,7 @@ def render_comparaison(cat):
                 raz_comparaison()
                 st.rerun()
 
+        # ---- 1. ce qu'on compare ---------------------------------------
         with st.container(key="exb_q_zone_c"):
             st.markdown(f'<div class="exb-sec" style="margin:0 0 2px">'
                         f'{_e(T("ex_c_sur"))}<span class="l"></span></div>',
@@ -2449,10 +2528,10 @@ def render_comparaison(cat):
                 default="scores", label_visibility="collapsed",
                 format_func=lambda c: T("ex_c_" + c)) or "scores"
 
-            q = modalite = None
+            q = modalite = ind = cible = None
             if source == "brut":
                 questions = cat["questions"]
-                c1, c2, c3 = st.columns([1, 2.2, 1.1])
+                c1, c2, c3 = st.columns([1, 2.2, 1.3])
                 with c1:
                     themes = sorted({x.get("category") or ""
                                      for x in questions},
@@ -2468,65 +2547,116 @@ def render_comparaison(cat):
                     qi = st.selectbox(
                         T("ex_question"), [x["i"] for x in vues],
                         key=f"exc_q_{theme or 'tous'}",
+                        index=None, placeholder=T("ex_b_choisir_q"),
                         format_func=lambda i: _libelle_question(
                             next(x for x in vues if x["i"] == i),
                             avec_theme=theme is None))
-                q = next(x for x in vues if x["i"] == qi)
+                q = next((x for x in vues if x["i"] == qi), None)
                 with c3:
-                    # UNE COMPARAISON PORTE SUR UNE RÉPONSE, et c'est ce qui
-                    # la distingue des résultats bruts : comparer dix
-                    # sections sur la répartition entière d'une question
-                    # donne trente barres qui ne se comparent pas. La réponse
-                    # est donc obligatoire ici, et la première est proposée.
-                    modalite = st.selectbox(
+                    # LA RÉPONSE EST OBLIGATOIRE ICI, et c'est ce qui
+                    # distingue cet écran des résultats bruts : comparer
+                    # trois profils sur la répartition entière d'une
+                    # question donnerait trois séries de barres, pas une
+                    # comparaison.
+                    modalite = (st.selectbox(
                         T("ex_reponse"), list(q["modalites"]),
-                        key=f"exc_m_{qi}",
+                        key=f"exc_m_{qi}", index=None,
+                        placeholder=T("ex_c_choisir_r"),
                         format_func=libelles_enquete.modalite)
-                ind = cible = None
-                lib_cible = libelles_enquete.modalite(modalite)
+                        if q is not None else None)
+                if q is None or modalite is None:
+                    st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'
+                                f'{_e(T("ex_c_vide_b"))}</p>',
+                                unsafe_allow_html=True)
+                    return
+                lib_cible = (_libelle_question(q, avec_theme=False) + " · "
+                             + libelles_enquete.modalite(modalite))
             else:
                 ind, cible, lib_cible = _cible_scores(cat, "exc")
+                if cible is None:
+                    st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'
+                                f'{_e(T("ex_c_vide_s"))}</p>',
+                                unsafe_allow_html=True)
+                    return
 
-        dims = _zone_projection(cat, prefixe="exc")
-        filtre, poses = _filtres_population(cat, "exc_f_", _REGISTRES_S)
-        n_f = int(filtre.sum())
-        if n_f == 0:
-            st.info(T("ex_s_vide"))
-            return
+        # ---- 2. les trois profils --------------------------------------
+        profils = []
+        for i in (1, 2, 3):
+            m, nom = _profil_choix(cat, f"exc_p{i}", T("ex_c_profil", n=i))
+            profils.append((nom, m))
 
-        # ---- le résultat ------------------------------------------------
+        # ---- 3. le résultat --------------------------------------------
+        lignes = []
+        for i, (nom, m) in enumerate(profils, start=1):
+            nb = int(m.sum())
+            if nb == 0:
+                continue
+            lib = nom or T("ex_tout_ech")
+            if source == "brut":
+                m_rep = np.zeros(cat["n"], dtype=bool)
+                for j in range(len(q["modalites"])):
+                    m_rep |= cat["bits"][q["debut"] + j]
+                base = int((m_rep & m).sum())
+                k = int((cat["bits"][q["debut"]
+                                     + q["modalites"].index(modalite)]
+                         & m_rep & m).sum())
+                val = (100.0 * k / base) if base else None
+                lignes.append({"nom": lib, "cle": f"p{i}",
+                               "axe": T("ex_c_profil", n=i),
+                               "axe_code": f"p{i}", "n": base, "k": k,
+                               "part": val})
+            else:
+                nb2, sc = _score_cible(cat, m, cible, ind)
+                lignes.append({"nom": lib, "cle": f"p{i}",
+                               "axe": T("ex_c_profil", n=i),
+                               "axe_code": f"p{i}", "n": nb2, "k": None,
+                               "part": sc, "score": sc})
+        lignes = [l for l in lignes if l["n"] > 0]
+
         r1, r3 = st.columns([1.6, 2.4], vertical_alignment="center")
         with r1:
-            st.markdown(f'<div class="exb-sec" style="margin:10px 0 0">'
+            st.markdown(f'<div class="exb-sec" style="margin:14px 0 0">'
                         f'{_e(T("ex_res"))}</div>', unsafe_allow_html=True)
+        # LE RADAR DEMANDE TROIS SOMMETS : il n'est proposé qu'une fois les
+        # trois profils renseignés, sans quoi il renverrait un message
+        # d'excuse à la place du dessin demandé.
+        formes = ["barres"] + (["radar"] if len(lignes) >= 3 else [])
         with r3:
             with st.container(key="exb_vue_c"):
                 forme = st.segmented_control(
-                    T("ex_format"), ["barres", "radar"], key="exc_forme",
+                    T("ex_format"), formes, key="exc_forme",
                     default="barres", label_visibility="collapsed",
                     format_func=lambda f: T("ex_" + f)) or "barres"
-
-        if not dims:
-            st.info(T("ex_c_sans_critere"))
-            return
-        if source == "brut":
-            lignes = _ventiler_dims(cat, q, modalite, dims, filtre)
-            mesure = "part"
-            ens = None
-        else:
-            lignes = _lignes_ventil_choisis(cat, dims, cible, ind, filtre)
-            mesure = "score"
-            nb_sel, sc_sel = _score_cible(cat, filtre, cible, ind)
-            ens = {"n": nb_sel, "k": None, "part": sc_sel, "score": sc_sel}
+        if len(lignes) < 3:
+            st.markdown(f'<p class="ex-note" style="margin:2px 0 6px">'
+                        f'{_e(T("ex_c_radar_3"))}</p>',
+                        unsafe_allow_html=True)
         if not lignes:
             st.info(T("ex_s_rien"))
             return
 
+        mesure = "part" if source == "brut" else "score"
+        # LA RÉFÉRENCE DE L'ENSEMBLE EST LE TRAIT POINTILLÉ DU GRAPHIQUE.
+        # Sans elle, trois profils se comparent entre eux sans qu'on sache
+        # si les trois sont au-dessus ou au-dessous de l'échantillon ; et
+        # l'histogramme, qui la lit toujours, tombait sur une référence
+        # absente.
+        _tout = np.ones(cat["n"], dtype=bool)
+        if source == "brut":
+            _m_rep = np.zeros(cat["n"], dtype=bool)
+            for j in range(len(q["modalites"])):
+                _m_rep |= cat["bits"][q["debut"] + j]
+            _base = int(_m_rep.sum())
+            _k = int((cat["bits"][q["debut"]
+                                  + q["modalites"].index(modalite)]
+                      & _m_rep).sum())
+            ens = {"n": _base, "k": _k,
+                   "part": (100.0 * _k / _base) if _base else None}
+        else:
+            _nb, _sc = _score_cible(cat, _tout, cible, ind)
+            ens = {"n": _nb, "k": None, "part": _sc, "score": _sc}
         st.markdown(f'<div class="ex-titre" style="margin-top:8px">'
                     f'{_e(lib_cible)}</div>', unsafe_allow_html=True)
-        if forme == "radar" and len(lignes) < 3:
-            st.info(T("ex_radar_court"))
-            forme = "barres"
         if forme == "radar":
             svg = radar.render_radar_svg(
                 [l["nom"] for l in lignes],
@@ -2535,114 +2665,15 @@ def render_comparaison(cat):
             st.markdown(f'<div style="max-width:760px;margin:6px auto 0">'
                         f'{svg}</div>', unsafe_allow_html=True)
         else:
-            st.markdown(_barres(lignes, ens, mesure), unsafe_allow_html=True)
-        st.markdown(_synthese(lignes, mesure), unsafe_allow_html=True)
-        if poses:
-            st.markdown(f'<p class="ex-note" style="margin:6px 0 0">'
-                        f'{_e(T("ex_s_n", n=_n(n_f), t=_n(cat["n"])))}</p>',
+            st.markdown(_barres(lignes, ens, mesure),
                         unsafe_allow_html=True)
+        st.markdown(_synthese(lignes, mesure), unsafe_allow_html=True)
 
 
 def raz_comparaison():
     for k in [k for k in list(st.session_state)
-              if str(k).startswith(("exc_f_", "exc_dim", "exc_dims",
-                                    "exc_cat_", "exc_forme", "exc_source"))]:
-        st.session_state.pop(k, None)
-
-
-def render_profil(cat):
-    """Un groupe, et ce qui va bien ou mal chez lui.
-
-    UN SEUL GROUPE, ET TOUTES SES MESURES. Comparer met des groupes côte à
-    côte sur une mesure ; profiler fait l'inverse — on désigne un groupe, si
-    besoin croisé (les femmes de la montagne), et l'écran déroule ses
-    indicateurs du mieux noté au plus faible. C'est la question qu'on pose
-    quand on sait déjà où l'on intervient et qu'on cherche sur quoi.
-    """
-    if not cat:
-        return
-    st.markdown(STYLE, unsafe_allow_html=True)
-    st.markdown(_CSS_BRUT, unsafe_allow_html=True)
-
-    with st.container(key="ex_brut_p"):
-        _h1, h2 = st.columns([4, 1], vertical_alignment="center")
-        with h2:
-            if st.button(T("ex_b_raz"), key="exp_raz", type="tertiary"):
-                raz_profil()
-                st.rerun()
-
-        with st.container(key="exb_q_zone_p"):
-            st.markdown(f'<div class="exb-sec" style="margin:0 0 2px">'
-                        f'{_e(T("ex_p_qui"))}<span class="l"></span></div>',
-                        unsafe_allow_html=True)
-            # LE GROUPE SE COMPOSE AVEC LES MÊMES REGISTRES QUE PARTOUT.
-            # Un paysage, un groupe social, une tranche d'âge, ou les trois
-            # à la fois : la composition est un ET, et c'est ce qui rend
-            # « les femmes de la montagne » désignable.
-            masque = np.ones(cat["n"], dtype=bool)
-            nom = []
-            cols = st.columns(len(_REGISTRES_S))
-            for col, (axe, lab) in zip(cols, _REGISTRES_S):
-                cases = _cases(cat, axe)
-                with col:
-                    v = st.selectbox(
-                        T(lab), [None] + [c[0] for c in cases],
-                        key=f"exp_g_{axe}", index=0,
-                        format_func=lambda x: (T("ex_p_tous") if x is None
-                                               else _lib(x)))
-                if v is not None and cat["groupes"].get(v) is not None:
-                    masque &= cat["groupes"][v]
-                    nom.append(_lib(v))
-        lib_groupe = " · ".join(nom) if nom else T("ex_tout_ech")
-
-        n_f = int(masque.sum())
-        if n_f == 0:
-            st.info(T("ex_s_vide"))
-            return
-
-        c1, c2 = st.columns([1, 1])
-        with c1:
-            dim = st.selectbox(
-                T("ex_s_dim"), [None] + _DIMS, key="exp_dim",
-                format_func=lambda c: (T("ex_s_toutes") if c is None
-                                       else T(c)))
-        with c2:
-            combien = st.selectbox(T("ex_s_combien"), [5, 10, 20],
-                                   key="exp_k")
-
-        inds = [x for x in _inds_tries(cat)
-                if dim is None or x["dim"] == dim]
-        lignes = [l for l in _lignes_indicateurs(cat, inds, masque)
-                  if l["score"] is not None]
-        if not lignes:
-            st.info(T("ex_s_rien"))
-            return
-        classees = sorted(lignes, key=lambda x: x["score"], reverse=True)
-        nb_g, sc_g = _score_cible(cat, masque, "global", None)
-        ens = {"n": nb_g, "k": None, "part": sc_g, "score": sc_g}
-
-        st.markdown(f'<div class="ex-titre" style="margin-top:10px">'
-                    f'{_e(lib_groupe)}</div>'
-                    f'<p class="ex-note" style="margin:0 0 10px">'
-                    f'{_e(T("ex_p_n", n=_n(n_f), s=_f(sc_g, 2)))}</p>',
-                    unsafe_allow_html=True)
-        # LES DEUX LISTES SONT L'UNE SOUS L'AUTRE, EN PLEINE LARGEUR. Côte à
-        # côte, chacune n'avait que la moitié de la page, et le nom d'un
-        # indicateur — « Perception of security (SDG 16.1.4) » — se coupait
-        # à gauche dans la marge de son libellé. Une liste de cinq lignes ne
-        # coûte pas assez de hauteur pour justifier de tronquer ce qu'elle
-        # nomme.
-        st.markdown(f'<div class="exb-sec" style="margin:0 0 6px">'
-                    f'{_e(T("ex_p_forts"))}<span class="l"></span></div>'
-                    + _barres(classees[:combien], ens, "score"),
-                    unsafe_allow_html=True)
-        st.markdown(f'<div class="exb-sec" style="margin:22px 0 6px">'
-                    f'{_e(T("ex_p_faibles"))}<span class="l"></span></div>'
-                    + _barres(classees[::-1][:combien], ens, "score"),
-                    unsafe_allow_html=True)
-
-
-def raz_profil():
-    for k in [k for k in list(st.session_state)
-              if str(k).startswith(("exp_g_", "exp_dim", "exp_k"))]:
+              if str(k).startswith(("exc_p1_", "exc_p2_", "exc_p3_",
+                                    "exc_dim", "exc_ind", "exc_theme",
+                                    "exc_q_", "exc_m_", "exc_forme",
+                                    "exc_source"))]:
         st.session_state.pop(k, None)

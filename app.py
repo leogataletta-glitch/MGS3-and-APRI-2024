@@ -1673,7 +1673,6 @@ TEXTES_NAV = {
     "ra_o_scores": {"en": "Resilience Scores",
                     "fr": "Scores de résilience"},
     "ra_o_comparer": {"en": "Compare", "fr": "Comparer"},
-    "ra_o_profil": {"en": "Profile", "fr": "Profil"},
     # L'ONGLET NE PROPOSE PLUS DES SOLUTIONS, IL DÉSIGNE DES CIBLES. Une
     # piste d'action lue avant d'avoir nommé la variable qui décroche est une
     # opinion ; nommer la variable, c'est le point de départ des boucles.
@@ -1695,9 +1694,6 @@ TEXTES_NAV = {
     "ra_d_comparer": {
         "en": "Groups side by side, on any measure",
         "fr": "Des groupes côte à côte, sur n'importe quelle mesure"},
-    "ra_d_profil": {
-        "en": "One group, its strengths and its weaknesses",
-        "fr": "Un groupe, ses forces et ses faiblesses"},
     "ra_d_solutions": {
         "en": "Where to start, and why there rather than elsewhere",
         "fr": "Par où commencer, et pourquoi là plutôt qu'ailleurs"},
@@ -1794,7 +1790,7 @@ _RENOMMEES = ("mode_accueil", "mode_methodo", "mode_dimensions",
               "mode_synthese", "mode_actions", "mode_donnees",
               "mode_boucles", "mode_croisement", "mode_rapport",
               "mode_levier", "mode_bailleurs", "ra_o_brut", "ra_o_scores",
-              "ra_o_comparer", "ra_o_profil", "ra_o_solutions")
+              "ra_o_comparer", "ra_o_solutions")
 for _c, _v in TEXTES_NAV.items():
     if _c in _RENOMMEES:
         i18n.DICO[_c] = _v
@@ -2282,7 +2278,12 @@ with _c_contenu:
         # hommes de la montagne. Comparer met des groupes côte à côte sur
         # une mesure, quels que soient les critères qui les définissent ;
         # Profil prend un groupe et déroule ses forces et ses faiblesses.
-        _CODES_RA = ["brut", "scores", "comparer", "profil", "solutions"]
+        # « PROFIL » A ÉTÉ REPLIÉ DANS « COMPARER ». Il prenait un groupe et
+        # déroulait ses meilleurs et ses plus faibles scores ; comparer trois
+        # profils sur une mesure choisie répond à la même question, et à
+        # celle que l'autre écran ne posait pas — comment ce groupe se situe
+        # par rapport à un autre.
+        _CODES_RA = ["brut", "scores", "comparer", "solutions"]
         # TOUTES LES BARRES DU SITE SONT AU MÊME FORMAT, celui à deux
         # lignes. Celle-ci avait été mise en compact pour gagner de la
         # hauteur ; elle était alors la seule à ne pas dire ce que ses
@@ -2297,7 +2298,7 @@ with _c_contenu:
         # C'est le même fichier de réponses individuelles ; le charger dans
         # chaque module en ferait cinq copies en mémoire.
         _cat = croisement_resultats._catalogue() \
-            if _ra in ("brut", "scores", "comparer", "profil",
+            if _ra in ("brut", "scores", "comparer",
                        "solutions") \
             else None
 
@@ -2364,9 +2365,6 @@ with _c_contenu:
 
         elif _ra == "comparer":
             explorateur.render_comparaison(_cat)
-
-        elif _ra == "profil":
-            explorateur.render_profil(_cat)
 
         else:
             # LES VARIABLES ALARMANTES SE LISENT APRÈS LES ÉCARTS, et c'est
