@@ -139,13 +139,36 @@ TEXTES = {
               "demandez plus de variables."},
     "sx_r": {"en": "Reinforcing", "fr": "Renforçante"},
     "sx_b": {"en": "Balancing", "fr": "Équilibrante"},
+    # LE TITRE DE CET ÉCRAN MANQUAIT AU DICTIONNAIRE, et la page affichait
+    # donc « SX_T2 » en pastille verte — la clé elle-même, faute de
+    # traduction. Les quatre autres onglets avaient le leur.
+    "sx_t2": {"en": "Each relation, and what it rests on",
+              "fr": "Chaque relation, et ce sur quoi elle repose"},
+    # DEUX NOMBRES QUI NE DISENT PAS LA MÊME CHOSE, ET QU'ON CONFONDAIT. La
+    # corrélation est mesurée chez nous, sur dix sections ; la force est
+    # empruntée à une source qui a mesuré l'effet ailleurs, et c'est elle
+    # seule qui fait tourner le modèle. Le tableau les mettait côte à côte
+    # sans dire lequel commande, et une corrélation faible se lisait alors
+    # comme un démenti de la force, ce qu'elle n'est pas.
     "sx_x2": {
-        "en": "The observed correlation, the strength posed in the model, and "
-              "the source that strength comes from. A correlation is never a "
-              "proof of causation.",
-        "fr": "La corrélation observée, la force posée dans le modèle, et la "
-              "source d'où sort cette force. Une corrélation n'est jamais une "
-              "preuve de causalité."},
+        "en": "Two different numbers sit side by side here. The correlation "
+              "is measured on our own data, across the ten communal "
+              "sections: it says whether the two measurements move together "
+              "over the territory, never which one moves the other, and it "
+              "does not drive the model. The strength is what drives it — "
+              "the share of a change that passes along this arrow — and it "
+              "does not come from our ten sections but from a source that "
+              "measured the effect elsewhere, or from the framework. The "
+              "level of evidence says what that strength rests on.",
+        "fr": "Deux nombres différents sont posés côte à côte. La "
+              "corrélation est mesurée chez nous, sur les dix sections "
+              "communales : elle dit si les deux mesures évoluent ensemble à "
+              "travers le territoire, jamais laquelle déplace l'autre, et "
+              "elle ne fait pas tourner le modèle. C'est la force qui le "
+              "fait tourner — la part d'un changement qui passe le long de "
+              "cette flèche — et elle ne vient pas de nos dix sections mais "
+              "d'une source qui a mesuré l'effet ailleurs, ou du cadre. Le "
+              "niveau de preuve dit sur quoi cette force repose."},
     "sx_rel": {"en": "Relation", "fr": "Relation"},
     "sx_correl": {"en": "Correlation across the 10 sections",
                   "fr": "Corrélation sur les 10 sections"},
@@ -161,6 +184,29 @@ TEXTES = {
               "corrélation ne se distingue pas du hasard au seuil de 5 %. "
               "Elle dit si les deux mesures évoluent ensemble à travers le "
               "territoire — jamais laquelle déplace l'autre."},
+    "sx_correl_vide": {
+        "en": "A dash means the correlation cannot be computed: at least one "
+              "of the two variables has no value per section — it exists in "
+              "the model as a mechanism rather than as a measured result, or "
+              "it is observed at another scale. The relation is not weaker "
+              "for it; it simply cannot be cross-checked against our own "
+              "data.",
+        "fr": "Un tiret veut dire que la corrélation n'est pas calculable : "
+              "l'une au moins des deux variables n'a pas de valeur par "
+              "section — elle existe dans le modèle comme mécanisme et non "
+              "comme résultat mesuré, ou bien elle s'observe à une autre "
+              "échelle. La relation n'en est pas plus faible ; elle n'est "
+              "simplement pas recoupable avec nos propres données."},
+    "sx_leg_f": {"en": "What the strength means", "fr": "Ce que dit la force"},
+    "sx_leg_f_x": {
+        "en": "the share of a change that passes along the arrow, on the "
+              "framework's five-step scale",
+        "fr": "la part d'un changement qui passe le long de la flèche, sur "
+              "l'échelle à cinq crans du cadre"},
+    "sx_leg_p": {"en": "What the level of evidence means",
+                 "fr": "Ce que dit le niveau de preuve"},
+    "sx_leg_p_x": {"en": "where that strength comes from, and how solid it is",
+                   "fr": "d'où vient cette force, et ce qu'elle vaut"},
     "sx_faible": {"en": "below the threshold", "fr": "sous le seuil"},
     "sx_accord": {"en": "same direction as the model",
                   "fr": "même sens que le modèle"},
@@ -358,6 +404,20 @@ STYLE = """
        text-transform:uppercase; color:#8a93a5; margin:10px 0 2px; }
   .sx-note { font-size:11.5px; color:#8a93a5; line-height:1.55;
        margin:8px 0 0; text-align:left !important; max-width:98ch; }
+  /* LA LÉGENDE DES DEUX NOMBRES, sous le tableau : à gauche ce que vaut une
+     force, à droite ce que vaut un niveau de preuve. Les deux listes sont
+     lues dans le barème du modèle, pas réécrites ici — une définition
+     recopiée diverge de celle qui commande le calcul. */
+  .sx-leg { display:grid; grid-template-columns:1fr 1fr; gap:14px 34px;
+       margin:14px 0 2px; }
+  .sx-leg-h { font-size:10.5px; font-weight:700; letter-spacing:.09em;
+       text-transform:uppercase; color:#3c4761; margin-bottom:2px; }
+  .sx-leg-x { font-size:11.5px; color:#8a93a5; margin-bottom:8px;
+       line-height:1.5; }
+  .sx-leg-e { font-size:12px; color:#3c4761; line-height:1.5;
+       padding:3px 0 3px 11px; border-left:2px solid #e3eaf3; }
+  .sx-leg-e b { color:#101728; font-weight:600; }
+  @media (max-width: 900px) { .sx-leg { grid-template-columns:1fr; } }
   .sx-tab { width:100%; border-collapse:collapse; margin-top:12px; }
   .sx-tab th { font-size:10.5px; font-weight:700; letter-spacing:.09em;
        text-transform:uppercase; color:#8a93a5; text-align:left;
@@ -823,6 +883,46 @@ def _classe_courte(m, a):
     return _classe(m, a).split(" — ")[0].split(" - ")[0].strip()
 
 
+def _legende_relations(m):
+    """Ce que vaut une force, ce que vaut un niveau de preuve.
+
+    LES DEUX LISTES SONT LUES DANS LE BARÈME DU MODÈLE. Le fichier du graphe
+    porte ses cinq crans de force — de 0,20 « lien plausible, aucune mesure »
+    à 0,80 « l'un est une composante de l'autre » — et ses cinq classes de
+    preuve avec leur définition. Les recopier ici aurait créé une seconde
+    version des mêmes définitions, qui aurait dérivé de celle qui commande le
+    calcul au premier ajustement.
+
+    ELLES ÉTAIENT INTROUVABLES. Le cran de force n'était écrit nulle part —
+    on lisait « 0,65 » sans savoir si c'était beaucoup — et la définition
+    d'une classe ne se lisait que dans le menu déroulant du filtre, c'est-à-
+    dire en cherchant à filtrer, pas en cherchant à comprendre.
+    """
+    bar = (m["g"].get("bareme") or {})
+    lg = i18n.get_lang()
+
+    def _txt(d):
+        return (d.get(lg) or d.get("fr") or "").strip()
+
+    crans = "".join(
+        f'<div class="sx-leg-e"><b>{_f(float(e.get("v") or 0), 2)}</b> — '
+        f'{_e(_txt(e))}</div>'
+        for e in (bar.get("echelons") or []))
+    classes = []
+    for c in (bar.get("classes") or []):
+        t = _txt(c)
+        nom, _sep, reste = t.partition(" — ")
+        classes.append(f'<div class="sx-leg-e"><b>{_e(nom)}</b>'
+                       + (f' — {_e(reste)}' if reste else "") + '</div>')
+    return (
+        '<div class="sx-leg">'
+        f'<div><div class="sx-leg-h">{_e(T("sx_leg_f")).upper()}</div>'
+        f'<div class="sx-leg-x">{_e(T("sx_leg_f_x"))}</div>{crans}</div>'
+        f'<div><div class="sx-leg-h">{_e(T("sx_leg_p")).upper()}</div>'
+        f'<div class="sx-leg-x">{_e(T("sx_leg_p_x"))}</div>'
+        + "".join(classes) + '</div></div>')
+
+
 def _table_relations(m, aretes, lang):
     """Une ligne par relation : sa corrélation, sa force, d'où sort le nombre.
 
@@ -925,8 +1025,14 @@ def render_relations():
     gardees.sort(key=lambda a: (s["centre"] not in (a["de"], a["vers"]),
                                 -(a.get("force") or 0)))
     st.markdown(_table_relations(m, gardees, lang), unsafe_allow_html=True)
+    st.markdown(_legende_relations(m), unsafe_allow_html=True)
+    # LA NOTE SUR LA CORRÉLATION DIT MAINTENANT AUSSI POURQUOI ELLE MANQUE.
+    # La moitié des lignes portent un tiret : sans explication, on lisait ce
+    # tiret comme un aveu de faiblesse alors qu'il dit seulement que l'une
+    # des deux variables ne se mesure pas section par section.
     st.markdown(f'<p class="sx-note">'
-                f'{_e(T("sx_correl_x", c=_f(RHO_CRITIQUE_10, 2)))}</p>',
+                f'{_e(T("sx_correl_x", c=_f(RHO_CRITIQUE_10, 2)))} '
+                f'{_e(T("sx_correl_vide"))}</p>',
                 unsafe_allow_html=True)
 
 
