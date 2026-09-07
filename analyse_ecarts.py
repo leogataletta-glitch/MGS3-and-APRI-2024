@@ -178,22 +178,6 @@ TEXTES = {
     "ec_rien": {"en": "No indicator can be computed on this group.",
                 "fr": "Aucun indicateur ne peut être calculé sur ce groupe."},
     "ec_combien": {"en": "Indicators shown", "fr": "Indicateurs affichés"},
-    "al_titre": {"en": "Identifying the most alarming variables",
-                 "fr": "Identification des variables les plus alarmantes"},
-    "al_intro": {
-        "en": "The five screens before this one answer questions that were "
-              "put to them. This one asks nothing: it sweeps the whole "
-              "framework and returns the indicators that score lowest — "
-              "across the territory first, then group by group. These are "
-              "the variables a causal loop diagram should be drawn around, "
-              "and the levers come after the loops, not before them.",
-        "fr": "Les cinq écrans précédents répondent aux questions qu'on leur "
-              "pose. Celui-ci n'en pose aucune : il balaye le cadre entier et "
-              "renvoie les indicateurs dont le score est le plus bas — sur le "
-              "territoire d'abord, puis groupe par groupe. Ce sont les "
-              "variables autour desquelles tracer un schéma de boucle "
-              "causale, et les leviers viennent après les boucles, pas "
-              "avant."},
     "al_t1": {"en": "The lowest indicators across the territory",
               "fr": "Les indicateurs les plus bas sur le territoire"},
     "al_x1": {
@@ -220,6 +204,44 @@ TEXTES = {
     "al_rang": {"en": "Rank", "fr": "Rang"},
     "al_terr": {"en": "Where it is worst", "fr": "Là où c'est le pire"},
     "al_alerte": {"en": "Alert", "fr": "Alerte"},
+    # LES QUATRE NIVEAUX D'ALERTE, du plus grave au plus tranquille.
+    "al_n_critique": {"en": "Critical", "fr": "Critique"},
+    "al_n_eleve": {"en": "High", "fr": "Élevée"},
+    "al_n_modere": {"en": "Moderate", "fr": "Modérée"},
+    "al_n_faible": {"en": "Low", "fr": "Faible"},
+    "al_qui": {"en": "Whose variables", "fr": "Les variables de qui"},
+    "al_tous": {"en": "All", "fr": "Tous"},
+    "al_tout_ech": {"en": "Whole sample", "fr": "Tout l'échantillon"},
+    "al_n": {"en": "{g} · {n} households",
+             "fr": "{g} · {n} ménages"},
+    "al_bas": {"en": "The lowest scores of this group",
+               "fr": "Les scores les plus bas de ce groupe"},
+    "al_haut": {"en": "The highest scores of this group",
+                "fr": "Les scores les plus hauts de ce groupe"},
+    "al_ecart": {"en": "Where this group falls furthest behind the rest",
+                 "fr": "Là où ce groupe décroche le plus du reste"},
+    "al_ecart_x": {
+        "en": "Compared with the {n} households outside the group. Only the "
+              "indicators where the group scores below them are listed, "
+              "biggest gap first.",
+        "fr": "Comparé aux {n} ménages hors du groupe. Seuls figurent les "
+              "indicateurs où le groupe est en dessous d'eux, du plus grand "
+              "écart au plus petit."},
+    "al_ecart_vide": {
+        "en": "Pick a group above: comparing the whole sample with what is "
+              "left of it compares it with nothing.",
+        "fr": "Choisissez un groupe ci-dessus : comparer l'échantillon "
+              "entier à ce qu'il en reste, c'est le comparer à rien."},
+    "al_ecart_rien": {
+        "en": "This group is at or above the rest of the cohort on every "
+              "indicator that could be computed.",
+        "fr": "Ce groupe est au niveau du reste de la cohorte ou au-dessus "
+              "sur tous les indicateurs calculables."},
+    "al_c_ind": {"en": "Indicator", "fr": "Indicateur"},
+    "al_c_score": {"en": "Score", "fr": "Score"},
+    "al_c_val": {"en": "Raw value", "fr": "Valeur brute"},
+    "al_c_reste": {"en": "Rest of the cohort", "fr": "Reste de la cohorte"},
+    "al_c_ecart": {"en": "Gap", "fr": "Écart"},
     "al_a3": {"en": "Critical", "fr": "Critique"},
     "al_a2": {"en": "High", "fr": "Élevée"},
     "al_a1": {"en": "Moderate", "fr": "Modérée"},
@@ -964,263 +986,173 @@ ALERTES = ((3, "al_a3", "#c33a24"), (2, "al_a2", "#c9821f"),
 
 
 def _alerte(score, ecart):
-    """Le niveau d'alerte, lu sur la hauteur du score ET la profondeur du
-    décrochage.
+    """Le niveau d'alerte d'un indicateur : son score, et son décrochage.
 
-    UN SEUL DES DEUX NE SUFFIT PAS. Un score de 1/10 partout est grave, mais
-    ce n'est pas une inégalité ; un décrochage de trois points sur un
-    indicateur déjà à 9/10 est une inégalité, mais personne n'en meurt. Ce qui
-    mérite « critique » est la conjonction : bas, et en plus effondré à un
-    endroit précis.
+    UN SCORE BAS ALERTE ; UN SCORE BAS DOUBLÉ D'UN DÉCROCHAGE ALERTE PLUS.
+    L'écart passé est celui du groupe au reste de la cohorte, en points, et
+    il n'est connu que sur le troisième tableau — d'où son caractère
+    facultatif.
     """
-    ec = abs(ecart or 0)
-    if score is None:
-        return 1
-    if score <= 2.0 and ec >= 2.0:
-        return 3
-    if score <= 3.0 or ec >= 3.0:
-        return 2
-    return 1
+    e = ecart or 0
+    if score <= 2 or (score <= 4 and e >= 2):
+        return "critique"
+    if score <= 4 or (score <= 6 and e >= 2):
+        return "eleve"
+    if score <= 6 or e >= 2:
+        return "modere"
+    return "faible"
 
 
 def _pastille(niv):
-    lib, coul = next((l, c) for n, l, c in ALERTES if n == niv)
-    return (f'<span style="display:inline-block;font-size:10.5px;'
-            f'font-weight:700;letter-spacing:.05em;text-transform:uppercase;'
-            f'color:{coul};border:1px solid {coul}55;border-radius:20px;'
-            f'padding:1px 8px;white-space:nowrap">{_e(T(lib))}</span>')
+    """La pastille colorée d'un niveau d'alerte."""
+    c = {"critique": ROUGE, "eleve": "#d1730c",
+         "modere": "#b58b00"}.get(niv, "#8a93a5")
+    return (f'<span style="display:inline-flex;align-items:center;gap:6px">'
+            f'<span style="width:9px;height:9px;border-radius:50%;'
+            f'background:{c}"></span>'
+            f'<span style="font-size:11.5px;color:{c}">'
+            f'{_e(T("al_n_" + niv))}</span></span>')
 
 
-def _pire_case(ind, cat, axe):
-    """La case d'un registre où l'indicateur est au plus bas, et son écart à
-    la moyenne des autres cases du même registre."""
-    scores = []
-    for v, lib in _cases(cat, axe):
-        m = _mesure(ind, cat["groupes"][v])
-        if m["n"] and m["score"] is not None:
-            scores.append((lib, m))
-    if len(scores) < 2:
-        return None
-    scores.sort(key=lambda x: (x[1]["score"], x[1]["valeur"]))
-    lib, m = scores[0]
-    autres = [s[1]["score"] for s in scores[1:]]
-    ref = sum(autres) / len(autres)
-    # LE MEILLEUR GROUPE EST RENVOYÉ AVEC LE PIRE, et c'est lui qui dit si le
-    # problème est soluble. Un indicateur bas partout est une contrainte de
-    # milieu ; un indicateur bas ici et haut à trente kilomètres de là est un
-    # écart que quelque chose produit, et que quelque chose peut donc réduire.
-    lib_b, mb = scores[-1]
-    return {"nom_groupe": lib, "score": m["score"], "valeur": m["valeur"],
-            "n": m["n"], "ref": ref, "d": m["score"] - ref,
-            "nom_meilleur": lib_b, "meilleur": mb["score"],
-            "d_max": m["score"] - mb["score"]}
+def _profil_alarmes(cat):
+    """Le groupe qu'on regarde : un ET de registres, chacun facultatif.
+
+    UN PROFIL, PAS UN BALAYAGE. L'écran passait en revue tous les registres
+    et tous leurs croisements pour en sortir les cases les plus basses : cela
+    répondait à « où que ce soit, qu'est-ce qui décroche », qui n'est pas la
+    question qu'on pose devant une carte et un budget. On pose « ici, chez
+    ces gens-là, qu'est-ce qui décroche » — donc on désigne le groupe, et
+    l'écran ne parle plus que de lui.
+    """
+    st.markdown(f'<div class="ec-sec">{_e(T("al_qui"))}</div>',
+                unsafe_allow_html=True)
+    masque = np.ones(cat["n"], dtype=bool)
+    nom = []
+    cols = st.columns(len(AXES))
+    for col, (axe, lab) in zip(cols, AXES):
+        cases = _cases(cat, axe)
+        with col:
+            v = st.selectbox(
+                T(lab), [None] + [c[0] for c in cases],
+                key=f"al_g_{axe}", index=0,
+                format_func=lambda x: (T("al_tous") if x is None
+                                       else _lib(x)))
+        if v is not None and cat["groupes"].get(v) is not None:
+            masque &= cat["groupes"][v]
+            nom.append(_lib(v))
+    return masque, (" · ".join(nom) if nom else None)
 
 
-def _cases_croisees(cat, axes):
-    """Les groupes du produit de deux registres, cases vides écartées."""
-    import itertools as _it
-    listes = []
-    for axe in axes:
-        listes.append([(lib, cat["groupes"].get(v))
-                       for v, lib in _cases(cat, axe)
-                       if cat["groupes"].get(v) is not None])
-    if not listes or any(not l for l in listes):
-        return []
-    out = []
-    for combo in _it.product(*listes):
-        m = combo[0][1].copy()
-        for _lib, g in combo[1:]:
-            m &= g
-        if m.sum() < N_MIN:
-            # UN GROUPE CROISÉ DE TROIS MÉNAGES N'EST PAS UN GROUPE. Le
-            # croisement divise l'effectif ; sous le seuil de lecture, la
-            # case est écartée du balayage plutôt que remontée comme la plus
-            # basse du territoire.
-            continue
-        out.append((" · ".join(c[0] for c in combo), m))
-    return out
-
-
-def _pire_case_croise(ind, cat, axes):
-    """La case la plus basse du produit de deux registres."""
-    scores = []
-    for lib, g in _cases_croisees(cat, axes):
-        m = _mesure(ind, g)
-        if m["n"] and m["score"] is not None:
-            scores.append((lib, m))
-    if len(scores) < 2:
-        return None
-    scores.sort(key=lambda x: (x[1]["score"], x[1]["valeur"]))
-    lib, m = scores[0]
-    autres = [x[1]["score"] for x in scores[1:]]
-    ref = sum(autres) / len(autres)
-    lib_b, mb = scores[-1]
-    return {"nom_groupe": lib, "score": m["score"], "valeur": m["valeur"],
-            "n": m["n"], "ref": ref, "d": m["score"] - ref,
-            "nom_meilleur": lib_b, "meilleur": mb["score"],
-            "d_max": m["score"] - mb["score"]}
-
-
-def _table_territoire(lignes):
+def _table_alarmes(lignes, avec_reste=False):
+    """Le tableau : l'indicateur, son score, sa valeur, et s'il y a lieu le
+    reste de la cohorte et l'écart."""
     r = ['<table class="ec-tab"><thead><tr>'
-         f'<th class="n">{_e(T("al_rang"))}</th>'
-         f'<th>{_e(T("al_col_var"))}</th>'
-         f'<th class="n">{_e(T("ec_col_score"))}</th>'
-         f'<th class="n">{_e(T("ec_col_val"))}</th>'
-         f'<th>{_e(T("al_terr"))}</th>'
-         f'<th>{_e(T("al_alerte"))}</th></tr></thead><tbody>']
-    for i, x in enumerate(lignes, 1):
-        pire = x.get("pire")
-        ou = (f'{_e(pire["nom_groupe"])} <span style="color:#8a93a5">'
-              f'{_f(pire["score"], 1)}</span>' if pire else "—")
-        r.append(f'<tr><td class="n" style="color:#8a93a5;font-weight:700">'
-                 f'{i}</td>'
-                 f'<td>{_e(x["nom"])}<br><span style="font-size:11px;'
-                 f'color:#8a93a5">{_e(x["dim"])}</span></td>'
-                 f'<td class="n v" style="color:{ROUGE}">'
-                 f'{_f(x["score"], 1)}</td>'
-                 f'<td class="n">{_f(x["valeur"], 1)}&#8201;%</td>'
-                 f'<td style="font-size:12px">{ou}</td>'
-                 f'<td>{_pastille(x["alerte"])}</td></tr>')
-    r.append('</tbody></table>')
-    return "".join(r)
-
-
-def _table_critiques(lignes):
-    r = ['<table class="ec-tab"><thead><tr>'
-         f'<th>{_e(T("al_col_var"))}</th>'
-         f'<th>{_e(T("al_col_groupe"))}</th>'
-         f'<th class="n">{_e(T("al_col_sien"))}</th>'
-         f'<th>{_e(T("al_col_best"))}</th>'
-         f'<th class="n">{_e(T("al_col_dmax"))}</th>'
-         f'<th class="n">{_e(T("ec_col_ecart"))}</th>'
-         f'<th>{_e(T("al_alerte"))}</th></tr></thead><tbody>']
+         f'<th>{_e(T("al_c_ind"))}</th>'
+         f'<th class="n">{_e(T("al_c_score"))}</th>'
+         f'<th class="n">{_e(T("al_c_val"))}</th>']
+    if avec_reste:
+        r.append(f'<th class="n">{_e(T("al_c_reste"))}</th>'
+                 f'<th class="n">{_e(T("al_c_ecart"))}</th>')
+    r.append(f'<th>{_e(T("al_alerte"))}</th></tr></thead><tbody>')
     for x in lignes:
         pale = ' class="pale"' if x["n"] < N_MIN else ""
-        best = (f'{_e(x.get("nom_meilleur") or "—")} '
-                f'<span style="color:#1a6b52;font-weight:700">'
-                f'{_f(x.get("meilleur"), 1)}</span>')
-        r.append(f'<tr{pale}><td>{_e(x["nom"])}<br>'
-                 f'<span style="font-size:11px;color:#8a93a5">'
-                 f'{_e(x["dim"])}</span></td>'
-                 f'<td>{_e(x["groupe"])}<br>'
-                 f'<span style="font-size:11px;color:#8a93a5">'
-                 f'{_e(x["registre"])} · n={x["n"]}</span></td>'
-                 f'<td class="n v" style="color:{ROUGE}">'
+        r.append(f'<tr{pale}><td>{_e(x["nom"])}</td>'
+                 f'<td class="n v" style="color:{x["coul"]}">'
                  f'{_f(x["score"], 1)}</td>'
-                 f'<td style="font-size:12px">{best}</td>'
-                 f'<td class="n v" style="color:{ROUGE}">'
-                 f'{_f(x.get("d_max"), 1, True)}</td>'
-                 f'<td class="n">{_f(x["d"], 1, True)}</td>'
-                 f'<td>{_pastille(x["alerte"])}</td></tr>')
+                 f'<td class="n">{_f(x["valeur"], 1)}&#8201;%</td>')
+        if avec_reste:
+            r.append(f'<td class="n" style="color:#8a93a5">'
+                     f'{_f(x["reste"], 1)}</td>'
+                     f'<td class="n v" style="color:{ROUGE}">'
+                     f'{_f(x["d"], 1)}</td>')
+        r.append(f'<td>{_pastille(x["alerte"])}</td></tr>')
     r.append('</tbody></table>')
     return "".join(r)
 
 
 def render_alarmes(cat):
-    """Les variables sur lesquelles commencer, et rien d'autre."""
+    """Un groupe désigné, ses variables les plus basses, les plus hautes, et
+    celles où il décroche le plus par rapport au reste de la cohorte.
+
+    TROIS TABLEAUX, ET RIEN D'AUTRE. Le premier dit ce qui va mal chez ce
+    groupe, le deuxième ce qui va bien — un profil sans ses points d'appui
+    n'est qu'une liste de reproches —, et le troisième la seule chose qu'un
+    score bas ne dit pas : est-ce bas ICI, ou bas partout. Un indicateur à
+    2 sur 10 dans le groupe et à 2 sur 10 chez tous les autres est une
+    faiblesse du territoire ; à 2 contre 6, c'est une faiblesse du groupe, et
+    ce ne sont pas les mêmes interventions.
+    """
     if not cat or not cat.get("indicateurs"):
         return
     st.markdown(STYLE, unsafe_allow_html=True)
-    st.markdown(f'<div class="titre-bloc">{_e(T("al_titre"))}</div>'
-                f'<p class="ec-note" style="margin:0 0 14px">'
-                f'{_e(T("al_intro"))}</p>', unsafe_allow_html=True)
 
-    tout = np.ones(cat["n"], dtype=bool)
-    bas = []
-    for ind in cat["indicateurs"]:
-        m = _mesure(ind, tout)
-        if m["score"] is not None:
-            bas.append({"nom": _nom(ind), "dim": T(ind["dim"]),
-                        "ligne": ind.get("ligne"), "ind": ind, **m})
-    if not bas:
+    masque, nom = _profil_alarmes(cat)
+    lib_g = nom or T("al_tout_ech")
+    n_g = int(masque.sum())
+    if n_g == 0:
         st.info(T("ec_rien"))
         return
-    bas.sort(key=lambda x: (x["score"], x["valeur"]))
+    reste = (~masque) if nom else None
 
-    # ---- 1 · le classement global ----------------------------------------
-    st.markdown(f'<div class="titre-bloc">{_e(T("al_t1"))}</div>'
-                f'<p class="ec-note" style="margin:0">'
-                f'{_e(T("al_x1", n=cat["n"]))}</p>', unsafe_allow_html=True)
-    k1 = st.selectbox(T("al_combien"), [5, 10, 20], key="al_k1")
-    montres = bas[:k1]
-    for x in montres:
-        # LE TERRITOIRE LE PLUS TOUCHÉ N'EST CALCULÉ QUE POUR LES LIGNES
-        # AFFICHÉES : dix sections pour soixante-six indicateurs feraient six
-        # cent soixante calculs dont on n'afficherait que vingt.
-        x["pire"] = _pire_case(x["ind"], cat, "section")
-        x["alerte"] = _alerte(x["score"],
-                              x["pire"]["d"] if x["pire"] else None)
-    st.markdown(_table_territoire(montres), unsafe_allow_html=True)
-    st.markdown(f'<p class="ec-note">{_e(T("al_alerte_x"))}</p>',
+    combien = st.selectbox(T("al_combien"), [5, 10, 20], key="al_k1")
+
+    lignes = []
+    for ind in cat["indicateurs"]:
+        m = _mesure(ind, masque)
+        if m["score"] is None:
+            continue
+        x = {"nom": _nom(ind), "ligne": ind.get("ligne"), **m}
+        if reste is not None:
+            a = _mesure(ind, reste)
+            x["reste"] = a["score"]
+            x["d"] = (None if a["score"] is None
+                      else round(m["score"] - a["score"], 2))
+        lignes.append(x)
+    if not lignes:
+        st.info(T("ec_rien"))
+        return
+
+    st.markdown(f'<p class="ec-note" style="margin:8px 0 2px">'
+                f'{_e(T("al_n", g=lib_g, n=_f(n_g, 0)))}</p>',
                 unsafe_allow_html=True)
 
-    # ---- 2 · les variables critiques issues des désagrégations ------------
-    st.markdown(f'<div class="titre-bloc" style="margin-top:26px">'
-                f'{_e(T("al_synth"))}</div>'
-                f'<p class="ec-note" style="margin:0 0 4px">'
-                f'{_e(T("al_synth_x"))}</p>', unsafe_allow_html=True)
-    c1, c2, c3, c4 = st.columns([1.5, 0.95, 1.05, 0.6])
-    with c1:
-        registres = st.multiselect(
-            T("al_registres"), [a for a, _l in AXES],
-            default=[a for a, _l in AXES], key="al_reg",
-            format_func=lambda a: T(dict(AXES)[a]))
-    with c2:
-        # UN REGISTRE OU DEUX. « Les femmes » et « Trichet » sont deux groupes ;
-        # « les femmes de la montagne à Trichet » en est un troisième, et
-        # c'est souvent lui qui décroche. Le croisement est un choix, pas le
-        # défaut : il divise les effectifs, et les cases sous le seuil de
-        # lecture sont écartées du balayage.
-        grain = st.selectbox(T("al_grain"), ["simple", "croise"],
-                             key="al_grain",
-                             format_func=lambda c: T("al_grain_" + c))
-    with c3:
-        tri = st.selectbox(T("al_trier"),
-                           ["dmax", "score", "ecart", "dim", "type"],
-                           key="al_tri",
-                           format_func=lambda c: T("al_t_" + c))
-    with c4:
-        k2 = st.selectbox(T("al_combien"), [10, 20, 40], key="al_k2")
-    if not registres:
-        return
+    # ---- 1 · les plus basses ---------------------------------------------
+    bas = sorted(lignes, key=lambda x: (x["score"], x["valeur"]))[:combien]
+    for x in bas:
+        x["coul"], x["alerte"] = ROUGE, _alerte(x["score"], None)
+    st.markdown(f'<div class="ec-sec" style="margin-top:18px">'
+                f'{_e(T("al_bas"))}</div>' + _table_alarmes(bas),
+                unsafe_allow_html=True)
 
-    ordre_reg = {a: i for i, (a, _l) in enumerate(AXES)}
-    if grain == "croise" and len(registres) < 2:
-        st.info(T("al_grain_deux"))
+    # ---- 2 · les plus hautes ---------------------------------------------
+    haut = sorted(lignes, key=lambda x: (-x["score"], -x["valeur"]))[:combien]
+    for x in haut:
+        x["coul"], x["alerte"] = "#1a6b52", _alerte(x["score"], None)
+    st.markdown(f'<div class="ec-sec" style="margin-top:24px">'
+                f'{_e(T("al_haut"))}</div>' + _table_alarmes(haut),
+                unsafe_allow_html=True)
+
+    # ---- 3 · le décrochage par rapport au reste de la cohorte ------------
+    st.markdown(f'<div class="ec-sec" style="margin-top:24px">'
+                f'{_e(T("al_ecart"))}</div>', unsafe_allow_html=True)
+    if reste is None:
+        # SANS PROFIL, IL N'Y A PAS DE RESTE. Comparer l'échantillon entier à
+        # son complément reviendrait à le comparer à rien.
+        st.markdown(f'<p class="ec-note" style="margin:0">'
+                    f'{_e(T("al_ecart_vide"))}</p>', unsafe_allow_html=True)
         return
-    balayage = ([(a,) for a in registres] if grain == "simple"
-                else list(itertools.combinations(registres, 2)))
-    critiques = []
-    for ind in cat["indicateurs"]:
-        for combi in balayage:
-            p = (_pire_case(ind, cat, combi[0]) if len(combi) == 1
-                 else _pire_case_croise(ind, cat, list(combi)))
-            # SEUL UN DÉCROCHAGE COMPTE : un groupe qui fait MIEUX que ses
-            # comparables n'a rien à faire dans un tableau de vulnérabilités.
-            if p is None or p["d"] >= -ECART_MIN:
-                continue
-            critiques.append({
-                "nom": _nom(ind), "dim": T(ind["dim"]), "dim_code": ind["dim"],
-                "groupe": p["nom_groupe"],
-                "registre": " × ".join(T(dict(AXES)[a]) for a in combi),
-                "reg_code": combi[0], "score": p["score"], "ref": p["ref"],
-                "d": p["d"], "n": p["n"],
-                "nom_meilleur": p.get("nom_meilleur"),
-                "meilleur": p.get("meilleur"), "d_max": p.get("d_max"),
-                "alerte": _alerte(p["score"], p["d"])})
-    if not critiques:
-        st.info(T("al_vide"))
-        return
-    cles = {"dmax": lambda x: (x.get("d_max") if x.get("d_max") is not None
-                              else 0, x["score"]),
-            "score": lambda x: (x["score"], x["d"]),
-            "ecart": lambda x: (x["d"], x["score"]),
-            "dim": lambda x: (x["dim_code"], x["score"], x["d"]),
-            "type": lambda x: (ordre_reg[x["reg_code"]], x["d"])}
-    critiques.sort(key=cles[tri])
-    st.markdown(_table_critiques(critiques[:k2]), unsafe_allow_html=True)
-    if any(x["n"] < N_MIN for x in critiques[:k2]):
+    n_r = int(reste.sum())
+    ecarts = [x for x in lignes if x.get("d") is not None and x["d"] < 0]
+    ecarts.sort(key=lambda x: x["d"])
+    for x in ecarts[:combien]:
+        x["coul"], x["alerte"] = ROUGE, _alerte(x["score"], -x["d"])
+    st.markdown(f'<p class="ec-note" style="margin:0 0 6px">'
+                f'{_e(T("al_ecart_x", n=_f(n_r, 0)))}</p>'
+                + (_table_alarmes(ecarts[:combien], avec_reste=True)
+                   if ecarts else ""), unsafe_allow_html=True)
+    if not ecarts:
+        st.markdown(f'<p class="ec-note">{_e(T("al_ecart_rien"))}</p>',
+                    unsafe_allow_html=True)
+    elif any(x["n"] < N_MIN for x in ecarts[:combien]):
         st.markdown(f'<p class="ec-note">{_e(T("ec_fragile", n=N_MIN))}</p>',
                     unsafe_allow_html=True)
-

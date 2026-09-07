@@ -42,6 +42,11 @@ from i18n import T
 ENCRE, ENCRE2, ENCRE3 = "#101728", "#3c4761", "#6b7590"
 VERT_APRI = "#2a6b3f"
 VERT, ROUGE, GRIS = "#1a8a4f", "#c33a24", "#8a93a5"
+# LES TROIS AIRES DU RADAR DE COMPARAISON. Trois teintes franchement
+# différentes, et pas trois verts : superposées et translucides, deux
+# nuances voisines donnent une troisième couleur qu'on prend pour une
+# quatrième aire.
+_COULEURS_PROFILS = ("#1a6b52", "#c26a1a", "#3b6ea5")
 
 # LE SEUIL DE FRAGILITÉ EST CELUI DU MOTEUR. Deux seuils différents dans deux
 # écrans du même site donneraient deux verdicts sur le même effectif.
@@ -102,22 +107,34 @@ TEXTES = {
               "score, et comment il se répartit entre groupes."},
     "ex_c_sur": {"en": "Compare on", "fr": "Comparer sur"},
     "ex_c_profil": {"en": "Profile {n}", "fr": "Profil {n}"},
+    "ex_c_branches": {"en": "Themes to compare on",
+                      "fr": "Thématiques à comparer"},
+    "ex_c_branches_ph": {
+        "en": "Dimensions or indicators — three or more draw a radar",
+        "fr": "Dimensions ou indicateurs — à partir de trois, un radar"},
+    "ex_c_branches_r": {"en": "Answers to compare on",
+                        "fr": "Réponses à comparer"},
+    "ex_c_radar_pct": {
+        "en": "The radar canvas runs from 0 to 10: shares are read at a "
+              "tenth of their value.",
+        "fr": "La toile du radar va de 0 à 10 : les parts s'y lisent au "
+              "dixième de leur valeur."},
     "ex_c_choisir_r": {"en": "Choose an answer", "fr": "Choisir une réponse"},
     "ex_c_vide_b": {
-        "en": "Pick a question and one of its answers, then define the "
-              "profiles to compare.",
-        "fr": "Choisissez une question et l'une de ses réponses, puis "
-              "définissez les profils à comparer."},
+        "en": "Pick a question, then the answers that will make the branches "
+              "and the profiles that will be drawn on them.",
+        "fr": "Choisissez une question, puis les réponses qui feront les "
+              "branches et les profils qui s'y dessineront."},
     "ex_c_vide_s": {
-        "en": "Pick a dimension or an indicator, then define the profiles to "
-              "compare.",
-        "fr": "Choisissez une dimension ou un indicateur, puis définissez "
-              "les profils à comparer."},
+        "en": "Pick the themes to compare on: each one becomes a branch, and "
+              "each profile an area drawn across them.",
+        "fr": "Choisissez les thématiques à comparer : chacune devient une "
+              "branche, et chaque profil une aire posée dessus."},
     "ex_c_radar_3": {
-        "en": "The radar needs three profiles; define the missing ones to "
-              "unlock it.",
-        "fr": "Le radar demande trois profils ; renseignez ceux qui manquent "
-              "pour l'obtenir."},
+        "en": "The radar needs three themes; add the missing ones to unlock "
+              "it.",
+        "fr": "Le radar demande trois thématiques ; ajoutez celles qui "
+              "manquent pour l'obtenir."},
     "ex_c_scores": {"en": "Resilience scores", "fr": "Scores de résilience"},
     "ex_c_brut": {"en": "A survey answer", "fr": "Une réponse d'enquête"},
     "ex_c_sans_critere": {
@@ -1129,7 +1146,11 @@ def _barres(lignes, ens, mesure, mg=None):
     utile = LARG - MG_G - RESERVE
     parts, axe_vu, y = [], None, MG_H
 
-    if ens["part"] is not None:
+    # LA RÉFÉRENCE D'ENSEMBLE EST FACULTATIVE. Quand les lignes portent des
+    # mesures différentes — trois profils sur sept thématiques —, un unique
+    # trait pointillé ne veut plus rien dire : il n'y a pas UNE valeur
+    # d'ensemble, il y en a sept.
+    if ens and ens.get("part") is not None:
         x = MG_G + utile * ens["part"] / vmax
         parts.append(
             f'<line x1="{x:.1f}" y1="{MG_H - 12}" x2="{x:.1f}" '
@@ -2492,19 +2513,35 @@ def _profil_choix(cat, prefixe, titre):
     return masque, (" · ".join(nom) if nom else None)
 
 
+def _cibles_possibles(cat):
+    """Les thématiques comparables : les sept dimensions, puis les indicateurs.
+
+    UNE THÉMATIQUE EST UN AXE DU RADAR, et rien n'oblige à ce que ce soit une
+    dimension : comparer trois profils sur cinq indicateurs d'accès aux
+    services est une question aussi légitime que les comparer sur les sept
+    dimensions. Les deux niveaux sont donc dans la même liste, les dimensions
+    d'abord.
+    """
+    out = [(f"d:{c}", T(c), None) for c in _DIMS]
+    for i, x in enumerate(_inds_tries(cat)):
+        out.append((f"i:{i}", f'{T(x["dim"])} · {_nom_ind(x)}', x))
+    return out
+
+
 def render_comparaison(cat):
-    """Trois profils, une mesure, et la forme sous laquelle on les lit.
+    """Des profils, des thématiques, et le dessin qui les croise.
 
-    COMPARER, C'EST METTRE DES GROUPES NOMMÉS CÔTE À CÔTE SUR UNE MESURE. La
-    version précédente demandait des critères de ventilation et produisait
-    toutes les cases de leur croisement : dix sections, vingt barres, et le
-    lecteur cherchait les deux qui l'intéressaient. Ici c'est lui qui nomme
-    les groupes — trois au plus, composés registre par registre — et l'écran
-    ne dessine que ceux-là.
+    UNE COMPARAISON A DEUX DIMENSIONS, ET LE RADAR LES MONTRE TOUTES LES
+    DEUX. Ce qu'on compare — les thématiques — devient les branches de
+    l'étoile ; qui l'on compare — les profils — devient les aires posées
+    dessus. Un profil qui décroche sur une seule branche se voit d'un coup
+    d'œil, ce qu'aucune liste de barres ne montre aussi vite. En barres, le
+    même tableau se relit thématique par thématique, avec les profils les uns
+    sous les autres.
 
-    LA MESURE SE CHOISIT D'ABORD, ET ELLE EST UNE. Une réponse d'enquête, ou
-    un score de résilience : dans les deux cas un seul chiffre par profil,
-    sans quoi il n'y a pas de comparaison mais une superposition.
+    TROIS PROFILS AU PLUS, PARCE QUE LE DESSIN NE TIENT PAS AU-DELÀ. Quatre
+    aires superposées sur la même étoile ne se distinguent plus, et la
+    fonction de rendu s'arrête d'elle-même à trois.
     """
     if not cat:
         return
@@ -2518,7 +2555,7 @@ def render_comparaison(cat):
                 raz_comparaison()
                 st.rerun()
 
-        # ---- 1. ce qu'on compare ---------------------------------------
+        # ---- 1. les thématiques, qui deviendront les branches -----------
         with st.container(key="exb_q_zone_c"):
             st.markdown(f'<div class="exb-sec" style="margin:0 0 2px">'
                         f'{_e(T("ex_c_sur"))}<span class="l"></span></div>',
@@ -2528,10 +2565,11 @@ def render_comparaison(cat):
                 default="scores", label_visibility="collapsed",
                 format_func=lambda c: T("ex_c_" + c)) or "scores"
 
-            q = modalite = ind = cible = None
+            q = None
+            branches = []          # [(libellé, cible, ind)] ou [(lib, mod)]
             if source == "brut":
                 questions = cat["questions"]
-                c1, c2, c3 = st.columns([1, 2.2, 1.3])
+                c1, c2 = st.columns([1, 2.4])
                 with c1:
                     themes = sorted({x.get("category") or ""
                                      for x in questions},
@@ -2552,82 +2590,89 @@ def render_comparaison(cat):
                             next(x for x in vues if x["i"] == i),
                             avec_theme=theme is None))
                 q = next((x for x in vues if x["i"] == qi), None)
-                with c3:
-                    # LA RÉPONSE EST OBLIGATOIRE ICI, et c'est ce qui
-                    # distingue cet écran des résultats bruts : comparer
-                    # trois profils sur la répartition entière d'une
-                    # question donnerait trois séries de barres, pas une
-                    # comparaison.
-                    modalite = (st.selectbox(
-                        T("ex_reponse"), list(q["modalites"]),
-                        key=f"exc_m_{qi}", index=None,
-                        placeholder=T("ex_c_choisir_r"),
-                        format_func=libelles_enquete.modalite)
-                        if q is not None else None)
-                if q is None or modalite is None:
+                if q is None:
                     st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'
                                 f'{_e(T("ex_c_vide_b"))}</p>',
                                 unsafe_allow_html=True)
                     return
-                lib_cible = (_libelle_question(q, avec_theme=False) + " · "
-                             + libelles_enquete.modalite(modalite))
+                # LES BRANCHES SONT LES RÉPONSES DE LA QUESTION. Chaque
+                # profil dessine alors la forme de ses réponses, et deux
+                # profils se comparent sur la répartition entière plutôt
+                # que sur une seule modalité.
+                st.session_state.setdefault(f"exc_mods_{qi}",
+                                            list(q["modalites"]))
+                mods = st.multiselect(
+                    T("ex_c_branches_r"), list(q["modalites"]),
+                    key=f"exc_mods_{qi}",
+                    format_func=libelles_enquete.modalite)
+                branches = [(libelles_enquete.modalite(m), m, None)
+                            for m in mods]
+                lib_mesure = _libelle_question(q, avec_theme=False)
             else:
-                ind, cible, lib_cible = _cible_scores(cat, "exc")
-                if cible is None:
-                    st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'
-                                f'{_e(T("ex_c_vide_s"))}</p>',
-                                unsafe_allow_html=True)
-                    return
+                opts = _cibles_possibles(cat)
+                par_cle = {c: (lib, ind) for c, lib, ind in opts}
+                choix = st.multiselect(
+                    T("ex_c_branches"), [c for c, _l, _i in opts],
+                    key="exc_cibles", max_selections=12,
+                    placeholder=T("ex_c_branches_ph"),
+                    format_func=lambda c: par_cle[c][0])
+                branches = [(par_cle[c][0], c, par_cle[c][1]) for c in choix]
+                lib_mesure = T("ex_c_scores")
+            if not branches:
+                st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'
+                            f'{_e(T("ex_c_vide_s"))}</p>',
+                            unsafe_allow_html=True)
+                return
 
-        # ---- 2. les trois profils --------------------------------------
+        # ---- 2. les profils, qui deviendront les aires -----------------
         profils = []
         for i in (1, 2, 3):
             m, nom = _profil_choix(cat, f"exc_p{i}", T("ex_c_profil", n=i))
-            profils.append((nom, m))
+            profils.append((nom or T("ex_tout_ech"), m))
+        profils = [(n, m) for n, m in profils if int(m.sum()) > 0]
 
-        # ---- 3. le résultat --------------------------------------------
-        lignes = []
-        for i, (nom, m) in enumerate(profils, start=1):
-            nb = int(m.sum())
-            if nb == 0:
-                continue
-            lib = nom or T("ex_tout_ech")
+        # ---- 3. la valeur de chaque profil sur chaque branche -----------
+        mesure = "part" if source == "brut" else "score"
+        if source == "brut":
+            m_rep = np.zeros(cat["n"], dtype=bool)
+            for j in range(len(q["modalites"])):
+                m_rep |= cat["bits"][q["debut"] + j]
+
+        def _valeur(masque, cle):
             if source == "brut":
-                m_rep = np.zeros(cat["n"], dtype=bool)
-                for j in range(len(q["modalites"])):
-                    m_rep |= cat["bits"][q["debut"] + j]
-                base = int((m_rep & m).sum())
-                k = int((cat["bits"][q["debut"]
-                                     + q["modalites"].index(modalite)]
-                         & m_rep & m).sum())
-                val = (100.0 * k / base) if base else None
-                lignes.append({"nom": lib, "cle": f"p{i}",
-                               "axe": T("ex_c_profil", n=i),
-                               "axe_code": f"p{i}", "n": base, "k": k,
-                               "part": val})
-            else:
-                nb2, sc = _score_cible(cat, m, cible, ind)
-                lignes.append({"nom": lib, "cle": f"p{i}",
-                               "axe": T("ex_c_profil", n=i),
-                               "axe_code": f"p{i}", "n": nb2, "k": None,
-                               "part": sc, "score": sc})
-        lignes = [l for l in lignes if l["n"] > 0]
+                base = int((m_rep & masque).sum())
+                k = int((cat["bits"][q["debut"] + q["modalites"].index(cle)]
+                         & m_rep & masque).sum())
+                return base, k, (100.0 * k / base) if base else None
+            nb, sc = _score_cible(cat, masque, cle, None)
+            return nb, None, sc
 
+        lignes = []
+        for lib_b, cle, _ind in branches:
+            for nom_p, masque in profils:
+                nb, k, v = _valeur(masque, cle)
+                if nb <= 0:
+                    continue
+                lignes.append({"nom": nom_p, "cle": f"{cle}|{nom_p}",
+                               "axe": lib_b, "axe_code": str(cle),
+                               "n": nb, "k": k, "part": v, "score": v})
+
+        # ---- 4. la forme -----------------------------------------------
         r1, r3 = st.columns([1.6, 2.4], vertical_alignment="center")
         with r1:
             st.markdown(f'<div class="exb-sec" style="margin:14px 0 0">'
                         f'{_e(T("ex_res"))}</div>', unsafe_allow_html=True)
-        # LE RADAR DEMANDE TROIS SOMMETS : il n'est proposé qu'une fois les
-        # trois profils renseignés, sans quoi il renverrait un message
-        # d'excuse à la place du dessin demandé.
-        formes = ["barres"] + (["radar"] if len(lignes) >= 3 else [])
+        # LE RADAR DEMANDE TROIS BRANCHES, PAS TROIS PROFILS : ce sont les
+        # branches qui font les sommets de l'étoile. Une seule thématique se
+        # lit en barres, et rien d'autre.
+        formes = ["barres"] + (["radar"] if len(branches) >= 3 else [])
         with r3:
             with st.container(key="exb_vue_c"):
                 forme = st.segmented_control(
                     T("ex_format"), formes, key="exc_forme",
                     default="barres", label_visibility="collapsed",
                     format_func=lambda f: T("ex_" + f)) or "barres"
-        if len(lignes) < 3:
+        if len(branches) < 3:
             st.markdown(f'<p class="ex-note" style="margin:2px 0 6px">'
                         f'{_e(T("ex_c_radar_3"))}</p>',
                         unsafe_allow_html=True)
@@ -2635,37 +2680,31 @@ def render_comparaison(cat):
             st.info(T("ex_s_rien"))
             return
 
-        mesure = "part" if source == "brut" else "score"
-        # LA RÉFÉRENCE DE L'ENSEMBLE EST LE TRAIT POINTILLÉ DU GRAPHIQUE.
-        # Sans elle, trois profils se comparent entre eux sans qu'on sache
-        # si les trois sont au-dessus ou au-dessous de l'échantillon ; et
-        # l'histogramme, qui la lit toujours, tombait sur une référence
-        # absente.
-        _tout = np.ones(cat["n"], dtype=bool)
-        if source == "brut":
-            _m_rep = np.zeros(cat["n"], dtype=bool)
-            for j in range(len(q["modalites"])):
-                _m_rep |= cat["bits"][q["debut"] + j]
-            _base = int(_m_rep.sum())
-            _k = int((cat["bits"][q["debut"]
-                                  + q["modalites"].index(modalite)]
-                      & _m_rep).sum())
-            ens = {"n": _base, "k": _k,
-                   "part": (100.0 * _k / _base) if _base else None}
-        else:
-            _nb, _sc = _score_cible(cat, _tout, cible, ind)
-            ens = {"n": _nb, "k": None, "part": _sc, "score": _sc}
         st.markdown(f'<div class="ex-titre" style="margin-top:8px">'
-                    f'{_e(lib_cible)}</div>', unsafe_allow_html=True)
+                    f'{_e(lib_mesure)}</div>', unsafe_allow_html=True)
         if forme == "radar":
-            svg = radar.render_radar_svg(
-                [l["nom"] for l in lignes],
-                [(lib_cible, [l[mesure] for l in lignes], VERT_APRI)],
-                taille=430)
-            st.markdown(f'<div style="max-width:760px;margin:6px auto 0">'
-                        f'{svg}</div>', unsafe_allow_html=True)
+            # LA TOILE DU RADAR EST GRADUÉE DE 0 À 10 : une part de
+            # pourcentage y est ramenée au dixième, et la note le dit. Sans
+            # cela, toutes les aires seraient plaquées contre le bord.
+            div = 10.0 if source == "brut" else 1.0
+            par_axe = {b[0]: {} for b in branches}
+            for l in lignes:
+                par_axe[l["axe"]][l["nom"]] = l[mesure]
+            axes = [b[0] for b in branches]
+            series = [(nom, [(par_axe[a].get(nom) / div
+                              if par_axe[a].get(nom) is not None else None)
+                             for a in axes], coul)
+                      for (nom, _m), coul in zip(profils, _COULEURS_PROFILS)]
+            st.markdown(
+                '<div style="max-width:860px;margin:6px auto 0">'
+                + radar.render_radar_svg(axes, series, taille=470)
+                + '</div>', unsafe_allow_html=True)
+            if source == "brut":
+                st.markdown(f'<p class="ex-note" style="margin:6px 0 0">'
+                            f'{_e(T("ex_c_radar_pct"))}</p>',
+                            unsafe_allow_html=True)
         else:
-            st.markdown(_barres(lignes, ens, mesure),
+            st.markdown(_barres(lignes, None, mesure),
                         unsafe_allow_html=True)
         st.markdown(_synthese(lignes, mesure), unsafe_allow_html=True)
 
@@ -2673,7 +2712,6 @@ def render_comparaison(cat):
 def raz_comparaison():
     for k in [k for k in list(st.session_state)
               if str(k).startswith(("exc_p1_", "exc_p2_", "exc_p3_",
-                                    "exc_dim", "exc_ind", "exc_theme",
-                                    "exc_q_", "exc_m_", "exc_forme",
-                                    "exc_source"))]:
+                                    "exc_cibles", "exc_mods_", "exc_theme",
+                                    "exc_q_", "exc_forme", "exc_source"))]:
         st.session_state.pop(k, None)
