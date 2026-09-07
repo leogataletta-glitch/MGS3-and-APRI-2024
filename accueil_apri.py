@@ -248,16 +248,24 @@ STYLE = """
      marche, dont le mot d'après tient sur deux lignes, « plusieurs »
      décrochait d'une ligne entière sous « mois ». Une règle qui corrige une
      marche et en casse une autre n'est pas une règle. */
-  .uma-av { font-size:14.5px; color:#5a6a80; line-height:1.35;
-            text-align:right; flex:0 0 auto; max-width:31ch; }
+  .uma-av { font-size:13px; color:#5a6a80; line-height:1.35;
+            text-align:right !important; flex:0 0 auto; max-width:31ch; }
   /* LE MÊME ROMAIN À EMPATTEMENTS QUE LA PHRASE D'OUVERTURE. Les deux blocs
      se répondent en haut et en bas de la colonne ; une troisième police les
      aurait séparés sans raison. */
-  .uma-nb { font-family:Georgia,"Times New Roman",serif; font-size:44px;
+  /* L'ESCALIER A BAISSÉ D'UN CRAN. Quatre nombres en corps quarante-quatre
+     tenaient la moitié de la page pour dire quatre chiffres, pendant que la
+     carte — qui, elle, montre le territoire — se serrait dans l'autre
+     moitié. En corps trente-six, l'escalier garde son allure et rend la
+     place à la carte. */
+  .uma-nb { font-family:Georgia,"Times New Roman",serif; font-size:36px;
             line-height:1; color:#1f7a4d; letter-spacing:-.015em;
             white-space:nowrap; flex:0 0 auto; }
-  .uma-ap { font-size:14.5px; color:#33455c; line-height:1.35;
-            max-width:26ch; }
+  /* AU FIL DE L'EAU, ET NON JUSTIFIÉ. La feuille de l'application justifie
+     les paragraphes ; sur une colonne de vingt-six signes, le mot d'après
+     d'une marche se retrouvait étiré en trois blocs séparés par des vides. */
+  .uma-ap { font-size:13px; color:#33455c; line-height:1.35;
+            max-width:26ch; text-align:left; }
 
   /* LA CARTE N'A NI CADRE NI FOND, ET LA MER EST TRANSPARENTE.
      Encadrée sur un aplat bleu, elle formait une vignette collée au milieu
@@ -702,7 +710,7 @@ def _comprendre(m):
     # presque égales il restait petit au milieu d'une page qui, elle, ne l'est
     # pas. La colonne de gauche cède la vingtaine de pixels qui la sépare de
     # la limite où la justification se creuse ; la carte les prend.
-    g, d = st.columns([1.2, 1.8], gap="medium")
+    g, d = st.columns([1, 2.1], gap="medium")
     with g:
         st.markdown(f'<div class="uma-socle">'
                     f'<div class="uma-sur">{_e(T("po_socle_sur"))}</div>'

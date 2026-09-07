@@ -21,8 +21,8 @@ SOUS_VUES = {
     # questionnaire.
     "ra_sat":     ("dimensions", "ra_source", "satellite"),
     "ra_scores":  ("dimensions", "ra_vue",  "scores"),
-    "ra_paysage": ("dimensions", "ra_vue",  "paysage"),
-    "ra_groupe":  ("dimensions", "ra_vue",  "groupe"),
+    "ra_comparer": ("dimensions", "ra_vue", "comparer"),
+    "ra_profil":   ("dimensions", "ra_vue", "profil"),
     "ra_solutions": ("dimensions", "ra_vue", "solutions"),
     # LES CINQ ÉCRANS DES BOUCLES. « boucles » rend le premier ; les quatre
     # autres sont adressés par leur code de vue.

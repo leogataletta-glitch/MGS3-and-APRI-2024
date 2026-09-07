@@ -877,7 +877,11 @@ st.markdown(("""
      étiquette de rangement, pas une destination. */
   div[class*="st-key-zone_nav"] .nav-famille {
     font-size: 10px; font-weight: 700; letter-spacing: .11em;
-    text-transform: uppercase; color: #2f6b4f;
+    /* EXACTEMENT LE VERT DU PIED DE PAGE. Deux verts proches sur la même
+       page se lisent comme une erreur d'impression plutôt que comme une
+       nuance : la colonne et le bandeau du bas portent maintenant le
+       même. */
+    text-transform: uppercase; color: #1f5b46;
     margin: 20px 0 7px; padding-left: 10px;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button {
@@ -1567,8 +1571,8 @@ TEXTES_NAV = {
     "ra_o_brut": {"en": "Raw Results", "fr": "Résultats bruts"},
     "ra_o_scores": {"en": "Resilience Scores",
                     "fr": "Scores de résilience"},
-    "ra_o_paysage": {"en": "By Landscape", "fr": "Par paysage"},
-    "ra_o_groupe": {"en": "By Social Group", "fr": "Par groupe social"},
+    "ra_o_comparer": {"en": "Compare", "fr": "Comparer"},
+    "ra_o_profil": {"en": "Profile", "fr": "Profil"},
     # L'ONGLET NE PROPOSE PLUS DES SOLUTIONS, IL DÉSIGNE DES CIBLES. Une
     # piste d'action lue avant d'avoir nommé la variable qui décroche est une
     # opinion ; nommer la variable, c'est le point de départ des boucles.
@@ -1587,12 +1591,12 @@ TEXTES_NAV = {
     "ra_d_scores": {
         "en": "The 0–10 index, on any combination of groups",
         "fr": "L'indice sur 10, sur n'importe quelle combinaison de groupes"},
-    "ra_d_paysage": {
-        "en": "What sets a landscape apart from the rest",
-        "fr": "Ce qui distingue un paysage du reste"},
-    "ra_d_groupe": {
-        "en": "What sets a social group apart from the rest",
-        "fr": "Ce qui distingue un groupe social du reste"},
+    "ra_d_comparer": {
+        "en": "Groups side by side, on any measure",
+        "fr": "Des groupes côte à côte, sur n'importe quelle mesure"},
+    "ra_d_profil": {
+        "en": "One group, its strengths and its weaknesses",
+        "fr": "Un groupe, ses forces et ses faiblesses"},
     "ra_d_solutions": {
         "en": "Where to start, and why there rather than elsewhere",
         "fr": "Par où commencer, et pourquoi là plutôt qu'ailleurs"},
@@ -1689,7 +1693,7 @@ _RENOMMEES = ("mode_accueil", "mode_methodo", "mode_dimensions",
               "mode_synthese", "mode_actions", "mode_donnees",
               "mode_boucles", "mode_croisement", "mode_rapport",
               "mode_levier", "mode_bailleurs", "ra_o_brut", "ra_o_scores",
-              "ra_o_paysage", "ra_o_groupe", "ra_o_solutions")
+              "ra_o_comparer", "ra_o_profil", "ra_o_solutions")
 for _c, _v in TEXTES_NAV.items():
     if _c in _RENOMMEES:
         i18n.DICO[_c] = _v
@@ -2170,7 +2174,14 @@ with _c_contenu:
         # détail d'un indicateur ventilé par un axe — se lit désormais dans
         # « Scores de résilience », qui compare plusieurs indicateurs sur la
         # même grille de filtres et de projection.
-        _CODES_RA = ["brut", "scores", "paysage", "groupe", "solutions"]
+        # « PAR PAYSAGE » ET « PAR GROUPE SOCIAL » ONT CÉDÉ LA PLACE À
+        # « COMPARER » ET « PROFIL ». Les deux écrans retirés faisaient la
+        # même chose sur deux découpages écrits en dur dans leur nom, et
+        # aucun des deux ne savait comparer les femmes du littoral aux
+        # hommes de la montagne. Comparer met des groupes côte à côte sur
+        # une mesure, quels que soient les critères qui les définissent ;
+        # Profil prend un groupe et déroule ses forces et ses faiblesses.
+        _CODES_RA = ["brut", "scores", "comparer", "profil", "solutions"]
         # LA BARRE EST COMPACTE ICI, ET NULLE PART AILLEURS. Six cartes à
         # deux lignes occupaient quatre-vingts pixels de haut avant le
         # premier réglage, et pesaient autant que l'analyse qu'elles
@@ -2186,7 +2197,7 @@ with _c_contenu:
         # C'est le même fichier de réponses individuelles ; le charger dans
         # chaque module en ferait cinq copies en mémoire.
         _cat = croisement_resultats._catalogue() \
-            if _ra in ("brut", "scores", "paysage", "groupe",
+            if _ra in ("brut", "scores", "comparer", "profil",
                        "solutions") \
             else None
 
@@ -2251,24 +2262,11 @@ with _c_contenu:
             # mode d'affichage choisi et rien d'autre.
             explorateur.render_scores(_cat)
 
-        elif _ra == "paysage":
-            # LA FICHE PAYSAGE EXISTAIT DÉJÀ et se lit d'une traite ; l'écran
-            # d'écarts la prolonge par ce qu'elle ne disait pas — quels
-            # indicateurs, précisément, séparent un paysage de l'autre.
-            # LA FICHE NE SUIT QUE SI L'ÉCRAN DU HAUT A RÉPONDU. Tant qu'aucun
-            # mode d'affichage n'est choisi, la page doit rester vide : une
-            # fiche complète posée dessous — sa barre de filtres, son radar —
-            # annulerait la promesse faite deux lignes plus haut.
-            if analyse_ecarts.render_paysage(_cat):
-                st.markdown('<div style="height:30px"></div>',
-                            unsafe_allow_html=True)
-                fiche_paysages.render(entete=False)
+        elif _ra == "comparer":
+            explorateur.render_comparaison(_cat)
 
-        elif _ra == "groupe":
-            if analyse_ecarts.render_groupe(_cat):
-                st.markdown('<div style="height:30px"></div>',
-                            unsafe_allow_html=True)
-                synthese_page.render(entete=False)
+        elif _ra == "profil":
+            explorateur.render_profil(_cat)
 
         else:
             # LES VARIABLES ALARMANTES SE LISENT APRÈS LES ÉCARTS, et c'est

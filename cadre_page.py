@@ -1553,8 +1553,11 @@ STYLE = """
      de l'indicateur ouvert ou de l'exemple. */
   .cad-ex-t { font-size:12px; font-weight:700; letter-spacing:.09em;
         text-transform:uppercase; color:#1a6b52; margin:14px 0 10px; }
+  /* DE L'AIR SOUS LA PHRASE D'OUVERTURE. Dix-huit pixels la collaient aux
+     deux colonnes : elle se lisait comme la première ligne du tableau plutôt
+     que comme la phrase qui l'annonce. */
   p.cad-attr-x { font-size:15px !important; color:#3c4761 !important;
-            line-height:1.55 !important; margin:2px 0 18px !important;
+            line-height:1.55 !important; margin:2px 0 34px !important;
             max-width:96ch; }
   /* SANS PICTOGRAMME, C'EST LE TITRE QUI OUVRE LA COLONNE, et un filet vert
      sous lui remplace le disque : il tient le même rôle — dire où commence

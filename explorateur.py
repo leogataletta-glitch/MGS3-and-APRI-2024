@@ -86,6 +86,21 @@ TEXTES = {
     "ex_dim_cat": {"en": "Categories", "fr": "Catégories"},
     "ex_dim_plus": {"en": "Add a criterion", "fr": "Ajouter un critère"},
     "ex_tout_ech": {"en": "Whole sample", "fr": "Tout l'échantillon"},
+    # --- comparer, et profiler
+    "ex_c_sur": {"en": "Compare on", "fr": "Comparer sur"},
+    "ex_c_scores": {"en": "Resilience scores", "fr": "Scores de résilience"},
+    "ex_c_brut": {"en": "A survey answer", "fr": "Une réponse d'enquête"},
+    "ex_c_sans_critere": {
+        "en": "Add at least one breakdown criterion: a comparison needs "
+              "groups to put side by side.",
+        "fr": "Ajoutez au moins un critère de ventilation : une comparaison "
+              "demande des groupes à mettre côte à côte."},
+    "ex_p_qui": {"en": "Whose profile", "fr": "Le profil de qui"},
+    "ex_p_tous": {"en": "All", "fr": "Tous"},
+    "ex_p_forts": {"en": "Highest scores", "fr": "Les meilleurs scores"},
+    "ex_p_faibles": {"en": "Lowest scores", "fr": "Les plus faibles scores"},
+    "ex_p_n": {"en": "{n} households · overall index {s} / 10",
+               "fr": "{n} ménages · indice global {s} / 10"},
     "ex_pourquoi_carte": {
         "en": "Map: available with the single criterion Communal section and "
               "one answer chosen.",
@@ -1045,8 +1060,14 @@ def _filtrer(lignes, choix, ens=None):
     return [x for x in lignes if id(x) in garder]
 
 
-def _barres(lignes, ens, mesure):
+def _barres(lignes, ens, mesure, mg=None):
     """L'histogramme, dessiné.
+
+    LA MARGE DE GAUCHE EST RÉGLABLE, ET IL LE FAUT. Deux cent dix pixels
+    suffisent à « Anse à Drick » ou « Femmes · Montagne » ; ils coupent
+    « Exposure to Public Sector Corruption » par la gauche, hors du cadre du
+    dessin. Les écrans qui alignent des noms d'indicateurs demandent donc
+    une marge plus large, et eux seuls.
 
     LA LIGNE DE L'ENSEMBLE EST TRACÉE EN POINTILLÉS. Sans repère, une part de
     38 % ne dit rien ; comparée aux 31 % de l'ensemble des répondants, elle
@@ -1062,7 +1083,15 @@ def _barres(lignes, ens, mesure):
     dec = 0 if mesure == "part" else 2
     unite = "&#8201;%" if mesure == "part" else ""
     LARG, H_L, GAP, H_AXE = 1000, 30, 9, 26
-    MG_G, MG_H, MG_B = 210, 26, 30
+    # LA MARGE SE MESURE SUR LE PLUS LONG DES NOMS. À douze pixels et demi,
+    # un caractère occupe un peu plus de six pixels de large ; la marge suit,
+    # entre deux cent dix — la largeur qui convenait aux noms de groupes — et
+    # quatre cent trente, au-delà de quoi c'est la barre qui n'aurait plus de
+    # place. Un plafond, pas une troncature : le nom reste entier.
+    if mg is None:
+        _long = max((len(l.get("nom") or "") for l in lignes), default=0)
+        mg = min(430, max(210, int(6.4 * _long) + 14))
+    MG_G, MG_H, MG_B = mg, 26, 30
     n_axes = len({l.get("axe") for l in lignes if l.get("axe")})
     H = (MG_H + len(lignes) * (H_L + GAP)
          + max(n_axes - 1, 0) * H_AXE + MG_B)
@@ -1441,6 +1470,33 @@ _REGISTRES_S = [("section", "ex_ax_section"), ("sexe", "ex_ax_sexe"),
                 ("paysage", "ex_ax_paysage")]
 
 
+def _lignes_ventil_choisis(cat, dims, cible, ind, filtre):
+    """Le score de la cible sur les groupes découpés par les critères retenus.
+
+    C'EST EXACTEMENT LA GRAMMAIRE DES RÉSULTATS BRUTS. Les catégories gardées
+    de chaque critère sont filtrées AVANT le regroupement, puis croisées dans
+    l'ordre où les critères ont été posés. Sans critère, il reste un seul
+    groupe — tout l'échantillon retenu — et c'est ce qui donne le score
+    d'ensemble sans avoir à ruser avec les filtres.
+    """
+    if not dims:
+        nb, sc = _score_cible(cat, filtre, cible, ind)
+        return ([] if nb <= 0 else
+                [{"nom": T("ex_tout_ech"), "cle": "tout",
+                  "axe": T("ex_tout_ech"), "axe_code": "tout",
+                  "n": nb, "k": None, "part": sc, "score": sc}])
+    axe_lib = (T(dict(_REGISTRES_S)[dims[0][0]]) if len(dims) == 1
+               else T("ex_croise"))
+    axe_code = dims[0][0] if len(dims) == 1 else "croisement"
+    out = []
+    for lib, cle, g in _croisements_choisis(cat, dims):
+        nb, sc = _score_cible(cat, g & filtre, cible, ind)
+        out.append({"nom": lib, "cle": cle, "axe": axe_lib,
+                    "axe_code": axe_code, "n": nb, "k": None,
+                    "part": sc, "score": sc})
+    return [l for l in out if l["n"] > 0]
+
+
 def _lignes_ventil(cat, axes, cible, ind, filtre):
     """Le score de la cible sur les cases des registres retenus, croisées.
 
@@ -1608,18 +1664,13 @@ def render_scores(cat):
                         else (_nom_ind(inds[i]) if dim
                               else f'{T(inds[i]["dim"])} · '
                                    f'{_nom_ind(inds[i])}')))
-            with c3:
-                # LA DIMENSION RESTE UN CHOIX À PART, hors de la cascade :
-                # elle ne se croise pas avec un registre social — « les
-                # femmes de la dimension environnementale » ne veut rien
-                # dire — et elle n'existe que sur l'indice ou une dimension.
-                _par_dim = k is None and st.checkbox(
-                    T("ex_s_ax_dim"), key="exs_dim_ax")
-        axes = ([] if _par_dim
-                else _projection("exs_axe", [a for a, _l in _REGISTRES_S],
-                                 T("ex_axe"), facultatif=True))
-        if _par_dim:
-            axes = ["dimension"]
+        # LA MÊME ZONE DE PROJECTION QUE LES RÉSULTATS BRUTS. L'écran des
+        # scores avait gardé la cascade « puis par », plus une case à cocher
+        # « Dimension » à côté d'elle : deux grammaires pour un même geste,
+        # à deux onglets d'écart, et aucune des deux ne permettait de ne
+        # garder que deux sections. Les critères de ventilation, chacun avec
+        # ses catégories, font ici ce qu'ils font là-bas.
+        dims = _zone_projection(cat, prefixe="exs")
         if k is not None:
             ind = inds[k]
             cible = f"i:{_inds_tries(cat).index(ind)}"
@@ -1659,13 +1710,26 @@ def render_scores(cat):
                 T("ex_s_mode"), ["actuel", "bas", "haut", "ecarts"],
                 key="exs_mode", label_visibility="collapsed",
                 format_func=lambda m: T("ex_s_m_" + m))
+        # LA CARTE ET LE RADAR NE S'OFFRENT QUE S'ILS PEUVENT SE DESSINER,
+        # comme sur les résultats bruts. La carte se trace par section
+        # communale et par elle seule ; le radar demande au moins trois
+        # sommets. Proposés hors de ces cas, ils renvoyaient un message
+        # d'excuse à la place du graphique demandé.
+        formes = ["barres"]
+        if len(dims) == 1 and dims[0][0] == "section":
+            formes.append("carte")
+        formes += ["radar", "tableau"]
         with r3:
             with st.container(key="exb_vue_s"):
                 forme = st.segmented_control(
-                    T("ex_format"), ["barres", "carte", "radar", "tableau"],
+                    T("ex_format"), formes,
                     key="exs_forme", default="barres",
                     label_visibility="collapsed",
                     format_func=lambda f: T("ex_" + f)) or "barres"
+        if "carte" not in formes:
+            st.markdown(f'<p class="ex-note" style="margin:2px 0 6px">'
+                        f'{_e(T("ex_pourquoi_carte"))}</p>',
+                        unsafe_allow_html=True)
 
         # ---- les écarts entre groupes ont leur propre tableau ------------
         if mode == "ecarts":
@@ -1694,10 +1758,10 @@ def render_scores(cat):
         if compares:
             titre = T("ex_s_comp_t")
             lignes = _lignes_indicateurs(cat, compares, filtre)
-        elif axes:
+        elif dims:
             titre = (T("ex_s_bas_a") if mode == "bas"
                      else T("ex_s_haut_a") if mode == "haut" else lib_cible)
-            lignes = _lignes_ventil(cat, axes, cible, ind, filtre)
+            lignes = _lignes_ventil_choisis(cat, dims, cible, ind, filtre)
         elif mode in ("bas", "haut"):
             titre = T("ex_s_bas_i" if mode == "bas" else "ex_s_haut_i")
             lignes = _lignes_indicateurs(cat, inds, filtre)
@@ -1727,7 +1791,8 @@ def render_scores(cat):
             st.info(T("ex_radar_court"))
             forme = "barres"
         if forme == "carte":
-            svg = _carte(lignes) if axes == ["section"] else None
+            svg = (_carte(lignes)
+                   if len(dims) == 1 and dims[0][0] == "section" else None)
             if svg is None:
                 st.info(T("ex_s_carte_sec"))
                 forme = "barres"
@@ -1763,6 +1828,7 @@ def raz_scores():
     """
     for k in [k for k in list(st.session_state)
               if str(k).startswith(("exs_f_", "exs_cmp_", "exs_axe",
+                                    "exs_dim", "exs_dims", "exs_cat_",
                                     "exs_forme", "exs_mode", "exs_k"))]:
         st.session_state.pop(k, None)
 
@@ -1908,7 +1974,7 @@ def _projection(cle, dispo, libelle, facultatif=False):
     return [a for a in (a1, a2, a3) if a is not None]
 
 
-def _zone_projection(cat):
+def _zone_projection(cat, prefixe="exb"):
     """Les dimensions de projection, et pour chacune ses catégories.
 
     DEUX GESTES DISTINCTS, ET C'EST TOUT L'OBJET DE CE BLOC. Choisir une
@@ -1931,8 +1997,9 @@ def _zone_projection(cat):
     vides.
     """
     dispo = [a for a, _l in AXES]
-    st.session_state.setdefault("exb_dims", [dispo[0]])
-    dims = [a for a in st.session_state["exb_dims"] if a in dispo]
+    cle_dims = prefixe + "_dims"
+    st.session_state.setdefault(cle_dims, [dispo[0]])
+    dims = [a for a in st.session_state[cle_dims] if a in dispo]
 
     st.markdown(f'<div class="exb-sec" style="margin:6px 0 2px">'
                 f'{_e(T("ex_axe"))}<span class="l"></span></div>',
@@ -1945,29 +2012,29 @@ def _zone_projection(cat):
         with c1:
             nouveau = st.selectbox(
                 T("ex_dim_n", n=i + 1), libres, index=libres.index(axe),
-                key=f"exb_dim_{i}",
+                key=f"{prefixe}_dim_{i}",
                 format_func=lambda a: T(dict(AXES)[a]))
         if nouveau != axe:
             # LE CHANGEMENT DE DIMENSION EMPORTE SES CATÉGORIES : celles de
             # l'ancienne n'ont aucun sens sous la nouvelle.
-            st.session_state["exb_dims"][i] = nouveau
-            st.session_state.pop(f"exb_cat_{axe}", None)
+            st.session_state[cle_dims][i] = nouveau
+            st.session_state.pop(f"{prefixe}_cat_{axe}", None)
             st.rerun()
         vals = [v for v, _lib in _cases(cat, axe)]
-        st.session_state.setdefault(f"exb_cat_{axe}", list(vals))
+        st.session_state.setdefault(f"{prefixe}_cat_{axe}", list(vals))
         with c2:
             gardees = st.multiselect(
-                T("ex_dim_cat"), vals, key=f"exb_cat_{axe}",
+                T("ex_dim_cat"), vals, key=f"{prefixe}_cat_{axe}",
                 placeholder=T("ex_dim_toutes"), format_func=_lib)
         with c3:
             # LE DERNIER CRITÈRE S'ENLÈVE AUSSI, et c'est ce qui donne le
             # résultat sur tout l'échantillon : sans critère, il n'y a pas de
             # découpage, donc un seul groupe — tous les ménages retenus.
-            if st.button("✕", key=f"exb_dim_x_{i}", type="tertiary",
+            if st.button("✕", key=f"{prefixe}_dim_x_{i}", type="tertiary",
                          help=T("ex_dim_oter")):
-                st.session_state["exb_dims"] = [
-                    a for a in st.session_state["exb_dims"] if a != axe]
-                st.session_state.pop(f"exb_cat_{axe}", None)
+                st.session_state[cle_dims] = [
+                    a for a in st.session_state[cle_dims] if a != axe]
+                st.session_state.pop(f"{prefixe}_cat_{axe}", None)
                 st.rerun()
         choisies.append((axe, gardees or vals))
 
@@ -1976,10 +2043,10 @@ def _zone_projection(cat):
                     f'<b style="color:#101728">{_e(T("ex_tout_ech"))}</b> · '
                     f'{_e(T("ex_tout_x"))}</p>', unsafe_allow_html=True)
     if len(dims) < len(dispo):
-        if st.button("＋ " + T("ex_dim_plus"), key="exb_dim_plus",
+        if st.button("＋ " + T("ex_dim_plus"), key=f"{prefixe}_dim_plus",
                      type="tertiary"):
             manque = [a for a in dispo if a not in dims]
-            st.session_state["exb_dims"] = list(dims) + [manque[0]]
+            st.session_state[cle_dims] = list(dims) + [manque[0]]
             st.rerun()
     return choisies
 
@@ -2306,3 +2373,276 @@ def _render_brut(cat):
                 T("ex_dl"), data=_csv(montrees, mesure),
                 file_name="resultats_apri.csv", mime="text/csv",
                 key="exb_dl", use_container_width=True)
+
+
+# ====================================================== comparer et profiler
+# POURQUOI CES DEUX ÉCRANS REMPLACENT « PAR PAYSAGE » ET « PAR GROUPE SOCIAL ».
+# Les deux onglets retirés faisaient la même chose sur deux découpages figés :
+# l'un comparait les paysages, l'autre les groupes sociaux, et aucun des deux
+# ne savait comparer les femmes du littoral aux hommes de la montagne. Le
+# découpage n'a pas à être écrit dans le nom d'un onglet : c'est une question
+# que le lecteur pose, et les critères de ventilation la posent déjà mieux —
+# un critère, deux, trois, chacun avec les catégories qu'on garde.
+#
+# COMPARER ET PROFILER SONT DEUX GESTES, PAS UN. Comparer met des groupes côte
+# à côte sur UNE mesure : qui décroche, de combien. Profiler prend UN groupe
+# et déroule ses mesures : ce qui va bien chez lui, ce qui va mal. La première
+# question se lit en barres ou en radar, la seconde en deux listes — les
+# meilleurs scores et les plus faibles. Les mêler dans un écran donnait la
+# fiche interminable qu'on a retirée.
+
+def _cible_scores(cat, prefixe):
+    """Le choix de ce qu'on mesure : l'indice, une dimension, un indicateur."""
+    c1, c2 = st.columns([1, 2])
+    with c1:
+        dim = st.selectbox(
+            T("ex_s_dim"), [None] + _DIMS, key=f"{prefixe}_dim",
+            format_func=lambda c: (T("ex_s_toutes") if c is None else T(c)))
+    inds = [x for x in _inds_tries(cat) if dim is None or x["dim"] == dim]
+    with c2:
+        k = st.selectbox(
+            T("ex_s_ind"), [None] + list(range(len(inds))),
+            key=f"{prefixe}_ind_{dim}",
+            format_func=lambda i: (
+                T("ex_s_tous_i" if dim else "ex_s_tous_i0") if i is None
+                else (_nom_ind(inds[i]) if dim
+                      else f'{T(inds[i]["dim"])} · {_nom_ind(inds[i])}')))
+    if k is not None:
+        ind = inds[k]
+        return ind, f"i:{_inds_tries(cat).index(ind)}", _nom_ind(ind)
+    if dim is not None:
+        return None, f"d:{dim}", T(dim)
+    return None, "global", T("ex_c_global")
+
+
+def render_comparaison(cat):
+    """Comparer des groupes : sur quoi, lesquels, et sous quelle forme.
+
+    TROIS DÉCISIONS, DANS L'ORDRE OÙ ELLES SE POSENT. Sur quoi on compare —
+    une réponse du questionnaire ou un score de résilience ; quels groupes on
+    met côte à côte — les critères de ventilation, cumulables ; et sous
+    quelle forme on les lit — des barres, qui classent, ou un radar, qui
+    donne la silhouette d'un groupe d'un coup d'œil.
+    """
+    if not cat:
+        return
+    st.markdown(STYLE, unsafe_allow_html=True)
+    st.markdown(_CSS_BRUT, unsafe_allow_html=True)
+
+    # LA CLÉ COMMENCE PAR « ex_brut_ », ET C'EST LOAD-BEARING : la feuille de
+    # style de l'écran vise `st-key-ex_brut`, et un conteneur nommé autrement
+    # n'hériterait ni des intitulés de section, ni du bouton de remise à zéro
+    # sans cadre, ni de la ligne de synthèse.
+    with st.container(key="ex_brut_c"):
+        _h1, h2 = st.columns([4, 1], vertical_alignment="center")
+        with h2:
+            if st.button(T("ex_b_raz"), key="exc_raz", type="tertiary"):
+                raz_comparaison()
+                st.rerun()
+
+        with st.container(key="exb_q_zone_c"):
+            st.markdown(f'<div class="exb-sec" style="margin:0 0 2px">'
+                        f'{_e(T("ex_c_sur"))}<span class="l"></span></div>',
+                        unsafe_allow_html=True)
+            source = st.segmented_control(
+                T("ex_c_sur"), ["scores", "brut"], key="exc_source",
+                default="scores", label_visibility="collapsed",
+                format_func=lambda c: T("ex_c_" + c)) or "scores"
+
+            q = modalite = None
+            if source == "brut":
+                questions = cat["questions"]
+                c1, c2, c3 = st.columns([1, 2.2, 1.1])
+                with c1:
+                    themes = sorted({x.get("category") or ""
+                                     for x in questions},
+                                    key=lambda c: _nom_theme(c).lower())
+                    theme = st.selectbox(
+                        T("ex_theme"), [None] + themes, key="exc_theme",
+                        format_func=lambda c: (T("ex_theme_tous")
+                                               if c is None
+                                               else _nom_theme(c)))
+                vues = [x for x in questions
+                        if theme is None or (x.get("category") or "") == theme]
+                with c2:
+                    qi = st.selectbox(
+                        T("ex_question"), [x["i"] for x in vues],
+                        key=f"exc_q_{theme or 'tous'}",
+                        format_func=lambda i: _libelle_question(
+                            next(x for x in vues if x["i"] == i),
+                            avec_theme=theme is None))
+                q = next(x for x in vues if x["i"] == qi)
+                with c3:
+                    # UNE COMPARAISON PORTE SUR UNE RÉPONSE, et c'est ce qui
+                    # la distingue des résultats bruts : comparer dix
+                    # sections sur la répartition entière d'une question
+                    # donne trente barres qui ne se comparent pas. La réponse
+                    # est donc obligatoire ici, et la première est proposée.
+                    modalite = st.selectbox(
+                        T("ex_reponse"), list(q["modalites"]),
+                        key=f"exc_m_{qi}",
+                        format_func=libelles_enquete.modalite)
+                ind = cible = None
+                lib_cible = libelles_enquete.modalite(modalite)
+            else:
+                ind, cible, lib_cible = _cible_scores(cat, "exc")
+
+        dims = _zone_projection(cat, prefixe="exc")
+        filtre, poses = _filtres_population(cat, "exc_f_", _REGISTRES_S)
+        n_f = int(filtre.sum())
+        if n_f == 0:
+            st.info(T("ex_s_vide"))
+            return
+
+        # ---- le résultat ------------------------------------------------
+        r1, r3 = st.columns([1.6, 2.4], vertical_alignment="center")
+        with r1:
+            st.markdown(f'<div class="exb-sec" style="margin:10px 0 0">'
+                        f'{_e(T("ex_res"))}</div>', unsafe_allow_html=True)
+        with r3:
+            with st.container(key="exb_vue_c"):
+                forme = st.segmented_control(
+                    T("ex_format"), ["barres", "radar"], key="exc_forme",
+                    default="barres", label_visibility="collapsed",
+                    format_func=lambda f: T("ex_" + f)) or "barres"
+
+        if not dims:
+            st.info(T("ex_c_sans_critere"))
+            return
+        if source == "brut":
+            lignes = _ventiler_dims(cat, q, modalite, dims, filtre)
+            mesure = "part"
+            ens = None
+        else:
+            lignes = _lignes_ventil_choisis(cat, dims, cible, ind, filtre)
+            mesure = "score"
+            nb_sel, sc_sel = _score_cible(cat, filtre, cible, ind)
+            ens = {"n": nb_sel, "k": None, "part": sc_sel, "score": sc_sel}
+        if not lignes:
+            st.info(T("ex_s_rien"))
+            return
+
+        st.markdown(f'<div class="ex-titre" style="margin-top:8px">'
+                    f'{_e(lib_cible)}</div>', unsafe_allow_html=True)
+        if forme == "radar" and len(lignes) < 3:
+            st.info(T("ex_radar_court"))
+            forme = "barres"
+        if forme == "radar":
+            svg = radar.render_radar_svg(
+                [l["nom"] for l in lignes],
+                [(lib_cible, [l[mesure] for l in lignes], VERT_APRI)],
+                taille=430)
+            st.markdown(f'<div style="max-width:760px;margin:6px auto 0">'
+                        f'{svg}</div>', unsafe_allow_html=True)
+        else:
+            st.markdown(_barres(lignes, ens, mesure), unsafe_allow_html=True)
+        st.markdown(_synthese(lignes, mesure), unsafe_allow_html=True)
+        if poses:
+            st.markdown(f'<p class="ex-note" style="margin:6px 0 0">'
+                        f'{_e(T("ex_s_n", n=_n(n_f), t=_n(cat["n"])))}</p>',
+                        unsafe_allow_html=True)
+
+
+def raz_comparaison():
+    for k in [k for k in list(st.session_state)
+              if str(k).startswith(("exc_f_", "exc_dim", "exc_dims",
+                                    "exc_cat_", "exc_forme", "exc_source"))]:
+        st.session_state.pop(k, None)
+
+
+def render_profil(cat):
+    """Un groupe, et ce qui va bien ou mal chez lui.
+
+    UN SEUL GROUPE, ET TOUTES SES MESURES. Comparer met des groupes côte à
+    côte sur une mesure ; profiler fait l'inverse — on désigne un groupe, si
+    besoin croisé (les femmes de la montagne), et l'écran déroule ses
+    indicateurs du mieux noté au plus faible. C'est la question qu'on pose
+    quand on sait déjà où l'on intervient et qu'on cherche sur quoi.
+    """
+    if not cat:
+        return
+    st.markdown(STYLE, unsafe_allow_html=True)
+    st.markdown(_CSS_BRUT, unsafe_allow_html=True)
+
+    with st.container(key="ex_brut_p"):
+        _h1, h2 = st.columns([4, 1], vertical_alignment="center")
+        with h2:
+            if st.button(T("ex_b_raz"), key="exp_raz", type="tertiary"):
+                raz_profil()
+                st.rerun()
+
+        with st.container(key="exb_q_zone_p"):
+            st.markdown(f'<div class="exb-sec" style="margin:0 0 2px">'
+                        f'{_e(T("ex_p_qui"))}<span class="l"></span></div>',
+                        unsafe_allow_html=True)
+            # LE GROUPE SE COMPOSE AVEC LES MÊMES REGISTRES QUE PARTOUT.
+            # Un paysage, un groupe social, une tranche d'âge, ou les trois
+            # à la fois : la composition est un ET, et c'est ce qui rend
+            # « les femmes de la montagne » désignable.
+            masque = np.ones(cat["n"], dtype=bool)
+            nom = []
+            cols = st.columns(len(_REGISTRES_S))
+            for col, (axe, lab) in zip(cols, _REGISTRES_S):
+                cases = _cases(cat, axe)
+                with col:
+                    v = st.selectbox(
+                        T(lab), [None] + [c[0] for c in cases],
+                        key=f"exp_g_{axe}", index=0,
+                        format_func=lambda x: (T("ex_p_tous") if x is None
+                                               else _lib(x)))
+                if v is not None and cat["groupes"].get(v) is not None:
+                    masque &= cat["groupes"][v]
+                    nom.append(_lib(v))
+        lib_groupe = " · ".join(nom) if nom else T("ex_tout_ech")
+
+        n_f = int(masque.sum())
+        if n_f == 0:
+            st.info(T("ex_s_vide"))
+            return
+
+        c1, c2 = st.columns([1, 1])
+        with c1:
+            dim = st.selectbox(
+                T("ex_s_dim"), [None] + _DIMS, key="exp_dim",
+                format_func=lambda c: (T("ex_s_toutes") if c is None
+                                       else T(c)))
+        with c2:
+            combien = st.selectbox(T("ex_s_combien"), [5, 10, 20],
+                                   key="exp_k")
+
+        inds = [x for x in _inds_tries(cat)
+                if dim is None or x["dim"] == dim]
+        lignes = [l for l in _lignes_indicateurs(cat, inds, masque)
+                  if l["score"] is not None]
+        if not lignes:
+            st.info(T("ex_s_rien"))
+            return
+        classees = sorted(lignes, key=lambda x: x["score"], reverse=True)
+        nb_g, sc_g = _score_cible(cat, masque, "global", None)
+        ens = {"n": nb_g, "k": None, "part": sc_g, "score": sc_g}
+
+        st.markdown(f'<div class="ex-titre" style="margin-top:10px">'
+                    f'{_e(lib_groupe)}</div>'
+                    f'<p class="ex-note" style="margin:0 0 10px">'
+                    f'{_e(T("ex_p_n", n=_n(n_f), s=_f(sc_g, 2)))}</p>',
+                    unsafe_allow_html=True)
+        # LES DEUX LISTES SONT L'UNE SOUS L'AUTRE, EN PLEINE LARGEUR. Côte à
+        # côte, chacune n'avait que la moitié de la page, et le nom d'un
+        # indicateur — « Perception of security (SDG 16.1.4) » — se coupait
+        # à gauche dans la marge de son libellé. Une liste de cinq lignes ne
+        # coûte pas assez de hauteur pour justifier de tronquer ce qu'elle
+        # nomme.
+        st.markdown(f'<div class="exb-sec" style="margin:0 0 6px">'
+                    f'{_e(T("ex_p_forts"))}<span class="l"></span></div>'
+                    + _barres(classees[:combien], ens, "score"),
+                    unsafe_allow_html=True)
+        st.markdown(f'<div class="exb-sec" style="margin:22px 0 6px">'
+                    f'{_e(T("ex_p_faibles"))}<span class="l"></span></div>'
+                    + _barres(classees[::-1][:combien], ens, "score"),
+                    unsafe_allow_html=True)
+
+
+def raz_profil():
+    for k in [k for k in list(st.session_state)
+              if str(k).startswith(("exp_g_", "exp_dim", "exp_k"))]:
+        st.session_state.pop(k, None)
