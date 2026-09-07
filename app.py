@@ -1913,7 +1913,12 @@ MODE_LEVIER = "levier"
 # territoire, on apprenait comment on le mesure. C'est l'ordre d'un rapport,
 # pas celui d'un tableau de bord.
 MODE_PORTAIL = "portail"
-MODE_PORTAIL2 = "portail2"
+# LA MÊME PAGE, UNE AUTRE PHOTOGRAPHIE. Une image d'ouverture ne se juge pas
+# sur un fichier ouvert à côté : elle se juge sous le titre, avec le voile
+# blanc dessus et la colonne verte contre son bord. Cette seconde entrée sert
+# à trancher entre deux clichés, et se retire en supprimant sa ligne de menu,
+# sa constante et son aiguillage.
+MODE_PORTAIL_B = "portail_b"
 # LE TEMPS, ENFIN MONTRÉ COMME DU TEMPS. Trois jeux satellitaires sont des
 # séries — la forêt depuis 2000, la pluie depuis 1981, la température depuis
 # 2001 — et le site les lisait comme des instantanés.
@@ -1933,7 +1938,7 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
                      MODE_RAPPORT: T("mode_rapport"),
                      MODE_LEVIER: T("mode_levier"),
                      MODE_PORTAIL: T("mode_portail"),
-                     MODE_PORTAIL2: T("a2_nav"),
+                     MODE_PORTAIL_B: T("mode_portail_b"),
                      MODE_TRAJECTOIRES: T("mode_trajectoires")})
 
 # L'état de navigation doit exister AVANT la barre du haut, qui affiche le nom
@@ -2003,7 +2008,7 @@ MODE_DIMENSIONS = "dimensions"
 # L'ACCUEIL N'A PAS DE FAMILLE, et il ne doit pas en avoir une : il est le
 # point d'où l'on part, pas une des choses qu'on y fait.
 _NAV_FAMILLES = [
-    (None, [(MODE_PORTAIL, "maison"), (MODE_PORTAIL2, "maison")]),
+    (None, [(MODE_PORTAIL, "maison"), (MODE_PORTAIL_B, "maison")]),
     # LE CADRE PASSE DEVANT LE TERRITOIRE. On dit d'abord ce qu'on mesure,
     # ensuite où on l'a mesuré : une carte de dix sections ne dit rien tant
     # qu'on ne sait pas ce qui y est compté, alors que la définition de
@@ -2133,14 +2138,14 @@ def _rendre_ruban(avec_image):
     c'est exactement ce que faisaient la couche de titre et la réglette des
     pages intérieures. Elles sont retirées toutes les deux.
 
-    IL EST DE NOUVEAU SUR TOUTES LES PAGES, SAUF SUR LA SECONDE D'ACCUEIL.
+    IL EST SUR TOUTES LES PAGES, SAUF SUR L'ACCUEIL.
     Il avait été retiré des pages intérieures parce qu'il y prenait le quart
     de l'écran pour redire de quel site il s'agit ; réduit à sa bande, il
     tient une centaine de pixels et donne à chaque page la même tête —
     c'est ce qui fait un site plutôt qu'une suite d'écrans. La seule page
-    qui s'en passe est la seconde d'accueil : elle porte déjà sa propre
-    photographie plein cadre avec le titre dedans, et deux bandeaux l'un
-    sur l'autre en feraient deux couvertures.
+    qui s'en passe est l'accueil : elle porte déjà sa propre photographie
+    plein cadre avec le titre dedans, et deux bandeaux l'un sur l'autre en
+    feraient deux couvertures.
 
     IL N'EST PAS ROGNÉ. Sa composition va du logo de gauche à celui de
     droite : `object-fit: cover` couperait l'un des deux dès que la fenêtre
@@ -2224,7 +2229,8 @@ _c_contenu = _col_page.container(key="zone_page")
 # Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par
 # la colonne de gauche qu'on vient de rendre.
-_rendre_ruban(st.session_state["app_mode"] != MODE_PORTAIL2)
+_rendre_ruban(st.session_state["app_mode"]
+              not in (MODE_PORTAIL, MODE_PORTAIL_B))
 
 app_mode = st.session_state["app_mode"]
 
@@ -2236,12 +2242,22 @@ app_mode = st.session_state["app_mode"]
 # Chaque page reste écrite comme avant ; c'est le contexte qui change, en un
 # seul endroit, plutôt que quarante modules qui devraient savoir où ils sont.
 with _c_contenu:
-    if app_mode == MODE_PORTAIL2:
+    if app_mode == MODE_PORTAIL:
+        # L'ACCUEIL EST CELUI QUI A ÉTÉ RETENU. Les deux ont vécu côte à côte
+        # le temps de trancher ; le premier — l'escalier de quatre nombres et
+        # sa carte — n'est plus une destination. Son module reste en place :
+        # celui-ci lui emprunte sa carte du territoire, avec son carton de
+        # localisation et ses étiquettes.
         accueil2_page.render()
 
-    elif app_mode == MODE_PORTAIL:
-        # Quatre écrans : où, ce qu'on a mesuré, ce qu'on a trouvé, quoi faire.
-        accueil_apri.render()
+    if app_mode == MODE_PORTAIL_B:
+        # LA MÊME PAGE, AU CLICHÉ PRÈS. Elle n'est pas recopiée : c'est le même
+        # module, appelé avec une autre photographie et son propre cadrage.
+        # Le panorama est plus large que le bandeau, donc coupé en hauteur ;
+        # le point de fuite est mis un peu bas pour garder la grève et les
+        # voiliers, plutôt que du ciel.
+        accueil2_page.render(photo_essai="accueil2_hero_b.jpg",
+                             cadrage="50% 62%")
 
     if app_mode == MODE_ACCUEIL:
         territoire_page.render()

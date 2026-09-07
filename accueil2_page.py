@@ -192,8 +192,12 @@ STYLE = """
      cliquable et ne l'est pas est le défaut le plus coûteux d'une page
      d'entrée ; le bouton de Streamlit porte donc la carte entière, et son
      libellé est composé sur deux lignes. */
+  /* « EXPLORER APRI » S'ALIGNE SUR « NOTRE ZONE D'ÉTUDE ». Le carton de la
+     carte a vingt pixels de rembourrage haut avant son intitulé ; sans le
+     même décalage, les deux colonnes commençaient à deux hauteurs
+     différentes et la droite semblait remonter dans les chiffres. */
   .a2-portes-t { font-size:11.5px; font-weight:700; letter-spacing:.15em;
-        text-transform:uppercase; color:#1a4d3a; margin:0 0 4px; }
+        text-transform:uppercase; color:#1a4d3a; margin:26px 0 4px; }
   .a2-portes-f { width:44px; height:2px; background:#9fc7b3; margin:0 0 14px; }
   div[class*="st-key-a2_porte_"] div[data-testid="stButton"] > button {
       display:flex !important; flex-direction:column !important;
@@ -269,7 +273,7 @@ def _trouver(nom):
 
 
 @st.cache_data(show_spinner=False)
-def _photo_b64(lang="fr"):
+def _photo_b64(lang="fr", prefere=None):
     """La photographie du bandeau, encodée une fois pour toutes.
 
     UNE PHOTOGRAPHIE DE TERRAIN, ET NON UNE ILLUSTRATION. Les bandeaux du
@@ -282,8 +286,14 @@ def _photo_b64(lang="fr"):
     `lang` n'a plus d'effet sur le choix du fichier — la photographie ne
     porte aucun mot — mais il reste dans la signature pour que les replis,
     eux, retrouvent leur version linguistique.
+
+    `prefere` NOMME UN CLICHÉ D'ESSAI, ET NE FAIT QUE PASSER DEVANT. C'est le
+    seul écart entre les deux entrées d'accueil : même page, même texte,
+    même carte, une autre photographie. Si le fichier manque, la liste
+    ordinaire reprend la main et la page s'affiche quand même.
     """
-    noms = ["accueil2_hero.jpg", "bandeau_apri_site.jpg",
+    noms = ([prefere] if prefere else []) + [
+            "accueil2_hero.jpg", "bandeau_apri_site.jpg",
             "bandeau_apri_large.jpg", "bandeau_apri.jpg"]
     if lang == "en":
         noms.append("bandeau_apri_dessin_en.jpg")
@@ -338,13 +348,20 @@ def _fmt(n):
     return f"{n:,}".replace(",", " ")
 
 
-def render():
-    """La page d'entrée, seconde version : annoncer, chiffrer, orienter."""
+def render(photo_essai=None, cadrage=None):
+    """La page d'entrée : annoncer, chiffrer, orienter.
+
+    LES DEUX PARAMÈTRES NE SERVENT QU'À ESSAYER UNE AUTRE PHOTOGRAPHIE. La
+    page reste unique — un second module aurait dédoublé le texte, la carte et
+    les quatre destinations, et les deux copies auraient divergé au premier
+    changement. `photo_essai` nomme le cliché à préférer, `cadrage` dit où le
+    couper quand il ne remplit pas le bandeau dans les mêmes proportions.
+    """
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(_CSS_ICONES, unsafe_allow_html=True)
 
     # ---- 1 · la photographie, le titre, l'appel ------------------------
-    photo = _photo_b64(i18n.get_lang())
+    photo = _photo_b64(i18n.get_lang(), photo_essai)
     # LE TITRE INSTITUTIONNEL SORT DE L'IMAGE. Il y était peint, donc figé
     # dans une langue et invisible à un lecteur d'écran ; écrit en texte, il
     # se traduit et se sélectionne.
@@ -355,6 +372,8 @@ def render():
     # jette la déclaration entière sans rien signaler.
     fond = (f"background-image:url('data:image/jpeg;base64,{photo}');"
             if photo else "background:#eef3f0;")
+    if photo and cadrage:
+        fond += f"background-position:{cadrage};"
     st.markdown(
         f'<div class="a2-hero" style="{fond}"><div class="a2-hero-c">'
         f'<div class="a2-inst">{inst}</div>'
