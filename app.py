@@ -903,7 +903,7 @@ st.markdown(("""
        la page ; une bande qui court du haut au bas de la fenêtre n'est pas
        une carte, c'est un bord. */
     border-radius: 0;
-    padding: 18px 12px 24px 16px;
+    padding: 18px 10px 24px 6px;
     margin: 0;
   }
   /* LA BANDE VERTE VA DU HAUT DE LA PAGE À SON BAS. Elle est posée sur la
@@ -915,8 +915,24 @@ st.markdown(("""
   div[data-testid="stColumn"]:has(div[class*="st-key-zone_nav"]) {
     background: linear-gradient(180deg, #23664e 0%, #1a4f3d 100%);
     margin-left: -2.6rem !important;
-    padding-left: 2.6rem !important;
+    /* LE REMBOURRAGE NE REND PLUS TOUTE LA GOUTTIÈRE. Il rendait au contenu
+       les 2,6 rem que la marge négative venait de reprendre, si bien que les
+       pictogrammes se retrouvaient à quatre-vingts pixels du bord de
+       l'écran : la colonne était large de deux cents pixels dont quatre-
+       vingts de vide. Quatorze pixels suffisent à ce que rien ne touche le
+       bord. */
+    padding-left: 14px !important;
     min-height: 100vh;
+    /* ET ELLE VA JUSQUE SOUS LE PIED DE PAGE. Entre le bas de la rangée et
+       le bandeau du bas, Streamlit laisse l'écart de ses blocs puis les
+       trente-quatre pixels de respiration du pied : une bande blanche de
+       quarante pixels courait donc sous le vert, tout en bas de la colonne,
+       et la coupait juste avant l'arrivée. Le rembourrage prolonge le fond
+       de soixante pixels, la marge négative les reprend au flux — la colonne
+       ne pousse rien vers le bas, elle passe simplement dessous. Le bandeau,
+       peint après elle, la recouvre. */
+    margin-bottom: -60px !important;
+    padding-bottom: 60px !important;
   }
   /* SANS CETTE RÈGLE, LE BLOC COLLANT N'A NULLE PART OÙ COLLER. Streamlit
      interpose entre la colonne et le bloc des rubriques une enveloppe dont

@@ -281,6 +281,9 @@ TEXTES = {
                   "fr": "Les onze scénarios ordinaux"},
     "cad_p2b_x": {"en": "The scale this indicator is read against.",
                   "fr": "L'échelle sur laquelle cet indicateur se lit."},
+    "cad_p2b_vide": {
+        "en": "They appear once an indicator is chosen above.",
+        "fr": "Ils apparaissent une fois un indicateur choisi ci-dessus."},
     # Les paliers sont écrits « borne → score », séparés par des barres.
     "cad_p2b_r": {"en": "≥ 120 min→0|60–120 min→2.5|30–60 min→5|"
                         "15–30 min→7.5|≤ 15 min→10",
@@ -1517,9 +1520,12 @@ STYLE = """
   .cad-log:first-of-type { padding-top:4px; }
   .cad-log-t { font-size:12.5px; font-weight:700; color:#1a6b52;
               margin:0 0 5px; }
+  /* PAS DE LARGEUR MAXIMALE ICI. Soixante signes coupaient le paragraphe au
+     milieu de sa colonne et laissaient la moitié droite vide : la colonne
+     fait déjà la mesure, elle n'a pas besoin d'une seconde. */
   p.cad-log-x { font-size:12px !important; color:#3c4761 !important;
               line-height:1.55 !important; margin:0 !important;
-              text-align:left !important; max-width:60ch; }
+              text-align:left !important; }
 
   /* Le pied : pourquoi l'échelle est de 0 à 10, et combien d'indicateurs. */
   .cad-pied { display:flex; align-items:flex-start; gap:26px; flex-wrap:wrap;
@@ -2287,7 +2293,11 @@ def _normalisations(x=None):
                         for i in sorted(par) if par[i])
         titre_b, sous_b = T("cad_p2b_t"), T("cad_ex_seuils_i")
     else:
-        brut, titre_b, sous_b = T("cad_p2b_r"), T("cad_p2b_t"), T("cad_p2b_x")
+        # RIEN À DROITE TANT QU'AUCUN INDICATEUR N'EST OUVERT. Les paliers de
+        # l'exemple — « ≥ 120 min → 0 » — s'affichaient là, et se lisaient
+        # comme l'échelle de quelque chose : c'est le même défaut que les
+        # chiffres de la chaîne, réglé de la même façon.
+        brut, titre_b, sous_b = "", T("cad_p2b_t"), T("cad_p2b_vide")
     return ('<div class="cad-nrm"><div>'
             + f'<div class="cad-nrm-t">{_e(T("cad_p2s_t"))}</div>'
             + f'<div class="cad-nrm-x">{_e(T("cad_p2s_x"))}</div>'
@@ -2305,9 +2315,10 @@ def _normalisations(x=None):
             + '</div><div>'
             + f'<div class="cad-nrm-t">{_e(titre_b)}</div>'
             + f'<div class="cad-nrm-x">{_e(sous_b)}</div>'
-            + '<div class="cad-duo">' + _seuils(brut, unite)
-            + f'<div class="cad-seu-n">{_e(T("cad_p2b_n"))}</div>'
-            + '</div></div></div>')
+            + ('<div class="cad-duo">' + _seuils(brut, unite)
+               + f'<div class="cad-seu-n">{_e(T("cad_p2b_n"))}</div>'
+               + '</div>' if brut else '')
+            + '</div></div>')
 
 
 # --- les indicateurs, leur échelle et leur pondération ----------------------
