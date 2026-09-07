@@ -72,16 +72,20 @@ TEXTES = {
     "sy_intro": {
         "en": "Every variable holds a level out of ten, the one measured by "
               "the survey where it exists. Click inside a bar to impose a "
-              "different value: that variable is then held, and the gap it "
-              "creates travels through the model. Press play and each "
+              "different value: that variable is then held, the gap it "
+              "creates travels through the model at once, and each other "
               "variable rises or falls according to what its neighbours do to "
-              "it, until everything settles.",
+              "it, until everything settles. What moved, and by how much, is "
+              "named under the bars. Play and pause let you take the "
+              "propagation back round by round.",
         "fr": "Chaque variable porte un niveau sur dix, celui mesuré par "
               "l'enquête là où il existe. Cliquez dans une barre pour lui "
-              "imposer une autre valeur : la variable est alors tenue, et "
-              "l'écart qu'elle crée circule dans le modèle. Appuyez sur "
-              "lecture et chaque variable monte ou descend selon ce que ses "
-              "voisines lui font, jusqu'à stabilisation."},
+              "imposer une autre valeur : la variable est alors tenue, "
+              "l'écart qu'elle crée circule aussitôt dans le modèle, et "
+              "chaque autre variable monte ou descend selon ce que ses "
+              "voisines lui font, jusqu'à stabilisation. Ce qui a bougé, et "
+              "de combien, est nommé sous les barres. Lecture et pause "
+              "servent à reprendre la propagation tour par tour."},
     "sy_avert": {
         "en": "A step is a round of propagation, not a year. The model knows "
               "the order of the relays, not their duration: forest loss takes "
@@ -118,8 +122,20 @@ TEXTES = {
     "sy_repere": {"en": "measured state (reference mark)",
                   "fr": "état mesuré (le repère)"},
     "sy_depart": {"en": "at the measured state", "fr": "au départ"},
-    "sy_aide": {"en": "click in the bar to impose a value",
-                "fr": "cliquez dans la barre pour imposer une valeur"},
+    "sy_aide": {"en": "click in a bar: the system starts on its own",
+                "fr": "cliquez dans une barre : le système part tout seul"},
+    # CE QUE ÇA DÉPLACE, ÉCRIT NOIR SUR BLANC. Quarante-cinq barres réparties
+    # en trois colonnes : quand onze d'entre elles bougeaient de trois
+    # dixièmes, il fallait les chercher pour s'en apercevoir, et l'on
+    # concluait que rien ne s'était passé. La bande nomme les variables qui
+    # ont le plus bougé, celle qu'on tient exclue — son mouvement est imposé,
+    # ce n'est pas une répercussion.
+    "sy_bilan": {"en": "What this moves", "fr": "Ce que cela déplace"},
+    "sy_bilan_0": {
+        "en": "Nothing else moves: within this model, no relation carries "
+              "this variable's change any further.",
+        "fr": "Rien d'autre ne bouge : dans ce modèle, aucune relation ne "
+              "porte plus loin le changement de cette variable."},
     "sy_absent": {"en": "Causal graph unavailable.",
                   "fr": "Le graphe causal n'est pas disponible."},
 }
@@ -222,6 +238,17 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
      font-weight:700}
  .dl{font-size:10.5px;font-variant-numeric:tabular-nums;color:#6b7590}
  .note{font-size:11px;color:#6b7590;margin:12px 2px 0;line-height:1.5}
+ /* LA BANDE DE BILAN : ce que la variable tenue déplace, nommé. Elle
+    n'apparaît que lorsqu'il y a quelque chose à nommer, sans quoi elle
+    laisserait un cadre vide sous le tableau. */
+ .bil{border:1px solid #e3eaf3;border-left:4px solid #1c6349;border-radius:12px;
+      padding:10px 14px;margin-top:14px;background:#fbfcfe}
+ .bil h5{margin:0 0 7px;font-size:10.5px;letter-spacing:.09em;
+         text-transform:uppercase;color:#1a4d3a;font-weight:700}
+ .bil .rg{display:flex;flex-wrap:wrap;gap:8px 18px}
+ .bil .it{font-size:12.5px;color:#3c4761}
+ .bil .it b{font-variant-numeric:tabular-nums;margin-left:6px}
+ .bil p{margin:0;font-size:12px;color:#6b7590}
  .lg{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:#6b7590;
      margin-top:10px;align-items:center}
  .lg i{display:inline-block;width:10px;height:10px;border-radius:2px;
@@ -247,6 +274,7 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
     fill="#9aa4b5"/></svg> __L_REPERE__</span>
   <span>__L_AIDE__</span>
 </div>
+<div id="bilan"></div>
 <p class="note" id="etat"></p>
 <script>
 const D = __DONNEES__, L = __LIBELLES__, CD = __COUL_DIM__;
@@ -309,6 +337,14 @@ function construire(){
       else tenu[id] = borne(v);
       k = 0; d = d0(); dprec = new Float64Array(NN);
       dessiner();
+      /* LE SYSTÈME PART TOUT SEUL. Il fallait cliquer dans une barre PUIS
+         trouver le bouton Lecture ; entre les deux, on posait une valeur, on
+         voyait une seule barre bouger, et l'on concluait qu'il ne se passait
+         rien. Poser une valeur EST la demande de propagation : le reste n'est
+         qu'une confirmation à cliquer. Lecture et Pause restent, pour
+         reprendre la main sur une propagation qu'on veut suivre pas à pas. */
+      arreter();
+      if (Object.keys(tenu).length) lancer();
     });
   });
 }
@@ -350,6 +386,25 @@ function dessiner(){
       ? ` · <b style="font-size:11px;color:${dm>0?HAUSSE:BAISSE}">`+
         `${dm>0?"+":"−"}${Math.abs(dm).toFixed(2).replace(".",",")}</b>`
       : "");
+  /* CE QUE ÇA DÉPLACE, NOMMÉ : les huit plus gros écarts, la variable tenue
+     exclue. Son propre mouvement est imposé et n'apprend rien ; ce qu'on
+     veut lire, c'est ce que le modèle en a fait ailleurs. */
+  const bil = document.getElementById("bilan");
+  if (!Object.keys(tenu).length){ bil.innerHTML = ""; }
+  else {
+    const bouges = N.map((n,i)=>({n, e: niveau(i) - base[i]}))
+      .filter(x => tenu[x.n.id] === undefined && Math.abs(x.e) >= 0.05)
+      .sort((a,b)=>Math.abs(b.e) - Math.abs(a.e)).slice(0, 8);
+    bil.className = "bil";
+    bil.innerHTML = "<h5>" + L.bilan + "</h5>" + (bouges.length
+      ? '<div class="rg">' + bouges.map(x =>
+          '<span class="it">' + x.n.nom +
+          '<b style="color:' + (x.e > 0 ? HAUSSE : BAISSE) + '">' +
+          (x.e > 0 ? "+" : "−") +
+          Math.abs(x.e).toFixed(2).replace(".", ",") + "</b></span>").join("")
+        + "</div>"
+      : "<p>" + L.bilan0 + "</p>");
+  }
   const e = document.getElementById("etat");
   if (!Object.keys(tenu).length) e.textContent = L.repos;
   else if (k > 0 && bouge < SEUIL){ e.textContent = L.stable; arreter(); }
@@ -374,7 +429,8 @@ construire(); dessiner();
 def _html(d, lang):
     lib = {"lire": T("sy_lire"), "pause": T("sy_pause"),
            "stable": T("sy_stable"), "repos": T("sy_repos"),
-           "non_mesure": T("sy_non_mesure"), "moy": T("sy_moyenne")}
+           "non_mesure": T("sy_non_mesure"), "moy": T("sy_moyenne"),
+           "bilan": T("sy_bilan"), "bilan0": T("sy_bilan_0")}
     return (GABARIT
             .replace("__DONNEES__", json.dumps(d, ensure_ascii=False,
                                                separators=(",", ":")))
