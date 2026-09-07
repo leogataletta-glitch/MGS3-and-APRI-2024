@@ -149,22 +149,33 @@ TEXTES = {
               "le compteur de relais se lit comme un horizon approché."},
     "sd_bilan": {"en": "Once the shock wave has settled",
                  "fr": "Une fois l'onde de choc stabilisée"},
-    "sd_connect": {"en": "Most connected variables",
-                   "fr": "Variables les plus connectées"},
-    "sd_connect_x": {"en": "links in and out, inside this perimeter",
-                     "fr": "liens entrants et sortants, dans ce périmètre"},
-    "sd_passages": {"en": "Variables the shock went through most often",
-                    "fr": "Variables les plus retraversées par l'onde"},
+    # DEUX QUESTIONS, ET AUCUNE NE PORTE SUR LA VARIABLE POUSSÉE ELLE-MÊME.
+    # Le tableau comptait les liens de chaque pastille, si bien que la
+    # variable centrale — la mieux reliée par construction, c'est elle qui a
+    # défini le périmètre — arrivait toujours en tête de son propre bilan.
+    # On ne veut pas savoir qu'elle est au centre : on veut savoir qui la
+    # tient, et sur qui elle pèse, pour aller agir là.
+    "sd_connect": {"en": "What influences {v} most",
+                   "fr": "Ce qui influence le plus {v}"},
+    "sd_connect_x": {
+        "en": "effect on the pushed variable of a +1 rise in each of them, "
+              "inside this perimeter, loops included",
+        "fr": "effet sur la variable poussée d'une hausse de +1 chez "
+              "chacune, dans ce périmètre, boucles comprises"},
+    # « Ce que Accès à l'eau influence le plus » : l'élision manquait et
+    # aucune règle générale ne la pose sur un nom de variable quelconque. La
+    # tournure passive contourne le problème dans les deux langues.
+    "sd_passages": {"en": "The ones most influenced by {v}",
+                    "fr": "Les plus influencées par {v}"},
     "sd_passages_x": {
-        "en": "relays that moved them: more than one means a loop brought "
-              "the shock back",
-        "fr": "relais qui les ont déplacées : au-delà d'un, c'est une boucle "
-              "qui a ramené l'onde"},
+        "en": "how far this run moved them, once the shock wave had settled",
+        "fr": "de combien cette course les a déplacées, une fois l'onde "
+              "stabilisée"},
     "sd_vagues_n": {"en": "relays", "fr": "relais"},
-    "sd_leg_j": {"en": "the most connected variables",
-                 "fr": "les variables les plus connectées"},
-    "sd_leg_c": {"en": "the ones the shock went through most often",
-                 "fr": "celles que l'onde a le plus retraversées"},
+    "sd_leg_j": {"en": "the ones that influence it most",
+                 "fr": "celles qui l'influencent le plus"},
+    "sd_leg_c": {"en": "the ones it influences most",
+                 "fr": "celles qu'elle influence le plus"},
     "sd_liens_n": {"en": "links", "fr": "liens"},
     "sd_perim": {
         "en": "The shock wave is followed inside the drawn perimeter only: "
@@ -345,9 +356,9 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
 <div id="scene"><svg id="g" preserveAspectRatio="xMidYMid meet"></svg></div>
 <div id="mot"></div>
 <div id="fin" hidden>
-  <div class="fb"><div class="fh">__L_CON__</div><div id="fc"></div>
+  <div class="fb"><div class="fh" id="hc">__L_CON__</div><div id="fc"></div>
     <div class="fx">__L_CONX__</div></div>
-  <div class="fb"><div class="fh">__L_PAS2__</div><div id="fp"></div>
+  <div class="fb"><div class="fh" id="hp">__L_PAS2__</div><div id="fp"></div>
     <div class="fx">__L_PASX__</div></div>
 </div>
 <div id="bas">
@@ -473,15 +484,46 @@ const vues = NO.map(n => {
 
    Trois pastilles au plus, pour que le signal reste un signal. */
 function poserHalo(on){
-  const tri = NO.map((n,i)=>({i, v: DEG[i]})).sort((a,b)=>b.v-a.v);
-  const cles = new Set(on ? tri.filter((x,r)=> r < 3 && x.v >= 2)
-                              .map(x=>x.i) : []);
+  /* CE NE SONT PLUS LES MIEUX RELIÉES, MAIS CELLES QUI TIENNENT LA VARIABLE
+     POUSSÉE. Compter les flèches désignait la variable centrale elle-même,
+     qui a défini le périmètre : un halo sur le sujet de la question. */
+  const cles = new Set(on ? amont.slice(0, 3).map(x => x.i) : []);
   vues.forEach((u,i)=>{
     if (cles.has(i)) u.rect.classList.add("lum");
     else u.rect.classList.remove("lum");
   });
   const lg = document.getElementById("lgj");
   if (lg) lg.hidden = !cles.size;
+}
+
+/* ---------- QUI TIENT LA VARIABLE POUSSÉE ------------------------------
+   Pour chaque autre variable du périmètre, on pousse +1 dessus et on lit ce
+   qui arrive à la variable regardée, boucles comprises. C'est la question
+   qu'on se pose vraiment devant un système : non pas « laquelle a le plus de
+   flèches », qui désigne toujours la variable centrale puisque c'est elle
+   qui a défini le périmètre, mais « sur laquelle appuyer pour que celle-ci
+   bouge ». Le calcul est le même que celui de la course, mené depuis chaque
+   point de départ possible ; à quinze ou trente variables, il tient en
+   quelques millisecondes. */
+function influenceVers(cible){
+  const j0 = IX[cible];
+  const out = [];
+  for (let j = 0; j < NO.length; j++){
+    if (j === j0) continue;
+    let v = new Float64Array(NO.length);
+    const c = new Float64Array(NO.length);
+    v[j] = 1;
+    for (let t = 0; t < KMAX; t++){
+      const nx = new Float64Array(NO.length);
+      let bouge = 0;
+      for (const l of LI) nx[IX[l.vers]] += l.w * v[IX[l.de]];
+      for (let m = 0; m < NO.length; m++){ c[m] += nx[m]; bouge += Math.abs(nx[m]); }
+      v = nx;
+      if (bouge < SEUIL) break;
+    }
+    if (Math.abs(c[j0]) > 0.004) out.push({n: NO[j], i: j, v: c[j0]});
+  }
+  return out.sort((a, b) => Math.abs(b.v) - Math.abs(a.v));
 }
 
 /* ---------- LE RASSEMBLEMENT : LE SCHÉMA SE RÉDUIT À SA CONCLUSION ------
@@ -495,18 +537,23 @@ function poserHalo(on){
    permet de reconnaître celle qu'on suivait des yeux. Une liste réécrite,
    elle, aurait obligé à la retrouver par son nom. */
 let regroupe = false;
+/* Les cinq variables qui tiennent le plus la variable poussée, recalculées
+   à chaque bilan : le halo et le regroupement les réutilisent plutôt que de
+   refaire le même calcul chacun de leur côté. */
+let amont = [];
 
 function _elus(){
-  const con = NO.map((n,i)=>({i, v: DEG[i]})).filter(x=>x.v > 0)
-                .sort((a,b)=>b.v - a.v).slice(0, 3).map(x=>x.i);
-  const pas = NO.map((n,i)=>({i, v: passages[i], c: Math.abs(cum[i])}))
-                .filter(x=>x.v > 0)
-                .sort((a,b)=>b.v - a.v || b.c - a.c).slice(0, 3).map(x=>x.i);
+  /* Trois qui la tiennent, trois qu'elle déplace, la variable poussée
+     exclue : c'est la conclusion de la course, pas son point de départ. */
+  const j0 = IX[src];
+  const av = NO.map((n, i) => ({i, v: Math.abs(cum[i])}))
+               .filter(x => x.i !== j0 && x.v > 0.004)
+               .sort((a, b) => b.v - a.v).slice(0, 3).map(x => x.i);
+  const am = amont.slice(0, 3).map(x => x.i);
   const vus = new Set();
   const out = [];
-  for (const i of [...pas, ...con]) if (!vus.has(i)){ vus.add(i); out.push(i); }
-  return out.sort((a,b)=> (passages[b] - passages[a])
-                          || (DEG[b] - DEG[a]));
+  for (const i of [...am, ...av]) if (!vus.has(i)){ vus.add(i); out.push(i); }
+  return out;
 }
 
 function rassembler(on){
@@ -533,7 +580,14 @@ function rassembler(on){
     g.style.transform = `translate(${(cx - u.n.x).toFixed(1)}px,`
                       + `${(cy - u.n.y).toFixed(1)}px)`;
     const e = cum[i];
-    const bouts = [DEG[i] + " " + L.liens, passages[i] + " " + L.vagues];
+    const vers = (amont.find(x => x.i === i) || {}).v;
+    /* Deux nombres, et deux sens : ce qu'elle fait à la variable poussée
+       quand on la monte de +1, et ce que la course vient de lui faire. */
+    const bouts = [];
+    if (vers !== undefined) bouts.push("→ " + fmt(vers, 2));
+    /* « 0 relais » sur une variable située en amont ne dit rien : l'onde est
+       partie dans l'autre sens, elle ne l'a jamais traversée. */
+    if (passages[i] > 0) bouts.push(passages[i] + " " + L.vagues);
     /* fmt() pose déjà le signe sur les valeurs à deux décimales : le
        redoubler donnait « ++0,27 ». */
     if (Math.abs(e) > 0.005) bouts.push(fmt(e, 2));
@@ -638,27 +692,33 @@ function bilan(montrer){
                         u.anneau.classList.remove("cli"); });
     return;
   }
+  /* LA VARIABLE POUSSÉE NE FIGURE DANS AUCUN DES DEUX TABLEAUX. Elle est
+     le sujet de la question, pas une réponse : dire qu'elle est la mieux
+     reliée du périmètre qu'elle a elle-même défini n'apprend rien, et dire
+     qu'elle a beaucoup bougé revient à relire la valeur qu'on vient de lui
+     imposer. */
+  const nom = (NO[IX[src]] || {}).nom || "";
+  amont = influenceVers(src).slice(0, 5);
+  const aval = NO.map((n, i) => ({n, i, v: cum[i]}))
+                 .filter(x => x.n.id !== src && Math.abs(x.v) > 0.004)
+                 .sort((a, b) => Math.abs(b.v) - Math.abs(a.v)).slice(0, 5);
   poserHalo(true);
-  const con = NO.map((n,i)=>({n, v: DEG[i]}))
-                .filter(x=>x.v>0).sort((a,b)=>b.v-a.v).slice(0,5);
-  const pas = NO.map((n,i)=>({n, v: passages[i], c: cum[i]}))
-                .filter(x=>x.v>0).sort((a,b)=>b.v-a.v || Math.abs(b.c)-Math.abs(a.c))
-                .slice(0,5);
-  const ligne = (x, u) => '<div class="fl"><span>' + x.n.nom
-    + '</span><b>' + x.v + ' ' + u + '</b></div>';
-  /* LES TROIS PLUS RETRAVERSÉES SE METTENT À CLIGNOTER SUR LE SCHÉMA. Le
-     tableau les nomme, le clignotement les montre : lire « sécurité
-     alimentaire, huit relais » ne dit pas où elle est dans le dessin. */
-  const chef = new Set(pas.slice(0, 3).map(x => x.n.id));
+  const ligne = x => '<div class="fl"><span>' + x.n.nom
+    + '</span><b style="color:' + (x.v > 0 ? VERT : ROUGE) + '">'
+    + fmt(x.v, 2) + '</b></div>';
+  /* LES TROIS PLUS INFLUENCÉES CLIGNOTENT SUR LE SCHÉMA. Le tableau les
+     nomme, le clignotement les montre : lire un nom ne dit pas où il est
+     dans le dessin. */
+  const chef = new Set(aval.slice(0, 3).map(x => x.n.id));
   vues.forEach(u => {
     const on = chef.has(u.n.id);
     u.anneau.setAttribute("opacity", on ? 1 : 0);
     u.anneau.classList.toggle("cli", on);
   });
-  document.getElementById("fc").innerHTML =
-    con.map(x=>ligne(x, L.liens)).join("");
-  document.getElementById("fp").innerHTML =
-    pas.map(x=>ligne(x, L.vagues)).join("");
+  document.getElementById("hc").textContent = L.con.replace("{v}", nom);
+  document.getElementById("hp").textContent = L.pas.replace("{v}", nom);
+  document.getElementById("fc").innerHTML = amont.map(ligne).join("");
+  document.getElementById("fp").innerHTML = aval.map(ligne).join("");
   e.hidden = false;
 }
 
@@ -815,6 +875,7 @@ def _html(d, lang):
            "ret": T("sd_retour"), "nm": T("sd_non_mesure"),
            "dis": T("sd_distrib"), "mois": T("sd_mois"), "ans": T("sd_ans"),
            "liens": T("sd_liens_n"), "vagues": T("sd_vagues_n"),
+           "con": T("sd_connect"), "pas": T("sd_passages"),
            "ess": T("sd_ess"), "ess_non": T("sd_ess_non"),
            "ess_t": T("sd_ess_t")}
     return (GABARIT
