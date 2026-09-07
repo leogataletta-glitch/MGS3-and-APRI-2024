@@ -223,6 +223,25 @@ TEXTES = {
                     "fr": "Tous les niveaux de preuve"},
     "sx_rel_0": {"en": "No relation in this system matches the filter.",
                  "fr": "Aucune relation de ce système ne passe le filtre."},
+    # L'ÉCRAN SE LIT MAINTENANT VARIABLE PAR VARIABLE, ET NON PLUS PÉRIMÈTRE
+    # PAR PÉRIMÈTRE. On voulait pouvoir prendre une variable et voir TOUTES
+    # ses relations avec les autres, chacune avec son coefficient et sa
+    # source ; le périmètre du système en cachait une partie, celles dont
+    # l'autre bout tombait hors du dessin.
+    "sx_rel_var": {"en": "Variable", "fr": "Variable"},
+    "sx_rel_n": {
+        "en": "{n} relations for this variable: {s} going out, {e} coming in.",
+        "fr": "{n} relations pour cette variable : {s} sortantes, {e} "
+              "entrantes."},
+    "sx_rel_etat": {
+        "en": "The model holds {t} relations in all. {v} of them carry a "
+              "source that was opened and checked, with its effect size; "
+              "{z} carry none.",
+        "fr": "Le modèle compte {t} relations en tout. {v} d'entre elles "
+              "portent une source ouverte et vérifiée, avec sa taille "
+              "d'effet ; {z} n'en portent aucune."},
+    "sx_rel_sortantes": {"en": "What it moves", "fr": "Ce qu'elle déplace"},
+    "sx_rel_entrantes": {"en": "What moves it", "fr": "Ce qui la déplace"},
     "sx_bilan_p": {
         "en": "{e} empirical · {d} documented · {s} structural · {t} "
               "theoretical · {h} hypothesis — and {c} contested.",
@@ -995,11 +1014,30 @@ def render_relations():
     st.markdown(f'<div class="titre-bloc">{_e(T("sx_t2"))}</div>',
                 unsafe_allow_html=True)
     s = _systeme(m, "r")
-    _rappel(m, s)
+    # LE RAPPEL DU PÉRIMÈTRE A DISPARU D'ICI, et c'est voulu : cet écran ne
+    # regarde plus le système dessiné mais une variable et toutes ses
+    # relations. Rappeler « dix variables en jeu » au-dessus d'un tableau qui
+    # n'en tient aucun compte aurait fait croire à un filtre.
     st.markdown(f'<p class="sx-note" style="margin:0 0 8px">'
                 f'{_e(T("sx_x2"))}</p>', unsafe_allow_html=True)
 
-    rang, aretes = _voisinage(m, s["centre"], s["n"])
+    # UNE VARIABLE, ET TOUTES SES RELATIONS. Le périmètre du système commande
+    # les autres écrans ; ici il ne commande rien, parce qu'une relation
+    # laissée dehors est précisément celle qu'on voudrait vérifier. Le menu
+    # s'ouvre sur la variable centrale du système, pour que le parcours ne
+    # perde pas son fil, et il donne accès aux quarante-cinq.
+    ids = sorted(m["ids"], key=lambda i: m["noms"].get(i, i))
+    if st.session_state.get("sx_var_rel") not in ids:
+        st.session_state["sx_var_rel"] = s["centre"]
+    x = st.selectbox(T("sx_rel_var"), ids, key="sx_var_rel",
+                     format_func=lambda i: m["noms"].get(i, i))
+    aretes = [a for (de, vers), a in m["aretes"].items()
+              if de == x or vers == x]
+    n_sort = sum(1 for a in aretes if a["de"] == x)
+    st.markdown(
+        f'<p class="sx-note" style="margin:2px 0 0">'
+        f'{_e(T("sx_rel_n", n=len(aretes), s=n_sort, e=len(aretes) - n_sort))}'
+        f'</p>', unsafe_allow_html=True)
     classes = sorted({a.get("just") or "hypothese" for a in aretes})
     lib_c = {c: _classe(m, {"just": c}) for c in classes}
     choix = st.multiselect(T("sx_filtre_p"), classes, default=classes,
@@ -1020,12 +1058,33 @@ def render_relations():
         return
 
     lang = i18n.get_lang()
-    # Les relations touchant le centre d'abord : c'est autour d'elles que la
-    # discussion se tient.
-    gardees.sort(key=lambda a: (s["centre"] not in (a["de"], a["vers"]),
-                                -(a.get("force") or 0)))
-    st.markdown(_table_relations(m, gardees, lang), unsafe_allow_html=True)
+    # CE QU'ELLE DÉPLACE D'ABORD, CE QUI LA DÉPLACE ENSUITE. Les deux
+    # questions ne se posent pas ensemble : « sur quoi puis-je agir en
+    # bougeant celle-ci » n'est pas « qu'est-ce qui la tient ». Un intertitre
+    # sépare les deux blocs, à l'intérieur d'un même tableau trié.
+    sortantes = sorted([a for a in gardees if a["de"] == x],
+                       key=lambda a: -(a.get("force") or 0))
+    entrantes = sorted([a for a in gardees if a["de"] != x],
+                       key=lambda a: -(a.get("force") or 0))
+    for cle, lot in (("sx_rel_sortantes", sortantes),
+                     ("sx_rel_entrantes", entrantes)):
+        if not lot:
+            continue
+        st.markdown(f'<div class="sx-leg-h" style="margin:16px 0 -4px">'
+                    f'{_e(T(cle)).upper()}</div>', unsafe_allow_html=True)
+        st.markdown(_table_relations(m, lot, lang), unsafe_allow_html=True)
     st.markdown(_legende_relations(m), unsafe_allow_html=True)
+    # L'ÉTAT DES PREUVES DU MODÈLE ENTIER, sous la légende : quatre-vingt-
+    # douze relations, et le compte de celles qui portent une source ouverte
+    # et vérifiée. Le tableau ne montre qu'une variable ; cette ligne dit sur
+    # quoi repose tout le reste.
+    _pv = m["g"].get("preuves") or {}
+    _tot = len(m["aretes"])
+    _sans = int(_pv.get("n_sans_source") or 0)
+    st.markdown(
+        f'<p class="sx-note" style="margin:10px 0 0">'
+        f'{_e(T("sx_rel_etat", t=_tot, v=_tot - _sans, z=_sans))}</p>',
+        unsafe_allow_html=True)
     # LA NOTE SUR LA CORRÉLATION DIT MAINTENANT AUSSI POURQUOI ELLE MANQUE.
     # La moitié des lignes portent un tiret : sans explication, on lisait ce
     # tiret comme un aveu de faiblesse alors qu'il dit seulement que l'une
