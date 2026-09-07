@@ -927,6 +927,19 @@ st.markdown(("""
   /* LE TITRE DE FAMILLE : petit, en capitales espacées, vert sourd. Il ne
      doit pas peser autant que les rubriques qu'il coiffe — c'est une
      étiquette de rangement, pas une destination. */
+  /* LA MARQUE EN TÊTE DE COLONNE. Elle est posée sur le vert, sans cadre ni
+     fond : le fichier est détouré, et le disque du logo suffit à la tenir. */
+  div[class*="st-key-zone_nav"] .nav-marque {
+    display: flex; align-items: center; gap: 11px;
+    padding: 4px 0 18px 8px; margin: 0;
+  }
+  div[class*="st-key-zone_nav"] .nav-marque img {
+    height: 40px; width: auto; display: block; flex: 0 0 auto;
+  }
+  div[class*="st-key-zone_nav"] .nav-marque span {
+    font-size: 21px; font-weight: 800; letter-spacing: .09em;
+    color: #ffffff; line-height: 1;
+  }
   /* LE PIED DE LA COLONNE : la devise, puis le crédit, tous deux en vert
      clair sur le vert de la bande, séparés des rubriques par un filet. */
   div[class*="st-key-zone_nav"] .nav-pied {
@@ -2032,6 +2045,22 @@ _CSS_ICONES_NAV = "<style>" + "".join(
     for _m, _ic in _NAV) + "</style>"
 
 
+@st.cache_data(show_spinner=False)
+def _logo_b64():
+    """La marque APRI, en tête de la colonne, encodée une fois pour toutes.
+
+    LE FOND DU FICHIER EST TRANSPARENT, ET IL LE FAUT : posé sur le vert de
+    la colonne, un logo sur carré blanc y découperait une vignette.
+    """
+    import base64 as _b64
+    for base in (os.path.join(APP_DIR, "data"), APP_DIR):
+        c = os.path.join(base, "logo_apri.png")
+        if os.path.exists(c):
+            with open(c, "rb") as f:
+                return _b64.b64encode(f.read()).decode()
+    return None
+
+
 def _entree_nav(mode, icone):
     actif = st.session_state["app_mode"] == mode
     st.button(LIBELLE_MODE[mode], key=f"nav_{mode}",
@@ -2104,12 +2133,14 @@ def _rendre_ruban(avec_image):
     c'est exactement ce que faisaient la couche de titre et la réglette des
     pages intérieures. Elles sont retirées toutes les deux.
 
-    IL N'EST PLUS QUE SUR L'ACCUEIL. Répété en tête des quinze pages, il
-    prenait le quart de chaque écran pour redire à chaque fois de quel site
-    il s'agit — une couverture qu'on relit à chaque chapitre. L'accueil la
-    porte, les pages intérieures partent droit au contenu. Le sélecteur de
-    langue, lui, reste partout : il vit dans le ruban et se pose dans le
-    flux, à droite, dès que l'illustration n'est pas là pour l'accueillir.
+    IL EST DE NOUVEAU SUR TOUTES LES PAGES, SAUF SUR LA SECONDE D'ACCUEIL.
+    Il avait été retiré des pages intérieures parce qu'il y prenait le quart
+    de l'écran pour redire de quel site il s'agit ; réduit à sa bande, il
+    tient une centaine de pixels et donne à chaque page la même tête —
+    c'est ce qui fait un site plutôt qu'une suite d'écrans. La seule page
+    qui s'en passe est la seconde d'accueil : elle porte déjà sa propre
+    photographie plein cadre avec le titre dedans, et deux bandeaux l'un
+    sur l'autre en feraient deux couvertures.
 
     IL N'EST PAS ROGNÉ. Sa composition va du logo de gauche à celui de
     droite : `object-fit: cover` couperait l'un des deux dès que la fenêtre
@@ -2138,6 +2169,20 @@ with _zone_nav:
     # l'écran quand la page défile — c'est ce qui la rend « toujours
     # disponible » sans qu'elle ait à flotter par-dessus le contenu.
     st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
+    # LA MARQUE OUVRE LA COLONNE. Le site portait son logo dans l'image du
+    # bandeau, donc sur la seule page qui l'affichait ; en tête de la colonne
+    # il est sur les seize pages, à la place où l'on va le chercher.
+    _lg = _logo_b64()
+    if _lg:
+        # L'EMBLÈME SEUL, ET LE MOT ÉCRIT À CÔTÉ. Le fichier d'origine porte
+        # « APRI » en vert foncé sous le disque : sur le vert de la colonne,
+        # ce mot-là disparaissait. Écrit en blanc, en texte, il se lit — et
+        # il se traduit le jour où la marque changerait de graphie.
+        st.markdown(
+            f'<div class="nav-marque">'
+            f'<img src="data:image/png;base64,{_lg}" alt="APRI"/>'
+            f'<span>APRI</span></div>',
+            unsafe_allow_html=True)
     # LA LANGUE OUVRE LA COLONNE. Elle vivait dans l'angle du bandeau, qui
     # n'existe plus que sur l'accueil : sur les quinze autres pages, le
     # réglage se serait trouvé ailleurs qu'à l'endroit où on l'avait laissé.
@@ -2179,7 +2224,7 @@ _c_contenu = _col_page.container(key="zone_page")
 # Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par
 # la colonne de gauche qu'on vient de rendre.
-_rendre_ruban(st.session_state["app_mode"] == MODE_PORTAIL)
+_rendre_ruban(st.session_state["app_mode"] != MODE_PORTAIL2)
 
 app_mode = st.session_state["app_mode"]
 

@@ -24,13 +24,12 @@ d'illustration ne permettrait de juger que du décor.
 import base64
 import json
 import os
-import re
 
 import streamlit as st
 
+import accueil_apri
 import i18n
 import icones
-import map_render
 from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -51,6 +50,14 @@ PORTES = [
 
 TEXTES = {
     "a2_nav": {"en": "Home 2", "fr": "Accueil 2"},
+    # LE TITRE INSTITUTIONNEL, EN DEUX LIGNES SÉPARÉES PAR UNE BARRE. La
+    # coupure n'est pas laissée au hasard de la largeur : « Observatoire de la
+    # résilience » d'un côté, ce sur quoi elle porte de l'autre.
+    "a2_inst": {
+        "en": "Observatory for the Resilience|of Haiti's Landscapes and "
+              "Populations",
+        "fr": "Observatoire de la résilience|des paysages et des populations "
+              "d'Haïti"},
     "a2_kicker": {"en": "People · Landscapes · Resilience",
                   "fr": "Populations · Paysages · Résilience"},
     "a2_titre": {"en": "Data for a more resilient Haiti",
@@ -96,27 +103,33 @@ for _c, _v in TEXTES.items():
 STYLE = """
 <style>
   /* --- LA PHOTOGRAPHIE PLEIN CADRE, ET LE TEXTE DESSUS -----------------
-     LE DÉGRADÉ N'EST PAS UN EFFET, C'EST CE QUI REND LE TITRE LISIBLE. Une
-     photographie de paysage porte du ciel clair et de la végétation sombre ;
-     un texte posé dessus sans voile passe de lisible à illisible au fil de
-     l'image. Le voile part du blanc à gauche, où vit le texte, et s'efface
-     à droite, où l'image doit rester nette. */
-  /* LE DESSIN EST PÂLE ET S'ÉTEINT DÉJÀ EN BLANC SUR SA GAUCHE : le voile
-     n'a donc plus à couvrir la moitié du cadre, il lui suffit d'assurer le
-     tiers où vit le texte. Et comme l'image est une frise très large, elle
-     est cadrée sur sa droite — le champ, le chemin et la maison — plutôt
-     qu'étirée sur une hauteur qu'elle n'a pas. */
+     LE VOILE N'EST PAS UN EFFET, C'EST CE QUI REND LE TITRE LISIBLE. La
+     photographie porte du ciel clair en haut et de la végétation sombre au
+     milieu ; un texte posé dessus sans voile passe de lisible à illisible
+     d'une ligne à l'autre. Le voile est opaque à gauche, où vit le texte, et
+     s'efface avant la moitié pour que la rivière et les mornes restent nets.
+
+     ELLE EST CADRÉE SUR SA DROITE. Le lit de la rivière et les mornes
+     occupent la moitié droite du cliché ; centrée, l'image aurait mis sous
+     le titre le talus de galets du premier plan. */
   .a2-hero { position:relative; border-radius:0; overflow:hidden;
-        min-height:370px; display:flex; align-items:center;
-        background-color:#ffffff;
-        background-size:cover; background-position:right center;
+        min-height:420px; display:flex; align-items:center;
+        background-color:#eef3f0;
+        background-size:cover; background-position:62% 40%;
         background-repeat:no-repeat; }
   .a2-hero::before { content:""; position:absolute; inset:0;
         background:linear-gradient(90deg,
-            rgba(255,255,255,.96) 0%, rgba(255,255,255,.88) 30%,
-            rgba(255,255,255,.42) 48%, rgba(255,255,255,0) 66%); }
+            rgba(255,255,255,.97) 0%, rgba(255,255,255,.93) 28%,
+            rgba(255,255,255,.62) 44%, rgba(255,255,255,.12) 62%,
+            rgba(255,255,255,0) 74%); }
   .a2-hero-c { position:relative; padding:52px 40px 48px 46px;
         max-width:640px; }
+  /* LE TITRE INSTITUTIONNEL : le même romain à empattements que le grand
+     titre, en corps réduit et en encre plus claire — il annonce l'institution
+     avant que la page annonce son sujet. */
+  .a2-inst { font-family:Georgia,"Times New Roman",serif; font-size:20px;
+        line-height:1.35; color:#2b4a3c; margin:0 0 30px;
+        text-align:left !important; }
   .a2-kick { font-size:11.5px; font-weight:700; letter-spacing:.19em;
         text-transform:uppercase; color:#3f8f66; margin:0 0 18px; }
   /* AU FIL DE L'EAU, ET NON JUSTIFIÉ. La feuille de l'application justifie
@@ -129,10 +142,11 @@ STYLE = """
   p.a2-intro { font-size:15.5px !important; color:#3c4761 !important;
         line-height:1.62 !important; margin:0 0 26px !important;
         max-width:44ch; text-align:left !important; }
-  /* LE CRÉDIT PASSE EN ENCRE SOMBRE. En blanc, il était posé sur un dessin
-     clair et ne se voyait plus. */
+  /* LE CRÉDIT EST BLANC, SUR LA PHOTOGRAPHIE. Une ombre portée le détache
+     là où le cliché passe clair — une plaque translucide, elle, découperait
+     un rectangle net dans l'image. */
   .a2-credit { position:absolute; right:18px; bottom:14px; font-size:11.5px;
-        color:#5a6a80; }
+        color:#ffffff; text-shadow:0 1px 3px rgba(0,0,0,.5); }
 
   /* --- LES QUATRE NOMBRES, SUR UNE RANGÉE ------------------------------
      Séparés par un filet plutôt que par des cartes : ce sont quatre mesures
@@ -229,10 +243,6 @@ _CSS_ICONES = "<style>" + "".join(
     for code, ic, _t, _x, _f in PORTES) + "</style>"
 
 
-# Le suffixe « · 1,0 » que le moteur de cartes ajoute à chaque étiquette.
-_ETIQUETTE = re.compile(r'( · [\d]+,[\d]+)(?=</text>)')
-
-
 def _e(t):
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
@@ -247,22 +257,24 @@ def _trouver(nom):
 
 @st.cache_data(show_spinner=False)
 def _photo_b64(lang="fr"):
-    """L'illustration du bandeau, celle du premier accueil, encodée une fois.
+    """La photographie du bandeau, encodée une fois pour toutes.
 
-    LE DESSIN, ET NON LA PHOTOGRAPHIE. Le dessin au crayon tient sur le même
-    blanc que la page : le titre s'y pose sans avoir besoin d'un voile épais,
-    et le bandeau ne dépose pas un rectangle de couleur en haut de l'écran. Le
-    premier accueil l'avait choisi pour cette raison, et les deux pages
-    d'entrée du même site n'ont pas à porter deux images différentes.
+    UNE PHOTOGRAPHIE DE TERRAIN, ET NON UNE ILLUSTRATION. Les bandeaux du
+    site portent un dessin au crayon composé avec le titre et le logo peints
+    dedans : posé derrière un autre titre, il en affichait deux. Celle-ci est
+    une vue du terrain enquêté, sans texte, et le titre de la page est donc
+    le seul qu'on lise. Les anciens fichiers restent en repli, au cas où
+    celui-ci manquerait dans un déploiement.
 
-    UNE COMPOSITION PAR LANGUE. Le titre est peint DANS l'image ; la version
-    anglaise est cherchée d'abord quand la langue servie est l'anglais, et la
-    française reprend sa place si elle manque.
+    `lang` n'a plus d'effet sur le choix du fichier — la photographie ne
+    porte aucun mot — mais il reste dans la signature pour que les replis,
+    eux, retrouvent leur version linguistique.
     """
-    noms = ["bandeau_apri_dessin.jpg", "bandeau_apri_site.jpg",
+    noms = ["accueil2_hero.jpg", "bandeau_apri_site.jpg",
             "bandeau_apri_large.jpg", "bandeau_apri.jpg"]
     if lang == "en":
-        noms.insert(0, "bandeau_apri_dessin_en.jpg")
+        noms.append("bandeau_apri_dessin_en.jpg")
+    noms.append("bandeau_apri_dessin.jpg")
     for nom in noms:
         p = _trouver(nom)
         if p:
@@ -294,21 +306,19 @@ def _chiffres():
 
 @st.cache_data(show_spinner=False)
 def _carte_svg():
-    """La carte du territoire, en aplat uniforme.
+    """La carte du premier accueil, telle quelle.
 
-    AUCUN SCORE SUR CETTE CARTE. Elle dit où l'on a travaillé, pas ce qu'on y
-    a trouvé : une couleur par section, sur une page d'entrée, se lit comme un
-    classement avant que le lecteur sache ce qui est classé.
+    ON NE REDESSINE PAS UNE CARTE QUI EXISTE. Celle du premier accueil porte
+    déjà le carton de localisation posé sur la mer, la rose des vents calée
+    contre la côte, l'échelle kilométrique et les dix étiquettes avec leurs
+    lignes de rappel : quatre réglages faits un par un, qu'une seconde carte
+    aurait fallu refaire un par un. Le module de l'accueil la compose, celui-ci
+    la reprend, et une retouche faite là se verra ici.
+
+    AUCUN SCORE DESSUS, ET C'EST DÉJÀ SON PARTI. Elle dit où l'on a travaillé,
+    pas ce qu'on y a trouvé.
     """
-    uni = ("#2f6b4f", "#ffffff")
-    svg, _s, _m = map_render.render_map_svg(
-        {s: 1.0 for s in SECTIONS}, {s: 1 for s in SECTIONS}, [9, 9.5, 10],
-        height=400, ramp=[uni, uni, uni, uni], unite="")
-    # LA VALEUR PORTÉE PAR CHAQUE ÉTIQUETTE EST RETIRÉE. Le moteur de cartes
-    # écrit « Quentin · 1,0 » parce qu'on lui a passé une valeur pour obtenir
-    # un aplat uniforme ; ce 1,0 n'est pas une mesure, et affiché sur une page
-    # d'entrée il se lirait comme un score.
-    return _ETIQUETTE.sub("", svg)
+    return accueil_apri._carte_indice({})["carte"]
 
 
 def _fmt(n):
@@ -322,6 +332,10 @@ def render():
 
     # ---- 1 · la photographie, le titre, l'appel ------------------------
     photo = _photo_b64(i18n.get_lang())
+    # LE TITRE INSTITUTIONNEL SORT DE L'IMAGE. Il y était peint, donc figé
+    # dans une langue et invisible à un lecteur d'écran ; écrit en texte, il
+    # se traduit et se sélectionne.
+    inst = "<br>".join(_e(x) for x in T("a2_inst").split("|"))
     # LES GUILLEMETS SIMPLES SONT LOAD-BEARING. L'URL vit dans un attribut
     # `style` délimité par des guillemets doubles ; en réutiliser à
     # l'intérieur ferme l'attribut au milieu de l'image, et le navigateur
@@ -330,6 +344,7 @@ def render():
             if photo else "background:#eef3f0;")
     st.markdown(
         f'<div class="a2-hero" style="{fond}"><div class="a2-hero-c">'
+        f'<div class="a2-inst">{inst}</div>'
         f'<div class="a2-kick">{_e(T("a2_kicker"))}</div>'
         f'<div class="a2-titre">{_e(T("a2_titre"))}</div>'
         f'<p class="a2-intro">{_e(T("a2_intro"))}</p>'
@@ -366,7 +381,8 @@ def render():
     g, d = st.columns([1, 1.15], gap="large")
     with g:
         st.markdown(
-            f'<div class="a2-carte">'
+            accueil_apri.STYLE
+            + f'<div class="a2-carte">'
             f'<div class="a2-carte-t">{_e(T("a2_carte_t"))}</div>'
             f'<div class="a2-carte-f"></div>{_carte_svg()}</div>',
             unsafe_allow_html=True)
