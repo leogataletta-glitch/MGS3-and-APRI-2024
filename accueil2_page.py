@@ -29,6 +29,7 @@ import streamlit as st
 
 import accueil_apri
 import assets
+import carte_zoom
 import i18n
 from i18n import T
 
@@ -579,9 +580,14 @@ def render():
         st.markdown(
             accueil_apri.STYLE
             + f'<div class="a2-portes-t">{_e(T("a2_carte_t"))}</div>'
-            f'<div class="a2-portes-f"></div>'
-            f'<div class="a2-carte">{_carte_svg()}</div>',
-            unsafe_allow_html=True)
+            f'<div class="a2-portes-f"></div>', unsafe_allow_html=True)
+        # LA CARTE SE DÉROULE : l'île, la péninsule, les dix sections. Elle
+        # vit dans un composant parce que le déroulé demande du JavaScript,
+        # et elle rend faux si ses géométries manquent — la carte fixe
+        # reprend alors sa place, sans que la page s'en aperçoive.
+        if not carte_zoom.render():
+            st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',
+                        unsafe_allow_html=True)
     with d:
         st.markdown(
             f'<div class="a2-portes-t">{_e(T("a2_portes_t"))}</div>'
