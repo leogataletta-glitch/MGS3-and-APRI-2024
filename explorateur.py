@@ -134,6 +134,17 @@ TEXTES = {
               "là où ils vivent, ce qui est précisément la question quand on "
               "demande si les ménages les plus pauvres vivent dans les "
               "sections les plus dégradées."},
+    "ex_s_terr_un": {
+        "en": "This indicator is territorial: it is measured on the communal "
+              "section, not on the household, and graded on the framework's "
+              "resilience scale. Each household carries the score of the "
+              "section it lives in, so a group's figure is the average over "
+              "its members and lands between two grades.",
+        "fr": "Cet indicateur est territorial : il se mesure sur la section "
+              "communale, pas sur le ménage, et se note sur l'échelle de "
+              "résilience du référentiel. Chaque ménage porte le score de la "
+              "section où il vit, si bien que le chiffre d'un groupe est la "
+              "moyenne sur ses membres et tombe entre deux notes."},
     "ex_s_dim_vide_env": {
         "en": "The environmental dimension is measured from imagery, not "
               "from what a household declares, so it is scored through the "
@@ -796,12 +807,17 @@ _REGISTRES_F = [("section", "ex_f_section"), ("sexe", "ex_ax_sexe"),
                 ("paysage", "ex_f_paysage")]
 
 
-def _carte(lignes):
+def _carte(lignes, unite="%"):
     """La part par section communale, portée sur la carte du territoire.
 
     LA CARTE NE MONTRE QUE LES SECTIONS. Les autres axes — sexe, âge,
     catégorie — n'ont pas de géographie : les porter sur une carte
     inventerait un territoire qu'ils n'ont pas.
+
+    L'UNITÉ SE DIT, ELLE NE SE DEVINE PAS. La carte servait deux écrans avec
+    un pour-cent en dur : sur les résultats bruts c'est juste, sur les scores
+    « 5,8 % » était un score sur dix déguisé en part de ménages. L'écran qui
+    appelle sait ce qu'il montre, il le dit.
     """
     vals = {l["cle"]: l["part"] for l in lignes
             if l.get("axe_code") == "section" and l["part"] is not None}
@@ -811,13 +827,13 @@ def _carte(lignes):
     seuils = map_render.nice_thresholds(dispo)
     svg, seuils_ret, _m = map_render.render_map_svg(
         vals, {s: 1 for s in vals}, seuils, height=560,
-        polarity="neutre", unite="%")
+        polarity="neutre", unite=unite)
     legende = "".join(
         f'<span style="display:inline-flex;align-items:center;gap:7px;'
         f'margin-right:16px"><span style="width:20px;height:11px;'
         f'border-radius:3px;background:{c}"></span>'
         f'<span style="font-size:11.5px;color:#52514e">{lab}</span></span>'
-        for c, lab in map_render.legend_items(seuils_ret, "neutre", "%"))
+        for c, lab in map_render.legend_items(seuils_ret, "neutre", unite))
     return (f'<div style="margin:6px 0 8px">{legende}</div>{svg}')
 
 
@@ -831,7 +847,7 @@ def _nom_ind(ind):
             else (ind.get("nom") or ind.get("nom_fr")))
 
 
-def _note_territoriale(cat, dim):
+def _note_territoriale(cat, dim, ind=None):
     """Ce qui, dans le chiffre affiché, n'a pas été mesuré sur des ménages.
 
     ELLE NE S'ÉCRIT QUE SI ELLE A QUELQUE CHOSE À DIRE. Sur la dimension
@@ -840,6 +856,14 @@ def _note_territoriale(cat, dim):
     croirait que les ménages de Trichet ont répondu quelque chose sur la
     végétation.
     """
+    # UN INDICATEUR CHOISI PARLE POUR LUI SEUL. Dire « 18 des 18 indicateurs
+    # sont territoriaux » sous une barre qui n'en montre qu'un serait faux ;
+    # et la même note sous un indicateur d'enquête serait un contresens.
+    if ind is not None:
+        if not ind.get("territorial"):
+            return ""
+        return (f'<p class="ex-note" style="margin:8px 0 0">'
+                f'{_e(T("ex_s_terr_un"))}</p>')
     terr = [i for i in (cat.get("territoriaux") or [])
             if dim is None or i["dim"] == dim]
     if not terr:
@@ -875,8 +899,17 @@ def _carte_vide(dim):
 
 
 def _inds_tries(cat):
-    """Les indicateurs calculables, rangés par dimension puis par nom."""
-    return sorted(cat.get("indicateurs") or [],
+    """Les indicateurs notables, rangés par dimension puis par nom.
+
+    LES TERRITORIAUX SONT DANS LA MÊME LISTE QUE LES AUTRES. Ils sont notés
+    par les mêmes échelles de résilience du référentiel, sur les mêmes dix
+    sections, et se ventilent par n'importe quel registre ; les tenir dans
+    une liste à part revenait à dire qu'ils ne sont pas des indicateurs,
+    et le sélecteur d'indicateurs de la dimension environnementale
+    s'ouvrait vide alors que dix-huit d'entre eux sont notés.
+    """
+    return sorted((cat.get("indicateurs") or [])
+                  + (cat.get("territoriaux") or []),
                   key=lambda x: (x["dim"], _nom_ind(x)))
 
 
@@ -887,6 +920,15 @@ def _mesure_ind(ind, masque):
     ventilation en dix sections, en demander un seul par ce chemin ferait six
     cent soixante calculs pour n'en afficher que dix.
     """
+    # UN INDICATEUR TERRITORIAL N'A PAS DE BASE DE RÉPONDANTS. Son score est
+    # déjà posé, section par section, par l'échelle du référentiel ; le porter
+    # sur un groupe, c'est faire la moyenne sur ses ménages, chacun avec le
+    # score de sa section. Un ménage dont la section n'est pas mesurée ne
+    # compte ni au numérateur ni au dénominateur.
+    if ind.get("territorial"):
+        s = ind["score_h"][masque]
+        s = s[~np.isnan(s)]
+        return int(s.size), (float(s.mean()) if s.size else None)
     base = ind["base"] & masque
     nb = int(base.sum())
     if nb == 0:
@@ -1952,7 +1994,7 @@ def render_scores(cat):
             st.info(T("ex_radar_court"))
             forme = "barres"
         if forme == "carte":
-            svg = (_carte(lignes)
+            svg = (_carte(lignes, unite="")
                    if len(dims) == 1 and dims[0][0] == "section" else None)
             if svg is None:
                 st.info(T("ex_s_carte_sec"))
@@ -1975,7 +2017,7 @@ def render_scores(cat):
             st.markdown(_barres(lignes, ens, "score"), unsafe_allow_html=True)
 
         st.markdown(_synthese(lignes, "score"), unsafe_allow_html=True)
-        st.markdown(_note_territoriale(cat, dim if k is None else None),
+        st.markdown(_note_territoriale(cat, dim, ind),
                     unsafe_allow_html=True)
         if poses:
             st.markdown(f'<p class="ex-note" style="margin:6px 0 0">'

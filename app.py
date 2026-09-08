@@ -953,8 +953,17 @@ st.markdown(("""
      laisse une bande vide sur ce bord. */
   div[data-testid="stColumn"]:has(div[class*="st-key-zone_nav"]) {
     background:
-      url("data:image/png;base64,__DESSIN__") left bottom / 300px auto
-        no-repeat fixed,
+      /* LA LARGEUR SUIT LA COLONNE, ELLE N'EST PLUS FIXE. À trois cents
+         pixels, le dessin couvrait la colonne d'un écran de 1 280 px et lui
+         laissait une bande vide à droite dès 1 900 px, où elle en fait plus
+         de trois cent dix. La colonne vaut environ 16,3 % de la fenêtre ;
+         `fixed` résout les pourcentages sur la fenêtre, donc 17,5vw la
+         dépasse toujours d'un cheveu et le dessin se laisse rogner à droite
+         au lieu de s'arrêter avant le bord. Le plancher de trois cents
+         pixels tient les fenêtres étroites, où la colonne ne rétrécit plus
+         autant que la fenêtre. */
+      url("data:image/png;base64,__DESSIN__") left bottom /
+        max(300px, 17.5vw) auto no-repeat fixed,
       linear-gradient(180deg, #eef2ed 0%, #e3eae4 100%);
     border-right: 1px solid #d9e1da;
     margin-left: -2.6rem !important;
