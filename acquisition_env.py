@@ -338,9 +338,40 @@ def render():
                 unsafe_allow_html=True)
 
     for bloc in BLOCS:
-        lot = par_bloc.get(bloc)
-        if not lot:
-            continue
+        _rendre_bloc(bloc, par_bloc.get(bloc), lang)
+
+
+def render_bloc(bloc):
+    """Un seul chantier, hors de sa page.
+
+    APPELÉ PAR L'ÉCRAN DES RÉSULTATS BRUTS. L'onglet « biodiversité » n'a
+    aucun résultat à montrer ; plutôt qu'une carte d'attente vide, il montre
+    le chantier lui-même — les sept indicateurs, leur état, et la recette qui
+    les remplirait. Même code, donc même information des deux côtés.
+    """
+    lang = i18n.get_lang()
+    st.markdown(STYLE, unsafe_allow_html=True)
+    lst = _indicateurs()
+    if not lst:
+        return
+    fiches = _fiches()
+    lot = []
+    for r in lst:
+        f = fiches.get(str(r["ligne"])) or {}
+        if f.get("bloc", "satellite") == bloc:
+            lot.append((r, f))
+    _rendre_bloc(bloc, lot, lang)
+
+
+def _rendre_bloc(bloc, lot, lang):
+    """Un chantier : son titre, ses indicateurs, ses recettes.
+
+    IL EST SORTI DE LA BOUCLE POUR POUVOIR ÊTRE APPELÉ SEUL. L'écran des
+    résultats bruts montre le chantier « biodiversité de terrain » à la place
+    de sa carte d'attente : c'est la même information — sept indicateurs, ce
+    qu'ils demandent — et la dupliquer aurait garanti qu'elle diverge.
+    """
+    if lot:
         nb = {e: sum(1 for r, _f in lot if r["etat"] == e)
               for e in ("calcule", "partiel", "absent")}
         detail = " · ".join(

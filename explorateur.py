@@ -105,6 +105,34 @@ TEXTES = {
               "splits across groups.",
         "fr": "Choisissez une dimension ou un indicateur pour voir son "
               "score, et comment il se répartit entre groupes."},
+    # UNE DIMENSION PEUT N'AVOIR AUCUN INDICATEUR MESURABLE SUR LES MÉNAGES,
+    # et il faut le dire au lieu de dessiner dix barres vides. La dimension
+    # environnementale est dans ce cas : ses trente-huit indicateurs sont
+    # satellitaires ou de terrain, pas des réponses d'enquête.
+    "ex_s_dim_vide_t": {"en": "Nothing to plot here",
+                        "fr": "Rien à tracer ici"},
+    "ex_s_dim_vide": {
+        "en": "This screen scores dimensions from the household survey, and "
+              "no indicator of this dimension comes from it. The bars would "
+              "all be empty, so none are drawn.",
+        "fr": "Cet écran calcule les scores de dimension à partir de "
+              "l'enquête ménages, et aucun indicateur de cette dimension "
+              "n'en vient. Les barres seraient toutes vides : aucune n'est "
+              "tracée."},
+    "ex_s_dim_vide_env": {
+        "en": "The environmental dimension is measured from imagery and "
+              "field surveys, not from what a household declares: forest "
+              "cover, vegetation indices, rainfall, temperature, protected "
+              "areas. Its 17 computed indicators are under Raw results · "
+              "Satellite, section by section; the 21 still partial or "
+              "missing are listed under Framework · Yet to be measured.",
+        "fr": "La dimension environnementale se mesure par imagerie et "
+              "relevés de terrain, pas par ce qu'un ménage déclare : "
+              "couverture forestière, indices de végétation, pluies, "
+              "températures, aires protégées. Ses 17 indicateurs calculés "
+              "sont dans Résultats bruts · Satellite, section par section ; "
+              "les 21 partiels ou manquants sont dans Cadre · Reste à "
+              "mesurer."},
     "ex_c_sur": {"en": "Compare on", "fr": "Comparer sur"},
     "ex_c_profil": {"en": "Profile {n}", "fr": "Profil {n}"},
     "ex_c_branches": {"en": "Themes to compare on",
@@ -785,6 +813,27 @@ def _cases(cat, axe):
 def _nom_ind(ind):
     return ((ind.get("nom_fr") or ind.get("nom")) if i18n.get_lang() == "fr"
             else (ind.get("nom") or ind.get("nom_fr")))
+
+
+def _carte_vide(dim):
+    """L'encadré qui remplace les barres vides d'une dimension non mesurée.
+
+    IL DOIT DIRE OÙ ALLER, sinon il ne fait qu'annoncer une absence. Pour la
+    dimension environnementale, les mesures existent — ailleurs — et la
+    phrase supplémentaire les nomme.
+    """
+    sup = (f'<p style="margin:10px 0 0;font-size:14px;line-height:1.6;'
+           f'color:#3c4761;text-align:justify">'
+           f'{_e(T("ex_s_dim_vide_env"))}</p>' if dim == "dim3" else "")
+    return (f'<div style="border:1px solid #e4e2de;background:#faf9f7;'
+            f'border-radius:12px;padding:20px 22px;margin:10px 0 4px;'
+            f'max-width:96ch">'
+            f'<div style="font-size:12px;letter-spacing:.09em;'
+            f'text-transform:uppercase;color:#8a7f6d;font-weight:600;'
+            f'margin-bottom:7px">{_e(T("ex_s_dim_vide_t"))}</div>'
+            f'<p style="margin:0;font-size:14px;line-height:1.6;'
+            f'color:#3c4761;text-align:justify">'
+            f'{_e(T("ex_s_dim_vide"))}</p>{sup}</div>')
 
 
 def _inds_tries(cat):
@@ -1738,6 +1787,13 @@ def render_scores(cat):
             cible = f"i:{_inds_tries(cat).index(ind)}"
             lib_cible = _nom_ind(ind)
         elif dim is not None:
+            # UNE DIMENSION SANS INDICATEUR MÉNAGE NE DONNE PAS UN SCORE BAS,
+            # ELLE N'EN DONNE AUCUN. Le moteur renvoie None, les barres se
+            # dessinaient à vide, et un écran de dix barres grises se lit
+            # comme un score de zéro. On dit ce qui manque et où c'est.
+            if not any(x["dim"] == dim for x in _inds_tries(cat)):
+                st.markdown(_carte_vide(dim), unsafe_allow_html=True)
+                return
             ind, cible, lib_cible = None, f"d:{dim}", T(dim)
         else:
             st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'

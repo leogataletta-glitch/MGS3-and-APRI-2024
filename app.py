@@ -29,6 +29,7 @@ import streamlit.components.v1 as components
 # ses deux cartes, et son rendu vit dans `territoire_page`.
 import a_propos_page
 import accueil_apri
+import acquisition_env
 # À L'ESSAI, ET SÉPARÉE POUR CELA. La seconde page d'entrée vit dans son
 # propre module et sous sa propre entrée de menu : la retirer, si elle ne
 # convient pas, ne touche à rien d'autre.
@@ -2619,6 +2620,15 @@ with _c_contenu:
                     f'<p style="margin:0;font-size:14px;line-height:1.6;'
                     f'color:#3c4761;text-align:justify">{_msg}</p>'
                     f'</div>', unsafe_allow_html=True)
+                # L'ATTENTE SE CHIFFRE. Dire « pas encore chargé » et
+                # s'arrêter là laisse croire que rien n'est su ; le chantier
+                # de biodiversité de terrain sait exactement quels sept
+                # indicateurs manquent, ce qu'il faut aller mesurer et avec
+                # quoi. C'est la même fonction que la page d'acquisition,
+                # appelée sur ce seul chantier, pour que les deux écrans ne
+                # puissent pas diverger.
+                if _src == "biodiversite":
+                    acquisition_env.render_bloc("terrain")
             else:
                 explorateur.render(_cat, mode="brut")
 
