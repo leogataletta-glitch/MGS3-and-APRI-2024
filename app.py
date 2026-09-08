@@ -1315,6 +1315,19 @@ st.markdown(("""
     background: linear-gradient(90deg, #ffffff 0%, #ffffff 26%,
                 rgba(255,255,255,.92) 34%, rgba(255,255,255,0) 56%);
   }
+  /* LE VOILE DU FILM S'ARRÊTE PLUS TÔT. Sur les photographies, le blanc
+     couvre le tiers gauche jusqu'à 56 % : elles y sont vides, c'est un ciel
+     ou un champ, et il ne mange rien. Le film, lui, a sa scène dans ce
+     tiers-là — la femme accroupie est entre 18 et 36 % de la largeur — et
+     le même voile l'effaçait. Il tient donc le fond du bloc de marque,
+     puis lâche vite : opaque jusqu'au logo, dégressif sur le titre, plus
+     rien à 42 %. Le titre reste lisible parce qu'il est sombre et que le
+     blanc sous lui ne descend pas sous 45 %. */
+  .bandeau-voile.film {
+    background: linear-gradient(90deg, #ffffff 0%, #ffffff 14%,
+                rgba(255,255,255,.85) 22%, rgba(255,255,255,.45) 30%,
+                rgba(255,255,255,0) 42%);
+  }
   .bandeau-marque {
     position: absolute; left: 3.4%; top: 50%; transform: translateY(-50%);
     z-index: 3; display: flex; align-items: center; gap: 16px;
@@ -2494,7 +2507,8 @@ def _rendre_ruban(avec_image):
         st.markdown(
             f'<div class="bandeau-haut bandeau-enveloppe">'
             f'{_fond}'
-            f'<div class="bandeau-voile"></div>{_marque}'
+            f'<div class="bandeau-voile{" film" if _film else ""}"></div>'
+            f'{_marque}'
             f'<img class="bandeau-logo" alt="UNEP" '
             f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
             + _bloc_credit(page, bool(_film))
