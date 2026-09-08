@@ -451,6 +451,224 @@ TEXTES = {
         "fr": "Cette mesure ne porte pas de barème publié : elle est livrée "
               "brute, et n'entre dans aucun score."},
 
+    "sat_calc_t": {"en": "How the figure is computed",
+                   "fr": "Comment le chiffre est calculé"},
+    "sat_calc_foret": {
+        "en": "Hansen publishes, per 30 m pixel, the tree cover of 2000 and "
+              "the year of loss if the pixel lost its cover. The forest of "
+              "2000 is the area of the pixels above 30 % cover inside the "
+              "section; the loss is the area of those same pixels flagged "
+              "lost between 2001 and the last year; the relative loss is the "
+              "second divided by the first, times a hundred; the annual rate "
+              "is the compound rate taking the area from 2000 to the area "
+              "remaining. Gain is only recorded up to 2012, so the net rate "
+              "understates any regrowth after that date.",
+        "fr": "Hansen publie, pour chaque pixel de 30 m, le couvert arboré de "
+              "2000 et l\u2019année de perte si le pixel a perdu son couvert. "
+              "La forêt de 2000 est la surface des pixels au-dessus de 30 % "
+              "de couvert dans la section ; la perte est la surface de ces "
+              "mêmes pixels signalés perdus entre 2001 et la dernière année ; "
+              "la perte relative est la seconde divisée par la première, "
+              "multipliée par cent ; le taux annuel est le taux composé qui "
+              "mène de la surface de 2000 à la surface restante. Le gain "
+              "n\u2019est enregistré que jusqu\u2019en 2012 : le taux net "
+              "sous-estime donc toute reprise postérieure."},
+    "sat_calc_vege": {
+        "en": "For each dry season, the median of the Sentinel-2 pixels of "
+              "the section is taken, clouds removed by the SCL band; the "
+              "index is computed on that median, then averaged over the "
+              "polygon. The change compares the 2019\u20132021 mean with the "
+              "2023\u20132025 mean, the year 2022 acting as the hinge.",
+        "fr": "Pour chaque saison sèche, on prend la médiane des pixels "
+              "Sentinel-2 de la section, nuages retirés par la bande SCL ; "
+              "l\u2019indice est calculé sur cette médiane, puis moyenné sur "
+              "le polygone. La variation compare la moyenne 2019-2021 à la "
+              "moyenne 2023-2025, l\u2019année 2022 servant de charnière."},
+    "sat_calc_pluie": {
+        "en": "CHIRPS gives a daily rainfall grid at 5.5 km since 1981. The "
+              "daily values are summed over the year, then averaged over the "
+              "section polygon. The normal is the 1991\u20132020 mean, the "
+              "period the WMO recommends; the ratio divides the year by that "
+              "normal; the SPI fits a gamma law on the 45 years and returns "
+              "the rarity of the year in standard deviations.",
+        "fr": "CHIRPS fournit une grille de pluie journalière à 5,5 km depuis "
+              "1981. Les valeurs journalières sont sommées sur "
+              "l\u2019année, puis moyennées sur le polygone de la section. La "
+              "normale est la moyenne 1991-2020, période recommandée par "
+              "l\u2019OMM ; le rapport divise l\u2019année par cette normale ; "
+              "le SPI ajuste une loi gamma sur les 45 ans et rend la rareté "
+              "de l\u2019année en écarts-types."},
+    "sat_calc_saison": {
+        "en": "Same source and same zonal averaging as the annual rainfall, "
+              "but summed over two windows read from the 45-year "
+              "climatology: March to May, and August to October. A dry day is "
+              "a day below 1 mm; the onset of the rains is the first day of "
+              "the first spell that accumulates enough without a long dry "
+              "break after it, and a failed onset is a spell that starts and "
+              "breaks.",
+        "fr": "Même source et même moyenne zonale que la pluie annuelle, mais "
+              "sommée sur deux fenêtres lues dans la climatologie de 45 ans : "
+              "mars à mai, et août à octobre. Un jour sec est un jour sous "
+              "1 mm ; l\u2019installation des pluies est le premier jour de la "
+              "première séquence qui accumule assez sans longue rupture "
+              "derrière, et une installation ratée est une séquence qui part "
+              "et se casse."},
+    "sat_calc_thermique": {
+        "en": "MODIS gives the ground temperature twice a day at 1 km. The "
+              "day and night values are averaged separately over the section "
+              "polygon and over the season; the day-night range is their "
+              "difference; the anomaly compares the season with the "
+              "2001\u20132020 normal. Evapotranspiration comes from MOD16A2, "
+              "and the aridity index divides rainfall by potential "
+              "evapotranspiration.",
+        "fr": "MODIS donne la température du sol deux fois par jour à 1 km. "
+              "Les valeurs de jour et de nuit sont moyennées séparément sur "
+              "le polygone de la section et sur la saison ; l\u2019amplitude "
+              "est leur différence ; l\u2019anomalie compare la saison à la "
+              "normale 2001-2020. L\u2019évapotranspiration vient de MOD16A2, "
+              "et l\u2019indice d\u2019aridité divise la pluie par "
+              "l\u2019évapotranspiration potentielle."},
+    "sat_lecture": {"en": "What this says, section by section",
+                    "fr": "Ce que cela dit, section par section"},
+
+    # UNE PHRASE PAR MESURE, ET ELLE EST ÉCRITE, PAS DÉDUITE. « {s} » est le
+    # nom de la section, « {v} » la valeur en valeur absolue, « {vs} » la
+    # valeur signée, « {a} » et « {a2} » les bornes de la période du fichier.
+    # Les mesures sans phrase n'en affichent pas : mieux vaut aucun
+    # commentaire qu'un commentaire générique.
+    "sat_p_foret2025_pct": {
+        "en": "{s} had {v} % of its area under forest in {a2}.",
+        "fr": "{s} avait {v} % de sa surface couverte de forêt en {a2}."},
+    "sat_p_foret2000_pct": {
+        "en": "{s} had {v} % of its area under forest in {a}.",
+        "fr": "{s} avait {v} % de sa surface couverte de forêt en {a}."},
+    "sat_p_perte_relative_pct": {
+        "en": "{s} has lost {v} % of its {a} forest area since {a}.",
+        "fr": "{s} a perdu {v} % de sa surface boisée depuis {a}."},
+    "sat_p_perte_totale_ha": {
+        "en": "{s} has lost {v} hectares of forest since {a}.",
+        "fr": "{s} a perdu {v} hectares de forêt depuis {a}."},
+    "sat_p_taux_annuel_net": {
+        "en": "In {s}, forest area changes by {vs} % a year on average over "
+              "{a}\u2013{a2}.",
+        "fr": "Dans {s}, la surface boisée évolue de {vs} % par an en moyenne "
+              "sur {a}-{a2}."},
+    "sat_p_part_choc_pct": {
+        "en": "In {s}, {v} % of all the forest lost since {a} went in a "
+              "single year.",
+        "fr": "Dans {s}, {v} % de toute la forêt perdue depuis {a} l\u2019a "
+              "été en une seule année."},
+    "sat_p_pluie_courante": {
+        "en": "{s} received {v} mm of rain over the assessed year.",
+        "fr": "{s} a reçu {v} mm de pluie sur l\u2019année évaluée."},
+    "sat_p_pluie_normale": {
+        "en": "{s} receives {v} mm of rain in a normal year (1991\u20132020 "
+              "average).",
+        "fr": "{s} reçoit {v} mm de pluie une année normale (moyenne "
+              "1991-2020)."},
+    "sat_p_ratio_normale": {
+        "en": "{s} received {v} % of its normal rainfall.",
+        "fr": "{s} a reçu {v} % de sa pluie normale."},
+    "sat_p_pl_min": {
+        "en": "The driest year on record in {s} brought {v} mm.",
+        "fr": "L\u2019année la plus sèche jamais enregistrée à {s} a apporté "
+              "{v} mm."},
+    "sat_p_pl_max": {
+        "en": "The wettest year on record in {s} brought {v} mm.",
+        "fr": "L\u2019année la plus arrosée jamais enregistrée à {s} a "
+              "apporté {v} mm."},
+    "sat_p_spi": {
+        "en": "{s} scores an SPI of {vs}: below \u22121 the year counts as a "
+              "drought.",
+        "fr": "{s} affiche un SPI de {vs} : en dessous de \u22121, "
+              "l\u2019année compte comme une sécheresse."},
+    "sat_p_spi_mam": {
+        "en": "For the spring campaign, {s} scores an SPI of {vs}: below "
+              "\u22121 the season counts as a drought.",
+        "fr": "Pour la campagne de printemps, {s} affiche un SPI de {vs} : en "
+              "dessous de \u22121, la saison compte comme une sécheresse."},
+    "sat_p_mam_courant": {
+        "en": "{s} received {v} mm over the March-to-May campaign.",
+        "fr": "{s} a reçu {v} mm sur la campagne de mars à mai."},
+    "sat_p_mam_normale": {
+        "en": "{s} receives {v} mm over a normal spring campaign.",
+        "fr": "{s} reçoit {v} mm sur une campagne de printemps normale."},
+    "sat_p_aso_courant": {
+        "en": "{s} received {v} mm over the August-to-October campaign.",
+        "fr": "{s} a reçu {v} mm sur la campagne d\u2019août à octobre."},
+    "sat_p_secs_mam": {
+        "en": "{s} counted {v} dry days during the spring campaign.",
+        "fr": "{s} a compté {v} jours secs pendant la campagne de printemps."},
+    "sat_p_secs_an": {
+        "en": "The longest dry spell of the year in {s} lasted {v} days.",
+        "fr": "La plus longue séquence sèche de l\u2019année à {s} a duré {v} "
+              "jours."},
+    "sat_p_j50": {
+        "en": "{s} counted {v} days above 50 mm of rain in the year.",
+        "fr": "{s} a compté {v} jours à plus de 50 mm de pluie dans "
+              "l\u2019année."},
+    "sat_p_install_decalage": {
+        "en": "In {s}, the onset of the rains has moved by {vs} days against "
+              "the earlier period: a negative figure means earlier.",
+        "fr": "À {s}, l\u2019installation des pluies s\u2019est déplacée de "
+              "{vs} jours par rapport à la période ancienne : un chiffre "
+              "négatif veut dire plus tôt."},
+    "sat_p_install_ratees": {
+        "en": "{s} has counted {v} failed onsets of the rainy season since "
+              "1981.",
+        "fr": "{s} a compté {v} installations ratées de la saison des pluies "
+              "depuis 1981."},
+    "sat_p_lst_courant": {
+        "en": "The ground of {s} reaches {v} \u00b0C on average over the dry "
+              "season.",
+        "fr": "Le sol de {s} atteint {v} \u00b0C en moyenne sur la saison "
+              "sèche."},
+    "sat_p_lst_anomalie": {
+        "en": "The dry-season ground temperature of {s} departs by {vs} % "
+              "from its normal.",
+        "fr": "La température du sol de {s} en saison sèche s\u2019écarte de "
+              "{vs} % de sa normale."},
+    "sat_p_lst_nuit": {
+        "en": "The ground of {s} falls back to {v} \u00b0C on average at "
+              "night.",
+        "fr": "Le sol de {s} retombe à {v} \u00b0C en moyenne la nuit."},
+    "sat_p_lst_amplitude": {
+        "en": "Between day and night, the ground of {s} swings by {v} "
+              "\u00b0C: the wider the swing, the barer the soil.",
+        "fr": "Entre le jour et la nuit, le sol de {s} varie de {v} \u00b0C : "
+              "plus l\u2019écart est grand, plus le sol est nu."},
+    "sat_p_lst_max": {
+        "en": "The hottest season on record in {s} reached {v} \u00b0C.",
+        "fr": "La saison la plus chaude enregistrée à {s} a atteint {v} "
+              "\u00b0C."},
+    "sat_p_aridite": {
+        "en": "In {s}, rainfall covers {v} of the atmospheric demand: below "
+              "0.65 the climate counts as dry sub-humid.",
+        "fr": "À {s}, la pluie couvre {v} de la demande atmosphérique : en "
+              "dessous de 0,65, le climat compte comme subhumide sec."},
+    "sat_p_et": {
+        "en": "{s} actually evaporates and transpires {v} mm a year.",
+        "fr": "{s} évapore et transpire réellement {v} mm par an."},
+    "sat_p_pet": {
+        "en": "The atmosphere of {s} could draw {v} mm a year if water were "
+              "unlimited.",
+        "fr": "L\u2019atmosphère de {s} pourrait tirer {v} mm par an si "
+              "l\u2019eau était illimitée."},
+    "sat_p_eau_ha": {
+        "en": "{s} carries {v} hectares of open water.",
+        "fr": "{s} porte {v} hectares d\u2019eau libre."},
+    "sat_p_vhi": {
+        "en": "{s} scores {v} on the vegetation health index, where 100 is "
+              "the healthiest state observed.",
+        "fr": "{s} obtient {v} à l\u2019indice de santé de la végétation, où "
+              "100 est le meilleur état observé."},
+    "sat_p_var_ndvi": {
+        "en": "The greenness of {s} swings by {v} from one year to the next: "
+              "the smaller the swing, the steadier the cover.",
+        "fr": "La verdeur de {s} varie de {v} d\u2019une année sur "
+              "l\u2019autre : plus l\u2019écart est petit, plus le couvert "
+              "est stable."},
+
     "sat_src_pluie": {
         "en": "CHIRPS daily ({s}), {d1}–{d2}, normal computed over {n1}–{n2}, "
               "year assessed {a}.",
@@ -492,6 +710,13 @@ STYLE = """
   .sat-tab td.v { font-weight:700; color:#101728; }
   .sat-note { font-size:11.5px; color:#8a93a5; line-height:1.5;
        margin:8px 0 0; text-align:left !important; max-width:96ch; }
+  /* LES PUCES VONT D'UN BORD À L'AUTRE : ce sont des phrases de lecture, pas
+     des notes de bas de tableau. */
+  .sat-puces { margin:10px 0 0; padding-left:18px; max-width:none;
+       list-style:disc; }
+  .sat-puces li { font-size:12.5px; color:#3c4761; line-height:1.6;
+       margin:0 0 4px; text-align:left !important; }
+  .sat-puces li b { color:#3c4761; }
 </style>
 """
 
@@ -796,11 +1021,47 @@ def render():
         st.markdown(_tableau(vals, unite, dec, moy, lib),
                     unsafe_allow_html=True)
 
-    st.markdown(f'<p class="sat-note">{_e(T("sat_ventile"))}</p>'
-                f'<p class="sat-note"><b>{_e(T("sat_source"))}</b> · '
-                f'{_e(_source(fichier, src))}</p>', unsafe_allow_html=True)
+    # DEUX PUCES, PLEINE LARGEUR. Les deux notes sont de même nature — ce que
+    # la mesure ne sait pas faire, et d'où elle vient — et elles se lisaient
+    # comme deux paragraphes sans lien, sur une colonne de quatre-vingt-douze
+    # signes au milieu d'une page vide.
+    st.markdown(
+        '<ul class="sat-puces">'
+        f'<li>{_e(T("sat_ventile"))}</li>'
+        f'<li><b>{_e(T("sat_source"))}</b> · {_e(_source(fichier, src))}</li>'
+        '</ul>', unsafe_allow_html=True)
 
+    _lecture(mesure, vals, dec, src)
     _dossier(mesure, vals, unite, dec)
+
+
+def _lecture(mesure, vals, dec, src):
+    """Ce que le chiffre veut dire, section par section, en une phrase.
+
+    UN POURCENTAGE NE SE LIT PAS TOUT SEUL. « 22,2 » sous un intitulé anglais
+    demande au lecteur de reconstituer la phrase : de quoi c'est le
+    pourcentage, par rapport à quoi, sur quelle période. La phrase est donc
+    écrite, une par section, avec le nombre dedans — c'est la même information
+    que le graphique, mais dans l'ordre où on la dirait à quelqu'un.
+
+    ELLES SONT RANGÉES DE LA PLUS FORTE À LA PLUS FAIBLE, en valeur absolue :
+    on veut voir d'abord la section dont on va parler.
+    """
+    cle = "sat_p_" + mesure[1]
+    if cle not in i18n.DICO or not vals:
+        return
+    per = (src or {}).get("periode") or (src or {}).get("periode_annees") or []
+    a0 = per[0] if per else ""
+    a1 = per[-1] if per else ""
+    lignes = sorted(vals.items(), key=lambda kv: -abs(kv[1]))
+    st.markdown(
+        f'<div class="sat-lab">{_e(T("sat_lecture"))}</div>'
+        '<ul class="sat-puces">'
+        + "".join(
+            '<li>' + _e(T(cle, s=s, v=_f(abs(v), dec), vs=_f(v, dec),
+                          a=a0, a2=a1)) + '</li>'
+            for s, v in lignes)
+        + '</ul>', unsafe_allow_html=True)
 
 
 def _dossier(mesure, vals, unite, dec):
@@ -823,18 +1084,29 @@ def _dossier(mesure, vals, unite, dec):
     ligne = LIGNES.get(mesure[1])
     r = _referentiel().get(ligne) if ligne else None
     with st.expander(T("sat_ref_t")):
+        cal0 = "sat_calc_" + mesure[3]
         if not r:
-            st.markdown(f'<p class="sat-note" style="max-width:none">'
-                        f'{_e(T("sat_ref_absent"))}</p>'
-                        f'<p class="sat-note" style="max-width:none">'
-                        f'{_e(T("sat_ref_zonal"))}</p>',
-                        unsafe_allow_html=True)
+            st.markdown(
+                (f'<div class="sat-lab">{_e(T("sat_calc_t"))}</div>'
+                 f'<p class="sat-note" style="max-width:none">'
+                 f'{_e(T(cal0))}</p>' if cal0 in i18n.DICO else "")
+                + f'<p class="sat-note" style="max-width:none">'
+                  f'{_e(T("sat_ref_absent"))}</p>'
+                  f'<p class="sat-note" style="max-width:none">'
+                  f'{_e(T("sat_ref_zonal"))}</p>',
+                unsafe_allow_html=True)
             return
         note = (r.get("note") if lang == "fr" else r.get("note_en")) \
             or r.get("note") or ""
         expl = (r.get("expl_fr") if lang == "fr" else r.get("expl_en")) \
             or r.get("metrique") or ""
         sco = r.get("scores") or {}
+        cal = "sat_calc_" + mesure[3]
+        if cal in i18n.DICO:
+            st.markdown(
+                f'<div class="sat-lab">{_e(T("sat_calc_t"))}</div>'
+                f'<p class="sat-note" style="max-width:none">{_e(T(cal))}</p>',
+                unsafe_allow_html=True)
         st.markdown(
             f'<div class="sat-lab">{_e(T("sat_ref_src"))}</div>'
             f'<p class="sat-note" style="max-width:none">{_e(note)}</p>'

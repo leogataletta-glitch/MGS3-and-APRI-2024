@@ -192,6 +192,22 @@ if not check_password():
 # une phrase qui court sur 1400 px est illisible, c'est ce qui rendait les
 # blocs de texte pénibles à lire.
 @st.cache_data(show_spinner=False)
+def _marque_bloc_b64():
+    """L'emblème APRI et le mot sous lui, tels que la charte les dessine.
+
+    C'EST LE FICHIER DE LA MARQUE, PAS UNE RECOMPOSITION — la même règle que
+    sur l'accueil, et le même fichier.
+    """
+    import base64 as _b64
+    for base in (os.path.join(APP_DIR, "data"), APP_DIR):
+        p = os.path.join(base, "logo_apri_bloc.png")
+        if os.path.exists(p):
+            with open(p, "rb") as f:
+                return _b64.b64encode(f.read()).decode()
+    return ""
+
+
+@st.cache_data(show_spinner=False)
 def _dessin_b64(nom="dessin_vallee.png"):
     """Une aquarelle de bas de colonne, lue une fois.
 
@@ -1275,6 +1291,38 @@ st.markdown(("""
             drop-shadow(0 0 6px rgba(30,45,35,.55));
   }
 
+  /* LA MARQUE DE LA BANDE EST ÉCRITE, ELLE N'EST PLUS PEINTE.
+     Elle était cuite dans le JPEG : un fichier de mille quatre cents pixels
+     de large, réduit à la largeur de la colonne, puis recompressé à chaque
+     remontage — trois générations de rééchantillonnage sur un texte de vingt
+     pixels. D'où le crénelage que l'accueil n'a jamais eu, puisqu'il compose
+     sa marque en HTML. La bande fait pareil désormais : l'emblème est un PNG
+     à sa taille, les deux lignes sont du texte. Elles restent nettes à
+     n'importe quel zoom, elles se traduisent, elles se sélectionnent, et
+     changer un mot ne demande plus de refabriquer quatre images. */
+  .bandeau-voile {
+    position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background: linear-gradient(90deg, #ffffff 0%, #ffffff 26%,
+                rgba(255,255,255,.92) 34%, rgba(255,255,255,0) 56%);
+  }
+  .bandeau-marque {
+    position: absolute; left: 3.4%; top: 50%; transform: translateY(-50%);
+    z-index: 3; display: flex; align-items: center; gap: 16px;
+  }
+  .bandeau-marque > img {
+    height: clamp(42px, 4.6vw, 66px); width: auto; display: block;
+    flex: 0 0 auto;
+  }
+  .bandeau-filet { width: 1px; align-self: stretch; margin: 3px 0;
+    background: #a9bcc6; flex: 0 0 1px; }
+  .bandeau-inst { font-family: Georgia, "Times New Roman", serif; margin: 0;
+    text-align: left !important; }
+  .bandeau-inst b { display: block; font-weight: 400; color: #17563f;
+    font-size: clamp(13px, 1.28vw, 19px); line-height: 1.24; }
+  .bandeau-inst span { display: block; color: #3d5c74;
+    font-size: clamp(11.5px, 1.1vw, 16.5px); line-height: 1.3; }
+  @media (max-width: 900px) { .bandeau-marque { display: none; } }
+
   /* LA LÉGENDE DE LA BANDE. La photographie n'était créditée nulle part sur
      les pages intérieures : elle y passait pour un ornement alors qu'elle
      montre un lieu précis de la zone d'enquête. Elle est posée en bas à
@@ -2343,10 +2391,20 @@ def _rendre_ruban(avec_image):
             avec_image = False
         if not avec_image:
             return
+        _l = [html.escape(x) for x in T("a2_inst").split("|")]
+        _bloc = _marque_bloc_b64()
+        _inst = ('<div class="bandeau-inst"><b>' + _l[0] + '</b>'
+                 + "".join(f'<span>{x}</span>' for x in _l[1:]) + '</div>')
+        _marque = (f'<div class="bandeau-marque">'
+                   f'<img alt="APRI" src="data:image/png;base64,{_bloc}">'
+                   f'<div class="bandeau-filet"></div>{_inst}</div>'
+                   if _bloc else
+                   f'<div class="bandeau-marque">{_inst}</div>')
         st.markdown(
             f'<div class="bandeau-haut bandeau-enveloppe">'
             f'<img class="bandeau-fond" alt="APRI" '
             f'src="data:image/jpeg;base64,{img}">'
+            f'<div class="bandeau-voile"></div>{_marque}'
             f'<img class="bandeau-logo" alt="UNEP" '
             f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
             f'<div class="bandeau-credit">'
