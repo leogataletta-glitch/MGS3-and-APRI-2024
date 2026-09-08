@@ -831,7 +831,7 @@ st.markdown(("""
     flex: 0 0 auto !important; height: auto !important;
     /* HAUTE D'UNE FENÊTRE AU MOINS, pour que l'emblème du bas ait de quoi
        descendre plutôt que de flotter sous la devise. */
-    min-height: 100vh;
+    min-height: calc(100vh * var(--dz));
     max-height: 100vh; overflow-y: auto; overscroll-behavior: contain;
     border: none;
     /* LE FOND EST POSÉ SUR LA COLONNE, PAS DERRIÈRE ELLE. Un dégradé qui
@@ -904,7 +904,7 @@ st.markdown(("""
        vingts de vide. Quatorze pixels suffisent à ce que rien ne touche le
        bord. */
     padding-left: 14px !important;
-    min-height: 100vh;
+    min-height: calc(100vh * var(--dz));
     /* ET ELLE VA JUSQUE SOUS LE PIED DE PAGE. Entre le bas de la rangée et
        le bandeau du bas, Streamlit laisse l'écart de ses blocs puis les
        trente-quatre pixels de respiration du pied : une bande blanche de
@@ -976,19 +976,23 @@ st.markdown(("""
      inférieur — les marges négatives annulent le rembourrage de la colonne,
      et c'est ce débord qui le fait lire comme une vignette de pied de page
      plutôt que comme une image posée dans une marge. */
-  div[class*="st-key-zone_nav"] .nav-unep {
-    margin-top: auto; padding-top: 22px;
-  }
-  div[class*="st-key-zone_nav"] .nav-unep img {
-    width: 58px; height: auto; display: block;
-    filter: brightness(0); opacity: .78;
-  }
+  /* LE DESSIN EST COLLÉ AUX TROIS BORDS DE LA COLONNE, et il y est posé en
+     absolu plutôt qu'au fil du texte. Au fil du texte, il dépendait de la
+     hauteur de tout ce qui le précède : il suffisait d'une rubrique de plus
+     pour qu'il descende sous la fenêtre, ou d'une de moins pour qu'il laisse
+     une bande verte en dessous. Ancré au bas de la colonne, il y reste quoi
+     qu'on empile au-dessus. Les décalages négatifs rattrapent les deux
+     rembourrages, celui du pied et celui de la colonne, plus les treize
+     pixels dont la colonne est en retrait de la bande verte : c'est ce qui
+     le fait toucher le bord gauche et le bord droit. */
   div[class*="st-key-zone_nav"] .nav-dessin {
-    /* LES MARGES ANNULENT DEUX REMBOURRAGES, celui du pied et celui de la
-       colonne : c'est à ce prix que le dessin touche vraiment les deux bords
-       et le bas, au lieu de flotter dans une marge de vingt pixels. */
-    margin: 16px -20px -24px -16px; line-height: 0;
+    position: absolute; left: -20px; right: -11px; bottom: -24px;
+    margin: 0; line-height: 0; pointer-events: none;
   }
+  /* La colonne fait exactement la hauteur de la fenêtre — `--dz` rattrape le
+     facteur de zoom du site, sans quoi « 100vh » vaut cinq pour cent de trop
+     et le dessin se pose sous le bord visible. */
+  div[class*="st-key-zone_nav"] { min-height: calc(100vh * var(--dz)); }
   div[class*="st-key-zone_nav"] .nav-dessin img {
     width: 100%; height: auto; display: block;
   }
@@ -2337,9 +2341,6 @@ with _zone_nav:
         '<div class="nav-pied"><div class="nav-mot">'
         + icones.svg("pousse", couleur="#6d9683", taille=15)
         + f'<div class="nav-devise">{T("pied_devise")}</div></div>'
-        + f'<div class="nav-unep">'
-          f'<img alt="UNEP" src="data:image/png;base64,'
-          f'{assets.LOGO_UNEP_BLANC}"></div>'
         + (f'<div class="nav-dessin"><img alt="" '
            f'src="data:image/png;base64,{_dessin_b64()}"></div>'
            if _dessin_b64() else "")
