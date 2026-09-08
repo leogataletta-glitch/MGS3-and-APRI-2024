@@ -421,11 +421,15 @@ _STYLE = """
   /* LA LISTE EST UN SOMMAIRE, PAS UNE PILE DE CARTES. Sept jeux de données
      dans sept cadres blancs empilés sur toute la largeur faisaient sept fois
      le même geste et occupaient deux écrans. Rangés en deux colonnes, numérotés
-     et sans cadre, ils se balayent d'un coup d'œil : le numéro tient le rang,
-     le titre nomme, la ligne grise décrit, et la dernière ligne dit ce qu'on
-     va recevoir. Le trait de séparation est la seule graisse conservée. */
-  .dl-n { font-size:11px; font-weight:600; color:#a8b4bd; padding-top:5px;
-          font-variant-numeric:tabular-nums; letter-spacing:.04em; }
+     et sans cadre, ils se balayent d'un coup d'œil : le titre nomme, la ligne
+     grise décrit, et la dernière ligne dit ce qu'on va recevoir. Le trait de
+     séparation est la seule graisse conservée.
+
+     LES NUMÉROS ONT ÉTÉ RETIRÉS. Ils ne disaient rien : les jeux ne se citent
+     pas par leur rang, ils ne se lisent pas dans l'ordre, et rien ailleurs sur
+     le site n'y renvoie. Restait une colonne de chiffres gris devant chaque
+     titre, c'est-à-dire du bruit. Les fichiers, eux, gardent leur préfixe
+     numérique : là il sert, il tient l'ordre dans un dossier. */
   .dl-t { font-family:Georgia,"Times New Roman",serif; font-size:17px;
           font-weight:400; color:#16241c; line-height:1.3;
           letter-spacing:-.01em; }
@@ -511,8 +515,8 @@ def _nb(n):
             else f"{n:,}")
 
 
-def _bloc(rang, cle_titre, nom_fichier, mime, format_txt, volume, fabrique):
-    """Une entrée du sommaire : son rang, ce que c'est, ce qu'on reçoit.
+def _bloc(cle_titre, nom_fichier, mime, format_txt, volume, fabrique):
+    """Une entrée du sommaire : ce que c'est, et ce qu'on reçoit.
 
     LE TITRE EST COUPÉ EN DEUX À LA VIRGULE, ET CE N'EST PAS UN BRICOLAGE.
     Les libellés sont écrits « Résultats descriptifs, les 503 questions par
@@ -541,8 +545,8 @@ def _bloc(rang, cle_titre, nom_fichier, mime, format_txt, volume, fabrique):
         return
 
     libelle = T(cle_titre)
-    # « 1 · » ordonne la liste dans le classeur, pas à l'écran : le numéro de
-    # tête dit déjà son rang.
+    # « 1 · » ordonne la liste dans le classeur, pas à l'écran : la position
+    # de la ligne dit tout ce qu'il y a à en dire.
     if " · " in libelle:
         libelle = libelle.split(" · ", 1)[1]
     titre, _, sous = libelle.partition(", ")
@@ -556,11 +560,7 @@ def _bloc(rang, cle_titre, nom_fichier, mime, format_txt, volume, fabrique):
         sous = ""
 
     with st.container(key=f"dl_{nom_fichier}_{i18n.get_lang()}_l"):
-        n, g, d = st.columns([0.42, 3.5, 0.62],
-                             vertical_alignment="center")
-        with n:
-            st.markdown(f'<div class="dl-n">{rang:02d}</div>',
-                        unsafe_allow_html=True)
+        g, d = st.columns([3.9, 0.62], vertical_alignment="center")
         with g:
             st.markdown(
                 f'<div class="dl-t">{_e(titre)}</div>'
@@ -609,8 +609,7 @@ def render():
     # en bas dans chaque colonne, ce qu'un rangement en serpentin perdrait.
     moitie = (len(jeux) + 1) // 2
     g, d = st.columns(2, gap="large")
-    for col, lot, depart in ((g, jeux[:moitie], 1),
-                             (d, jeux[moitie:], moitie + 1)):
+    for col, lot in ((g, jeux[:moitie]), (d, jeux[moitie:])):
         with col:
-            for i, j in enumerate(lot):
-                _bloc(depart + i, *j)
+            for j in lot:
+                _bloc(*j)
