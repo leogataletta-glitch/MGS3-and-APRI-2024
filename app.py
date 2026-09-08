@@ -831,7 +831,7 @@ st.markdown(("""
     flex: 0 0 auto !important; height: auto !important;
     /* HAUTE D'UNE FENÊTRE AU MOINS, pour que l'emblème du bas ait de quoi
        descendre plutôt que de flotter sous la devise. */
-    min-height: calc(100vh - 24px);
+    min-height: 100vh;
     max-height: 100vh; overflow-y: auto; overscroll-behavior: contain;
     border: none;
     /* LE FOND EST POSÉ SUR LA COLONNE, PAS DERRIÈRE ELLE. Un dégradé qui
@@ -970,12 +970,27 @@ st.markdown(("""
      lui, signe la colonne. En noir plutôt qu'en couleur — le fichier est
      blanc, et `brightness(0)` en tire une silhouette pleine sans avoir à
      transporter un second fichier. */
+  /* LE BAS DE LA COLONNE : LA DEVISE, L'EMBLÈME, PUIS LE DESSIN.
+     La marge automatique posée sur l'emblème pousse les deux vers le bas ;
+     le dessin, lui, va d'un bord à l'autre et descend jusqu'au ras du bord
+     inférieur — les marges négatives annulent le rembourrage de la colonne,
+     et c'est ce débord qui le fait lire comme une vignette de pied de page
+     plutôt que comme une image posée dans une marge. */
   div[class*="st-key-zone_nav"] .nav-unep {
     margin-top: auto; padding-top: 22px;
   }
   div[class*="st-key-zone_nav"] .nav-unep img {
-    width: 62px; height: auto; display: block;
-    filter: brightness(0); opacity: .72;
+    width: 58px; height: auto; display: block;
+    filter: brightness(0); opacity: .78;
+  }
+  div[class*="st-key-zone_nav"] .nav-dessin {
+    /* LES MARGES ANNULENT DEUX REMBOURRAGES, celui du pied et celui de la
+       colonne : c'est à ce prix que le dessin touche vraiment les deux bords
+       et le bas, au lieu de flotter dans une marge de vingt pixels. */
+    margin: 16px -20px -24px -16px; line-height: 0;
+  }
+  div[class*="st-key-zone_nav"] .nav-dessin img {
+    width: 100%; height: auto; display: block;
   }
   div[class*="st-key-zone_nav"] .nav-pied {
     display: flex; flex-direction: column; flex: 1 1 auto; min-height: 150px;
@@ -1845,10 +1860,10 @@ TEXTES_NAV = {
     # LA BANDE DES PAGES INTÉRIEURES MONTRE UN LIEU PRÉCIS, et le disait
     # nulle part : une plaine irriguée du Sud passait pour un décor.
     "bandeau_credit": {
-        "en": "The Voldrogue's incised river valley and alluvial plain, "
-              "Grand'Anse, Haiti — drawing after a 2024 photograph.",
-        "fr": "Vallée encaissée et plaine alluviale de la Voldrogue, "
-              "Grand'Anse, Haïti — dessin d'après une photographie de 2024."},
+        "en": "Irrigated farmland of the Camp-Perrin plain, Sud department, "
+              "Haiti, 2024.",
+        "fr": "Paysage agricole irrigué de la plaine de Camp-Perrin, "
+              "département du Sud, Haïti, 2024."},
 
     # --- le pied de page
     "pied_devise": {
@@ -2192,6 +2207,24 @@ def _entree_nav(mode, icone):
 # o\u00f9 l'on va. Ce qu'il ne faut surtout pas, c'est que les deux listes
 # divergent \u2014 d'o\u00f9 la source unique `_NAV`, dont les deux se servent.
 @st.cache_data(show_spinner=False)
+def _dessin_b64():
+    """L'aquarelle du bas de colonne, lue une fois.
+
+    UN FICHIER ABSENT NE LAISSE PAS DE TROU : le bloc n'est simplement pas
+    rendu, et la colonne se termine sur la devise comme avant.
+    """
+    import base64 as _b64
+    for base in (os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                              "data"),
+                 os.path.dirname(os.path.abspath(__file__))):
+        p = os.path.join(base, "dessin_vallee.png")
+        if os.path.exists(p):
+            with open(p, "rb") as f:
+                return _b64.b64encode(f.read()).decode()
+    return ""
+
+
+@st.cache_data(show_spinner=False)
 def _bandeau_b64(lang="fr"):
     """L'illustration du bandeau, encodée une fois pour toutes.
 
@@ -2272,10 +2305,8 @@ def _rendre_ruban(avec_image):
             f'<div class="bandeau-haut bandeau-enveloppe">'
             f'<img class="bandeau-fond" alt="APRI" '
             f'src="data:image/jpeg;base64,{img}">'
-            # L'EMBLÈME DU PNUE A QUITTÉ LA BANDE. Il y était posé sur une
-            # aquarelle claire où il tenait mal, et il est désormais au bas
-            # de la colonne de gauche, où il signe le site une fois pour
-            # toutes plutôt qu'une fois par page.
+            f'<img class="bandeau-logo" alt="UNEP" '
+            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
             f'<div class="bandeau-credit">'
             f'{html.escape(T("bandeau_credit"))}</div>'
             f'</div>', unsafe_allow_html=True)
@@ -2306,10 +2337,13 @@ with _zone_nav:
         '<div class="nav-pied"><div class="nav-mot">'
         + icones.svg("pousse", couleur="#6d9683", taille=15)
         + f'<div class="nav-devise">{T("pied_devise")}</div></div>'
-        f'<div class="nav-unep">'
-        f'<img alt="UNEP" src="data:image/png;base64,'
-        f'{assets.LOGO_UNEP_BLANC}"></div>'
-        '</div>',
+        + f'<div class="nav-unep">'
+          f'<img alt="UNEP" src="data:image/png;base64,'
+          f'{assets.LOGO_UNEP_BLANC}"></div>'
+        + (f'<div class="nav-dessin"><img alt="" '
+           f'src="data:image/png;base64,{_dessin_b64()}"></div>'
+           if _dessin_b64() else "")
+        + '</div>',
         unsafe_allow_html=True)
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
