@@ -175,6 +175,22 @@
   "ancrage": {
    "fr": "Le maintien sur place ne se décrète pas, il se déduit : c'est le résultat de l'eau, du revenu et de l'école. Il sert d'indicateur de synthèse pour vérifier qu'un programme a rendu le lieu vivable, pas de cible à atteindre.",
    "en": "Staying in place cannot be decreed, it is derived: it is the result of water, income and school. It serves as a summary indicator to check that a programme made the place liveable, not as a target to hit."
+  },
+  "abris": {
+   "fr": "Un abri ne se décrète pas le jour du cyclone : il se choisit à froid, avec le CASEC et l'école qui l'accueille, et il se vérifie chaque année. Réhabiliter les bâtiments déjà désignés plutôt qu'en construire de nouveaux, les doter d'eau, de latrines séparées et d'un stock de première urgence, et publier la liste par section communale avec le chemin pour s'y rendre. Un abri sans eau se vide en deux jours.",
+   "en": "A shelter is not decided on the day of the storm: it is chosen in calm weather, with the CASEC and the school that hosts it, and checked every year. Rehabilitate the buildings already designated rather than build new ones, give them water, separate latrines and an emergency stock, and publish the list per communal section with the route to reach it. A shelter without water empties in two days."
+  },
+  "rentabilite_charbon": {
+   "fr": "Le charbon se coupe parce qu'il se vend, et notre enquête montre qu'il se consomme davantage à mesure que le revenu monte : c'est un marché, pas un geste de survie isolé. Agir sur sa rentabilité veut dire encadrer les points de vente et le transport plutôt que poursuivre les coupeurs, appuyer la carbonisation améliorée là où elle restera l'activité de familles entières, et rendre le gaz et les foyers économes moins chers à l'usage que le sac de charbon. Une interdiction sans alternative de revenu déplace la filière d'une section à l'autre.",
+   "en": "Charcoal is cut because it sells, and our survey shows it is used more as income rises: this is a market, not an isolated act of survival. Acting on its profitability means regulating sale points and transport rather than chasing cutters, supporting improved carbonisation where it will remain whole families' livelihood, and making gas and efficient stoves cheaper to use than a bag of charcoal. A ban with no income alternative simply moves the trade to the next section."
+  },
+  "feux": {
+   "fr": "Le brûlis est une technique, pas une négligence : il nettoie vite une parcelle sans outil ni salarié. On ne le supprime qu'en offrant un autre calendrier de travail, paillage et cultures de couverture, et en organisant des pare-feu et des périodes autorisées avec les agriculteurs eux-mêmes plutôt que par arrêté. Former des brigades communautaires par section, avec des outils simples et un numéro qui répond, coûte moins qu'un versant reboisé deux fois.",
+   "en": "Slash-and-burn is a technique, not carelessness: it clears a plot fast with no tools and no wages. It goes away only if another work calendar is offered, mulching and cover crops, and if firebreaks and authorised periods are organised with the farmers themselves rather than by decree. Community brigades per section, with simple tools and a phone number that answers, cost less than replanting one hillside twice."
+  },
+  "pression_demo": {
+   "fr": "La pression sur la terre ne se traite pas par la démographie mais par ce qui pousse à ouvrir une parcelle de plus : l'absence de titre, l'absence d'emploi hors du champ et le retour des familles chassées d'ailleurs. Sécuriser les usages existants, appuyer les activités qui ne demandent pas de nouvelle surface, transformation, pêche, services, et prévoir l'accueil des ménages déplacés dans les plans communaux, sans quoi ils s'installeront sur les pentes.",
+   "en": "Pressure on land is not addressed through demography but through what pushes people to open one more plot: no title, no work off the field, and families displaced from elsewhere coming back. Secure existing uses, support activities that need no new surface, processing, fishing, services, and plan for displaced households in communal plans, otherwise they will settle on the slopes."
   }
  }
 }
