@@ -27,6 +27,7 @@ import streamlit as st
 
 import i18n
 import map_render
+import onglets
 from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -38,39 +39,159 @@ VERT_APRI = "#2a6b3f"
 # Les mesures offertes : (code, clé de libellé, fichier, chemin, unité,
 # décimales, polarité de carte). `serie:<nom>` lit la dernière année de la
 # série ; `serie:<nom>:delta` lit l'écart entre la première et la dernière.
+# CHAQUE MESURE PORTE SA CATÉGORIE. Une liste déroulante de quarante entrées
+# mélangeant la forêt, la pluie et la température obligeait à lire tous les
+# intitulés pour trouver celui qu'on cherchait, et surtout elle cachait ce
+# qu'elle contenait : on ne pouvait pas savoir que la pluie était mesurée sans
+# dérouler jusqu'à elle. Les catégories sont donc des onglets, et la liste ne
+# porte plus que les mesures de la catégorie ouverte.
+#
+# (catégorie, code, clé de libellé, fichier, chemin, unité, décimales,
+#  polarité de carte). `serie:<nom>` lit la dernière année de la série ;
+# `serie:<nom>:delta` lit l'écart entre la première et la dernière.
 MESURES = [
-    ("foret2025_pct", "sat_m_couvert", "foret", "foret2025_pct",
+    # --- la forêt
+    ("foret", "foret2025_pct", "sat_m_couvert", "foret", "foret2025_pct",
      "%", 1, "eleve_bon"),
-    ("foret2000_pct", "sat_m_couvert2000", "foret", "foret2000_pct",
+    ("foret", "foret2000_pct", "sat_m_couvert2000", "foret", "foret2000_pct",
      "%", 1, "eleve_bon"),
-    ("perte_relative_pct", "sat_m_perte", "foret", "perte_relative_pct",
-     "%", 1, "eleve_mauvais"),
-    ("perte_totale_ha", "sat_m_perte_ha", "foret", "perte_totale_ha",
-     "ha", 1, "eleve_mauvais"),
-    ("taux_annuel_net", "sat_m_taux", "foret", "taux_annuel_net",
+    ("foret", "perte_relative_pct", "sat_m_perte", "foret",
+     "perte_relative_pct", "%", 1, "eleve_mauvais"),
+    ("foret", "perte_totale_ha", "sat_m_perte_ha", "foret",
+     "perte_totale_ha", "ha", 1, "eleve_mauvais"),
+    ("foret", "taux_annuel_net", "sat_m_taux", "foret", "taux_annuel_net",
      "%/an", 3, "eleve_bon"),
-    ("part_choc_pct", "sat_m_choc", "foret", "part_choc_pct",
+    ("foret", "part_choc_pct", "sat_m_choc", "foret", "part_choc_pct",
      "%", 1, "eleve_mauvais"),
-    ("ndvi", "sat_m_ndvi", "vege", "serie:serie_ndvi", "", 3, "eleve_bon"),
-    ("ndvi_delta", "sat_m_ndvi_d", "vege", "serie:serie_ndvi:delta",
+    # --- la végétation
+    ("vege", "ndvi", "sat_m_ndvi", "vege", "serie:serie_ndvi", "", 3,
+     "eleve_bon"),
+    ("vege", "ndvi_delta", "sat_m_ndvi_d", "vege", "serie:serie_ndvi:delta",
      "", 3, "eleve_bon"),
-    ("ndmi", "sat_m_ndmi", "vege", "serie:serie_ndmi", "", 3, "eleve_bon"),
-    ("evi", "sat_m_evi", "vege", "serie:serie_evi", "", 3, "eleve_bon"),
-    ("fvc", "sat_m_fvc", "vege", "serie:serie_fvc", "", 3, "eleve_bon"),
-    ("ndwi", "sat_m_ndwi", "vege", "serie:serie_ndwi", "", 3, "eleve_bon"),
+    ("vege", "ndmi", "sat_m_ndmi", "vege", "serie:serie_ndmi", "", 3,
+     "eleve_bon"),
+    ("vege", "evi", "sat_m_evi", "vege", "serie:serie_evi", "", 3,
+     "eleve_bon"),
+    ("vege", "savi", "sat_m_savi", "vege", "serie:serie_savi", "", 3,
+     "eleve_bon"),
+    ("vege", "vari", "sat_m_vari", "vege", "serie:serie_vari", "", 3,
+     "eleve_bon"),
+    ("vege", "fvc", "sat_m_fvc", "vege", "serie:serie_fvc", "", 3,
+     "eleve_bon"),
+    # LA VARIABILITÉ INTERANNUELLE EST UNE MESURE À PART ENTIÈRE, et c'est
+    # même celle qui dit la résilience : une végétation qui vaut la même
+    # chose chaque année tient, une qui saute d'une année à l'autre dépend
+    # de la pluie de l'année.
+    ("vege", "var_ndvi", "sat_m_var_ndvi", "vege", "var_ndvi", "", 3,
+     "eleve_mauvais"),
+    ("vege", "var_ndmi", "sat_m_var_ndmi", "vege", "var_ndmi", "", 3,
+     "eleve_mauvais"),
+    ("vege", "vhi", "sat_m_vhi", "thermique", "vhi", "", 1, "eleve_bon"),
+    ("vege", "vci", "sat_m_vci", "thermique", "vci", "", 1, "eleve_bon"),
+    # --- l'eau de surface
+    ("eau", "ndwi", "sat_m_ndwi", "vege", "serie:serie_ndwi", "", 3,
+     "eleve_bon"),
+    ("eau", "frac_eau", "sat_m_frac_eau", "vege", "serie:serie_frac_eau",
+     "%", 2, "eleve_bon"),
+    ("eau", "eau_ha", "sat_m_eau_ha", "vege", "eau_ha", "ha", 1,
+     "eleve_bon"),
+    ("eau", "ndti", "sat_m_ndti", "vege", "serie:serie_ndti_eau", "", 3,
+     "eleve_mauvais"),
+    ("eau", "var_eau", "sat_m_var_eau", "vege", "var_eau", "", 3,
+     "eleve_mauvais"),
+    # --- la pluie
+    ("pluie", "pluie_courante", "sat_m_pl_courante", "pluie",
+     "pluie_courante_mm", "mm", 0, "eleve_bon"),
+    ("pluie", "pluie_normale", "sat_m_pl_normale", "pluie", "normale_mm",
+     "mm", 0, "eleve_bon"),
+    ("pluie", "ratio_normale", "sat_m_pl_ratio", "pluie", "ratio_normale",
+     "%", 1, "eleve_bon"),
+    ("pluie", "spi", "sat_m_pl_spi", "pluie", "spi", "", 2, "eleve_bon"),
+    ("pluie", "pci", "sat_m_pl_pci", "pluie", "pci", "", 1, "eleve_bon"),
+    ("pluie", "aai", "sat_m_pl_aai", "pluie", "aai", "", 3, "eleve_mauvais"),
+    ("pluie", "pluie_serie", "sat_m_pl_serie", "pluie", "serie:serie_mm",
+     "mm", 0, "eleve_bon"),
+    ("pluie", "pl_min", "sat_m_pl_min", "pluie", "minimum_mm", "mm", 0,
+     "eleve_bon"),
+    ("pluie", "pl_max", "sat_m_pl_max", "pluie", "maximum_mm", "mm", 0,
+     "eleve_bon"),
+    # --- la saison des pluies, c'est-à-dire la variation intra-annuelle
+    ("saison", "mam_courant", "sat_m_sa_mam", "saison", "mam_courant_mm",
+     "mm", 0, "eleve_bon"),
+    ("saison", "mam_normale", "sat_m_sa_mam_n", "saison", "mam_normale_mm",
+     "mm", 0, "eleve_bon"),
+    ("saison", "aso_courant", "sat_m_sa_aso", "saison", "aso_courant_mm",
+     "mm", 0, "eleve_bon"),
+    ("saison", "spi_mam", "sat_m_sa_spi", "saison", "spi", "", 2,
+     "eleve_bon"),
+    ("saison", "secs_mam", "sat_m_sa_secs", "saison", "secs_mam_courant",
+     "j", 1, "eleve_mauvais"),
+    ("saison", "secs_an", "sat_m_sa_secs_an", "saison", "secs_an_courant",
+     "j", 1, "eleve_mauvais"),
+    ("saison", "j50", "sat_m_sa_j50", "saison", "j50_courant", "j", 2,
+     "eleve_bon"),
+    ("saison", "install_recent", "sat_m_sa_install", "saison",
+     "install_jour_recent", "j", 0, "eleve_mauvais"),
+    ("saison", "install_decalage", "sat_m_sa_decalage", "saison",
+     "install_decalage_j", "j", 1, "eleve_bon"),
+    ("saison", "install_ratees", "sat_m_sa_ratees", "saison",
+     "install_ratees", "", 0, "eleve_mauvais"),
+    ("saison", "mam_serie", "sat_m_sa_serie", "saison", "serie:serie_mam",
+     "mm", 0, "eleve_bon"),
+    # --- la température
+    ("temp", "lst_courant", "sat_m_t_courant", "thermique", "lst_courant_c",
+     "°C", 2, "eleve_mauvais"),
+    ("temp", "lst_normale", "sat_m_t_normale", "thermique", "lst_normale_c",
+     "°C", 2, "eleve_mauvais"),
+    ("temp", "lst_anomalie", "sat_m_t_anomalie", "thermique",
+     "lst_anomalie_pct", "%", 2, "eleve_mauvais"),
+    ("temp", "lst_an", "sat_m_t_an", "thermique", "lst_an_moy_c", "°C", 2,
+     "eleve_mauvais"),
+    ("temp", "lst_nuit", "sat_m_t_nuit", "thermique", "lst_nuit_moy_c",
+     "°C", 2, "eleve_mauvais"),
+    # L'AMPLITUDE JOUR-NUIT EST LA VARIATION INTRA-ANNUELLE DE LA CHALEUR :
+    # un sol nu chauffe le jour et se vide la nuit, un sol couvert amortit
+    # les deux. C'est l'indicateur qui distingue un versant boisé d'un
+    # versant pelé mieux que la moyenne annuelle.
+    ("temp", "lst_amplitude", "sat_m_t_ampli", "thermique",
+     "lst_amplitude_c", "°C", 2, "eleve_mauvais"),
+    ("temp", "lst_max", "sat_m_t_max", "thermique", "lst_max_c", "°C", 2,
+     "eleve_mauvais"),
+    ("temp", "tci", "sat_m_t_tci", "thermique", "tci", "", 1, "eleve_bon"),
+    ("temp", "lst_serie", "sat_m_t_serie", "thermique",
+     "serie:serie_lst_saison", "°C", 2, "eleve_mauvais"),
+    ("temp", "lst_serie_an", "sat_m_t_serie_an", "thermique",
+     "serie:serie_lst_an", "°C", 2, "eleve_mauvais"),
+    # --- le bilan hydrique
+    ("aridite", "aridite", "sat_m_ar_indice", "thermique", "aridite", "",
+     3, "eleve_bon"),
+    ("aridite", "et", "sat_m_ar_et", "thermique", "et_mm", "mm", 0,
+     "eleve_bon"),
+    ("aridite", "pet", "sat_m_ar_pet", "thermique", "pet_mm", "mm", 0,
+     "eleve_mauvais"),
+    ("aridite", "pluie_bilan", "sat_m_ar_pluie", "thermique", "pluie_mm",
+     "mm", 0, "eleve_bon"),
 ]
+
+# LES ONGLETS, DANS L'ORDRE OÙ ON LES PARCOURT : ce qui couvre le sol, puis
+# ce qui l'arrose, puis ce qui l'assèche.
+CATEGORIES = ("foret", "vege", "eau", "pluie", "saison", "temp", "aridite")
+
 
 TEXTES = {
     "sat_titre": {"en": "Satellite measurements",
                   "fr": "Mesures satellitaires"},
     "sat_intro": {
-        "en": "Forest cover and vegetation indices, measured from orbit for "
-              "each of the ten communal sections. These are raw measurements, "
+        "en": "Fifty-six measurements taken from orbit for each of the ten "
+              "communal sections: forest, vegetation, surface water, "
+              "rainfall since 1981, the rainy season, surface temperature "
+              "since 2001 and the water balance. These are raw measurements, "
               "not scores: no scale has been applied to them.",
-        "fr": "Couverture forestière et indices de végétation, mesurés depuis "
-              "l'orbite pour chacune des dix sections communales. Ce sont des "
-              "mesures brutes, pas des scores : aucun barème ne leur a été "
-              "appliqué."},
+        "fr": "Cinquante-six mesures prises depuis l'orbite pour chacune des "
+              "dix sections communales : forêt, végétation, eau de surface, "
+              "pluie depuis 1981, saison des pluies, température de surface "
+              "depuis 2001 et bilan hydrique. Ce sont des mesures brutes, "
+              "pas des scores : aucun barème ne leur a été appliqué."},
     "sat_source": {"en": "Source", "fr": "Source"},
     "sat_mesure": {"en": "Measurement", "fr": "Mesure"},
     "sat_annee": {"en": "Year", "fr": "Année"},
@@ -117,6 +238,159 @@ TEXTES = {
     "sat_m_ndwi": {"en": "NDWI — water index, {a}",
                    "fr": "NDWI — indice d'eau, {a}"},
 
+    # ---- les onglets de catégorie
+    "sat_c_foret": {"en": "Forest", "fr": "Forêt"},
+    "sat_c_vege": {"en": "Vegetation", "fr": "Végétation"},
+    "sat_c_eau": {"en": "Surface water", "fr": "Eau de surface"},
+    "sat_c_pluie": {"en": "Rainfall", "fr": "Pluie"},
+    "sat_c_saison": {"en": "Rainy season", "fr": "Saison des pluies"},
+    "sat_c_temp": {"en": "Temperature", "fr": "Température"},
+    "sat_c_aridite": {"en": "Water balance", "fr": "Bilan hydrique"},
+    "sat_cd_foret": {"en": "Cover, loss and its pace",
+                     "fr": "Couvert, perte et rythme de la perte"},
+    "sat_cd_vege": {"en": "Greenness, moisture and their year-to-year swing",
+                    "fr": "Verdeur, humidité et leur écart d'une année à "
+                          "l'autre"},
+    "sat_cd_eau": {"en": "Open water and its turbidity",
+                   "fr": "Eau libre et sa turbidité"},
+    "sat_cd_pluie": {"en": "Annual totals, 1981 to 2025, against the normal",
+                     "fr": "Cumuls annuels, 1981 à 2025, rapportés à la "
+                           "normale"},
+    "sat_cd_saison": {"en": "Spring and autumn rains, dry spells and onset",
+                      "fr": "Pluies de printemps et d'automne, jours secs et "
+                            "installation"},
+    "sat_cd_temp": {"en": "Land surface temperature, day and night, 2001 to "
+                          "2025",
+                    "fr": "Température de surface, jour et nuit, 2001 à 2025"},
+    "sat_cd_aridite": {"en": "Evapotranspiration against rainfall",
+                       "fr": "Évapotranspiration rapportée à la pluie"},
+
+    # ---- végétation
+    "sat_m_savi": {"en": "SAVI — soil-adjusted vegetation index, {a}",
+                   "fr": "SAVI — indice de végétation ajusté au sol, {a}"},
+    "sat_m_vari": {"en": "VARI — atmospherically resistant index, {a}",
+                   "fr": "VARI — indice résistant à l'atmosphère, {a}"},
+    "sat_m_var_ndvi": {
+        "en": "NDVI year-to-year swing (standard deviation of the series)",
+        "fr": "Écart du NDVI d'une année à l'autre (écart-type de la série)"},
+    "sat_m_var_ndmi": {
+        "en": "NDMI year-to-year swing (standard deviation of the series)",
+        "fr": "Écart du NDMI d'une année à l'autre (écart-type de la série)"},
+    "sat_m_vhi": {"en": "VHI — vegetation health index",
+                  "fr": "VHI — indice de santé de la végétation"},
+    "sat_m_vci": {"en": "VCI — vegetation condition index",
+                  "fr": "VCI — indice de condition de la végétation"},
+
+    # ---- eau de surface
+    "sat_m_frac_eau": {"en": "Share of the section under open water, {a} (%)",
+                       "fr": "Part de la section en eau libre, {a} (%)"},
+    "sat_m_eau_ha": {"en": "Open water (hectares)",
+                     "fr": "Eau libre (hectares)"},
+    "sat_m_ndti": {"en": "NDTI — water turbidity, {a}",
+                   "fr": "NDTI — turbidité de l'eau, {a}"},
+    "sat_m_var_eau": {
+        "en": "Year-to-year swing of the water surface",
+        "fr": "Écart de la surface en eau d'une année à l'autre"},
+
+    # ---- pluie
+    "sat_m_pl_courante": {"en": "Rainfall of the assessed year (mm)",
+                          "fr": "Pluie de l'année évaluée (mm)"},
+    "sat_m_pl_normale": {"en": "Normal annual rainfall, 1991–2020 (mm)",
+                         "fr": "Normale pluviométrique annuelle, 1991-2020 "
+                               "(mm)"},
+    "sat_m_pl_ratio": {"en": "Rainfall against the normal (%)",
+                       "fr": "Pluie rapportée à la normale (%)"},
+    "sat_m_pl_spi": {"en": "SPI — standardised precipitation index",
+                     "fr": "SPI — indice de précipitation standardisé"},
+    "sat_m_pl_pci": {"en": "PCI — precipitation condition index",
+                     "fr": "PCI — indice de condition pluviométrique"},
+    "sat_m_pl_aai": {"en": "Anomalous aridity index",
+                     "fr": "Indice d'aridité anormale"},
+    "sat_m_pl_serie": {"en": "Annual rainfall, {a} (mm)",
+                       "fr": "Pluie annuelle, {a} (mm)"},
+    "sat_m_pl_min": {"en": "Driest year on record since 1981 (mm)",
+                     "fr": "Année la plus sèche depuis 1981 (mm)"},
+    "sat_m_pl_max": {"en": "Wettest year on record since 1981 (mm)",
+                     "fr": "Année la plus arrosée depuis 1981 (mm)"},
+
+    # ---- saison des pluies
+    "sat_m_sa_mam": {"en": "Spring rains, March to May, current (mm)",
+                     "fr": "Pluies de printemps, mars à mai, courantes (mm)"},
+    "sat_m_sa_mam_n": {"en": "Spring rains, normal 1991–2020 (mm)",
+                       "fr": "Pluies de printemps, normale 1991-2020 (mm)"},
+    "sat_m_sa_aso": {"en": "Autumn rains, August to October, current (mm)",
+                     "fr": "Pluies d'automne, août à octobre, courantes (mm)"},
+    "sat_m_sa_spi": {"en": "SPI of the spring campaign",
+                     "fr": "SPI de la campagne de printemps"},
+    "sat_m_sa_secs": {"en": "Dry days in the spring campaign",
+                      "fr": "Jours secs dans la campagne de printemps"},
+    "sat_m_sa_secs_an": {"en": "Longest dry spell in the year (days)",
+                         "fr": "Plus longue séquence sèche de l'année "
+                               "(jours)"},
+    "sat_m_sa_j50": {"en": "Days above 50 mm of rain in the year",
+                     "fr": "Jours à plus de 50 mm de pluie dans l'année"},
+    "sat_m_sa_install": {
+        "en": "Onset of the rains, recent period (day of year)",
+        "fr": "Installation des pluies, période récente (jour de l'année)"},
+    "sat_m_sa_decalage": {
+        "en": "Shift in the onset of the rains, recent minus older (days)",
+        "fr": "Décalage de l'installation des pluies, récent moins ancien "
+              "(jours)"},
+    "sat_m_sa_ratees": {"en": "Failed onsets since 1981 (count)",
+                        "fr": "Installations ratées depuis 1981 (nombre)"},
+    "sat_m_sa_serie": {"en": "Spring rains, {a} (mm)",
+                       "fr": "Pluies de printemps, {a} (mm)"},
+
+    # ---- température
+    "sat_m_t_courant": {"en": "Dry-season surface temperature, current (°C)",
+                        "fr": "Température de surface en saison sèche, "
+                              "courante (°C)"},
+    "sat_m_t_normale": {"en": "Dry-season surface temperature, normal (°C)",
+                        "fr": "Température de surface en saison sèche, "
+                              "normale (°C)"},
+    "sat_m_t_anomalie": {"en": "Temperature anomaly against the normal (%)",
+                         "fr": "Anomalie de température par rapport à la "
+                               "normale (%)"},
+    "sat_m_t_an": {"en": "Annual mean surface temperature, day (°C)",
+                   "fr": "Température de surface moyenne annuelle, jour "
+                         "(°C)"},
+    "sat_m_t_nuit": {"en": "Annual mean surface temperature, night (°C)",
+                     "fr": "Température de surface moyenne annuelle, nuit "
+                           "(°C)"},
+    "sat_m_t_ampli": {"en": "Day-night temperature range (°C)",
+                      "fr": "Amplitude thermique jour-nuit (°C)"},
+    "sat_m_t_max": {"en": "Hottest season on record since 2001 (°C)",
+                    "fr": "Saison la plus chaude depuis 2001 (°C)"},
+    "sat_m_t_tci": {"en": "TCI — temperature condition index",
+                    "fr": "TCI — indice de condition thermique"},
+    "sat_m_t_serie": {"en": "Dry-season surface temperature, {a} (°C)",
+                      "fr": "Température de surface en saison sèche, {a} "
+                            "(°C)"},
+    "sat_m_t_serie_an": {"en": "Annual mean surface temperature, {a} (°C)",
+                         "fr": "Température de surface moyenne annuelle, {a} "
+                               "(°C)"},
+
+    # ---- bilan hydrique
+    "sat_m_ar_indice": {"en": "Aridity index (rainfall over demand)",
+                        "fr": "Indice d'aridité (pluie rapportée à la "
+                              "demande)"},
+    "sat_m_ar_et": {"en": "Actual evapotranspiration (mm/year)",
+                    "fr": "Évapotranspiration réelle (mm/an)"},
+    "sat_m_ar_pet": {"en": "Potential evapotranspiration (mm/year)",
+                     "fr": "Évapotranspiration potentielle (mm/an)"},
+    "sat_m_ar_pluie": {"en": "Rainfall used in the balance (mm/year)",
+                       "fr": "Pluie retenue dans le bilan (mm/an)"},
+
+    "sat_src_pluie": {
+        "en": "CHIRPS daily ({s}), {d1}–{d2}, normal computed over {n1}–{n2}, "
+              "year assessed {a}.",
+        "fr": "CHIRPS journalier ({s}), {d1}-{d2}, normale calculée sur "
+              "{n1}-{n2}, année évaluée {a}."},
+    "sat_src_thermique": {
+        "en": "{s}, {d1}–{d2}, normal computed over {n1}–{n2}, recent window "
+              "{f1}–{f2}.",
+        "fr": "{s}, {d1}-{d2}, normale calculée sur {n1}-{n2}, fenêtre "
+              "récente {f1}-{f2}."},
     "sat_src_foret": {
         "en": "Hansen / UMD global forest change, {s}. Forest = at least "
               "{p} % tree cover. Period {d1}–{d2}.",
@@ -174,7 +448,10 @@ def _charger():
     """
     out = {}
     for cle, nom in (("foret", "foret.json"),
-                     ("vege", "indices_vegetation.json")):
+                     ("vege", "indices_vegetation.json"),
+                     ("pluie", "pluie.json"),
+                     ("saison", "pluie_saison.json"),
+                     ("thermique", "thermique.json")):
         p = os.path.join(DATA, nom)
         if not os.path.exists(p):
             p = os.path.join(APP_DIR, nom)
@@ -227,7 +504,7 @@ def _valeurs(d, spec, annee=None):
 
 def _libelle(cle_lib, mesure, d, annee):
     """Le libellé d'une mesure, avec l'année ou la fenêtre qu'elle couvre."""
-    _c, _l, fichier, spec, _u, _dec, _p = mesure
+    _cat, _c, _l, fichier, spec, _u, _dec, _p = mesure
     if fichier == "foret":
         base = (d or {}).get("periode") or [2000, 2025]
         a = base[0] if "2000" in spec else base[1]
@@ -246,6 +523,23 @@ def _source(fichier, d):
         per = d.get("periode") or [2000, 2025]
         return T("sat_src_foret", s=d.get("source", "—"),
                  p=d.get("seuil_couvert_pct", 30), d1=per[0], d2=per[1])
+    # LA PLUIE ET LA TEMPÉRATURE ONT LEUR PROPRE PHRASE DE SOURCE : une
+    # normale de trente ans et une fenêtre récente ne se disent pas comme un
+    # composite de saison sèche, et lire un SPI sans savoir sur quelle
+    # période la normale a été calculée n'apprend rien.
+    if fichier in ("pluie", "saison"):
+        per = d.get("periode") or [1981, 2025]
+        nor = d.get("normale_periode") or [1991, 2020]
+        return T("sat_src_pluie", s=d.get("source", "—"),
+                 d1=per[0], d2=per[1], n1=nor[0], n2=nor[1],
+                 a=d.get("annee_evaluee", "—"))
+    if fichier == "thermique":
+        per = d.get("periode_annees") or [2001, 2025]
+        nor = d.get("normale_periode") or [2001, 2020]
+        fen = d.get("fenetre_recente") or [2021, 2025]
+        return T("sat_src_thermique", s=d.get("source", "—"),
+                 d1=per[0], d2=per[-1], n1=nor[0], n2=nor[1],
+                 f1=fen[0], f2=fen[1])
     per = d.get("periode_annees") or []
     return T("sat_src_vege", s=d.get("source", "—"),
              sa=d.get("saison", "—"),
@@ -338,19 +632,34 @@ def render():
         unsafe_allow_html=True)
 
     d = _charger()
-    dispo = [m for m in MESURES if d.get(m[2])]
+    dispo = [m for m in MESURES if d.get(m[3])]
     if not dispo:
+        st.info(T("sat_indispo"))
+        return
+
+    # LES CATÉGORIES SONT DES ONGLETS, ET C'EST CE QUI REND LES MESURES
+    # VISIBLES. Cinquante mesures dans une seule liste déroulante donnaient
+    # une page qui paraissait ne porter que la forêt : il fallait dérouler
+    # jusqu'au bout pour découvrir que la pluie de quarante-cinq ans et la
+    # température de vingt-cinq ans étaient là. Un onglet par famille annonce
+    # le contenu avant le clic — c'est tout ce qu'on demande à une barre.
+    cats = [c for c in CATEGORIES if any(m[0] == c for m in dispo)]
+    cat = onglets.barre("sat_cat", cats, titre=lambda c: T("sat_c_" + c),
+                        description=lambda c: T("sat_cd_" + c),
+                        defaut=cats[0])
+    lot = [m for m in dispo if m[0] == cat]
+    if not lot:
         st.info(T("sat_indispo"))
         return
 
     c1, c2, c3 = st.columns([2, 0.8, 1])
     with c1:
         k = st.selectbox(
-            T("sat_mesure"), list(range(len(dispo))), key="sat_m",
-            format_func=lambda i: _libelle(dispo[i][1], dispo[i],
-                                           d[dispo[i][2]], None))
-    mesure = dispo[k]
-    _code, cle_lib, fichier, spec, unite, dec, polarite = mesure
+            T("sat_mesure"), list(range(len(lot))), key=f"sat_m_{cat}",
+            format_func=lambda i: _libelle(lot[i][2], lot[i],
+                                           d[lot[i][3]], None))
+    mesure = lot[k]
+    _cat, _code, cle_lib, fichier, spec, unite, dec, polarite = mesure
     src = d[fichier]
     ans = _annees(src, spec.split(":")[1]) if spec.startswith("serie:") else []
     annee = None
