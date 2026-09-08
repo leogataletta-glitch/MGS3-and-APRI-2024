@@ -124,6 +124,17 @@ TEXTES = {
     "sy_depart": {"en": "at the measured state", "fr": "au départ"},
     "sy_aide": {"en": "click in a bar: the system starts on its own",
                 "fr": "cliquez dans une barre : le système part tout seul"},
+    # LE MODE D'EMPLOI, EN GRAND ET DANS LA BARRE. Il était écrit sous les
+    # quarante-cinq barres, en gris de onze pixels : on appuyait sur Lecture
+    # sans rien avoir tenu, le compteur montait, rien ne bougeait, et l'on
+    # concluait que l'écran était cassé. Tant qu'aucune variable n'est tenue,
+    # les deux boutons de course sont éteints et la consigne prend leur
+    # place : il n'y a rien d'autre à faire que de poser une valeur.
+    "sy_amorce": {
+        "en": "Click inside any bar to set the level you want: that variable "
+              "is then held, and the system starts on its own.",
+        "fr": "Cliquez dans une barre pour y poser le niveau que vous voulez : "
+              "la variable est alors tenue, et le système part tout seul."},
     # CE QUE ÇA DÉPLACE, ÉCRIT NOIR SUR BLANC. Quarante-cinq barres réparties
     # en trois colonnes : quand onze d'entre elles bougeaient de trois
     # dixièmes, il fallait les chercher pour s'en apercevoir, et l'on
@@ -212,6 +223,16 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
      border:1px solid #d7e0ec;background:#fff;color:#3c4761;cursor:pointer}
  .bt:hover{border-color:#b6d8c6}
  .bt.p{background:#1c6349;border-color:#1c6349;color:#fff}
+ /* UN BOUTON QUI NE PEUT RIEN FAIRE LE DIT. Éteint, il n'invite pas au clic,
+    et la consigne à côté explique ce qui manque. */
+ .bt[disabled]{opacity:.42;cursor:not-allowed;background:#fff;
+    border-color:#e3eaf3;color:#8a93a5}
+ #amorce{font-size:12.5px;color:#1a4d3a;background:#eef4f0;
+    border:1px solid #cfe0d6;border-radius:9px;padding:7px 12px;
+    line-height:1.4;max-width:46ch}
+ /* LA BARRE SE SIGNALE SOUS LE POINTEUR : sans cela, rien ne dit qu'un
+    rectangle gris de quinze pixels est le lieu du geste. */
+ .ba:hover{outline:2px solid #b6d8c6;outline-offset:1px}
  .cpt{display:flex;gap:20px;margin-left:auto;align-items:baseline}
  .cpt div{text-align:right}
  .cpt b{font-size:16px;font-variant-numeric:tabular-nums}
@@ -255,9 +276,10 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
        margin-right:5px;vertical-align:-1px}
 </style></head><body>
 <div class="barre">
-  <button class="bt p" id="play">__L_LIRE__</button>
-  <button class="bt" id="pas">__L_PAS__</button>
+  <button class="bt p" id="play" disabled>__L_LIRE__</button>
+  <button class="bt" id="pas" disabled>__L_PAS__</button>
   <button class="bt" id="zero">__L_ZERO__</button>
+  <div id="amorce">__L_AMORCE__</div>
   <div class="cpt">
     <div><b id="kk">0</b><span>__L_TOUR__</span></div>
     <div><b id="nt">0</b><span>__L_TENUES__</span></div>
@@ -405,19 +427,30 @@ function dessiner(){
         + "</div>"
       : "<p>" + L.bilan0 + "</p>");
   }
+  /* LES DEUX BOUTONS DE COURSE NE S'ALLUMENT QUE S'IL Y A QUELQUE CHOSE À
+     PROPAGER. Sans variable tenue, l'écart de départ est nul : la course
+     tourne à vide, le compteur monte et le dessin ne bouge pas d'un pixel. */
+  const rien = !Object.keys(tenu).length;
+  document.getElementById("play").disabled = rien;
+  document.getElementById("pas").disabled = rien;
+  document.getElementById("amorce").style.display = rien ? "" : "none";
   const e = document.getElementById("etat");
-  if (!Object.keys(tenu).length) e.textContent = L.repos;
+  if (rien) e.textContent = L.repos;
   else if (k > 0 && bouge < SEUIL){ e.textContent = L.stable; arreter(); }
   else e.textContent = "";
 }
 
 const bp = document.getElementById("play");
-bp.onclick = ()=>{ minuteur ? arreter() : lancer(); };
-document.getElementById("pas").onclick = ()=>{ arreter(); avancer(); };
+bp.onclick = ()=>{ if (!Object.keys(tenu).length) return;
+                   minuteur ? arreter() : lancer(); };
+document.getElementById("pas").onclick = ()=>{
+  if (!Object.keys(tenu).length) return;
+  arreter(); avancer(); };
 document.getElementById("zero").onclick = ()=>{
   arreter(); for (const id in tenu) delete tenu[id];
   k = 0; d = new Float64Array(NN); dprec = new Float64Array(NN); dessiner(); };
-function lancer(){ bp.textContent = L.pause; bp.classList.remove("p");
+function lancer(){ if (!Object.keys(tenu).length) return;
+                   bp.textContent = L.pause; bp.classList.remove("p");
                    minuteur = setInterval(avancer, 780); avancer(); }
 function arreter(){ if (minuteur) clearInterval(minuteur); minuteur = null;
                     bp.textContent = L.lire; bp.classList.add("p"); }
@@ -445,6 +478,7 @@ def _html(d, lang):
             .replace("__L_BAISSE__", _e(T("sy_baisse")))
             .replace("__L_MOY__", _e(T("sy_moyenne")))
             .replace("__L_REPERE__", _e(T("sy_repere")))
+            .replace("__L_AMORCE__", _e(T("sy_amorce")))
             .replace("__L_AIDE__", _e(T("sy_aide"))))
 
 
