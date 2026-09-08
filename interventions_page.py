@@ -290,6 +290,62 @@ TEXTES = {
     "int_sur_rien": {"en": "— a dimension, a theme or an indicator",
                      "fr": "— une dimension, une thématique ou un indicateur"},
     "int_sur_dim": {"en": "Dimension", "fr": "Dimension"},
+    "int_sur_theme": {"en": "Theme", "fr": "Thématique"},
+
+    # ---------------- les thématiques d'intervention
+    # ON N'ARRIVE PAS ICI AVEC UN NOM DE VARIABLE EN TÊTE. On arrive avec un
+    # métier : l'eau, l'énergie domestique, les risques, le foncier. Les sept
+    # dimensions sont la grille d'analyse de la résilience, pas le découpage
+    # d'un portefeuille de projets ; la liste des quarante-huit variables, elle,
+    # oblige à savoir d'avance laquelle porte la question qu'on se pose. Les
+    # thématiques ci-dessous sont celles d'une programmation ordinaire, et
+    # chacune dit franchement quelles variables du modèle elle recouvre — sans
+    # quoi elle serait une étiquette posée sur un calcul qu'on ne voit pas.
+    "int_th_wash": {"en": "Water, sanitation and hygiene",
+                    "fr": "Eau, assainissement et hygiène"},
+    "int_th_energie": {"en": "Household energy and cooking",
+                       "fr": "Énergie domestique et cuisson"},
+    "int_th_agri": {"en": "Agriculture and food security",
+                    "fr": "Agriculture et sécurité alimentaire"},
+    "int_th_foret": {"en": "Forests, reforestation and erosion control",
+                     "fr": "Forêts, reboisement et lutte contre l'érosion"},
+    "int_th_biodiv": {"en": "Biodiversity and conservation",
+                      "fr": "Biodiversité et conservation"},
+    "int_th_risques": {"en": "Disaster risk management",
+                       "fr": "Gestion des risques et des catastrophes"},
+    "int_th_climat": {"en": "Climate adaptation and water resources",
+                      "fr": "Adaptation climatique et ressource en eau"},
+    "int_th_sante": {"en": "Health and nutrition", "fr": "Santé et nutrition"},
+    "int_th_educ": {"en": "Education, training and awareness",
+                    "fr": "Éducation, formation et sensibilisation"},
+    "int_th_moyens": {"en": "Livelihoods, jobs and income",
+                      "fr": "Moyens d'existence, emploi et revenus"},
+    "int_th_finance": {"en": "Financial inclusion and social protection",
+                       "fr": "Inclusion financière et protection sociale"},
+    "int_th_gouv": {"en": "Local governance and public services",
+                    "fr": "Gouvernance locale et services publics"},
+    "int_th_foncier": {"en": "Land tenure and territorial planning",
+                       "fr": "Foncier et aménagement du territoire"},
+    "int_th_social": {"en": "Social cohesion and community organisations",
+                      "fr": "Cohésion sociale et organisations communautaires"},
+    "int_th_habitat": {"en": "Housing and basic infrastructure",
+                       "fr": "Habitat et infrastructures de base"},
+    "int_th_droits": {"en": "Legal identity and access to rights",
+                      "fr": "Identité juridique et accès aux droits"},
+    "int_th_vars": {"en": "What this theme covers in the model",
+                    "fr": "Ce que cette thématique recouvre dans le modèle"},
+    "int_th_x": {
+        "en": "A theme is a bundle of measured variables, not a node of the "
+              "model. Its levers are those that move that bundle: each "
+              "variable of the model is pushed by two points in turn, and "
+              "what moves the bundle is kept. A lever belonging to the theme "
+              "itself counts its own push as well as its feedbacks.",
+        "fr": "Une thématique est un faisceau de variables mesurées, pas un "
+              "nœud du modèle. Ses leviers sont ceux qui déplacent ce "
+              "faisceau : chaque variable du modèle est poussée de deux "
+              "points à son tour, et l'on retient celles qui le font bouger. "
+              "Un levier qui appartient à la thématique compte sa propre "
+              "poussée en plus de ses rétroactions."},
     "int_rien_encore": {
         "en": "Choose what to act on: the levers that move it appear below, "
               "sorted by kind, each with its profile.",
@@ -1577,6 +1633,57 @@ CAT_DE_DIM = {"dim1": "technique", "dim2": "structurel", "dim3": "technique",
               "dim6": "comportemental", "dim7": "comportemental"}
 POUSSEE = 2.0
 
+# LES THÉMATIQUES D'INTERVENTION, ET CE QU'ELLES RECOUVRENT.
+# L'ORDRE EST CELUI D'UN PORTEFEUILLE, PAS CELUI DU MODÈLE : on descend des
+# services de base vers les ressources, puis vers l'économie, la gouvernance et
+# les droits. Une variable apparaît dans plusieurs thématiques quand elle y
+# appartient vraiment — l'eau est un sujet WASH et un sujet climatique, et la
+# faire figurer une seule fois obligerait à trancher une question qui n'a pas
+# de réponse. Chaque liste ne contient que des identifiants du graphe : une
+# thématique qui nommerait une variable inexistante serait un intitulé creux,
+# et le contrôle en fin de module le refuse.
+THEMES = [
+    ("wash", ["eau", "assain", "temps_eau", "infiltration"]),
+    ("energie", ["cuisson", "elec", "pression_bois", "rentabilite_charbon",
+                 "abondance_bois"]),
+    ("agri", ["prod_agri", "agro_durable", "fertilite", "alimentaire",
+              "erosion", "feux"]),
+    ("foret", ["foret", "abondance_bois", "erosion", "feux", "controle",
+               "infiltration", "pression_bois"]),
+    ("biodiv", ["biodiv", "foret", "vegetation", "controle", "sensib"]),
+    ("risques", ["alerte", "comites", "prepa", "abris", "logement"]),
+    ("climat", ["pluie", "aridite", "vegetation", "infiltration",
+                "agro_durable"]),
+    ("sante", ["sante", "sante_acces", "alimentaire", "eau", "assain"]),
+    ("educ", ["ecole", "education", "sensib"]),
+    ("moyens", ["emploi", "revenu", "reserve", "prod_agri", "travail"]),
+    ("finance", ["compte", "reserve", "transferts", "revenu"]),
+    ("gouv", ["services", "comites", "controle", "etat_civil", "securite"]),
+    ("foncier", ["foncier", "pression_demo", "ancrage"]),
+    ("social", ["entraide", "passerelle", "ocb", "securite"]),
+    ("habitat", ["logement", "elec", "mobile", "abris", "sante_acces",
+                 "ecole"]),
+    ("droits", ["etat_civil", "identite", "foncier"]),
+]
+THEME_VARS = dict(THEMES)
+
+
+def _controler_themes(graphe):
+    """Les identifiants cités par les thématiques existent-ils tous.
+
+    UNE THÉMATIQUE QUI NOMME UNE VARIABLE DISPARUE NE LE DIT PAS TOUTE SEULE :
+    elle se contente d'être plus pauvre d'une ligne, et le classement des
+    leviers change sans que personne s'en aperçoive. Le contrôle est donc fait
+    à l'affichage et rendu au module, qui l'écrit là où on le lira.
+    """
+    connus = {n["id"] for n in graphe["noeuds"]}
+    manquants = []
+    for code, cases in THEMES:
+        for v in cases:
+            if v not in connus:
+                manquants.append(code + " → " + v)
+    return manquants
+
 
 @st.cache_data(show_spinner=False)
 def _propositions():
@@ -1615,17 +1722,21 @@ def _effets_leviers():
 
 
 def _cibles(graphe):
-    """Ce sur quoi on peut vouloir intervenir : les sept dimensions, puis
-    chaque variable mesurée du modèle.
+    """Ce sur quoi on peut vouloir intervenir : les thématiques de projet,
+    puis les sept dimensions, puis chaque variable mesurée du modèle.
 
-    UNE DIMENSION EST UN DOMAINE, UN INDICATEUR EST UN PROBLÈME. « Agir sur
-    la dimension économique » et « agir sur l'accès à l'eau de boisson » ne
-    sont pas la même demande, et la seconde est celle qu'on formule le plus
-    souvent en sortant de l'analyse des résultats. Les deux sont donc dans la
-    même liste, les dimensions d'abord.
+    TROIS FAÇONS DE POSER LA MÊME QUESTION, ET ELLES NE SE REMPLACENT PAS.
+    Une thématique est le langage d'un programme — l'eau, l'énergie, le
+    foncier — et c'est celui dans lequel arrive presque toujours la demande.
+    Une dimension est la grille d'analyse de la résilience. Un indicateur est
+    un problème précis, celui qu'on formule en sortant des résultats. Les
+    thématiques viennent en tête parce que ce sont elles qu'on cherche
+    d'abord ; les deux autres entrées restent pour qui sait déjà où il va.
     """
-    out = [("d:" + d, f'{T("int_sur_dim")} · {T(d)}') for d in
-           ("dim1", "dim2", "dim3", "dim4", "dim5", "dim6", "dim7")]
+    out = [("t:" + c, f'{T("int_sur_theme")} · {T("int_th_" + c)}')
+           for c, _v in THEMES]
+    out += [("d:" + d, f'{T("int_sur_dim")} · {T(d)}') for d in
+            ("dim1", "dim2", "dim3", "dim4", "dim5", "dim6", "dim7")]
     noeuds = sorted((n for n in graphe["noeuds"] if n.get("ligne")),
                     key=lambda n: (n.get("dim") or "", _libelle(n)))
     for n in noeuds:
@@ -1634,17 +1745,33 @@ def _cibles(graphe):
     return out
 
 
-def _effet_sur(cible, effets, par_id, graphe):
+def _effet_sur(cible, effets, par_id, graphe, levier=None):
     """De combien une poussée sur ce levier déplace la cible choisie.
 
     SUR UN INDICATEUR, C'EST L'EFFET SUR SON NŒUD. Sur une dimension, c'est
     la moyenne des effets sur ses variables mesurées : une dimension n'est
     pas un nœud du graphe, elle est un ensemble de lignes, et ce qui la
     déplace est ce qui déplace ses lignes.
+
+    SUR UNE THÉMATIQUE, LA POUSSÉE DIRECTE COMPTE. Le moteur rend l'effet
+    PROPAGÉ, poussée initiale déduite : c'est ce qu'on veut lire quand on
+    regarde un indicateur bouger. Mais une thématique est le faisceau qu'on
+    cherche à déplacer : reboiser déplace le thème forêt d'abord par les deux
+    points posés sur le couvert, et n'en tenir aucun compte reviendrait à
+    classer la reforestation derrière tout ce qui l'influence de loin. La
+    poussée est donc rendue au faisceau quand le levier lui appartient.
     """
     if cible.startswith("n:"):
         c = cible[2:]
         return effets.get(c, 0.0)
+    if cible.startswith("t:"):
+        cases = [x for x in THEME_VARS.get(cible[2:], []) if x in par_id]
+        if not cases:
+            return 0.0
+        tot = sum(effets.get(x, 0.0) for x in cases)
+        if levier in cases:
+            tot += POUSSEE
+        return tot / len(cases)
     d = cible[2:]
     lignes = [n["id"] for n in graphe["noeuds"]
               if n.get("ligne") and n.get("dim") == d]
@@ -1757,13 +1884,34 @@ def _render():
     # bouge ; ceux qui ne la bougent pas ne sont pas des leviers pour elle,
     # aussi centraux soient-ils ailleurs. La cible ne se propose jamais
     # elle-même comme levier.
+    # ---- ce que la thématique recouvre, dit avant les leviers -------------
+    # UNE THÉMATIQUE QUI NE MONTRERAIT PAS SES VARIABLES SERAIT UNE ÉTIQUETTE.
+    # Le classement des leviers qui suit est calculé sur ce faisceau-là ; le
+    # lecteur doit pouvoir vérifier que « énergie domestique » veut bien dire
+    # cuisson, électricité et pression sur le bois, et pas autre chose.
+    if cible.startswith("t:"):
+        cases = [par_id[v] for v in THEME_VARS.get(cible[2:], [])
+                 if v in par_id]
+        st.markdown(
+            f'<div class="int-lab" style="margin:14px 0 6px">'
+            f'{_e(T("int_th_vars"))}</div>'
+            + '<div style="display:flex;flex-wrap:wrap;gap:7px;'
+              'margin-bottom:4px">'
+            + "".join(
+                f'<span style="font-size:12px;color:{ENCRE2};'
+                f'background:#f2f6f3;border:1px solid #dde7e0;'
+                f'border-radius:999px;padding:3px 11px">'
+                f'{_e(_libelle(n))}</span>' for n in cases)
+            + '</div>', unsafe_allow_html=True)
+        st.caption(T("int_th_x"))
+
     tous = _effets_leviers()
     cle_cible = cible[2:] if cible.startswith("n:") else None
     lot = []
     for lev, effets in tous.items():
         if lev == cle_cible:
             continue
-        d_c = _effet_sur(cible, effets, par_id, graphe)
+        d_c = _effet_sur(cible, effets, par_id, graphe, levier=lev)
         if abs(d_c) <= M.SEUIL_NUL:
             continue
         f = par_levier.get(lev)
