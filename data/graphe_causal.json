@@ -1724,7 +1724,7 @@
    "de": "revenu",
    "vers": "pression_bois",
    "signe": 1,
-   "force": 0.5,
+   "force": 0.35,
    "just": "documentee",
    "ref_fr": "Dans huit pays en développement, la part des ménages utilisant des combustibles non solides est corrélée à 0,84 avec la dépense par habitant, l'usage de bois reculant avec le revenu.",
    "ref_en": "Across eight developing countries, the share of households using non-solid fuels correlates at 0.84 with per capita expenditure, wood use falling as income rises.",
@@ -1740,10 +1740,11 @@
     "type_en": "institutional report",
     "geo_en": "Eight low- or middle-income countries: Brazil, Ghana, Guatemala, India, Nepal, Nicaragua, South Africa, Vietnam"
    },
-   "reserve_fr": "Réserve majeure pour Haïti rural : le rapport montre qu'en zone rurale la quantité de bois consommée culmine au milieu de la distribution des revenus et ne baisse nettement que dans le dernier décile, donc l'effet protecteur du revenu est surtout urbain.",
+   "reserve_fr": "Réserve majeure pour Haïti rural : le rapport montre qu'en zone rurale la quantité de bois consommée culmine au milieu de la distribution des revenus et ne baisse nettement que dans le dernier décile, donc l'effet protecteur du revenu est surtout urbain. CONTREDIT PAR NOTRE PROPRE ENQUÊTE. Sur les 410 ménages ayant déclaré un revenu mensuel (médiane 13 000 gourdes), l'usage du charbon de bois monte avec le revenu au lieu de baisser : 11 % sous 2 500 gourdes, 33 % entre 5 000 et 10 000, 68 % entre 25 000 et 50 000, 88 % au-delà de 50 000. Le bois sec reste au -dessus de 88 % dans toutes les tranches sauf la dernière (53 %), et le gaz ne dépasse pas 15 % même en haut de distribution. Aucun seuil de revenu observé dans nos données ne fait renoncer au bois : au niveau du ménage, le revenu déplace la consommation du bois ramassé vers le charbon acheté, qui est produit ailleurs par quelqu'un d'autre. Le lien est donc maintenu à titre de mécanisme de long terme, à force réduite et signalé comme contesté.",
    "cite_fr": "HELTBERG (2003), « Household Energy Use in Developing Countries: A Multicountry Study », ESMAP, Banque mondiale",
    "cite_en": "HELTBERG (2003), “Household Energy Use in Developing Countries: A Multicountry Study”, ESMAP, World Bank",
-   "reserve_en": "Major reservation for rural Haiti: the report shows that in rural areas the quantity of wood consumed peaks in the middle of the income distribution and falls markedly only in the top decile, so the protective effect of income is mainly urban."
+   "reserve_en": "Major reservation for rural Haiti: the report shows that in rural areas the quantity of wood consumed peaks in the middle of the income distribution and falls markedly only in the top decile, so the protective effect of income is mainly urban. CONTRADICTED BY OUR OWN SURVEY. Among the 410 households reporting a monthly income (median 13,000 gourdes), charcoal use rises with income instead of falling: 11 % below 2,500 gourdes, 33 % between 5,000 and 10,000, 68 % between 25,000 and 50,000, 88 % above 50,000. Dry wood stays above 88 % in every band but the top one (53 %), and gas never exceeds 15 %. No income threshold in our data makes households give up wood: at household level, income shifts consumption from gathered wood to bought charcoal, which someone else produced elsewhere. The link is kept as a long-run mechanism, at reduced strength and flagged as contested.",
+   "conteste": true
   },
   {
    "de": "foret",
@@ -2924,6 +2925,6 @@
   "methode_en": "Every link was searched on the web, the source opened and checked, and its effect size recorded. Links with no verifiable source say so.",
   "n_verifiees": 100,
   "n_sans_source": 0,
-  "n_contestees": 11
+  "n_contestees": 12
  }
 }
