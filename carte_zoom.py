@@ -65,14 +65,15 @@ TEXTES = {
     "cz_e1": {"en": "The island", "fr": "L'île"},
     "cz_e2": {"en": "The southern peninsula", "fr": "La péninsule du sud"},
     "cz_e3": {"en": "The ten sections", "fr": "Les dix sections"},
-    "cz_rejouer": {"en": "Replay", "fr": "Rejouer"},
+    "cz_stop": {"en": "Stop", "fr": "Stop"},
+    "cz_lire": {"en": "Loop", "fr": "En boucle"},
     "cz_haiti": {"en": "HAITI", "fr": "HAÏTI"},
     "cz_dom": {"en": "DOMINICAN REPUBLIC", "fr": "RÉPUBLIQUE DOMINICAINE"},
     "cz_aide": {
-        "en": "The sequence plays once on opening. The three framings can be "
-              "revisited in any order.",
-        "fr": "Le déroulé joue une fois à l'ouverture. Les trois cadrages se "
-              "reprennent ensuite dans n'importe quel ordre."},
+        "en": "The sequence replays every fifteen seconds. Picking a framing "
+              "stops the loop; Loop starts it again.",
+        "fr": "Le déroulé rejoue toutes les quinze secondes. Choisir un "
+              "cadrage arrête la boucle ; « En boucle » la relance."},
 }
 for _c, _v in TEXTES.items():
     i18n.DICO.setdefault(_c, _v)
@@ -247,9 +248,15 @@ def _composer(lang):
     # --- les couches
     d_dom = _chemin(a_dom, proj, 45.0)
     d_hti = _chemin(a_hti, proj, 10.0)
+    # LES LIMITES DE DÉPARTEMENT SONT UNE COUCHE, PAS UN LISERÉ. Le projet
+    # travaille dans la Grand'Anse et le Sud : ces limites sont ce qui situe
+    # les dix sections dans une géographie administrative que le lecteur
+    # connaît. Elles sont donc tracées en tirets — la convention des limites
+    # administratives — et restent visibles jusqu'au dernier cadrage.
     g_dept = "".join(
         f'<path d="{_chemin(rs, proj, 6.0)}" fill="{DEPT}" '
-        f'fill-opacity=".55" stroke="{DEPT_TRAIT}" stroke-width="1" '
+        f'fill-opacity=".5" stroke="{DEPT_TRAIT}" stroke-width="1.4" '
+        f'stroke-dasharray="5 3.5" stroke-linejoin="round" '
         f'vector-effect="non-scaling-stroke"/>' for _n, rs in depts)
     g_sec = "".join(
         f'<path class="cz-s" data-nom="{i18n.echapper(nom) if hasattr(i18n, "echapper") else nom}" '
@@ -345,7 +352,7 @@ def _composer(lang):
     </g>
   </svg>
   <div class="cz-cmd">{boutons}
-    <button class="cz-b cz-r" id="cz-rejouer">&#8635; {T('cz_rejouer')}</button>
+    <button class="cz-b cz-r" id="cz-boucle" aria-pressed="true"></button>
   </div>
   <p class="cz-aide">{T('cz_aide')}</p>
 </div>
@@ -378,6 +385,25 @@ def _composer(lang):
     return t;
   }});
 
+  // CHAQUE FAMILLE D'ÉTIQUETTES A SA FENÊTRE. Les noms de pays ne servent
+  // qu'au premier cadrage et gênent partout ailleurs ; les départements et
+  // les deux villes, eux, doivent RESTER quand on descend sur les sections —
+  // c'est ce qui dit au lecteur que Blactote est dans la Grand'Anse et
+  // Trichet dans le Sud. Les noms de section, à l'inverse, n'apparaissent
+  // qu'à l'approche, sans quoi ils s'empilent sur un point.
+  function voile(classe, niv) {{
+    if (classe === 'pays') {{
+      const d = Math.abs(niv - 1);
+      return d < 0.55 ? 1 - d / 0.55 : 0;
+    }}
+    if (classe === 'dept' || classe === 'ville') {{
+      const a = classe === 'dept' ? 1.45 : 1.60;
+      return niv <= a ? 0 : Math.min(1, (niv - a) / 0.45);
+    }}
+    const b = 2.35;
+    return niv <= b ? 0 : Math.min(1, (niv - b) / 0.45);
+  }}
+
   let vb = CADRES[0].slice();
   let etape = 1;
 
@@ -394,11 +420,11 @@ def _composer(lang):
       // UNE ÉTIQUETTE PARAÎT À SON CADRAGE ET S'EFFACE APRÈS. Les dix noms de
       // section sur la vue de l'île seraient dix mots empilés sur un point ;
       // le nom du pays sur la vue des sections serait hors champ.
-      const d = Math.abs(niv - e.e);
-      t.style.opacity = d < 0.55 ? String(1 - d / 0.55) : '0';
+      t.style.opacity = String(voile(e.c, niv));
       t.setAttribute('x', e.x);
       t.setAttribute('y', e.y + (e.c === 'ville' ? -9 * k : 0));
-      if (e.c === 'sec' && d < 0.55) visibles.push({{ t: t, e: e }});
+      if (e.c === 'sec' && voile('sec', niv) > 0.05)
+        visibles.push({{ t: t, e: e }});
     }});
     // CINQ SECTIONS SE TOUCHENT AU SUD-EST, ET LEURS NOMS SE SUPERPOSAIENT.
     // On les écarte le long de la verticale, du haut vers le bas, en gardant
@@ -426,8 +452,7 @@ def _composer(lang):
     }});
     document.querySelectorAll('.cz-v').forEach(function (c) {{
       c.setAttribute('r', (3 * k).toFixed(2));
-      const d = Math.abs(niv - 2);
-      c.style.opacity = d < 0.8 ? String(1 - d / 0.8) : '0';
+      c.style.opacity = String(voile('ville', niv));
     }});
   }}
 
@@ -471,28 +496,71 @@ def _composer(lang):
     anim.id = requestAnimationFrame(pas);
   }}
 
-  // --- le déroulé, joué une fois
-  let intro = [];
-  function stopIntro() {{
-    intro.forEach(clearTimeout); intro = [];
+  // --- LE DÉROULÉ TOURNE EN BOUCLE, ET LA BOUCLE S'ARRÊTE
+  // Un cycle dure quinze secondes : quatre et demie de mouvement, le reste
+  // arrêté sur les dix sections. C'est ce temps d'arrêt qui compte — une
+  // carte qui bouge sans cesse ne se lit pas, elle se subit.
+  const CYCLE = 15000;
+  let minuteurs = [];
+  let boucle = true;
+
+  function arreterMinuteurs() {{
+    minuteurs.forEach(clearTimeout); minuteurs = [];
   }}
+
+  function marquerBoucle() {{
+    const b = document.getElementById('cz-boucle');
+    b.innerHTML = boucle ? '&#9633; {T("cz_stop")}' : '&#9654; {T("cz_lire")}';
+    b.setAttribute('aria-pressed', String(boucle));
+  }}
+
+  function cycle() {{
+    arreterMinuteurs();
+    // ELLE NE TOURNE PAS DANS LE VIDE. Onglet en arrière-plan ou carte
+    // sortie de l'écran, le cycle passe son tour : le lecteur qui est en
+    // train de lire les cartes du dessous n'a pas besoin qu'on lui rejoue
+    // un zoom dans le coin de l'œil, et un onglet caché n'a pas besoin
+    // qu'on l'anime.
+    if (!document.hidden && visible) {{
+      aller(1, 0);
+      minuteurs.push(setTimeout(function () {{ aller(2, 1500); }}, 900));
+      minuteurs.push(setTimeout(function () {{ aller(3, 1600); }}, 2900));
+    }}
+    if (boucle) minuteurs.push(setTimeout(cycle, CYCLE));
+  }}
+
+  // La carte est-elle à l'écran ? Sans `IntersectionObserver`, on suppose
+  // que oui : mieux vaut une boucle qui tourne qu'une carte qui ne bouge
+  // jamais.
+  let visible = true;
+  if (window.IntersectionObserver) {{
+    new IntersectionObserver(function (es) {{
+      visible = es[0].isIntersecting;
+    }}, {{ threshold: 0.25 }}).observe(svg);
+  }}
+
   document.querySelectorAll('.cz-b[data-e]').forEach(function (b) {{
     b.addEventListener('click', function () {{
-      stopIntro(); aller(+b.dataset.e, 900);
+      // PRENDRE LA MAIN, C'EST ARRÊTER LA BOUCLE. Sans cela, le cadrage
+      // qu'on vient de demander serait balayé au tour suivant.
+      boucle = false; marquerBoucle(); arreterMinuteurs();
+      aller(+b.dataset.e, 900);
     }});
   }});
-  document.getElementById('cz-rejouer').addEventListener('click', function () {{
-    stopIntro(); aller(1, 0); derouler();
+
+  document.getElementById('cz-boucle').addEventListener('click', function () {{
+    boucle = !boucle;
+    marquerBoucle();
+    if (boucle) {{ cycle(); }} else {{ arreterMinuteurs(); }}
   }});
 
-  function derouler() {{
-    stopIntro();
-    intro.push(setTimeout(function () {{ aller(2, 1500); }}, 900));
-    intro.push(setTimeout(function () {{ aller(3, 1600); }}, 2900));
-  }}
-
   marquer(1); poser();
-  if (doux) {{ derouler(); }} else {{ aller(3, 0); }}
+  // `prefers-reduced-motion` COUPE LA BOUCLE, PAS SEULEMENT LA TRANSITION.
+  // Une carte qui se recadre toutes les quinze secondes est exactement ce
+  // que ce réglage demande d'éviter : elle ouvre sur les sections et attend
+  // qu'on la sollicite.
+  if (doux) {{ cycle(); }} else {{ boucle = false; aller(3, 0); }}
+  marquerBoucle();
 }})();
 </script></body></html>"""
 

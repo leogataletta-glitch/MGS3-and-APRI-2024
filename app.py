@@ -2380,10 +2380,24 @@ def _bandeau_b64(lang="fr", page=""):
         return _b64.b64encode(f.read()).decode()
 
 
+def _bloc_credit(page, film):
+    """La légende du bandeau, dans sa boîte — ou rien du tout."""
+    txt = _legende_bandeau(page, film)
+    return (f'<div class="bandeau-credit">{html.escape(txt)}</div>'
+            if txt else '')
+
+
 def _legende_bandeau(page, film):
-    """La légende du bandeau : celle de la page, ou celle du film."""
+    """La légende du bandeau, ou rien.
+
+    LE FILM N'EST PAS LÉGENDÉ. Les photographies disent où elles ont été
+    prises, parce que ce sont des documents ; la vidéo du bandeau des données
+    n'en est pas un, et « Illustration animée » posé en bas d'un bandeau
+    n'apprend rien à personne. Elle reste ce qu'elle est, un habillage, et
+    l'espace lui revient.
+    """
     if film:
-        return T("bandeau_credit_film")
+        return ""
     cle = "bandeau_credit_" + page
     return T(cle if cle in i18n.DICO else "bandeau_credit")
 
@@ -2483,9 +2497,8 @@ def _rendre_ruban(avec_image):
             f'<div class="bandeau-voile"></div>{_marque}'
             f'<img class="bandeau-logo" alt="UNEP" '
             f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
-            f'<div class="bandeau-credit">'
-            f'{html.escape(_legende_bandeau(page, bool(_film)))}</div>'
-            f'</div>', unsafe_allow_html=True)
+            + _bloc_credit(page, bool(_film))
+            + '</div>', unsafe_allow_html=True)
 
 
 with _zone_nav:
