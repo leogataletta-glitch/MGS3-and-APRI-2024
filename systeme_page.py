@@ -122,8 +122,12 @@ TEXTES = {
     "sy_repere": {"en": "measured state (reference mark)",
                   "fr": "état mesuré (le repère)"},
     "sy_depart": {"en": "at the measured state", "fr": "au départ"},
-    "sy_aide": {"en": "click in a bar: the system starts on its own",
-                "fr": "cliquez dans une barre : le système part tout seul"},
+    "sy_aide": {"en": "− and + set a level by half a point; the system starts "
+                      "on its own",
+                "fr": "− et + règlent le niveau par demi-point ; le système "
+                      "part tout seul"},
+    "sy_moins": {"en": "half a point lower", "fr": "un demi-point de moins"},
+    "sy_plus": {"en": "half a point higher", "fr": "un demi-point de plus"},
     # LE MODE D'EMPLOI, EN GRAND ET DANS LA BARRE. Il était écrit sous les
     # quarante-cinq barres, en gris de onze pixels : on appuyait sur Lecture
     # sans rien avoir tenu, le compteur montait, rien ne bougeait, et l'on
@@ -131,10 +135,14 @@ TEXTES = {
     # les deux boutons de course sont éteints et la consigne prend leur
     # place : il n'y a rien d'autre à faire que de poser une valeur.
     "sy_amorce": {
-        "en": "Click inside any bar to set the level you want: that variable "
-              "is then held, and the system starts on its own.",
-        "fr": "Cliquez dans une barre pour y poser le niveau que vous voulez : "
-              "la variable est alors tenue, et le système part tout seul."},
+        "en": "Every variable carries its measured level. Change any of them "
+              "with − and +, or click inside a bar to set a level in one go: "
+              "that variable is then held there, and the system starts on its "
+              "own. Several can be held at once.",
+        "fr": "Chaque variable porte son niveau mesuré. Changez celui que vous "
+              "voulez avec − et +, ou cliquez dans une barre pour y poser un "
+              "niveau d'un coup : la variable est alors tenue là, et le "
+              "système part tout seul. On peut en tenir plusieurs à la fois."},
     # CE QUE ÇA DÉPLACE, ÉCRIT NOIR SUR BLANC. Quarante-cinq barres réparties
     # en trois colonnes : quand onze d'entre elles bougeaient de trois
     # dixièmes, il fallait les chercher pour s'en apercevoir, et l'on
@@ -244,8 +252,18 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
          text-transform:uppercase;color:#6b7590;display:flex;
          align-items:center;gap:6px}
  .grp h4 i{width:8px;height:8px;border-radius:2px;flex:none}
- .li{display:grid;grid-template-columns:1fr 96px 46px;gap:8px;
+ .li{display:grid;grid-template-columns:1fr 74px 44px 42px;gap:7px;
      align-items:center;padding:2px 0}
+ /* MOINS ET PLUS, SUR CHAQUE LIGNE. Viser un dixième dans une barre de
+    soixante-quatorze pixels demandait une précision que personne n'a, et
+    surtout rien n'annonçait qu'un rectangle gris était réglable. Deux boutons
+    par demi-point disent le geste et le rendent exact ; la barre reste
+    cliquable pour poser un niveau d'un coup, loin de la valeur mesurée. */
+ .pm{display:flex;gap:3px}
+ .pm button{width:19px;height:17px;line-height:1;padding:0;font-size:12px;
+    font-weight:700;border:1px solid #d7e0ec;background:#fff;color:#3c4761;
+    border-radius:5px;cursor:pointer}
+ .pm button:hover{border-color:#1c6349;color:#1c6349;background:#f2f8f4}
  .nm{font-size:11px;color:#3c4761;white-space:nowrap;overflow:hidden;
      text-overflow:ellipsis}
  .nm.t{font-weight:700;color:#101728}
@@ -345,7 +363,11 @@ function construire(){
         `<div class="ba" id="ba${i}" data-i="${i}">`+
         `<div class="f" id="fi${i}"></div><div class="r" id="re${i}"></div></div>`+
         `<div><div class="vl" id="vl${i}"></div>`+
-        `<div class="dl" id="dl${i}"></div></div></div>`).join("")+
+        `<div class="dl" id="dl${i}"></div></div>`+
+        `<div class="pm"><button data-i="${i}" data-p="-0.5" `+
+        `title="${L.moins}">−</button>`+
+        `<button data-i="${i}" data-p="0.5" title="${L.plus}">+</button></div>`+
+        `</div>`).join("")+
       `</div>`;
   }).join("")+'</div>').join("");
   document.getElementById("cols").innerHTML = html;
@@ -357,18 +379,37 @@ function construire(){
       /* un deuxième clic au même endroit libère la variable */
       if (tenu[id] !== undefined && Math.abs(tenu[id] - v) < 0.26) delete tenu[id];
       else tenu[id] = borne(v);
-      k = 0; d = d0(); dprec = new Float64Array(NN);
-      dessiner();
-      /* LE SYSTÈME PART TOUT SEUL. Il fallait cliquer dans une barre PUIS
-         trouver le bouton Lecture ; entre les deux, on posait une valeur, on
-         voyait une seule barre bouger, et l'on concluait qu'il ne se passait
-         rien. Poser une valeur EST la demande de propagation : le reste n'est
-         qu'une confirmation à cliquer. Lecture et Pause restent, pour
-         reprendre la main sur une propagation qu'on veut suivre pas à pas. */
-      arreter();
-      if (Object.keys(tenu).length) lancer();
+      relancer();
     });
   });
+  /* LE RÉGLAGE PAR DEMI-POINT PART DE LÀ OÙ EN EST LA VARIABLE : de la valeur
+     déjà imposée si elle en porte une, sinon de sa valeur mesurée. Revenir
+     exactement sur la mesure libère la variable — sans quoi « je remets comme
+     avant » laisserait une variable tenue à sa propre valeur, ce qui n'est pas
+     la même chose que de ne pas la tenir : elle serait alors bloquée là et ne
+     recevrait plus rien du système. */
+  document.querySelectorAll(".pm button").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const i = +b.dataset.i, id = N[i].id;
+      const dep = tenu[id] !== undefined ? tenu[id] : base[i];
+      const v = borne(Math.round((dep + (+b.dataset.p)) * 2) / 2);
+      if (Math.abs(v - base[i]) < 0.001) delete tenu[id];
+      else tenu[id] = v;
+      relancer();
+    });
+  });
+}
+
+/* LE SYSTÈME PART TOUT SEUL. Il fallait poser une valeur PUIS trouver le
+   bouton Lecture ; entre les deux, on voyait une seule barre bouger, et l'on
+   concluait qu'il ne se passait rien. Poser une valeur EST la demande de
+   propagation. Lecture et Pause restent, pour reprendre la main sur une
+   propagation qu'on veut suivre pas à pas. */
+function relancer(){
+  k = 0; d = d0(); dprec = new Float64Array(NN);
+  dessiner();
+  arreter();
+  if (Object.keys(tenu).length) lancer();
 }
 
 function dessiner(){
@@ -463,7 +504,8 @@ def _html(d, lang):
     lib = {"lire": T("sy_lire"), "pause": T("sy_pause"),
            "stable": T("sy_stable"), "repos": T("sy_repos"),
            "non_mesure": T("sy_non_mesure"), "moy": T("sy_moyenne"),
-           "bilan": T("sy_bilan"), "bilan0": T("sy_bilan_0")}
+           "bilan": T("sy_bilan"), "bilan0": T("sy_bilan_0"),
+           "moins": T("sy_moins"), "plus": T("sy_plus")}
     return (GABARIT
             .replace("__DONNEES__", json.dumps(d, ensure_ascii=False,
                                                separators=(",", ":")))

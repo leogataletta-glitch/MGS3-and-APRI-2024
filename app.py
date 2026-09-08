@@ -829,6 +829,9 @@ st.markdown(("""
        n'y a plus de course du tout. Le plafond d'une fenêtre le fait défiler
        pour son compte le jour où les rubriques dépasseront l'écran. */
     flex: 0 0 auto !important; height: auto !important;
+    /* HAUTE D'UNE FENÊTRE AU MOINS, pour que le crédit du PNUE puisse être
+       poussé tout en bas plutôt que de flotter sous la devise. */
+    min-height: calc(100vh - 24px);
     max-height: 100vh; overflow-y: auto; overscroll-behavior: contain;
     border: none;
     /* LE FOND EST POSÉ SUR LA COLONNE, PAS DERRIÈRE ELLE. Un dégradé qui
@@ -947,8 +950,14 @@ st.markdown(("""
     margin: 28px 0 4px; padding: 16px 10px 0;
     border-top: 1px solid #d3ddd5;
   }
+  /* LA POUSSE SE MET À CÔTÉ DE LA DEVISE, PAS AU-DESSUS. Seule sur sa ligne,
+     elle avait l'air d'une puce orpheline en haut d'un paragraphe ; posée
+     contre la première ligne du texte, elle en devient la marque. */
+  div[class*="st-key-zone_nav"] .nav-pied .nav-mot {
+    display: flex; align-items: flex-start; gap: 8px;
+  }
   div[class*="st-key-zone_nav"] .nav-pied svg { display: block;
-    margin-bottom: 8px; }
+    flex: none; margin-top: 2px; }
   /* AU FIL DE L'EAU, LES DEUX. La feuille de l'application justifie les
      blocs de texte ; sur une colonne de deux cents pixels, la justification
      creuse des rivières entre les mots. */
@@ -956,9 +965,36 @@ st.markdown(("""
     font-size: 12px; line-height: 1.5; color: #4d5c53;
     font-style: italic; text-align: left !important;
   }
+  /* LE CRÉDIT EST COLLÉ AU BAS DE LA COLONNE, avec l'emblème du PNUE.
+     Il flottait sous la devise, à mi-hauteur d'une colonne qui en fait mille,
+     et la marque de l'institution qui publie n'y figurait pas du tout. Une
+     marge automatique le pousse en bas ; la colonne étant collante et haute
+     comme la fenêtre, il s'y tient sans position absolue. */
   div[class*="st-key-zone_nav"] .nav-credit {
-    font-size: 10.5px; line-height: 1.45; color: #87958c; margin-top: 10px;
-    text-align: left !important;
+    font-size: 10.5px; line-height: 1.45; color: #87958c;
+    margin-top: auto; padding-top: 18px; text-align: left !important;
+    display: flex; align-items: center; gap: 9px;
+  }
+  div[class*="st-key-zone_nav"] .nav-credit img {
+    width: 34px; height: auto; flex: none; opacity: .82;
+  }
+  div[class*="st-key-zone_nav"] .nav-pied {
+    display: flex; flex-direction: column; flex: 1 1 auto; min-height: 118px;
+  }
+  /* POUR QUE LE PIED DESCENDE, TOUTE LA CHAÎNE DOIT S'ÉTIRER. Streamlit
+     enveloppe chaque bloc de trois conteneurs qui prennent la hauteur de leur
+     contenu : une marge automatique posée au fond n'avait donc rien à
+     pousser. Le dernier conteneur de la colonne, et lui seul, devient
+     extensible. */
+  div[class*="st-key-zone_nav"] > div[data-testid="stElementContainer"]:last-of-type,
+  div[class*="st-key-zone_nav"] > div[data-testid="stElementContainer"]:last-of-type
+    > div[data-testid="stMarkdown"],
+  div[class*="st-key-zone_nav"] > div[data-testid="stElementContainer"]:last-of-type
+    div[data-testid="stMarkdown"] > div,
+  div[class*="st-key-zone_nav"] > div[data-testid="stElementContainer"]:last-of-type
+    div[data-testid="stMarkdownContainer"] {
+    flex: 1 1 auto !important; display: flex !important;
+    flex-direction: column !important; min-height: 0 !important;
   }
   div[class*="st-key-zone_nav"] .nav-famille {
     font-size: 10px; font-weight: 700; letter-spacing: .11em;
@@ -1197,7 +1233,9 @@ st.markdown(("""
      l'accueil — assez lisible pour nommer le lieu, assez discret pour ne pas
      entrer en concurrence avec le titre de la page qui suit. */
   .bandeau-credit {
-    position: absolute; left: 22px; bottom: 9px; z-index: 4;
+    /* EN BAS À DROITE, comme sur l'accueil : la légende appartient au coin
+       opposé au titre, et les deux bandeaux se lisent alors pareil. */
+    position: absolute; right: 22px; bottom: 9px; text-align: right; z-index: 4;
     font-size: 10.5px; line-height: 1.35; max-width: 52ch;
     pointer-events: none;
     /* ENCRE SOMBRE ET HALO CLAIR, ET NON L'INVERSE. La bande n'est pas une
@@ -1205,8 +1243,9 @@ st.markdown(("""
        claire, et du blanc y disparaissait entièrement. Le halo blanc détache
        l'encre foncée aussi bien du papier crème de gauche que du vert des
        champs. */
-    color: #2f4a39;
-    text-shadow: 0 0 4px rgba(255,255,255,.95), 0 1px 2px rgba(255,255,255,.9);
+    color: #0b1410;
+    text-shadow: 0 0 4px rgba(255,255,255,.95), 0 0 9px rgba(255,255,255,.85),
+                 0 1px 2px rgba(255,255,255,.9);
   }
   @media (max-width: 900px) { .bandeau-credit { display: none; } }
 
@@ -1756,6 +1795,16 @@ TEXTES_NAV = {
     "sx_d6": {"en": "Push a variable and watch the system move, live",
               "fr": "Poussez une variable et regardez le système bouger, "
                     "en direct"},
+    # L'ÉCRAN DE RÉGLAGE SORT DE SON REPLI. Il existait, complet, derrière un
+    # dépliant au bas d'un autre onglet : autant dire qu'il n'existait pas.
+    # C'est pourtant le seul endroit du site où l'on voit la valeur mesurée de
+    # chacune des quarante-huit variables et où on peut la changer soi-même
+    # avant de faire tourner le système. Il devient donc un onglet.
+    "sx_o7": {"en": "Set the Values and Run",
+              "fr": "Régler les valeurs et faire tourner"},
+    "sx_d7": {"en": "Every variable at its measured level, yours to change",
+              "fr": "Chaque variable à son niveau mesuré, que vous pouvez "
+                    "changer"},
     "ra_srcd_menages": {"en": "1,211 households, 483 questions",
                         "fr": "1 211 ménages, 483 questions"},
     "ra_srcd_satellite": {"en": "Forest cover and vegetation indices",
@@ -2254,11 +2303,13 @@ with _zone_nav:
     # LA DEVISE FERME LA COLONNE. Un filet la sépare de la dernière rubrique :
     # sans lui, elle se lirait comme une entrée de menu qui ne mène nulle part.
     st.markdown(
-        '<div class="nav-pied">'
+        '<div class="nav-pied"><div class="nav-mot">'
         + icones.svg("pousse", couleur="#6d9683", taille=15)
-        + f'<div class="nav-devise">{T("pied_devise")}</div>'
+        + f'<div class="nav-devise">{T("pied_devise")}</div></div>'
         f'<div class="nav-credit">'
-        f'{T("pied_credit", a=datetime.date.today().year)}</div></div>',
+        f'<img alt="UNEP" src="data:image/png;base64,{assets.LOGO_UNEP}">'
+        f'<span>{T("pied_credit", a=datetime.date.today().year)}</span>'
+        f'</div></div>',
         unsafe_allow_html=True)
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
@@ -2503,26 +2554,29 @@ with _c_contenu:
         # tourner. Les trois écrans d'analyse — relations, leviers,
         # interventions — viennent après, quand on a vu le système bouger et
         # qu'on sait quelles questions lui poser.
-        _CODES_SX = ["construire", "direct", "relations", "leviers",
+        _CODES_SX = ["construire", "direct", "regler", "relations", "leviers",
                      "simuler", "vagues"]
-        _N_SX = dict(zip(_CODES_SX, ("sx_o1", "sx_o6", "sx_o2", "sx_o3",
-                                     "sx_o4", "sx_o5")))
-        _D_SX = dict(zip(_CODES_SX, ("sx_d1", "sx_d6", "sx_d2", "sx_d3",
-                                     "sx_d4", "sx_d5")))
+        _N_SX = dict(zip(_CODES_SX, ("sx_o1", "sx_o6", "sx_o7", "sx_o2",
+                                     "sx_o3", "sx_o4", "sx_o5")))
+        _D_SX = dict(zip(_CODES_SX, ("sx_d1", "sx_d6", "sx_d7", "sx_d2",
+                                     "sx_d3", "sx_d4", "sx_d5")))
         _vue = onglets.barre("bcl_vue", _CODES_SX,
                              titre=lambda c: T(_N_SX[c]),
                              description=lambda c: T(_D_SX[c]),
                              defaut="construire")
         if _vue == "construire":
             systeme_complexe.render_construire()
+        elif _vue == "regler":
+            # IL EST SEUL SUR SON ÉCRAN, ET SANS DÉPLIANT. Quarante-huit
+            # variables réglables tiennent une page entière ; les mettre sous
+            # un autre écran revenait à les cacher.
+            systeme_page.render(entete=False)
         elif _vue == "relations":
             systeme_complexe.render_relations()
         elif _vue == "leviers":
             systeme_complexe.render_leviers()
         elif _vue == "simuler":
             systeme_complexe.render_simuler()
-            with st.expander(T("sx_deplier_syst")):
-                systeme_page.render(entete=False)
         elif _vue == "vagues":
             systeme_complexe.render_vagues()
         else:

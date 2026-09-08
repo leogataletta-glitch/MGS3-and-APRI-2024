@@ -203,6 +203,39 @@ TEXTES = {
     # « 4 R · 2 B » et non « 4 renforçantes · 2 équilibrantes », qui ne tient
     # pas sur une ligne. La légende du premier onglet donne les deux noms en
     # entier ; ici on compte, on ne définit pas.
+    # LE RÉGLAGE EN COURS DE COURSE. Une boucle ne montre ce qu'elle vaut que
+    # si l'on peut la contrarier pendant qu'elle tourne : tenir le revenu plus
+    # haut au troisième relais et regarder si le retour sur le couvert
+    # forestier change de sens n'est pas la même expérience que relancer deux
+    # courses et comparer deux images de fin.
+    "sd_regl": {"en": "Levels, adjustable while it runs",
+                "fr": "Niveaux, réglables pendant la course"},
+    "sd_regl_x": {
+        "en": "− and + change a variable by half a point and keep it there. "
+              "Do it while the wave is running: the change enters the system "
+              "at the next relay, and the diagram carries on from there.",
+        "fr": "− et + changent une variable d'un demi-point et l'y "
+              "maintiennent. Faites-le pendant que l'onde tourne : le "
+              "changement entre dans le système au relais suivant, et le "
+              "schéma continue de là."},
+    "sd_moins": {"en": "half a point lower", "fr": "un demi-point de moins"},
+    "sd_plus": {"en": "half a point higher", "fr": "un demi-point de plus"},
+    "sd_basc": {
+        "en": "Relay {k}: what reached these turned round, rising becomes "
+              "falling or the reverse — a loop has just taken over: {v}",
+        "fr": "Relais {k} : ce qui leur arrivait s'est retourné, la hausse "
+              "devient baisse ou l'inverse — une boucle vient de prendre la "
+              "main : {v}"},
+    "sd_basc_r": {
+        "en": "Relay {k}: this relay carries more than the one before it — "
+              "the reinforcing loops have taken over.",
+        "fr": "Relais {k} : ce relais porte plus que le précédent — les "
+              "boucles renforçantes ont pris la main."},
+    "sd_basc_b": {
+        "en": "Relay {k}: this relay carries less than the one before it — "
+              "balancing and attenuation are winning.",
+        "fr": "Relais {k} : ce relais porte moins que le précédent — "
+              "l'équilibrage et l'atténuation l'emportent."},
     "sd_bcl_r": {"en": "R", "fr": "R"},
     "sd_bcl_b": {"en": "B", "fr": "B"},
     # UN PÉRIMÈTRE ÉTROIT PEUT NE CONTENIR AUCUNE BOUCLE ENTIÈRE : la colonne
@@ -337,7 +370,35 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
   #kl{font-size:10px;font-weight:700;letter-spacing:.07em;
     text-transform:uppercase;color:#6b7590}
   #kd{font-size:11.5px;color:#6b7590;font-variant-numeric:tabular-nums}
+  /* LE RÉGLAGE VIT À CÔTÉ DU SCHÉMA, PAS DANS UN AUTRE ÉCRAN. Changer une
+     valeur pendant que l'onde tourne n'a de sens que si l'on voit le schéma
+     au même instant : c'est le moment où la boucle se retourne qu'on cherche,
+     et il ne dure qu'un relais. */
+  #aire{flex:1;min-height:0;display:flex;gap:12px}
   #scene{flex:1;min-height:0;position:relative}
+  #regl{width:252px;flex:none;overflow-y:auto;border:1px solid #e3eaf3;
+    border-radius:12px;background:#fbfcfd;padding:9px 10px 10px}
+  .rh{font-size:10px;font-weight:700;letter-spacing:.07em;
+    text-transform:uppercase;color:#2a6b3f;margin-bottom:7px}
+  .rx{font-size:10.5px;color:#8a93a5;line-height:1.45;margin-top:9px;
+    border-top:1px solid #eef2f7;padding-top:8px}
+  .rr{display:grid;grid-template-columns:1fr 34px 40px;gap:5px;
+    align-items:center;padding:2px 0}
+  .rn{font-size:11px;color:#3c4761;white-space:nowrap;overflow:hidden;
+    text-overflow:ellipsis}
+  .rr.on .rn{font-weight:700;color:#101728}
+  .rv{font-size:11px;font-weight:700;text-align:right;
+    font-variant-numeric:tabular-nums;color:#3c4761}
+  .rb{display:flex;gap:3px}
+  .rb button{width:18px;height:17px;padding:0;font-size:12px;line-height:1;
+    border-radius:5px}
+  /* LE RETOURNEMENT EST L'ÉVÉNEMENT QU'ON GUETTE : le relais où ce qui
+     arrivait en hausse arrive en baisse, ou l'inverse. C'est là qu'une boucle
+     équilibrante a repris la main, ou qu'une boucle renforçante s'est
+     enclenchée ; sans cette ligne, il fallait le déduire des couleurs. */
+  #bascule{font-size:12px;color:#8a5a12;background:#fdf6e8;
+    border:1px solid #f0dfbe;border-radius:9px;padding:6px 11px;
+    margin:4px 0 0;line-height:1.45}
   svg{width:100%;height:100%;display:block}
   #bas{display:flex;align-items:center;gap:18px;flex-wrap:wrap;
     padding:7px 3px 0;font-size:11.5px;color:#6b7590}
@@ -408,8 +469,16 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
     <div id="kv">0</div><div id="kd">0 % __L_DIS__</div>
     <div id="kt"></div></div>
 </div>
-<div id="scene"><svg id="g" preserveAspectRatio="xMidYMid meet"></svg></div>
+<div id="aire">
+  <div id="scene"><svg id="g" preserveAspectRatio="xMidYMid meet"></svg></div>
+  <aside id="regl">
+    <div class="rh">__L_REGL__</div>
+    <div id="rl"></div>
+    <div class="rx">__L_REGLX__</div>
+  </aside>
+</div>
 <div id="mot"></div>
+<div id="bascule" hidden></div>
 <div id="fin" hidden>
   <div class="fb"><div class="fh" id="hc">__L_CON__</div><div id="fc"></div>
     <div class="fx">__L_CONX__</div></div>
@@ -689,6 +758,19 @@ let total = 1, k = 0, joue = false, anim = null, retour = 0;
 /* Combien de relais ont déplacé chaque nœud : au-delà d'un, c'est une
    boucle qui a ramené l'onde dessus. */
 let passages = new Int32Array(NO.length);
+/* CE QU'ON A IMPOSÉ SOI-MÊME, EN PLUS DE L'ONDE. Une valeur réglée à la main
+   n'est pas un choc de plus : c'est un niveau qui change et qui le reste. En
+   écart au départ, cela revient à ajouter la différence à l'état courant ET à
+   la vague en cours, qui la portera au relais suivant — c'est exactement
+   l'écart_{t+1} = écart_0 + A · écart_t du système interactif, écrit en
+   incréments parce qu'ici on dessine les vagues plutôt que les niveaux. */
+let soutien = new Float64Array(NO.length);
+/* Le signe de ce que chaque nœud a reçu au dernier relais, pour reconnaître
+   le relais où il change. */
+let signePrec = new Int8Array(NO.length);
+/* Le volume du relais précédent et le régime en cours : −1 l'onde s'amortit,
+   +1 elle se ramplifie. */
+let bougePrec = 0, phase = 0;
 
 /* Le degré de chaque nœud DANS LE PÉRIMÈTRE DESSINÉ, entrant plus sortant.
    C'est le nombre de liens qu'on voit à l'écran, pas celui du graphe entier :
@@ -714,6 +796,57 @@ function totalAbsolu(depart, a){
 function fmt(v, d){
   const s = (v>=0 && d ? "+" : "") + v.toFixed(d ? 2 : 1);
   return s.replace(".", "__VIRG__");
+}
+
+/* ---------- RÉGLER UNE VARIABLE, MÊME PENDANT QUE L'ONDE TOURNE ---------
+   C'est la question qu'on pose à un système bouclé : « et si je tenais
+   celle-ci plus haut, la boucle se retourne-t-elle ? ». Y répondre en
+   relançant tout depuis le début fait perdre ce qu'on voulait voir, à savoir
+   le relais exact où le retour change de sens. Le réglage entre donc dans la
+   course en marche. */
+function niveauDe(i){
+  const n = NO[i], b = n.s === null ? 5 : n.s;
+  return Math.max(0, Math.min(10, b + cum[i] + (n.id === src ? amp : 0)));
+}
+
+function regler(i, pas){
+  const avant = niveauDe(i), apres = Math.max(0, Math.min(10, avant + pas));
+  const d = apres - avant;
+  if (Math.abs(d) < 0.001) return;
+  soutien[i] += d; cum[i] += d; vague[i] += d;
+  if (regroupe) rassembler(false);
+  majReglage(); peindre();
+  /* Un réglage posé à l'arrêt vaut une demande de propagation : sans cela on
+     déplace une pastille et rien ne bouge, ce qui a déjà été signalé une
+     fois. */
+  if (!joue && !anim) demarrer();
+}
+
+function majReglage(){
+  for (let i = 0; i < NO.length; i++){
+    const r = document.getElementById("rr" + i);
+    if (!r) continue;
+    const v = document.getElementById("rv" + i);
+    v.textContent = NO[i].s === null && Math.abs(cum[i]) < SEUIL
+      && Math.abs(soutien[i]) < 0.001 ? "—" : fmt(niveauDe(i), 0);
+    const on = Math.abs(soutien[i]) > 0.001;
+    r.classList.toggle("on", on);
+    v.style.color = on ? "#2a6b3f" : "#3c4761";
+  }
+}
+
+function construireReglage(){
+  const l = document.getElementById("rl");
+  l.innerHTML = NO.map((n, i) =>
+    '<div class="rr" id="rr' + i + '"><div class="rn" title="' + n.nom + '">'
+    + n.nom + '</div><div class="rv" id="rv' + i + '"></div>'
+    + '<div class="rb"><button data-i="' + i + '" data-p="-0.5" title="'
+    + L.moins + '">−</button><button data-i="' + i + '" data-p="0.5" title="'
+    + L.plus + '">+</button></div></div>').join("");
+  l.querySelectorAll("button").forEach(b => {
+    b.onclick = () => regler(+b.dataset.i, +b.dataset.p);
+  });
+  majReglage();
 }
 
 function horizon(){
@@ -751,6 +884,7 @@ function peindre(){
   document.getElementById("kv").textContent = vmax ? (k + " / " + vmax) : k;
   document.getElementById("kd").textContent =
     Math.round(100*Math.min(1, total ? d/total : 0)) + " % " + L.dis;
+  majReglage();
   horizon();
 }
 
@@ -843,6 +977,14 @@ function remise(){
   cum = new Float64Array(NO.length);
   vague = new Float64Array(NO.length);
   passages = new Int32Array(NO.length);
+  /* LA REMISE À ZÉRO EFFACE AUSSI LES RÉGLAGES POSÉS À LA MAIN. Les garder
+     ferait repartir une course depuis un état que le bouton prétend avoir
+     remis à l'état mesuré. */
+  soutien = new Float64Array(NO.length);
+  signePrec = new Int8Array(NO.length);
+  bougePrec = 0; phase = 0;
+  const eb = document.getElementById("bascule");
+  if (eb){ eb.hidden = true; eb.textContent = ""; }
   vague[IX[src]] = amp;
   total = totalAbsolu(src, amp) || 1;
   gBilles.innerHTML = "";
@@ -870,6 +1012,39 @@ function vaguesuivante(apres){
   k += 1;
   for (let j=0;j<NO.length;j++)
     if (Math.abs(suivante[j]) > SEUIL) passages[j] += 1;
+  /* LE RETOURNEMENT, NOMMÉ AU RELAIS OÙ IL SE PRODUIT. Un nœud qui recevait
+     une hausse et reçoit maintenant une baisse n'a pas changé de nature : une
+     boucle équilibrante vient de rendre le mouvement inverse, et c'est
+     l'instant qu'on cherchait. Le seuil est plus haut que celui de la course,
+     sinon le bruit numérique de fin d'onde ferait clignoter la ligne. */
+  const bascules = [];
+  for (let j=0;j<NO.length;j++){
+    const s = Math.abs(suivante[j]) > 0.008 ? (suivante[j] > 0 ? 1 : -1) : 0;
+    if (s && signePrec[j] && s !== signePrec[j]) bascules.push(NO[j].nom);
+    if (s) signePrec[j] = s;
+  }
+  /* DEUX ÉVÉNEMENTS, ET LE SECOND EST DE LOIN LE PLUS FRÉQUENT. Le premier est
+     le retournement franc : ce qui montait descend, et il demande une relation
+     négative sur le chemin — le modèle n'en compte que quatre sur cent, il est
+     donc rare et c'est une information en soi. Le second est le régime de
+     l'onde : tant que chaque relais rend moins que le précédent, l'équilibrage
+     et l'atténuation l'emportent ; le relais où il rend davantage est celui où
+     les boucles renforçantes prennent la main, et c'est ce moment-là qu'on
+     guette quand on tient une variable plus haut en cours de route. */
+  let msg = "";
+  if (k >= 2 && bougePrec > SEUIL){
+    if (bouge > bougePrec*1.02 && phase !== 1){
+      phase = 1; msg = L.basc_r.replace("{k}", k);
+    } else if (bouge < bougePrec*0.98 && phase !== -1){
+      phase = -1; msg = L.basc_b.replace("{k}", k);
+    }
+  }
+  bougePrec = bouge;
+  if (bascules.length)
+    msg = (msg ? msg + " " : "") + L.basc.replace("{k}", k)
+            .replace("{v}", bascules.slice(0, 4).join(", "));
+  const eb = document.getElementById("bascule");
+  if (msg){ eb.hidden = false; eb.textContent = msg; }
   const duree = 950*vitesse, part = 0.82;
   const actifs = [];
   LI.forEach((l,i) => {
@@ -968,9 +1143,8 @@ document.getElementById("pas").onclick = () => {
   if (regroupe) rassembler(false);
   arret(); bilan(false); vaguesuivante(v => bilan(true));
 };
-document.getElementById("lire").onclick = () => {
-  if (joue){ arret(); return; }
-  if (anim) return;
+function demarrer(){
+  if (anim || joue) return;
   /* On ne fait pas courir une onde sur un schéma réduit à six pastilles :
      reprendre la lecture, c'est vouloir revoir le chemin. */
   if (regroupe) rassembler(false);
@@ -978,9 +1152,14 @@ document.getElementById("lire").onclick = () => {
   document.getElementById("lire").textContent = L.pause;
   document.getElementById("lire").classList.remove("p");
   vaguesuivante(boucler);
+}
+document.getElementById("lire").onclick = () => {
+  if (joue){ arret(); return; }
+  demarrer();
 };
 
 document.getElementById("ampv").textContent = fmt(amp, 1);
+construireReglage();
 remise();
 </script></body></html>"""
 
@@ -992,7 +1171,9 @@ def _html(d, lang):
            "liens": T("sd_liens_n"), "vagues": T("sd_vagues_n"),
            "con": T("sd_connect"), "pas": T("sd_passages"),
            "bcl_r": T("sd_bcl_r"), "bcl_b": T("sd_bcl_b"),
-           "bcl_vide": T("sd_bcl_vide"),
+           "bcl_vide": T("sd_bcl_vide"), "basc": T("sd_basc"),
+           "basc_r": T("sd_basc_r"), "basc_b": T("sd_basc_b"),
+           "moins": T("sd_moins"), "plus": T("sd_plus"),
            "ess": T("sd_ess"), "ess_non": T("sd_ess_non"),
            "ess_t": T("sd_ess_t")}
     return (GABARIT
@@ -1023,6 +1204,8 @@ def _html(d, lang):
             .replace("__L_MULX__", _e(T("sd_mul_x")))
             .replace("__L_BCL__", _e(T("sd_bcl")))
             .replace("__L_BCLX__", _e(T("sd_bcl_x")))
+            .replace("__L_REGLX__", _e(T("sd_regl_x")))
+            .replace("__L_REGL__", _e(T("sd_regl")))
             .replace("__L_VAG__", _e(T("sd_vag_t")))
             .replace("__L_VAGX__", _e(T("sd_vag_x")))
             .replace("__L_ESS__", _e(T("sd_ess")))

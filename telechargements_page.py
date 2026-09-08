@@ -418,39 +418,54 @@ XLSX = ("application/vnd.openxmlformats-officedocument."
 
 _STYLE = """
 <style>
-  /* UNE CARTE PAR JEU, ET LES QUATRE MÊMES CHOSES À LA MÊME PLACE : ce que
-     c'est, combien il y en a, dans quel format, et le bouton. La liste se
-     balaye alors en colonne — on compare des volumes et des formats sans
-     lire une ligne de prose. */
-  div[class*="st-key-zone_page"] div[data-testid="stHorizontalBlock"]:has(
-      .dl-t) {
-      border:1px solid #e4eae6; border-radius:12px; background:#fff;
-      padding:12px 16px; margin:0 0 9px;
-  }
-  div[class*="st-key-zone_page"] div[data-testid="stHorizontalBlock"]:has(
-      .dl-t):hover { border-color:#cddbd2; background:#fcfdfc; }
-  .dl-t { font-size:14.5px; font-weight:700; color:#1f5b46;
-          line-height:1.35; }
-  .dl-s { font-size:12px; color:#6b8a7c; line-height:1.4; margin-top:3px; }
-  .dl-v { font-size:13px; font-weight:600; color:#3c4761;
+  /* LA LISTE EST UN SOMMAIRE, PAS UNE PILE DE CARTES. Sept jeux de données
+     dans sept cadres blancs empilés sur toute la largeur faisaient sept fois
+     le même geste et occupaient deux écrans. Rangés en deux colonnes, numérotés
+     et sans cadre, ils se balayent d'un coup d'œil : le numéro tient le rang,
+     le titre nomme, la ligne grise décrit, et la dernière ligne dit ce qu'on
+     va recevoir. Le trait de séparation est la seule graisse conservée. */
+  .dl-n { font-size:11px; font-weight:600; color:#a8b4bd; padding-top:5px;
+          font-variant-numeric:tabular-nums; letter-spacing:.04em; }
+  .dl-t { font-family:Georgia,"Times New Roman",serif; font-size:17px;
+          font-weight:400; color:#16241c; line-height:1.3;
+          letter-spacing:-.01em; }
+  .dl-s { font-size:12.5px; color:#7a8b83; line-height:1.4; margin-top:3px; }
+  .dl-m { font-size:11px; color:#9aa7a0; margin-top:6px;
           font-variant-numeric:tabular-nums; }
-  .dl-d { font-size:11.5px; color:#8a93a5; margin-top:3px; }
-  /* LA PASTILLE DE FORMAT : le mot XLSX ou CSV, en petit, dans un cadre pâle.
-     Elle répond avant le clic à « qu'est-ce que je vais recevoir ». */
-  .dl-f { display:inline-block; font-size:11px; font-weight:700;
-          letter-spacing:.06em; color:#3c6b57; background:#eef4f0;
-          border:1px solid #dde8e2; border-radius:7px; padding:4px 10px; }
-  div[data-testid="stDownloadButton"] > button {
-      border-radius:9px !important; min-height:38px !important;
-      border:1px solid #1f5b46 !important; background:#1f5b46 !important;
+  .dl-m b { font-weight:600; letter-spacing:.05em; color:#7f8d86; }
+  /* LE BOUTON EST UN DISQUE, ET IL NE PORTE QUE LA FLÈCHE. Un pavé vert de
+     cent cinquante pixels répété sept fois pesait plus lourd que les titres
+     qu'il accompagnait ; le disque dit la même chose et laisse la page aux
+     noms des jeux. */
+  div[class*="st-key-dl_"] button[data-testid="stBaseButton-secondary"] {
+      width:34px !important; min-width:34px !important; height:34px !important;
+      min-height:34px !important; padding:0 !important;
+      border-radius:999px !important; background:#fff !important;
+      aspect-ratio:1 / 1 !important; overflow:hidden !important;
+      border:1px solid #b9cdc0 !important; color:#1f5b46 !important;
+      display:flex !important; align-items:center !important;
+      justify-content:center !important; margin-left:auto !important;
+      transition:background .16s ease, border-color .16s ease,
+                 transform .16s ease;
   }
-  div[data-testid="stDownloadButton"] > button p {
-      font-size:12.5px !important; font-weight:600 !important;
-      color:#fff !important;
+  div[class*="st-key-dl_"] button[data-testid="stBaseButton-secondary"] p {
+      font-size:15px !important; font-weight:400 !important;
+      color:#1f5b46 !important; margin:0 !important; line-height:1 !important;
   }
-  div[data-testid="stDownloadButton"] > button:hover {
-      background:#17462f !important; border-color:#17462f !important;
+  div[class*="st-key-dl_"] button[data-testid="stBaseButton-secondary"]:hover {
+      background:#1f5b46 !important; border-color:#1f5b46 !important;
+      transform:translateY(2px);
   }
+  div[class*="st-key-dl_"] div[data-testid="stDownloadButton"]
+      > button:hover p { color:#fff !important; }
+  div[class*="st-key-dl_"] div[data-testid="stDownloadButton"],
+  div[class*="st-key-dl_"] button[data-testid="stBaseButton-secondary"] {
+      width:34px !important;
+  }
+  /* LA LIGNE DE SÉPARATION, ET RIEN D'AUTRE : elle sépare deux jeux sans les
+     enfermer chacun dans une boîte. */
+  div[class*="st-key-dl_"] { border-bottom:1px solid #edf1ee;
+      padding:13px 2px 13px 0; }
 </style>
 """
 
@@ -496,8 +511,8 @@ def _nb(n):
             else f"{n:,}")
 
 
-def _bloc(cle_titre, nom_fichier, mime, format_txt, volume, fabrique):
-    """Une ligne : ce que c'est, combien, en quel format, et le bouton.
+def _bloc(rang, cle_titre, nom_fichier, mime, format_txt, volume, fabrique):
+    """Une entrée du sommaire : son rang, ce que c'est, ce qu'on reçoit.
 
     LE TITRE EST COUPÉ EN DEUX À LA VIRGULE, ET CE N'EST PAS UN BRICOLAGE.
     Les libellés sont écrits « Résultats descriptifs, les 503 questions par
@@ -506,6 +521,11 @@ def _bloc(cle_titre, nom_fichier, mime, format_txt, volume, fabrique):
     libellé qu'on traduit une seule fois ; les séparer à l'affichage évite
     d'entretenir quatorze libellés là où sept suffisent, et garantit que le
     nom et sa description ne divergent jamais.
+
+    LE VOLUME ET LE FORMAT SONT DESCENDUS SOUS LA DESCRIPTION. En colonnes,
+    ils occupaient le tiers de la largeur pour dire deux mots ; sur une ligne
+    de pied, ils tiennent la place qu'ils valent et libèrent la largeur pour
+    le nom du jeu.
     """
     # Un fichier source absent du dépôt ne doit pas emporter tout l'onglet :
     # on signale le jeu manquant et les autres restent téléchargeables.
@@ -521,39 +541,37 @@ def _bloc(cle_titre, nom_fichier, mime, format_txt, volume, fabrique):
         return
 
     libelle = T(cle_titre)
-    # « 1 · » ordonne la liste dans le classeur, pas à l'écran : la position
-    # de la ligne dit déjà son rang.
+    # « 1 · » ordonne la liste dans le classeur, pas à l'écran : le numéro de
+    # tête dit déjà son rang.
     if " · " in libelle:
         libelle = libelle.split(" · ", 1)[1]
     titre, _, sous = libelle.partition(", ")
     sous = sous[:1].upper() + sous[1:] if sous else ""
     # LE SOUS-TITRE DISPARAÎT QUAND IL REDIT LE VOLUME. « Base individuelle
-    # anonymisée, 1211 ménages » à côté d'une colonne qui affiche déjà
-    # « 1 211 ménages » écrit le même nombre deux fois sur la même ligne.
+    # anonymisée, 1211 ménages » à côté d'une ligne qui affiche déjà
+    # « 1 211 ménages » écrit le même nombre deux fois au même endroit.
     _ch = "".join(c for c in sous if c.isdigit())
     if _ch and _ch == "".join(c for c in volume if c.isdigit()) \
             and len(sous) <= 26:
         sous = ""
 
-    g, m, f, d = st.columns([3.1, 1.5, 0.7, 1.5],
-                            vertical_alignment="center")
-    with g:
-        st.markdown(f'<div class="dl-t">{_e(titre)}</div>'
-                    + (f'<div class="dl-s">{_e(sous)}</div>' if sous else ""),
-                    unsafe_allow_html=True)
-    with m:
-        st.markdown(f'<div class="dl-v">{_e(volume)}</div>'
-                    f'<div class="dl-d">{_e(T("d_source"))}</div>',
-                    unsafe_allow_html=True)
-    with f:
-        st.markdown(f'<span class="dl-f">{_e(format_txt)}</span>',
-                    unsafe_allow_html=True)
-    with d:
-        st.download_button(
-            T("d_bouton"), data=data,
-            file_name=nom_fichier, mime=mime, icon=":material/download:",
-            key=f"dl_{nom_fichier}_{i18n.get_lang()}",
-            use_container_width=True)
+    with st.container(key=f"dl_{nom_fichier}_{i18n.get_lang()}_l"):
+        n, g, d = st.columns([0.42, 3.5, 0.62],
+                             vertical_alignment="center")
+        with n:
+            st.markdown(f'<div class="dl-n">{rang:02d}</div>',
+                        unsafe_allow_html=True)
+        with g:
+            st.markdown(
+                f'<div class="dl-t">{_e(titre)}</div>'
+                + (f'<div class="dl-s">{_e(sous)}</div>' if sous else "")
+                + f'<div class="dl-m">{_e(volume)}  ·  '
+                  f'<b>{_e(format_txt)}</b></div>', unsafe_allow_html=True)
+        with d:
+            st.download_button(
+                "\u2193", data=data, help=T("d_bouton"),
+                file_name=nom_fichier, mime=mime,
+                key=f"dl_{nom_fichier}_{i18n.get_lang()}")
 
 
 def render():
@@ -561,23 +579,38 @@ def render():
     st.markdown(_STYLE, unsafe_allow_html=True)
     v = _volumes()
 
-    _bloc("d1_titre", "01_resultats_descriptifs.xlsx", XLSX, "XLSX",
-          T("d_v_questions", n=_nb(v["q"])),
-          lambda: _fichier_descriptif(lang))
-    _bloc("d2_titre", "02_indicateurs_resilience.xlsx", XLSX, "XLSX",
-          T("d_v_indicateurs", n=_nb(v["ind"])),
-          lambda: _fichier_indicateurs(lang))
-    _bloc("d3_titre", "03_ventilation_section_souspop.xlsx", XLSX, "XLSX",
-          T("d_v_indicateurs", n=_nb(v["ind"])),
-          lambda: _fichier_ventilation(lang))
-    _bloc("d4_titre", "04_scores_composites.xlsx", XLSX, "XLSX",
-          T("d_v_dimensions", n=_nb(v["dim"])),
-          lambda: _fichier_composite(lang))
-    _bloc("d5_titre", "05_base_individuelle_anonymisee.csv", "text/csv",
-          "CSV", T("d_v_menages", n=_nb(v["men"])), _fichier_brut)
-    _bloc("d6_titre", "06_dictionnaire_questionnaire.xlsx", XLSX, "XLSX",
-          T("d_v_items", n=_nb(v["q"])),
-          lambda: _fichier_dictionnaire(lang))
-    _bloc("d7_titre", "07_organisations_communautaires.xlsx", XLSX, "XLSX",
-          T("d_v_organisations", n=_nb(v["ocb"])),
-          lambda: _fichier_ocb(lang))
+    # LES SEPT JEUX, DÉCRITS UNE SEULE FOIS. La liste sert au rendu et à la
+    # numérotation : ajouter un jeu, c'est ajouter une ligne, et les numéros
+    # se recalculent seuls.
+    jeux = [
+        ("d1_titre", "01_resultats_descriptifs.xlsx", XLSX, "XLSX",
+         T("d_v_questions", n=_nb(v["q"])),
+         lambda: _fichier_descriptif(lang)),
+        ("d2_titre", "02_indicateurs_resilience.xlsx", XLSX, "XLSX",
+         T("d_v_indicateurs", n=_nb(v["ind"])),
+         lambda: _fichier_indicateurs(lang)),
+        ("d3_titre", "03_ventilation_section_souspop.xlsx", XLSX, "XLSX",
+         T("d_v_indicateurs", n=_nb(v["ind"])),
+         lambda: _fichier_ventilation(lang)),
+        ("d4_titre", "04_scores_composites.xlsx", XLSX, "XLSX",
+         T("d_v_dimensions", n=_nb(v["dim"])),
+         lambda: _fichier_composite(lang)),
+        ("d5_titre", "05_base_individuelle_anonymisee.csv", "text/csv",
+         "CSV", T("d_v_menages", n=_nb(v["men"])), _fichier_brut),
+        ("d6_titre", "06_dictionnaire_questionnaire.xlsx", XLSX, "XLSX",
+         T("d_v_items", n=_nb(v["q"])),
+         lambda: _fichier_dictionnaire(lang)),
+        ("d7_titre", "07_organisations_communautaires.xlsx", XLSX, "XLSX",
+         T("d_v_organisations", n=_nb(v["ocb"])),
+         lambda: _fichier_ocb(lang)),
+    ]
+    # DEUX COLONNES, ET LA PREMIÈRE PORTE LE JEU EN TROP. Sept ne se partage
+    # pas en deux ; quatre à gauche et trois à droite garde la lecture de haut
+    # en bas dans chaque colonne, ce qu'un rangement en serpentin perdrait.
+    moitie = (len(jeux) + 1) // 2
+    g, d = st.columns(2, gap="large")
+    for col, lot, depart in ((g, jeux[:moitie], 1),
+                             (d, jeux[moitie:], moitie + 1)):
+        with col:
+            for i, j in enumerate(lot):
+                _bloc(depart + i, *j)

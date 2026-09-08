@@ -102,7 +102,9 @@ TEXTES = {
                         "baie de Corail, Grand'Anse, Haïti, 2024."},
     "a2_c1_x": {"en": "household surveys", "fr": "enquêtes ménage"},
     "a2_c2_x": {"en": "communal sections", "fr": "sections communales"},
-    "a2_c3_n": {"en": "Two", "fr": "Deux"},
+    # LE NOMBRE S'ÉCRIT EN CHIFFRE COMME SES TROIS VOISINS. « Deux » au milieu
+    # de 1 200, 10 et 10+ faisait lire une phrase là où la rangée compte.
+    "a2_c3_n": {"en": "2", "fr": "2"},
     "a2_c3_x": {"en": "pilot territories", "fr": "territoires pilotes"},
     "a2_c3_s": {"en": "Grand'Anse and Sud", "fr": "Grand'Anse et Sud"},
     "a2_c4_n": {"en": "10+ months", "fr": "10+ mois"},
@@ -193,10 +195,17 @@ STYLE = """
   /* AU FIL DE L'EAU, ET NON JUSTIFIÉ. La feuille de l'application justifie
      les blocs de texte ; sur un titre de quatre mots en corps cinquante-deux,
      la justification écarte les mots jusqu'aux bords du cadre. */
-  .a2-titre { font-family:Georgia,"Times New Roman",serif; font-size:52px;
+  /* DEUX LIGNES, ET LE CORPS CÈDE AVANT ELLES. Le saut de ligne était écrit,
+     mais rien n'empêchait le navigateur d'en ajouter un troisième quand la
+     fenêtre rétrécissait : la première moitié se coupait à son tour. Chaque
+     moitié est donc insécable, et c'est la taille du texte qui suit la largeur
+     de la fenêtre — jamais le nombre de lignes. */
+  .a2-titre { font-family:Georgia,"Times New Roman",serif;
+        font-size:clamp(29px, 3.35vw, 52px);
         line-height:1.08; letter-spacing:-.02em; color:#153b2c;
         margin:0 0 20px; font-weight:400; text-align:left !important;
         max-width:none; }
+  .a2-titre span { display:block; white-space:nowrap; }
   /* LA LARGEUR SUIT LA LONGUEUR. Le chapeau tenait en une phrase et se
      coupait à quarante-quatre signes ; il en fait maintenant plusieurs, et
      la même colonne étroite en aurait fait dix lignes sous le titre. Il
@@ -214,12 +223,14 @@ STYLE = """
   /* LE CRÉDIT EST BLANC, SUR LA PHOTOGRAPHIE. Une ombre portée le détache
      là où le cliché passe clair — une plaque translucide, elle, découperait
      un rectangle net dans l'image. */
-  .a2-credit { position:absolute; right:18px; bottom:14px; font-size:11.5px;
-        color:#ffffff; text-shadow:0 1px 3px rgba(0,0,0,.5);
-        /* La légende nomme maintenant un relief et une date, pas seulement un
-           département : elle peut courir sur deux lignes sur un écran étroit,
-           calées à droite comme le reste du bloc. */
-        max-width:46ch; text-align:right; line-height:1.4; }
+  /* ENCRE NOIRE ET HALO BLANC, SANS PLAQUE. Le rectangle sombre tenait la
+     lisibilité mais posait un objet de plus dans l'image ; l'ombre portée
+     blanche fait le même travail en ne laissant voir que le texte. */
+  .a2-credit { position:absolute; right:16px; bottom:12px; font-size:11px;
+        color:#0b1410; max-width:46ch; text-align:right; line-height:1.4;
+        text-shadow:0 0 4px rgba(255,255,255,.95),
+                    0 0 9px rgba(255,255,255,.85),
+                    0 1px 2px rgba(255,255,255,.9); }
 
   /* --- LES QUATRE NOMBRES, SUR UNE RANGÉE ------------------------------
      Séparés par un filet plutôt que par des cartes : ce sont quatre mesures
@@ -241,7 +252,7 @@ STYLE = """
   @media (max-width: 900px) {
     .a2-chif { grid-template-columns:repeat(2, 1fr); row-gap:22px; }
     .a2-chif > div:nth-child(3) { border-left:0; }
-    .a2-titre { font-size:38px; }
+    .a2-titre { font-size:clamp(24px, 6.4vw, 38px); }
   }
 
   /* --- LA CARTE, DANS SON CARTON PÂLE ---------------------------------- */
@@ -273,8 +284,8 @@ STYLE = """
       display:flex !important; flex-direction:column !important;
       align-items:center !important; justify-content:center !important;
       text-align:center !important; width:100% !important;
-      min-height:118px !important; height:100% !important;
-      padding:22px 22px 18px !important; border-radius:14px !important;
+      min-height:96px !important; height:100% !important;
+      padding:16px 16px 14px !important; border-radius:13px !important;
       border:1px solid transparent !important; box-shadow:none !important;
       transition:border-color .15s ease, transform .15s ease;
   }
@@ -284,18 +295,18 @@ STYLE = """
   }
   div[class*="st-key-a2_porte_"] div[data-testid="stButton"] > button p {
       text-align:center !important; margin:0 !important;
-      font-size:15px !important; font-weight:600 !important;
-      color:#101728 !important; line-height:1.35 !important;
+      font-size:14px !important; font-weight:600 !important;
+      color:#101728 !important; line-height:1.32 !important;
       font-family:Georgia,"Times New Roman",serif !important;
   }
   div[class*="st-key-a2_porte_"] div[data-testid="stButton"] > button
       p em { display:block; font-family:Inter,system-ui,sans-serif;
-      font-style:normal; font-size:12.5px; font-weight:400; color:#5a6a80;
-      margin-top:7px; line-height:1.45;
+      font-style:normal; font-size:11.8px; font-weight:400; color:#5a6a80;
+      margin-top:6px; line-height:1.42;
       /* DEUX LIGNES RÉSERVÉES, QU'IL Y EN AIT UNE OU DEUX. Les descriptions
          n'ont pas la même longueur, et les quatre flèches se retrouvaient à
          quatre hauteurs différentes dans quatre cartes de même taille. */
-      min-height:36px; }
+      min-height:34px; }
   /* LA FLÈCHE FERME LA CARTE. Elle est écrite dans le libellé, en gras, ce
      qui est la seule façon de lui donner sa propre ligne dans un bouton de
      Streamlit ; la graisse est aussitôt reprise ici — c'est une flèche, pas
@@ -308,17 +319,12 @@ STYLE = """
      trois pixels, ce qui dit que la carte entière est cliquable sans avoir à
      écrire « cliquez ici ». */
   div[class*="st-key-a2_porte_"] div[data-testid="stButton"] > button
-      p strong { display:inline-flex; align-items:center;
-      justify-content:center; width:38px; height:38px; margin-top:16px;
-      border-radius:50%; border:1px solid #c6dccd;
-      background:rgba(255,255,255,.72); box-sizing:border-box;
-      font-family:Inter,system-ui,sans-serif; font-size:18px;
-      font-weight:400; line-height:1; color:#1f7a4d;
-      transition:background .17s ease, border-color .17s ease,
-                 color .17s ease, transform .17s ease; }
+      p strong { display:block; margin-top:13px; font-weight:400;
+      font-family:Inter,system-ui,sans-serif; font-size:15px; line-height:1;
+      color:#3f8a63; letter-spacing:.04em;
+      transition:color .16s ease, transform .16s ease; }
   div[class*="st-key-a2_porte_"] div[data-testid="stButton"]
-      > button:hover p strong { background:#1f7a4d; border-color:#1f7a4d;
-      color:#ffffff; transform:translateX(3px); }
+      > button:hover p strong { color:#166b41; transform:translateX(4px); }
 
   /* --- LE BOUTON D'APPEL DU BANDEAU ------------------------------------ */
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button {
@@ -502,7 +508,8 @@ def render():
         f'{marque}'
         f'<div class="a2-kick">{_e(T("a2_kicker"))}</div>'
         f'<div class="a2-titre">'
-        f'{"<br>".join(_e(x) for x in T("a2_titre").split("@@"))}</div>'
+        f'{"".join("<span>" + _e(x) + "</span>" for x in T("a2_titre").split("@@"))}'
+        f'</div>'
         f'<p class="a2-intro">{_e(T("a2_intro"))}</p>'
         f'</div><div class="a2-credit">{_e(T("a2_credit"))}</div></div>',
         unsafe_allow_html=True)
@@ -536,7 +543,11 @@ def render():
             for n, lab, sous in cases) + '</div>', unsafe_allow_html=True)
 
     # ---- 3 · la carte, et les quatre destinations -----------------------
-    g, d = st.columns([1, 1.15], gap="large")
+    # LA CARTE PASSE DEVANT. Elle porte dix sections communales et
+    # deux départements dans un carton de six cents pixels ; les quatre
+    # cartes, elles, portent deux lignes chacune et n'ont pas besoin de
+    # la moitié de la page.
+    g, d = st.columns([1.32, 1], gap="large")
     with g:
         # LE TITRE EST SORTI DU CARTON. Il y était enfermé, si bien que le
         # rectangle pâle de gauche commençait soixante pixels plus haut que
@@ -565,8 +576,12 @@ def render():
                             f'div[data-testid="stButton"] > button '
                             f'{{ background:{fond_c} !important; }}</style>',
                             unsafe_allow_html=True)
+                        # UNE FLÈCHE LONGUE ET FINE PLUTÔT QU'UN CHEVRON DANS
+                        # UN DISQUE. Le disque faisait une pastille de plus
+                        # dans une page qui en compte déjà beaucoup ; le trait
+                        # dit la même chose et ne pèse rien.
                         if st.button(f'{T(cle_t)}  \n*{T(cle_x)}*'
-                                     f'  \n**\u2192**',
+                                     f'  \n**\u27f6**',
                                      key=f"a2_b_{code}",
                                      use_container_width=True):
                             st.session_state["app_mode"] = code
