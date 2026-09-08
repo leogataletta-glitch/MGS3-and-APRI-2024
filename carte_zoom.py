@@ -80,11 +80,22 @@ for _c, _v in TEXTES.items():
 
 # --------------------------------------------------------------- géométrie
 def _lire(nom):
-    p = os.path.join(DATA, nom)
-    if not os.path.exists(p):
-        return None
-    with open(p, encoding="utf-8") as f:
-        return json.load(f)
+    """Une géométrie, cherchée dans `data/` PUIS à la racine.
+
+    LE DÉPÔT DÉPLOYÉ N'A PAS LA MÊME ARBORESCENCE QUE L'ATELIER. Trois des
+    quatre géométries — le contour d'Haïti, les départements, les sections
+    communales — y vivent à la racine et non dans `data/`, parce qu'elles y
+    ont été déposées avant que le dossier existe. Ne chercher que dans
+    `data/` renvoyait donc None en ligne, et la page d'accueil retombait
+    silencieusement sur sa carte fixe : rien ne s'affichait de la nouvelle
+    carte, et rien ne le signalait. C'est la règle du reste de la
+    plateforme, et elle n'avait pas été suivie ici.
+    """
+    for c in (os.path.join(DATA, nom), os.path.join(APP_DIR, nom)):
+        if os.path.exists(c):
+            with open(c, encoding="utf-8") as f:
+                return json.load(f)
+    return None
 
 
 def _anneaux(geom):
