@@ -78,11 +78,12 @@ TEXTES = {
               "by indicator on a population. To score a subgroup, each "
               "indicator is recomputed on it and the published scale applied "
               "which is only legitimate where the definition reproduces "
-              "exactly. {k} indicators out of {t} pass that test, **{p} % of "
-              "the framework's weight**, across five dimensions out of six. "
-              "The environmental dimension is absent by nature: forest cover "
-              "and rainfall are measured by satellite and do not vary with "
-              "who answered. This index therefore compares one group with "
+              "exactly. {k} indicators out of {t} are scored here, **{p} % "
+              "of the framework's weight**, across six dimensions out of "
+              "six. {r} of them are territorial: forest cover, rainfall or "
+              "the section's organisations do not vary with who answered, so "
+              "each household carries the score of the communal section it "
+              "lives in. This index therefore compares one group with "
               "another, both sides use the same indicators, and does not "
               "compare with the published APRI score.",
         "fr": "**Le score de résilience affiché ici est un indice partiel.** "
@@ -91,10 +92,11 @@ TEXTES = {
               "noter un sous-groupe, chaque indicateur est recalculé sur lui "
               "et le barème publié appliqué, ce qui n'est légitime que là où "
               "la définition se reproduit exactement. {k} indicateurs sur {t} "
-              "passent ce test, soit **{p} % du poids du référentiel**, sur "
-              "cinq dimensions sur six. La dimension environnementale est "
-              "absente par nature : couvert forestier et pluie sont mesurés "
-              "par satellite et ne varient pas selon le répondant. Cet indice "
+              "sont notés ici, soit **{p} % du poids du référentiel**, sur "
+              "six dimensions sur six. {r} d'entre eux sont territoriaux : "
+              "couvert forestier, pluie ou organisations de la section ne "
+              "varient pas selon le répondant, chaque ménage porte donc le "
+              "score de la section communale où il vit. Cet indice "
               "compare donc un groupe à un autre, les deux côtés sont "
               "calculés sur les mêmes indicateurs, et ne se compare pas au "
               "score APRI publié."},
@@ -559,8 +561,10 @@ def render():
 
     couv = M.couverture(cat)
     st.info(T("cx_intro", n=len(cat["questions"])))
-    st.warning(T("cx_avert_indice", k=len(cat["indicateurs"]),
-                 t=cat["n_scores"],
+    _terr = cat.get("territoriaux") or []
+    st.warning(T("cx_avert_indice",
+                 k=len(cat["indicateurs"]) + len(_terr),
+                 t=cat["n_scores"], r=len(_terr),
                  p=_f(100 * couv["global"], 0)))
 
     tout = np.ones(cat["n"], dtype=bool)

@@ -43,12 +43,19 @@ valeur est recalculée sur l'échantillon ENTIER et comparée à la valeur publi
     ayant des enfants — ou de ratios qui ne sont pas des parts de ménages.
     Deviner ces bases produirait des chiffres faux que rien ne signalerait.
 
-Il reste 25 indicateurs, 57,4 points de pondération sur 155,4 — 37 % du
-référentiel, et cinq dimensions sur six. La couverture est très inégale : 85 %
-du poids de la dimension physique, 44 % de l'institutionnelle, et RIEN de
-l'environnementale — couvert forestier, pluie et température sont mesurés par
-satellite et ne varient pas selon le répondant. Ces chiffres ne sont pas figés
-ici : `couverture()` les recalcule sur les données du jour.
+LES INDICATEURS TERRITORIAUX S'AJOUTENT AUX INDICATEURS D'ENQUÊTE. Un indice
+de végétation ne se demande pas à un ménage, mais il se mesure sur la section
+communale où ce ménage vit, et cette section est connue pour chacun des 1 211
+répondants. Un indicateur satellitaire noté sur les dix sections par les
+échelles de résilience du référentiel se porte donc sur n'importe quel
+sous-groupe : chaque ménage reçoit le score de sa section, et le score du
+groupe est la moyenne sur ses membres. Ce n'est PAS une mesure par ménage,
+c'est une exposition territoriale — deux groupes ne s'y distinguent que par
+là où ils vivent, ce qui est précisément ce qu'on veut lire quand on demande
+si les ménages les plus pauvres vivent dans les sections les plus dégradées.
+
+La couverture reste inégale, et `couverture()` la recalcule sur les données du
+jour : ces chiffres ne sont pas figés ici.
 
 CE QUE CET INDICE EST, ET N'EST PAS. C'est un INDICE PARTIEL. Il se compare
 d'un groupe à l'autre — les deux côtés sont calculés sur les mêmes
@@ -119,8 +126,15 @@ def _parse_echelle(txt):
     On garde la BORNE HAUTE de chaque classe : c'est elle qui décide du
     passage au score suivant. Le dernier couple sert de valeur par défaut.
     """
+    # LE SIGNE MOINS DU RÉFÉRENTIEL N'EST PAS UN TIRET DU CLAVIER. Les barèmes
+    # sont écrits avec U+2212, que `_NUM` ne reconnaissait pas : « 0 (−1 to
+    # −0.8) » se lisait « 0 (1 to 0.8) », et huit barèmes environnementaux —
+    # NDVI, NDWI, SPI, aridité, couvert forestier, turbidité — se retrouvaient
+    # avec des bornes positives, donc à l'envers. Le tiret demi-cadratin, lui,
+    # reste un séparateur d'intervalle et ne doit pas être touché.
+    txt = (txt or "").replace("−", "-")
     out = []
-    for m in re.finditer(r"(\d+)\s*\(\s*([^)]*)\)", (txt or "").split(":", 1)[-1]):
+    for m in re.finditer(r"(\d+)\s*\(\s*([^)]*)\)", txt.split(":", 1)[-1]):
         nums = [float(x.replace(",", ".")) for x in re.findall(_NUM, m.group(2))]
         if nums:
             out.append((int(m.group(1)), nums[-1]))
@@ -231,11 +245,68 @@ def charger():
             "score_pub": (r.get("scores_corriges") or {}).get("Total"),
         })
 
+    # LES INDICATEURS TERRITORIAUX. Ils sont notés, mais pas sur des ménages :
+    # sur des sections. La condition d'admission est donc simple et
+    # vérifiable — le référentiel doit rendre un score sur CHACUNE des dix
+    # sections. Un indicateur noté seulement au total ne dirait rien d'un
+    # sous-groupe et resterait dehors.
+    territoriaux = []
+    for r in res:
+        if (r.get("source") or "menage") == "menage":
+            continue
+        sc = dict(r.get("scores_corriges") or r.get("scores") or {})
+        vals = r.get("valeurs") or {}
+
+        # LE BARÈME EXISTE, IL SUFFIT DE L'APPLIQUER. Trois indicateurs
+        # environnementaux — NDWI, turbidité, et la stabilité de l'eau — ont
+        # une mesure par section et une échelle de résilience publiée, mais
+        # aucun score : personne ne les avait croisés. On les note ici avec le
+        # barème du référentiel, et la même fonction rend exactement les
+        # scores publiés des six autres, ce qui vaut vérification.
+        ech = r.get("echelle") or ""
+        bornes = _parse_echelle(ech)
+        # UN BARÈME EN POURCENTAGE NE NOTE PAS DES HECTARES. La surface de
+        # mangrove est mesurée en ha et son échelle est une part conservée :
+        # lui appliquer le barème rendrait un zéro qui aurait l'air d'un
+        # résultat. Elle reste sans score jusqu'à ce que la surface de
+        # référence soit posée.
+        unite = (r.get("unite") or "").strip()
+        compatible = bool(bornes) and not ("%" in ech and unite
+                                           and "%" not in unite)
+        decroissant = (bool(bornes) and len(bornes) > 1
+                       and bornes[0][1] > bornes[1][1])
+        if compatible:
+            for s in SECTIONS:
+                if sc.get(s) is None and vals.get(s) is not None:
+                    sc[s] = _score_de(float(vals[s]), bornes, decroissant)
+
+        if all(sc.get(s) is None for s in SECTIONS):
+            continue
+        s_h = np.full(n, np.nan)
+        v_h = np.full(n, np.nan)
+        for s in SECTIONS:
+            m = groupes.get(s)
+            if m is None or sc.get(s) is None:
+                continue
+            s_h[m] = float(sc[s])
+            if vals.get(s) is not None:
+                v_h[m] = float(vals[s])
+        if np.isnan(s_h).all():
+            continue
+        territoriaux.append({
+            "ligne": r["ligne"], "dim": DIM_DE.get(r["dimension"], ""),
+            "nom": r.get("indicateur"), "nom_fr": r.get("indicateur_fr"),
+            "poids": r.get("ponderation") or 1, "territorial": True,
+            "source": r.get("source") or "", "score_h": s_h, "valeur_h": v_h,
+        })
+
     return {
         "n": n, "bits": bits, "questions": index["questions"],
         "groupes": groupes, "indicateurs": indicateurs,
+        "territoriaux": territoriaux,
         "poids_total": poids_total, "n_scores": len(scores),
-        "poids_couvert": sum(i["poids"] for i in indicateurs),
+        "poids_couvert": (sum(i["poids"] for i in indicateurs)
+                          + sum(i["poids"] for i in territoriaux)),
         "ecartes": [(r["ligne"], m) for r, m in ecartes],
     }
 
@@ -245,8 +316,10 @@ def couverture(cat):
     globalement et par dimension. C'est le chiffre à écrire à côté du score."""
     par_dim = {}
     for cle, _long in DIMENSIONS:
-        p = sum(i["poids"] for i in cat["indicateurs"] if i["dim"] == cle)
-        par_dim[cle] = p
+        par_dim[cle] = (
+            sum(i["poids"] for i in cat["indicateurs"] if i["dim"] == cle)
+            + sum(i["poids"] for i in (cat.get("territoriaux") or [])
+                  if i["dim"] == cle))
     return {"global": (cat["poids_couvert"] / cat["poids_total"]
                        if cat["poids_total"] else 0.0),
             "poids": par_dim}
@@ -332,6 +405,22 @@ def profil(cat, masque):
                        ("ligne", "dim", "nom", "nom_fr", "poids")},
                     "n": nb, "valeur": val,
                     "score": _score_de(val, ind["bornes"], ind["decroissant"])})
+
+    # LE SCORE TERRITORIAL EST UNE MOYENNE SUR LES MÉNAGES, PAS SUR LES DIX
+    # SECTIONS. La différence n'est pas cosmétique : une moyenne des sections
+    # donnerait le même chiffre à tous les groupes, alors qu'un groupe dont
+    # les deux tiers vivent à Quentin doit porter le score de Quentin. Ce sont
+    # les ménages du groupe qui pondèrent, un par un.
+    for ind in cat.get("territoriaux") or []:
+        s = ind["score_h"][masque]
+        s = s[~np.isnan(s)]
+        v = ind["valeur_h"][masque]
+        v = v[~np.isnan(v)]
+        out.append({**{k: ind[k] for k in
+                       ("ligne", "dim", "nom", "nom_fr", "poids")},
+                    "territorial": True, "n": int(s.size),
+                    "valeur": (float(v.mean()) if v.size else None),
+                    "score": (float(s.mean()) if s.size else None)})
     return out
 
 

@@ -190,16 +190,22 @@ TEXTES = {
               "and the published scale applied, which is only possible for "
               "the indicators whose definition reproduces exactly from the "
               "individual answers ({k} of them, {p} % of the framework's "
-              "weight). The others show no score under a combination.",
+              "weight), plus the territorial ones, satellite or "
+              "organisations, which each household carries through its "
+              "communal section. The others show no score under a "
+              "combination.",
         "fr": "**Les scores ci-dessous sont recalculés, non publiés.** Aucun "
               "fichier ne porte le score de « femmes × montagne × Cat C » : le "
               "référentiel publie vingt-deux découpages, pas leurs "
               "croisements. Chaque indicateur est donc recalculé sur le "
               "sous-groupe sélectionné et le barème publié appliqué, ce qui "
               "n'est possible que pour les indicateurs dont la définition se "
-              "reproduit exactement à partir des réponses individuelles ({k} "
-              "d'entre eux, {p} % du poids du référentiel). Les autres "
-              "n'affichent pas de score sous une combinaison."},
+              "reproduit exactement à partir des réponses individuelles, "
+              "auxquels s'ajoutent les indicateurs territoriaux — "
+              "satellitaires ou organisationnels — que chaque ménage porte à "
+              "travers sa section communale ({k} au total, {p} % du poids du "
+              "référentiel). Les autres n'affichent pas de score sous une "
+              "combinaison."},
     "qr_combine_n": {"en": "Subgroup: {n} respondents ({p} % of the sample)",
                      "fr": "Sous-groupe : {n} répondants ({p} % de "
                            "l'échantillon)"},
@@ -684,7 +690,8 @@ def render(cle_dim, dimension):
                 if cat:
                     c = __import__("croisement_moteur").couverture(cat)
                     st.warning(T("qr_combine_note",
-                                 k=len(cat["indicateurs"]),
+                                 k=(len(cat["indicateurs"])
+                                    + len(cat.get("territoriaux") or [])),
                                  p=_f(100 * c["global"], 0)))
                     st.caption(T("qr_combine_n", n=n_sg,
                                  p=_f(100 * n_sg / cat["n"])))

@@ -119,19 +119,35 @@ TEXTES = {
               "l'enquête ménages, et aucun indicateur de cette dimension "
               "n'en vient. Les barres seraient toutes vides : aucune n'est "
               "tracée."},
+    "ex_s_terr": {
+        "en": "{k} of the {n} indicators scored here are territorial ({p} % "
+              "of the weight): measured by satellite or on the section's "
+              "organisations, then carried by each household through the "
+              "communal section it lives in. Groups differ on them only "
+              "through where they live, which is exactly the question when "
+              "you ask whether the poorest households live in the most "
+              "degraded sections.",
+        "fr": "{k} des {n} indicateurs notés ici sont territoriaux ({p} % du "
+              "poids) : mesurés par satellite ou sur les organisations de la "
+              "section, puis portés par chaque ménage à travers la section "
+              "communale où il vit. Les groupes ne s'y distinguent que par "
+              "là où ils vivent, ce qui est précisément la question quand on "
+              "demande si les ménages les plus pauvres vivent dans les "
+              "sections les plus dégradées."},
     "ex_s_dim_vide_env": {
-        "en": "The environmental dimension is measured from imagery and "
-              "field surveys, not from what a household declares: forest "
-              "cover, vegetation indices, rainfall, temperature, protected "
-              "areas. Its 17 computed indicators are under Raw results · "
-              "Satellite, section by section; the 21 still partial or "
-              "missing are listed under Framework · Yet to be measured.",
-        "fr": "La dimension environnementale se mesure par imagerie et "
-              "relevés de terrain, pas par ce qu'un ménage déclare : "
-              "couverture forestière, indices de végétation, pluies, "
-              "températures, aires protégées. Ses 17 indicateurs calculés "
-              "sont dans Résultats bruts · Satellite, section par section ; "
-              "les 21 partiels ou manquants sont dans Cadre · Reste à "
+        "en": "The environmental dimension is measured from imagery, not "
+              "from what a household declares, so it is scored through the "
+              "communal section: 18 indicators, each graded on the "
+              "framework's own resilience scale, section by section. The "
+              "measurements themselves are under Raw results · Satellite; "
+              "the 20 still partial or missing are under Framework · Yet to "
+              "be measured.",
+        "fr": "La dimension environnementale se mesure par imagerie, pas "
+              "par ce qu'un ménage déclare : elle se note donc à travers la "
+              "section communale, 18 indicateurs, chacun sur l'échelle de "
+              "résilience du référentiel, section par section. Les mesures "
+              "elles-mêmes sont dans Résultats bruts · Satellite ; les 20 "
+              "encore partielles ou manquantes dans Cadre · Reste à "
               "mesurer."},
     "ex_c_sur": {"en": "Compare on", "fr": "Comparer sur"},
     "ex_c_profil": {"en": "Profile {n}", "fr": "Profil {n}"},
@@ -813,6 +829,28 @@ def _cases(cat, axe):
 def _nom_ind(ind):
     return ((ind.get("nom_fr") or ind.get("nom")) if i18n.get_lang() == "fr"
             else (ind.get("nom") or ind.get("nom_fr")))
+
+
+def _note_territoriale(cat, dim):
+    """Ce qui, dans le chiffre affiché, n'a pas été mesuré sur des ménages.
+
+    ELLE NE S'ÉCRIT QUE SI ELLE A QUELQUE CHOSE À DIRE. Sur la dimension
+    physique elle serait vide et n'apparaît pas ; sur la dimension
+    environnementale elle porte tout le chiffre, et sans elle un lecteur
+    croirait que les ménages de Trichet ont répondu quelque chose sur la
+    végétation.
+    """
+    terr = [i for i in (cat.get("territoriaux") or [])
+            if dim is None or i["dim"] == dim]
+    if not terr:
+        return ""
+    men = [i for i in cat["indicateurs"] if dim is None or i["dim"] == dim]
+    pt = sum(i["poids"] for i in terr)
+    pm = sum(i["poids"] for i in men)
+    part = 100.0 * pt / (pt + pm) if (pt + pm) else 0.0
+    return (f'<p class="ex-note" style="margin:8px 0 0">'
+            f'{_e(T("ex_s_terr", k=len(terr), n=len(terr) + len(men), p=_f(part, 0)))}'
+            f'</p>')
 
 
 def _carte_vide(dim):
@@ -1791,7 +1829,9 @@ def render_scores(cat):
             # ELLE N'EN DONNE AUCUN. Le moteur renvoie None, les barres se
             # dessinaient à vide, et un écran de dix barres grises se lit
             # comme un score de zéro. On dit ce qui manque et où c'est.
-            if not any(x["dim"] == dim for x in _inds_tries(cat)):
+            if not any(x["dim"] == dim for x in _inds_tries(cat)) and \
+                    not any(x["dim"] == dim
+                            for x in (cat.get("territoriaux") or [])):
                 st.markdown(_carte_vide(dim), unsafe_allow_html=True)
                 return
             ind, cible, lib_cible = None, f"d:{dim}", T(dim)
@@ -1935,6 +1975,8 @@ def render_scores(cat):
             st.markdown(_barres(lignes, ens, "score"), unsafe_allow_html=True)
 
         st.markdown(_synthese(lignes, "score"), unsafe_allow_html=True)
+        st.markdown(_note_territoriale(cat, dim if k is None else None),
+                    unsafe_allow_html=True)
         if poses:
             st.markdown(f'<p class="ex-note" style="margin:6px 0 0">'
                         f'{_e(T("ex_s_n", n=_n(n_f), t=_n(cat["n"])))}</p>',

@@ -544,7 +544,9 @@ def render(entete=True):
             st.info(T("fp_absent"))
         else:
             couv = CM.couverture(cat)
-            st.warning(T("fp_recalc", k=len(cat["indicateurs"]),
+            st.warning(T("fp_recalc",
+                         k=(len(cat["indicateurs"])
+                            + len(cat.get("territoriaux") or [])),
                          p=_f(100 * couv["global"], 0)))
             registre = st.radio(
                 T("fp_croiser"), [r for r, _v in REGISTRES],
