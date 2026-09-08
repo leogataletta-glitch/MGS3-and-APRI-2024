@@ -983,9 +983,12 @@ st.markdown(("""
      étiquette de rangement, pas une destination. */
   /* LE PIED DE LA COLONNE : la devise, puis le crédit, tous deux en vert
      clair sur le vert de la bande, séparés des rubriques par un filet. */
+  /* PLUS DE FILET AU-DESSUS DE LA DEVISE. Il séparait le menu du pied à
+     l'époque où le pied n'était qu'une ligne de texte au milieu du vert ;
+     depuis que le dessin monte jusque-là, c'est lui qui fait la séparation,
+     et le trait venait le barrer en travers. */
   div[class*="st-key-zone_nav"] .nav-pied {
     margin: 28px 0 4px; padding: 16px 10px 0;
-    border-top: 1px solid #d3ddd5;
   }
   /* LA POUSSE SE MET À CÔTÉ DE LA DEVISE, PAS AU-DESSUS. Seule sur sa ligne,
      elle avait l'air d'une puce orpheline en haut d'un paragraphe ; posée
