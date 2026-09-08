@@ -11,6 +11,7 @@ avec les filtres choisis passés par variables d'environnement, on récupère
 le résultat, et on l'affiche.
 """
 
+import html
 import io
 import json
 import datetime
@@ -1189,6 +1190,26 @@ st.markdown(("""
             drop-shadow(0 0 6px rgba(30,45,35,.55));
   }
 
+  /* LA LÉGENDE DE LA BANDE. La photographie n'était créditée nulle part sur
+     les pages intérieures : elle y passait pour un ornement alors qu'elle
+     montre un lieu précis de la zone d'enquête. Elle est posée en bas à
+     gauche, à l'opposé du logo, en petit corps blanc ombré comme sur
+     l'accueil — assez lisible pour nommer le lieu, assez discret pour ne pas
+     entrer en concurrence avec le titre de la page qui suit. */
+  .bandeau-credit {
+    position: absolute; left: 22px; bottom: 9px; z-index: 4;
+    font-size: 10.5px; line-height: 1.35; max-width: 52ch;
+    pointer-events: none;
+    /* ENCRE SOMBRE ET HALO CLAIR, ET NON L'INVERSE. La bande n'est pas une
+       photographie sombre comme celle de l'accueil : c'est une aquarelle
+       claire, et du blanc y disparaissait entièrement. Le halo blanc détache
+       l'encre foncée aussi bien du papier crème de gauche que du vert des
+       champs. */
+    color: #2f4a39;
+    text-shadow: 0 0 4px rgba(255,255,255,.95), 0 1px 2px rgba(255,255,255,.9);
+  }
+  @media (max-width: 900px) { .bandeau-credit { display: none; } }
+
   /* L'ILLUSTRATION OCCUPE TOUTE LA LARGEUR ET N'EST PAS ROGNÉE. Streamlit
      impose à toute image un `object-fit: scale-down` et un `max-width` :
      l'illustration se réduisait alors pour tenir entière dans une bande
@@ -1774,6 +1795,14 @@ TEXTES_NAV = {
     "nav_g_agir": {"en": "Act", "fr": "Agir"},
     "nav_g_ressources": {"en": "Resources", "fr": "Ressources"},
 
+    # LA BANDE DES PAGES INTÉRIEURES MONTRE UN LIEU PRÉCIS, et le disait
+    # nulle part : une plaine irriguée du Sud passait pour un décor.
+    "bandeau_credit": {
+        "en": "Irrigated farmland of the Camp-Perrin plain, Sud department, "
+              "Haiti, 2024.",
+        "fr": "Paysage agricole irrigué de la plaine de Camp-Perrin, "
+              "département du Sud, Haïti, 2024."},
+
     # --- le pied de page
     "pied_devise": {
         "en": "Measuring today to strengthen tomorrow's resilience.",
@@ -2198,6 +2227,8 @@ def _rendre_ruban(avec_image):
             f'src="data:image/jpeg;base64,{img}">'
             f'<img class="bandeau-logo" alt="UNEP" '
             f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
+            f'<div class="bandeau-credit">'
+            f'{html.escape(T("bandeau_credit"))}</div>'
             f'</div>', unsafe_allow_html=True)
 
 

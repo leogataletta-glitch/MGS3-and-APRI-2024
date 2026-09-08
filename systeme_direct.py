@@ -172,6 +172,46 @@ TEXTES = {
         "fr": "de combien cette course les a déplacées, une fois l'onde "
               "stabilisée"},
     "sd_vagues_n": {"en": "relays", "fr": "relais"},
+    # QUATRE CLASSEMENTS, QUATRE QUESTIONS QUI NE SE CONFONDENT PAS. Ce qui
+    # touche la variable regardée n'est pas ce qui remue le reste du système ;
+    # être dans beaucoup de boucles n'est pas recevoir beaucoup de relais.
+    # Chacun a sa colonne, avec sa définition dessous.
+    "sd_mul": {"en": "Biggest multiplier on the rest of the system",
+               "fr": "Plus fort effet démultiplicateur sur le reste du "
+                     "système"},
+    "sd_mul_x": {
+        "en": "total movement produced everywhere else by a +1 rise in each "
+              "of them, loops included",
+        "fr": "mouvement total produit partout ailleurs par une hausse de +1 "
+              "chez chacune, boucles comprises"},
+    "sd_bcl": {"en": "Most caught up in loops",
+               "fr": "Les plus prises dans des boucles"},
+    "sd_bcl_x": {
+        "en": "loops running through them inside this perimeter, reinforcing "
+              "and balancing; being in both is what makes a tipping lever",
+        "fr": "boucles qui passent par elles dans ce périmètre, renforçantes "
+              "et équilibrantes ; être dans les deux fait un levier de "
+              "basculement"},
+    "sd_vag_t": {"en": "Most crossed by the shock wave",
+                 "fr": "Les plus retraversées par l'onde"},
+    "sd_vag_x": {
+        "en": "relays that moved them: more than one means a loop brought "
+              "the shock back onto them",
+        "fr": "relais qui les ont déplacées : au-delà d'un, c'est une boucle "
+              "qui a ramené le choc sur elles"},
+    # DEUX LETTRES PLUTÔT QUE DEUX MOTS : la colonne des boucles affiche
+    # « 4 R · 2 B » et non « 4 renforçantes · 2 équilibrantes », qui ne tient
+    # pas sur une ligne. La légende du premier onglet donne les deux noms en
+    # entier ; ici on compte, on ne définit pas.
+    "sd_bcl_r": {"en": "R", "fr": "R"},
+    "sd_bcl_b": {"en": "B", "fr": "B"},
+    # UN PÉRIMÈTRE ÉTROIT PEUT NE CONTENIR AUCUNE BOUCLE ENTIÈRE : la colonne
+    # le dit plutôt que de rester vide, sinon on croit à une panne.
+    "sd_bcl_vide": {
+        "en": "no complete loop inside this perimeter — ask for more "
+              "variables in the first tab",
+        "fr": "aucune boucle entière dans ce périmètre — demandez plus de "
+              "variables dans le premier onglet"},
     "sd_leg_j": {"en": "the ones that influence it most",
                  "fr": "celles qui l'influencent le plus"},
     "sd_leg_c": {"en": "the ones it influences most",
@@ -230,6 +270,20 @@ def _donnees(m, centre, n):
     etat = M.etat_courant(m["g"], m["par_ligne"], "Total")
     A, ids, idx = m["A"], m["ids"], m["idx"]
 
+    # COMBIEN DE BOUCLES PASSENT PAR CHAQUE VARIABLE, DANS CE PÉRIMÈTRE. Le
+    # décompte se fait ici : le navigateur reçoit un sous-graphe, pas
+    # l'énumération des cycles, et la refaire en JavaScript à chaque affichage
+    # coûterait plus cher que de l'envoyer toute faite. Seules les boucles
+    # entièrement contenues dans le dessin sont comptées : en annoncer une
+    # dont la moitié est hors cadre serait invérifiable à l'œil.
+    dedans = set(pos)
+    bcl = {i: [0, 0] for i in pos}
+    for b in m["boucles"]:
+        if not set(b["noeuds"]) <= dedans:
+            continue
+        for i in b["noeuds"]:
+            bcl[i][0 if b["type"] == "renforcante" else 1] += 1
+
     noeuds = []
     for n in sorted(pos, key=lambda i: m["noms"].get(i, i)):
         x, y = pos[n]
@@ -238,7 +292,8 @@ def _donnees(m, centre, n):
                        "lig": _lignes(m["noms"].get(n, n)),
                        "x": round(x, 1), "y": round(y, 1),
                        "s": None if v is None else round(float(v), 2),
-                       "r": rang.get(n, 9), "c": n == centre})
+                       "r": rang.get(n, 9), "c": n == centre,
+                       "br": bcl[n][0], "bb": bcl[n][1]})
     liens = []
     for a in aretes:
         de, vers = a["de"], a["vers"]
@@ -360,6 +415,12 @@ GABARIT = r"""<!doctype html><html><head><meta charset="utf-8">
     <div class="fx">__L_CONX__</div></div>
   <div class="fb"><div class="fh" id="hp">__L_PAS2__</div><div id="fp"></div>
     <div class="fx">__L_PASX__</div></div>
+  <div class="fb"><div class="fh">__L_MUL__</div><div id="fm"></div>
+    <div class="fx">__L_MULX__</div></div>
+  <div class="fb"><div class="fh">__L_BCL__</div><div id="fb"></div>
+    <div class="fx">__L_BCLX__</div></div>
+  <div class="fb"><div class="fh">__L_VAG__</div><div id="fvg"></div>
+    <div class="fx">__L_VAGX__</div></div>
 </div>
 <div id="bas">
   <span class="lg"><span class="pt" style="background:#1a8a4f"></span>
@@ -505,6 +566,12 @@ function poserHalo(on){
    bouge ». Le calcul est le même que celui de la course, mené depuis chaque
    point de départ possible ; à quinze ou trente variables, il tient en
    quelques millisecondes. */
+/* La même poussée répond en réalité à DEUX questions, et il serait absurde de
+   refaire le calcul pour la seconde : ce qui arrive à la variable regardée
+   (v) et ce que la poussée remue partout ailleurs (p, somme des déplacements
+   absolus reçus par toutes les autres). La première désigne où appuyer pour
+   celle-ci ; la seconde désigne où appuyer pour le système. Elles ne donnent
+   presque jamais la même tête de liste, et c'est tout l'intérêt. */
 function influenceVers(cible){
   const j0 = IX[cible];
   const out = [];
@@ -521,10 +588,22 @@ function influenceVers(cible){
       v = nx;
       if (bouge < SEUIL) break;
     }
-    if (Math.abs(c[j0]) > 0.004) out.push({n: NO[j], i: j, v: c[j0]});
+    /* LE MOUVEMENT TOTAL EXCLUT LA POUSSÉE ELLE-MÊME : ce qu'une boucle lui
+       renvoie à elle n'est pas de l'effet sur le reste du système. */
+    let p = 0;
+    for (let m = 0; m < NO.length; m++) if (m !== j) p += Math.abs(c[m]);
+    out.push({n: NO[j], i: j, v: c[j0], p: p});
   }
-  return out.sort((a, b) => Math.abs(b.v) - Math.abs(a.v));
+  return out;
 }
+
+/* Les deux classements tirés de cette table, chacun avec son seuil de
+   lisibilité : en dessous de quatre millièmes, le chiffre affiché serait
+   « 0,00 » et la ligne ne dirait rien. */
+function classeVers(t){ return t.filter(x => Math.abs(x.v) > 0.004)
+                              .sort((a, b) => Math.abs(b.v) - Math.abs(a.v)); }
+function classeSysteme(t){ return t.filter(x => x.p > 0.004)
+                                 .sort((a, b) => b.p - a.p); }
 
 /* ---------- LE RASSEMBLEMENT : LE SCHÉMA SE RÉDUIT À SA CONCLUSION ------
    Les variables que la course a désignées — les mieux reliées du périmètre
@@ -698,7 +777,8 @@ function bilan(montrer){
      qu'elle a beaucoup bougé revient à relire la valeur qu'on vient de lui
      imposer. */
   const nom = (NO[IX[src]] || {}).nom || "";
-  amont = influenceVers(src).slice(0, 5);
+  const table = influenceVers(src);
+  amont = classeVers(table).slice(0, 5);
   const aval = NO.map((n, i) => ({n, i, v: cum[i]}))
                  .filter(x => x.n.id !== src && Math.abs(x.v) > 0.004)
                  .sort((a, b) => Math.abs(b.v) - Math.abs(a.v)).slice(0, 5);
@@ -706,6 +786,12 @@ function bilan(montrer){
   const ligne = x => '<div class="fl"><span>' + x.n.nom
     + '</span><b style="color:' + (x.v > 0 ? VERT : ROUGE) + '">'
     + fmt(x.v, 2) + '</b></div>';
+  /* Les trois autres colonnes ne portent pas un déplacement signé mais une
+     grandeur : un volume de mouvement, un nombre de boucles, un nombre de
+     relais. Elles restent donc en encre neutre, sans vert ni rouge, qui
+     laisseraient croire à une direction. */
+  const lignen = (n, txt) => '<div class="fl"><span>' + n.nom
+    + '</span><b>' + txt + '</b></div>';
   /* LES TROIS PLUS INFLUENCÉES CLIGNOTENT SUR LE SCHÉMA. Le tableau les
      nomme, le clignotement les montre : lire un nom ne dit pas où il est
      dans le dessin. */
@@ -719,6 +805,35 @@ function bilan(montrer){
   document.getElementById("hp").textContent = L.pas.replace("{v}", nom);
   document.getElementById("fc").innerHTML = amont.map(ligne).join("");
   document.getElementById("fp").innerHTML = aval.map(ligne).join("");
+
+  /* 3. L'EFFET DÉMULTIPLICATEUR. La variable poussée y a sa place, elle :
+     la question n'est plus « qui la tient » mais « qui remue le système »,
+     et elle est un candidat comme un autre. On la garde donc dans le
+     classement, où elle se situe parfois loin de la première place. */
+  const mul = classeSysteme(table).slice(0, 5);
+  const mag = v => v.toFixed(2).replace(".", "__VIRG__");
+  document.getElementById("fm").innerHTML =
+    mul.map(x => lignen(x.n, mag(x.p))).join("");
+
+  /* 4. LES BOUCLES. Compté sur la structure du périmètre, pas sur la course :
+     une variable est prise dans ses boucles avant qu'on ait rien poussé. Les
+     deux nombres sont donnés séparément parce qu'une variable qui siège dans
+     les deux familles est un point de bascule, ce qu'une somme cacherait. */
+  const bcl = NO.map((n, i) => ({n, i, r: n.br || 0, b: n.bb || 0}))
+                .filter(x => x.r + x.b > 0)
+                .sort((a, b) => (b.r + b.b) - (a.r + a.b)
+                                || (b.r * b.b) - (a.r * a.b)).slice(0, 5);
+  document.getElementById("fb").innerHTML = bcl.length
+    ? bcl.map(x => lignen(x.n, x.r + " " + L.bcl_r + " · " + x.b + " " + L.bcl_b)).join("")
+    : '<div class="fl"><span>' + L.bcl_vide + '</span><b></b></div>';
+
+  /* 5. LES RELAIS REÇUS. Là c'est bien la course qui parle : au-delà d'un
+     relais, une boucle a ramené le choc sur la variable. */
+  const vg = NO.map((n, i) => ({n, i, p: passages[i]}))
+               .filter(x => x.n.id !== src && x.p > 0)
+               .sort((a, b) => b.p - a.p).slice(0, 5);
+  document.getElementById("fvg").innerHTML =
+    vg.map(x => lignen(x.n, x.p + " " + L.vagues)).join("");
   e.hidden = false;
 }
 
@@ -876,6 +991,8 @@ def _html(d, lang):
            "dis": T("sd_distrib"), "mois": T("sd_mois"), "ans": T("sd_ans"),
            "liens": T("sd_liens_n"), "vagues": T("sd_vagues_n"),
            "con": T("sd_connect"), "pas": T("sd_passages"),
+           "bcl_r": T("sd_bcl_r"), "bcl_b": T("sd_bcl_b"),
+           "bcl_vide": T("sd_bcl_vide"),
            "ess": T("sd_ess"), "ess_non": T("sd_ess_non"),
            "ess_t": T("sd_ess_t")}
     return (GABARIT
@@ -902,6 +1019,12 @@ def _html(d, lang):
             .replace("__L_CON__", _e(T("sd_connect")))
             .replace("__L_PASX__", _e(T("sd_passages_x")))
             .replace("__L_PAS2__", _e(T("sd_passages")))
+            .replace("__L_MUL__", _e(T("sd_mul")))
+            .replace("__L_MULX__", _e(T("sd_mul_x")))
+            .replace("__L_BCL__", _e(T("sd_bcl")))
+            .replace("__L_BCLX__", _e(T("sd_bcl_x")))
+            .replace("__L_VAG__", _e(T("sd_vag_t")))
+            .replace("__L_VAGX__", _e(T("sd_vag_x")))
             .replace("__L_ESS__", _e(T("sd_ess")))
             .replace("__L_NB__", _e(T("sd_nb")))
             .replace("__L_NBA__", _e(T("sd_nb_auto")))

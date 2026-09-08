@@ -71,8 +71,12 @@ TEXTES = {
     # sachant ce que veut dire APRI, et le mot est le premier qu'on y lit.
     "a2_kicker": {"en": "Integrated Resilient Landscape Approach",
                   "fr": "Approche Paysages Résilients Intégrée"},
-    "a2_titre": {"en": "Data for a more resilient Haiti",
-                 "fr": "Des données pour une Haïti plus résiliente"},
+    # LA COUPURE EST ÉCRITE, ELLE N'EST PLUS SUBIE. Une largeur en signes
+    # laissait le navigateur choisir où couper, et il en faisait trois lignes
+    # bancales. Le @@ dit où passer à la ligne, dans chaque langue, et la
+    # coupure tombe alors sur le sens.
+    "a2_titre": {"en": "Data for a more@@resilient Haiti",
+                 "fr": "Des données pour une Haïti@@plus résiliente"},
     "a2_intro": {
         "en": "The APRI approach assesses how a landscape maintains and "
               "improves its essential functions in the face of constant "
@@ -89,7 +93,13 @@ TEXTES = {
               "d'action spécifiques : tirer parti au mieux des compétences "
               "disponibles, ou identifier celles à améliorer."},
     "a2_cta": {"en": "Explore the results", "fr": "Explorer les résultats"},
-    "a2_credit": {"en": "Grand'Anse, Haiti", "fr": "Grand'Anse, Haïti"},
+    # LA LÉGENDE SUIT LA PHOTOGRAPHIE, ET LES DEUX PHOTOGRAPHIES DIFFÈRENT :
+    # la vallée de la Voldrogue côté anglais, le port côté français. Chaque
+    # langue nomme donc ce qu'elle montre, et non un lieu générique.
+    "a2_credit": {"en": "The Voldrogue's incised river valley and alluvial "
+                        "plain, Grand'Anse, Haiti, 2024.",
+                  "fr": "Site de débarquement de la pêche artisanale dans la "
+                        "baie de Corail, Grand'Anse, Haïti, 2024."},
     "a2_c1_x": {"en": "household surveys", "fr": "enquêtes ménage"},
     "a2_c2_x": {"en": "communal sections", "fr": "sections communales"},
     "a2_c3_n": {"en": "Two", "fr": "Deux"},
@@ -186,7 +196,7 @@ STYLE = """
   .a2-titre { font-family:Georgia,"Times New Roman",serif; font-size:52px;
         line-height:1.08; letter-spacing:-.02em; color:#153b2c;
         margin:0 0 20px; font-weight:400; text-align:left !important;
-        max-width:13ch; }
+        max-width:none; }
   /* LA LARGEUR SUIT LA LONGUEUR. Le chapeau tenait en une phrase et se
      coupait à quarante-quatre signes ; il en fait maintenant plusieurs, et
      la même colonne étroite en aurait fait dix lignes sous le titre. Il
@@ -205,13 +215,22 @@ STYLE = """
      là où le cliché passe clair — une plaque translucide, elle, découperait
      un rectangle net dans l'image. */
   .a2-credit { position:absolute; right:18px; bottom:14px; font-size:11.5px;
-        color:#ffffff; text-shadow:0 1px 3px rgba(0,0,0,.5); }
+        color:#ffffff; text-shadow:0 1px 3px rgba(0,0,0,.5);
+        /* La légende nomme maintenant un relief et une date, pas seulement un
+           département : elle peut courir sur deux lignes sur un écran étroit,
+           calées à droite comme le reste du bloc. */
+        max-width:46ch; text-align:right; line-height:1.4; }
 
   /* --- LES QUATRE NOMBRES, SUR UNE RANGÉE ------------------------------
      Séparés par un filet plutôt que par des cartes : ce sont quatre mesures
      de la même campagne, pas quatre objets distincts. */
+  /* LA RANGÉE REMONTE, ET LE BOUTON REMONTE PLUS ENCORE. Les quatre nombres
+     arrivaient collés sous « Explorer APRI », si bien que le bouton semblait
+     les commander alors qu'il ouvre le reste du site. En enfonçant le bouton
+     un peu plus dans la photographie et en remontant la rangée, l'écart entre
+     les deux se creuse au lieu de se combler. */
   .a2-chif { display:grid; grid-template-columns:repeat(4, 1fr);
-        margin:34px 0 8px; }
+        margin:14px 0 38px; }
   .a2-chif > div { padding:4px 26px; }
   .a2-chif > div + div { border-left:1px solid #e6ebe8; }
   .a2-n { font-family:Georgia,"Times New Roman",serif; font-size:34px;
@@ -261,6 +280,7 @@ STYLE = """
   }
   div[class*="st-key-a2_porte_"] div[data-testid="stButton"] > button:hover {
       border-color:#bcd6c8 !important; transform:none !important;
+      box-shadow:0 6px 18px rgba(23,58,40,.09) !important;
   }
   div[class*="st-key-a2_porte_"] div[data-testid="stButton"] > button p {
       text-align:center !important; margin:0 !important;
@@ -279,11 +299,26 @@ STYLE = """
   /* LA FLÈCHE FERME LA CARTE. Elle est écrite dans le libellé, en gras, ce
      qui est la seule façon de lui donner sa propre ligne dans un bouton de
      Streamlit ; la graisse est aussitôt reprise ici — c'est une flèche, pas
-     une insistance. */
+     une insistance.
+
+     ELLE EST POSÉE DANS UNE PASTILLE. Seule au milieu du blanc, elle était un
+     signe de ponctuation perdu dans une carte de trois cents pixels : on
+     voyait un titre, une ligne, puis rien. Le disque lui donne une taille et
+     un bord, donc une cible ; au survol il se remplit de vert et avance de
+     trois pixels, ce qui dit que la carte entière est cliquable sans avoir à
+     écrire « cliquez ici ». */
   div[class*="st-key-a2_porte_"] div[data-testid="stButton"] > button
-      p strong { display:block; margin-top:15px; font-weight:400;
-      font-family:Inter,system-ui,sans-serif; font-size:17px;
-      line-height:1; color:#1f7a4d; }
+      p strong { display:inline-flex; align-items:center;
+      justify-content:center; width:38px; height:38px; margin-top:16px;
+      border-radius:50%; border:1px solid #c6dccd;
+      background:rgba(255,255,255,.72); box-sizing:border-box;
+      font-family:Inter,system-ui,sans-serif; font-size:18px;
+      font-weight:400; line-height:1; color:#1f7a4d;
+      transition:background .17s ease, border-color .17s ease,
+                 color .17s ease, transform .17s ease; }
+  div[class*="st-key-a2_porte_"] div[data-testid="stButton"]
+      > button:hover p strong { background:#1f7a4d; border-color:#1f7a4d;
+      color:#ffffff; transform:translateX(3px); }
 
   /* --- LE BOUTON D'APPEL DU BANDEAU ------------------------------------ */
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button {
@@ -305,10 +340,11 @@ STYLE = """
      toucher le bas de la photographie. */
   div[class*="st-key-a2_cta"] {
       position:relative; z-index:6;
-      margin:-39px 0 24px calc(2rem + 46px) !important;
+      margin:-34px 0 24px calc(2rem + 46px) !important;
   }
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button:hover {
       background:#186340 !important; transform:none !important;
+      box-shadow:0 6px 16px rgba(12,40,26,.28) !important;
   }
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button p {
       color:#ffffff !important; font-size:14px !important;
@@ -465,7 +501,8 @@ def render():
         f'<div class="a2-hero" style="{fond}"><div class="a2-hero-c">'
         f'{marque}'
         f'<div class="a2-kick">{_e(T("a2_kicker"))}</div>'
-        f'<div class="a2-titre">{_e(T("a2_titre"))}</div>'
+        f'<div class="a2-titre">'
+        f'{"<br>".join(_e(x) for x in T("a2_titre").split("@@"))}</div>'
         f'<p class="a2-intro">{_e(T("a2_intro"))}</p>'
         f'</div><div class="a2-credit">{_e(T("a2_credit"))}</div></div>',
         unsafe_allow_html=True)
