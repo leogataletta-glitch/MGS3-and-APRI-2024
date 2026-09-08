@@ -136,6 +136,12 @@ MESURES = [
      "install_decalage_j", "j", 1, "eleve_bon"),
     ("saison", "install_ratees", "sat_m_sa_ratees", "saison",
      "install_ratees", "", 0, "eleve_mauvais"),
+    ("saison", "pci_mam", "sat_m_sa_pci", "saison", "pci", "", 1,
+     "eleve_bon"),
+    ("saison", "aai_mam", "sat_m_sa_aai", "saison", "aai", "", 3,
+     "eleve_mauvais"),
+    ("saison", "ratio_mam", "sat_m_sa_ratio", "saison", "ratio_normale",
+     "%", 1, "eleve_bon"),
     ("saison", "mam_serie", "sat_m_sa_serie", "saison", "serie:serie_mam",
      "mm", 0, "eleve_bon"),
     # --- la température
@@ -172,6 +178,19 @@ MESURES = [
     ("aridite", "pluie_bilan", "sat_m_ar_pluie", "thermique", "pluie_mm",
      "mm", 0, "eleve_bon"),
 ]
+
+# LA MESURE BRUTE ET SA NOTE SONT LE MÊME OBJET, VU DEUX FOIS. Le référentiel
+# porte, pour une partie de ces mesures, un barème publié, une note de source
+# et une phrase de lecture : les cacher dans un autre écran obligeait à savoir
+# qu'ils existaient. La table dit quelle ligne du référentiel correspond à
+# quelle mesure ; celles qui n'y figurent pas restent des mesures brutes, et
+# l'écran ne leur invente pas de note.
+LIGNES = {
+    "ndvi": 33, "ndmi": 34, "ndwi": 35, "vhi": 36, "evi": 37, "savi": 38,
+    "vari": 39, "fvc": 40, "lst_anomalie": 41, "tci": 42,
+    "pci_mam": 43, "aai_mam": 44, "ratio_mam": 45, "spi_mam": 46,
+    "taux_annuel_net": 54, "ndti": 63,
+}
 
 # LES ONGLETS, DANS L'ORDRE OÙ ON LES PARCOURT : ce qui couvre le sol, puis
 # ce qui l'arrose, puis ce qui l'assèche.
@@ -381,6 +400,57 @@ TEXTES = {
     "sat_m_ar_pluie": {"en": "Rainfall used in the balance (mm/year)",
                        "fr": "Pluie retenue dans le bilan (mm/an)"},
 
+    "sat_m_sa_pci": {"en": "PCI of the spring campaign",
+                     "fr": "PCI de la campagne de printemps"},
+    "sat_m_sa_aai": {"en": "Anomalous aridity of the spring campaign",
+                     "fr": "Aridité anormale de la campagne de printemps"},
+    "sat_m_sa_ratio": {"en": "Spring rains against their normal (%)",
+                       "fr": "Pluies de printemps rapportées à leur normale "
+                             "(%)"},
+
+    # ---- ce que le référentiel dit d'une mesure
+    "sat_ref_t": {"en": "Source, method and how to read it",
+                  "fr": "Source, méthode et lecture"},
+    "sat_ref_src": {"en": "Where it comes from, and how it was attributed to "
+                          "each communal section",
+                    "fr": "D'où elle vient, et comment elle a été attribuée à "
+                          "chaque section communale"},
+    "sat_ref_bar": {"en": "The published scale, and the score it gives",
+                    "fr": "Le barème publié, et la note qu'il donne"},
+    "sat_ref_lire": {"en": "How to read it", "fr": "Comment la lire"},
+    "sat_ref_note": {"en": "APRI score", "fr": "Note APRI"},
+    "sat_ref_grade": {
+        "en": "What the scale grades is the referential\u2019s own quantity, "
+              "«\u00a0{n}\u00a0», which is not always the level drawn above: "
+              "several vegetation scales grade a change between two windows "
+              "rather than the value of a year.",
+        "fr": "Ce que le barème note est la grandeur du référentiel, "
+              "«\u00a0{n}\u00a0», qui n\u2019est pas toujours le niveau "
+              "dessiné plus haut : plusieurs barèmes de végétation notent une "
+              "variation entre deux fenêtres plutôt que la valeur d\u2019une "
+              "année."},
+    "sat_ref_note_x": {
+        "en": "The scale above turns this raw measurement into a mark out of "
+              "ten. It is the same number that enters the resilience index; "
+              "here it sits beside the measurement it comes from.",
+        "fr": "Le barème ci-dessus transforme cette mesure brute en note sur "
+              "dix. C'est le nombre qui entre dans l'indice de résilience ; "
+              "il est ici à côté de la mesure dont il sort."},
+    "sat_ref_zonal": {
+        "en": "Every satellite figure is a zonal statistic: the pixels are "
+              "averaged over the polygon of the communal section, and over "
+              "nothing else. A section is therefore described by its own "
+              "ground, not by the nearest station.",
+        "fr": "Chaque chiffre satellitaire est une statistique zonale : les "
+              "pixels sont moyennés sur le polygone de la section communale, "
+              "et sur rien d'autre. Une section est donc décrite par son "
+              "propre sol, non par la station la plus proche."},
+    "sat_ref_absent": {
+        "en": "This measurement carries no published scale: it is delivered "
+              "raw, and enters no score.",
+        "fr": "Cette mesure ne porte pas de barème publié : elle est livrée "
+              "brute, et n'entre dans aucun score."},
+
     "sat_src_pluie": {
         "en": "CHIRPS daily ({s}), {d1}–{d2}, normal computed over {n1}–{n2}, "
               "year assessed {a}.",
@@ -461,6 +531,24 @@ def _charger():
         except Exception:
             out[cle] = None
     return out
+
+
+@st.cache_data(show_spinner=False)
+def _referentiel():
+    """Les indicateurs du référentiel, rangés par numéro de ligne.
+
+    C'EST LÀ QUE VIVENT LA SOURCE, LE BARÈME ET LA PHRASE DE LECTURE. Ils y
+    sont depuis le début, mais seuls les écrans de score les affichaient : la
+    page des mesures brutes renvoyait donc à un autre onglet pour savoir d'où
+    venait un chiffre. Elle les lit maintenant elle-même.
+    """
+    p = os.path.join(DATA, "resultats.json")
+    if not os.path.exists(p):
+        return {}
+    with open(p, encoding="utf-8") as f:
+        d = json.load(f)
+    lst = d["indicateurs"] if isinstance(d, dict) and "indicateurs" in d else d
+    return {r.get("ligne"): r for r in (lst or []) if r.get("ligne")}
 
 
 def _annees(d, chemin):
@@ -711,3 +799,82 @@ def render():
     st.markdown(f'<p class="sat-note">{_e(T("sat_ventile"))}</p>'
                 f'<p class="sat-note"><b>{_e(T("sat_source"))}</b> · '
                 f'{_e(_source(fichier, src))}</p>', unsafe_allow_html=True)
+
+    _dossier(mesure, vals, unite, dec)
+
+
+def _dossier(mesure, vals, unite, dec):
+    """D'où vient la mesure, comment elle a été rattachée à la section, et
+    ce que son barème en fait.
+
+    TROIS QUESTIONS, ET ELLES SE POSENT DANS CET ORDRE. D'où vient le chiffre :
+    quel capteur, quelle période, quelle résolution. Comment il devient le
+    chiffre d'une section communale : par moyenne zonale sur le polygone, ce
+    qui est la seule opération faite et qu'il faut dire, parce qu'elle a ses
+    limites — à cinq kilomètres de résolution, une petite section tient dans
+    une poignée de pixels. Ce qu'on doit en conclure : le barème publié et la
+    phrase de lecture, tels qu'ils sont écrits dans le référentiel.
+
+    UNE MESURE SANS BARÈME LE DIT. La moitié de ces mesures n'entre dans aucun
+    score : le taire laisserait croire que tout ce qui est affiché ici pèse
+    dans l'indice.
+    """
+    lang = i18n.get_lang()
+    ligne = LIGNES.get(mesure[1])
+    r = _referentiel().get(ligne) if ligne else None
+    with st.expander(T("sat_ref_t")):
+        if not r:
+            st.markdown(f'<p class="sat-note" style="max-width:none">'
+                        f'{_e(T("sat_ref_absent"))}</p>'
+                        f'<p class="sat-note" style="max-width:none">'
+                        f'{_e(T("sat_ref_zonal"))}</p>',
+                        unsafe_allow_html=True)
+            return
+        note = (r.get("note") if lang == "fr" else r.get("note_en")) \
+            or r.get("note") or ""
+        expl = (r.get("expl_fr") if lang == "fr" else r.get("expl_en")) \
+            or r.get("metrique") or ""
+        sco = r.get("scores") or {}
+        st.markdown(
+            f'<div class="sat-lab">{_e(T("sat_ref_src"))}</div>'
+            f'<p class="sat-note" style="max-width:none">{_e(note)}</p>'
+            f'<p class="sat-note" style="max-width:none">'
+            f'{_e(T("sat_ref_zonal"))}</p>'
+            + (f'<div class="sat-lab">{_e(T("sat_ref_lire"))}</div>'
+               f'<p class="sat-note" style="max-width:none">{_e(expl)}</p>'
+               if expl else "")
+            + (f'<div class="sat-lab">{_e(T("sat_ref_bar"))}</div>'
+               f'<p class="sat-note" style="max-width:none">'
+               f'{_e(r.get("echelle"))}</p>' if r.get("echelle") else ""),
+            unsafe_allow_html=True)
+        # LA COLONNE NOTÉE EST CELLE DU RÉFÉRENTIEL, PAS CELLE DU DESSIN.
+        # Le barème d'un indice de végétation note souvent une VARIATION entre
+        # deux fenêtres, quand le graphique au-dessus montre le NIVEAU de
+        # l'année : accoler la note au niveau aurait fait lire « NDVI 0,60 donc
+        # 10 sur 10 », ce qui est faux. Le tableau reprend donc la grandeur que
+        # le barème note, telle qu'elle est écrite dans le référentiel, et la
+        # nomme.
+        val_ref = r.get("valeurs") or {}
+        nom_ref = (r.get("indicateur_fr") if lang == "fr" else None) \
+            or r.get("indicateur") or ""
+        u_ref = (r.get("unite") or "").strip()
+        lignes = [(x, val_ref.get(x), sco.get(x)) for x in sorted(vals)
+                  if sco.get(x) is not None]
+        if lignes:
+            st.markdown(
+                f'<div class="sat-lab">{_e(T("sat_ref_note"))}</div>'
+                f'<p class="sat-note" style="margin:0 0 4px">'
+                f'{_e(T("sat_ref_grade", n=nom_ref))}</p>'
+                '<table class="sat-tab"><thead><tr>'
+                f'<th>{_e(T("sat_col_sec"))}</th>'
+                f'<th class="n">{_e(nom_ref)}'
+                f'{(" (" + _e(u_ref) + ")") if u_ref else ""}</th>'
+                f'<th class="n">{_e(T("sat_ref_note"))}</th></tr></thead><tbody>'
+                + "".join(
+                    f'<tr><td>{_e(x)}</td>'
+                    f'<td class="n">{_e(_f(v, 2) if v is not None else "—")}</td>'
+                    f'<td class="n v">{_e(n)} / 10</td></tr>'
+                    for x, v, n in lignes)
+                + '</tbody></table>'
+                f'<p class="sat-note">{_e(T("sat_ref_note_x"))}</p>',
+                unsafe_allow_html=True)
