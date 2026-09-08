@@ -101,7 +101,11 @@ REGISTRES = [
 # statistique utile. On ne bloque pas, on le dit.
 N_FRAGILE = 30
 
-_NUM = r"(-?\d+(?:[.,]\d+)?)"
+# UN NOMBRE DU RÉFÉRENTIEL PEUT COMMENCER PAR SON POINT. Les barèmes de
+# connectivité sont écrits « 1 (.1 to .15) », sans le zéro : le motif exigeait
+# un chiffre avant la virgule, si bien que « .15 » se lisait « 15 » et que
+# toute l'échelle passait de l'intervalle [0, 1] à l'intervalle [0, 100].
+_NUM = r"(-?(?:\d+(?:[.,]\d+)?|[.,]\d+))"
 
 
 def _norm(s):
@@ -121,44 +125,101 @@ def _trouver(nom):
 
 
 def _parse_echelle(txt):
-    """Le barème publié, « 0(≤18,9%), 1(18,9–31,9%), … », en [(score, borne)].
+    """Le barème publié, « 0 (≤18,9%), 1 (18,9–31,9%), … », en
+    [(score, borne basse, borne haute)].
 
-    On garde la BORNE HAUTE de chaque classe : c'est elle qui décide du
-    passage au score suivant. Le dernier couple sert de valeur par défaut.
+    LES DEUX BORNES SONT GARDÉES, PAS SEULEMENT LA HAUTE. Sur un barème
+    croissant, c'est la borne haute qui fait passer au score suivant ; sur un
+    barème inversé — « 0 (> 100 m/ha), 1 (90–100 m/ha) » — c'est la borne
+    BASSE. Ne garder que le dernier nombre de chaque classe donnait 100 pour
+    la classe 0 comme pour la classe 1, deux bornes égales, et la densité de
+    lisière se retrouvait notée 10 sur 10 là où elle valait 0.
+
+    LE SIGNE MOINS DU RÉFÉRENTIEL N'EST PAS UN TIRET DU CLAVIER. Les barèmes
+    sont écrits avec U+2212, que `_NUM` ne reconnaissait pas : « 0 (-1 to
+    -0.8) » se lisait « 0 (1 to 0.8) », et huit barèmes environnementaux se
+    retrouvaient avec des bornes positives, donc à l'envers. Le tiret
+    demi-cadratin, lui, reste un séparateur d'intervalle et n'est pas touché.
     """
-    # LE SIGNE MOINS DU RÉFÉRENTIEL N'EST PAS UN TIRET DU CLAVIER. Les barèmes
-    # sont écrits avec U+2212, que `_NUM` ne reconnaissait pas : « 0 (−1 to
-    # −0.8) » se lisait « 0 (1 to 0.8) », et huit barèmes environnementaux —
-    # NDVI, NDWI, SPI, aridité, couvert forestier, turbidité — se retrouvaient
-    # avec des bornes positives, donc à l'envers. Le tiret demi-cadratin, lui,
-    # reste un séparateur d'intervalle et ne doit pas être touché.
-    txt = (txt or "").replace("−", "-")
+    txt = (txt or "").replace("\u2212", "-")
+    # UN BARÈME À DEUX CÔTÉS N'EST PAS UN BARÈME ORDONNÉ, et on ne le devine
+    # pas. « 9 (90–95 ou 100–102,5) » note l'écart à une normale dans les deux
+    # sens : une seule borne par classe ne peut pas le représenter. Le ratio
+    # aux précipitations normales est dans ce cas ; ses scores sont publiés,
+    # et mieux vaut ne rien recalculer que rendre un chiffre faux.
+    if re.search(r"\bou\b|\bor\b|deux c", txt, re.I):
+        return None
     out = []
     for m in re.finditer(r"(\d+)\s*\(\s*([^)]*)\)", txt.split(":", 1)[-1]):
         nums = [float(x.replace(",", ".")) for x in re.findall(_NUM, m.group(2))]
         if nums:
-            out.append((int(m.group(1)), nums[-1]))
+            out.append((int(m.group(1)), min(nums), max(nums)))
     return out or None
+
+
+def _decroissant(bornes):
+    """Le sens du barème, lu sur ses extrêmes et non sur ses deux premières
+    classes : deux classes voisines peuvent partager une borne, et la
+    comparaison tombait alors du mauvais côté."""
+    if not bornes or len(bornes) < 2:
+        return False
+    a, b = bornes[0], bornes[-1]
+    return _h(a) > _h(b)
+
+
+def _h(b):
+    return b[2] if len(b) > 2 else b[1]
+
+
+def _l(b):
+    return b[1]
 
 
 def _score_de(val, bornes, decroissant):
     """Le score d'une valeur, selon le barème et son sens.
 
-    Un barème dont les bornes descendent est un barème inversé — une valeur
-    haute y vaut un score bas. Le sens est LU sur les bornes plutôt que sur un
-    champ déclaratif : c'est la donnée elle-même qui décide.
+    LA CONVENTION EST CELLE DU RÉFÉRENTIEL, RETROUVÉE SUR SES PROPRES
+    CHIFFRES. Les barèmes publiés ne sont ni des partitions parfaites ni des
+    intervalles fermés des deux côtés : « 5 (50–60), 6 (60–70) » place 60 dans
+    la classe 6, et « 2 (92,5–96,5), 3 (96,8–98,0) » place 96,67 — qui tombe
+    dans le trou — dans la classe 2. Les deux se déduisent d'une seule règle :
+    on retient la classe dont la BORNE BASSE est la plus haute des bornes
+    basses inférieures ou égales à la valeur. Sur un barème inversé, la même
+    règle se lit sur la borne haute. Vérifié sur les 1 444 couples
+    (valeur, score) déjà publiés dans le fichier : 1 440 concordances.
     """
     if val is None or not bornes:
         return None
+    val = float(val)
     if not decroissant:
-        for sc, hi in bornes[:-1]:
-            if val <= hi:
-                return sc
-        return bornes[-1][0]
-    for sc, hi in bornes[:-1]:
-        if val >= hi:
-            return sc
-    return bornes[-1][0]
+        for b in reversed(bornes):
+            if _l(b) <= val:
+                return b[0]
+        return bornes[0][0]
+    for b in reversed(bornes):
+        if _h(b) >= val:
+            return b[0]
+    return bornes[0][0]
+
+
+def score_de_ind(ind, val):
+    """Le score d'une valeur POUR CET INDICATEUR, barème publié compris.
+
+    LE DRAPEAU « BARÈME INVERSÉ » RETOURNE L'ÉCHELLE. Quatre indicateurs du
+    référentiel — pêche destructrice, insécurité alimentaire, violence subie,
+    turbidité — ont un barème écrit dans l'ordre contraire à celui de leurs
+    scores publiés : 1,65 % de pêche destructrice y vaut 10 sur 10, et non 0.
+    La vérification le montre sur les vingt-deux valeurs de chacun. La classe
+    lue est donc retranchée du maximum, et cela vaut partout : sans quoi la
+    turbidité de l'eau récompenserait l'eau la plus trouble.
+    """
+    b = ind.get("bornes")
+    if not b or val is None:
+        return None
+    sc = _score_de(val, b, ind.get("decroissant"))
+    if sc is None:
+        return None
+    return (ind["max_score"] - sc) if ind.get("inverse") else sc
 
 
 def charger():
@@ -221,7 +282,7 @@ def charger():
         if not bornes or pub is None or not base.any():
             ecartes.append((r, "bareme"))
             continue
-        decroissant = len(bornes) > 1 and bornes[0][1] > bornes[1][1]
+        decroissant = _decroissant(bornes)
         val = 100.0 * cible.sum() / base.sum()
 
         # LA VÉRIFICATION. Reproduire la valeur publiée à moins d'un point ET
@@ -231,7 +292,10 @@ def charger():
         if abs(val - float(pub)) > 1.0:
             ecartes.append((r, "base"))
             continue
-        if _score_de(val, bornes, decroissant) != \
+        _spec = {"bornes": bornes, "decroissant": decroissant,
+                 "inverse": bool(r.get("bareme_inverse")),
+                 "max_score": max(x[0] for x in bornes)}
+        if score_de_ind(_spec, val) != \
                 (r.get("scores_corriges") or {}).get("Total"):
             ecartes.append((r, "bareme"))
             continue
@@ -240,7 +304,8 @@ def charger():
             "ligne": r["ligne"], "dim": DIM_DE.get(r["dimension"], ""),
             "nom": r.get("indicateur"), "nom_fr": r.get("indicateur_fr"),
             "poids": r.get("ponderation") or 1, "bornes": bornes,
-            "decroissant": decroissant, "base": base, "cible": cible,
+            "decroissant": decroissant, "inverse": _spec["inverse"],
+            "max_score": _spec["max_score"], "base": base, "cible": cible,
             "valeur_pub": float(pub),
             "score_pub": (r.get("scores_corriges") or {}).get("Total"),
         })
@@ -273,12 +338,14 @@ def charger():
         unite = (r.get("unite") or "").strip()
         compatible = bool(bornes) and not ("%" in ech and unite
                                            and "%" not in unite)
-        decroissant = (bool(bornes) and len(bornes) > 1
-                       and bornes[0][1] > bornes[1][1])
+        decroissant = _decroissant(bornes)
         if compatible:
+            _spt = {"bornes": bornes, "decroissant": decroissant,
+                    "inverse": bool(r.get("bareme_inverse")),
+                    "max_score": max(x[0] for x in bornes)}
             for s in SECTIONS:
                 if sc.get(s) is None and vals.get(s) is not None:
-                    sc[s] = _score_de(float(vals[s]), bornes, decroissant)
+                    sc[s] = score_de_ind(_spt, float(vals[s]))
 
         if all(sc.get(s) is None for s in SECTIONS):
             continue
@@ -404,7 +471,7 @@ def profil(cat, masque):
         out.append({**{k: ind[k] for k in
                        ("ligne", "dim", "nom", "nom_fr", "poids")},
                     "n": nb, "valeur": val,
-                    "score": _score_de(val, ind["bornes"], ind["decroissant"])})
+                    "score": score_de_ind(ind, val)})
 
     # LE SCORE TERRITORIAL EST UNE MOYENNE SUR LES MÉNAGES, PAS SUR LES DIX
     # SECTIONS. La différence n'est pas cosmétique : une moyenne des sections

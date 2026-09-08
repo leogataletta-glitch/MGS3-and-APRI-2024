@@ -934,7 +934,7 @@ def _mesure_ind(ind, masque):
     if nb == 0:
         return 0, None
     val = 100.0 * float((ind["cible"] & masque).sum()) / nb
-    return nb, M._score_de(val, ind["bornes"], ind["decroissant"])
+    return nb, M.score_de_ind(ind, val)
 
 
 def _cibles(cat):

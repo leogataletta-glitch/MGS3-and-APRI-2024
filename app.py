@@ -1962,6 +1962,14 @@ TEXTES_NAV = {
     "bandeau_credit_donnees": {
         "en": "Ploughed plots at the foot of the hills, Haiti, 2024.",
         "fr": "Parcelles labourées au pied des mornes, Haïti, 2024."},
+    # UNE IMAGE DE SYNTHÈSE LE DIT. La vidéo du bandeau des données n'est pas
+    # une prise de vue de terrain : la légender « Haïti, 2024 » comme les
+    # photographies voisines la ferait passer pour un document, sur un site
+    # qui publie précisément des données de terrain. Sa légende dit ce
+    # qu'elle est.
+    "bandeau_credit_film": {
+        "en": "Animated illustration, synthetic image.",
+        "fr": "Illustration animée, image de synthèse."},
     "bandeau_credit_actions": {
         "en": "Irrigation canal along a ploughed plot, Haiti, 2024.",
         "fr": "Canal d'irrigation le long d'une parcelle labourée, Haïti, "
@@ -2372,6 +2380,47 @@ def _bandeau_b64(lang="fr", page=""):
         return _b64.b64encode(f.read()).decode()
 
 
+def _legende_bandeau(page, film):
+    """La légende du bandeau : celle de la page, ou celle du film."""
+    if film:
+        return T("bandeau_credit_film")
+    cle = "bandeau_credit_" + page
+    return T(cle if cle in i18n.DICO else "bandeau_credit")
+
+
+@st.cache_data(show_spinner=False)
+def _film_bandeau(page):
+    """La vidéo du bandeau de cette page : (URL statique, poster en base64).
+
+    ELLE N'EXISTE QUE SI LES DEUX FICHIERS SONT LÀ. Sans le film, la page
+    garde sa photographie ; sans l'affiche, on ne pose pas de vidéo — un
+    bandeau qui reste blanc une seconde au chargement est pire qu'un bandeau
+    fixe. Le chemin `app/static/…` est celui que Streamlit sert quand
+    `enableStaticServing` est vrai, et il est relatif : il vaut en local
+    comme sur le site déployé.
+    """
+    import base64 as _b64
+    films = {"donnees": "bandeau_donnees"}
+    nom = films.get(page)
+    if not nom:
+        return None
+    mp4 = os.path.join(APP_DIR, "static", nom + ".mp4")
+    # DEUX ENCODAGES POUR UN SEUL FILM. H.264 est lu partout, mais les
+    # Chromium compilés sans codec propriétaire — les navigateurs libres, et
+    # tous les environnements de test — ne le décodent pas et laissent le
+    # bandeau sur son affiche. Le VP9 en second `source` couvre ce cas ; le
+    # navigateur prend le premier qu'il sait lire et ne télécharge pas
+    # l'autre.
+    jpg = next((q for q in (os.path.join(b, nom + "_poster.jpg")
+                            for b in (os.path.join(APP_DIR, "data"), APP_DIR))
+                if os.path.exists(q)), None)
+    if not (os.path.exists(mp4) and jpg):
+        return None
+    with open(jpg, "rb") as f:
+        return ("app/static/" + nom,
+                _b64.b64encode(f.read()).decode("ascii"))
+
+
 def _rendre_ruban(avec_image):
     """Le bandeau composé, en tête de l'accueil.
 
@@ -2410,15 +2459,32 @@ def _rendre_ruban(avec_image):
                    f'<div class="bandeau-filet"></div>{_inst}</div>'
                    if _bloc else
                    f'<div class="bandeau-marque">{_inst}</div>')
+        # LE BANDEAU DE « DONNÉES » BOUGE. Une vidéo remplace la photographie
+        # sur cette seule page, et rien d'autre ne change : même cadre, même
+        # voile, même marque, même légende. Elle est muette, sans piste
+        # audio du tout, et rejouée en boucle — un bandeau qui demande un
+        # clic pour démarrer serait un bandeau cassé.
+        # LA PHOTOGRAPHIE RESTE DESSOUS, en `poster` : c'est elle qui
+        # s'affiche le temps du téléchargement, et c'est elle qu'on voit si
+        # le navigateur refuse la lecture automatique ou si le fichier
+        # statique n'est pas servi. Le bandeau ne peut donc pas être vide.
+        _film = _film_bandeau(page)
+        _fond = (
+            f'<video class="bandeau-fond" autoplay muted loop playsinline '
+            f'preload="auto" poster="data:image/jpeg;base64,{_film[1]}">'
+            f'<source src="{_film[0]}.mp4" type="video/mp4">'
+            f'<source src="{_film[0]}.webm" type="video/webm"></video>'
+            if _film else
+            f'<img class="bandeau-fond" alt="APRI" '
+            f'src="data:image/jpeg;base64,{img}">')
         st.markdown(
             f'<div class="bandeau-haut bandeau-enveloppe">'
-            f'<img class="bandeau-fond" alt="APRI" '
-            f'src="data:image/jpeg;base64,{img}">'
+            f'{_fond}'
             f'<div class="bandeau-voile"></div>{_marque}'
             f'<img class="bandeau-logo" alt="UNEP" '
             f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
             f'<div class="bandeau-credit">'
-            f'{html.escape(T("bandeau_credit_" + page if "bandeau_credit_" + page in i18n.DICO else "bandeau_credit"))}</div>'
+            f'{html.escape(_legende_bandeau(page, bool(_film)))}</div>'
             f'</div>', unsafe_allow_html=True)
 
 

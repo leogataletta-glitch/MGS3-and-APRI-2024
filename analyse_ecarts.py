@@ -402,7 +402,7 @@ def _mesure(ind, masque):
         return {"n": 0, "valeur": None, "score": None}
     val = 100.0 * float((ind["cible"] & masque).sum()) / nb
     return {"n": nb, "valeur": val,
-            "score": M._score_de(val, ind["bornes"], ind["decroissant"])}
+            "score": M.score_de_ind(ind, val)}
 
 
 def _cases(cat, axe):
