@@ -2416,7 +2416,7 @@ if st.session_state["app_mode"] != MODE_PORTAIL and _dessin_b64("dessin_mangrove
         'background:'
         ' url("data:image/png;base64,'
         + _dessin_b64("dessin_mangrove.png")
-        + '") left bottom / 360px auto no-repeat fixed,'
+        + '") left bottom / 300px auto no-repeat fixed,'
         ' linear-gradient(180deg, #eef2ed 0%, #e3eae4 100%); }</style>',
         unsafe_allow_html=True)
 
