@@ -191,6 +191,25 @@ if not check_password():
 # connexion aux polices Google échoue), et une largeur de ligne bornée —
 # une phrase qui court sur 1400 px est illisible, c'est ce qui rendait les
 # blocs de texte pénibles à lire.
+@st.cache_data(show_spinner=False)
+def _dessin_b64():
+    """L'aquarelle du bas de colonne, lue une fois.
+
+    UN FICHIER ABSENT NE LAISSE PAS DE TROU : le bloc n'est simplement pas
+    rendu, et la colonne se termine sur la devise comme avant.
+    """
+    import base64 as _b64
+    for base in (os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                              "data"),
+                 os.path.dirname(os.path.abspath(__file__))):
+        p = os.path.join(base, "dessin_vallee.png")
+        if os.path.exists(p):
+            with open(p, "rb") as f:
+                return _b64.b64encode(f.read()).decode()
+    return ""
+
+
+
 st.markdown(("""
 <style>
   /* UNE SEULE FAMILLE, ET C'EST UN CHOIX DE SOBRIÉTÉ. Les titres étaient en
@@ -893,8 +912,17 @@ st.markdown(("""
      reprennent l'encre sombre du reste du site, où elles se lisent mieux
      qu'en blanc sur vert. Le filet de droite fait le reste : sans lui, deux
      tons aussi proches se touchent sans frontière. */
+  /* LE DESSIN EST LE FOND DE LA COLONNE, PAS UNE IMAGE POSÉE DEDANS.
+     Posé dedans, il dépendait de trois rembourrages emboîtés — celui du pied,
+     celui du bloc, celui de la colonne — et il suffisait qu'un seul change
+     pour qu'une bande vide reparaisse sur un bord. Peint comme fond, il
+     épouse par construction les bords de la bande verte : il commence où
+     elle commence, il finit où elle finit, et aucun réglage ne peut plus
+     l'en écarter. Il est cadré en bas et large de toute la colonne. */
   div[data-testid="stColumn"]:has(div[class*="st-key-zone_nav"]) {
-    background: linear-gradient(180deg, #eef2ed 0%, #e3eae4 100%);
+    background:
+      url("data:image/png;base64,__DESSIN__") left bottom / 100% auto no-repeat,
+      linear-gradient(180deg, #eef2ed 0%, #e3eae4 100%);
     border-right: 1px solid #d9e1da;
     margin-left: -2.6rem !important;
     /* LE REMBOURRAGE NE REND PLUS TOUTE LA GOUTTIÈRE. Il rendait au contenu
@@ -976,23 +1004,6 @@ st.markdown(("""
      inférieur — les marges négatives annulent le rembourrage de la colonne,
      et c'est ce débord qui le fait lire comme une vignette de pied de page
      plutôt que comme une image posée dans une marge. */
-  /* LE DESSIN EST COLLÉ AUX TROIS BORDS DE LA COLONNE, et il y est posé en
-     absolu plutôt qu'au fil du texte. Au fil du texte, il dépendait de la
-     hauteur de tout ce qui le précède : il suffisait d'une rubrique de plus
-     pour qu'il descende sous la fenêtre, ou d'une de moins pour qu'il laisse
-     une bande verte en dessous. Ancré au bas de la colonne, il y reste quoi
-     qu'on empile au-dessus. Les décalages négatifs rattrapent les deux
-     rembourrages, celui du pied et celui de la colonne, plus les treize
-     pixels dont la colonne est en retrait de la bande verte : c'est ce qui
-     le fait toucher le bord gauche et le bord droit. */
-  div[class*="st-key-zone_nav"] .nav-dessin {
-    position: absolute; left: -20px; right: -11px; bottom: -24px;
-    margin: 0; line-height: 0; pointer-events: none;
-  }
-  /* La colonne fait exactement la hauteur de la fenêtre — `--dz` rattrape le
-     facteur de zoom du site, sans quoi « 100vh » vaut cinq pour cent de trop
-     et le dessin se pose sous le bord visible. */
-  div[class*="st-key-zone_nav"] { min-height: calc(100vh * var(--dz)); }
   div[class*="st-key-zone_nav"] .nav-dessin img {
     width: 100%; height: auto; display: block;
   }
@@ -1672,6 +1683,7 @@ st.markdown(("""
 """).replace("__ICONE_RESET__", icones.regle_masque(
     'section[data-testid="stSidebar"] div[class*="st-key-f_reset_global"] '
     'div[data-testid="stButton"] > button', "rafraichir", 16, 10))
+    .replace("__DESSIN__", _dessin_b64())
    ,
     unsafe_allow_html=True)
 
@@ -2211,24 +2223,6 @@ def _entree_nav(mode, icone):
 # o\u00f9 l'on va. Ce qu'il ne faut surtout pas, c'est que les deux listes
 # divergent \u2014 d'o\u00f9 la source unique `_NAV`, dont les deux se servent.
 @st.cache_data(show_spinner=False)
-def _dessin_b64():
-    """L'aquarelle du bas de colonne, lue une fois.
-
-    UN FICHIER ABSENT NE LAISSE PAS DE TROU : le bloc n'est simplement pas
-    rendu, et la colonne se termine sur la devise comme avant.
-    """
-    import base64 as _b64
-    for base in (os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                              "data"),
-                 os.path.dirname(os.path.abspath(__file__))):
-        p = os.path.join(base, "dessin_vallee.png")
-        if os.path.exists(p):
-            with open(p, "rb") as f:
-                return _b64.b64encode(f.read()).decode()
-    return ""
-
-
-@st.cache_data(show_spinner=False)
 def _bandeau_b64(lang="fr"):
     """L'illustration du bandeau, encodée une fois pour toutes.
 
@@ -2341,9 +2335,6 @@ with _zone_nav:
         '<div class="nav-pied"><div class="nav-mot">'
         + icones.svg("pousse", couleur="#6d9683", taille=15)
         + f'<div class="nav-devise">{T("pied_devise")}</div></div>'
-        + (f'<div class="nav-dessin"><img alt="" '
-           f'src="data:image/png;base64,{_dessin_b64()}"></div>'
-           if _dessin_b64() else "")
         + '</div>',
         unsafe_allow_html=True)
 
