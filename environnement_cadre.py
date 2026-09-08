@@ -346,7 +346,8 @@ def render(complement=None):
                 for cle, coul, t in zip(("env_tx_od", "env_tx_oi", "env_tx_po"),
                                         (BLEU, VERT, AMBRE), ta))
             + '</div>', unsafe_allow_html=True)
-        st.caption(c["intro"]["transects"])
+        st.markdown(f'<p class="ev-x">{_e(c["intro"]["transects"])}</p>',
+                    unsafe_allow_html=True)
 
     with st.expander(T("env_src2_t")):
         st.markdown(
@@ -363,7 +364,8 @@ def render(complement=None):
                                (sum(len(b["points"]) for b in c["cotier"]),
                                 T("env_l_cot"))))
             + '</div>', unsafe_allow_html=True)
-        st.caption(c["intro"]["geo_fin"])
+        st.markdown(f'<p class="ev-x">{_e(c["intro"]["geo_fin"])}</p>',
+                    unsafe_allow_html=True)
 
     with st.expander(T("env_src3_t")):
         st.markdown(
@@ -390,32 +392,35 @@ def render(complement=None):
                 unsafe_allow_html=True)
 
     with st.expander(T("env_v_terrain")):
-        st.caption(c["intro"]["bareme"])
+        st.markdown(f'<p class="ev-x">{_e(c["intro"]["bareme"])}</p>',
+                    unsafe_allow_html=True)
         _bloc_terrain(c)
 
     with st.expander(T("env_v_veg")):
         st.markdown(_tableau(c["vegetation"]), unsafe_allow_html=True)
 
     with st.expander(T("env_v_frag")):
-        st.caption(c["intro"]["fragmentation"])
+        st.markdown(f'<p class="ev-x">{_e(c["intro"]["fragmentation"])}</p>',
+                    unsafe_allow_html=True)
         st.markdown(_tableau(c["fragmentation"]), unsafe_allow_html=True)
 
     with st.expander(T("env_v_conn")):
-        st.caption(c["intro"]["connectivite"])
+        st.markdown(f'<p class="ev-x">{_e(c["intro"]["connectivite"])}</p>',
+                    unsafe_allow_html=True)
         st.markdown(_tableau(c["connectivite"]), unsafe_allow_html=True)
 
     with st.expander(T("env_v_cot")):
         _bloc_cotier(c)
 
     with st.expander(T("env_v_hydro")):
-        st.markdown(f'<p class="ev-x" style="max-width:96ch">'
+        st.markdown(f'<p class="ev-x">'
                     f'{_e(c["intro"]["pression"])}</p>'
                     '<ul class="ev-puce" style="margin-top:8px">'
                     + "".join(f'<li>{_e(p)}</li>' for p in c["hydro"])
                     + '</ul>', unsafe_allow_html=True)
 
     with st.expander(T("env_v_men")):
-        st.markdown(f'<p class="ev-x" style="max-width:96ch">'
+        st.markdown(f'<p class="ev-x">'
                     f'{_e(c["intro"]["menages2"])}</p>'
                     '<ul class="ev-puce" style="margin-top:8px">'
                     + "".join(f'<li>{_e(p)}</li>' for p in c["menages"])

@@ -28,6 +28,7 @@ import os
 import streamlit as st
 
 import accueil_apri
+import assets
 import i18n
 from i18n import T
 
@@ -76,7 +77,7 @@ TEXTES = {
     # bancales. Le @@ dit où passer à la ligne, dans chaque langue, et la
     # coupure tombe alors sur le sens.
     "a2_titre": {"en": "Data for a more@@resilient Haiti",
-                 "fr": "Des données pour une Haïti@@plus résiliente"},
+                 "fr": "Des données pour une@@Haïti plus résiliente"},
     "a2_intro": {
         "en": "The APRI approach assesses how a landscape maintains and "
               "improves its essential functions in the face of constant "
@@ -223,14 +224,27 @@ STYLE = """
   /* LE CRÉDIT EST BLANC, SUR LA PHOTOGRAPHIE. Une ombre portée le détache
      là où le cliché passe clair — une plaque translucide, elle, découperait
      un rectangle net dans l'image. */
-  /* ENCRE NOIRE ET HALO BLANC, SANS PLAQUE. Le rectangle sombre tenait la
+  /* ENCRE BLANCHE ET HALO NOIR, SANS PLAQUE. Le rectangle sombre tenait la
      lisibilité mais posait un objet de plus dans l'image ; l'ombre portée
-     blanche fait le même travail en ne laissant voir que le texte. */
+     fait le même travail en ne laissant voir que le texte. Le blanc l'emporte
+     sur le noir parce qu'une légende de photographie se lit en blanc partout
+     ailleurs, et parce que le halo sombre tient aussi bien sur un ciel clair
+     que sur des galets. */
+  /* L'EMBLÈME DU PNUE DANS L'ANGLE HAUT DROIT DE LA PHOTOGRAPHIE. L'accueil
+     était la seule page à ne pas le porter : les pages intérieures l'ont dans
+     leur bande depuis le début, et c'est la marque de l'institution qui
+     publie, pas une décoration. En blanc, avec la même ombre que la légende,
+     puisqu'il est posé sur un ciel qui change de valeur d'un cliché à
+     l'autre. */
+  .a2-unep { position:absolute; top:17px; right:26px; width:78px; height:auto;
+        z-index:5; pointer-events:none;
+        filter:drop-shadow(0 1px 2px rgba(10,18,13,.75))
+               drop-shadow(0 0 7px rgba(10,18,13,.5)); }
   .a2-credit { position:absolute; right:16px; bottom:12px; font-size:11px;
-        color:#0b1410; max-width:46ch; text-align:right; line-height:1.4;
-        text-shadow:0 0 4px rgba(255,255,255,.95),
-                    0 0 9px rgba(255,255,255,.85),
-                    0 1px 2px rgba(255,255,255,.9); }
+        color:#ffffff; max-width:46ch; text-align:right; line-height:1.4;
+        text-shadow:0 0 4px rgba(10,18,13,.95),
+                    0 0 9px rgba(10,18,13,.85),
+                    0 1px 2px rgba(10,18,13,.9); }
 
   /* --- LES QUATRE NOMBRES, SUR UNE RANGÉE ------------------------------
      Séparés par un filet plutôt que par des cartes : ce sont quatre mesures
@@ -346,7 +360,11 @@ STYLE = """
      toucher le bas de la photographie. */
   div[class*="st-key-a2_cta"] {
       position:relative; z-index:6;
-      margin:-34px 0 24px calc(2rem + 46px) !important;
+      /* LE BOUTON PART DU MÊME BORD QUE LE TITRE. La marge avait été
+         réglée à l'œil sur une largeur de fenêtre ; mesurée, elle poussait
+         le bouton cent pixels plus loin que le premier mot du chapeau, et
+         le bandeau paraissait bancal. */
+      margin:-34px 0 24px 23px !important;
   }
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button:hover {
       background:#186340 !important; transform:none !important;
@@ -511,7 +529,10 @@ def render():
         f'{"".join("<span>" + _e(x) + "</span>" for x in T("a2_titre").split("@@"))}'
         f'</div>'
         f'<p class="a2-intro">{_e(T("a2_intro"))}</p>'
-        f'</div><div class="a2-credit">{_e(T("a2_credit"))}</div></div>',
+        f'</div>'
+        f'<img class="a2-unep" alt="UNEP" '
+        f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
+        f'<div class="a2-credit">{_e(T("a2_credit"))}</div></div>',
         unsafe_allow_html=True)
     # LE BOUTON EST DANS LA PHOTOGRAPHIE, ET IL Y ENTRE PAR LE HAUT. Streamlit
     # ne sait pas poser un widget à l'intérieur d'un bloc HTML qu'on a écrit

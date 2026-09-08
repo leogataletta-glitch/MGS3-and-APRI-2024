@@ -829,8 +829,8 @@ st.markdown(("""
        n'y a plus de course du tout. Le plafond d'une fenêtre le fait défiler
        pour son compte le jour où les rubriques dépasseront l'écran. */
     flex: 0 0 auto !important; height: auto !important;
-    /* HAUTE D'UNE FENÊTRE AU MOINS, pour que le crédit du PNUE puisse être
-       poussé tout en bas plutôt que de flotter sous la devise. */
+    /* HAUTE D'UNE FENÊTRE AU MOINS, pour que l'emblème du bas ait de quoi
+       descendre plutôt que de flotter sous la devise. */
     min-height: calc(100vh - 24px);
     max-height: 100vh; overflow-y: auto; overscroll-behavior: contain;
     border: none;
@@ -965,30 +965,27 @@ st.markdown(("""
     font-size: 12px; line-height: 1.5; color: #4d5c53;
     font-style: italic; text-align: left !important;
   }
-  /* LE CRÉDIT EST COLLÉ AU BAS DE LA COLONNE, avec l'emblème du PNUE.
-     Il flottait sous la devise, à mi-hauteur d'une colonne qui en fait mille,
-     et la marque de l'institution qui publie n'y figurait pas du tout. Une
-     marge automatique le pousse en bas ; la colonne étant collante et haute
-     comme la fenêtre, il s'y tient sans position absolue. */
-  div[class*="st-key-zone_nav"] .nav-credit {
-    font-size: 10.5px; line-height: 1.45; color: #87958c;
-    margin-top: auto; padding-top: 18px; text-align: left !important;
-    display: flex; align-items: center; gap: 9px;
+  /* LA LIGNE DE CRÉDIT A ÉTÉ RETIRÉE, L'EMBLÈME EST RESTÉ. La phrase de
+     copyright redisait en petit ce que le bandeau porte déjà ; l'emblème,
+     lui, signe la colonne. En noir plutôt qu'en couleur — le fichier est
+     blanc, et `brightness(0)` en tire une silhouette pleine sans avoir à
+     transporter un second fichier. */
+  div[class*="st-key-zone_nav"] .nav-unep {
+    margin-top: auto; padding-top: 22px;
   }
-  div[class*="st-key-zone_nav"] .nav-credit img {
-    width: 34px; height: auto; flex: none; opacity: .82;
+  div[class*="st-key-zone_nav"] .nav-unep img {
+    width: 62px; height: auto; display: block;
+    filter: brightness(0); opacity: .72;
   }
   div[class*="st-key-zone_nav"] .nav-pied {
-    display: flex; flex-direction: column; flex: 1 1 auto; min-height: 118px;
+    display: flex; flex-direction: column; flex: 1 1 auto; min-height: 150px;
   }
-  /* POUR QUE LE PIED DESCENDE, TOUTE LA CHAÎNE DOIT S'ÉTIRER. Streamlit
-     enveloppe chaque bloc de trois conteneurs qui prennent la hauteur de leur
-     contenu : une marge automatique posée au fond n'avait donc rien à
-     pousser. Le dernier conteneur de la colonne, et lui seul, devient
-     extensible. */
+  /* POUR QUE L'EMBLÈME DESCENDE, TOUTE LA CHAÎNE DOIT S'ÉTIRER : Streamlit
+     enveloppe chaque bloc de conteneurs qui prennent la hauteur de leur
+     contenu, et une marge automatique n'a alors rien à pousser. */
   div[class*="st-key-zone_nav"] > div[data-testid="stElementContainer"]:last-of-type,
   div[class*="st-key-zone_nav"] > div[data-testid="stElementContainer"]:last-of-type
-    > div[data-testid="stMarkdown"],
+    div[data-testid="stMarkdown"],
   div[class*="st-key-zone_nav"] > div[data-testid="stElementContainer"]:last-of-type
     div[data-testid="stMarkdown"] > div,
   div[class*="st-key-zone_nav"] > div[data-testid="stElementContainer"]:last-of-type
@@ -1238,14 +1235,13 @@ st.markdown(("""
     position: absolute; right: 22px; bottom: 9px; text-align: right; z-index: 4;
     font-size: 10.5px; line-height: 1.35; max-width: 52ch;
     pointer-events: none;
-    /* ENCRE SOMBRE ET HALO CLAIR, ET NON L'INVERSE. La bande n'est pas une
-       photographie sombre comme celle de l'accueil : c'est une aquarelle
-       claire, et du blanc y disparaissait entièrement. Le halo blanc détache
-       l'encre foncée aussi bien du papier crème de gauche que du vert des
-       champs. */
-    color: #0b1410;
-    text-shadow: 0 0 4px rgba(255,255,255,.95), 0 0 9px rgba(255,255,255,.85),
-                 0 1px 2px rgba(255,255,255,.9);
+    /* ENCRE BLANCHE ET HALO SOMBRE, comme la légende de l'accueil. La bande
+       est une aquarelle claire où du blanc nu disparaîtrait ; c'est l'ombre
+       portée qui le tient, et elle le tient aussi bien sur le papier crème de
+       gauche que sur le vert des champs. */
+    color: #ffffff;
+    text-shadow: 0 0 4px rgba(10,18,13,.95), 0 0 9px rgba(10,18,13,.88),
+                 0 1px 2px rgba(10,18,13,.9);
   }
   @media (max-width: 900px) { .bandeau-credit { display: none; } }
 
@@ -1344,7 +1340,9 @@ st.markdown(("""
      se poserait deux centimètres et demi trop à gauche. L'écart est dit dans
      l'unité de la mise en page, comme celui de l'image : les deux suivent
      ensemble le facteur de zoom. */
-  div[class*="st-key-zone_langue_h"] { top: 24px; right: calc(30px - 2.6rem); }
+  /* L'ACCUEIL PORTE MAINTENANT L'EMBLÈME DU PNUE DANS CET ANGLE : les deux
+     langues se rangent à sa gauche plutôt que dessous. */
+  div[class*="st-key-zone_langue_h"] { top: 26px; right: calc(126px - 2.6rem); }
   /* SUR LES AUTRES PAGES, LE MÊME ANGLE EST PRIS. Le bandeau dessiné y porte
      l'emblème du Programme des Nations unies pour l'environnement ; les codes
      de langue s'arrêtent avant lui, dans le ciel du dessin. */
@@ -2306,10 +2304,10 @@ with _zone_nav:
         '<div class="nav-pied"><div class="nav-mot">'
         + icones.svg("pousse", couleur="#6d9683", taille=15)
         + f'<div class="nav-devise">{T("pied_devise")}</div></div>'
-        f'<div class="nav-credit">'
-        f'<img alt="UNEP" src="data:image/png;base64,{assets.LOGO_UNEP}">'
-        f'<span>{T("pied_credit", a=datetime.date.today().year)}</span>'
-        f'</div></div>',
+        f'<div class="nav-unep">'
+        f'<img alt="UNEP" src="data:image/png;base64,'
+        f'{assets.LOGO_UNEP_BLANC}"></div>'
+        '</div>',
         unsafe_allow_html=True)
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
