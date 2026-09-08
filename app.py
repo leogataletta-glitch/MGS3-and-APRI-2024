@@ -192,17 +192,24 @@ if not check_password():
 # une phrase qui court sur 1400 px est illisible, c'est ce qui rendait les
 # blocs de texte pénibles à lire.
 @st.cache_data(show_spinner=False)
-def _dessin_b64():
-    """L'aquarelle du bas de colonne, lue une fois.
+def _dessin_b64(nom="dessin_vallee.png"):
+    """Une aquarelle de bas de colonne, lue une fois.
 
-    UN FICHIER ABSENT NE LAISSE PAS DE TROU : le bloc n'est simplement pas
-    rendu, et la colonne se termine sur la devise comme avant.
+    DEUX PLANCHES, ET ELLES NE DISENT PAS LA MÊME CHOSE. La vallée de la
+    Voldrogue ferme l'accueil, où la photographie du même paysage occupe déjà
+    le haut de la page : le dessin la prolonge. Les pages intérieures, elles,
+    portent la plaine de Camp-Perrin dans leur bande ; leur colonne reçoit
+    donc la mangrove, troisième milieu du territoire, plutôt que de redire
+    l'un des deux autres.
+
+    UN FICHIER ABSENT NE LAISSE PAS DE TROU : le fond garde son seul dégradé,
+    et la colonne se termine sur la devise.
     """
     import base64 as _b64
     for base in (os.path.join(os.path.dirname(os.path.abspath(__file__)),
                               "data"),
                  os.path.dirname(os.path.abspath(__file__))):
-        p = os.path.join(base, "dessin_vallee.png")
+        p = os.path.join(base, nom)
         if os.path.exists(p):
             with open(p, "rb") as f:
                 return _b64.b64encode(f.read()).decode()
@@ -2398,6 +2405,20 @@ with _zone_langue:
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par
 # la colonne de gauche qu'on vient de rendre.
 _rendre_ruban(st.session_state["app_mode"] != MODE_PORTAIL)
+
+# LA PLANCHE DU BAS DE COLONNE CHANGE AVEC LA PAGE, et il faut pour cela une
+# seconde feuille : la première est écrite avant qu'on sache où l'on est. Elle
+# ne redéclare que le fond de la colonne, une ligne, et la règle qui vient
+# après l'emporte sans qu'on ait à forcer quoi que ce soit.
+if st.session_state["app_mode"] != MODE_PORTAIL and _dessin_b64("dessin_mangrove.png"):
+    st.markdown(
+        '<style>div[data-testid="stColumn"]:has(div[class*="st-key-zone_nav"]) {'
+        'background:'
+        ' url("data:image/png;base64,'
+        + _dessin_b64("dessin_mangrove.png")
+        + '") left bottom / 360px auto no-repeat fixed,'
+        ' linear-gradient(180deg, #eef2ed 0%, #e3eae4 100%); }</style>',
+        unsafe_allow_html=True)
 
 app_mode = st.session_state["app_mode"]
 
