@@ -1394,13 +1394,15 @@ st.markdown(("""
      l'emblème du Programme des Nations unies pour l'environnement ; les codes
      de langue s'arrêtent avant lui, dans le ciel du dessin. */
   div[class*="st-key-zone_langue_r"] { top: 16px; right: calc(126px - 2.6rem); }
-  /* ET LÀ, UNE PASTILLE SOMBRE. Sur l'accueil les deux codes tombent dans le
-     ciel de la photographie, où l'encre suffit ; sur les autres pages le même
-     angle du bandeau dessiné est occupé par des frondaisons, et deux mots
-     d'encre avec leur halo blanc s'y perdaient. La pastille ne dépasse pas les
-     mots, et le vert du site s'y lit encore : c'est une couleur du dessin, pas
-     une plaque posée dessus. */
-  div[class*="st-key-zone_langue_r"] {
+  /* UNE PASTILLE SOMBRE, ET SUR TOUTES LES PAGES. Elle n'existait que sur le
+     bandeau dessiné, où des frondaisons occupent cet angle ; sur l'accueil,
+     les deux codes étaient posés à nu dans le ciel de la photographie, et le
+     ciel change de valeur d'un cliché à l'autre — clair sur la vallée, plus
+     chargé sur le port. Deux traitements pour un même objet, c'était déjà une
+     règle de trop ; et sur la photographie du port, l'encre nue devenait
+     illisible. La pastille est donc partout : elle ne dépasse pas les mots,
+     et l'image continue de se lire à travers. */
+  div[class*="st-key-zone_langue"] {
     background: rgba(16,40,29,.46); border-radius: 999px;
     padding: 3px 13px 4px !important;
     backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
@@ -1409,18 +1411,18 @@ st.markdown(("""
      exactement le poids de celles qui donnent leur encre aux deux codes plus
      bas dans la feuille, et c'est l'ordre d'écriture qui tranche — contre
      elles. Un segment de plus, et la pastille l'emporte. */
-  div[class*="st-key-zone_langue_r"] div[class*="st-key-lang_"]
+  div[class*="st-key-zone_langue"] div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button p {
     color: rgba(255,255,255,.74) !important;
     text-shadow: 0 1px 3px rgba(0,0,0,.4) !important;
   }
-  div[class*="st-key-zone_langue_r"] div[class*="st-key-lang_"]
+  div[class*="st-key-zone_langue"] div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button:hover p,
-  div[class*="st-key-zone_langue_r"] div[class*="st-key-lang_"]
+  div[class*="st-key-zone_langue"] div[class*="st-key-lang_"]
   div[data-testid="stButton"] > button[kind="primary"] p {
     color: #ffffff !important;
   }
-  div[class*="st-key-zone_langue_r"] div[data-testid="stColumn"]:last-child
+  div[class*="st-key-zone_langue"] div[data-testid="stColumn"]:last-child
   div[class*="st-key-lang_"]::before { background: rgba(255,255,255,.45); }
   /* Streamlit donne au conteneur du bouton la largeur de son mot : sans ces
      deux lignes, le `width:100%` du bouton vaut 100 % de vingt-cinq pixels,
