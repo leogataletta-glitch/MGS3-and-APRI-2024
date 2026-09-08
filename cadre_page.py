@@ -32,6 +32,7 @@ from urllib.parse import quote
 
 import streamlit as st
 
+import acquisition_env
 import environnement_cadre
 import trajectoires
 import i18n
@@ -2079,20 +2080,23 @@ MIN_SECTION = 120
 # barèmes réels sans dire ce qu'ils produisent. Les deux se lisent maintenant
 # au même endroit, et la chaîne tourne sur l'indicateur qu'on a ouvert.
 VUES = ("mesure", "sources", "indicateurs", "boucles",
-        "environnement", "document")
+        "environnement", "acquisition", "document")
 # `_LIB` porte les intitulés longs ; ils ne sont plus rendus depuis que la
 # barre a pris les titres courts, mais la table reste la carte des sept vues.
 _LIB = {"mesure": "cad_o1", "sources": "cad_o2",
         "indicateurs": "cad_c35", "boucles": "cad_o5",
-        "environnement": "cad_o6", "document": "cad_o7"}
+        "environnement": "cad_o6", "acquisition": "aq_onglet",
+        "document": "cad_o7"}
 _COURT = {"mesure": "cad_c1", "sources": "cad_c2",
           "indicateurs": "cad_c35", "boucles": "cad_c5",
-          "environnement": "cad_c6", "document": "cad_c7"}
+          "environnement": "cad_c6", "acquisition": "aq_court",
+          "document": "cad_c7"}
 # LA LIGNE DE DESCRIPTION DE CHAQUE ONGLET, dans le format à deux lignes que
 # portent désormais toutes les barres du site.
 _DESC = {"mesure": "cad_d1", "sources": "cad_d2",
          "indicateurs": "cad_d35", "boucles": "cad_d5",
-         "environnement": "cad_d6", "document": "cad_d7"}
+         "environnement": "cad_d6", "acquisition": "aq_desc",
+         "document": "cad_d7"}
 
 
 def render(doc_complet=None):
@@ -2132,6 +2136,10 @@ def render(doc_complet=None):
         _v_boucles()
     elif vue == "environnement":
         _v_environnement()
+    elif vue == "acquisition":
+        # L'ÉCART SUIT LE CADRE, IL NE LE PRÉCÈDE PAS : on lit d'abord ce que
+        # le protocole demande, on voit ensuite ce qui en est acquis.
+        acquisition_env.render()
     elif vue == "document":
         _v_document(doc_complet)
     else:
