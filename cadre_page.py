@@ -476,6 +476,26 @@ TEXTES = {
     "cad_bl_m_t": {"en": "Opposite direction", "fr": "Sens contraire"},
     "cad_bl_m_x": {"en": "If A increases, B decreases.",
                    "fr": "Si A augmente, B diminue."},
+    # LE SIGNE DE LA SPIRALE, QUE LE TYPE NE DIT PAS. Une boucle renforçante
+    # amplifie ce qu'on lui donne, sans plus : c'est le sens dans lequel on la
+    # pousse qui décide si elle est vertueuse ou vicieuse. Le dire évite le
+    # contresens le plus courant, qui est de lire « renforçante » comme
+    # « mauvaise » et « équilibrante » comme « bonne ».
+    "cad_bl_pm": {
+        "en": "A loop carries no verdict of its own. A reinforcing loop is "
+              "virtuous when pushed upwards (R+) and vicious when pushed "
+              "downwards (R−): the same forest, income and fuelwood loop "
+              "either restores the cover or strips it. A balancing loop holds "
+              "the system where it is, which is good when that state is "
+              "liveable (B+) and bad when it locks in a degraded one (B−).",
+        "fr": "Une boucle ne porte aucun verdict par elle-même. Une boucle "
+              "renforçante est vertueuse quand on la pousse vers le haut "
+              "(R+) et vicieuse quand on la pousse vers le bas (R−) : la "
+              "même boucle du couvert, du revenu et du bois-énergie "
+              "reconstitue la forêt ou la rase. Une boucle équilibrante "
+              "tient le système où il est, ce qui est bon quand cet état est "
+              "vivable (B+) et mauvais quand il verrouille un état dégradé "
+              "(B−)."},
     "cad_bl_r": {"en": "R — Reinforcing", "fr": "R — Renforçante"},
     "cad_bl_r_x": {"en": "Amplifies change", "fr": "Amplifie le changement"},
     "cad_bl_b": {"en": "B — Balancing", "fr": "B — Équilibrante"},
@@ -2613,7 +2633,12 @@ def _v_boucles():
         # pas dire bon » posé sous deux pastilles qui portent chacune sa
         # phrase redisait en négatif ce que les deux disaient déjà en clair.
         f'<div class="cad-bl-u">{_e(T("cad_uma"))}</div>'
-        '</div></div>', unsafe_allow_html=True)
+        '</div>'
+        # LE SIGNE DE LA SPIRALE, sous les deux pastilles : il concerne les
+        # deux types, il ne peut donc vivre dans aucune des deux.
+        f'<div class="cad-bm-x" style="margin:14px 0 0">'
+        f'{_e(T("cad_bl_pm"))}</div>'
+        '</div>', unsafe_allow_html=True)
 
     # ---- la méthode, et ses références -----------------------------------
     refs = []
