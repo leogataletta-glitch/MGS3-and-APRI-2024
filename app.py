@@ -1845,10 +1845,10 @@ TEXTES_NAV = {
     # LA BANDE DES PAGES INTÉRIEURES MONTRE UN LIEU PRÉCIS, et le disait
     # nulle part : une plaine irriguée du Sud passait pour un décor.
     "bandeau_credit": {
-        "en": "Irrigated farmland of the Camp-Perrin plain, Sud department, "
-              "Haiti, 2024.",
-        "fr": "Paysage agricole irrigué de la plaine de Camp-Perrin, "
-              "département du Sud, Haïti, 2024."},
+        "en": "The Voldrogue's incised river valley and alluvial plain, "
+              "Grand'Anse, Haiti — drawing after a 2024 photograph.",
+        "fr": "Vallée encaissée et plaine alluviale de la Voldrogue, "
+              "Grand'Anse, Haïti — dessin d'après une photographie de 2024."},
 
     # --- le pied de page
     "pied_devise": {
@@ -2272,8 +2272,10 @@ def _rendre_ruban(avec_image):
             f'<div class="bandeau-haut bandeau-enveloppe">'
             f'<img class="bandeau-fond" alt="APRI" '
             f'src="data:image/jpeg;base64,{img}">'
-            f'<img class="bandeau-logo" alt="UNEP" '
-            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
+            # L'EMBLÈME DU PNUE A QUITTÉ LA BANDE. Il y était posé sur une
+            # aquarelle claire où il tenait mal, et il est désormais au bas
+            # de la colonne de gauche, où il signe le site une fois pour
+            # toutes plutôt qu'une fois par page.
             f'<div class="bandeau-credit">'
             f'{html.escape(T("bandeau_credit"))}</div>'
             f'</div>', unsafe_allow_html=True)
