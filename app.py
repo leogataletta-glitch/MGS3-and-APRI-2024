@@ -994,16 +994,21 @@ st.markdown(("""
      elle avait l'air d'une puce orpheline en haut d'un paragraphe ; posée
      contre la première ligne du texte, elle en devient la marque. */
   div[class*="st-key-zone_nav"] .nav-pied .nav-mot {
-    display: flex; align-items: flex-start; gap: 8px;
+    display: flex; align-items: flex-start; justify-content: flex-end;
+    gap: 8px;
   }
   div[class*="st-key-zone_nav"] .nav-pied svg { display: block;
     flex: none; margin-top: 2px; }
   /* AU FIL DE L'EAU, LES DEUX. La feuille de l'application justifie les
      blocs de texte ; sur une colonne de deux cents pixels, la justification
      creuse des rivières entre les mots. */
+  /* LA DEVISE EST FERRÉE À DROITE. Au fer à gauche elle s'alignait sur les
+     rubriques et se lisait comme une entrée de plus ; à droite elle s'en
+     détache et referme la colonne, la pousse restant en tête de sa première
+     ligne. */
   div[class*="st-key-zone_nav"] .nav-devise {
     font-size: 12px; line-height: 1.5; color: #4d5c53;
-    font-style: italic; text-align: left !important;
+    font-style: italic; text-align: right !important;
   }
   /* LA LIGNE DE CRÉDIT A ÉTÉ RETIRÉE, L'EMBLÈME EST RESTÉ. La phrase de
      copyright redisait en petit ce que le bandeau porte déjà ; l'emblème,
