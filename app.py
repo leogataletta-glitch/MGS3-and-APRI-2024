@@ -918,10 +918,19 @@ st.markdown(("""
      pour qu'une bande vide reparaisse sur un bord. Peint comme fond, il
      épouse par construction les bords de la bande verte : il commence où
      elle commence, il finit où elle finit, et aucun réglage ne peut plus
-     l'en écarter. Il est cadré en bas et large de toute la colonne. */
+     l'en écarter.
+
+     IL EST ACCROCHÉ À LA FENÊTRE, PAS À LA PAGE. Accroché à la page, il se
+     posait tout en bas d'une colonne haute de mille cent pixels : on ne le
+     voyait qu'après avoir déroulé jusqu'au bout. Accroché à la fenêtre, il
+     ferme la colonne à l'écran, toujours. Et il est dessiné plus large que la
+     colonne ne peut l'être, si bien qu'il la déborde et se laisse rogner à
+     droite : c'est la seule façon de garantir qu'aucune largeur de fenêtre ne
+     laisse une bande vide sur ce bord. */
   div[data-testid="stColumn"]:has(div[class*="st-key-zone_nav"]) {
     background:
-      url("data:image/png;base64,__DESSIN__") left bottom / 100% auto no-repeat,
+      url("data:image/png;base64,__DESSIN__") left bottom / 360px auto
+        no-repeat fixed,
       linear-gradient(180deg, #eef2ed 0%, #e3eae4 100%);
     border-right: 1px solid #d9e1da;
     margin-left: -2.6rem !important;
