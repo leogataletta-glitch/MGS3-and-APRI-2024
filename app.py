@@ -1899,6 +1899,15 @@ TEXTES_NAV = {
 
     # LA BANDE DES PAGES INTÉRIEURES MONTRE UN LIEU PRÉCIS, et le disait
     # nulle part : une plaine irriguée du Sud passait pour un décor.
+    # CHAQUE PHOTOGRAPHIE DIT CE QU'ELLE MONTRE. Une légende reprise d'une
+    # autre vue serait pire que pas de légende du tout.
+    "bandeau_credit_donnees": {
+        "en": "Ploughed plots at the foot of the hills, Haiti, 2024.",
+        "fr": "Parcelles labourées au pied des mornes, Haïti, 2024."},
+    "bandeau_credit_actions": {
+        "en": "Irrigation canal along a ploughed plot, Haiti, 2024.",
+        "fr": "Canal d'irrigation le long d'une parcelle labourée, Haïti, "
+              "2024."},
     "bandeau_credit": {
         "en": "Irrigated farmland of the Camp-Perrin plain, Sud department, "
               "Haiti, 2024.",
@@ -2247,7 +2256,7 @@ def _entree_nav(mode, icone):
 # o\u00f9 l'on va. Ce qu'il ne faut surtout pas, c'est que les deux listes
 # divergent \u2014 d'o\u00f9 la source unique `_NAV`, dont les deux se servent.
 @st.cache_data(show_spinner=False)
-def _bandeau_b64(lang="fr"):
+def _bandeau_b64(lang="fr", page=""):
     """L'illustration du bandeau, encodée une fois pour toutes.
 
     UNE COMPOSITION PAR LANGUE. Le titre et le sous-titre sont peints DANS
@@ -2277,10 +2286,20 @@ def _bandeau_b64(lang="fr"):
     # lisent comme une seule feuille, là où la photographie posait un
     # rectangle de couleur en haut de l'écran. La photographie reste sous
     # `bandeau_apri_site.jpg` — retirer le dessin la remet en service.
-    noms = ["bandeau_apri_dessin.jpg", "bandeau_apri_site.jpg",
-            "bandeau_apri_large.jpg", "bandeau_apri.jpg"]
+    # UNE BANDE PAR RUBRIQUE, QUAND LA RUBRIQUE EN A UNE. Le même paysage en
+    # tête de huit écrans finit par ne plus rien dire ; une photographie
+    # différente sur les Données et sur les Fiches d'intervention donne à
+    # chacune sa page de garde, et le lecteur sait où il est avant d'avoir lu
+    # un titre. Les rubriques sans photographie propre gardent la plaine de
+    # Camp-Perrin, qui reste la vue par défaut du site.
+    base_nom = {"donnees": "bandeau_donnees", "actions": "bandeau_actions"}.get(
+        page, "bandeau_apri_dessin")
+    noms = [base_nom + ".jpg", "bandeau_apri_dessin.jpg",
+            "bandeau_apri_site.jpg", "bandeau_apri_large.jpg",
+            "bandeau_apri.jpg"]
     if lang == "en":
-        noms.insert(0, "bandeau_apri_dessin_en.jpg")
+        noms.insert(0, base_nom + "_en.jpg")
+        noms.insert(1, "bandeau_apri_dessin_en.jpg")
     for nom in noms:
         for base in (os.path.join(APP_DIR, "data"), APP_DIR):
             essai = os.path.join(base, nom)
@@ -2318,7 +2337,8 @@ def _rendre_ruban(avec_image):
     change de proportion. La hauteur suit donc la largeur, et rien ne sort.
     """
     with _ruban:
-        img = _bandeau_b64(i18n.get_lang()) if avec_image else None
+        page = st.session_state.get("app_mode", "")
+        img = _bandeau_b64(i18n.get_lang(), page) if avec_image else None
         if avec_image and not img:
             avec_image = False
         if not avec_image:
@@ -2330,7 +2350,7 @@ def _rendre_ruban(avec_image):
             f'<img class="bandeau-logo" alt="UNEP" '
             f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
             f'<div class="bandeau-credit">'
-            f'{html.escape(T("bandeau_credit"))}</div>'
+            f'{html.escape(T("bandeau_credit_" + page if "bandeau_credit_" + page in i18n.DICO else "bandeau_credit"))}</div>'
             f'</div>', unsafe_allow_html=True)
 
 
