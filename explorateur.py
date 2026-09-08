@@ -167,7 +167,8 @@ TEXTES = {
     "ex_croiser_plus": {"en": "Cross with another question",
                         "fr": "Croiser avec une autre question"},
     "ex_croiser_n": {"en": "{n} crossed", "fr": "{n} croisées"},
-    "ex_axe_non": {"en": "None", "fr": "Aucun"},
+    # C'EST UN PLACEHOLDER DE LISTE VIDE, DONC UNE INVITATION, pas un état.
+    "ex_axe_non": {"en": "Choose a criterion", "fr": "Choisir un critère"},
     "ex_ax_section": {"en": "Communal section", "fr": "Section communale"},
     "ex_ax_sexe": {"en": "Sex", "fr": "Sexe"},
     "ex_ax_age": {"en": "Age group", "fr": "Tranche d'âge"},
@@ -180,11 +181,17 @@ TEXTES = {
     "ex_s_titre": {"en": "Resilience scores", "fr": "Scores de résilience"},
     "ex_s_dim": {"en": "Dimension", "fr": "Dimension"},
     "ex_s_ind": {"en": "Indicator", "fr": "Indicateur"},
-    "ex_s_toutes": {"en": "All — overall index", "fr": "Toutes — indice global"},
-    "ex_s_tous_i": {"en": "None — dimension score",
-                    "fr": "Aucun — score de la dimension"},
-    "ex_s_tous_i0": {"en": "None — overall index",
-                     "fr": "Aucun — indice global"},
+    # « AUCUN » SE LIT COMME UNE PANNE, PAS COMME UN CHOIX. L'entrée par
+    # défaut de ces deux listes ne veut pas dire qu'il manque quelque chose :
+    # elle veut dire qu'on regarde l'ensemble plutôt qu'une de ses parties.
+    # Elle est donc nommée par ce qu'elle affiche — l'indice global, le score
+    # de la dimension — et non par ce qu'elle ne sélectionne pas.
+    "ex_s_toutes": {"en": "All dimensions — the overall index",
+                    "fr": "Toutes les dimensions — l'indice global"},
+    "ex_s_tous_i": {"en": "All indicators — the dimension score",
+                    "fr": "Tous les indicateurs — le score de la dimension"},
+    "ex_s_tous_i0": {"en": "All indicators — the overall index",
+                     "fr": "Tous les indicateurs — l'indice global"},
     "ex_s_axe": {"en": "Project results by",
                  "fr": "Projeter les résultats par"},
     "ex_s_aucun": {"en": "Nothing — the selection alone",
