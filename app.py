@@ -936,7 +936,7 @@ st.markdown(("""
      laisse une bande vide sur ce bord. */
   div[data-testid="stColumn"]:has(div[class*="st-key-zone_nav"]) {
     background:
-      url("data:image/png;base64,__DESSIN__") left bottom / 360px auto
+      url("data:image/png;base64,__DESSIN__") left bottom / 300px auto
         no-repeat fixed,
       linear-gradient(180deg, #eef2ed 0%, #e3eae4 100%);
     border-right: 1px solid #d9e1da;
@@ -1001,8 +1001,7 @@ st.markdown(("""
      elle avait l'air d'une puce orpheline en haut d'un paragraphe ; posée
      contre la première ligne du texte, elle en devient la marque. */
   div[class*="st-key-zone_nav"] .nav-pied .nav-mot {
-    display: flex; align-items: flex-start; justify-content: flex-end;
-    gap: 8px;
+    display: flex; justify-content: flex-end;
   }
   div[class*="st-key-zone_nav"] .nav-pied svg { display: block;
     flex: none; margin-top: 2px; }
@@ -1011,8 +1010,7 @@ st.markdown(("""
      creuse des rivières entre les mots. */
   /* LA DEVISE EST FERRÉE À DROITE. Au fer à gauche elle s'alignait sur les
      rubriques et se lisait comme une entrée de plus ; à droite elle s'en
-     détache et referme la colonne, la pousse restant en tête de sa première
-     ligne. */
+     détache et referme la colonne. */
   div[class*="st-key-zone_nav"] .nav-devise {
     font-size: 12px; line-height: 1.5; color: #4d5c53;
     font-style: italic; text-align: right !important;
@@ -1709,7 +1707,7 @@ st.markdown(("""
 """).replace("__ICONE_RESET__", icones.regle_masque(
     'section[data-testid="stSidebar"] div[class*="st-key-f_reset_global"] '
     'div[data-testid="stButton"] > button', "rafraichir", 16, 10))
-    .replace("__DESSIN__", _dessin_b64())
+    .replace("__DESSIN__", _dessin_b64("dessin_mangrove.png"))
    ,
     unsafe_allow_html=True)
 
@@ -2358,8 +2356,10 @@ with _zone_nav:
     # LA DEVISE FERME LA COLONNE. Un filet la sépare de la dernière rubrique :
     # sans lui, elle se lirait comme une entrée de menu qui ne mène nulle part.
     st.markdown(
+        # LA POUSSE A ÉTÉ RETIRÉE. Un pictogramme de quinze pixels devant une
+        # phrase de deux lignes, dans une colonne qui porte déjà une aquarelle
+        # en pied : c'était un signe de trop pour une seule idée.
         '<div class="nav-pied"><div class="nav-mot">'
-        + icones.svg("pousse", couleur="#6d9683", taille=15)
         + f'<div class="nav-devise">{T("pied_devise")}</div></div>'
         + '</div>',
         unsafe_allow_html=True)
@@ -2405,20 +2405,6 @@ with _zone_langue:
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par
 # la colonne de gauche qu'on vient de rendre.
 _rendre_ruban(st.session_state["app_mode"] != MODE_PORTAIL)
-
-# LA PLANCHE DU BAS DE COLONNE CHANGE AVEC LA PAGE, et il faut pour cela une
-# seconde feuille : la première est écrite avant qu'on sache où l'on est. Elle
-# ne redéclare que le fond de la colonne, une ligne, et la règle qui vient
-# après l'emporte sans qu'on ait à forcer quoi que ce soit.
-if st.session_state["app_mode"] != MODE_PORTAIL and _dessin_b64("dessin_mangrove.png"):
-    st.markdown(
-        '<style>div[data-testid="stColumn"]:has(div[class*="st-key-zone_nav"]) {'
-        'background:'
-        ' url("data:image/png;base64,'
-        + _dessin_b64("dessin_mangrove.png")
-        + '") left bottom / 300px auto no-repeat fixed,'
-        ' linear-gradient(180deg, #eef2ed 0%, #e3eae4 100%); }</style>',
-        unsafe_allow_html=True)
 
 app_mode = st.session_state["app_mode"]
 
