@@ -502,12 +502,23 @@ def _valeurs(d, spec, annee=None):
     return out, None, None
 
 
+# L'ANNÉE QU'UN LIBELLÉ FORESTIER PORTE N'EST PAS TOUJOURS CELLE DE SON
+# CHAMP. « Forêt perdue depuis … » compte la perte sur toute la période, elle
+# se date donc de son DÉBUT ; « Couverture forestière … » décrit un état, elle
+# se date de l'année de cet état. La règle tenait auparavant à la présence du
+# nombre 2000 dans le nom du champ : `perte_relative_pct` ne le contient pas,
+# et la plateforme annonçait « forêt perdue depuis 2025, en % de la forêt de
+# 2025 » pour une perte mesurée de 2000 à 2025. Les deux familles sont donc
+# nommées, une fois pour toutes.
+_ANNEE_DEBUT = {"foret2000_pct", "perte_relative_pct", "perte_totale_ha"}
+
+
 def _libelle(cle_lib, mesure, d, annee):
     """Le libellé d'une mesure, avec l'année ou la fenêtre qu'elle couvre."""
-    _cat, _c, _l, fichier, spec, _u, _dec, _p = mesure
+    _cat, code, _l, fichier, spec, _u, _dec, _p = mesure
     if fichier == "foret":
         base = (d or {}).get("periode") or [2000, 2025]
-        a = base[0] if "2000" in spec else base[1]
+        a = base[0] if code in _ANNEE_DEBUT else base[1]
         return T(cle_lib, a=a, d1=base[0], d2=base[1])
     ans = _annees(d, spec.split(":")[1]) if spec.startswith("serie:") else []
     if spec.endswith(":delta") and ans:
