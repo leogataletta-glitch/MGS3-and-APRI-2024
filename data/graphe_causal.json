@@ -1419,12 +1419,12 @@
   },
   {
    "de": "abondance_bois",
-   "vers": "pression_bois",
-   "signe": 1,
-   "force": 0.5,
+   "vers": "foret",
+   "signe": -1,
+   "force": 0.6,
    "just": "documentee",
-   "ref_fr": "En Haïti, bois et charbon couvrent environ 80 % des besoins énergétiques et le stock ligneux reculerait d'environ 4 % entre 2017 et 2027 en scénario tendanciel.",
-   "ref_en": "In Haiti wood and charcoal cover about 80 percent of national energy needs, and woody biomass stocks would fall by about 4 percent between 2017 and 2027 under business as usual.",
+   "ref_fr": "Le prélèvement suit le stock accessible : 946 500 tonnes de charbon par an sur une ressource en accès libre et sans contrôle, et un stock ligneux aérien qui reculerait d'environ 4 % entre 2017 et 2027 en scénario tendanciel. Le couvert qui revient devient la coupe de l'année suivante.",
+   "ref_en": "Offtake follows the accessible stock: 946,500 tonnes of charcoal a year drawn from an open-access, unenforced resource, with above-ground woody stock falling by about 4 percent between 2017 and 2027 under business as usual. Cover that grows back becomes next year's cutting.",
    "src": {
     "titre": "Charcoal in Haiti: A National Assessment of Charcoal Production and Consumption Trends",
     "auteurs": "Tarter et al.",
@@ -1437,10 +1437,37 @@
     "type_en": "institutional report",
     "geo_en": "Haiti (national source, directly relevant)"
    },
-   "reserve_fr": "Le rapport documente la pression mais ne mesure pas l'élasticité de la pression à la disponibilité ligneuse, et il révise à la hausse le couvert arboré haïtien en contestant le récit classique des 2 % de forêt : le mécanisme rareté-prix-coupe avancé par le modèle reste donc plausible mais non chiffré.",
    "cite_fr": "TARTER et al. (2018), « Charcoal in Haiti: A National Assessment of Charcoal Production and Consumption Trends », Banque mondiale",
    "cite_en": "TARTER et al. (2018), “Charcoal in Haiti: A National Assessment of Charcoal Production and Consumption Trends”, World Bank",
-   "reserve_en": "The report documents the pressure but does not measure the elasticity of pressure to woody availability, and it revises Haitian tree cover upwards, contesting the classic narrative of 2 % forest: the scarcity-price-cutting mechanism advanced by the model therefore remains plausible but unquantified."
+   "reserve_fr": "LIEN AJOUTÉ : le modèle faisait dépendre la coupe du combustible de cuisson, du revenu, du contrôle forestier et du maintien de la population, mais jamais de la ressource elle-même. Une forêt est un stock prélevé, et sans ce lien toute reconstitution du couvert se maintenait d'elle-même. Le prélèvement est ici posé proportionnel au stock atteignable, hypothèse standard des ressources en accès libre, mais non estimée pour Haïti : la force est posée à dire d'expert.",
+   "reserve_en": "LINK ADDED: the model made cutting depend on cooking fuel, income, forest enforcement and whether people stay, but never on the resource itself. A forest is a stock that is harvested, and without this link any recovery of cover sustained itself. Offtake is set here proportional to the reachable stock, the standard open-access assumption, but it is not estimated for Haiti: the strength is expert-set.",
+   "rho": null,
+   "p": null
+  },
+  {
+   "de": "abondance_bois",
+   "vers": "pression_bois",
+   "signe": -1,
+   "force": 0.5,
+   "just": "documentee",
+   "ref_fr": "En Haïti la demande de charbon ne dépend pas du prix : le prix réel est à peu près stable depuis 1978 malgré le doublement de la population, et 946 500 tonnes sont consommées chaque année pour environ 80 % des besoins énergétiques. Ce qui est sur pied et atteignable est donc coupé, et un stock qui se reconstitue alimente la coupe suivante.",
+   "ref_en": "In Haiti charcoal demand does not follow price: the real price has been roughly flat since 1978 despite a doubling population, and 946,500 tonnes are consumed every year for about 80 percent of energy needs. What stands and can be reached is therefore cut, and a stock that grows back feeds the next round of cutting.",
+   "src": {
+    "titre": "Charcoal in Haiti: A National Assessment of Charcoal Production and Consumption Trends",
+    "auteurs": "Tarter et al.",
+    "annee": 2018,
+    "editeur": "Banque mondiale",
+    "url": "https://documents1.worldbank.org/curated/en/697221548446232632/pdf/134058-CharcoalHaitiWeb.pdf",
+    "geo": "Haïti (source nationale, directement pertinente)",
+    "effet": "Bois de feu et charbon couvrent environ 80 % des besoins énergétiques nationaux ; 946 500 tonnes de charbon consommées par an dont environ 438 000 pour Port-au-Prince ; en scénario tendanciel le stock de biomasse ligneuse aérienne reculerait d'environ 4 % entre 2017 et 2027 ; grand sac de charbon à environ 800 gourdes (12,42 USD) en 2018",
+    "type": "rapport institutionnel",
+    "type_en": "institutional report",
+    "geo_en": "Haiti (national source, directly relevant)"
+   },
+   "reserve_fr": "SENS INVERSÉ APRÈS RELECTURE DES SOURCES DU MODÈLE. Le lien portait auparavant le mécanisme rareté-prix-coupe, qui en fait une boucle renforçante : moins de bois, prix plus haut, coupe plus rentable, encore moins de bois. Deux sources déjà citées dans ce modèle le contredisent pour Haïti — le prix réel du charbon n'y suit pas la rareté du bois (Tarter et al., 2018) et la demande y est quasi inélastique au prix (Chiumia et al., 2026, tripler le prix ne fait reculer l'usage que de 85,8 % à 82,8 %). Quand la demande ne cède pas au prix, l'offre suit la ressource disponible. L'élasticité elle-même n'est pas chiffrée pour Haïti : la force reste au cran moyen.",
+   "cite_fr": "TARTER et al. (2018), « Charcoal in Haiti: A National Assessment of Charcoal Production and Consumption Trends », Banque mondiale",
+   "cite_en": "TARTER et al. (2018), “Charcoal in Haiti: A National Assessment of Charcoal Production and Consumption Trends”, World Bank",
+   "reserve_en": "DIRECTION REVERSED AFTER RE-READING THE MODEL'S OWN SOURCES. The link previously carried the scarcity-price-cutting mechanism, which makes it a reinforcing loop: less wood, higher price, more profitable cutting, less wood still. Two sources already cited in this model contradict that for Haiti — the real price of charcoal does not track wood scarcity (Tarter et al., 2018) and demand is near price-inelastic (Chiumia et al., 2026: tripling the price cut use only from 85.8 to 82.8 percent). Where demand does not yield to price, offtake follows the resource that is there. The elasticity itself is not quantified for Haiti: the strength stays at the middle step."
   },
   {
    "de": "agro_durable",
@@ -2657,11 +2684,11 @@
   {
    "de": "abondance_bois",
    "vers": "rentabilite_charbon",
-   "signe": 1,
+   "signe": -1,
    "force": 0.35,
    "just": "documentee",
-   "ref_fr": "Étude de terrain sur le bois-énergie urbain en RDC : les prix du bois-énergie et les revenus des producteurs montent avec la raréfaction perçue de la ressource, l'auteure notant le potentiel de revenu des ressources rares et demandées.",
-   "ref_en": "Field study of urban woodfuel in DR Congo: fuelwood prices and producer revenues rise with perceived scarcity, the author noting the income potential of scarce resources in demand.",
+   "ref_fr": "Un stock dense et proche rend la journée de coupe plus payante que la même journée passée à chercher du bois loin et clairsemé : l'abondance augmente le revenu tiré du charbon, elle ne le réduit pas.",
+   "ref_en": "A dense stock close by makes a day of cutting pay better than the same day spent gathering scattered wood far away: abundance raises the income drawn from charcoal rather than lowering it.",
    "cite_fr": "SCHURE (2014), « Woodfuel for urban markets in the Congo Basin: a livelihood perspective », thèse, Université de Wageningen",
    "cite_en": "SCHURE (2014), “Woodfuel for urban markets in the Congo Basin: a livelihood perspective”, PhD thesis, Wageningen University",
    "src": {
@@ -2676,8 +2703,8 @@
     "type": "étude de terrain, thèse de doctorat",
     "type_en": "field study, PhD thesis"
    },
-   "reserve_fr": "CONTRADICTION DOCUMENTÉE POUR HAÏTI : l'évaluation nationale du charbon (Banque mondiale/PROFOR, 2018) constate que le prix réel du charbon y est resté à peu près stable depuis 1978 malgré le doublement de la population, les hausses suivant les prix des carburants plutôt que la rareté du bois. Le lien est donc retenu au cran faible.",
-   "reserve_en": "DOCUMENTED CONTRADICTION FOR HAITI: the national charcoal assessment (World Bank/PROFOR, 2018) finds the real price of charcoal roughly flat since 1978 despite a doubling population, price moves tracking fuel prices rather than wood scarcity. The link is therefore kept at a low step.",
+   "reserve_fr": "SENS INVERSÉ. Le lien portait le mécanisme rareté-prix relevé en RDC (Schure, 2014), déjà signalé ici comme contredit pour Haïti : l'évaluation nationale du charbon (Banque mondiale/PROFOR, 2018) constate que le prix réel y est resté à peu près stable depuis 1978 malgré le doublement de la population, les hausses suivant les prix des carburants plutôt que la rareté du bois. Le sens retenu est donc celui du rendement de la coupe et non celui du prix, et la force reste au cran faible : aucune des deux lectures n'est chiffrée pour Haïti.",
+   "reserve_en": "DIRECTION REVERSED. The link carried the scarcity-price mechanism observed in DR Congo (Schure, 2014), already flagged here as contradicted for Haiti: the national charcoal assessment (World Bank/PROFOR, 2018) finds the real price roughly flat since 1978 despite a doubling population, price moves tracking fuel prices rather than wood scarcity. The direction kept is therefore the yield of a day's cutting and not the price, and the strength stays at the low step: neither reading is quantified for Haiti.",
    "conteste": true
   },
   {
@@ -2923,7 +2950,7 @@
   "date": "2026-09-08",
   "methode_fr": "Chaque lien a été recherché sur le web, la source ouverte et vérifiée, et sa taille d'effet relevée. Les liens sans source vérifiable le disent.",
   "methode_en": "Every link was searched on the web, the source opened and checked, and its effect size recorded. Links with no verifiable source say so.",
-  "n_verifiees": 100,
+  "n_verifiees": 101,
   "n_sans_source": 0,
   "n_contestees": 12
  }
