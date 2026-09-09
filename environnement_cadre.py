@@ -123,10 +123,18 @@ STYLE = """
   .ev-fl-x { font-size:11.5px; color:#8a93a5; margin-top:3px; line-height:1.4; }
   .ev-ch   { align-self:center; color:#c3ccda; font-size:16px; flex:0 0 auto; }
   .ev-tab  { width:100%; border-collapse:collapse; font-size:12px; }
-  .ev-tab th { text-align:left; padding:8px 10px; border-bottom:2px solid #e6ecf4;
+  /* AUCUN TRAIT DE COLONNE, SEULEMENT LES LIGNES. La feuille de style de
+     base pose une bordure sur les quatre côtés de chaque cellule, et nos
+     règles n'écrasaient que celle du bas : il restait un quadrillage
+     vertical qui découpait en cases un tableau dont les colonnes se lisent
+     déjà par leur alignement. On remet les quatre côtés à zéro, puis on ne
+     redonne que le filet horizontal. */
+  .ev-tab th, .ev-tab td { border: 0 !important; }
+  .ev-tab th { text-align:left; padding:8px 10px;
+             border-bottom:2px solid #e6ecf4 !important;
              font-size:10.5px; letter-spacing:.05em; text-transform:uppercase;
              color:#6b7590; font-weight:700; }
-  .ev-tab td { padding:8px 10px; border-bottom:1px solid #f0f4f9;
+  .ev-tab td { padding:8px 10px; border-bottom:1px solid #f0f4f9 !important;
              color:#3c4761; line-height:1.5; vertical-align:top; }
   .ev-tab td:first-child { font-weight:700; color:#101728; }
   .ev-seuil { font-variant-numeric:tabular-nums; white-space:nowrap;

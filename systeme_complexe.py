@@ -460,13 +460,21 @@ STYLE = """
        text-transform:none; font-size:10.5px; color:#a2aab8;
        margin-top:3px; line-height:1.35; }
   .sx-tab { width:100%; border-collapse:collapse; margin-top:12px; }
+  /* AUCUN TRAIT DE COLONNE, SEULEMENT LES LIGNES. La feuille de style de
+     base pose une bordure sur les quatre côtés de chaque cellule, et nos
+     règles n'écrasaient que celle du bas : il restait un quadrillage
+     vertical qui découpait en cases un tableau dont les colonnes se lisent
+     déjà par leur alignement. On remet les quatre côtés à zéro, puis on ne
+     redonne que le filet horizontal. */
+  .sx-tab th, .sx-tab td { border: 0 !important; }
   .sx-tab th { font-size:10.5px; font-weight:700; letter-spacing:.09em;
        text-transform:uppercase; color:#8a93a5; text-align:left;
-       padding:0 9px 7px 0; border-bottom:1px solid #e9eef4; }
+       padding:0 9px 7px 0;
+       border-bottom:1px solid #e9eef4 !important; }
   .sx-tab th.n, .sx-tab td.n { text-align:right;
        font-variant-numeric:tabular-nums; }
   .sx-tab td { font-size:12.5px; color:#3c4761; padding:7px 9px 7px 0;
-       border-bottom:1px solid #f2f5f9; vertical-align:top; }
+       border-bottom:1px solid #f2f5f9 !important; vertical-align:top; }
   .sx-tab td.v { font-weight:700; color:#101728; }
   .sx-kpi { display:flex; gap:14px; flex-wrap:wrap; margin:6px 0 10px; }
   .sx-k { flex:1 1 170px; background:#fff; border:1px solid #e3eaf3;

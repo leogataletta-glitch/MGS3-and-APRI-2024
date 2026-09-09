@@ -1430,13 +1430,21 @@ STYLE = """
   .sat-lab { font-size:10.5px; font-weight:700; letter-spacing:.09em;
        text-transform:uppercase; color:#8a93a5; margin:10px 0 2px; }
   .sat-tab { width:100%; border-collapse:collapse; margin-top:12px; }
+  /* AUCUN TRAIT DE COLONNE, SEULEMENT LES LIGNES. La feuille de style de
+     base pose une bordure sur les quatre côtés de chaque cellule, et nos
+     règles n'écrasaient que celle du bas : il restait un quadrillage
+     vertical qui découpait en cases un tableau dont les colonnes se lisent
+     déjà par leur alignement. On remet les quatre côtés à zéro, puis on ne
+     redonne que le filet horizontal. */
+  .sat-tab th, .sat-tab td { border: 0 !important; }
   .sat-tab th { font-size:10.5px; font-weight:700; letter-spacing:.09em;
        text-transform:uppercase; color:#8a93a5; text-align:left;
-       padding:0 10px 7px 0; border-bottom:1px solid #e9eef4; }
+       padding:0 10px 7px 0;
+       border-bottom:1px solid #e9eef4 !important; }
   .sat-tab th.n, .sat-tab td.n { text-align:right;
        font-variant-numeric:tabular-nums; }
   .sat-tab td { font-size:12.5px; color:#3c4761; padding:7px 10px 7px 0;
-       border-bottom:1px solid #f2f5f9; }
+       border-bottom:1px solid #f2f5f9 !important; }
   .sat-tab td.v { font-weight:700; color:#101728; }
   .sat-note { font-size:11.5px; color:#8a93a5; line-height:1.5;
        margin:8px 0 0; text-align:left !important; max-width:96ch; }
