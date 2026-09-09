@@ -200,6 +200,18 @@ MESURES = [
     ("frag", "iic_d", "sat_m_iic_d", "frag", "iic_d", "", 3, "eleve_bon"),
     ("frag", "aire_habitat_ha", "sat_m_hab_ha", "frag", "aire_habitat_ha",
      " ha", 1, "eleve_bon"),
+    # --- L'ACCÈS ROUTIER. Ni orbite ni indice spectral : un réseau routier
+    # ouvert et un raster de population. La mesure retenue par le
+    # référentiel est la première ; les deux suivantes sont là parce que le
+    # chiffre dépend d'une définition, et qu'un lecteur doit pouvoir voir de
+    # combien.
+    ("acces", "acces_axe", "sat_m_acces", "acces", "acces_axe", "%", 1,
+     "eleve_bon"),
+    ("acces", "acces_pistes", "sat_m_acces_p", "acces", "acces_pistes",
+     "%", 1, "eleve_bon"),
+    ("acces", "acces_classe", "sat_m_acces_c", "acces", "acces_classe",
+     "%", 1, "eleve_bon"),
+    ("acces", "pop", "sat_m_pop", "acces", "pop", "", 0, "eleve_bon"),
 ]
 
 # LA MESURE BRUTE ET SA NOTE SONT LE MÊME OBJET, VU DEUX FOIS. Le référentiel
@@ -215,12 +227,13 @@ LIGNES = {
     "taux_annuel_net": 54, "ndti": 63,
     "pc_d": 64, "pc_d2": 65, "iic": 66, "iic_d": 67,
     "densite_lisiere_m_ha": 68, "ratio_core_move": 69, "core_pct": 70,
+    "acces_axe": 8,
 }
 
 # LES ONGLETS, DANS L'ORDRE OÙ ON LES PARCOURT : ce qui couvre le sol, puis
 # ce qui l'arrose, puis ce qui l'assèche.
 CATEGORIES = ("foret", "frag", "vege", "eau", "pluie", "saison", "temp",
-              "aridite")
+              "aridite", "acces")
 
 
 TEXTES = {
@@ -231,18 +244,20 @@ TEXTES = {
     # d'habitat sont arrivées depuis, et la page annonçait toujours
     # cinquante-six.
     "sat_intro": {
-        "en": "{n} measurements taken from orbit for each of the ten "
-              "communal sections: forest, the shape of the habitat, "
+        "en": "{n} measurements from imagery and open geodata for each of "
+              "the ten communal sections: forest, the shape of the habitat, "
               "vegetation, surface water, rainfall since 1981, the rainy "
-              "season, surface temperature since 2001 and the water "
-              "balance. These are raw measurements: where the framework "
-              "publishes a scale, the score sits under the chart.",
-        "fr": "{n} mesures prises depuis l'orbite pour chacune des dix "
-              "sections communales : forêt, forme de l'habitat, végétation, "
-              "eau de surface, pluie depuis 1981, saison des pluies, "
-              "température de surface depuis 2001 et bilan hydrique. Ce sont "
-              "des mesures brutes : là où le référentiel publie un barème, "
-              "la note est sous le graphique."},
+              "season, surface temperature since 2001, the water balance "
+              "and road access. These are raw measurements: where the "
+              "framework publishes a scale, the score sits under the "
+              "chart.",
+        "fr": "{n} mesures tirées de l'imagerie et de données "
+              "géographiques ouvertes, pour chacune des dix sections "
+              "communales : forêt, forme de l'habitat, végétation, eau de "
+              "surface, pluie depuis 1981, saison des pluies, température "
+              "de surface depuis 2001, bilan hydrique et accès routier. Ce "
+              "sont des mesures brutes : là où le référentiel publie un "
+              "barème, la note est sous le graphique."},
     "sat_source": {"en": "Source", "fr": "Source"},
     "sat_mesure": {"en": "Measurement", "fr": "Mesure"},
     "sat_annee": {"en": "Year", "fr": "Année"},
@@ -297,6 +312,24 @@ TEXTES = {
     "sat_c_saison": {"en": "Rainy season", "fr": "Saison des pluies"},
     "sat_c_temp": {"en": "Temperature", "fr": "Température"},
     "sat_c_aridite": {"en": "Water balance", "fr": "Bilan hydrique"},
+    "sat_c_acces": {"en": "Road access", "fr": "Accès routier"},
+    "sat_cd_acces": {
+        "en": "Population within 2 km of a road, and what the definition of "
+              "a road changes",
+        "fr": "Population à moins de 2 km d'une route, et ce que change la "
+              "définition d'une route"},
+    "sat_m_acces": {
+        "en": "Population within 2 km of a drivable road, tracks excluded",
+        "fr": "Population à moins de 2 km d'un axe carrossable, pistes "
+              "exclues"},
+    "sat_m_acces_p": {
+        "en": "Same, counting tracks as roads",
+        "fr": "La même, en comptant les pistes comme des routes"},
+    "sat_m_acces_c": {
+        "en": "Same, classified network only",
+        "fr": "La même, réseau classé seulement"},
+    "sat_m_pop": {"en": "Section population, WorldPop 2020",
+                  "fr": "Population de la section, WorldPop 2020"},
     "sat_c_frag": {"en": "Habitat shape", "fr": "Forme de l'habitat"},
     "sat_cd_frag": {
         "en": "How much habitat is left, in how many pieces, and whether "
@@ -589,6 +622,59 @@ TEXTES = {
               "connectivité entre deux sections voisines n'est pas comptée. "
               "Chaque section est décrite comme si elle était seule, ce qui "
               "sous-estime la connectivité des sections mitoyennes."},
+    "sat_calc_acces": {
+        "en": "The road network comes from OpenStreetMap, the population "
+              "from WorldPop 2020 UN-adjusted at 3 arcsec, about 92 m. The "
+              "network is densified every 100 m, so the distance from a "
+              "populated pixel to the nearest road is exact to within fifty "
+              "metres against a threshold of two thousand. For each "
+              "section, the population of the pixels inside the section and "
+              "within 2 km of the network is divided by the section's total "
+              "population. THE ALL-SEASON CONDITION IN THE FRAMEWORK'S "
+              "TITLE IS NOT APPLIED: surface is tagged on only 11 % of the "
+              "ways in OSM, and keeping it would have rested the indicator "
+              "on the completeness of that tagging rather than on the state "
+              "of the roads. What is applied instead is a definition of a "
+              "road: classified network and access roads, 1,618 km. Counting "
+              "tracks as well brings it to 3,129 km and the territory "
+              "figure from 96.6 to 98.8 %; keeping only the classified "
+              "network, 291 km, drops it to 74.6 %. The three are shown "
+              "here because the choice is worth more score than the "
+              "computation.",
+        "fr": "Le réseau vient d'OpenStreetMap, la population de WorldPop "
+              "2020 ajustée ONU à 3 secondes d'arc, environ 92 m. Le réseau "
+              "est densifié tous les 100 m, si bien que la distance d'un "
+              "pixel peuplé à la route la plus proche est juste à cinquante "
+              "mètres près, pour un seuil de deux mille. Pour chaque "
+              "section, la population des pixels situés dans la section et "
+              "à moins de 2 km du réseau est divisée par la population "
+              "totale de la section. LA CONDITION « PRATICABLE EN TOUTE "
+              "SAISON » DU LIBELLÉ N'EST PAS APPLIQUÉE : la surface n'est "
+              "renseignée que sur 11 % des voies dans OSM, et la retenir "
+              "aurait fait reposer l'indicateur sur la complétude de "
+              "l'étiquetage plutôt que sur l'état des routes. Ce qui est "
+              "appliqué, en revanche, c'est une définition de la route : "
+              "réseau classé et voies de desserte, 1 618 km. En comptant "
+              "aussi les pistes, on passe à 3 129 km et le chiffre du "
+              "territoire de 96,6 à 98,8 % ; en ne gardant que le réseau "
+              "classé, 291 km, il tombe à 74,6 %. Les trois sont affichées "
+              "ici parce que le choix vaut plus de points que le calcul."},
+    "sat_src_acces": {
+        "en": "{s}. Population: {p}. Threshold {d} m. Retained network "
+              "{k:,.0f} km.",
+        "fr": "{s}. Population : {p}. Seuil {d} m. Réseau retenu "
+              "{k:,.0f} km."},
+    "sat_ref_zonal_acces": {
+        "en": "This figure is not an average of pixels: it is a share of "
+              "population. A section whose people all live along the one "
+              "road that crosses it scores high even if nine tenths of its "
+              "ground is unreachable — which is the intent, since the "
+              "indicator is about people, not about land.",
+        "fr": "Ce chiffre n'est pas une moyenne de pixels : c'est une part "
+              "de population. Une section dont tous les habitants vivent le "
+              "long de la seule route qui la traverse est bien notée même "
+              "si les neuf dixièmes de son sol sont inaccessibles — c'est "
+              "voulu, l'indicateur parle des gens, pas du territoire."},
     "sat_src_frag": {
         "en": "{s}. Habitat: tree cover, shrubland, herbaceous wetland, "
               "mangrove; grassland excluded. Edge depth {l} m, dispersal "
@@ -701,6 +787,20 @@ TEXTES = {
               "single year.",
         "fr": "Dans {s}, {v} % de toute la forêt perdue depuis {a} l\u2019a "
               "été en une seule année."},
+    "sat_p_acces_axe": {
+        "en": "{v} % of the people of {s} live within 2 km of a drivable "
+              "road.",
+        "fr": "{v} % des habitants de {s} vivent à moins de 2 km d'un axe "
+              "carrossable."},
+    "sat_p_acces_pistes": {
+        "en": "Counting tracks as roads, {v} % of {s}.",
+        "fr": "En comptant les pistes comme des routes, {v} % pour {s}."},
+    "sat_p_acces_classe": {
+        "en": "On the classified network alone, {v} % of {s}.",
+        "fr": "Sur le seul réseau classé, {v} % pour {s}."},
+    "sat_p_pop": {
+        "en": "{s} holds about {v} inhabitants.",
+        "fr": "{s} compte environ {v} habitants."},
     "sat_p_habitat_pct": {
         "en": "{v} % of {s} is natural habitat: tree cover, shrubland, "
               "wetland or mangrove.",
@@ -944,7 +1044,8 @@ def _charger():
                      ("pluie", "pluie.json"),
                      ("saison", "pluie_saison.json"),
                      ("thermique", "thermique.json"),
-                     ("frag", "fragmentation.json")):
+                     ("frag", "fragmentation.json"),
+                     ("acces", "acces_routier.json")):
         p = os.path.join(DATA, nom)
         if not os.path.exists(p):
             p = os.path.join(APP_DIR, nom)
@@ -1062,6 +1163,10 @@ def _source(fichier, d):
         return T("sat_src_thermique", s=d.get("source", "—"),
                  d1=per[0], d2=per[-1], n1=nor[0], n2=nor[1],
                  f1=fen[0], f2=fen[1])
+    if fichier == "acces":
+        return T("sat_src_acces", s=d.get("source", "—"),
+                 p=d.get("population", "—"), d=d.get("seuil_m", 2000),
+                 k=(d.get("reseau_km") or {}).get("standard", 0))
     if fichier == "frag":
         pa = d.get("parametres") or {}
         return T("sat_src_frag", s=pa.get("source", "—"),
@@ -1287,8 +1392,8 @@ def _dossier(mesure, vals, unite, dec):
     lang = i18n.get_lang()
     ligne = LIGNES.get(mesure[1])
     r = _referentiel().get(ligne) if ligne else None
-    zonal = ("sat_ref_zonal_frag" if mesure[3] == "frag"
-             else "sat_ref_zonal")
+    zonal = {"frag": "sat_ref_zonal_frag",
+             "acces": "sat_ref_zonal_acces"}.get(mesure[3], "sat_ref_zonal")
     with st.expander(T("sat_ref_t")):
         cal0 = "sat_calc_" + mesure[3]
         if not r:
