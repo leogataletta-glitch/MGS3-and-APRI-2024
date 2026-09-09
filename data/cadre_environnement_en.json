@@ -1,0 +1,346 @@
+{
+ "terrain": [
+  {
+   "nom": "Species richness",
+   "unite": "Dragonflies (Od) number of species recorded along a standardised transect\n\nBirds (Oi) number of species recorded along a standardised transect\n\nPollinators (Po) number of pollinator species or specific morpho-groups recorded along a standardised transect",
+   "s0": "(Od) Complete absence of dragonflies or only one tolerant species a sign of polluted stagnant water an eroded gully or a river cut off by siltation\n(Oi) Complete absence of birds or the sole presence of tolerant and ubiquitous species such as xxx a sign of extreme degradation of the farmed landscape and of the near disappearance of natural habitats\n(Po) Complete absence of pollinators or the sole presence of a tolerant opportunistic taxon such as xxx but with no wild bees or butterflies a sign of extreme degradation absence of wild flowers intensive pesticides or bare soils",
+   "s10": "(Od) More than fifteen species in a single reach presence of sensitive families such as xxxx  a sign of clear water of good forest connectivity and of very low human pressure in the catchment\n\n(Oi) More than 25 (?) species in a single transect including the presence of sensitive endemics or near-endemics such as xxx or high quality forest species a sign of a near-reference state with high diversity and strong ecological recovery capacity\n(Po) More than twenty five species along a transect including a great diversity of wild bees  varied day-flying butterflies and several sensitive hawkmoths a sign of a habitat  with a diversified floral mosaic high connectivity and strong recovery capacity"
+  },
+  {
+   "nom": "Relative Abundance",
+   "unite": "Dragonflies (Od) number of individuals recorded per taxon or functional group along a standardised transect\nBirds (Oi) number of individuals recorded per functional guild along a standardised transect\nPollinators (Po) number of individuals recorded per taxon or functional group along a standardised transect",
+   "s0": "(Od) Complete absence of individuals or one or two highly tolerant dragonflies, almost no activity, degraded, stagnant or highly turbid water, larval habitats destroyed.\n\n(Oi) Complete absence of birds or a single tolerant generalist individual, ecological silence, no insectivores or nectarivores, highly degraded landscape.\n\n(Po) Complete absence of individuals, only one or two opportunistic records, no wild bees or butterflies, complete absence of floral activity.",
+   "s10": "(Od) More than fifty individuals recorded along a transect, presence of sensitive families, clear water, connected habitats and strong recovery capacity.\n\n(Oi) More than thirty species and very high abundance of individuals, presence of sensitive and endemic species, state close to an ecological reference.\n\n(Po) More than one hundred individuals in total with a great diversity of wild bees, day-flying butterflies and sensitive hawkmoths, a rich and connected floral mosaic."
+  },
+  {
+   "nom": "Functional diversity",
+   "unite": "Dragonflies (Od) diversity of functional traits, for example flight strata, hunting modes, types of larval habitat, water preferences\nBirds (Oi) diversity of functional guilds, for example insectivores, frugivores, nectarivores, granivores, carnivores, raptors\nPollinators (Po) diversity of functional groups, for example generalist wild bees, specialist bees, day-flying butterflies, hawkmoths, hoverflies, flower-visiting beetles",
+   "s0": "(Od) A single function represented, only highly tolerant species. A single hunting mode, a single flight stratum, complete absence of specialisations.\n\n(Oi) A single guild dominated by generalist species. No forest insectivores, frugivores or nectarivores.\n\n(Po) A single functional group, dominated by opportunistic species. No specialised pollinators.",
+   "s10": "(Od) Full set of functions, varied flight strata, multiple hunting modes, lentic and lotic species, maximum diversity of larval microhabitats, strong functional complementarity\n\n(Oi) Complete and balanced guilds, functioning trophic network, good representation of specialised insectivores, canopy frugivores and sensitive nectarivores.\n\n(Po) Wide range of functional groups, strong presence of specialist bees, butterflies from different microhabitats, sensitive hawkmoths, diversified and stable pollination activity."
+  },
+  {
+   "nom": "Phylogenetic diversity",
+   "unite": "Dragonflies (Od) diversity of evolutionary lineages and families (for example Libellulidae, Coenagrionidae, Calopterygidae, Gomphidae)\nBirds (Oi) diversity of avian families and orders (for example Thraupidae, Trochilidae, Turdidae, Accipitridae)\nPollinators (Po) diversity of families and deep lineages (for example Apidae, Halictidae, Andrenidae, Pieridae, Nymphalidae, Sphingidae, Syrphidae)",
+   "s0": "(Od) A single family represented, no sensitive or deep lineage, highly simplified system.\n\n(Oi) Very low evolutionary depth, only one or two generalist families.\n\n(Po) A single dominant group, complete absence of specialised or nocturnal lineages, phylogeny reduced to the bare minimum.",
+   "s10": "(Od) Several families present, ancient divergent lineages well represented, high evolutionary depth indicating a functioning habitat.\n\n(Oi) Multiple avian families and orders present, presence of species from deep lineages, strong evolutionary representation.\n\n(Po) Broad phylogenetic spectrum including several families of wild bees, day-flying butterflies and hawkmoths, rich and complete evolutionary structure."
+  },
+  {
+   "nom": "Shannon (H’)",
+   "unite": "Dragonflies (Od)\nValue of H’ reflecting the species richness of dragonflies and the evenness of their numbers\nBirds (Oi)\nValue of H’ reflecting the species richness of birds and the balanced distribution among functional guilds\nPollinators (Po)\nValue of H’ reflecting the richness in pollinator species or morpho-functional groups and the evenness of their numbers",
+   "s0": "H’ = 0,00 to 0,10\nA single highly tolerant species, no evenness.\nBirds (Oi)\nH’ = 0,00 to 0,15\nOne or two ubiquitous species are entirely dominant.\nPollinators (Po)\nH’ = 0,00 to 0,10\nA single opportunistic group or taxon present.",
+   "s10": "Dragonflies (Od)\nH’ = 2,0 to 2,2\nHigh species richness, sensitive families present, balanced distribution of numbers.\nBirds (Oi)\nH’ = 2,8 to 3,0\nLarge number of species spread across several guilds, high evenness, presence of sensitive and endemic species.\nPollinators (Po)\nH’ = 2,6 to 2,8\nVery high diversity of wild bees, varied day-flying butterflies, hawkmoths, groups well balanced in abundance."
+  },
+  {
+   "nom": "Simpson (1–D)",
+   "unite": "Dragonflies (Od)\nValue of the Simpson index (1–D) reflecting the probability that two dragonflies chosen at random belong to different species, hence species richness and low dominance\nBirds (Oi)\nValue of the Simpson index (1–D) reflecting the probability that two birds chosen at random belong to different species, hence species diversity and the balance among functional guilds\nPollinators (Po)\nValue of the Simpson index (1–D) reflecting the probability that two pollinators chosen at random belong to different species or morpho-functional groups, hence diversity and the low dominance of any single group",
+   "s0": "Dragonflies (Od) 0,00 to 0,05\nOne ultra dominant species, no real diversity.\nBirds (Oi) 0,00 to 0,10\nOne or two ubiquitous species dominate the whole landscape.\nPollinators (Po)  0,00 to 0,05\nA single functional group recorded, no diversity.",
+   "s10": "Dragonflies (Od) 0,80 to 0,85\nNo dominant species, balanced diversity, sensitive families present.\nBirds (Oi) 0,88 to 0,92\nVery high diversity and evenness, complete guilds, presence of sensitive and endemic species.\nPollinators (Po) 0,85 to 0,90\nVery high diversity, balanced distribution among wild bees, butterflies, hawkmoths, hoverflies."
+  }
+ ],
+ "vegetation": [
+  {
+   "nom": "NDVI dry season median",
+   "mesure": "Plant activity under water constraint during the driest period, computed with the median in order to avoid outliers.",
+   "lien": "A high dry season NDVI shows that the vegetation remains active despite water stress and has a strong structural resistance.",
+   "seuils": "0 =  < 0,30 ; 10 = > 0,70"
+  },
+  {
+   "nom": "NDVI variability (SD or CV)",
+   "mesure": "Temporal or spatial instability of the vegetation, revealing stressed or degraded areas.",
+   "lien": "Low variability indicates stable vegetation able to maintain its functions even under disturbance.",
+   "seuils": "0 = > 0,35 ; 10 = < 0,10"
+  },
+  {
+   "nom": "EVI",
+   "mesure": "Vigour and density of the vegetation, corrected for the saturation of NDVI in very green environments.",
+   "lien": "A high EVI reflects a dense and productive biomass able to absorb climatic shocks.",
+   "seuils": "0 = < 0,20 ; 10 = > 0,55"
+  },
+  {
+   "nom": "SAVI",
+   "mesure": "Vegetation index adapted to dry areas which corrects for the effect of bare soil.",
+   "lien": "A high SAVI indicates good ecological cover in arid environments and better resistance to droughts.",
+   "seuils": "0 = < 0,15 ; 10 = > 0,45"
+  },
+  {
+   "nom": "VARI",
+   "mesure": "Measurement of vegetation in turbid or very bright coastal areas where NDVI does not work well.",
+   "lien": "A high VARI indicates that the vegetation remains functional despite salinity, erosion and marine intrusion.",
+   "seuils": "0 =  < 0,05 ; 10 =  > 0,25"
+  },
+  {
+   "nom": "FVC",
+   "mesure": "Proportion of the ground actually covered by vegetation (canopy, shrubs, herbaceous layer).",
+   "lien": "A high cover protects soils, biodiversity and microclimate and increases the general resistance of the landscape.",
+   "seuils": "0 = < 20 % ; 10 = > 80 %"
+  },
+  {
+   "nom": "NDWI or MNDWI",
+   "mesure": "Moisture of the vegetation and of the soils, presence of open water.",
+   "lien": "A high NDWI shows good water availability, which reduces the impact of droughts and supports regeneration.",
+   "seuils": "0 =  < -0,20 ; 10 =  > 0,20"
+  },
+  {
+   "nom": "Terrestrial forest cover",
+   "mesure": "Stable and continuous forest area, measured by remote sensing.",
+   "lien": "A high forest cover stabilises soils, retains water and reduces exposure to extreme climatic events.",
+   "seuils": "0 = forest < 15 % ; 10 = forest > 60 %"
+  },
+  {
+   "nom": "Degraded land SDG 15.3.1 (%)",
+   "mesure": "Proportion of land classified as degraded according to international standards.",
+   "lien": "Little degraded soil retains water better, supports more species and offers a better recovery capacity.",
+   "seuils": "0 = >60 % of degraded land ; 10 = <10 %"
+  },
+  {
+   "nom": "Seagrass surface",
+   "mesure": "Extent of the seagrass beds in hectares.",
+   "lien": "Extensive seagrass beds stabilise the seabed, improve water clarity and support the juvenile stages of marine species.",
+   "seuils": "0 = <20 % cover ; 10 = >80 %"
+  },
+  {
+   "nom": "Mangroves surface",
+   "mesure": "Total mangrove area measured by satellite.",
+   "lien": "An extensive mangrove protects the coastline, buffers storms and supports fisheries reproduction.",
+   "seuils": "0 = <20 % of the historical area ; 10 = >80 % of the historical area"
+  }
+ ],
+ "fragmentation": [
+  {
+   "nom": "Number of habitat patches",
+   "mesure": "Total number of separate natural habitat units in a landscape. The more there are, the more the large habitats have been cut up.",
+   "lien": "A low number of patches indicates a compact landscape where species can move easily, feed and maintain stable populations.",
+   "seuils": "0 = proliferation of patches, >200 patches per 100 km² ; 10 = little fragmented landscape, <40 patches per 100 km²"
+  },
+  {
+   "nom": "Mean patch size",
+   "mesure": "Mean area of a patch in hectares, a direct indicator of the capacity of a habitat to support a viable population.",
+   "lien": "Larger patches provide stable core areas where species can live, breed and withstand disturbance.",
+   "seuils": "0 = very small patches <1 ha ; 10 = large patches >20 ha"
+  },
+  {
+   "nom": "Median patch size",
+   "mesure": "Typical size of the majority of the patches, robust to extreme values.",
+   "lien": "A high median size shows that fragmentation is not localised but low across the whole landscape.",
+   "seuils": "0 = median <0,5 ha ; 10 = median >10 ha"
+  },
+  {
+   "nom": "Edge density",
+   "mesure": "Total length of the edges between natural habitats and degraded environments, expressed per unit area.",
+   "lien": "A low edge density indicates a continuous habitat where the internal ecological conditions remain stable.",
+   "seuils": "0 = very high density >100 m/ha ; 10 = low density <20 m/ha"
+  },
+  {
+   "nom": "Habitat matrix contrast",
+   "mesure": "Difference between the natural habitat (forest, mangrove) and the surrounding matrix (farmland, urban).",
+   "lien": "A low contrast allows species to move between patches, which strengthens connectivity and the persistence of sensitive populations.",
+   "seuils": "0 = strong contrast (forest surrounded by urban land or conventional farming) ; 10 = weak contrast (wooded mosaic or agroforestry)"
+  },
+  {
+   "nom": "Mean distance between patches",
+   "mesure": "Mean distance between the centres of the habitat patches, measured in metres.",
+   "lien": "Short distances facilitate dispersal and recolonisation and reduce the risk of genetic isolation.",
+   "seuils": "0 = distances >1000 m ; 10 = distances <200 m"
+  },
+  {
+   "nom": "Total CORE area",
+   "mesure": "Total area of the very high quality habitats able to sustain populations (closed forest, permanent wetlands).",
+   "lien": "A large CORE area supports reproduction, survival and ecological stability, which increases the resilience of the landscape.",
+   "seuils": "0 = <5 % CORE ; 10 = >25 % CORE"
+  },
+  {
+   "nom": "Total MOVE area",
+   "mesure": "Area of the intermediate habitats allowing species to move between the CORE cores.",
+   "lien": "A landscape with a lot of MOVE is more permeable and allows species to move even if the CORE is fragmented.",
+   "seuils": "0 = <10 % MOVE ; 10 = >40 %"
+  },
+  {
+   "nom": "CORE / suitable habitat ratio",
+   "mesure": "Proportion of CORE relative to all the natural habitats suitable for the maintenance of species.",
+   "lien": "A high ratio indicates a high ecological quality and a good persistence capacity of sensitive populations.",
+   "seuils": "0 = <0,10 ; 10 = >0,40"
+  },
+  {
+   "nom": "CORE+MOVE / suitable habitat ratio",
+   "mesure": "Proportion of the habitats allowing species to live or to move relative to the whole natural area.",
+   "lien": "A high ratio reveals a highly permeable landscape where fragmentation has little effect on ecological mobility.",
+   "seuils": "0 = <0,30 ; 10 = >0,70"
+  }
+ ],
+ "connectivite": [
+  {
+   "nom": "PC(d*/2)",
+   "mesure": "Probability of connection between patches for a restrictive distance corresponding to poorly mobile species.",
+   "lien": "A low PC at this distance shows that the most sensitive species can hardly move at all, which rapidly weakens local populations.",
+   "seuils": "0 = PC < 0,05 ; 10 = PC > 0,40"
+  },
+  {
+   "nom": "PC(d*)",
+   "mesure": "Probability of connection between patches for the central dispersal distance typical of the target species.",
+   "lien": "A high PC at this distance indicates that most species can reach other habitats and maintain their populations.",
+   "seuils": "0 = PC < 0,10 ; 10 = PC > 0,60"
+  },
+  {
+   "nom": "PC(2d*)",
+   "mesure": "Probability of connection between patches for highly mobile species.",
+   "lien": "A high PC means that the most mobile species can use the whole landscape to disperse and to recolonise after disturbance.",
+   "seuils": "0 = PC < 0,20 ; 10 = PC > 0,75"
+  },
+  {
+   "nom": "IIC(d*/2)",
+   "mesure": "Structural connectivity of the habitats for poorly mobile species.",
+   "lien": "A high IIC reveals that even species with limited movement have access to networks of reachable patches, which reduces the risk of isolation.",
+   "seuils": "0 = very low IIC ; 10 = high and continuous IIC"
+  },
+  {
+   "nom": "IIC(d*)",
+   "mesure": "Structural connectivity for the typical dispersal distance.",
+   "lien": "A good score indicates a landscape where the patches are close enough to maintain regular exchanges between populations.",
+   "seuils": "0 = highly fragmented landscape ; 10 = widely connected habitat"
+  },
+  {
+   "nom": "IIC(2d*)",
+   "mesure": "Structural connectivity for highly mobile species.",
+   "lien": "A good score reflects a highly permeable landscape network, allowing rapid recolonisation after disturbance.",
+   "seuils": "0 = low IIC ; 10 = optimal IIC with a continuous network"
+  },
+  {
+   "nom": "dIIC total",
+   "mesure": "Overall importance of a patch in the total connectivity of the landscape.",
+   "lien": "A high value means that certain patches play a key role in the stability and the resilience of the ecological network.",
+   "seuils": "0 = no contribution from the patches ; 10 = critical patches connected"
+  },
+  {
+   "nom": "dIIC intra",
+   "mesure": "Internal contribution of a patch to local connectivity.",
+   "lien": "A high score shows that the patches provide ecological cores essential to the maintenance of populations.",
+   "seuils": "0 = patches too small or isolated ; 10 = patches providing stable cores"
+  },
+  {
+   "nom": "dIIC flux",
+   "mesure": "Contribution to the movement flux between patches.",
+   "lien": "A high score shows a landscape offering good opportunities for movement between habitats.",
+   "seuils": "0 = very limited flux ; 10 = continuous flux throughout the landscape"
+  },
+  {
+   "nom": "dIIC connector",
+   "mesure": "Role of a patch as an essential bridge or corridor linking two areas.",
+   "lien": "A good value implies that the critical corridors are present and not cut, which reduces ecological isolation.",
+   "seuils": "0 = no corridors ; 10 = multiple and unfragmented corridors"
+  },
+  {
+   "nom": "Effective dispersal distance for guilds",
+   "mesure": "Actual distance that amphibians, birds, pollinators, dragonflies and bats can cover.",
+   "lien": "An appropriate distance ensures that the analysis distances are realistic and that connectivity reflects the biological capacities of the species.",
+   "seuils": "0 = unsuitable or overly long distances leading to false connectivity ; 10 = distances adjusted by guild"
+  },
+  {
+   "nom": "Ratio R = PCobs / PCmax",
+   "mesure": "Normalisation of the actual connectivity against a perfect connectivity.",
+   "lien": "A high ratio shows that the landscape functions almost as if it were intact, which maximises ecological resilience.",
+   "seuils": "0 = R < 0,30 ; 10 = R > 0,60"
+  }
+ ],
+ "cotier": [
+  {
+   "nom": "Turbidity and coastal water quality",
+   "contexte": "Very important for Haiti because of erosion and heavily degraded catchments",
+   "points": [
+    "Mean coastal turbidity (Sentinel-2)",
+    "Monthly variability of the turbidity",
+    "Extent of the turbidity plumes after rainfall",
+    "TSS / suspended solids (reflectance proxy)",
+    "Coastal transparency (Kd490)"
+   ],
+   "verdict": "absolutely relevant and easy to produce"
+  },
+  {
+   "nom": "Mangroves",
+   "contexte": "Key ecosystems in Haiti, often degraded but present along the whole southern and north-eastern coastline",
+   "points": [
+    "Total mangrove area (Global Mangrove Watch + Sentinel-2)",
+    "Annual loss / annual gain",
+    "Fragmentation (IIC, simple PC)",
+    "Mean width of the mangrove (shoreline buffering capacity)",
+    "Mangrove–shoreline distance (effective protection)"
+   ],
+   "verdict": "essential for coastal resilience in Haiti"
+  },
+  {
+   "nom": "Seagrass beds",
+   "contexte": "Very difficult in Haiti, few historical data but Sentinel-2 works relatively well",
+   "points": [
+    "Seagrass area",
+    "Seagrass fragmentation",
+    "Mangrove–seagrass–reef connectivity (simple distance)"
+   ],
+   "verdict": "feasible but beware of confusion (sand, algae)"
+  },
+  {
+   "nom": "Coral reefs",
+   "contexte": "Critical indicators, Haiti = one of the countries in the world with the lowest level of monitoring, but Allen Coral Atlas provides usable products",
+   "points": [
+    "Percentage of live coral",
+    "Algal cover (macroalgae cover)",
+    "Complexity/rugosity index (from Allen Coral Atlas or photo-mosaics)",
+    "Thermal anomalies (SST, Degree Heating Weeks – NOAA Coral Reef Watch)",
+    "Turbidity stress on reefs (turbidity – reef overlay)"
+   ],
+   "verdict": ""
+  },
+  {
+   "nom": "Shoreline dynamics",
+   "contexte": "Haiti is highly exposed to erosion, particularly in the South and the North-West",
+   "points": [
+    "Coastal erosion rate (m/year) – Landsat, DSAS",
+    "Migration of the shoreline",
+    "Accretion / loss of beaches",
+    "Coastal exposure index (coral → shore distance, swell angle of attack)"
+   ],
+   "verdict": "essential in a country highly vulnerable to hurricanes"
+  },
+  {
+   "nom": "Simple integrated indicators",
+   "contexte": "A more realistic approach for Haiti, given data availability and local capacities",
+   "points": [
+    "Integrated coastal health index (mangroves + seagrass + reefs)",
+    "Coastal pressure index (turbidity + erosion + urbanisation)",
+    "Natural shoreline protection index (coral + mangrove + bathy)"
+   ],
+   "verdict": "very useful for a national SIE because it is readable for decision makers"
+  }
+ ],
+ "hydro": [
+  "Drought, water variability, rainfall anomalies (SPI, NDWI, soil moisture indices)",
+  "Water stress of the vegetation",
+  "Prolonged hydrological deficits",
+  "Turbidity of fresh waters",
+  "Land surface temperature (LST)",
+  "Seasonal water availability",
+  "Aridity indices"
+ ],
+ "menages": [
+  "The frequency of use or exploitation: wood collection, mangrove cutting, pesticide use, hunting or harvesting of sensitive resources.",
+  "Dependence on natural resources, measured by the share of income or of food coming from fishing, farming, charcoal or forest products.",
+  "The local perception of the state of the environment: presence or disappearance of key species, changes observed in watercourses, reduction of forest areas.",
+  "Adaptive capacity: strategies adopted in the event of crop loss, flooding or drought, diversification of livelihoods.",
+  "The degree of collective organisation: local resource management rules, watch committees, community restoration initiatives."
+ ],
+ "intro": {
+  "terrain": "Environmental resilience can be approached through a set of ecological proxies based on the composition, the structure and the functioning of biological communities. Among the taxonomic groups  most widely used in tropical landscapes are dragonflies (Odonata), pollinating insects and bird communities. These groups respond rapidly to habitat change, which makes them good indicators of the quality of environments and of their capacity to absorb disturbance.",
+  "transects": "Resilience can be measured through anthropisation transects, that is to say land-use disturbance gradients along which one observes how the composition of the communities changes as a function of the level of human disturbance. These transects show the speed at which sensitive species disappear and the rapidity with which generalist species take their place, which constitutes an important signal on the resilience of ecological systems. Several metrics make up this approach.",
+  "geo": "The indicators derived from field surveys are complemented by indicators produced from geospatial data which play an essential role, because they make it possible to extend the point observations carried out along the transects to the whole territory. They document the dynamics of ecosystems, fragmentation, structural and functional connectivity, habitat cover and quality, and also the temporal evolution of environmental pressures. They therefore constitute an indispensable complement to the biological indicators.",
+  "fragmentation": "Fragmentation describes the way in which a formerly continuous landscape ends up cut into small pieces under the effect of agriculture, roads, urbanisation or quarries, which makes the movements of species more difficult and weakens local populations. A highly fragmented landscape displays numerous small patches, many edges between natural and degraded environments, a strong contrast between habitat and surrounding matrix, and large distances between patches, all factors that increase ecological isolation. Conversely, a little fragmented landscape offers good quality habitats called CORE, able to sustain viable populations, and intermediate MOVE habitats which serve as transit areas. The quality of the matrix is measured in particular by the size of the CORE, the area of the MOVE and the CORE or CORE+MOVE ratios relative to the suitable landscape, which indicate the general permeability of the environment and therefore its capacity to support the mobility, the reproduction, the colonisation and the resilience of species. In a fragmented landscape, the ability of species to move depends strongly on their dispersal distances, which conditions their access to CORE habitats and to MOVE corridors. Amphibians rarely travel more than a few hundred metres and require nearby patches, with habitat sizes of between 1 and 5 hectares in order to remain viable. Forest birds move over greater distances, typically around 1,5 to 3 kilometres, with a tolerance that can reach 6 kilometres for certain mobile species, and need patches of 5 to 20 hectares in order to maintain stable populations. Bats, which are much more mobile, can cover distances of several kilometres, generally around 2 kilometres in connectivity models, but sometimes well beyond, with habitat requirements of at least about ten hectares. These thresholds define the analysis distances used for connectivity (d*/2, d*, 2d*), make it possible to test the ease of movement under different scenarios and help to determine whether a landscape remains permeable or becomes isolating for wildlife.",
+  "connectivite": "Connectivity measures the extent to which habitat patches are linked to one another and answers a simple but central question: can a species really move from one habitat to another in the current landscape. Since each species has different movement capacities, the dispersal distance changes according to the guild. Amphibians travel only a few hundred metres, forest birds several kilometres and bats sometimes tens of kilometres. In order to take this variability into account, each analysis is carried out with three threshold distances: d/2, which represents a restrictive situation for the least mobile species, d*, which corresponds to the typical movement distance, and 2d*, which reflects a permissive scenario for highly mobile species. This triptych makes it possible to test the robustness of the results, because connectivity can change abruptly when a single threshold is modified, a phenomenon known as the percolation effect. The recommended distances vary according to the guilds, for example 1,5, 3 and 6 km for forest birds, 0,5, 1 and 2 km for pollinators, or else 0,25, 0,5 and 1 km for Zygoptera and 1, 2 and 4 km for Anisoptera. To quantify connectivity, two families of indicators are mainly used. The Probability of Connectivity (PC) estimates the probability that an individual can move from one patch to another as a function of their actual distance. It is based on the formula pij = exp(−dij / β) with β = d*/ln2, which ensures that two patches separated by d* have a connection probability of 0,5. PC is computed for the three distances d/2, d* and 2d*. The Integral Index of Connectivity (IIC) completes this approach by offering a simpler reading, indicating directly whether the patches are connected and to what degree, while making it possible to identify the ecological cores, the essential corridors or the critical bridges. For this purpose the indices IIC(d/2), IIC(d*), IIC(2d*) are produced, as well as the dIIC total, dIIC intra, dIIC flux and dIIC connector variants. Finally, in order to compare different landscapes or different guilds, the values are normalised by computing PCmax, corresponding to a perfectly connected landscape, then R = PCobs / PCmax. This ratio is interpreted simply: R < 0,30 indicates a low connectivity ; 0,30 to 0,60 an intermediate connectivity ; and a value close to 0,60 or above signals a good ecological connectivity.",
+  "pression": "Data on anthropogenic pressure, whether land use change, urban expansion, agricultural intensification or the extraction of materials, make it possible to identify the areas where ecological resilience is the most threatened.",
+  "geo_fin": "Thanks to these indicators, geospatial data offer a synoptic and temporal view of Haitian landscapes. Combined with field surveys, they make it possible not only to characterise the current state of the ecosystems but also to model their trajectory, their capacity to absorb disturbance and their recovery potential.",
+  "menages": "Survey data make it possible to identify proxies of environmental resilience from questions put to households, that is to say measurable elements which reflect at once the pressure exerted on natural environments, the dependence on resources and the capacity of families to adapt to disturbance.",
+  "menages2": "This type of data makes it possible for example to assess the frequency of resource exploitation, agricultural practices, access to ecosystem services, but also the perception of environmental risks, the knowledge of sensitive species, or the capacity of households to reorganise after a shock. This information brings a view complementary to the ecological analysis, because it shows how human behaviour directly influences the resilience of ecosystems.",
+  "bareme": "Scenarios\nThe worst scenario, scored 0, corresponds to a degraded and stable ecological regime, characterised by the loss of diversity, of functions and of connectivity.\nThe best scenario, scored 10, corresponds to the healthy, stable and optimal ecological regime to be reached, characterised by the highest diversity possible according to the context, by active ecological functions and by a strong recovery capacity, beyond which no further improvement would generate any more resilience.",
+  "taxons": [
+   "Dragonflies (Odonata) constitute an excellent proxy for the resilience of aquatic and riparian environments, because their ecological requirements are well documented. Certain families are strictly associated with clean waters, others are more tolerant of degradation. Their relative presence therefore informs on the degree of alteration or of restoration of aquatic habitats.",
+   "Birds, finally, make up a group that is highly sensitive to land use change and make it possible to assess general avian richness, the diversity of ecological niches and the complexity of the vegetation strata.",
+   "Pollinating insects, for their part, provide information on floral availability, the structure of the vegetation and the continuity of food resources, which makes it possible to assess the functional stability of a landscape."
+  ]
+ }
+}
