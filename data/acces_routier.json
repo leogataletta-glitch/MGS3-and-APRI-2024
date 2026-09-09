@@ -1,10 +1,7 @@
 {
  "indicateur": "SDG 9.1.1 — population a moins de 2 km d une route praticable en toute saison",
- "source_reseau": "OpenStreetMap, extrait Overpass du 9 septembre 2026, emprise 18,00-18,55 N / 74,45-73,75 O",
- "source_population": {
-  "contrainte": "WorldPop 2020 UN-adjusted constrained, 3 arcsec",
-  "non_contrainte": "WorldPop 2020 UN-adjusted unconstrained, 3 arcsec"
- },
+ "source": "OpenStreetMap, extrait Overpass du 9 septembre 2026, emprise 18,00-18,55 N / 74,45-73,75 O",
+ "population": "WorldPop 2020 UN-adjusted unconstrained, 3 arcsec",
  "seuil_m": 2000,
  "definitions": {
   "stricte": "reseau classe (primary, secondary, tertiary) hors surface meuble, plus toute voie explicitement revetue",
@@ -16,152 +13,141 @@
   "standard": 1617.9379550113129,
   "permissive": 3129.222013563946
  },
- "population_contrainte": {
-  "sections": {
-   "Anse à Drick": {
-    "pop": 11881.167373657227,
-    "stricte": 92.71983364262843,
-    "standard": 100.0,
-    "permissive": 100.0
-   },
-   "Barbois": {
-    "pop": 11356.33177947998,
-    "stricte": 97.59596068119767,
-    "standard": 100.0,
-    "permissive": 100.0
-   },
-   "Beaulieu": {
-    "pop": 9350.796478271484,
-    "stricte": 90.7155218786376,
-    "standard": 100.0,
-    "permissive": 100.0
-   },
-   "Blactote": {
-    "pop": 9839.848485946655,
-    "stricte": 99.90314902453869,
-    "standard": 100.0,
-    "permissive": 100.0
-   },
-   "Dalmette": {
-    "pop": 3297.925717353821,
-    "stricte": 99.80035552535864,
-    "standard": 99.80035552535864,
-    "permissive": 100.0
-   },
-   "Débouchette": {
-    "pop": 5488.124862670898,
-    "stricte": 86.24978529261973,
-    "standard": 92.25033216652128,
-    "permissive": 100.0
-   },
-   "Dumont": {
-    "pop": 4786.178749084473,
-    "stricte": 55.527170747846306,
-    "standard": 100.0,
-    "permissive": 100.0
-   },
-   "Mouline": {
-    "pop": 447.89617919921875,
-    "stricte": 0.0,
-    "standard": 10.895540314275822,
-    "permissive": 59.39929920713579
-   },
-   "Quentin": {
-    "pop": 3219.971766471863,
-    "stricte": 78.83745234435439,
-    "standard": 90.32307172104092,
-    "permissive": 97.4285456474061
-   },
-   "Trichet": {
-    "pop": 7746.208917617798,
-    "stricte": 55.4835624652847,
-    "standard": 100.0,
-    "permissive": 100.0
-   }
+ "sections": {
+  "Anse à Drick": {
+   "acces_axe": 100.0,
+   "acces_pistes": 100.0,
+   "acces_classe": 85.8,
+   "pop": 13490
   },
-  "ensemble": {
-   "stricte": 85.93312753541771,
-   "standard": 98.30513280574299,
-   "permissive": 99.60742972685443
+  "Barbois": {
+   "acces_axe": 100.0,
+   "acces_pistes": 100.0,
+   "acces_classe": 95.5,
+   "pop": 11434
   },
-  "reseau_km": {
-   "stricte": 291.4050301663027,
-   "standard": 1617.9379550113129,
-   "permissive": 3129.222013563946
+  "Beaulieu": {
+   "acces_axe": 100.0,
+   "acces_pistes": 100.0,
+   "acces_classe": 77.9,
+   "pop": 11230
+  },
+  "Blactote": {
+   "acces_axe": 99.5,
+   "acces_pistes": 100.0,
+   "acces_classe": 68.4,
+   "pop": 10181
+  },
+  "Dalmette": {
+   "acces_axe": 83.6,
+   "acces_pistes": 100.0,
+   "acces_classe": 80.8,
+   "pop": 3281
+  },
+  "Débouchette": {
+   "acces_axe": 97.4,
+   "acces_pistes": 100.0,
+   "acces_classe": 83.6,
+   "pop": 5968
+  },
+  "Dumont": {
+   "acces_axe": 100.0,
+   "acces_pistes": 100.0,
+   "acces_classe": 79.5,
+   "pop": 5103
+  },
+  "Mouline": {
+   "acces_axe": 76.6,
+   "acces_pistes": 95.1,
+   "acces_classe": 17.1,
+   "pop": 1265
+  },
+  "Quentin": {
+   "acces_axe": 60.6,
+   "acces_pistes": 76.7,
+   "acces_classe": 36.0,
+   "pop": 3335
+  },
+  "Trichet": {
+   "acces_axe": 98.5,
+   "acces_pistes": 100.0,
+   "acces_classe": 39.1,
+   "pop": 7311
   }
  },
- "population_non_contrainte": {
+ "ensemble": {
+  "acces_axe": 96.6,
+  "acces_pistes": 98.8,
+  "acces_classe": 74.6,
+  "pop": 72598
+ },
+ "sensibilite_population_contrainte": {
   "sections": {
    "Anse à Drick": {
-    "pop": 13490.06460750103,
-    "stricte": 85.8095040109313,
-    "standard": 100.0,
-    "permissive": 100.0
+    "acces_axe": 100.0,
+    "acces_pistes": 100.0,
+    "acces_classe": 92.7,
+    "pop": 11881
    },
    "Barbois": {
-    "pop": 11433.533838152885,
-    "stricte": 95.45497318471455,
-    "standard": 100.0,
-    "permissive": 100.0
+    "acces_axe": 100.0,
+    "acces_pistes": 100.0,
+    "acces_classe": 97.6,
+    "pop": 11356
    },
    "Beaulieu": {
-    "pop": 11230.348931789398,
-    "stricte": 77.91064948111709,
-    "standard": 100.0,
-    "permissive": 100.0
+    "acces_axe": 100.0,
+    "acces_pistes": 100.0,
+    "acces_classe": 90.7,
+    "pop": 9351
    },
    "Blactote": {
-    "pop": 10180.647419214249,
-    "stricte": 68.42962362336856,
-    "standard": 99.49393978797715,
-    "permissive": 100.0
+    "acces_axe": 100.0,
+    "acces_pistes": 100.0,
+    "acces_classe": 99.9,
+    "pop": 9840
    },
    "Dalmette": {
-    "pop": 3281.3896975815296,
-    "stricte": 80.80412377631333,
-    "standard": 83.628376461604,
-    "permissive": 100.0
+    "acces_axe": 99.8,
+    "acces_pistes": 100.0,
+    "acces_classe": 99.8,
+    "pop": 3298
    },
    "Débouchette": {
-    "pop": 5967.534166097641,
-    "stricte": 83.59234774780076,
-    "standard": 97.42086957864905,
-    "permissive": 100.0
+    "acces_axe": 92.3,
+    "acces_pistes": 100.0,
+    "acces_classe": 86.2,
+    "pop": 5488
    },
    "Dumont": {
-    "pop": 5103.156212687492,
-    "stricte": 79.46977892753179,
-    "standard": 100.0,
-    "permissive": 100.0
+    "acces_axe": 100.0,
+    "acces_pistes": 100.0,
+    "acces_classe": 55.5,
+    "pop": 4786
    },
    "Mouline": {
-    "pop": 1264.563852082938,
-    "stricte": 17.137277363389245,
-    "standard": 76.57511950196154,
-    "permissive": 95.09886895379697
+    "acces_axe": 10.9,
+    "acces_pistes": 59.4,
+    "acces_classe": 0.0,
+    "pop": 448
    },
    "Quentin": {
-    "pop": 3335.1024170815945,
-    "stricte": 35.98898495657078,
-    "standard": 60.57182092618827,
-    "permissive": 76.71828236105299
+    "acces_axe": 90.3,
+    "acces_pistes": 97.4,
+    "acces_classe": 78.8,
+    "pop": 3220
    },
    "Trichet": {
-    "pop": 7311.37793970108,
-    "stricte": 39.146451938961555,
-    "standard": 98.49616434815945,
-    "permissive": 100.0
+    "acces_axe": 100.0,
+    "acces_pistes": 100.0,
+    "acces_classe": 55.5,
+    "pop": 7746
    }
   },
   "ensemble": {
-   "stricte": 74.63091790858036,
-   "standard": 96.60624145380417,
-   "permissive": 98.84507795854803
-  },
-  "reseau_km": {
-   "stricte": 291.4050301663027,
-   "standard": 1617.9379550113129,
-   "permissive": 3129.222013563946
+   "stricte": 85.9,
+   "standard": 98.3,
+   "permissive": 99.6
   }
  }
 }
