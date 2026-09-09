@@ -323,33 +323,15 @@ def _ligne(r, fiche, lang):
         unsafe_allow_html=True)
 
 
-def _fiche_bloc(fiche, lang):
-    """La recette du chantier, écrite une fois pour tout le bloc.
-
-    Elle est commune à ses indicateurs parce que c'est un seul travail : on
-    ne va pas chercher WorldCover sept fois pour sept métriques de patchs.
-    La répéter sous chaque ligne aurait fait croire à sept chantiers.
-    """
-    if not fiche:
-        return
-    sfx = "" if lang == "fr" else "_en"
-    lignes = (("aq_l_donnee", "donnee"), ("aq_l_outil", "outil"),
-              ("aq_l_effort", "effort"))
-    st.markdown(
-        '<div style="border-left:3px solid #cfe0d6;padding:2px 0 2px 14px;'
-        'margin:12px 0 6px">'
-        + "".join(
-            f'<div class="aq-fl">{_e(T(cle))}</div>'
-            f'<div class="aq-fv">{_e(fiche.get(champ + sfx) or fiche.get(champ, ""))}</div>'
-            for cle, champ in lignes)
-        + f'<div class="aq-fl">{_e(T("aq_l_faire"))}</div>'
-          f'<div class="aq-f">'
-          f'{_e(fiche.get("quoi" + sfx) or fiche.get("quoi", ""))}</div>'
-        + (f'<div class="aq-fv" style="margin-top:8px">'
-           f'<a href="{_e(fiche["url"])}" target="_blank" '
-           f'rel="noopener">{_e(fiche["url"])}</a></div>'
-           if fiche.get("url") else "")
-        + '</div>', unsafe_allow_html=True)
+# LA RECETTE DE CHANTIER N'EST PLUS DESSINÉE NULLE PART, et la fonction qui
+# la dessinait est partie avec elle. Elle rendait, sous chaque groupe de
+# lignes, quatre intitulés et un paragraphe — où trouver la donnée, avec quoi,
+# pour quel travail, et ce qu'il reste à faire. Les deux écrans qui
+# l'appelaient ne montrent plus que l'indicateur et son état ; garder une
+# fonction morte aurait laissé croire, à la relecture, que ces encadrés
+# existent encore quelque part. Le contenu, lui, n'est pas perdu : il est dans
+# `data/acquisition_env.json` et, en toutes lettres, dans la note de chaque
+# indicateur du fichier de résultats.
 
 
 def render():
@@ -461,21 +443,13 @@ def _rendre_bloc(bloc, lot, lang):
             f'<div class="aq-h">{_e(T("aq_b_" + bloc))}</div>'
             f'<div class="aq-hx">{len(lot)} · {_e(detail)}</div>',
             unsafe_allow_html=True)
-        # UN CHANTIER PEUT PORTER DEUX RECETTES, ET IL FAUT ALORS DEUX
-        # ENCADRÉS. L'indice de diversité des cultures est rangé avec la
-        # biodiversité parce qu'il en mesure une, mais il se calcule depuis
-        # les réponses des ménages et ne demande aucun terrain : lui coller la
-        # recette des transects ferait attendre une campagne là où deux jours
-        # suffisent. Les lignes sont donc groupées par recette.
-        vus, groupes = [], []
+        # ICI NON PLUS, PAS DE RECETTE SOUS LES LIGNES. Chaque indicateur
+        # portait « où trouver la donnée », « avec quoi », « pour quel
+        # travail » et un paragraphe sur ce qu'il reste à faire : une
+        # demi-page par ligne, sept lignes, et un onglet qu'on ne parcourait
+        # plus. Ce qu'on vient y chercher tient en deux informations — quel
+        # indicateur, et dans quel état — exactement comme sur l'écran de ce
+        # qui reste à mesurer, dont c'est le même code. Les recettes restent
+        # écrites en toutes lettres dans la note de chaque indicateur.
         for r, f in lot:
-            cle = f.get("quoi") or f.get("bloc") or bloc
-            if cle in vus:
-                groupes[vus.index(cle)][1].append(r)
-            else:
-                vus.append(cle)
-                groupes.append((f, [r]))
-        for f, rs in groupes:
-            for r in rs:
-                _ligne(r, f, lang)
-            _fiche_bloc(f, lang)
+            _ligne(r, f, lang)
