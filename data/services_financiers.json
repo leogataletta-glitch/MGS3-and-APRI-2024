@@ -1,0 +1,352 @@
+{
+ "sections": {
+  "Anse à Drick": {
+   "guichets": 0,
+   "guichets_p100k": 0.0,
+   "adultes_estimes": 8768,
+   "dist_guichet_km": 14.1,
+   "dist_point_financier_km": 13.3,
+   "poi_cartographies": 7
+  },
+  "Barbois": {
+   "guichets": 0,
+   "guichets_p100k": 0.0,
+   "adultes_estimes": 7432,
+   "dist_guichet_km": 13.1,
+   "dist_point_financier_km": 12.7,
+   "poi_cartographies": 26
+  },
+  "Beaulieu": {
+   "guichets": 0,
+   "guichets_p100k": 0.0,
+   "adultes_estimes": 7300,
+   "dist_guichet_km": 20.1,
+   "dist_point_financier_km": 19.0,
+   "poi_cartographies": 5
+  },
+  "Blactote": {
+   "guichets": 0,
+   "guichets_p100k": 0.0,
+   "adultes_estimes": 6618,
+   "dist_guichet_km": 39.2,
+   "dist_point_financier_km": 39.2,
+   "poi_cartographies": 4
+  },
+  "Dalmette": {
+   "guichets": 0,
+   "guichets_p100k": 0.0,
+   "adultes_estimes": 2133,
+   "dist_guichet_km": 32.0,
+   "dist_point_financier_km": 32.0,
+   "poi_cartographies": 3
+  },
+  "Débouchette": {
+   "guichets": 0,
+   "guichets_p100k": 0.0,
+   "adultes_estimes": 3879,
+   "dist_guichet_km": 16.5,
+   "dist_point_financier_km": 16.4,
+   "poi_cartographies": 4
+  },
+  "Dumont": {
+   "guichets": 0,
+   "guichets_p100k": 0.0,
+   "adultes_estimes": 3317,
+   "dist_guichet_km": 18.2,
+   "dist_point_financier_km": 18.1,
+   "poi_cartographies": 5
+  },
+  "Mouline": {
+   "guichets": 0,
+   "guichets_p100k": 0.0,
+   "adultes_estimes": 822,
+   "dist_guichet_km": 1.7,
+   "dist_point_financier_km": 1.7,
+   "poi_cartographies": 5
+  },
+  "Quentin": {
+   "guichets": 0,
+   "guichets_p100k": 0.0,
+   "adultes_estimes": 2168,
+   "dist_guichet_km": 20.3,
+   "dist_point_financier_km": 20.3,
+   "poi_cartographies": 1
+  },
+  "Trichet": {
+   "guichets": 0,
+   "guichets_p100k": 0.0,
+   "adultes_estimes": 4752,
+   "dist_guichet_km": 14.1,
+   "dist_point_financier_km": 14.0,
+   "poi_cartographies": 18
+  }
+ },
+ "total": {
+  "guichets": 0,
+  "adultes_estimes": 47189,
+  "guichets_p100k": 0.0,
+  "poi_cartographies": 78,
+  "dist_guichet_km": 18.9
+ },
+ "source": "OpenStreetMap, extrait Overpass, presqu'île du Sud",
+ "part_adultes": 0.65,
+ "comptes": [
+  "bank",
+  "bureau_de_change",
+  "money_transfer"
+ ],
+ "releve": [
+  {
+   "genre": "bank",
+   "nom": "",
+   "lat": 18.19495,
+   "lon": -73.74801
+  },
+  {
+   "genre": "bank",
+   "nom": "Unibank",
+   "lat": 18.64497,
+   "lon": -74.11319
+  },
+  {
+   "genre": "bureau_de_change",
+   "nom": "Intransfer",
+   "lat": 18.64583,
+   "lon": -74.11364
+  },
+  {
+   "genre": "bank",
+   "nom": "Banque Nationale de Crédit (BNC)",
+   "lat": 18.64302,
+   "lon": -74.11374
+  },
+  {
+   "genre": "bureau_de_change",
+   "nom": "Charlitto Bank",
+   "lat": 18.19818,
+   "lon": -73.75297
+  },
+  {
+   "genre": "bank",
+   "nom": "Verittes Bank",
+   "lat": 18.1976,
+   "lon": -73.75054
+  },
+  {
+   "genre": "bank",
+   "nom": "La Difference Bank",
+   "lat": 18.19705,
+   "lon": -73.74967
+  },
+  {
+   "genre": "bank",
+   "nom": "Micro crédit Banque nationale",
+   "lat": 18.19683,
+   "lon": -73.74925
+  },
+  {
+   "genre": "bureau_de_change",
+   "nom": "C.A.M",
+   "lat": 18.19612,
+   "lon": -73.74872
+  },
+  {
+   "genre": "bank",
+   "nom": "Uni Bank",
+   "lat": 18.19614,
+   "lon": -73.74918
+  },
+  {
+   "genre": "bank",
+   "nom": "Sevis Finance De Fonkoze",
+   "lat": 18.19656,
+   "lon": -73.74912
+  },
+  {
+   "genre": "bank",
+   "nom": "Pas De Credit",
+   "lat": 18.19645,
+   "lon": -73.74907
+  },
+  {
+   "genre": "bank",
+   "nom": "CAPOSUD (Caisse Populaire Du Sud)",
+   "lat": 18.19511,
+   "lon": -73.74735
+  },
+  {
+   "genre": "bureau_de_change",
+   "nom": "CAM Transfert",
+   "lat": 18.19519,
+   "lon": -73.74866
+  },
+  {
+   "genre": "bank",
+   "nom": "Caisse Populaire Des Cayes",
+   "lat": 18.196,
+   "lon": -73.74787
+  },
+  {
+   "genre": "money_transfer",
+   "nom": "Western Union",
+   "lat": 18.20129,
+   "lon": -73.76085
+  },
+  {
+   "genre": "money_transfer",
+   "nom": "Western Union",
+   "lat": 18.19312,
+   "lon": -73.7492
+  },
+  {
+   "genre": "bank",
+   "nom": "CAPOSUD (Caisse Populaire Du Sud)",
+   "lat": 18.19461,
+   "lon": -73.75051
+  },
+  {
+   "genre": "bank",
+   "nom": "Banque Nationale De Crédit",
+   "lat": 18.19116,
+   "lon": -73.75025
+  },
+  {
+   "genre": "bank",
+   "nom": "Capital Bank",
+   "lat": 18.1944,
+   "lon": -73.74923
+  },
+  {
+   "genre": "bureau_de_change",
+   "nom": "Money Gram",
+   "lat": 18.19343,
+   "lon": -73.74941
+  },
+  {
+   "genre": "money_transfer",
+   "nom": "Western Union",
+   "lat": 18.1924,
+   "lon": -73.74965
+  },
+  {
+   "genre": "bureau_de_change",
+   "nom": "C.A.M",
+   "lat": 18.19421,
+   "lon": -73.74837
+  },
+  {
+   "genre": "money_transfer",
+   "nom": "Western Union",
+   "lat": 18.19498,
+   "lon": -73.74811
+  },
+  {
+   "genre": "bureau_de_change",
+   "nom": "In God We Trust Money Exchange",
+   "lat": 18.19446,
+   "lon": -73.74542
+  },
+  {
+   "genre": "bureau_de_change",
+   "nom": "Amitty Bank",
+   "lat": 18.19217,
+   "lon": -73.74499
+  },
+  {
+   "genre": "bureau_de_change",
+   "nom": "Chez Gurdy Bank",
+   "lat": 18.19324,
+   "lon": -73.7448
+  },
+  {
+   "genre": "money_transfer",
+   "nom": "C.A.M Money Transfert",
+   "lat": 18.2987,
+   "lon": -73.65498
+  },
+  {
+   "genre": "bank",
+   "nom": "Hector Bank",
+   "lat": 18.34382,
+   "lon": -73.77605
+  },
+  {
+   "genre": "bank",
+   "nom": "La Differance Bank",
+   "lat": 18.34371,
+   "lon": -73.77634
+  },
+  {
+   "genre": "bank",
+   "nom": "La Differance Bank",
+   "lat": 18.34421,
+   "lon": -73.77627
+  },
+  {
+   "genre": "bureau_de_change",
+   "nom": "Uni Transfer",
+   "lat": 18.34404,
+   "lon": -73.77623
+  },
+  {
+   "genre": "bank",
+   "nom": "Pas De Credit",
+   "lat": 18.34157,
+   "lon": -73.77689
+  },
+  {
+   "genre": "bureau_de_change",
+   "nom": "",
+   "lat": 18.19131,
+   "lon": -73.75304
+  },
+  {
+   "genre": "bureau_de_change",
+   "nom": "",
+   "lat": 18.19761,
+   "lon": -73.75234
+  },
+  {
+   "genre": "bank",
+   "nom": "Banque Nationale",
+   "lat": 18.19108,
+   "lon": -73.75055
+  },
+  {
+   "genre": "bureau_de_change",
+   "nom": "C.A.M",
+   "lat": 18.19393,
+   "lon": -73.75297
+  },
+  {
+   "genre": "bank",
+   "nom": "Central Charlito Bank",
+   "lat": 18.08584,
+   "lon": -73.65506
+  },
+  {
+   "genre": "bank",
+   "nom": "Central Junot Bank",
+   "lat": 18.08558,
+   "lon": -73.65485
+  },
+  {
+   "genre": "bank",
+   "nom": "(BUH) Banque L'Union Haitienne",
+   "lat": 18.19357,
+   "lon": -73.74912
+  },
+  {
+   "genre": "bank",
+   "nom": "Unitransfer",
+   "lat": 18.19513,
+   "lon": -73.74917
+  },
+  {
+   "genre": "bank",
+   "nom": "FONKOZE",
+   "lat": 18.47797,
+   "lon": -73.95579
+  }
+ ]
+}
