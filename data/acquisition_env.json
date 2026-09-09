@@ -1012,18 +1012,6 @@
    "effort_en": "one hour",
    "quoi_en": "This indicator is complete section by section — thirty-four organisations recorded, from zero to eight depending on the section — but it has no territory-wide value, and it cannot get one mechanically: the scale grades a NUMBER of organisations per section, and applying it to the territory's thirty-four would give ten out of ten, which means nothing. Two possible answers, and one must be chosen: the territory figure is the mean per section, 3.4 organisations, which grades 6; or it is the mean of the ten scores. Until that is settled, the platform counts it as partial.",
    "bloc": "decision"
-  },
-  "9": {
-   "donnee": "Aucune question de l'enquête ne les porte",
-   "outil": "Module à ajouter à la prochaine passation ; en attendant, CNSA et FEWS NET pour les pertes agricoles",
-   "effort": "une passation, ou une estimation départementale d'ici là",
-   "quoi": "Pertes de récolte, pertes de bétail, ratio d'endettement, accès aux services financiers : ce sont des questions de ménage, elles n'ont simplement pas été posées. Les ajouter coûte quatre questions au prochain tour, et aucune source satellitaire ou administrative ne les rendra à l'échelle de la section communale.",
-   "donnee_en": "No survey question carries them",
-   "outil_en": "A module to add to the next round; meanwhile CNSA and FEWS NET for crop losses",
-   "effort_en": "one survey round, or a department-level estimate until then",
-   "quoi_en": "Crop losses, livestock losses, debt ratio, access to financial services: these are household questions and they simply were not asked. Adding them costs four questions in the next round, and no satellite or administrative source will return them at communal-section scale.",
-   "url": "https://fews.net/",
-   "bloc": "menage_a_ajouter"
   }
  }
 }
