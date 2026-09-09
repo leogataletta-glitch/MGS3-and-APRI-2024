@@ -17,16 +17,15 @@ TROIS CADRAGES, DANS CET ORDRE
      C'est l'échelle des départements où le projet travaille.
   3. Les dix sections communales enquêtées. C'est l'échelle de la donnée.
 
-ELLE SE DÉROULE SEULE, PUIS ELLE SE LAISSE CONDUIRE. Le déroulé automatique
-joue une fois, à l'ouverture : c'est la lecture voulue, et un lecteur qui ne
-touche à rien la reçoit. Après quoi les trois cadrages deviennent trois
-boutons, plus un pour rejouer — parce qu'une animation qu'on ne peut pas
-reprendre est une animation qu'on rate. Le premier clic interrompt le déroulé
-sans le reprendre depuis le début : le lecteur qui prend la main l'a prise.
+ELLE TOURNE EN BOUCLE, ET LA BOUCLE S'ARRÊTE. Le déroulé rejoue toutes les
+neuf secondes : quatre et demie de mouvement, quatre et demie arrêté sur les
+dix sections. Le bouton d'arrêt le suspend, et choisir un cadrage l'arrête
+aussi — sans quoi le cadrage qu'on vient de demander serait balayé au tour
+suivant. Le lecteur qui prend la main l'a prise.
 
-`prefers-reduced-motion` EST RESPECTÉ. Le déroulé ne joue pas, la carte ouvre
-directement sur les sections, et les boutons sautent d'un cadrage à l'autre
-sans transition. C'est un réglage système, pas une préférence esthétique :
+`prefers-reduced-motion` EST RESPECTÉ. Ni boucle ni transition : la carte
+ouvre directement sur les sections, et les boutons sautent d'un cadrage à
+l'autre. C'est un réglage système, pas une préférence esthétique :
 certains lecteurs en ont besoin.
 
 POURQUOI UN COMPOSANT ET NON UN SVG POSÉ DANS LA PAGE. L'animation demande du
@@ -69,11 +68,6 @@ TEXTES = {
     "cz_lire": {"en": "Loop", "fr": "En boucle"},
     "cz_haiti": {"en": "HAITI", "fr": "HAÏTI"},
     "cz_dom": {"en": "DOMINICAN REPUBLIC", "fr": "RÉPUBLIQUE DOMINICAINE"},
-    "cz_aide": {
-        "en": "The sequence replays every fifteen seconds. Picking a framing "
-              "stops the loop; Loop starts it again.",
-        "fr": "Le déroulé rejoue toutes les quinze secondes. Choisir un "
-              "cadrage arrête la boucle ; « En boucle » la relance."},
 }
 for _c, _v in TEXTES.items():
     i18n.DICO.setdefault(_c, _v)
@@ -222,7 +216,6 @@ def _composer(lang):
         return None
 
     proj = _Proj(18.5)
-    ratio = LARG / HAUT
 
     a_hti = _anneaux(hti["features"][0]["geometry"])
     a_dom = (_anneaux(dom["features"][0]["geometry"]) if dom else [])
@@ -238,12 +231,15 @@ def _composer(lang):
                  _anneaux(f["geometry"])) for f in sec["features"]]
 
     # --- les trois cadrages
+    # LES CADRAGES PARTENT D'ICI SANS FORMAT. C'est le navigateur qui connaît
+    # la taille de la case où la carte est posée — elle change avec la largeur
+    # de la fenêtre — et c'est donc lui qui étend chaque cadrage au format
+    # utile. Le faire en Python obligeait à parier sur un format, et le pari
+    # se voyait : une bande bleue à droite sur les écrans larges.
     tout = a_hti + a_dom
-    c1 = _ajuster(_cadre(tout, proj, 0.06), ratio)
-    c2 = _ajuster(_cadre([r for _n, rs in depts for r in rs], proj, 0.08)
-                  or c1, ratio)
-    c3 = _ajuster(_cadre([r for _n, rs in sections for r in rs], proj, 0.15),
-                  ratio)
+    c1 = _cadre(tout, proj, 0.06)
+    c2 = _cadre([r for _n, rs in depts for r in rs], proj, 0.08) or c1
+    c3 = _cadre([r for _n, rs in sections for r in rs], proj, 0.15)
 
     # --- les couches
     d_dom = _chemin(a_dom, proj, 45.0)
@@ -304,10 +300,20 @@ def _composer(lang):
   * {{ box-sizing: border-box; }}
   body {{ margin:0; font-family:Inter,system-ui,-apple-system,sans-serif;
           background:transparent; }}
+  html, body {{ height:100%; }}
+  /* LA HAUTEUR EST DONNÉE, LA LARGEUR EST SUBIE. Le cadre de Streamlit a une
+     hauteur fixe ; tant que la carte se dimensionnait sur sa largeur, elle
+     dépassait ce cadre dès qu'on élargissait la fenêtre — à 2 560 pixels,
+     elle demandait neuf cent dix pixels de haut pour six cent vingt
+     disponibles, et les commandes se retrouvaient coupées. La carte prend
+     donc la hauteur qui reste et s'étend en largeur. */
   .cz-cadre {{ background:#f4f7f5; border-radius:14px; padding:12px 14px 10px;
-               overflow:hidden; }}
-  .cz-carte {{ width:100%; display:block; border-radius:10px;
-               background:{MER}; }}
+               overflow:hidden; height:100%; display:flex;
+               flex-direction:column; }}
+  .cz-zone {{ flex:1 1 auto; min-height:0; position:relative;
+              border-radius:10px; overflow:hidden; background:{MER}; }}
+  .cz-carte {{ position:absolute; inset:0; width:100%; height:100%;
+               display:block; }}
   /* LES COMMANDES SONT SOUS LA CARTE, PAS DESSUS. Posées en surimpression
      elles auraient masqué la mer au nord de la péninsule, qui est
      précisément là où le regard part au premier cadrage. */
@@ -324,8 +330,6 @@ def _composer(lang):
   .cz-b[aria-current="true"] {{ background:{SECTION}; border-color:{SECTION};
            color:#fff; }}
   .cz-r {{ margin-left:auto; }}
-  .cz-aide {{ font-size:10.5px; color:#7d8794; margin:7px 2px 0;
-              line-height:1.45; }}
   .cz-s {{ transition:fill-opacity .15s; }}
   .cz-s:hover {{ fill-opacity:1; }}
   text {{ font-family:Inter,system-ui,sans-serif; paint-order:stroke;
@@ -336,6 +340,7 @@ def _composer(lang):
   .l-sec {{ fill:#0e3f2e; font-weight:700; }}
 </style></head><body>
 <div class="cz-cadre">
+  <div class="cz-zone">
   <svg class="cz-carte" id="cz" viewBox="0 0 {LARG:.0f} {HAUT:.0f}"
        preserveAspectRatio="xMidYMid meet" role="img"
        aria-label="{T('cz_t')}">
@@ -351,14 +356,33 @@ def _composer(lang):
       <g id="cz-etiq"></g>
     </g>
   </svg>
+  </div>
   <div class="cz-cmd">{boutons}
     <button class="cz-b cz-r" id="cz-boucle" aria-pressed="true"></button>
   </div>
-  <p class="cz-aide">{T('cz_aide')}</p>
 </div>
 <script>
 (function () {{
-  const CADRES = {cadres};
+  const BRUTS = {cadres};
+  let CADRES = BRUTS.map(function (c) {{ return c.slice(); }});
+
+  // ÉTENDRE UN CADRAGE AU FORMAT DE LA CASE. Un cadrage qui n'a pas ce
+  // format est complété par le navigateur, et l'objet visé se retrouve
+  // décentré d'autant. On l'étend autour de son propre centre, à chaque
+  // changement de taille.
+  function formater() {{
+    const r = svg.getBoundingClientRect();
+    const ratio = (r.width && r.height) ? r.width / r.height
+                                        : {LARG:.0f} / {HAUT:.0f};
+    svg.setAttribute('viewBox', '0 0 ' + {LARG:.0f} + ' '
+                     + ({LARG:.0f} / ratio).toFixed(1));
+    CADRES = BRUTS.map(function (c) {{
+      let x = c[0], y = c[1], w = c[2], h = c[3];
+      if (w / h < ratio) {{ const nw = h * ratio; x -= (nw - w) / 2; w = nw; }}
+      else {{ const nh = w / ratio; y -= (nh - h) / 2; h = nh; }}
+      return [x, y, w, h];
+    }});
+  }}
   const ETIQ = {etiquettes};
   const svg = document.getElementById('cz');
   const gEt = document.getElementById('cz-etiq');
@@ -410,7 +434,9 @@ def _composer(lang):
   function poser() {{
     svg.setAttribute('viewBox', vb.map(function (v) {{
       return v.toFixed(1); }}).join(' '));
-    const k = vb[2] / {LARG:.0f};              // unités de carte par pixel
+    // Unités de carte par pixel d'écran : c'est ce rapport qui garde les
+    // étiquettes à taille constante quand le cadrage se resserre.
+    const k = vb[2] / Math.max(svg.getBoundingClientRect().width, 1);
     const niv = niveau();
     const visibles = [];
     noeuds.forEach(function (t, i) {{
@@ -497,10 +523,10 @@ def _composer(lang):
   }}
 
   // --- LE DÉROULÉ TOURNE EN BOUCLE, ET LA BOUCLE S'ARRÊTE
-  // Un cycle dure quinze secondes : quatre et demie de mouvement, le reste
-  // arrêté sur les dix sections. C'est ce temps d'arrêt qui compte — une
-  // carte qui bouge sans cesse ne se lit pas, elle se subit.
-  const CYCLE = 15000;
+  // Un cycle dure neuf secondes : quatre et demie de mouvement, quatre et
+  // demie arrêté sur les dix sections. C'est ce temps d'arrêt qui compte —
+  // une carte qui bouge sans cesse ne se lit pas, elle se subit.
+  const CYCLE = 9000;
   let minuteurs = [];
   let boucle = true;
 
@@ -554,6 +580,26 @@ def _composer(lang):
     if (boucle) {{ cycle(); }} else {{ arreterMinuteurs(); }}
   }});
 
+  formater();
+  let taille = null;
+  if (window.ResizeObserver) {{
+    taille = new ResizeObserver(function () {{
+      formater();
+      const c = CADRES[etape - 1];
+      for (let i = 0; i < 4; i++) vb[i] = c[i];
+      poser();
+    }});
+    taille.observe(svg);
+  }} else {{
+    window.addEventListener('resize', function () {{
+      formater();
+      const c = CADRES[etape - 1];
+      for (let i = 0; i < 4; i++) vb[i] = c[i];
+      poser();
+    }});
+  }}
+
+  vb = CADRES[0].slice();
   marquer(1); poser();
   // `prefers-reduced-motion` COUPE LA BOUCLE, PAS SEULEMENT LA TRANSITION.
   // Une carte qui se recadre toutes les quinze secondes est exactement ce
@@ -565,7 +611,7 @@ def _composer(lang):
 </script></body></html>"""
 
 
-def render(hauteur=620):
+def render(hauteur=560):
     """La carte animée, ou None si elle ne peut pas être composée.
 
     Rend True quand elle a été dessinée : l'appelant sait alors qu'il n'a pas
