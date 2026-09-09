@@ -1,0 +1,103 @@
+{
+ "parametres": {
+  "modele": "RUSLE, A = R x K x LS x C x P",
+  "R": "CHIRPS 1981-2024, Renard & Freimund 1994",
+  "K": "SoilGrids 250 m, Williams 1995 (EPIC)",
+  "LS": "Copernicus DEM 30 m, Wischmeier & Smith, longueur = maille",
+  "C": "ESA WorldCover 2021, une valeur par classe",
+  "P": 1,
+  "resolution_m": 30.0
+ },
+ "sections": {
+  "Anse à Drick": {
+   "erosion_t_ha_an": 73.0,
+   "erosion_mediane": 47.8,
+   "part_sup_10": 71.7,
+   "part_sup_50": 49.0,
+   "pente_moy_deg": 15.6,
+   "pluie_mm": 1193.0,
+   "K_moy": 0.045
+  },
+  "Barbois": {
+   "erosion_t_ha_an": 48.5,
+   "erosion_mediane": 14.7,
+   "part_sup_10": 56.3,
+   "part_sup_50": 31.5,
+   "pente_moy_deg": 13.0,
+   "pluie_mm": 1181.0,
+   "K_moy": 0.044
+  },
+  "Beaulieu": {
+   "erosion_t_ha_an": 57.4,
+   "erosion_mediane": 29.3,
+   "part_sup_10": 67.8,
+   "part_sup_50": 38.5,
+   "pente_moy_deg": 14.7,
+   "pluie_mm": 1027.0,
+   "K_moy": 0.043
+  },
+  "Blactote": {
+   "erosion_t_ha_an": 34.4,
+   "erosion_mediane": 8.1,
+   "part_sup_10": 45.3,
+   "part_sup_50": 24.1,
+   "pente_moy_deg": 14.0,
+   "pluie_mm": 1033.0,
+   "K_moy": 0.042
+  },
+  "Dalmette": {
+   "erosion_t_ha_an": 48.2,
+   "erosion_mediane": 13.2,
+   "part_sup_10": 54.0,
+   "part_sup_50": 32.2,
+   "pente_moy_deg": 12.8,
+   "pluie_mm": 1085.0,
+   "K_moy": 0.042
+  },
+  "Débouchette": {
+   "erosion_t_ha_an": 20.2,
+   "erosion_mediane": 5.4,
+   "part_sup_10": 40.4,
+   "part_sup_50": 13.5,
+   "pente_moy_deg": 8.9,
+   "pluie_mm": 955.0,
+   "K_moy": 0.041
+  },
+  "Dumont": {
+   "erosion_t_ha_an": 4.3,
+   "erosion_mediane": 1.6,
+   "part_sup_10": 10.5,
+   "part_sup_50": 0.6,
+   "pente_moy_deg": 4.6,
+   "pluie_mm": 897.0,
+   "K_moy": 0.044
+  },
+  "Mouline": {
+   "erosion_t_ha_an": 251.6,
+   "erosion_mediane": 56.8,
+   "part_sup_10": 89.8,
+   "part_sup_50": 54.0,
+   "pente_moy_deg": 24.5,
+   "pluie_mm": 2052.0,
+   "K_moy": 0.042
+  },
+  "Quentin": {
+   "erosion_t_ha_an": 130.9,
+   "erosion_mediane": 111.5,
+   "part_sup_10": 84.0,
+   "part_sup_50": 67.2,
+   "pente_moy_deg": 23.5,
+   "pluie_mm": 1107.0,
+   "K_moy": 0.045
+  },
+  "Trichet": {
+   "erosion_t_ha_an": 12.7,
+   "erosion_mediane": 2.5,
+   "part_sup_10": 23.5,
+   "part_sup_50": 8.1,
+   "pente_moy_deg": 8.8,
+   "pluie_mm": 1112.0,
+   "K_moy": 0.046
+  }
+ }
+}

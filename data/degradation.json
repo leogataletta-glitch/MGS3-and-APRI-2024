@@ -1,0 +1,61 @@
+{
+ "parametres": {
+  "regle": "one out all out sur les processus calculables",
+  "tolerance_erosion_t_ha_an": 10.0,
+  "couvert_perdu": "Hansen/UMD GFC 2023 v1.11, seuil 30 % de couvert en 2000",
+  "productivite": "non calculee, le resultat est un minorant",
+  "resolution_m": 30.0
+ },
+ "sections": {
+  "Anse à Drick": {
+   "degrade_pct": 73.7,
+   "erosion_sup_tolerance_pct": 70.4,
+   "couvert_perdu_pct": 4.4
+  },
+  "Barbois": {
+   "degrade_pct": 63.0,
+   "erosion_sup_tolerance_pct": 55.5,
+   "couvert_perdu_pct": 9.2
+  },
+  "Beaulieu": {
+   "degrade_pct": 64.8,
+   "erosion_sup_tolerance_pct": 61.6,
+   "couvert_perdu_pct": 4.0
+  },
+  "Blactote": {
+   "degrade_pct": 44.2,
+   "erosion_sup_tolerance_pct": 42.4,
+   "couvert_perdu_pct": 2.3
+  },
+  "Dalmette": {
+   "degrade_pct": 53.7,
+   "erosion_sup_tolerance_pct": 50.1,
+   "couvert_perdu_pct": 5.9
+  },
+  "Débouchette": {
+   "degrade_pct": 36.5,
+   "erosion_sup_tolerance_pct": 34.1,
+   "couvert_perdu_pct": 2.6
+  },
+  "Dumont": {
+   "degrade_pct": 14.1,
+   "erosion_sup_tolerance_pct": 9.1,
+   "couvert_perdu_pct": 5.1
+  },
+  "Mouline": {
+   "degrade_pct": 91.9,
+   "erosion_sup_tolerance_pct": 89.8,
+   "couvert_perdu_pct": 20.3
+  },
+  "Quentin": {
+   "degrade_pct": 82.6,
+   "erosion_sup_tolerance_pct": 80.9,
+   "couvert_perdu_pct": 3.3
+  },
+  "Trichet": {
+   "degrade_pct": 29.4,
+   "erosion_sup_tolerance_pct": 19.1,
+   "couvert_perdu_pct": 10.4
+  }
+ }
+}
