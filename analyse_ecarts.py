@@ -389,6 +389,17 @@ def _nom(ind):
             else (ind.get("nom") or ind.get("nom_fr")))
 
 
+def _val_txt(l, dec=1):
+    """La valeur d'une ligne, avec son unité — et sans pour-cent quand ce n'en
+    est pas un. L'indice de diversité des cultures vaut 0,70, pas 0,7 %."""
+    v = l.get("valeur")
+    if v is None:
+        return ""
+    if l.get("moyenne"):
+        return _f(v, 3)
+    return f"{_f(v, dec)}&#8201;%"
+
+
 def _mesure(ind, masque):
     """Valeur et score d'UN indicateur sur UN masque.
 
@@ -400,8 +411,14 @@ def _mesure(ind, masque):
     nb = int(base.sum())
     if nb == 0:
         return {"n": 0, "valeur": None, "score": None}
-    val = 100.0 * float((ind["cible"] & masque).sum()) / nb
-    return {"n": nb, "valeur": val,
+    # UNE RÈGLE À VALEUR N'A PAS DE CIBLE. L'indice de diversité des cultures
+    # n'est pas une part de ménages mais une moyenne : sa valeur se lit dans
+    # le vecteur des ménages, pas dans un décompte de cochés.
+    if ind.get("moyenne"):
+        val = float(ind["valeur_h"][base].mean())
+    else:
+        val = 100.0 * float((ind["cible"] & masque).sum()) / nb
+    return {"n": nb, "valeur": val, "moyenne": bool(ind.get("moyenne")),
             "score": M.score_de_ind(ind, val)}
 
 
@@ -502,8 +519,7 @@ def _barres(lignes, ref):
         # 6,4 ne dit pas combien de ménages sont concernés ; la part dont il
         # est tiré le dit, et les deux ensemble se lisent d'un coup d'œil sans
         # descendre au tableau.
-        val = (f'{_f(l["valeur"], 0)}&#8201;%' if l.get("valeur") is not None
-               else "")
+        val = _val_txt(l, 0)
         parts.append(f'<text x="{LARG - 4}" y="{y + 14}" font-size="11" '
                      f'fill="{GRIS}" text-anchor="end">'
                      f'{val}{"  ·  " if val else ""}n={l["n"]}</text>')
@@ -525,11 +541,11 @@ def _table_cases(lignes, ref):
         cl = ' class="pale"' if l["n"] < N_MIN else ""
         r.append(f'<tr{cl}><td>{_e(l["nom"])}</td>'
                  f'<td class="n v">{_f(l["score"], 1)}</td>'
-                 f'<td class="n">{_f(l["valeur"], 1)}&#8201;%</td>'
+                 f'<td class="n">{_val_txt(l)}</td>'
                  f'<td class="n">{l["n"]}</td></tr>')
     r.append(f'<tr><td>{_e(T("ec_indice"))}</td>'
              f'<td class="n v">{_f(ref["score"], 1)}</td>'
-             f'<td class="n">{_f(ref["valeur"], 1)}&#8201;%</td>'
+             f'<td class="n">{_val_txt(ref)}</td>'
              f'<td class="n">{ref["n"]}</td></tr></tbody></table>')
     return "".join(r)
 
@@ -572,6 +588,7 @@ def _profil_compare(cat, masque, autre=None):
                        "d": a["score"] - b["score"],
                        "gv": a["valeur"], "av": b["valeur"],
                        "dv": a["valeur"] - b["valeur"],
+                       "moyenne": a.get("moyenne"),
                        "n": a["n"]})
     return ag_g, ag_a, ecarts
 
@@ -617,8 +634,11 @@ def _table_ecarts(ecarts, lib_g, lib_a=None):
             f'<td class="n v">{_f(x["g"], 1)}</td>'
             f'<td class="n">{_f(x["a"], 1)}</td>'
             f'<td class="n v" style="color:{coul}">{_f(x["d"], 1, True)}</td>'
-            f'<td class="n">{_f(x["gv"], 0)}&#8201;% <span style="color:#a7b0be">'
-            f'/ {_f(x["av"], 0)}&#8201;%</span></td>'
+            f'<td class="n">'
+            f'{_val_txt({"valeur": x["gv"], "moyenne": x.get("moyenne")}, 0)}'
+            f' <span style="color:#a7b0be">/ '
+            f'{_val_txt({"valeur": x["av"], "moyenne": x.get("moyenne")}, 0)}'
+            f'</span></td>'
             f'<td class="n">{x["n"]}</td></tr>')
     r.append('</tbody></table>')
     return "".join(r)
@@ -1059,7 +1079,7 @@ def _table_alarmes(lignes, avec_reste=False):
         r.append(f'<tr{pale}><td>{_e(x["nom"])}</td>'
                  f'<td class="n v" style="color:{x["coul"]}">'
                  f'{_f(x["score"], 1)}</td>'
-                 f'<td class="n">{_f(x["valeur"], 1)}&#8201;%</td>')
+                 f'<td class="n">{_val_txt(x)}</td>')
         if avec_reste:
             r.append(f'<td class="n" style="color:#8a93a5">'
                      f'{_f(x["reste"], 1)}</td>'

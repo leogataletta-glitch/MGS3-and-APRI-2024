@@ -46,6 +46,12 @@ COLS = {
     "adultes": (13, "adultes vivent dans votre foyer"),
     "enfants": (40, "enfants avez-vous"),
     "pieces": (226, "pieces votre logement"),
+    "agriculture": (521, "pratiquez-vous, vous meme, l'agriculture"),
+    # LES VINGT-TROIS COLONNES DE CULTURE, une par espèce, prises comme un
+    # bloc : leur intitulé est le nom de la culture, il n'y a donc rien à
+    # reconnaître dans le texte. La colonne « ne souhaite pas répondre » est
+    # hors du bloc, volontairement.
+    "cultures": (523, 546),
 }
 
 PIECES_MAX = 15
@@ -100,8 +106,50 @@ def _surpeuplement(df):
     return base, cible
 
 
+def _diversite_cultures(df):
+    """CDI = 1 − Σ pᵢ², la diversité de Simpson des cultures d'un ménage.
+
+    LES PARTS SONT ÉGALES ENTRE CULTURES, ET C'EST UNE APPROXIMATION QU'IL
+    FAUT DIRE. La formule du référentiel demande la part de chaque culture, et
+    l'enquête a bien posé la superficie dédiée à chacune — mais le jeu de
+    données rend ces superficies en classes dont le libellé est corrompu :
+    « e » y apparaît 1 716 fois sur 3 442 réponses, à côté de « 1/16 », « 1 »
+    et « + de 3 ». Un « e » seul est ce qui reste d'un libellé fait de
+    fractions et d'un « à » ; on ne peut pas deviner laquelle. Faute de
+    pondérer, chaque culture reçoit une part égale, si bien que le CDI vaut
+    1 − 1/n pour un ménage cultivant n espèces. C'est la richesse spécifique,
+    pas l'équitabilité : deux ménages cultivant les quatre mêmes espèces
+    obtiennent le même indice, que l'un consacre 90 % de sa terre au maïs ou
+    non. Le jour où le libellé des classes de surface est retrouvé, la même
+    fonction pondère et l'indice devient celui du référentiel.
+
+    LA BASE, CE SONT LES CULTIVATEURS. Un ménage qui ne cultive pas n'a pas un
+    indice de diversité nul, il n'en a pas : le compter à zéro ferait baisser
+    la note d'une section pêcheuse pour une raison qui n'a rien d'agricole.
+    """
+    c_agri = _colonne(df, "agriculture")
+    if not c_agri:
+        return None
+    debut, fin = COLS["cultures"]
+    if fin > len(df.columns):
+        return None
+    noms = list(df.columns[debut:fin])
+    pres = df[noms].notna() & (df[noms].astype(str) != "?")
+    n = pres.sum(axis=1).to_numpy()
+    agri = (df[c_agri].astype(str) == "Oui").to_numpy()
+    base = agri & (n > 0)
+    val = np.where(n > 0, 1.0 - 1.0 / np.maximum(n, 1), 0.0)
+    return base, val
+
+
 # ligne du référentiel -> la règle qui la calcule
 REGLES = {9: _surpeuplement}
+
+# LES RÈGLES QUI RENDENT UNE VALEUR PAR MÉNAGE, et non une appartenance. Le
+# surpeuplement est un OUI ou un NON ; la diversité des cultures est un nombre
+# entre zéro et un, et le score d'un groupe est la moyenne de ces nombres,
+# notée ensuite par le barème. Les deux familles se ventilent pareil.
+REGLES_VALEUR = {53: _diversite_cultures}
 
 # CE QU'UNE RÈGLE DEVIENT DANS LES RÉSULTATS BRUTS : une question de plus,
 # avec ses deux réponses. Elle n'a pas été posée sur le terrain, et le
@@ -149,6 +197,19 @@ def charger(groupes=None, n=None):
     return out
 
 
+def charger_valeurs(groupes=None, n=None):
+    """Les règles à valeur : {ligne: (base, valeur par ménage)}."""
+    df = _lire()
+    if df is None or (n is not None and len(df) != n):
+        return {}
+    out = {}
+    for ligne, f in REGLES_VALEUR.items():
+        r = f(df)
+        if r and r[0].any():
+            out[ligne] = r
+    return out
+
+
 def valeurs_par_groupe(groupes):
     """La valeur publiée de chaque règle, pour chaque découpage du fichier de
     résultats : {ligne: {groupe: valeur}}.
@@ -162,6 +223,18 @@ def valeurs_par_groupe(groupes):
     if df is None:
         return {}
     out = {}
+    for ligne, f in REGLES_VALEUR.items():
+        r = f(df)
+        if not r:
+            continue
+        base, val = r
+        vals = {}
+        for nom, m in groupes.items():
+            b = base & m
+            if b.sum():
+                vals[nom] = round(float(val[b].mean()), 4)
+        vals["Total"] = round(float(val[base].mean()), 4)
+        out[ligne] = vals
     for ligne, f in REGLES.items():
         r = f(df)
         if not r:

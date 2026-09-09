@@ -83,6 +83,13 @@ DIMENSIONS = [
     ("dim4", "IV. ECONOMIC, LIVELIHOODS, AND FOOD SECURITY DIMENSION"),
     ("dim5", "V. SOCIAL AND COMMUNITY DIMENSION"),
     ("dim6", "VI. HUMAN DIMENSION"),
+    # LA SEPTIÈME DIMENSION MANQUAIT À L'APPEL. Elle existe partout ailleurs
+    # dans la plateforme — le cadre la dessine, l'accueil lui donne sa
+    # couleur — mais pas ici : ses indicateurs étaient donc chargés avec un
+    # code de dimension vide, et l'agrégation les sautait en silence. Aucun ne
+    # portait de score jusqu'ici, si bien que le trou ne se voyait pas ; le
+    # premier indicateur culturel noté l'aurait rendu visible en le perdant.
+    ("dim7", "VII. CULTURAL, IDENTITY-BASED, AND PSYCHOLOGICAL DIMENSION"),
 ]
 DIM_DE = {long: court for court, long in DIMENSIONS}
 
@@ -142,19 +149,46 @@ def _parse_echelle(txt):
     demi-cadratin, lui, reste un séparateur d'intervalle et n'est pas touché.
     """
     txt = (txt or "").replace("\u2212", "-")
-    # UN BARÈME À DEUX CÔTÉS N'EST PAS UN BARÈME ORDONNÉ, et on ne le devine
-    # pas. « 9 (90–95 ou 100–102,5) » note l'écart à une normale dans les deux
-    # sens : une seule borne par classe ne peut pas le représenter. Le ratio
-    # aux précipitations normales est dans ce cas ; ses scores sont publiés,
-    # et mieux vaut ne rien recalculer que rendre un chiffre faux.
-    if re.search(r"\bou\b|\bor\b|deux c", txt, re.I):
-        return None
+    corps = txt.split(":", 1)[-1]
+
     out = []
-    for m in re.finditer(r"(\d+)\s*\(\s*([^)]*)\)", txt.split(":", 1)[-1]):
+    for m in re.finditer(r"(\d+)\s*\(\s*([^)]*)\)", corps):
+        # UN BARÈME À DEUX CÔTÉS N'EST PAS UN BARÈME ORDONNÉ, et on ne le
+        # devine pas. « 9 (90–95 ou 100–102,5) » note l'écart à une normale
+        # dans les deux sens : une seule borne par classe ne peut pas le
+        # représenter. LE TEST PORTE SUR LA CLASSE, PAS SUR LA PHRASE : le
+        # chercher dans le texte entier écartait cinq barèmes parfaitement
+        # ordonnés dont une classe se lit « 5 or less ».
+        if re.search(r"\d\s*[-–]\s*\d.*\b(ou|or)\b.*\d\s*[-–]\s*\d",
+                     m.group(2), re.I):
+            return None
         nums = [float(x.replace(",", ".")) for x in re.findall(_NUM, m.group(2))]
         if nums:
             out.append((int(m.group(1)), min(nums), max(nums)))
-    return out or None
+    if out:
+        return out
+
+    # LES BARÈMES SANS PARENTHÈSES. Une partie du référentiel écrit ses
+    # classes autrement — « 0 = 0, 1 > 0–0,40, 2 > 0,40–0,50 » pour l'indice
+    # de diversité des cultures, « 0: 0–5 % | 1: >5–15 % » pour les neuf
+    # indicateurs culturels. Ce sont les mêmes classes, avec un autre signe
+    # entre le score et sa plage, et les déclarer illisibles revenait à dire
+    # qu'un barème publié n'existe pas. On exige au moins cinq classes : une
+    # échelle décrite en toutes lettres, comme celles de la biodiversité de
+    # terrain, ne doit pas être prise pour une suite de nombres.
+    for sep in ("|", ";", ","):
+        bouts = [b for b in corps.split(sep) if b.strip()]
+        libre = []
+        for b in bouts:
+            m = re.match(r"\s*(\d+)\s*[:=>]+\s*(.+)$", b)
+            if not m:
+                continue
+            nums = [float(x.replace(",", ".")) for x in re.findall(_NUM, m.group(2))]
+            if nums:
+                libre.append((int(m.group(1)), min(nums), max(nums)))
+        if len(libre) >= 5:
+            return libre
+    return None
 
 
 def _decroissant(bornes):
@@ -320,8 +354,9 @@ def charger():
     try:
         import indicateurs_regles as _reg
         _rgl = _reg.charger(groupes=groupes, n=n)
+        _rvl = _reg.charger_valeurs(groupes=groupes, n=n)
     except Exception:
-        _rgl = {}
+        _rgl, _rvl = {}, {}
     _par_ligne = {r.get("ligne"): r for r in res}
     # UNE RÈGLE DEVIENT AUSSI UNE QUESTION. Deux lignes sont ajoutées à la
     # matrice — « oui » et « non » — et une entrée au catalogue des
@@ -371,6 +406,31 @@ def charger():
             "base": np.asarray(_base, dtype=bool),
             "cible": np.asarray(_cible, dtype=bool),
             "regle": True,
+            "valeur_pub": (r.get("valeurs") or {}).get("Total"),
+            "score_pub": (r.get("scores_corriges") or {}).get("Total"),
+        })
+
+    # LES RÈGLES À VALEUR. Le score d'un groupe est la MOYENNE de la valeur de
+    # ses ménages, notée ensuite par le barème — et non une part de ménages.
+    # Confondre les deux ferait lire « 70 % des ménages » là où l'indice de
+    # diversité vaut 0,70.
+    for _lg, (_base, _val) in (_rvl or {}).items():
+        r = _par_ligne.get(_lg)
+        if r is None:
+            continue
+        bornes = _parse_echelle(r.get("echelle"))
+        if not bornes:
+            continue
+        indicateurs.append({
+            "ligne": _lg, "dim": DIM_DE.get(r["dimension"], ""),
+            "nom": r.get("indicateur"), "nom_fr": r.get("indicateur_fr"),
+            "poids": r.get("ponderation") or 1, "bornes": bornes,
+            "decroissant": _decroissant(bornes),
+            "inverse": bool(r.get("bareme_inverse")),
+            "max_score": max(x[0] for x in bornes),
+            "base": np.asarray(_base, dtype=bool),
+            "valeur_h": np.asarray(_val, dtype=float),
+            "moyenne": True, "regle": True,
             "valeur_pub": (r.get("valeurs") or {}).get("Total"),
             "score_pub": (r.get("scores_corriges") or {}).get("Total"),
         })
@@ -535,6 +595,14 @@ def profil(cat, masque):
     for ind in cat["indicateurs"]:
         base = ind["base"] & masque
         nb = int(base.sum())
+        if ind.get("moyenne"):
+            v = (float(ind["valeur_h"][base].mean()) if nb else None)
+            out.append({**{k: ind[k] for k in
+                           ("ligne", "dim", "nom", "nom_fr", "poids")},
+                        "n": nb, "valeur": v,
+                        "score": (score_de_ind(ind, v) if v is not None
+                                  else None)})
+            continue
         if nb == 0:
             out.append({**{k: ind[k] for k in
                            ("ligne", "dim", "nom", "nom_fr", "poids")},

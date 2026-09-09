@@ -27,6 +27,9 @@ son effectif, plutôt que retirée — retirer une barre laisse croire qu'il n'y
 a rien à cet endroit.
 """
 
+import json
+import os
+
 import numpy as np
 import itertools
 
@@ -38,6 +41,8 @@ import libelles_enquete
 import map_render
 import radar
 from i18n import T
+
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
 
 ENCRE, ENCRE2, ENCRE3 = "#101728", "#3c4761", "#6b7590"
 VERT_APRI = "#2a6b3f"
@@ -134,6 +139,13 @@ TEXTES = {
               "là où ils vivent, ce qui est précisément la question quand on "
               "demande si les ménages les plus pauvres vivent dans les "
               "sections les plus dégradées."},
+    "ex_s_couv": {
+        "en": "This dimension is scored on {k} of its {n} indicators, {p} % "
+              "of its weight in the framework. Read it as what is measured "
+              "of the dimension, not as the dimension.",
+        "fr": "Cette dimension est notée sur {k} de ses {n} indicateurs, "
+              "{p} % de son poids dans le référentiel. À lire comme ce qui "
+              "est mesuré de la dimension, non comme la dimension."},
     "ex_s_terr_un": {
         "en": "This indicator is territorial: it is measured on the communal "
               "section, not on the household, and graded on the framework's "
@@ -888,6 +900,60 @@ def _note_territoriale(cat, dim, ind=None):
             f'</p>')
 
 
+def _note_couverture(cat, dim, ind=None):
+    """Sur combien d'indicateurs une dimension est réellement notée.
+
+    UN SCORE DE DIMENSION N'A PAS LE MÊME POIDS SELON CE QU'IL COUVRE. La
+    dimension culturelle est notée sur un indicateur sur neuf : le chiffre est
+    juste, mais le lire comme « la dimension culturelle vaut 1 sur 10 » serait
+    faux. La phrase ne s'écrit que là où la couverture est mince, sans quoi
+    elle deviendrait un bruit de fond qu'on cesse de lire.
+    """
+    if ind is not None or dim is None:
+        return ""
+    n_dim = sum(1 for x in _inds_tries(cat) if x["dim"] == dim)
+    poids = M.couverture(cat)["poids"].get(dim, 0.0)
+    tot = _poids_dimension(cat, dim)
+    if not tot or not n_dim:
+        return ""
+    part = 100.0 * poids / tot
+    if part >= 55.0:
+        return ""
+    return (f'<p class="ex-note" style="margin:8px 0 0">'
+            f'{_e(T("ex_s_couv", k=n_dim, n=_n_dim_total(cat, dim), p=_f(part, 0)))}'
+            f'</p>')
+
+
+@st.cache_data(show_spinner=False)
+def _poids_referentiel():
+    """Le poids total de chaque dimension dans le référentiel, indicateurs non
+    notés compris : c'est le dénominateur de la couverture."""
+    p = os.path.join(APP_DIR, "data", "resultats.json")
+    if not os.path.exists(p):
+        p = os.path.join(APP_DIR, "resultats.json")
+    if not os.path.exists(p):
+        return {}, {}
+    with open(p, encoding="utf-8") as f:
+        d = json.load(f)
+    lst = d["indicateurs"] if isinstance(d, dict) and "indicateurs" in d else d
+    poids, nb = {}, {}
+    for r in lst or []:
+        c = M.DIM_DE.get(r.get("dimension"), "")
+        if not c:
+            continue
+        poids[c] = poids.get(c, 0.0) + (r.get("ponderation") or 1)
+        nb[c] = nb.get(c, 0) + 1
+    return poids, nb
+
+
+def _poids_dimension(cat, dim):
+    return _poids_referentiel()[0].get(dim, 0.0)
+
+
+def _n_dim_total(cat, dim):
+    return _poids_referentiel()[1].get(dim, 0)
+
+
 def _carte_vide(dim):
     """L'encadré qui remplace les barres vides d'une dimension non mesurée.
 
@@ -940,6 +1006,15 @@ def _mesure_ind(ind, masque):
         s = ind["score_h"][masque]
         s = s[~np.isnan(s)]
         return int(s.size), (float(s.mean()) if s.size else None)
+    # UNE RÈGLE À VALEUR SE MOYENNE PUIS SE NOTE, dans cet ordre. Noter chaque
+    # ménage puis moyenner les notes donnerait un autre chiffre, et faux : les
+    # paliers d'un barème ne sont pas régulièrement espacés.
+    if ind.get("moyenne"):
+        b = ind["base"] & masque
+        nb = int(b.sum())
+        if not nb:
+            return 0, None
+        return nb, M.score_de_ind(ind, float(ind["valeur_h"][b].mean()))
     base = ind["base"] & masque
     nb = int(base.sum())
     if nb == 0:
@@ -2031,6 +2106,7 @@ def render_scores(cat):
         st.markdown(_synthese(lignes, "score"), unsafe_allow_html=True)
         st.markdown(_note_territoriale(cat, dim, ind),
                     unsafe_allow_html=True)
+        st.markdown(_note_couverture(cat, dim, ind), unsafe_allow_html=True)
         if poses:
             st.markdown(f'<p class="ex-note" style="margin:6px 0 0">'
                         f'{_e(T("ex_s_n", n=_n(n_f), t=_n(cat["n"])))}</p>',
