@@ -39,7 +39,9 @@ import croisement_moteur as M
 import i18n
 import libelles_enquete
 import map_render
+import onglets
 import radar
+import themes_enquete
 from i18n import T
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -2500,41 +2502,57 @@ def _render_brut(cat):
         # zéro n'a donc plus de rangée à elle : elle se range au bout de la
         # première, à hauteur du menu des questions.
 
-        # LE THÈME RESTE, MAIS IL PASSE AU SECOND PLAN. Quatre cent
-        # quatre-vingt-trois questions dans un menu unique se cherchent à
-        # l'aveugle ; le module du questionnaire est le tri dans lequel on
-        # pense sa question. Il est donc gardé, étroit, à côté de la question
-        # — qui, elle, occupe le double de largeur et porte le seul libellé
-        # en encre pleine de l'écran.
+        # LA THÉMATIQUE EST UNE BARRE D'ONGLETS, COMME SUR L'ÉCRAN
+        # SATELLITAIRE, ET POUR LA MÊME RAISON. Un menu déroulant ne dit pas
+        # ce qu'il contient : il fallait le dérouler pour découvrir que
+        # l'enquête portait un module de pêche, et le lecteur qui n'y pensait
+        # pas ne le trouvait jamais. Une barre annonce ses dix rubriques avant
+        # le clic, chacune avec sa ligne de description, et le menu qui reste
+        # ne porte plus que les questions de la rubrique ouverte.
+        #
+        # CE SONT DES THÉMATIQUES, PAS LES MODULES DU QUESTIONNAIRE. Il y a
+        # quarante-six modules, qui suivent l'ordre de passation sur le
+        # terrain : onze d'entre eux sont agricoles. Une barre de
+        # quarante-six onglets ne se lit pas. Le regroupement est dans
+        # `themes_enquete`, et le module d'origine reste écrit à côté de
+        # chaque question.
+        cats = {x.get("category") or "" for x in questions}
+        codes = themes_enquete.codes_presents(cats)
+        theme = onglets.barre(
+            "exb_theme_ong", codes,
+            titre=lambda c: T(themes_enquete.libelle(c)),
+            description=lambda c: T(themes_enquete.description(c)),
+            defaut=codes[0] if codes else None)
         with st.container(key="exb_q_zone"):
-            c1, c2, c4, c0 = st.columns([1, 2.2, 1.1, 0.55],
-                                        vertical_alignment="bottom")
+            c2, c4, c0 = st.columns([3.2, 1.1, 0.55],
+                                    vertical_alignment="bottom")
             with c0:
                 if st.button(T("ex_b_raz"), key="exb_raz", type="tertiary"):
                     st.session_state["ra_raz"] = True
                     st.rerun()
-            with c1:
-                themes = sorted({x.get("category") or "" for x in questions},
-                                key=lambda c: _nom_theme(c).lower())
-                theme = st.selectbox(
-                    T("ex_theme"), [None] + themes, key="exb_theme",
-                    format_func=lambda c: (T("ex_theme_tous") if c is None
-                                           else _nom_theme(c)))
             vues = [x for x in questions
-                    if theme is None or (x.get("category") or "") == theme]
+                    if themes_enquete.theme_de(x.get("category")) == theme]
             with c2:
                 # AUCUNE QUESTION N'EST CHOISIE D'AVANCE. La première de la
                 # liste s'ouvrait toute seule, et l'écran affichait donc,
                 # dès l'arrivée, la ventilation complète d'une question que
                 # personne n'avait demandée : dix sections, vingt barres, et
                 # un lecteur qui croit lire un résultat.
+                #
+                # LE MODULE RESTE ÉCRIT DEVANT CHAQUE QUESTION. Une
+                # thématique en rassemble jusqu'à onze — l'agriculture porte
+                # deux cent vingt-sept questions — et sans son module, « Maïs »
+                # ne dit pas si l'on parle d'une superficie, d'un rendement ou
+                # d'une perte. C'est aussi ce qui rend la frappe au clavier
+                # utile : taper « rendement » ne retient que le bon tableau.
                 qi = st.selectbox(
                     T("ex_question"), [x["i"] for x in vues],
                     key=f"exb_q_{theme or 'tous'}",
                     index=None, placeholder=T("ex_b_choisir_q"),
+                    help=T("ex_chercher"),
                     format_func=lambda i: _libelle_question(
                         next(x for x in vues if x["i"] == i),
-                        avec_theme=theme is None))
+                        avec_theme=True))
         if qi is None:
             st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'
                         f'{_e(T("ex_b_vide"))}</p>', unsafe_allow_html=True)

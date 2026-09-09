@@ -713,6 +713,51 @@ REGLES_POIDS = {83: _perte_cheptel, 84: _pertes_agricoles}
 # qui le sait, c'est donc la règle qui le déclare.
 SANS_BAREME = {92, 94}
 
+# LES HUIT INDICES COMPOSITES DE LA DIMENSION VII, décrits dans `indices_vii`.
+# Ce ne sont pas des taux mais des COMPTES DE VOLETS, et c'est pour cela
+# qu'ils vivent dans leur propre module : chacun tient dans un tableau de sept
+# ou huit détecteurs, et ce tableau est l'objet à lire quand on veut savoir ce
+# que l'indice mesure vraiment.
+try:
+    import indices_vii as _vii
+except Exception:
+    _vii = None
+
+
+def _indice_vii(ligne):
+    def f(df):
+        d = _vii.construire(df)
+        return d.get(ligne)
+    return f
+
+
+if _vii is not None:
+    for _lg in _vii.VOLETS:
+        REGLES_VALEUR[_lg] = _indice_vii(_lg)
+    # Une ligne à qui il manque un volet ne se note pas : son indice plafonne
+    # sous le maximum du barème. Le tableau le dit sans qu'il faille lire les
+    # données.
+    SANS_BAREME |= {lg for lg, i in _vii.inventaire().items()
+                    if not i["complet"]}
+
+
+def _verifier_indices(df):
+    """Un volet peut manquer À L'EXÉCUTION et non seulement au tableau.
+
+    Un détecteur rend `None` quand la colonne qu'il désigne n'est plus celle
+    qu'il attendait — questionnaire modifié, colonne insérée. L'indice perd
+    alors un volet en silence, et une ligne réputée complète se retrouverait
+    notée sur un barème trop large. On revérifie donc sur les données du jour,
+    et toute ligne qui n'atteint plus le maximum de son barème rejoint les
+    lignes sans note.
+    """
+    if _vii is None:
+        return
+    mx = _vii.maximum_atteignable(df)
+    for lg, i in _vii.inventaire().items():
+        if mx.get(lg, 0) < i["attendus"]:
+            SANS_BAREME.add(lg)
+
 # CE QU'UNE RÈGLE DEVIENT DANS LES RÉSULTATS BRUTS : une question de plus,
 # avec ses deux réponses. Elle n'a pas été posée sur le terrain, et le
 # libellé le dit — « calculé » est dans son intitulé. Tout le reste de
@@ -796,6 +841,10 @@ def charger_valeurs(groupes=None, n=None):
     df = _lire()
     if df is None or (n is not None and len(df) != n):
         return {}
+    # LA VÉRIFICATION PASSE AVANT LE CHARGEMENT, et il le faut : le moteur lit
+    # `SANS_BAREME` après cet appel, et c'est là que se décide si un indice
+    # composite amputé peut être noté.
+    _verifier_indices(df)
     out = {}
     for ligne, f in list(REGLES_VALEUR.items()) + list(REGLES_POIDS.items()):
         r = f(df)
