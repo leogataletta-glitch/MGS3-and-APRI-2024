@@ -1014,7 +1014,8 @@ def _mesure_ind(ind, masque):
         nb = int(b.sum())
         if not nb:
             return 0, None
-        return nb, M.score_de_ind(ind, float(ind["valeur_h"][b].mean()))
+        v = M.valeur_moyenne(ind, b)
+        return nb, (M.score_de_ind(ind, v) if v is not None else None)
     base = ind["base"] & masque
     nb = int(base.sum())
     if nb == 0:

@@ -25,7 +25,8 @@ le groupe ; le traiter comme un score nul en ferait la première vulnérabilité
 du classement, qui serait un artefact.
 """
 
-import itertools
+import html
+
 
 import numpy as np
 import streamlit as st
@@ -391,11 +392,37 @@ def _nom(ind):
 
 def _val_txt(l, dec=1):
     """La valeur d'une ligne, avec son unité — et sans pour-cent quand ce n'en
-    est pas un. L'indice de diversité des cultures vaut 0,70, pas 0,7 %."""
+    est pas un.
+
+    C'EST L'UNITÉ DU RÉFÉRENTIEL QUI DÉCIDE, PAS LA FAMILLE DE L'INDICATEUR.
+    La règle d'avant écrivait un pour-cent partout sauf sur les indicateurs à
+    moyenne, ce qui marchait tant que le seul d'entre eux était l'indice de
+    diversité des cultures, sans unité — 0,70 et non 0,7 %. Le capital
+    d'élevage perdu se calcule de la même façon et s'exprime bien en pour
+    cent, et le nombre d'espèces pêchées en espèces : la famille ne dit rien
+    de l'unité, la ligne du référentiel la porte, on la lit.
+    """
     v = l.get("valeur")
     if v is None:
         return ""
-    if l.get("moyenne"):
+    u = (l.get("unite") or "").strip()
+    if u == "%":
+        return f"{_f(v, dec)}&#8201;%"
+    # UNE UNITÉ QUI PORTE UNE VIRGULE N'EST PAS UNE UNITÉ, C'EST UNE
+    # DESCRIPTION. Le référentiel écrit « Probabilité, 0–1 » pour la
+    # connectivité : accolé au chiffre, cela donne « 0,2 Probabilité, 0–1 »,
+    # illisible. Le nombre se suffit, l'en-tête de colonne dit le reste.
+    if u and "," not in u:
+        return f"{_f(v, dec)}&#8201;{html.escape(u)}"
+    if u:
+        return _f(v, 3)
+    # PAS D'UNITÉ DÉCLARÉE : le pour-cent n'est le bon défaut que pour une
+    # PART DE MÉNAGES, qui est ce que rend un indicateur d'enquête ordinaire.
+    # Une moyenne — l'indice de diversité des cultures — et une mesure
+    # territoriale — la turbidité de l'eau, entre −1 et 1 — sont des nombres
+    # nus, et le pour-cent y était une faute d'unité qui passait inaperçue
+    # parce qu'aucune des deux n'affichait de valeur jusqu'ici.
+    if l.get("moyenne") or l.get("territorial"):
         return _f(v, 3)
     return f"{_f(v, dec)}&#8201;%"
 
@@ -415,7 +442,9 @@ def _mesure(ind, masque):
     # n'est pas une part de ménages mais une moyenne : sa valeur se lit dans
     # le vecteur des ménages, pas dans un décompte de cochés.
     if ind.get("moyenne"):
-        val = float(ind["valeur_h"][base].mean())
+        val = M.valeur_moyenne(ind, base)
+        if val is None:
+            return {"n": nb, "valeur": None, "score": None}
     else:
         val = 100.0 * float((ind["cible"] & masque).sum()) / nb
     return {"n": nb, "valeur": val, "moyenne": bool(ind.get("moyenne")),

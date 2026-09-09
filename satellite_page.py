@@ -262,6 +262,20 @@ MESURES = [
      "eleve_bon"),
     ("marin", "herbier_polygones", "sat_m_herbier_n", "herb", "polygones",
      "", 0, "eleve_bon"),
+    # --- LE GUICHET LE PLUS PROCHE. Le compte d'agences vaut zéro dans les
+    # dix sections, et un indicateur qui ne distingue rien ne dit pourtant
+    # pas rien : c'est la DISTANCE qui porte l'information, et elle est ici
+    # à côté de lui plutôt que dans une note qu'on n'ouvre pas.
+    ("finance", "guichets_p100k", "sat_m_guichets", "fin", "guichets_p100k",
+     "", 2, "eleve_bon"),
+    ("finance", "dist_guichet_km", "sat_m_dist_guichet", "fin",
+     "dist_guichet_km", " km", 1, "eleve_mauvais"),
+    ("finance", "dist_point_financier_km", "sat_m_dist_fin", "fin",
+     "dist_point_financier_km", " km", 1, "eleve_mauvais"),
+    ("finance", "adultes_estimes", "sat_m_adultes", "fin",
+     "adultes_estimes", "", 0, "eleve_bon"),
+    ("finance", "poi_cartographies", "sat_m_poi", "fin",
+     "poi_cartographies", "", 0, "eleve_bon"),
 ]
 
 # LA MESURE BRUTE ET SA NOTE SONT LE MÊME OBJET, VU DEUX FOIS. Le référentiel
@@ -278,13 +292,13 @@ LIGNES = {
     "pc_d": 64, "pc_d2": 65, "iic": 66, "iic_d": 67,
     "densite_lisiere_m_ha": 68, "ratio_core_move": 69, "core_pct": 70,
     "acces_axe": 8, "erosion_t_ha_an": 59, "degrade_pct": 60,
-    "chl_a": 61, "herbier_ha": 58,
+    "chl_a": 61, "herbier_ha": 58, "guichets_p100k": 73,
 }
 
 # LES ONGLETS, DANS L'ORDRE OÙ ON LES PARCOURT : ce qui couvre le sol, puis
 # ce qui l'arrose, puis ce qui l'assèche.
 CATEGORIES = ("foret", "frag", "sol", "vege", "eau", "marin", "pluie",
-              "saison", "temp", "aridite", "acces")
+              "saison", "temp", "aridite", "acces", "finance")
 
 
 TEXTES = {
@@ -299,16 +313,16 @@ TEXTES = {
               "the ten communal sections: forest, the shape of the habitat, "
               "vegetation, surface water, the sea offshore, rainfall since "
               "1981, the rainy season, surface temperature since 2001, the "
-              "water balance and road access. These are raw measurements: "
-              "where the "
+              "water balance, road access and financial counters. These "
+              "are raw measurements: where the "
               "framework publishes a scale, the score sits under the "
               "chart.",
         "fr": "{n} mesures tirées de l'imagerie et de données "
               "géographiques ouvertes, pour chacune des dix sections "
               "communales : forêt, forme de l'habitat, végétation, eau de "
               "surface, mer au large, pluie depuis 1981, saison des pluies, "
-              "température de surface depuis 2001, bilan hydrique et accès "
-              "routier. Ce "
+              "température de surface depuis 2001, bilan hydrique, accès "
+              "routier et guichets financiers. Ce "
               "sont des mesures brutes : là où le référentiel publie un "
               "barème, la note est sous le graphique."},
     "sat_source": {"en": "Source", "fr": "Source"},
@@ -367,6 +381,29 @@ TEXTES = {
     "sat_c_aridite": {"en": "Water balance", "fr": "Bilan hydrique"},
     "sat_c_sol": {"en": "Soil", "fr": "Sol"},
     "sat_c_marin": {"en": "The sea offshore", "fr": "La mer au large"},
+    "sat_c_finance": {"en": "Financial counters",
+                      "fr": "Guichets financiers"},
+    "sat_cd_finance": {
+        "en": "Bank branches and ATMs per 100,000 adults, and how far the "
+              "nearest one is",
+        "fr": "Agences et distributeurs pour 100 000 adultes, et la "
+              "distance au plus proche"},
+    "sat_m_guichets": {
+        "en": "Bank branches and ATMs per 100,000 adults (SDG 8.10.1)",
+        "fr": "Agences et distributeurs pour 100 000 adultes (ODD 8.10.1)"},
+    "sat_m_dist_guichet": {
+        "en": "Distance to the nearest branch or ATM",
+        "fr": "Distance à l'agence ou au distributeur le plus proche"},
+    "sat_m_dist_fin": {
+        "en": "Distance to the nearest financial counter of any kind",
+        "fr": "Distance au premier point financier, quel qu'il soit"},
+    "sat_m_adultes": {
+        "en": "Estimated adult population of the section",
+        "fr": "Population adulte estimée de la section"},
+    "sat_m_poi": {
+        "en": "Ordinary points of interest mapped in the section (control)",
+        "fr": "Points d'intérêt ordinaires cartographiés dans la section "
+              "(contrôle)"},
     "sat_m_chl": {
         "en": "Chlorophyll-a offshore, 2021-2025 average",
         "fr": "Chlorophylle-a au large, moyenne 2021-2025"},
@@ -752,6 +789,87 @@ TEXTES = {
               "parcelles. Une section sans côte ne figure pas ici — elle "
               "n'a pas de mesure de chlorophylle, ce qui n'est pas la même "
               "chose qu'une mesure nulle."},
+    "sat_ref_zonal_fin": {
+        "en": "This figure counts what stands INSIDE the section, and it "
+              "stands at zero in all ten: every branch and ATM mapped in "
+              "the two departments is in Les Cayes, Jérémie, Camp-Perrin "
+              "or Aquin, none of them inside a studied section. A zero can "
+              "mean « there is nothing » or « nobody mapped it », so the "
+              "control is published beside it: the ordinary points of "
+              "interest — shops, schools, pharmacies, markets — mapped in "
+              "each section. Seventy-eight across the ten, from one to "
+              "twenty-six: the map is not blank, but it is thin, and the "
+              "zero is a probable absence rather than a certified one. "
+              "What separates the ten sections is the distance to the "
+              "nearest counter, from 1.7 km to 39.2 km, and it carries no "
+              "score because the referential does not grade it.",
+        "fr": "Ce chiffre compte ce qui se trouve DANS la section, et il "
+              "vaut zéro dans les dix : toutes les agences et tous les "
+              "distributeurs cartographiés des deux départements sont aux "
+              "Cayes, à Jérémie, à Camp-Perrin ou à Aquin, aucun dans une "
+              "section étudiée. Un zéro peut vouloir dire « il n'y a "
+              "rien » ou « personne ne l'a cartographié » : le contrôle "
+              "est donc publié à côté, ce sont les points d'intérêt "
+              "ordinaires — commerces, écoles, pharmacies, marchés — "
+              "cartographiés dans chaque section. Soixante-dix-huit pour "
+              "les dix, de un à vingt-six : la carte n'est pas vierge, "
+              "mais elle est mince, et le zéro est une absence probable "
+              "plutôt qu'une absence certifiée. Ce qui distingue les dix "
+              "sections, c'est la distance au guichet le plus proche, de "
+              "1,7 km à 39,2 km, et elle ne porte pas de note parce que le "
+              "référentiel ne la note pas."},
+    "sat_calc_fin": {
+        "en": "SDG 8.10.1 counts COMMERCIAL BANK BRANCHES AND ATMs per "
+              "100,000 adults: an infrastructure statistic, not a question "
+              "put to households. What the survey knows — who holds an "
+              "account — is SDG 8.10.2, and that is line 72 of the "
+              "referential, already computed from the answers. The two do "
+              "not replace each other: one says whether people have an "
+              "account, the other whether there is a counter where they "
+              "live. Positions come from OpenStreetMap, the only open "
+              "source that gives them; money-transfer offices are "
+              "recorded but left out of the scored count, since the "
+              "indicator names branches and ATMs. Adults are estimated at "
+              "65 % of the section's WorldPop population. AND THE ZERO "
+              "DOES NOT MEAN THERE IS NO FINANCIAL LIFE: 369 surveyed "
+              "households belong to a savings mutual or a community bank, "
+              "and 350 would turn to a solidarity mutual for credit. Those "
+              "are neither branches nor ATMs, and the scale decides that, "
+              "not us.",
+        "fr": "L'ODD 8.10.1 compte des AGENCES DE BANQUE COMMERCIALE ET "
+              "DES DISTRIBUTEURS pour 100 000 adultes : une statistique "
+              "d'infrastructure, pas une question posée aux ménages. Ce "
+              "que l'enquête sait — qui possède un compte — est l'ODD "
+              "8.10.2, et c'est la ligne 72 du référentiel, déjà calculée "
+              "depuis les réponses. Les deux ne se remplacent pas : l'une "
+              "dit si les gens ont un compte, l'autre s'il existe un "
+              "guichet là où ils vivent. Les positions viennent "
+              "d'OpenStreetMap, seule source ouverte à les donner ; les "
+              "bureaux de transfert d'argent sont relevés mais laissés "
+              "hors du compte noté, l'indicateur nommant les agences et "
+              "les distributeurs. Les adultes sont estimés à 65 % de la "
+              "population WorldPop de la section. ET LE ZÉRO NE VEUT PAS "
+              "DIRE QU'IL N'Y A PAS DE VIE FINANCIÈRE : 369 ménages "
+              "enquêtés sont membres d'une mutuelle d'épargne ou d'une "
+              "banque communautaire, et 350 se tourneraient vers une "
+              "mutuelle de solidarité pour un crédit. Ce ne sont ni des "
+              "agences ni des distributeurs, et c'est le barème qui en "
+              "décide, pas nous."},
+    "sat_src_fin": {
+        "en": "{s}. {n} financial points recorded on the peninsula, adults "
+              "taken as {a} % of the WorldPop total, {p} control points of "
+              "interest mapped across the ten sections.",
+        "fr": "{s}. {n} points financiers relevés sur la presqu'île, "
+              "adultes pris à {a} % de la population WorldPop, {p} points "
+              "d'intérêt de contrôle cartographiés dans les dix sections."},
+    "sat_p_guichets_p100k": {
+        "en": "{s} has {v} branches or ATMs per 100,000 adults.",
+        "fr": "{s} compte {v} agence ou distributeur pour 100 000 "
+              "adultes."},
+    "sat_p_dist_guichet_km": {
+        "en": "The nearest branch or ATM to {s} is {v} km away.",
+        "fr": "L'agence ou le distributeur le plus proche de {s} est à "
+              "{v} km."},
     "sat_calc_chl": {
         "en": "NOAA CoastWatch, VIIRS SNPP, OCI algorithm, monthly 4 km "
               "composites. The scored value is the 2021-2025 mean, taken "
@@ -1364,7 +1482,8 @@ def _charger():
                      ("sol", "erosion.json"),
                      ("deg", "degradation.json"),
                      ("chl", "chlorophylle.json"),
-                     ("herb", "herbiers.json")):
+                     ("herb", "herbiers.json"),
+                     ("fin", "services_financiers.json")):
         p = os.path.join(DATA, nom)
         if not os.path.exists(p):
             p = os.path.join(APP_DIR, nom)
@@ -1489,6 +1608,11 @@ def _source(fichier, d):
         pa = d.get("parametres") or {}
         return T("sat_src_deg", r=pa.get("resolution_m", 30),
                  t=pa.get("tolerance_erosion_t_ha_an", 10))
+    if fichier == "fin":
+        return T("sat_src_fin", s=d.get("source", "—"),
+                 a=int(100 * (d.get("part_adultes") or 0.65)),
+                 n=len(d.get("releve") or []),
+                 p=(d.get("total") or {}).get("poi_cartographies", "—"))
     if fichier == "chl":
         fen = d.get("fenetre") or [2021, 2025]
         return T("sat_src_chl", s=d.get("source", "—"),
@@ -1730,7 +1854,8 @@ def _dossier(mesure, vals, unite, dec):
     zonal = {"frag": "sat_ref_zonal_frag",
              "acces": "sat_ref_zonal_acces",
              "chl": "sat_ref_zonal_marin",
-             "herb": "sat_ref_zonal_marin"}.get(mesure[3], "sat_ref_zonal")
+             "herb": "sat_ref_zonal_marin",
+             "fin": "sat_ref_zonal_fin"}.get(mesure[3], "sat_ref_zonal")
     if mesure[3] in ("sol", "deg"):
         zonal = "sat_ref_zonal"
     with st.expander(T("sat_ref_t")):

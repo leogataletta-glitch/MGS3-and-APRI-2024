@@ -152,7 +152,19 @@ def _parse_echelle(txt):
     corps = txt.split(":", 1)[-1]
 
     out = []
-    for m in re.finditer(r"(\d+)\s*\(\s*([^)]*)\)", corps):
+    # LE RÉFÉRENTIEL NE FERME PAS TOUJOURS SES CLASSES PAR UNE PARENTHÈSE.
+    # Cinq barèmes sont écrits en notation d'intervalle mathématique — « 0
+    # (≥ 95,0 %], 1 (85,0–95,0 %] » pour l'isolement, « 1[38,96–45,07[ » pour
+    # la vaccination — où le crochet dit si la borne est comprise. Le motif
+    # d'avant exigeait une parenthèse fermante : il ne trouvait donc AUCUNE
+    # fin de classe et avalait tout le barème comme une classe unique allant
+    # de la première borne à la dernière. L'échelle rendait alors un seul
+    # score, le même pour toute valeur, et rien ne le signalait. Les deux
+    # familles de délimiteurs sont donc acceptées à l'ouverture comme à la
+    # fermeture ; ce que le crochet dit de l'inclusion des bornes n'est pas
+    # lu, la convention du référentiel — la classe dont la borne basse est la
+    # plus grande sous la valeur — tranche déjà les cas limites.
+    for m in re.finditer(r"(\d+)\s*[(\[]\s*([^()\[\]]*)[)\]\[]", corps):
         # UN BARÈME À DEUX CÔTÉS N'EST PAS UN BARÈME ORDONNÉ, et on ne le
         # devine pas. « 9 (90–95 ou 100–102,5) » note l'écart à une normale
         # dans les deux sens : une seule borne par classe ne peut pas le
@@ -406,6 +418,7 @@ def charger():
             "base": np.asarray(_base, dtype=bool),
             "cible": np.asarray(_cible, dtype=bool),
             "regle": True,
+            "unite": (r.get("unite") or "").strip(),
             "valeur_pub": (r.get("valeurs") or {}).get("Total"),
             "score_pub": (r.get("scores_corriges") or {}).get("Total"),
         })
@@ -414,7 +427,26 @@ def charger():
     # ses ménages, notée ensuite par le barème — et non une part de ménages.
     # Confondre les deux ferait lire « 70 % des ménages » là où l'indice de
     # diversité vaut 0,70.
-    for _lg, (_base, _val) in (_rvl or {}).items():
+    # UNE RÈGLE PEUT RENDRE DEUX VECTEURS OU TROIS. Deux — base et valeur —
+    # et le chiffre du groupe est la moyenne de ses ménages : c'est le cas de
+    # la diversité des cultures. Trois — base, valeur et POIDS — et c'est un
+    # rapport de totaux : le capital d'élevage perdu par un territoire est la
+    # somme des unités animales mortes sur la somme des troupeaux, jamais la
+    # moyenne des taux de chaque cour, qui donnerait le même poids à deux
+    # chèvres qu'à quarante bovins. Un poids de un partout redonne la
+    # moyenne : c'est la même mécanique avec un vecteur de plus.
+    # UNE RÈGLE PEUT DÉCLARER QUE SON BARÈME NE LUI CONVIENT PAS. L'autonomie
+    # des femmes et la scolarisation des filles se mesurent sur ce que
+    # l'enquête porte, mais pas sur ce que le référentiel décrit : leurs
+    # barèmes s'appliqueraient sans broncher et produiraient des notes
+    # fausses. Le module des règles tient la liste et dit pourquoi ; le moteur
+    # la respecte et publie la valeur sans la noter.
+    _sans = set(getattr(_reg, "SANS_BAREME", set()) if _rvl else set())
+    for _lg, _r in (_rvl or {}).items():
+        if _lg in _sans:
+            continue
+        _base, _val = _r[0], _r[1]
+        _pds = _r[2] if len(_r) > 2 else None
         r = _par_ligne.get(_lg)
         if r is None:
             continue
@@ -430,7 +462,10 @@ def charger():
             "max_score": max(x[0] for x in bornes),
             "base": np.asarray(_base, dtype=bool),
             "valeur_h": np.asarray(_val, dtype=float),
+            "poids_h": (None if _pds is None
+                        else np.asarray(_pds, dtype=float)),
             "moyenne": True, "regle": True,
+            "unite": (r.get("unite") or "").strip(),
             "valeur_pub": (r.get("valeurs") or {}).get("Total"),
             "score_pub": (r.get("scores_corriges") or {}).get("Total"),
         })
@@ -446,11 +481,19 @@ def charger():
     # scores par section dans le fichier : sans ce garde-fou il entrait deux
     # fois, son poids comptait double dans l'indice, et le sélecteur en
     # offrait deux exemplaires dont l'un se disait territorial.
-    _deja = {i["ligne"] for i in indicateurs}
+    # ET UNE MESURE DE MÉNAGE NON RETENUE NE DOIT PAS REVENIR PAR LÀ NON
+    # PLUS. La scolarisation des filles est calculée par une règle, publiée
+    # section par section, et volontairement laissée sans note : le chemin
+    # territorial la reprenait, appliquait le barème aux valeurs de section
+    # et lui rendait la note que la règle avait refusée. Le test porte
+    # désormais sur la FAMILLE de la source — tout ce qui commence par
+    # « menage » est une mesure de ménage — et sur la liste des lignes dont
+    # le module de règles déclare que le barème ne convient pas.
+    _deja = {i["ligne"] for i in indicateurs} | _sans
     for r in res:
         if r.get("ligne") in _deja:
             continue
-        if (r.get("source") or "menage") == "menage":
+        if (r.get("source") or "menage").startswith("menage"):
             continue
         sc = dict(r.get("scores_corriges") or r.get("scores") or {})
         vals = r.get("valeurs") or {}
@@ -497,7 +540,9 @@ def charger():
             "ligne": r["ligne"], "dim": DIM_DE.get(r["dimension"], ""),
             "nom": r.get("indicateur"), "nom_fr": r.get("indicateur_fr"),
             "poids": r.get("ponderation") or 1, "territorial": True,
-            "source": r.get("source") or "", "score_h": s_h, "valeur_h": v_h,
+            "source": r.get("source") or "",
+            "unite": (r.get("unite") or "").strip(),
+            "score_h": s_h, "valeur_h": v_h,
         })
 
     return {
@@ -584,6 +629,31 @@ def evaluer(cat, clauses, liaison="ET"):
 
 
 # ------------------------------------------------------- profil de résilience
+def valeur_moyenne(ind, base):
+    """Le chiffre d'un indicateur à valeur, sur une base déjà masquée.
+
+    UN SEUL ENDROIT POUR CETTE FORMULE. Trois écrans la calculaient — le
+    profil, l'explorateur, l'analyse des écarts — et le jour où le poids est
+    arrivé, il fallait les corriger tous les trois ou les laisser diverger en
+    silence, chacun affichant un chiffre différent pour le même indicateur et
+    le même groupe.
+
+    Sans poids, c'est la moyenne des ménages. Avec, c'est la somme des
+    valeurs pondérées sur la somme des poids, c'est-à-dire un rapport de
+    totaux : le capital d'élevage perdu par un territoire, la part de récolte
+    perdue par un ménage.
+    """
+    v = ind["valeur_h"][base]
+    if not v.size:
+        return None
+    p = ind.get("poids_h")
+    if p is None:
+        return float(v.mean())
+    p = p[base]
+    s = float(p.sum())
+    return (float(np.dot(v, p) / s) if s > 0 else None)
+
+
 def profil(cat, masque):
     """Valeur, score et poids de chaque indicateur retenu, sur ce masque.
 
@@ -596,21 +666,23 @@ def profil(cat, masque):
         base = ind["base"] & masque
         nb = int(base.sum())
         if ind.get("moyenne"):
-            v = (float(ind["valeur_h"][base].mean()) if nb else None)
-            out.append({**{k: ind[k] for k in
-                           ("ligne", "dim", "nom", "nom_fr", "poids")},
-                        "n": nb, "valeur": v,
+            v = valeur_moyenne(ind, base) if nb else None
+            out.append({**{k: ind.get(k) for k in
+                           ("ligne", "dim", "nom", "nom_fr", "poids",
+                            "unite")},
+                        "moyenne": True, "n": nb, "valeur": v,
                         "score": (score_de_ind(ind, v) if v is not None
                                   else None)})
             continue
         if nb == 0:
-            out.append({**{k: ind[k] for k in
-                           ("ligne", "dim", "nom", "nom_fr", "poids")},
+            out.append({**{k: ind.get(k) for k in
+                           ("ligne", "dim", "nom", "nom_fr", "poids",
+                            "unite")},
                         "n": 0, "valeur": None, "score": None})
             continue
         val = 100.0 * float((ind["cible"] & masque).sum()) / nb
-        out.append({**{k: ind[k] for k in
-                       ("ligne", "dim", "nom", "nom_fr", "poids")},
+        out.append({**{k: ind.get(k) for k in
+                       ("ligne", "dim", "nom", "nom_fr", "poids", "unite")},
                     "n": nb, "valeur": val,
                     "score": score_de_ind(ind, val)})
 
@@ -624,8 +696,8 @@ def profil(cat, masque):
         s = s[~np.isnan(s)]
         v = ind["valeur_h"][masque]
         v = v[~np.isnan(v)]
-        out.append({**{k: ind[k] for k in
-                       ("ligne", "dim", "nom", "nom_fr", "poids")},
+        out.append({**{k: ind.get(k) for k in
+                       ("ligne", "dim", "nom", "nom_fr", "poids", "unite")},
                     "territorial": True, "n": int(s.size),
                     "valeur": (float(v.mean()) if v.size else None),
                     "score": (float(s.mean()) if s.size else None)})
