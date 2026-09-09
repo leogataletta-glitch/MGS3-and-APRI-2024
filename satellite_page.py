@@ -177,6 +177,29 @@ MESURES = [
      "eleve_mauvais"),
     ("aridite", "pluie_bilan", "sat_m_ar_pluie", "thermique", "pluie_mm",
      "mm", 0, "eleve_bon"),
+    # --- LA FRAGMENTATION ET LA CONNECTIVITÉ, calculées sur la couverture
+    # du sol et non sur un indice spectral. Elles ne décrivent pas l'état de
+    # la végétation mais la FORME de l'habitat : combien il en reste, en
+    # combien de morceaux, et si ces morceaux se rejoignent. Sept d'entre
+    # elles portent un barème du référentiel.
+    ("frag", "habitat_pct", "sat_m_habitat", "frag", "habitat_pct",
+     "%", 1, "eleve_bon"),
+    ("frag", "taches_total", "sat_m_taches", "frag", "taches_total",
+     "", 0, "eleve_mauvais"),
+    ("frag", "densite_lisiere_m_ha", "sat_m_lisiere", "frag",
+     "densite_lisiere_m_ha", " m/ha", 1, "eleve_mauvais"),
+    ("frag", "core_pct", "sat_m_core", "frag", "core_pct", "%", 2,
+     "eleve_bon"),
+    ("frag", "core_ha", "sat_m_core_ha", "frag", "core_ha", " ha", 1,
+     "eleve_bon"),
+    ("frag", "ratio_core_move", "sat_m_ratio", "frag", "ratio_core_move",
+     "", 3, "eleve_bon"),
+    ("frag", "pc_d", "sat_m_pc", "frag", "pc_d", "", 3, "eleve_bon"),
+    ("frag", "pc_d2", "sat_m_pc2", "frag", "pc_d2", "", 3, "eleve_bon"),
+    ("frag", "iic", "sat_m_iic", "frag", "iic", "", 3, "eleve_bon"),
+    ("frag", "iic_d", "sat_m_iic_d", "frag", "iic_d", "", 3, "eleve_bon"),
+    ("frag", "aire_habitat_ha", "sat_m_hab_ha", "frag", "aire_habitat_ha",
+     " ha", 1, "eleve_bon"),
 ]
 
 # LA MESURE BRUTE ET SA NOTE SONT LE MÊME OBJET, VU DEUX FOIS. Le référentiel
@@ -190,27 +213,36 @@ LIGNES = {
     "vari": 39, "fvc": 40, "lst_anomalie": 41, "tci": 42,
     "pci_mam": 43, "aai_mam": 44, "ratio_mam": 45, "spi_mam": 46,
     "taux_annuel_net": 54, "ndti": 63,
+    "pc_d": 64, "pc_d2": 65, "iic": 66, "iic_d": 67,
+    "densite_lisiere_m_ha": 68, "ratio_core_move": 69, "core_pct": 70,
 }
 
 # LES ONGLETS, DANS L'ORDRE OÙ ON LES PARCOURT : ce qui couvre le sol, puis
 # ce qui l'arrose, puis ce qui l'assèche.
-CATEGORIES = ("foret", "vege", "eau", "pluie", "saison", "temp", "aridite")
+CATEGORIES = ("foret", "frag", "vege", "eau", "pluie", "saison", "temp",
+              "aridite")
 
 
 TEXTES = {
     "sat_titre": {"en": "Satellite measurements",
                   "fr": "Mesures satellitaires"},
+    # LE COMPTE EST CALCULÉ, PAS ÉCRIT EN LETTRES. « Cinquante-six mesures »
+    # était juste le jour où la phrase a été écrite ; onze mesures de forme
+    # d'habitat sont arrivées depuis, et la page annonçait toujours
+    # cinquante-six.
     "sat_intro": {
-        "en": "Fifty-six measurements taken from orbit for each of the ten "
-              "communal sections: forest, vegetation, surface water, "
-              "rainfall since 1981, the rainy season, surface temperature "
-              "since 2001 and the water balance. These are raw measurements, "
-              "not scores: no scale has been applied to them.",
-        "fr": "Cinquante-six mesures prises depuis l'orbite pour chacune des "
-              "dix sections communales : forêt, végétation, eau de surface, "
-              "pluie depuis 1981, saison des pluies, température de surface "
-              "depuis 2001 et bilan hydrique. Ce sont des mesures brutes, "
-              "pas des scores : aucun barème ne leur a été appliqué."},
+        "en": "{n} measurements taken from orbit for each of the ten "
+              "communal sections: forest, the shape of the habitat, "
+              "vegetation, surface water, rainfall since 1981, the rainy "
+              "season, surface temperature since 2001 and the water "
+              "balance. These are raw measurements: where the framework "
+              "publishes a scale, the score sits under the chart.",
+        "fr": "{n} mesures prises depuis l'orbite pour chacune des dix "
+              "sections communales : forêt, forme de l'habitat, végétation, "
+              "eau de surface, pluie depuis 1981, saison des pluies, "
+              "température de surface depuis 2001 et bilan hydrique. Ce sont "
+              "des mesures brutes : là où le référentiel publie un barème, "
+              "la note est sous le graphique."},
     "sat_source": {"en": "Source", "fr": "Source"},
     "sat_mesure": {"en": "Measurement", "fr": "Mesure"},
     "sat_annee": {"en": "Year", "fr": "Année"},
@@ -265,6 +297,42 @@ TEXTES = {
     "sat_c_saison": {"en": "Rainy season", "fr": "Saison des pluies"},
     "sat_c_temp": {"en": "Temperature", "fr": "Température"},
     "sat_c_aridite": {"en": "Water balance", "fr": "Bilan hydrique"},
+    "sat_c_frag": {"en": "Habitat shape", "fr": "Forme de l'habitat"},
+    "sat_cd_frag": {
+        "en": "How much habitat is left, in how many pieces, and whether "
+              "those pieces connect",
+        "fr": "Ce qu'il reste d'habitat, en combien de morceaux, et si ces "
+              "morceaux se rejoignent"},
+    # LES INTITULÉS DISENT LA GRANDEUR, PAS SON SIGLE. « PC(d*) » ne veut rien
+    # dire à qui ouvre la page ; « probabilité que deux points d'habitat
+    # soient reliés » se lit.
+    "sat_m_habitat": {"en": "Natural habitat, share of the section",
+                      "fr": "Habitat naturel, part de la section"},
+    "sat_m_taches": {"en": "Habitat patches, count",
+                     "fr": "Taches d'habitat, nombre"},
+    "sat_m_lisiere": {"en": "Edge density, metres of habitat edge per hectare",
+                      "fr": "Densité de lisière, mètres de bordure d'habitat "
+                            "par hectare"},
+    "sat_m_core": {"en": "Interior habitat, share of the section",
+                   "fr": "Habitat intérieur, part de la section"},
+    "sat_m_core_ha": {"en": "Interior habitat, area",
+                      "fr": "Habitat intérieur, surface"},
+    "sat_m_ratio": {"en": "Habitat that is core or corridor, share of all "
+                          "habitat",
+                    "fr": "Habitat de cœur ou de corridor, part de tout "
+                          "l'habitat"},
+    "sat_m_pc": {"en": "Functional connectivity, PC at 1 000 m",
+                 "fr": "Connectivité fonctionnelle, PC à 1 000 m"},
+    "sat_m_pc2": {"en": "Connectivity for low mobility, PC at 500 m",
+                  "fr": "Connectivité pour faible mobilité, PC à 500 m"},
+    "sat_m_iic": {"en": "Structural connectivity, IIC between touching "
+                        "patches",
+                  "fr": "Connectivité structurelle, IIC entre taches "
+                        "jointives"},
+    "sat_m_iic_d": {"en": "Structural connectivity, IIC at 1 000 m",
+                    "fr": "Connectivité structurelle, IIC à 1 000 m"},
+    "sat_m_hab_ha": {"en": "Natural habitat, area",
+                     "fr": "Habitat naturel, surface"},
     "sat_cd_foret": {"en": "Cover, loss and its pace",
                      "fr": "Couvert, perte et rythme de la perte"},
     "sat_cd_vege": {"en": "Greenness, moisture and their year-to-year swing",
@@ -453,6 +521,81 @@ TEXTES = {
 
     "sat_calc_t": {"en": "How the figure is computed",
                    "fr": "Comment le chiffre est calculé"},
+    "sat_calc_frag": {
+        "en": "ESA WorldCover 2021 gives the land cover of every 10 m pixel. "
+              "Natural habitat is taken as tree cover, shrubland, herbaceous "
+              "wetland and mangrove; grassland is excluded, because here it "
+              "is grazed and degraded and counting it would make every "
+              "section look connected. The section is reprojected to metres "
+              "(UTM 18N), habitat pixels are grouped into patches by "
+              "eight-neighbour connectivity, and patches under 0.1 ha are "
+              "dropped. Edge density counts every habitat / non-habitat "
+              "boundary between two pixels, ten metres each, divided by the "
+              "area of the section; the section's own outline is not counted "
+              "as edge, since nothing is known beyond it. Interior habitat "
+              "is what survives a 100 m erosion, the usual edge depth for "
+              "fragmented tropical forest. Distances between patches are "
+              "edge to edge, in metres. IIC is the integral index of "
+              "connectivity over the patch graph, with links between "
+              "touching patches for the unconstrained version and links "
+              "under 1 000 m for the constrained one; PC uses a dispersal "
+              "probability of exp(-k d) with k set so that the probability "
+              "is one half at the dispersal distance, and the maximum "
+              "product path between every pair of patches. That dispersal "
+              "distance, 1 000 m, is the one biological choice in the whole "
+              "chain and it must be set per guild: a dragonfly, a bird and a "
+              "freshwater fish do not cross the same gaps.",
+        "fr": "ESA WorldCover 2021 donne la couverture du sol de chaque pixel "
+              "de 10 m. L'habitat naturel retenu est l'arbre, l'arbuste, la "
+              "zone humide herbacée et la mangrove ; la prairie est exclue, "
+              "parce qu'elle est ici du pâturage dégradé et que la compter "
+              "rendrait toutes les sections connectées. La section est "
+              "reprojetée en mètres (UTM 18N), les pixels d'habitat sont "
+              "regroupés en taches par voisinage à huit, et les taches de "
+              "moins de 0,1 ha sont écartées. La densité de lisière compte "
+              "chaque frontière habitat / non-habitat entre deux pixels, dix "
+              "mètres chacune, divisée par la surface de la section ; le "
+              "contour de la section n'est pas compté comme lisière, "
+              "puisqu'on ne sait rien de ce qu'il y a au-delà. L'habitat "
+              "intérieur est ce qui survit à une érosion de 100 m, la "
+              "profondeur de lisière usuelle en forêt tropicale fragmentée. "
+              "Les distances entre taches sont de bord à bord, en mètres. "
+              "L'IIC est l'indice intégral de connectivité sur le graphe des "
+              "taches, avec des liens entre taches jointives pour la version "
+              "non contrainte et des liens sous 1 000 m pour la version "
+              "contrainte ; le PC utilise une probabilité de dispersion en "
+              "exp(-k d), k étant réglé pour que la probabilité vaille un "
+              "demi à la distance de dispersion, et le chemin de probabilité "
+              "maximale entre chaque paire de taches. Cette distance de "
+              "dispersion, 1 000 m, est le seul choix biologique de toute la "
+              "chaîne et elle doit être fixée par guilde : une libellule, un "
+              "oiseau et un poisson d'eau douce ne franchissent pas les "
+              "mêmes ruptures."},
+    # LA PHRASE DE STATISTIQUE ZONALE NE VAUT PAS POUR CES MESURES, et la
+    # laisser aurait été un contresens : on ne fait pas la moyenne de pixels,
+    # on construit des taches. La vraie limite est ailleurs, et elle est dite.
+    "sat_ref_zonal_frag": {
+        "en": "These figures are not an average of pixels. The patches are "
+              "built inside the section, and the statistics computed on "
+              "them, so a habitat patch that straddles a boundary is cut at "
+              "that boundary: connectivity across two neighbouring sections "
+              "is not counted. Each section is therefore described as if it "
+              "were alone, which understates connectivity for the sections "
+              "that adjoin one another.",
+        "fr": "Ces chiffres ne sont pas une moyenne de pixels. Les taches "
+              "sont construites à l'intérieur de la section et les "
+              "statistiques calculées sur elles : une tache d'habitat à "
+              "cheval sur une limite est donc coupée à cette limite, et la "
+              "connectivité entre deux sections voisines n'est pas comptée. "
+              "Chaque section est décrite comme si elle était seule, ce qui "
+              "sous-estime la connectivité des sections mitoyennes."},
+    "sat_src_frag": {
+        "en": "{s}. Habitat: tree cover, shrubland, herbaceous wetland, "
+              "mangrove; grassland excluded. Edge depth {l} m, dispersal "
+              "distance {d} m, patches from {t} ha.",
+        "fr": "{s}. Habitat : arbres, arbustes, zone humide herbacée, "
+              "mangrove ; prairie exclue. Lisière {l} m, distance de "
+              "dispersion {d} m, taches à partir de {t} ha."},
     "sat_calc_foret": {
         "en": "Hansen publishes, per 30 m pixel, the tree cover of 2000 and "
               "the year of loss if the pixel lost its cover. The forest of "
@@ -558,6 +701,60 @@ TEXTES = {
               "single year.",
         "fr": "Dans {s}, {v} % de toute la forêt perdue depuis {a} l\u2019a "
               "été en une seule année."},
+    "sat_p_habitat_pct": {
+        "en": "{v} % of {s} is natural habitat: tree cover, shrubland, "
+              "wetland or mangrove.",
+        "fr": "{v} % de la section de {s} est de l'habitat naturel : arbres, "
+              "arbustes, zone humide ou mangrove."},
+    "sat_p_taches_total": {
+        "en": "The habitat of {s} is broken into {v} separate patches.",
+        "fr": "L'habitat de {s} est morcelé en {v} taches séparées."},
+    "sat_p_densite_lisiere_m_ha": {
+        "en": "{s} carries {v} metres of habitat edge per hectare; the "
+              "framework's scale already gives its worst mark above a "
+              "hundred.",
+        "fr": "{s} porte {v} mètres de bordure d'habitat par hectare ; "
+              "au-delà de cent, le barème du référentiel donne déjà sa note "
+              "la plus basse."},
+    "sat_p_core_pct": {
+        "en": "Only {v} % of {s} is interior habitat, that is habitat more "
+              "than a hundred metres from any edge.",
+        "fr": "Seuls {v} % de la section de {s} sont de l'habitat intérieur, "
+              "c'est-à-dire à plus de cent mètres de toute lisière."},
+    "sat_p_core_ha": {
+        "en": "{s} holds {v} hectares of interior habitat.",
+        "fr": "{s} compte {v} hectares d'habitat intérieur."},
+    "sat_p_ratio_core_move": {
+        "en": "In {s}, {v} of the habitat still serves as core or as "
+              "corridor; the rest is fragment dust, too small and too far to "
+              "do either.",
+        "fr": "Dans {s}, {v} de l'habitat sert encore de cœur ou de "
+              "corridor ; le reste est de la poussière de fragments, trop "
+              "petits et trop éloignés pour l'un comme pour l'autre."},
+    "sat_p_pc_d": {
+        "en": "In {s}, two points of habitat picked at random have a "
+              "connection probability of {v} for a species dispersing over "
+              "a kilometre.",
+        "fr": "Dans {s}, deux points d'habitat pris au hasard ont une "
+              "probabilité de connexion de {v} pour une espèce qui se "
+              "disperse sur un kilomètre."},
+    "sat_p_pc_d2": {
+        "en": "In {s}, that probability falls to {v} for a species that only "
+              "crosses five hundred metres.",
+        "fr": "Dans {s}, cette probabilité tombe à {v} pour une espèce qui "
+              "ne franchit que cinq cents mètres."},
+    "sat_p_iic": {
+        "en": "Counting only patches that touch, the structural connectivity "
+              "of {s} is {v}.",
+        "fr": "En ne comptant que les taches jointives, la connectivité "
+              "structurelle de {s} vaut {v}."},
+    "sat_p_iic_d": {
+        "en": "Allowing jumps up to a kilometre, it rises to {v} in {s}.",
+        "fr": "En autorisant des sauts jusqu'à un kilomètre, elle monte à "
+              "{v} dans {s}."},
+    "sat_p_aire_habitat_ha": {
+        "en": "{s} holds {v} hectares of natural habitat.",
+        "fr": "{s} compte {v} hectares d'habitat naturel."},
     "sat_p_pluie_courante": {
         "en": "{s} received {v} mm of rain over the assessed year.",
         "fr": "{s} a reçu {v} mm de pluie sur l\u2019année évaluée."},
@@ -746,7 +943,8 @@ def _charger():
                      ("vege", "indices_vegetation.json"),
                      ("pluie", "pluie.json"),
                      ("saison", "pluie_saison.json"),
-                     ("thermique", "thermique.json")):
+                     ("thermique", "thermique.json"),
+                     ("frag", "fragmentation.json")):
         p = os.path.join(DATA, nom)
         if not os.path.exists(p):
             p = os.path.join(APP_DIR, nom)
@@ -864,6 +1062,12 @@ def _source(fichier, d):
         return T("sat_src_thermique", s=d.get("source", "—"),
                  d1=per[0], d2=per[-1], n1=nor[0], n2=nor[1],
                  f1=fen[0], f2=fen[1])
+    if fichier == "frag":
+        pa = d.get("parametres") or {}
+        return T("sat_src_frag", s=pa.get("source", "—"),
+                 l=pa.get("profondeur_lisiere_m", 100),
+                 d=pa.get("d_etoile_m", 1000),
+                 t=pa.get("min_tache_ha", 0.1))
     per = d.get("periode_annees") or []
     return T("sat_src_vege", s=d.get("source", "—"),
              sa=d.get("saison", "—"),
@@ -952,7 +1156,7 @@ def render():
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(
         f'<div class="titre-bloc">{_e(T("sat_titre"))}</div>'
-        f'<p class="sat-note" style="margin:0 0 10px">{_e(T("sat_intro"))}</p>',
+        f'<p class="sat-note" style="margin:0 0 10px">{_e(T("sat_intro", n=len(MESURES)))}</p>',
         unsafe_allow_html=True)
 
     d = _charger()
@@ -1083,6 +1287,8 @@ def _dossier(mesure, vals, unite, dec):
     lang = i18n.get_lang()
     ligne = LIGNES.get(mesure[1])
     r = _referentiel().get(ligne) if ligne else None
+    zonal = ("sat_ref_zonal_frag" if mesure[3] == "frag"
+             else "sat_ref_zonal")
     with st.expander(T("sat_ref_t")):
         cal0 = "sat_calc_" + mesure[3]
         if not r:
@@ -1093,7 +1299,7 @@ def _dossier(mesure, vals, unite, dec):
                 + f'<p class="sat-note" style="max-width:none">'
                   f'{_e(T("sat_ref_absent"))}</p>'
                   f'<p class="sat-note" style="max-width:none">'
-                  f'{_e(T("sat_ref_zonal"))}</p>',
+                  f'{_e(T(zonal))}</p>',
                 unsafe_allow_html=True)
             return
         note = (r.get("note") if lang == "fr" else r.get("note_en")) \
@@ -1111,7 +1317,7 @@ def _dossier(mesure, vals, unite, dec):
             f'<div class="sat-lab">{_e(T("sat_ref_src"))}</div>'
             f'<p class="sat-note" style="max-width:none">{_e(note)}</p>'
             f'<p class="sat-note" style="max-width:none">'
-            f'{_e(T("sat_ref_zonal"))}</p>'
+            f'{_e(T(zonal))}</p>'
             + (f'<div class="sat-lab">{_e(T("sat_ref_lire"))}</div>'
                f'<p class="sat-note" style="max-width:none">{_e(expl)}</p>'
                if expl else "")
