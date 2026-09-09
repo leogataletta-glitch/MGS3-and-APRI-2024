@@ -1261,6 +1261,24 @@ st.markdown(("""
   /* L'enveloppe existe pour que le logo puisse se poser DANS la photo :
      un élément en position absolue se place par rapport au premier parent
      positionné, et l'image seule n'en est pas un. */
+  /* UNE LISTE DÉROULANTE PREND LA LARGEUR DE SON CONTENU, plus celle de son
+     champ. Les intitulés du questionnaire font quatre-vingts signes ; dans
+     une colonne de deux cent cinquante pixels, on ne lisait que le début de
+     chaque proposition et il fallait deviner la suite. Le menu de Streamlit
+     est rendu dans un calque à part, hors de toute colonne : la règle est
+     donc globale, et elle ne peut que rendre service — un menu ne s'élargit
+     que s'il a quelque chose à montrer, et jamais au-delà des trois quarts
+     de la fenêtre. */
+  div[data-baseweb="popover"] ul[role="listbox"],
+  div[data-baseweb="popover"] div[role="listbox"] {
+    width: max-content !important;
+    min-width: 100% !important;
+    max-width: min(74vw, 900px) !important;
+  }
+  div[data-baseweb="popover"] li[role="option"] {
+    white-space: normal !important; line-height: 1.35 !important;
+  }
+
   .bandeau-enveloppe { position: relative; display: block; line-height: 0; }
   /* L'ILLUSTRATION OCCUPE TOUTE LA LARGEUR, ET SON VOILE EST DANS LE FICHIER.
      Le dégradé blanc qui éclaircit le tiers gauche a été composé dans l'image

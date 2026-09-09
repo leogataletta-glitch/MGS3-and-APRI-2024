@@ -100,8 +100,24 @@ def _surpeuplement(df):
     return base, cible
 
 
-# ligne du référentiel -> (fonction, sens du barème lu sur les bornes)
+# ligne du référentiel -> la règle qui la calcule
 REGLES = {9: _surpeuplement}
+
+# CE QU'UNE RÈGLE DEVIENT DANS LES RÉSULTATS BRUTS : une question de plus,
+# avec ses deux réponses. Elle n'a pas été posée sur le terrain, et le
+# libellé le dit — « calculé » est dans son intitulé. Tout le reste de
+# l'écran des résultats bruts fonctionne alors sans rien savoir d'elle : la
+# ventilation par section, le graphique, le tableau, le téléchargement.
+QUESTIONS = {
+    9: {
+        "categorie": "Logement (calculé)",
+        "categorie_en": "Housing (computed)",
+        "question": "Logement surpeuplé : plus de trois personnes par pièce",
+        "question_en": "Overcrowded dwelling: more than three people per "
+                       "room",
+        "modalites": ["Oui", "Non"],
+    },
+}
 
 
 def charger(groupes=None, n=None):

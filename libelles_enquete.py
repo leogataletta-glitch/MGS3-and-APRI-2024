@@ -45,11 +45,26 @@ def _table():
     return {}, {}, {}
 
 
+# LES LIBELLÉS AJOUTÉS PAR LE CODE, et non par le questionnaire. Les
+# indicateurs calculés par une règle — le surpeuplement du logement, par
+# exemple — ne viennent d'aucune question de terrain : leur intitulé est écrit
+# dans la plateforme, et il doit donc être traduit ici plutôt que dans le
+# fichier du questionnaire, qui décrit ce qui a été demandé aux ménages.
+_AJOUTS = {"c": {}, "q": {}, "m": {}}
+
+
+def ajouter(quoi, fr, en):
+    """Déclare la traduction d'un libellé que le questionnaire ne porte pas."""
+    if quoi in _AJOUTS and fr and en:
+        _AJOUTS[quoi][fr] = en
+
+
 def _tr(quoi, texte):
     if not texte or i18n.get_lang() != "en":
         return texte
     cats, questions, mods = _table()
-    return {"c": cats, "q": questions, "m": mods}[quoi].get(texte, texte)
+    t = {"c": cats, "q": questions, "m": mods}[quoi]
+    return _AJOUTS.get(quoi, {}).get(texte) or t.get(texte, texte)
 
 
 def module(nom):

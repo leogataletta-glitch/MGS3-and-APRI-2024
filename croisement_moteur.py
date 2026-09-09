@@ -323,6 +323,37 @@ def charger():
     except Exception:
         _rgl = {}
     _par_ligne = {r.get("ligne"): r for r in res}
+    # UNE RÈGLE DEVIENT AUSSI UNE QUESTION. Deux lignes sont ajoutées à la
+    # matrice — « oui » et « non » — et une entrée au catalogue des
+    # questions : l'écran des résultats bruts la ventile alors par section
+    # comme n'importe quelle réponse d'enquête, sans une ligne de code de
+    # plus. C'est ce qui manquait pour que le surpeuplement se lise là où on
+    # le cherche.
+    _qs = list(index["questions"])
+    _i_max = max([q.get("i", 0) for q in _qs] or [0])
+    _sup = []
+    for _lg, (_base, _cible) in (_rgl or {}).items():
+        _sp = (getattr(_reg, "QUESTIONS", {}) or {}).get(_lg)
+        if not _sp:
+            continue
+        _i_max += 1
+        _sup.append(np.asarray(_cible, dtype=bool))
+        _sup.append(np.asarray(_base & ~_cible, dtype=bool))
+        _qs.append({
+            "i": _i_max, "question": _sp["question"],
+            "category": _sp["categorie"], "modalites": list(_sp["modalites"]),
+            "debut": bits.shape[0] + len(_sup) - 2, "regle": _lg,
+        })
+        try:
+            import libelles_enquete as _lib
+            _lib.ajouter("q", _sp["question"], _sp.get("question_en") or "")
+            _lib.ajouter("c", _sp["categorie"], _sp.get("categorie_en") or "")
+        except Exception:
+            pass
+    if _sup:
+        bits = np.vstack([bits] + _sup)
+        index = {**index, "questions": _qs}
+
     for _lg, (_base, _cible) in (_rgl or {}).items():
         r = _par_ligne.get(_lg)
         if r is None:

@@ -361,6 +361,17 @@ TEXTES = {
     "ex_cond_aucune": {"en": "No condition", "fr": "Aucune condition"},
     "ex_cond_r": {"en": "Answers kept", "fr": "Réponses retenues"},
     "ex_theme_tous": {"en": "All themes", "fr": "Tous les thèmes"},
+    # LA RECHERCHE EXISTE DÉJÀ, ELLE NE SE VOYAIT PAS. Un sélecteur de
+    # Streamlit filtre sa liste dès qu'on tape ; avec quatre cent quatre-vingt
+    # trois questions, c'est le seul usage raisonnable du menu, et personne ne
+    # le devine devant une flèche. L'aide le dit.
+    "ex_chercher": {
+        "en": "Open the list and type a keyword to filter it: « water », "
+              "« charcoal », « school ». Leave the theme on « All themes » "
+              "to search across the whole questionnaire.",
+        "fr": "Ouvrez la liste et tapez un mot clé pour la filtrer : "
+              "« eau », « charbon », « école ». Laissez le thème sur « Tous "
+              "les thèmes » pour chercher dans tout le questionnaire."},
     "ex_croise": {"en": "Crossed groups", "fr": "Groupes croisés"},
     "ex_s_comp": {"en": "Compare several indicators (optional)",
                   "fr": "Comparer plusieurs indicateurs (facultatif)"},
@@ -1473,10 +1484,11 @@ def render(cat, mode=None):
         _etape(2, "ex_e2_t", aide="ex_e2_x")
         _themes = sorted({x.get("category") or "" for x in questions},
                          key=lambda c: _nom_theme(c).lower())
-        t1, t2, t3 = st.columns([1.15, 1.75, 1])
+        t1, t2, t3 = st.columns([1.5, 2.4, 1.05])
         with t1:
             theme = st.selectbox(
                 T("ex_theme"), [None] + _themes, key="ex_theme",
+                help=T("ex_chercher"),
                 format_func=lambda c: (T("ex_theme_tous") if c is None
                                        else _nom_theme(c)))
         vues = [x for x in questions
@@ -1486,7 +1498,7 @@ def render(cat, mode=None):
             # la question du thème précédent, qui n'est plus dans la liste.
             qi = st.selectbox(
                 T("ex_question"), [x["i"] for x in vues],
-                key=f"ex_q_{theme or 'tous'}",
+                key=f"ex_q_{theme or 'tous'}", help=T("ex_chercher"),
                 format_func=lambda i: _libelle_question(
                     next(x for x in vues if x["i"] == i),
                     avec_theme=theme is None))

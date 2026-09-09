@@ -212,6 +212,18 @@ MESURES = [
     ("acces", "acces_classe", "sat_m_acces_c", "acces", "acces_classe",
      "%", 1, "eleve_bon"),
     ("acces", "pop", "sat_m_pop", "acces", "pop", "", 0, "eleve_bon"),
+    # LA PART DE POPULATION SATURE, LA DISTANCE NON. Quatre sections sont à
+    # 100 % parce que la section ENTIÈRE est à moins de deux kilomètres d'une
+    # voie : le seuil du référentiel, taillé pour des statistiques
+    # nationales, ne discrimine plus à l'échelle d'une section de vingt
+    # kilomètres carrés. Ces deux mesures-là discriminent, et elles disent la
+    # même chose sans plafonner.
+    ("acces", "dist_med_m", "sat_m_dist", "acces", "dist_med_m", " m", 0,
+     "eleve_mauvais"),
+    ("acces", "aire_2km_pct", "sat_m_aire2", "acces", "aire_2km_pct", "%", 1,
+     "eleve_bon"),
+    ("acces", "dist_med_classe_m", "sat_m_dist_c", "acces",
+     "dist_med_classe_m", " m", 0, "eleve_mauvais"),
 ]
 
 # LA MESURE BRUTE ET SA NOTE SONT LE MÊME OBJET, VU DEUX FOIS. Le référentiel
@@ -314,10 +326,10 @@ TEXTES = {
     "sat_c_aridite": {"en": "Water balance", "fr": "Bilan hydrique"},
     "sat_c_acces": {"en": "Road access", "fr": "Accès routier"},
     "sat_cd_acces": {
-        "en": "Population within 2 km of a road, and what the definition of "
-              "a road changes",
-        "fr": "Population à moins de 2 km d'une route, et ce que change la "
-              "définition d'une route"},
+        "en": "Population within 2 km of a road, distance to the nearest "
+              "one, and what the definition of a road changes",
+        "fr": "Population à moins de 2 km d'une route, distance à la plus "
+              "proche, et ce que change la définition d'une route"},
     "sat_m_acces": {
         "en": "Population within 2 km of a drivable road, tracks excluded",
         "fr": "Population à moins de 2 km d'un axe carrossable, pistes "
@@ -330,6 +342,16 @@ TEXTES = {
         "fr": "La même, réseau classé seulement"},
     "sat_m_pop": {"en": "Section population, WorldPop 2020",
                   "fr": "Population de la section, WorldPop 2020"},
+    "sat_m_dist": {
+        "en": "Median distance from an inhabitant to the nearest road",
+        "fr": "Distance médiane d'un habitant à la route la plus proche"},
+    "sat_m_dist_c": {
+        "en": "Median distance to the classified network",
+        "fr": "Distance médiane au réseau classé"},
+    "sat_m_aire2": {
+        "en": "Share of the section's AREA within 2 km of a road",
+        "fr": "Part de la SUPERFICIE de la section à moins de 2 km d'une "
+              "route"},
     "sat_c_frag": {"en": "Habitat shape", "fr": "Forme de l'habitat"},
     "sat_cd_frag": {
         "en": "How much habitat is left, in how many pieces, and whether "
@@ -787,6 +809,21 @@ TEXTES = {
               "single year.",
         "fr": "Dans {s}, {v} % de toute la forêt perdue depuis {a} l\u2019a "
               "été en une seule année."},
+    "sat_p_dist_med_m": {
+        "en": "Half the inhabitants of {s} live within {v} m of a road.",
+        "fr": "La moitié des habitants de {s} vivent à moins de {v} m d'une "
+              "route."},
+    "sat_p_dist_med_classe_m": {
+        "en": "From the classified network, that median distance is {v} m in "
+              "{s}.",
+        "fr": "Du réseau classé, cette distance médiane vaut {v} m dans "
+              "{s}."},
+    "sat_p_aire_2km_pct": {
+        "en": "{v} % of the ground of {s} is within 2 km of a road — the "
+              "figure to read next to the population share, which saturates.",
+        "fr": "{v} % du sol de {s} est à moins de 2 km d'une route — c'est "
+              "le chiffre à lire à côté de la part de population, qui "
+              "sature."},
     "sat_p_acces_axe": {
         "en": "{v} % of the people of {s} live within 2 km of a drivable "
               "road.",
