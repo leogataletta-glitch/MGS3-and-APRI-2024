@@ -182,7 +182,31 @@ def _trouver(nom):
 
 
 @st.cache_data(show_spinner=False)
-def _contenu():
+def _contenu(lang="fr"):
+    """Le fichier de cadrage, dans la langue de l'écran.
+
+    LA LANGUE EST UN ARGUMENT ET NON UNE LECTURE INTERNE, pour la même raison
+    que dans `_etat_dimension` juste au-dessous : le résultat est mis en
+    cache, et une langue lue à l'intérieur figerait la première affichée pour
+    l'autre. C'est le bogue qui montrait la liste anglaise dans la page
+    française, et il se reproduit à l'identique dès qu'on l'oublie.
+
+    LA TRADUCTION EST UN FICHIER JUMEAU, PAS UN CHAMP DE PLUS. Le protocole
+    est un texte suivi de vingt-quatre mille caractères : le doubler champ
+    par champ dans le même fichier l'aurait rendu illisible à qui doit le
+    relire. Les deux fichiers ont exactement la même structure — mêmes clés,
+    mêmes longueurs de liste, même ordre — et le français reste le repli :
+    une traduction absente laisse voir le texte d'origine, ce qui est
+    corrigible, plutôt qu'un écran vide.
+    """
+    if lang == "en":
+        p = _trouver("cadre_environnement_en.json")
+        if p:
+            try:
+                with open(p, encoding="utf-8") as f:
+                    return json.load(f)
+            except Exception:
+                pass
     p = _trouver("cadre_environnement.json")
     if not p:
         return None
@@ -301,7 +325,7 @@ def render(complement=None):
     donc elles appartiennent a ce qu'on explore, pas a la methode qu'on
     deplie ensuite.
     """
-    c = _contenu()
+    c = _contenu(i18n.get_lang())
     st.markdown(STYLE, unsafe_allow_html=True)
     # PAS DE TITRE DE PAGE : la barre d'onglets porte deja « Environmental
     # data », et la colonne de menu la rubrique.
@@ -321,59 +345,27 @@ def render(complement=None):
     # Il reste lisible dimension par dimension dans l'onglet des dimensions,
     # et indicateur par indicateur dans l'analyse des resultats.
     #
-    # ===================== STRATE 2 — EXPLORER ============================
-    st.markdown(f'<div class="ev-etage">{_e(T("env_s2"))}</div>',
-                unsafe_allow_html=True)
-
-    # TOUT EST REPLIE, ET C'EST LA MEME REGLE POUR LES SIX. Trois sources
-    # deroulees puis six volets, c'etait deux traitements pour un seul
-    # contenu : une methode. Repliee, la page tient en une liste de titres
-    # qu'on ouvre quand on veut la verifier — ce qui est exactement
-    # l'usage d'un protocole.
-    ta = c["intro"]["taxons"]
-    with st.expander(T("env_src1_t")):
-        st.markdown(
-            f'<p class="ev-x" style="margin-top:2px">'
-            f'{_e(c["intro"]["terrain"])}</p>'
-            f'<div class="ev-lab" style="margin:14px 0 7px">'
-            f'{_e(T("env_taxons"))}</div>'
-            '<div style="display:flex;gap:14px;flex-wrap:wrap">'
-            + "".join(
-                f'<div class="ev-n" style="flex:1 1 240px;'
-                f'border-top:3px solid {coul}">'
-                f'<p class="ev-t">{_e(T(cle))}</p>'
-                f'<p class="ev-x" style="font-size:12px">{_e(t)}</p></div>'
-                for cle, coul, t in zip(("env_tx_od", "env_tx_oi", "env_tx_po"),
-                                        (BLEU, VERT, AMBRE), ta))
-            + '</div>', unsafe_allow_html=True)
-        st.markdown(f'<p class="ev-x">{_e(c["intro"]["transects"])}</p>',
-                    unsafe_allow_html=True)
-
-    with st.expander(T("env_src2_t")):
-        st.markdown(
-            f'<p class="ev-x" style="margin-top:2px">'
-            f'{_e(c["intro"]["geo"])}</p>'
-            '<div class="ev-flux" style="margin-top:12px">'
-            + "".join(
-                f'<div class="ev-fl" style="flex:1 1 165px">'
-                f'<div class="ev-fn">{n}</div>'
-                f'<div class="ev-fl-l">{_e(lab)}</div></div>'
-                for n, lab in ((len(c["vegetation"]), T("env_l_veg")),
-                               (len(c["fragmentation"]), T("env_l_frag")),
-                               (len(c["connectivite"]), T("env_l_conn")),
-                               (sum(len(b["points"]) for b in c["cotier"]),
-                                T("env_l_cot"))))
-            + '</div>', unsafe_allow_html=True)
-        st.markdown(f'<p class="ev-x">{_e(c["intro"]["geo_fin"])}</p>',
-                    unsafe_allow_html=True)
-
-    with st.expander(T("env_src3_t")):
-        st.markdown(
-            f'<p class="ev-x" style="margin-top:2px">'
-            f'{_e(c["intro"]["menages"])}</p>'
-            '<ul class="ev-puce" style="margin-top:8px">'
-            + "".join(f'<li>{_e(p)}</li>' for p in c["menages"]) + '</ul>',
-            unsafe_allow_html=True)
+    # LA SECTION DES TROIS SOURCES A ÉTÉ VIDÉE, TROIS FOIS POUR TROIS
+    # RAISONS DIFFÉRENTES, et son titre est parti avec elle.
+    #
+    # LES RELEVÉS DE TERRAIN ONT CHANGÉ D'ÉCRAN. Ils expliquaient pourquoi
+    # trois taxons servent de proxys et comment se lit un transect
+    # d'anthropisation : c'est la question qu'on se pose en ouvrant l'onglet
+    # « biodiversité » des résultats bruts, où il n'y a encore aucun chiffre
+    # à montrer, et non celle qu'on se pose en lisant un protocole
+    # satellitaire. Voir `render_terrain`.
+    #
+    # LE VOLET SATELLITAIRE A ÉTÉ RETIRÉ, LUI, ET NON DÉPLACÉ. Il annonçait
+    # en deux paragraphes ce que les données géospatiales permettent, puis
+    # quatre pavés chiffrés comptant les indicateurs de chaque famille. Les
+    # volets qui suivent portent ces indicateurs UN PAR UN, avec ce que
+    # chacun mesure et son barème : l'annonce ne faisait que retarder la
+    # chose annoncée, et les pavés comptaient ce que la liste énumère.
+    #
+    # LES PROXYS D'ENQUÊTE SONT PARTIS AUX FICHES D'INTERVENTION. Ils ne
+    # décrivent pas ce que la plateforme mesure aujourd'hui mais ce qu'une
+    # prochaine vague pourrait demander : c'est une recommandation, pas un
+    # protocole en cours. Voir `render_enquete`.
 
     # LE COMPLÉMENT N'EST PLUS APPELÉ PAR LE CADRE. Les trajectoires
     # donnaient les séries mesurées — des résultats — au milieu d'une page qui
@@ -425,3 +417,64 @@ def render(complement=None):
                     '<ul class="ev-puce" style="margin-top:8px">'
                     + "".join(f'<li>{_e(p)}</li>' for p in c["menages"])
                     + '</ul>', unsafe_allow_html=True)
+
+
+def render_terrain():
+    """Les relevés de terrain : pourquoi ces trois taxons, et le transect.
+
+    APPELÉ PAR L'ONGLET « BIODIVERSITÉ » DES RÉSULTATS BRUTS. Cet onglet n'a
+    pas encore de chiffre à montrer — les relevés ne sont pas faits — et
+    plutôt qu'une carte d'attente vide, il porte ce qui répond à la question
+    qu'on se pose en l'ouvrant : ce qu'on va compter, et pourquoi ces
+    espèces-là plutôt que d'autres.
+
+    LE TEXTE EST LU DANS LE MÊME FICHIER DE CADRAGE que le reste du
+    protocole, et non recopié : deux versions d'une note de méthode
+    divergent, toujours.
+    """
+    c = _contenu(i18n.get_lang())
+    if not c or not c.get("intro"):
+        return
+    st.markdown(STYLE, unsafe_allow_html=True)
+    ta = c["intro"].get("taxons") or []
+    st.markdown(
+        f'<p class="ev-x" style="margin-top:2px">'
+        f'{_e(c["intro"].get("terrain", ""))}</p>'
+        f'<div class="ev-lab" style="margin:14px 0 7px">'
+        f'{_e(T("env_taxons"))}</div>'
+        '<div style="display:flex;gap:14px;flex-wrap:wrap">'
+        + "".join(
+            f'<div class="ev-n" style="flex:1 1 240px;'
+            f'border-top:3px solid {coul}">'
+            f'<p class="ev-t">{_e(T(cle))}</p>'
+            f'<p class="ev-x" style="font-size:12px">{_e(t)}</p></div>'
+            for cle, coul, t in zip(("env_tx_od", "env_tx_oi", "env_tx_po"),
+                                    (BLEU, VERT, AMBRE), ta))
+        + '</div>', unsafe_allow_html=True)
+    if c["intro"].get("transects"):
+        st.markdown(f'<p class="ev-x" style="margin-top:12px">'
+                    f'{_e(c["intro"]["transects"])}</p>',
+                    unsafe_allow_html=True)
+
+
+def render_enquete():
+    """Les proxys de résilience environnementale qu'une enquête peut porter.
+
+    APPELÉ PAR LES FICHES D'INTERVENTION, sous les recommandations pour
+    l'avenir. Ce texte ne décrit pas ce que la plateforme mesure : il décrit
+    ce qu'un questionnaire pourrait demander pour mesurer davantage — la
+    fréquence de prélèvement, la dépendance aux ressources, la perception du
+    milieu, la capacité d'adaptation, l'organisation collective. C'est donc
+    une recommandation de collecte, et elle se lit là où l'on décide quoi
+    faire ensuite, pas au milieu d'un protocole déjà en cours.
+    """
+    c = _contenu(i18n.get_lang())
+    if not c or not c.get("menages"):
+        return
+    st.markdown(STYLE, unsafe_allow_html=True)
+    st.markdown(
+        f'<p class="ev-x" style="margin-top:2px">'
+        f'{_e((c.get("intro") or {}).get("menages", ""))}</p>'
+        '<ul class="ev-puce" style="margin-top:8px">'
+        + "".join(f'<li>{_e(p)}</li>' for p in c["menages"]) + '</ul>',
+        unsafe_allow_html=True)

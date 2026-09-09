@@ -306,13 +306,21 @@ for _c, _v in TEXTES.items():
 STYLE = """
 <style>
   .ec-tab { width:100%; border-collapse:collapse; margin-top:12px; }
+  /* AUCUN TRAIT DE COLONNE. La feuille de style de base pose une bordure sur
+     les QUATRE côtés de chaque cellule, et nos règles n'écrasaient que celle
+     du bas : il restait donc un quadrillage vertical entre les colonnes, qui
+     découpe en cases un tableau dont les colonnes se lisent d'elles-mêmes
+     grâce à l'alignement des nombres. On remet tout à zéro, puis on ne
+     redonne que le filet horizontal. */
+  .ec-tab th, .ec-tab td { border: 0 !important; }
   .ec-tab th { font-size:10.5px; font-weight:700; letter-spacing:.09em;
        text-transform:uppercase; color:#8a93a5; text-align:left;
-       padding:0 10px 7px 0; border-bottom:1px solid #e9eef4; }
+       padding:0 10px 7px 0;
+       border-bottom:1px solid #e9eef4 !important; }
   .ec-tab th.n, .ec-tab td.n { text-align:right;
        font-variant-numeric:tabular-nums; }
   .ec-tab td { font-size:12.5px; color:#3c4761; padding:7px 10px 7px 0;
-       border-bottom:1px solid #f2f5f9; vertical-align:top; }
+       border-bottom:1px solid #f2f5f9 !important; vertical-align:top; }
   .ec-tab td.v { font-weight:700; color:#101728; }
   .ec-tab tr.pale td { opacity:.55; }
   .ec-note { font-size:11.5px; color:#8a93a5; line-height:1.5;

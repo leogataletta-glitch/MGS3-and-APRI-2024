@@ -1496,6 +1496,49 @@ def _libelle_question(q, avec_theme=True):
     return libelles_enquete.libelle(q, avec_module=avec_theme)
 
 
+def _module_court(q):
+    """Le nom du module, sans son code de lettre et sans ses capitales.
+
+    LE QUESTIONNAIRE ÉCRIT SES MODULES EN CAPITALES, et c'est une convention
+    de saisie : « AGRICULTURE — RENDEMENTS ANNUELS PAR CULTURE » devant une
+    question la noie. Rendu en casse ordinaire et entre parenthèses, le même
+    texte se lit sans effort et laisse la question au premier plan.
+    """
+    nom = libelles_enquete.module(q.get("category") or "")
+    nom = nom.split(". ", 1)[-1].strip()
+    if nom.isupper():
+        nom = nom.capitalize()
+    return nom
+
+
+def _libelles_liste(vues):
+    """Le libellé de chaque question de la liste : la question, et rien de
+    plus tant qu'elle suffit à se distinguer.
+
+    ON NE MET LE MODULE QUE LÀ OÙ IL SÉPARE DEUX HOMONYMES. Cinq blocs
+    agricoles portent chacun une colonne « Maïs » — la superficie, le semis,
+    le rendement, les circonstances de perte, la part perdue — et cinq
+    entrées « Maïs » dans une liste ne se choisissent pas. Mais mettre le
+    module devant les deux cent vingt-sept, pour cinq qui en ont besoin,
+    rendait la liste entière illisible. Le module n'apparaît donc que
+    derrière les libellés qui reviennent, en casse ordinaire et entre
+    parenthèses.
+    """
+    noms = {}
+    for q in vues:
+        n = libelles_enquete.question(q.get("question") or "")
+        noms[q["i"]] = n
+    compte = {}
+    for n in noms.values():
+        compte[n] = compte.get(n, 0) + 1
+    out = {}
+    for q in vues:
+        n = noms[q["i"]]
+        out[q["i"]] = (f"{n}  ({_module_court(q)})" if compte.get(n, 0) > 1
+                       else n)
+    return out
+
+
 def render(cat, mode=None):
     """L'explorateur, dans l'ordre : mesure, question, ventilation, format.
 
@@ -2539,20 +2582,18 @@ def _render_brut(cat):
                 # personne n'avait demandée : dix sections, vingt barres, et
                 # un lecteur qui croit lire un résultat.
                 #
-                # LE MODULE RESTE ÉCRIT DEVANT CHAQUE QUESTION. Une
-                # thématique en rassemble jusqu'à onze — l'agriculture porte
-                # deux cent vingt-sept questions — et sans son module, « Maïs »
-                # ne dit pas si l'on parle d'une superficie, d'un rendement ou
-                # d'une perte. C'est aussi ce qui rend la frappe au clavier
-                # utile : taper « rendement » ne retient que le bon tableau.
+                # LA QUESTION SEULE, ET LE MODULE UNIQUEMENT S'IL SÉPARE DEUX
+                # HOMONYMES. L'onglet au-dessus dit déjà la thématique ; la
+                # répéter en capitales devant chacune des deux cent vingt-sept
+                # questions agricoles poussait la question elle-même hors de
+                # vue. Voir `_libelles_liste`.
+                libs = _libelles_liste(vues)
                 qi = st.selectbox(
                     T("ex_question"), [x["i"] for x in vues],
                     key=f"exb_q_{theme or 'tous'}",
                     index=None, placeholder=T("ex_b_choisir_q"),
                     help=T("ex_chercher"),
-                    format_func=lambda i: _libelle_question(
-                        next(x for x in vues if x["i"] == i),
-                        avec_theme=True))
+                    format_func=lambda i: libs.get(i, ""))
         if qi is None:
             st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'
                         f'{_e(T("ex_b_vide"))}</p>', unsafe_allow_html=True)

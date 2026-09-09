@@ -65,23 +65,19 @@ TEXTES = {
                       "how to fill it",
                 "fr": "Tous les indicateurs du référentiel qui ne sont pas "
                       "encore dans le système, et comment les remplir"},
+    # LA PHRASE S'EST RACCOURCIE AVEC L'ÉCRAN. Elle annonçait, pour chaque
+    # indicateur, où trouver la donnée, avec quel outil et pour quel travail :
+    # c'était vrai tant que la recette était écrite sous chaque ligne, ce
+    # n'est plus le cas. Elle expliquait aussi que l'état est relu du fichier
+    # à chaque affichage — une garantie qui vaut pour toute la plateforme et
+    # qui n'a pas à être répétée en tête d'un écran.
     "aq_intro": {
         "en": "The framework describes {t} indicators across the seven "
               "dimensions; the platform grades part of them. This screen "
-              "lists what is left, dimension by dimension, and says for each "
-              "one where the missing data can be found, with which tool and "
-              "for how much work. The state of each indicator is read from "
-              "the results file at every display: it is never entered by "
-              "hand, so it cannot drift from what the platform actually "
-              "holds.",
+              "lists what is left, dimension by dimension.",
         "fr": "Le référentiel décrit {t} indicateurs sur les sept "
               "dimensions ; la plateforme en note une partie. Cet écran "
-              "liste ce qui reste, dimension par dimension, et dit pour "
-              "chacun où trouver la donnée manquante, avec quel outil et "
-              "pour quel travail. L'état de chaque indicateur est lu dans le "
-              "fichier de résultats à chaque affichage : il n'est jamais "
-              "saisi à la main, il ne peut donc pas s'écarter de ce que la "
-              "plateforme détient réellement."},
+              "liste ce qui reste, dimension par dimension."},
     "aq_e_calcule": {"en": "Computed", "fr": "Calculé"},
     "aq_e_partiel": {"en": "Partial", "fr": "Partiel"},
     "aq_e_absent": {"en": "Missing", "fr": "Absent"},
@@ -386,7 +382,6 @@ def render():
             f'{_e(T("aq_e_" + e))} · {_e(T("aq_e_" + e + "_x"))}</div>'
             for e in ("calcule", "partiel", "absent"))
         + '</div>', unsafe_allow_html=True)
-    st.caption(T("aq_maj"))
 
     # LA PAGE NE LISTE QUE CE QUI RESTE, dimension par dimension. Les
     # indicateurs déjà notés sont comptés dans la barre et nulle part

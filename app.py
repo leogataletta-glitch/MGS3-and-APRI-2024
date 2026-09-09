@@ -30,6 +30,7 @@ import streamlit.components.v1 as components
 import a_propos_page
 import accueil_apri
 import acquisition_env
+import environnement_cadre
 # À L'ESSAI, ET SÉPARÉE POUR CELA. La seconde page d'entrée vit dans son
 # propre module et sous sa propre entrée de menu : la retirer, si elle ne
 # convient pas, ne touche à rien d'autre.
@@ -2740,6 +2741,13 @@ with _c_contenu:
                 # appelée sur ce seul chantier, pour que les deux écrans ne
                 # puissent pas diverger.
                 if _src == "biodiversite":
+                    # LE PROTOCOLE D'ABORD, LE CHANTIER ENSUITE. L'onglet
+                    # n'a pas de chiffre à montrer : la première question
+                    # qu'on s'y pose est ce qu'on va compter et pourquoi ces
+                    # trois taxons-là, et c'est le texte de cadrage qui y
+                    # répond. Le chantier — quels indicateurs, dans quel
+                    # état — vient après.
+                    environnement_cadre.render_terrain()
                     acquisition_env.render_bloc("terrain")
             else:
                 explorateur.render(_cat, mode="brut")

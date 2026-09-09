@@ -279,6 +279,37 @@ TEXTES = {
               "de nature à accroître la vulnérabilité."},
     "cad_p2h": {"en": "Higher is better", "fr": "Plus, c'est mieux"},
     "cad_p2l": {"en": "Lower is better", "fr": "Moins, c'est mieux"},
+    "cad_ec_nq": {"en": "quantiles", "fr": "quantiles"},
+    "cad_ec_nq_x": {
+        "en": "Quantile-based discretization: the thresholds come from the "
+              "indicator's empirical cumulative distribution at "
+              "international level, and the score says where the observed "
+              "value sits inside it.",
+        "fr": "Discrétisation par quantiles : les seuils viennent de la "
+              "distribution cumulative empirique de l'indicateur au niveau "
+              "international, et le score dit où la valeur observée se place "
+              "dedans."},
+    "cad_ec_nn": {"en": "local benchmark", "fr": "repère local"},
+    "cad_ec_nn_x": {
+        "en": "Local normative benchmark: no robust comparative "
+              "distribution exists for this attribute, so the scale is "
+              "bounded by a locally defined optimal scenario and a critical "
+              "one, cut into equidistant classes.",
+        "fr": "Repère normatif local : aucune distribution comparative "
+              "robuste n'existe pour cet attribut, l'échelle est donc bornée "
+              "par un scénario optimal et un scénario critique définis "
+              "localement, découpés en classes équidistantes."},
+    "cad_ec_ni": {"en": "composite index", "fr": "indice composite"},
+    "cad_ec_ni_x": {
+        "en": "Composite index: the scale grades a COUNT of binary parts "
+              "satisfied by the household, not a measurement. The score "
+              "ladder is therefore read against the number of parts, and a "
+              "group's value is the mean of its households' counts.",
+        "fr": "Indice composite : le barème note un COMPTE de volets "
+              "binaires satisfaits par le ménage, et non une mesure. "
+              "L'échelle des scores se lit donc sur un nombre de volets, et "
+              "la valeur d'un groupe est la moyenne des comptes de ses "
+              "ménages."},
     "cad_p2b_t": {"en": "The eleven ordinal scenarios",
                   "fr": "Les onze scénarios ordinaux"},
     "cad_p2b_x": {"en": "The scale this indicator is read against.",
@@ -1076,7 +1107,32 @@ def _bandes(txt):
     return out
 
 
-def _type_echelle(par):
+# CE QUE LE PRÉFIXE DU BARÈME DÉCLARE. Le référentiel écrit devant chaque
+# échelle la façon dont elle a été construite, en deux ou trois lettres, et la
+# plateforme ne l'affichait nulle part : « CE » pour cumulative empirique,
+# c'est-à-dire une discrétisation par quantiles sur une distribution
+# internationale ; « LN » pour local normatif, c'est-à-dire un intervalle borné
+# par un scénario optimal et un scénario critique définis ici ; « CI » pour
+# indice composite, où le barème note un compte de volets et non une mesure.
+# Les deux logiques sont décrites plus bas dans l'écran, mais rien ne disait
+# laquelle s'appliquait à l'indicateur qu'on regarde — et c'est pourtant la
+# première chose à savoir pour contester un seuil.
+PREFIXE_NORM = {
+    "CE": "q", "LN": "n", "CI": "i",
+    "ÉCHELLE LINÉAIRE": "n", "ECHELLE LINEAIRE": "n",
+}
+
+
+def _famille_echelle(txt):
+    """La famille de normalisation déclarée par le barème, ou rien."""
+    t = (txt or "").strip().upper()
+    for pre, code in PREFIXE_NORM.items():
+        if t.startswith(pre):
+            return code
+    return None
+
+
+def _type_echelle(par, echelle=None):
     """De quelle sorte de barème il s'agit : son unité et son sens.
 
     DEUX BARÈMES DE MÊME FORME NE SE LISENT PAS PAREIL. « ≤ 15,8 % » pour le
@@ -1103,6 +1159,9 @@ def _type_echelle(par):
     bouts = [(T("cad_ec_" + unite), T("cad_ec_" + unite + "_x"))]
     if sens:
         bouts.append((T("cad_ec_" + sens), T("cad_ec_" + sens + "_x")))
+    fam = _famille_echelle(echelle)
+    if fam:
+        bouts.append((T("cad_ec_n" + fam), T("cad_ec_n" + fam + "_x")))
     return (f'<span class="cad-ec-t" title="'
             f'{_e(" ".join(x for _m, x in bouts))}">'
             + " · ".join(_e(mot) for mot, _x in bouts) + '</span>')
@@ -1530,6 +1589,15 @@ STYLE = """
   .cad-it-d { font-size:11px; color:#8a93a5; margin-top:3px;
        line-height:1.35; }
   .cad-it-r { color:#2a6b3f; font-weight:700; }
+  /* LE POINT D'INTERROGATION EST DISCRET ET RESTE CLIQUABLE DU REGARD :
+     un rond gris pâle, un cran plus petit que le titre, qui se colore au
+     survol pour dire qu'il porte quelque chose. */
+  .cad-it-q { display:inline-flex; align-items:center;
+       justify-content:center; width:14px; height:14px; margin-left:6px;
+       border-radius:50%; background:#eef2f7; color:#8a93a5;
+       font-size:9.5px; font-weight:700; cursor:help;
+       vertical-align:middle; transition:background .15s, color .15s; }
+  .cad-it-q:hover { background:#2a6b3f; color:#fff; }
   .cad-it-e { font-size:11.5px !important; color:#3c4761 !important;
        line-height:1.55 !important; text-align:left !important;
        font-variant-numeric:tabular-nums; }
@@ -2500,7 +2568,10 @@ def _normalisations(x=None):
         # palier, la parenthèse ne sépare plus rien.
         brut = "|".join(f"{par[i].strip('()[] ')}→{i}"
                         for i in sorted(par) if par[i])
-        titre_b, sous_b = T("cad_p2b_t"), T("cad_ex_seuils_i")
+        # LA SOUS-LIGNE A DISPARU. « Les onze paliers de cet indicateur »
+        # répétait le titre juste au-dessus, en plus long, devant une colonne
+        # qui montre déjà onze paliers les uns sous les autres.
+        titre_b, sous_b = T("cad_p2b_t"), ""
     else:
         # RIEN À DROITE TANT QU'AUCUN INDICATEUR N'EST OUVERT. Les paliers de
         # l'exemple — « ≥ 120 min → 0 » — s'affichaient là, et se lisaient
@@ -2628,12 +2699,25 @@ def _v_indicateurs():
     # partout sauf pour une poignée d'indicateurs, et une mention portée par
     # toutes les lignes n'en distingue aucune. L'échelle, ligne par ligne, dit
     # déjà dans quel sens elle monte.
+    lang = i18n.get_lang()
     for x in vus:
         num, _, court = T(x["dim"]).partition(". ")
         ech = _echelle_html(x["echelle"])
+        # CE QUE L'INDICATEUR COMPTE AU JUSTE, SOUS UN POINT
+        # D'INTERROGATION. « Access to a Primary School Within 30 Minutes »
+        # est un titre, pas une définition : il ne dit ni qui est compté — les
+        # ménages —, ni ce qui est mesuré — un temps de marche aller —, ni le
+        # seuil. La phrase du référentiel le dit en une ligne, et elle était
+        # écrite dans le fichier sans être affichée nulle part sur cet écran.
+        # Elle vient au survol plutôt qu'en clair : elle est nécessaire quand
+        # on doute, encombrante le reste du temps.
+        quoi = ((x.get("metrique_fr") if lang == "fr"
+                 else x.get("metrique_en")) or x.get("metrique") or "").strip()
+        aide = (f'<span class="cad-it-q" title="{_e(quoi)}" '
+                f'aria-label="{_e(quoi)}">?</span>' if quoi else "")
         lignes.append(
             '<tr><td>'
-            f'<div class="cad-it-n">{_e(x["nom"])}</div>'
+            f'<div class="cad-it-n">{_e(x["nom"])}{aide}</div>'
             f'<div class="cad-it-d"><span class="cad-it-r">{_e(num)}</span> '
             f'{_e(court)}</div></td>'
             f'<td class="cad-it-e">{ech}</td>'

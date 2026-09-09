@@ -57,6 +57,7 @@ import streamlit as st
 
 import boucles_moteur as M
 import i18n
+import environnement_cadre
 import onglets
 from i18n import T
 
@@ -380,6 +381,19 @@ TEXTES = {
               "its dimension.",
         "fr": "La nature d'un levier sans fiche rédigée est déduite de sa "
               "dimension."},
+    "int_futur": {"en": "Recommendations for the future",
+                  "fr": "Recommandations pour l'avenir"},
+    "int_futur_enq": {"en": "New data collection · Household survey",
+                      "fr": "Collecte de nouvelles données · Enquête ménage"},
+    "int_futur_x": {
+        "en": "What a next survey round could ask in order to measure more. "
+              "These are proxies, not indicators already in the platform: "
+              "each one would have to be written as a closed question and "
+              "tested before it grades anything.",
+        "fr": "Ce qu'une prochaine vague d'enquête pourrait demander pour "
+              "mesurer davantage. Ce sont des proxys, non des indicateurs "
+              "déjà dans la plateforme : chacun devrait être écrit comme une "
+              "question fermée et testé avant de noter quoi que ce soit."},
     "int_o_fiches": {"en": "Intervention profiles",
                      "fr": "Fiches d'intervention"},
     "int_o_plans": {"en": "Community resilience plans",
@@ -1951,3 +1965,20 @@ def _render():
     st.caption(T("int_prop_x"))
     if deduits:
         st.caption(T("int_nature_x"))
+
+    # ---- ce qu'il faudrait mesurer la prochaine fois ----------------------
+    # UNE RECOMMANDATION DE COLLECTE EST UNE RECOMMANDATION, ET SA PLACE EST
+    # ICI. Les proxys de résilience environnementale qu'une enquête ménage
+    # peut porter — fréquence de prélèvement, dépendance aux ressources,
+    # perception du milieu, capacité d'adaptation, organisation collective —
+    # décrivaient jusqu'ici un protocole en cours, au milieu de l'écran des
+    # données environnementales. Ils n'en décrivent pas un : ils disent ce
+    # qu'une PROCHAINE vague devrait demander. Ils se lisent donc là où l'on
+    # décide de la suite, sous les leviers, et repliés — c'est une piste, pas
+    # une consigne.
+    st.markdown(f'<div class="int-lab" style="margin:22px 0 6px">'
+                f'{_e(T("int_futur"))}</div>', unsafe_allow_html=True)
+    with st.expander(T("int_futur_enq")):
+        st.markdown(f'<p class="int-x" style="margin:0 0 6px">'
+                    f'{_e(T("int_futur_x"))}</p>', unsafe_allow_html=True)
+        environnement_cadre.render_enquete()
