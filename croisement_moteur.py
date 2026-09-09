@@ -310,13 +310,55 @@ def charger():
             "score_pub": (r.get("scores_corriges") or {}).get("Total"),
         })
 
+    # LES INDICATEURS CALCULÉS PAR UNE RÈGLE. Le taux de surpeuplement n'est
+    # coché nulle part : il se déduit de deux questions numériques et d'un
+    # critère. Une règle rend exactement ce qu'une modalité rend — une base et
+    # une cible — et l'indicateur qui en sort est un indicateur de ménage
+    # comme les autres : il se ventile par sexe, par richesse, par section, et
+    # il entre dans l'indice avec son poids. Sans ce chemin, un indicateur que
+    # l'enquête PORTE était déclaré absent.
+    try:
+        import indicateurs_regles as _reg
+        _rgl = _reg.charger(groupes=groupes, n=n)
+    except Exception:
+        _rgl = {}
+    _par_ligne = {r.get("ligne"): r for r in res}
+    for _lg, (_base, _cible) in (_rgl or {}).items():
+        r = _par_ligne.get(_lg)
+        if r is None:
+            continue
+        bornes = _parse_echelle(r.get("echelle"))
+        if not bornes:
+            continue
+        indicateurs.append({
+            "ligne": _lg, "dim": DIM_DE.get(r["dimension"], ""),
+            "nom": r.get("indicateur"), "nom_fr": r.get("indicateur_fr"),
+            "poids": r.get("ponderation") or 1, "bornes": bornes,
+            "decroissant": _decroissant(bornes),
+            "inverse": bool(r.get("bareme_inverse")),
+            "max_score": max(x[0] for x in bornes),
+            "base": np.asarray(_base, dtype=bool),
+            "cible": np.asarray(_cible, dtype=bool),
+            "regle": True,
+            "valeur_pub": (r.get("valeurs") or {}).get("Total"),
+            "score_pub": (r.get("scores_corriges") or {}).get("Total"),
+        })
+
     # LES INDICATEURS TERRITORIAUX. Ils sont notés, mais pas sur des ménages :
     # sur des sections. La condition d'admission est donc simple et
     # vérifiable — le référentiel doit rendre un score sur CHACUNE des dix
     # sections. Un indicateur noté seulement au total ne dirait rien d'un
     # sous-groupe et resterait dehors.
     territoriaux = []
+    # UN INDICATEUR DÉJÀ RETENU NE SE REPREND PAS PAR L'AUTRE CHEMIN. Le taux
+    # de surpeuplement est calculé par une règle sur les ménages ET porte des
+    # scores par section dans le fichier : sans ce garde-fou il entrait deux
+    # fois, son poids comptait double dans l'indice, et le sélecteur en
+    # offrait deux exemplaires dont l'un se disait territorial.
+    _deja = {i["ligne"] for i in indicateurs}
     for r in res:
+        if r.get("ligne") in _deja:
+            continue
         if (r.get("source") or "menage") == "menage":
             continue
         sc = dict(r.get("scores_corriges") or r.get("scores") or {})
