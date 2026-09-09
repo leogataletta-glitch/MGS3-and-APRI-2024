@@ -1,13 +1,19 @@
-"""Ce qu'il reste à mesurer : l'état d'acquisition des trente-huit
-indicateurs environnementaux, et ce qu'il faudrait pour remplir chacun.
+"""Ce qu'il reste à mesurer : l'état d'acquisition des 128 indicateurs du
+référentiel, et ce qu'il faudrait pour remplir chacun de ceux qui manquent.
 
 POURQUOI CET ÉCRAN EXISTE.
 Le cadre décrit un protocole complet ; la plateforme n'en calcule qu'une
 partie. Tant que l'écart n'est écrit nulle part, il se raconte de mémoire et
 il se raconte mal : on croit manquer la biodiversité et on manque aussi la
 connectivité, on croit tenir les mangroves alors qu'on tient des hectares sans
-barème. Cette page pose l'écart noir sur blanc, indicateur par indicateur, et
-dit pour chacun où aller chercher la donnée manquante.
+barème, et on ne voit pas que douze indicateurs sont mesurés depuis le début et
+n'attendent qu'un barème. Cette page pose l'écart noir sur blanc, dimension par
+dimension, et dit pour chacun où aller chercher ce qui manque.
+
+ELLE NE LISTE QUE CE QUI RESTE. Les indicateurs déjà notés sont comptés dans la
+barre du haut et nulle part ailleurs : ils se voient partout dans la
+plateforme, et les répéter ici noierait ceux qui manquent — la seule question
+que cette page pose.
 
 ELLE SE MET À JOUR TOUTE SEULE, ET C'EST TOUT SON INTÉRÊT.
 L'état — calculé, partiel, absent — n'est pas saisi : il est LU dans
@@ -55,26 +61,27 @@ TEXTES = {
     "aq_onglet": {"en": "What is left to measure",
                   "fr": "Ce qu'il reste à mesurer"},
     "aq_court": {"en": "Left to Measure", "fr": "Reste à mesurer"},
-    "aq_desc": {"en": "The state of the 38 environmental indicators, and how "
-                      "to fill the gaps",
-                "fr": "L'état des 38 indicateurs environnementaux, et comment "
-                      "combler les manques"},
+    "aq_desc": {"en": "Every framework indicator not yet in the system, and "
+                      "how to fill it",
+                "fr": "Tous les indicateurs du référentiel qui ne sont pas "
+                      "encore dans le système, et comment les remplir"},
     "aq_intro": {
-        "en": "The environmental framework describes a full protocol; the "
-              "platform computes part of it. This screen states the gap "
-              "indicator by indicator, and says for each one where the "
-              "missing data can be found, with which tool and for how much "
-              "work. The state of each indicator is read from the results "
-              "file at every display: it is never entered by hand, so it "
-              "cannot drift from what the platform actually holds.",
-        "fr": "Le cadre environnemental décrit un protocole complet ; la "
-              "plateforme en calcule une partie. Cet écran pose l'écart "
-              "indicateur par indicateur, et dit pour chacun où trouver la "
-              "donnée manquante, avec quel outil et pour quel travail. "
-              "L'état de chaque indicateur est lu dans le fichier de "
-              "résultats à chaque affichage : il n'est jamais saisi à la "
-              "main, il ne peut donc pas s'écarter de ce que la plateforme "
-              "détient réellement."},
+        "en": "The framework describes {t} indicators across the seven "
+              "dimensions; the platform grades part of them. This screen "
+              "lists what is left, dimension by dimension, and says for each "
+              "one where the missing data can be found, with which tool and "
+              "for how much work. The state of each indicator is read from "
+              "the results file at every display: it is never entered by "
+              "hand, so it cannot drift from what the platform actually "
+              "holds.",
+        "fr": "Le référentiel décrit {t} indicateurs sur les sept "
+              "dimensions ; la plateforme en note une partie. Cet écran "
+              "liste ce qui reste, dimension par dimension, et dit pour "
+              "chacun où trouver la donnée manquante, avec quel outil et "
+              "pour quel travail. L'état de chaque indicateur est lu dans le "
+              "fichier de résultats à chaque affichage : il n'est jamais "
+              "saisi à la main, il ne peut donc pas s'écarter de ce que la "
+              "plateforme détient réellement."},
     "aq_e_calcule": {"en": "Computed", "fr": "Calculé"},
     "aq_e_partiel": {"en": "Partial", "fr": "Partiel"},
     "aq_e_absent": {"en": "Missing", "fr": "Absent"},
@@ -99,6 +106,47 @@ TEXTES = {
     "aq_b_aires": {"en": "Protected areas", "fr": "Aires protégées"},
     "aq_b_satellite": {"en": "Vegetation and climate",
                        "fr": "Végétation et climat"},
+    # LES SEPT DIMENSIONS, NOMMÉES COMME AILLEURS SUR LE SITE.
+    "aq_d_I": {"en": "I · Physical and infrastructural",
+               "fr": "I · Physique et infrastructurelle"},
+    "aq_d_II": {"en": "II · Institutional, technological and governance",
+                "fr": "II · Institutionnelle, technologique et gouvernance"},
+    "aq_d_III": {"en": "III · Environmental and ecological",
+                 "fr": "III · Environnementale et écologique"},
+    "aq_d_IV": {"en": "IV · Economic, livelihoods and food security",
+                "fr": "IV · Économique, moyens d'existence et sécurité "
+                      "alimentaire"},
+    "aq_d_V": {"en": "V · Social and community",
+               "fr": "V · Sociale et communautaire"},
+    "aq_d_VI": {"en": "VI · Human", "fr": "VI · Humaine"},
+    "aq_d_VII": {"en": "VII · Cultural, identity-based and psychological",
+                 "fr": "VII · Culturelle, identitaire et psychologique"},
+    "aq_dim_complete": {
+        "en": "Nothing left: every indicator of this dimension is graded on "
+              "the ten sections.",
+        "fr": "Rien à faire : tous les indicateurs de cette dimension sont "
+              "notés sur les dix sections."},
+    # LE NOM DU CHANTIER, sous celui de l'indicateur. Il dit de quelle NATURE
+    # est le travail qui manque — un barème à écrire n'est pas une campagne de
+    # terrain — et c'est ce qui permet de lire la page comme un plan de
+    # travail plutôt que comme une liste de manques.
+    "aq_b_bareme": {"en": "Scale to be written", "fr": "Barème à écrire"},
+    "aq_b_ocb": {"en": "Institutional survey, two sections left",
+                 "fr": "Enquête institutionnelle, deux sections à faire"},
+    "aq_b_sante": {"en": "National health statistics",
+                   "fr": "Statistiques sanitaires nationales"},
+    "aq_b_menage_a_ajouter": {"en": "Question to add to the survey",
+                              "fr": "Question à ajouter à l'enquête"},
+    "aq_b_peche": {"en": "Landing records", "fr": "Relevés de débarquement"},
+    "aq_b_registres": {"en": "Administrative registers",
+                       "fr": "Registres administratifs"},
+    "aq_b_social_a_ajouter": {"en": "Social module to add",
+                              "fr": "Module social à ajouter"},
+    "aq_b_reseau": {"en": "Road network and population",
+                    "fr": "Réseau routier et population"},
+    "aq_b_ecoles": {"en": "School facility survey",
+                    "fr": "Enquête d'établissement scolaire"},
+    "aq_b_decision": {"en": "A decision to make", "fr": "Une décision à prendre"},
     "aq_l_donnee": {"en": "Where to find it", "fr": "Où la chercher"},
     "aq_l_outil": {"en": "With what", "fr": "Avec quoi"},
     "aq_l_effort": {"en": "What it costs", "fr": "Ce que ça coûte"},
@@ -106,18 +154,20 @@ TEXTES = {
     "aq_l_source": {"en": "Source planned by the framework",
                     "fr": "Source prévue par le cadre"},
     "aq_rien": {
-        "en": "No environmental indicator was found in the results file.",
-        "fr": "Aucun indicateur environnemental n'a été trouvé dans le "
-              "fichier de résultats."},
+        "en": "No indicator was found in the results file.",
+        "fr": "Aucun indicateur n'a été trouvé dans le fichier de "
+              "résultats."},
     "aq_ordre": {
-        "en": "Blocks are ordered by what they unblock, not by how many "
-              "indicators they hold: the field records are first because no "
-              "imagery will ever replace them and because the answer is a "
-              "decision, not a computation.",
-        "fr": "Les chantiers sont rangés par ce qu'ils débloquent, non par le "
-              "nombre d'indicateurs qu'ils portent : les relevés de terrain "
-              "viennent d'abord parce qu'aucune image ne les remplacera et "
-              "parce que la réponse est une décision, pas un calcul."},
+        "en": "Only what is left is listed. Within a dimension, indicators "
+              "are grouped by the work that fills them: one written scale "
+              "fills twelve of them, one imagery chain filled seven, and it "
+              "is that piece of work that gets planned, not the line of the "
+              "framework.",
+        "fr": "Seul ce qui reste est listé. Dans une dimension, les "
+              "indicateurs sont groupés par le travail qui les remplit : un "
+              "barème écrit en remplit douze, une chaîne d'imagerie en a "
+              "rempli sept, et c'est ce travail-là qu'on planifie, pas la "
+              "ligne du référentiel."},
     "aq_maj": {
         "en": "Read from the results file. This page changes on its own as "
               "files arrive.",
@@ -181,7 +231,7 @@ def _fiches():
 
 @st.cache_data(show_spinner=False)
 def _indicateurs():
-    """Les trente-huit indicateurs environnementaux et leur état réel.
+    """Les indicateurs du référentiel, tous, et leur état réel.
 
     L'ÉTAT EST DÉDUIT, JAMAIS DÉCLARÉ. Trois cas seulement, et ils se lisent
     dans le fichier de résultats :
@@ -204,8 +254,6 @@ def _indicateurs():
     lst = d["indicateurs"] if isinstance(d, dict) and "indicateurs" in d else d
     out = []
     for r in lst or []:
-        if not str(r.get("dimension", "")).startswith("III"):
-            continue
         val = r.get("valeurs") or {}
         sco = r.get("scores") or {}
         n_val = sum(1 for s in SECTIONS if val.get(s) is not None)
@@ -219,6 +267,7 @@ def _indicateurs():
             etat = "absent"
         out.append({
             "ligne": r.get("ligne"),
+            "dim": _dim_code(r.get("dimension")),
             "nom_fr": r.get("indicateur_fr") or r.get("indicateur") or "",
             "nom_en": r.get("indicateur") or "",
             "source": (r.get("source") or "").strip(),
@@ -226,6 +275,20 @@ def _indicateurs():
             "total": total,
         })
     return out
+
+
+# LES SEPT DIMENSIONS, DANS L'ORDRE DU RÉFÉRENTIEL. Le chiffre romain est
+# écrit en tête de chaque dimension du fichier de résultats ; on le lit
+# plutôt que de le déduire d'un libellé traduit.
+DIMS = ("I", "II", "III", "IV", "V", "VI", "VII")
+
+
+def _dim_code(nom):
+    t = str(nom or "").strip().upper()
+    for c in ("VII", "VI", "IV", "V", "III", "II", "I"):
+        if t.startswith(c + "."):
+            return c
+    return ""
 
 
 def _couleur(etat):
@@ -302,7 +365,7 @@ def render():
         return
     fiches = _fiches()
 
-    st.markdown(f'<p class="aq-f">{_e(T("aq_intro"))}</p>',
+    st.markdown(f'<p class="aq-f">{_e(T("aq_intro", t=len(lst)))}</p>',
                 unsafe_allow_html=True)
 
     # LE COMPTE D'ABORD, ET EN PROPORTION. Trois nombres et une barre : c'est
@@ -325,20 +388,51 @@ def render():
         + '</div>', unsafe_allow_html=True)
     st.caption(T("aq_maj"))
 
-    # LES CHANTIERS SONT RANGÉS PAR CE QU'ILS DÉBLOQUENT. Le terrain d'abord
-    # parce qu'il est le seul irremplaçable, la fragmentation ensuite parce
-    # qu'une seule chaîne y remplit sept indicateurs, et les indices
-    # satellitaires en dernier parce qu'ils tournent déjà.
-    par_bloc = {}
-    for r in lst:
-        f = fiches.get(str(r["ligne"])) or {}
-        par_bloc.setdefault(f.get("bloc", "satellite"), []).append((r, f))
-
+    # LA PAGE NE LISTE QUE CE QUI RESTE, dimension par dimension. Les
+    # soixante-cinq indicateurs déjà notés sont comptés dans la barre et
+    # nulle part ailleurs : ils sont visibles partout dans la plateforme, et
+    # les répéter ici noierait les soixante-trois qui manquent — ce qui est
+    # précisément la question que cette page pose.
     st.markdown(f'<p class="aq-x">{_e(T("aq_ordre"))}</p>',
                 unsafe_allow_html=True)
 
-    for bloc in BLOCS:
-        _rendre_bloc(bloc, par_bloc.get(bloc), lang)
+    for dim in DIMS:
+        lot_dim = [r for r in lst if r["dim"] == dim]
+        if not lot_dim:
+            continue
+        reste = [r for r in lot_dim if r["etat"] != "calcule"]
+        nb = {e: sum(1 for r in lot_dim if r["etat"] == e)
+              for e in ("calcule", "partiel", "absent")}
+        detail = " · ".join(
+            f'{nb[e]} {T("aq_e_" + e).lower()}'
+            for e in ("calcule", "partiel", "absent") if nb[e])
+        st.markdown(
+            f'<div class="aq-h">{_e(T("aq_d_" + dim))}</div>'
+            f'<div class="aq-hx">{len(lot_dim)} · {_e(detail)}</div>',
+            unsafe_allow_html=True)
+        if not reste:
+            st.markdown(f'<p class="aq-x" style="margin:2px 0 14px">'
+                        f'{_e(T("aq_dim_complete"))}</p>',
+                        unsafe_allow_html=True)
+            continue
+        # DANS UNE DIMENSION, LES INDICATEURS SONT GROUPÉS PAR RECETTE. Une
+        # même démarche remplit souvent plusieurs lignes du référentiel — un
+        # barème à écrire en remplit douze, une chaîne de fragmentation en
+        # remplissait sept — et c'est la démarche qu'on planifie, pas la
+        # ligne.
+        vus, groupes = [], []
+        for r in reste:
+            f = fiches.get(str(r["ligne"])) or {}
+            cle = f.get("quoi") or f.get("bloc") or "?"
+            if cle in vus:
+                groupes[vus.index(cle)][1].append(r)
+            else:
+                vus.append(cle)
+                groupes.append((f, [r]))
+        for f, rs in groupes:
+            for r in rs:
+                _ligne(r, f, lang)
+            _fiche_bloc(f, lang)
 
 
 def render_bloc(bloc):
