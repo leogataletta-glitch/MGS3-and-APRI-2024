@@ -18,68 +18,112 @@
    "acces_axe": 100.0,
    "acces_pistes": 100.0,
    "acces_classe": 85.8,
-   "pop": 13490
+   "pop": 13490,
+   "aire_km2": 34.5,
+   "aire_2km_pct": 100.0,
+   "dist_med_m": 137,
+   "dist_med_classe_m": 1102
   },
   "Barbois": {
    "acces_axe": 100.0,
    "acces_pistes": 100.0,
    "acces_classe": 95.5,
-   "pop": 11434
+   "pop": 11434,
+   "aire_km2": 46.0,
+   "aire_2km_pct": 100.0,
+   "dist_med_m": 125,
+   "dist_med_classe_m": 671
   },
   "Beaulieu": {
    "acces_axe": 100.0,
    "acces_pistes": 100.0,
    "acces_classe": 77.9,
-   "pop": 11230
+   "pop": 11230,
+   "aire_km2": 28.5,
+   "aire_2km_pct": 100.0,
+   "dist_med_m": 183,
+   "dist_med_classe_m": 1434
   },
   "Blactote": {
    "acces_axe": 99.5,
    "acces_pistes": 100.0,
    "acces_classe": 68.4,
-   "pop": 10181
+   "pop": 10181,
+   "aire_km2": 31.4,
+   "aire_2km_pct": 99.3,
+   "dist_med_m": 627,
+   "dist_med_classe_m": 1976
   },
   "Dalmette": {
    "acces_axe": 83.6,
    "acces_pistes": 100.0,
    "acces_classe": 80.8,
-   "pop": 3281
+   "pop": 3281,
+   "aire_km2": 31.2,
+   "aire_2km_pct": 70.9,
+   "dist_med_m": 876,
+   "dist_med_classe_m": 1357
   },
   "Débouchette": {
    "acces_axe": 97.4,
    "acces_pistes": 100.0,
    "acces_classe": 83.6,
-   "pop": 5968
+   "pop": 5968,
+   "aire_km2": 22.3,
+   "aire_2km_pct": 97.6,
+   "dist_med_m": 356,
+   "dist_med_classe_m": 1133
   },
   "Dumont": {
    "acces_axe": 100.0,
    "acces_pistes": 100.0,
    "acces_classe": 79.5,
-   "pop": 5103
+   "pop": 5103,
+   "aire_km2": 14.6,
+   "aire_2km_pct": 100.0,
+   "dist_med_m": 242,
+   "dist_med_classe_m": 1396
   },
   "Mouline": {
    "acces_axe": 76.6,
    "acces_pistes": 95.1,
    "acces_classe": 17.1,
-   "pop": 1265
+   "pop": 1265,
+   "aire_km2": 62.2,
+   "aire_2km_pct": 56.3,
+   "dist_med_m": 1321,
+   "dist_med_classe_m": 2925
   },
   "Quentin": {
    "acces_axe": 60.6,
    "acces_pistes": 76.7,
    "acces_classe": 36.0,
-   "pop": 3335
+   "pop": 3335,
+   "aire_km2": 18.8,
+   "aire_2km_pct": 35.9,
+   "dist_med_m": 1716,
+   "dist_med_classe_m": 6062
   },
   "Trichet": {
    "acces_axe": 98.5,
    "acces_pistes": 100.0,
    "acces_classe": 39.1,
-   "pop": 7311
+   "pop": 7311,
+   "aire_km2": 23.9,
+   "aire_2km_pct": 97.7,
+   "dist_med_m": 304,
+   "dist_med_classe_m": 2915
   }
  },
  "ensemble": {
   "acces_axe": 96.6,
   "acces_pistes": 98.8,
   "acces_classe": 74.6,
-  "pop": 72598
+  "pop": 72598,
+  "aire_km2": 313.4,
+  "aire_2km_pct": 84.2,
+  "dist_med_m": 625,
+  "dist_med_classe_m": 1995
  },
  "sensibilite_population_contrainte": {
   "sections": {
@@ -149,5 +193,6 @@
    "standard": 98.3,
    "permissive": 99.6
   }
- }
+ },
+ "diagnostic": "La part de population a moins de 2 km sature a 100 % dans quatre sections parce que la section ENTIERE y est a moins de 2 km d'une voie : la distance mediane d'un point quelconque a la route la plus proche y vaut 140 a 280 m. Le seuil de 2 km, concu pour des statistiques nationales, ne discrimine pas a l'echelle d'une section de 15 a 60 km2. Les deux mesures ajoutees — distance mediane a la route et part de la SUPERFICIE a moins de 2 km — disent ce que la part de population ne dit plus."
 }
