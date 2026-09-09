@@ -389,12 +389,11 @@ def render():
     st.caption(T("aq_maj"))
 
     # LA PAGE NE LISTE QUE CE QUI RESTE, dimension par dimension. Les
-    # soixante-cinq indicateurs déjà notés sont comptés dans la barre et
-    # nulle part ailleurs : ils sont visibles partout dans la plateforme, et
-    # les répéter ici noierait les soixante-trois qui manquent — ce qui est
-    # précisément la question que cette page pose.
-    st.markdown(f'<p class="aq-x">{_e(T("aq_ordre"))}</p>',
-                unsafe_allow_html=True)
+    # indicateurs déjà notés sont comptés dans la barre et nulle part
+    # ailleurs : ils sont visibles partout dans la plateforme, et les répéter
+    # ici noierait ceux qui manquent — ce qui est précisément la question que
+    # cette page pose. La phrase qui l'annonçait est retirée : la barre
+    # au-dessus la dit en trois nombres, et le titre de la page la dit déjà.
 
     for dim in DIMS:
         lot_dim = [r for r in lst if r["dim"] == dim]
@@ -415,24 +414,16 @@ def render():
                         f'{_e(T("aq_dim_complete"))}</p>',
                         unsafe_allow_html=True)
             continue
-        # DANS UNE DIMENSION, LES INDICATEURS SONT GROUPÉS PAR RECETTE. Une
-        # même démarche remplit souvent plusieurs lignes du référentiel — un
-        # barème à écrire en remplit douze, une chaîne de fragmentation en
-        # remplissait sept — et c'est la démarche qu'on planifie, pas la
-        # ligne.
-        vus, groupes = [], []
+        # LA PAGE DIT CE QUI MANQUE, ELLE NE DIT PLUS COMMENT LE COMBLER.
+        # Chaque ligne portait sous elle sa recette — où trouver la donnée,
+        # avec quoi, en combien de temps, et un paragraphe sur ce qu'il reste
+        # à faire — soit une demi-page par indicateur et une page qu'on ne
+        # parcourait plus. Ce qu'on vient y chercher tient en deux
+        # informations : quel indicateur, et dans quel état. Les recettes
+        # existent toujours, écrites en toutes lettres dans la note de chaque
+        # indicateur, là où on les lit au moment où on en a besoin.
         for r in reste:
-            f = fiches.get(str(r["ligne"])) or {}
-            cle = f.get("quoi") or f.get("bloc") or "?"
-            if cle in vus:
-                groupes[vus.index(cle)][1].append(r)
-            else:
-                vus.append(cle)
-                groupes.append((f, [r]))
-        for f, rs in groupes:
-            for r in rs:
-                _ligne(r, f, lang)
-            _fiche_bloc(f, lang)
+            _ligne(r, fiches.get(str(r["ligne"])) or {}, lang)
 
 
 def render_bloc(bloc):

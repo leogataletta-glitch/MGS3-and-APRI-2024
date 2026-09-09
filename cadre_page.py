@@ -33,6 +33,7 @@ from urllib.parse import quote
 import streamlit as st
 
 import acquisition_env
+import libelles_enquete
 import environnement_cadre
 import trajectoires
 import i18n
@@ -671,11 +672,15 @@ TEXTES = {
     "cad_doc_tel": {
         "en": "Download the IRLA approach (Word, {t})",
         "fr": "Télécharger l'approche IRLA (Word, {t})"},
+    # « CI-DESSUS » DÉSIGNE UNE POSITION SUR UN ÉCRAN, PAS UN CONTENU. Le
+    # document reprend ce que les onglets précédents exposent — le cadre, les
+    # sources, les indicateurs, les boucles — et non ce qui se trouve
+    # au-dessus de ce bouton, qui n'est qu'un titre et un poids de fichier.
     "cad_doc_note": {
-        "en": "Everything above, in full prose, with the sources and the "
-              "detail of each choice.",
-        "fr": "Tout ce qui précède, en texte suivi, avec les sources et le "
-              "détail de chaque choix."},
+        "en": "Everything set out in the preceding sections, in full prose, "
+              "with the sources and the detail of each choice.",
+        "fr": "Tout ce qui est exposé dans les rubriques précédentes, en "
+              "texte suivi, avec les sources et le détail de chaque choix."},
     "cad_doc_absent": {
         "en": "The file is not in the repository yet: drop a Word document "
               "whose name contains IRLA into data/ and the download appears.",
@@ -716,6 +721,71 @@ TEXTES = {
     # et pondérations » n'annonçait plus que la moitié de ce qu'on y trouve.
     "cad_c35": {"en": "From Indicators to Resilience Scores",
                 "fr": "Des indicateurs aux scores de résilience"},
+    "cad_iv_bareme": {"en": "Scale and computation",
+                      "fr": "Barème et calcul"},
+    "cad_ivd_bareme": {
+        "en": "One indicator: its published scale, its weight, and the five "
+              "steps from its measurement to a dimension score",
+        "fr": "Un indicateur : son barème publié, son poids, et les cinq "
+              "étapes qui mènent de sa mesure au score d'une dimension"},
+    "cad_iv_meta": {"en": "Metadata", "fr": "Métadonnées"},
+    "cad_ivd_meta": {
+        "en": "All the indicators: what each one measures, how it is "
+              "obtained, and why it matters for resilience",
+        "fr": "Tous les indicateurs : ce que chacun mesure, comment il est "
+              "obtenu, et pourquoi il compte pour la résilience"},
+    "cad_meta_etat": {"en": "State", "fr": "État"},
+    "cad_meta_etat_tous": {"en": "All states", "fr": "Tous les états"},
+    "cad_meta_x": {
+        "en": "{n} of the {t} indicators of the framework. Click one to open "
+              "its record without leaving this page.",
+        "fr": "{n} des {t} indicateurs du référentiel. Cliquez sur l'un "
+              "d'eux pour ouvrir sa fiche sans quitter cette page."},
+    "cad_meta_poids": {"en": "weight", "fr": "poids"},
+    "cad_meta_valeur": {"en": "Territory value:", "fr": "Valeur du "
+                                                        "territoire :"},
+    "cad_meta_score": {"en": "score", "fr": "score"},
+    "cad_meta_quoi": {"en": "What is measured", "fr": "Ce qui est mesuré"},
+    "cad_meta_comment": {"en": "How it is obtained",
+                         "fr": "Comment il est obtenu"},
+    "cad_meta_pourquoi": {"en": "Why it matters for resilience",
+                          "fr": "Pourquoi cela compte pour la résilience"},
+    "cad_meta_bareme": {"en": "Published scale", "fr": "Barème publié"},
+    "cad_meta_s_sat": {
+        "en": "Satellite imagery, measured on the communal section.",
+        "fr": "Imagerie satellitaire, mesurée sur la section communale."},
+    "cad_meta_s_geo": {
+        "en": "Open geographic data, measured on the communal section.",
+        "fr": "Données géographiques ouvertes, mesurées sur la section "
+              "communale."},
+    "cad_meta_s_regle": {
+        "en": "Computed by a rule from several survey answers: it was not "
+              "asked as such in the field.",
+        "fr": "Calculé par une règle à partir de plusieurs réponses "
+              "d'enquête : il n'a pas été posé tel quel sur le terrain."},
+    "cad_meta_s_men": {"en": "Household survey answer.",
+                       "fr": "Réponse du questionnaire ménage."},
+    "cad_meta_s_inconnu": {
+        "en": "Source not yet recorded for this line.",
+        "fr": "Source non encore renseignée pour cette ligne."},
+    "cad_meta_agit": {
+        "en": "Acts on: {n} ({s})",
+        "fr": "Agit sur : {n} ({s})"},
+    "cad_meta_depend": {"en": "Depends on: {n}", "fr": "Dépend de : {n}"},
+    "cad_meta_pourquoi_dim": {
+        "en": "It serves dimension {d}, where it carries a weight of {p}.",
+        "fr": "Il sert la dimension {d}, où il pèse {p}."},
+    "cad_meta_pourquoi_absent": {
+        "en": "No measured causal link is documented for this indicator. "
+              "Thirty-one of the framework's lines are nodes of the causal "
+              "graph, with a referenced effect; this one is not among them, "
+              "and inventing a sentence here would give it the same "
+              "appearance as the thirty-one real ones.",
+        "fr": "Aucun lien causal mesuré n'est documenté pour cet "
+              "indicateur. Trente et une lignes du référentiel sont des "
+              "nœuds du graphe causal, avec un effet référencé ; celle-ci "
+              "n'en fait pas partie, et inventer ici une phrase lui "
+              "donnerait la même allure qu'aux trente et une vraies."},
     "cad_ind_dim": {"en": "Dimension", "fr": "Dimension"},
     "cad_ind_all": {"en": "All seven", "fr": "Toutes les sept"},
     "cad_ind_q": {"en": "Search an indicator", "fr": "Chercher un indicateur"},
@@ -1089,6 +1159,32 @@ def _echelle_html(txt):
             f'<span class="cad-ec-l">{defaut}{"".join(lignes)}</span></span>')
 
 
+SECTIONS_REF = ["Anse à Drick", "Barbois", "Dumont", "Débouchette",
+                "Mouline", "Quentin", "Beaulieu", "Blactote", "Dalmette",
+                "Trichet"]
+
+
+def _etat_ligne(r):
+    """Calculé, partiel ou absent — la même règle que l'écran d'acquisition.
+
+    ELLE EST RECOPIÉE ET NON IMPORTÉE, à trois lignes près, parce que
+    l'importer ferait dépendre le cadre de l'écran d'acquisition alors que
+    c'est l'inverse qui est vrai : le cadre décrit le référentiel, l'écran
+    d'acquisition décrit un chantier. La règle, elle, tient en une phrase :
+    noté sur les dix sections et au total, c'est calculé ; quelque chose
+    quelque part, c'est partiel ; rien, c'est absent.
+    """
+    sco = r.get("scores_corriges") or r.get("scores") or {}
+    val = r.get("valeurs") or {}
+    n_sco = sum(1 for s in SECTIONS_REF if sco.get(s) is not None)
+    n_val = sum(1 for s in SECTIONS_REF if val.get(s) is not None)
+    if sco.get("Total") is not None and n_sco >= len(SECTIONS_REF):
+        return "calcule"
+    if n_val or n_sco or sco.get("Total") is not None:
+        return "partiel"
+    return "absent"
+
+
 @st.cache_data(show_spinner=False)
 def _referentiel():
     """Les indicateurs du référentiel, tels qu'ils y sont écrits.
@@ -1127,7 +1223,19 @@ def _referentiel():
             "valeur": (r.get("valeurs") or {}).get("Total"),
             "score": (r.get("scores_corriges") or {}).get("Total"),
             "metrique_fr": (r.get("expl_fr") or "").strip(),
+            "metrique_en": (r.get("expl_en") or "").strip(),
             "nom_fr": (r.get("indicateur_fr") or "").strip(),
+            # LA MÉTADONNÉE SUIT L'INDICATEUR, ELLE N'EST PAS RECOMPOSÉE. La
+            # note de méthode, la question posée sur le terrain, ses
+            # modalités, l'unité et la source sont écrites dans le fichier de
+            # résultats : les relire ici serait en avoir deux versions.
+            "note": (r.get("note") or "").strip(),
+            "note_en": (r.get("note_en") or "").strip(),
+            "question": (r.get("question") or "").strip(),
+            "modalites": (r.get("modalites") or "").strip(),
+            "unite": (r.get("unite") or "").strip(),
+            "source": (r.get("source") or "").strip(),
+            "etat": _etat_ligne(r),
             "calcule": (r.get("scores_corriges") or {}).get("Total")
                        is not None})
     out.sort(key=lambda x: (ORDRE.index(x["dim"]) if x["dim"] in ORDRE else 99,
@@ -1205,6 +1313,16 @@ def _menages():
 
 STYLE = """
 <style>
+  .cad-md-et { font-size:10.5px; font-weight:800; letter-spacing:.09em;
+               text-transform:uppercase; margin:0 0 6px; }
+  .cad-md-v { font-size:12.5px; color:#3d4757; margin:0 0 10px; }
+  .cad-md-l { font-size:10.5px; font-weight:700; letter-spacing:.09em;
+              text-transform:uppercase; color:#6b7590; margin:12px 0 3px; }
+  .cad-md-p { font-size:13px; line-height:1.62; color:#22303f; margin:0; }
+  .cad-md-note { font-size:12px; color:#5a6473; }
+  .cad-md-r { display:block; font-size:12px; color:#5a6473;
+              margin:2px 0 0 0; }
+
   .cad-h    { font-size:17.5px; font-weight:700; color:#101728;
               letter-spacing:-.015em; margin:0 0 3px; }
   .cad-note { font-size:12.5px; color:#6b7590; line-height:1.5;
@@ -2447,6 +2565,24 @@ def _v_indicateurs():
     if not tous:
         st.info(T("e_absent"))
         return
+
+    # DEUX LECTURES DU MÊME RÉFÉRENTIEL, ET UN SOUS-ONGLET POUR PASSER DE
+    # L'UNE À L'AUTRE SANS QUITTER LA PAGE. La première répond à « quel
+    # barème, quel poids, et qu'est-ce que cela donne » : un indicateur à la
+    # fois, sa règle graduée, et les cinq étapes qui mènent de sa mesure à un
+    # score. La seconde répond à « qu'est-ce que cet indicateur mesure au
+    # juste, comment, et pourquoi cela compte » : les cent vingt-huit lignes
+    # d'un coup, chacune dépliable là où elle est. Ce sont deux questions
+    # différentes posées par deux lecteurs différents, et les empiler sur un
+    # seul écran aurait obligé chacun à traverser la réponse de l'autre.
+    vue = onglets.barre(
+        "cad_i_vue", ["bareme", "meta"],
+        titre=lambda c: T("cad_iv_" + c),
+        description=lambda c: T("cad_ivd_" + c), defaut="bareme")
+    if vue == "meta":
+        _v_metadonnees(tous)
+        return
+
     g, d = st.columns([1, 2])
     with g:
         dim = st.selectbox(T("cad_ind_dim"), [None] + ORDRE, key="cad_i_dim",
@@ -2515,6 +2651,179 @@ def _v_indicateurs():
                 f'<div class="cad-ex-t">{_e(T("cad_ex_titre"))}</div>'
                 + _chaine_indicateur(vus[0])
                 + _normalisations(vus[0]), unsafe_allow_html=True)
+
+
+# --- 4 bis · la métadonnée de chaque indicateur ----------------------------
+def _causal():
+    """Le graphe causal, indexé par ligne du référentiel.
+
+    IL NE COUVRE PAS TOUT LE RÉFÉRENTIEL, ET C'EST PRÉCISÉMENT POURQUOI IL
+    FAUT LE DIRE. Trente et une lignes sur cent vingt-huit sont des nœuds du
+    graphe : pour celles-là, « pourquoi cela compte » n'est pas une opinion,
+    c'est un lien mesuré, avec sa force, son sens et sa référence. Pour les
+    autres, la seule réponse honnête est la dimension qu'elles servent et le
+    poids qu'elles y pèsent — et c'est ce qui est écrit, plutôt qu'une phrase
+    inventée qui aurait la même allure que les trente et une vraies.
+    """
+    p = _trouver("graphe_causal.json")
+    if not p:
+        return {}, {}
+    try:
+        with open(p, encoding="utf-8") as f:
+            g = json.load(f)
+    except Exception:
+        return {}, {}
+    noeuds = {n["id"]: n for n in g.get("noeuds") or []}
+    par_ligne = {}
+    for n in noeuds.values():
+        if n.get("ligne"):
+            par_ligne.setdefault(int(n["ligne"]), n["id"])
+    liens = {}
+    for a in g.get("aretes") or []:
+        liens.setdefault(a.get("de"), []).append(("sort", a))
+        liens.setdefault(a.get("vers"), []).append(("entre", a))
+    return par_ligne, (noeuds, liens)
+
+
+def _meta_source(x, lang):
+    """D'où vient le chiffre, en une ligne : la question, ou le capteur."""
+    if x.get("question"):
+        # LE LIBELLÉ DU TERRAIN EST EN FRANÇAIS, L'ÉCRAN PEUT ÊTRE EN
+        # ANGLAIS. La table de traduction du questionnaire existe : la sauter
+        # ici affichait « Source d'eau de boisson — Eau de réseau + … » au
+        # milieu d'une fiche entièrement anglaise. Ce qu'elle ne connaît pas
+        # reste en français, ce qui est visible et corrigible.
+        q = libelles_enquete.question(x["question"])
+        m = x.get("modalites") or ""
+        if m:
+            m = " + ".join(libelles_enquete.modalite(a.strip())
+                           for a in m.split("+"))
+        return q + (" — " + m if m else "")
+    s = (x.get("source") or "").lower()
+    return {"satellite": T("cad_meta_s_sat"),
+            "geospatial": T("cad_meta_s_geo"),
+            "menage_regle": T("cad_meta_s_regle"),
+            "menage": T("cad_meta_s_men")}.get(s, T("cad_meta_s_inconnu"))
+
+
+def _meta_pourquoi(x, par_ligne, graphe, lang):
+    """Pourquoi cet indicateur compte, et d'où on le sait."""
+    noeuds, liens = graphe if graphe else ({}, {})
+    nid = par_ligne.get(int(x["ligne"])) if x.get("ligne") else None
+    out = []
+    if nid and liens.get(nid):
+        # Les effets sortants d'abord : ce que cet indicateur fait bouger.
+        sortants = [a for s, a in liens[nid] if s == "sort"]
+        entrants = [a for s, a in liens[nid] if s == "entre"]
+        for a in sortants[:3]:
+            cible = noeuds.get(a.get("vers"), {})
+            nom = cible.get("fr" if lang == "fr" else "en", a.get("vers"))
+            ref = a.get("ref_fr" if lang == "fr" else "ref_en") or ""
+            signe = "+" if (a.get("signe") or 1) > 0 else "−"
+            out.append((T("cad_meta_agit", n=nom, s=signe), ref))
+        for a in entrants[:2]:
+            src = noeuds.get(a.get("de"), {})
+            nom = src.get("fr" if lang == "fr" else "en", a.get("de"))
+            out.append((T("cad_meta_depend", n=nom), ""))
+    return out
+
+
+def _v_metadonnees(tous):
+    """Les cent vingt-huit indicateurs et ce qu'on sait de chacun.
+
+    UN INDICATEUR PAR LIGNE, DÉPLIABLE SUR PLACE. Cent vingt-huit fiches
+    ouvertes feraient trente écrans ; cent vingt-huit liens vers une autre
+    page feraient perdre la liste à chaque consultation. Le dépliant garde
+    les deux : on parcourt la liste, on ouvre celui qu'on cherche, on le
+    referme, on est toujours au même endroit.
+
+    TROIS QUESTIONS, TOUJOURS DANS LE MÊME ORDRE. Ce qui est mesuré, comment
+    c'est obtenu, pourquoi cela compte pour la résilience. La troisième est
+    la seule qui ne soit pas toujours renseignée, et quand elle ne l'est pas
+    la fiche le dit au lieu de la combler.
+    """
+    lang = i18n.get_lang()
+    par_ligne, graphe = _causal()
+    c1, c2 = st.columns([1, 1.2])
+    with c1:
+        dim = st.selectbox(T("cad_ind_dim"), [None] + ORDRE, key="cad_m_dim",
+                           format_func=lambda c: (T("cad_ind_all")
+                                                  if c is None else T(c)))
+    with c2:
+        etat = st.selectbox(
+            T("cad_meta_etat"), [None, "calcule", "partiel", "absent"],
+            key="cad_m_etat",
+            format_func=lambda c: (T("cad_meta_etat_tous") if c is None
+                                   else T("aq_e_" + c)))
+    lot = [x for x in tous
+           if (dim is None or x["dim"] == dim)
+           and (etat is None or x.get("etat") == etat)]
+    st.markdown(f'<p class="cad-attr-x" style="margin:6px 0 10px">'
+                f'{_e(T("cad_meta_x", n=len(lot), t=len(tous)))}</p>',
+                unsafe_allow_html=True)
+    if not lot:
+        return
+
+    coul = {"calcule": "#1a8a4f", "partiel": "#d1730c", "absent": "#b0464b"}
+    for x in lot:
+        nom = (x.get("nom_fr") or x["nom"]) if lang == "fr" else x["nom"]
+        num = T(x["dim"]).split(".")[0]
+        et = x.get("etat") or "absent"
+        titre = f"{nom}  ·  {num}  ·  {T('cad_meta_poids')} {_fmt(x['poids'])}"
+        with st.expander(titre):
+            st.markdown(
+                f'<div class="cad-md-et" style="color:{coul[et]}">'
+                f'{_e(T("aq_e_" + et))}</div>'
+                + (f'<div class="cad-md-v">{_e(T("cad_meta_valeur"))} '
+                   f'<b>{_fmt(x["valeur"])}'
+                   f'{(" " + x["unite"]) if x.get("unite") else ""}</b>'
+                   f'{" · " + _e(T("cad_meta_score")) + " <b>" + str(x["score"]) + "/10</b>" if x.get("score") is not None else ""}'
+                   f'</div>' if x.get("valeur") is not None else ""),
+                unsafe_allow_html=True)
+
+            mesure = ((x.get("metrique_fr") if lang == "fr"
+                       else x.get("metrique_en")) or x.get("metrique") or "")
+            st.markdown(f'<div class="cad-md-l">{_e(T("cad_meta_quoi"))}</div>'
+                        f'<div class="cad-md-p">{_e(mesure)}</div>'
+                        if mesure else "", unsafe_allow_html=True)
+
+            st.markdown(f'<div class="cad-md-l">{_e(T("cad_meta_comment"))}'
+                        f'</div>'
+                        f'<div class="cad-md-p">{_e(_meta_source(x, lang))}'
+                        f'</div>', unsafe_allow_html=True)
+            note = (x.get("note") if lang == "fr" else x.get("note_en")) \
+                or x.get("note") or ""
+            if note:
+                st.markdown(f'<div class="cad-md-p cad-md-note">{_e(note)}'
+                            f'</div>', unsafe_allow_html=True)
+
+            pourquoi = _meta_pourquoi(x, par_ligne, graphe, lang)
+            st.markdown(f'<div class="cad-md-l">{_e(T("cad_meta_pourquoi"))}'
+                        f'</div>', unsafe_allow_html=True)
+            if pourquoi:
+                st.markdown(
+                    "".join(
+                        f'<div class="cad-md-p"><b>{_e(t)}</b>'
+                        + (f'<span class="cad-md-r">{_e(r)}</span>'
+                           if r else "")
+                        + '</div>'
+                        for t, r in pourquoi), unsafe_allow_html=True)
+            else:
+                st.markdown(
+                    f'<div class="cad-md-p">'
+                    f'{_e(T("cad_meta_pourquoi_dim", d=T(x["dim"]), p=_fmt(x["poids"])))}'
+                    f'</div>'
+                    f'<div class="cad-md-p cad-md-note">'
+                    f'{_e(T("cad_meta_pourquoi_absent"))}</div>',
+                    unsafe_allow_html=True)
+
+            if x.get("echelle"):
+                st.markdown(f'<div class="cad-md-l">'
+                            f'{_e(T("cad_meta_bareme"))}</div>'
+                            f'<div class="cad-md-p cad-md-note">'
+                            f'{_e(x["echelle"])}</div>',
+                            unsafe_allow_html=True)
+
 
 
 # --- 5 · les boucles de rétroaction ----------------------------------------
