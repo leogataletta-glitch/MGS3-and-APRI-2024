@@ -598,11 +598,11 @@ TEXTES = {
               "porte d'entrée de la pression sur le bois."},
     "int_cuisson_o": {
         "en": "Take households off fuelwood, which is the first driver of "
-              "cover loss and the demand end of the balancing loops that tie "
-              "wood scarcity to cutting.",
+              "cover loss and the demand end of the harvest loop that ties "
+              "standing wood to cutting.",
         "fr": "Sortir les ménages du bois-énergie, premier moteur du recul du "
-              "couvert et extrémité « demande » des boucles équilibrantes qui "
-              "lient raréfaction du bois et coupe."},
+              "couvert et extrémité « demande » de la boucle de prélèvement "
+              "qui lie le bois sur pied et la coupe."},
     "int_cuisson_at": {
         "en": "Improved stoves at two efficiency levels · a supported "
               "eco-charcoal supply chain (carbonisation kilns, drying) · "
@@ -657,12 +657,18 @@ TEXTES = {
               "écologique avant toute restriction, jamais après · suivi sur la "
               "ligne 6 du référentiel, déjà mesurée"},
     "int_cuisson_b": {
-        "en": "Cover loss → wood scarcity → higher price → cutting becomes "
-              "profitable → more cutting. An alternative fuel cuts the loop at "
-              "its demand end.",
-        "fr": "Recul du couvert → raréfaction → hausse du prix → la coupe "
-              "devient rentable → coupe accrue. Une énergie alternative coupe "
-              "la boucle du côté de la demande."},
+        "en": "Cover that grows back → a stock that can be reached → cutting "
+              "→ cover loss → what grows back is cut again. Charcoal demand "
+              "in Haiti barely moves with price, so offtake follows the "
+              "resource that is there: planting alone does not hold. An "
+              "alternative fuel cuts the loop at its demand end, which is the "
+              "only end that gives way.",
+        "fr": "Un couvert qui revient → une ressource atteignable → la coupe → "
+              "le recul du couvert → ce qui repousse est coupé à nouveau. En "
+              "Haïti la demande de charbon ne cède presque pas au prix : le "
+              "prélèvement suit la ressource présente, et replanter seul ne "
+              "tient pas. Une énergie alternative coupe la boucle du côté de "
+              "la demande, le seul qui cède."},
 
     # ---------------- fiche : agro
     "int_agro_t": {"en": "Fertility without fire",

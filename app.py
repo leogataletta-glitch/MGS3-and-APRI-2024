@@ -1924,10 +1924,10 @@ TEXTES_NAV = {
               "fr": "Corrélation, mécanisme et preuve, tenus séparés"},
     "sx_d3": {"en": "Where a push travels furthest",
               "fr": "Où une poussée voyage le plus loin"},
-    "sx_d4": {"en": "Push several variables at once",
-              "fr": "Pousser plusieurs variables à la fois"},
-    "sx_d5": {"en": "Relay after relay, and what the loops add",
-              "fr": "Relais après relais, et ce que les boucles ajoutent"},
+    "sx_d4": {"en": "Push several variables at once, read the total, then the "
+                    "same total relay after relay",
+              "fr": "Pousser plusieurs variables à la fois, lire le total, "
+                    "puis ce même total relais après relais"},
     "sx_d6": {"en": "Push a variable and watch the system move, live",
               "fr": "Poussez une variable et regardez le système bouger, "
                     "en direct"},
@@ -2814,12 +2814,18 @@ with _c_contenu:
         # tourner. Les trois écrans d'analyse — relations, leviers,
         # interventions — viennent après, quand on a vu le système bouger et
         # qu'on sait quelles questions lui poser.
+        # « TESTER » ET « VOIR L'IMPACT » N'ÉTAIENT QU'UN SEUL ÉCRAN. Le
+        # second ne demandait rien : il relisait le scénario et le périmètre
+        # du premier depuis les mêmes clés, puis décomposait relais par relais
+        # le total que le premier venait de donner. Deux onglets pour un seul
+        # calcul laissaient croire à deux interventions. Le total et sa
+        # décomposition tiennent désormais dans le même écran.
         _CODES_SX = ["construire", "direct", "regler", "relations", "leviers",
-                     "simuler", "vagues"]
+                     "simuler"]
         _N_SX = dict(zip(_CODES_SX, ("sx_o1", "sx_o6", "sx_o7", "sx_o2",
-                                     "sx_o3", "sx_o4", "sx_o5")))
+                                     "sx_o3", "sx_o4")))
         _D_SX = dict(zip(_CODES_SX, ("sx_d1", "sx_d6", "sx_d7", "sx_d2",
-                                     "sx_d3", "sx_d4", "sx_d5")))
+                                     "sx_d3", "sx_d4")))
         _vue = onglets.barre("bcl_vue", _CODES_SX,
                              titre=lambda c: T(_N_SX[c]),
                              description=lambda c: T(_D_SX[c]),
@@ -2837,8 +2843,6 @@ with _c_contenu:
             systeme_complexe.render_leviers()
         elif _vue == "simuler":
             systeme_complexe.render_simuler()
-        elif _vue == "vagues":
-            systeme_complexe.render_vagues()
         else:
             # L'ONDE SE REGARDE SUR LE SCHÉMA, PAS DANS DES COLONNES. Les
             # colonnes de vagues disent combien et quand ; elles ne disent pas

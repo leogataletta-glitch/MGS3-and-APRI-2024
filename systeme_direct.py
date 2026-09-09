@@ -69,33 +69,6 @@ TEXTES = {
               "variable atteinte monte ou descend sous vos yeux. Le vert "
               "porte une amélioration, le rouge une dégradation, et plus la "
               "bille est grosse plus elle porte."},
-    # DEUX NIVEAUX, DEUX MOTS. Une poussée est une ONDE DE CHOC : elle
-    # traverse le système entier et revient par les boucles. Ce que compte
-    # l'écran, ce sont les RELAIS qui la composent. Les deux portaient le
-    # même nom — « vague » — et l'on ne savait plus si le compteur disait le
-    # choc ou son pas. Un rang de relais n'est pas non plus une durée, et
-    # c'est l'autre contresens que la phrase ferme.
-    "sd_vague_x": {
-        "en": "One push is one shock wave: it spreads through the whole "
-              "system, comes back through the loops, and settles. What is "
-              "counted here are the relays inside it. At each relay, every "
-              "variable that has just moved passes its change to its direct "
-              "neighbours, and those pass it on at the next relay. The shock "
-              "wave dies out when there is nothing left worth passing on, "
-              "and when a loop closes it comes back to the variable it "
-              "started from. A relay is an order of transmission, not a "
-              "length of time. You can cap the number of relays, or let the "
-              "shock wave run until it settles.",
-        "fr": "Une poussée est une onde de choc : elle traverse tout le "
-              "système, revient par les boucles, puis se stabilise. Ce qui "
-              "est compté ici, ce sont les relais qui la composent. À chaque "
-              "relais, chaque variable qui vient de bouger transmet son "
-              "changement à ses voisines directes, qui le transmettront au "
-              "relais suivant. L'onde s'éteint quand il n'y a plus rien qui "
-              "vaille d'être transmis, et quand une boucle se referme elle "
-              "revient sur la variable de départ. Un relais est un ordre de "
-              "transmission, pas une durée. Vous pouvez borner le nombre de "
-              "relais, ou laisser l'onde aller jusqu'à sa stabilisation."},
     # LE RASSEMBLEMENT. Une fois l'onde stabilisée, le schéma a fait son
     # travail : il a montré le chemin. Ce qu'on veut garder tient en cinq ou
     # six variables — les mieux reliées et les plus retraversées — et les
@@ -547,6 +520,32 @@ const ttl = el("text",{id:"ttl", x:D.vb[0]+52, y:D.vb[1]+34,
 ttl.textContent = (L.ess_t || "").toUpperCase();
 svg.appendChild(ttl);
 
+/* ---------- LE CADRAGE SUIT LE REGROUPEMENT ----------------------------
+   Six pastilles laissées dans une boîte taillée pour trente en occupent le
+   dixième : on venait de ne garder que l'essentiel, et l'essentiel
+   s'affichait en vignettes de quarante pixels, chiffres compris. La boîte se
+   resserre donc sur la colonne retenue et son détail. Rien n'est redessiné —
+   c'est le même dessin, cadré plus près, donc rendu plus grand à hauteur
+   d'iframe inchangée. Le mouvement est tweené : un saut de cadrage donne
+   l'impression que le schéma a été remplacé, alors qu'on y a seulement
+   approché. */
+const VB_PLEIN = D.vb.slice();
+let vbAnim = null;
+function cadrer(cible, ms){
+  const dep = (svg.getAttribute("viewBox") || VB_PLEIN.join(" "))
+                .trim().split(/\s+/).map(Number);
+  if (vbAnim) cancelAnimationFrame(vbAnim);
+  const t0 = performance.now();
+  const pas = t => {
+    const u = Math.min(1, (t - t0) / ms);
+    const e = u < 0.5 ? 2*u*u : 1 - 2*(1-u)*(1-u);
+    svg.setAttribute("viewBox",
+      dep.map((v, i) => (v + (cible[i] - v) * e).toFixed(2)).join(" "));
+    if (u < 1) vbAnim = requestAnimationFrame(pas);
+  };
+  pas(t0);
+}
+
 const traits = LI.map(l => {
   const a = NO[IX[l.de]], b = NO[IX[l.vers]], g = bords(a,b);
   const p = el("path",{d:`M${g.x1},${g.y1} Q${g.mx},${g.my} ${g.x2},${g.y2}`,
@@ -744,8 +743,18 @@ function rassembler(on){
   });
   const gl = document.getElementById("gl");
   if (gl) gl.style.opacity = on ? "0" : "1";
+  /* Le cadre se referme sur la colonne : de la pastille la plus à gauche au
+     bout de sa ligne de chiffres, plus une marge. */
+  const CG = x0 + 34, CL = 470, MB = 26;
   const t = document.getElementById("ttl");
-  if (t) t.setAttribute("opacity", on ? "1" : "0");
+  if (t){
+    t.setAttribute("opacity", on ? "1" : "0");
+    /* L'INTITULÉ SUIT LE CADRE. Laissé à sa place d'origine, il tombait
+       au-dessus de la boîte resserrée et disparaissait avec elle. */
+    t.setAttribute("x", on ? CG + 20 : D.vb[0] + 52);
+    t.setAttribute("y", on ? depart - MB + 20 : D.vb[1] + 34);
+  }
+  cadrer(on ? [CG, depart - MB, CL, haut + MB*2] : VB_PLEIN, 420);
   const b = document.getElementById("ess");
   b.textContent = on ? L.ess_non : L.ess;
 }
@@ -1230,14 +1239,10 @@ def render():
         f'<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
         f'solid {VERT_APRI};border-radius:14px;padding:12px 16px;'
         f'font-size:14px;color:{ENCRE2};line-height:1.6;margin:2px 0 8px;'
+        # LE MODE D'EMPLOI SUFFIT. La définition d'un relais le suivait, dans
+        # le même cadre : dix lignes de théorie devant un dessin qui la montre
+        # en une seconde dès qu'on appuie sur lire.
         f'max-width:96ch">{T("sd_intro")}'
-        # LA DÉFINITION D'UNE VAGUE VIENT AVEC LE MODE D'EMPLOI, dans le même
-        # cadre et détachée par un filet : c'est la clé de lecture de tout ce
-        # qui suit — le compteur, le bouton d'un pas, le tableau des
-        # retraversées et le délai par relais comptent tous des vagues.
-        f'<div style="margin-top:10px;padding-top:10px;'
-        f'border-top:1px solid #eef2f7;color:{ENCRE3}">'
-        f'{T("sd_vague_x")}</div>'
         f'</div>', unsafe_allow_html=True)
 
     # LA HAUTEUR SUIT LE DESSIN. Un périmètre de quatre pastilles n'a pas

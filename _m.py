@@ -23,12 +23,14 @@ SOUS_VUES = {
     "ra_scores":  ("dimensions", "ra_vue",  "scores"),
     "ra_comparer": ("dimensions", "ra_vue", "comparer"),
     "ra_solutions": ("dimensions", "ra_vue", "solutions"),
-    # LES CINQ ÉCRANS DES BOUCLES. « boucles » rend le premier ; les quatre
-    # autres sont adressés par leur code de vue.
+    # LES QUATRE ÉCRANS DES BOUCLES. « boucles » rend le premier ; les trois
+    # autres sont adressés par leur code de vue. « vagues » a disparu : sa
+    # décomposition relais par relais est passée sous le total, dans
+    # « simuler ». Un code absent de la liste des onglets retomberait sur
+    # l'onglet par défaut et passerait le harnais sans rien prouver.
     "bcl_rel":    ("boucles",    "bcl_vue", "relations"),
     "bcl_lev":    ("boucles",    "bcl_vue", "leviers"),
     "bcl_sim":    ("boucles",    "bcl_vue", "simuler"),
-    "bcl_vag":    ("boucles",    "bcl_vue", "vagues"),
     # LE CADRE DE RÉSILIENCE A SEPT ONGLETS, et « methodologie » n'en rend
     # qu'un — le premier. Sans ces six entrées, six écrans entiers, dont le
     # plan de sondage et les limites qui viennent d'être remis en service,

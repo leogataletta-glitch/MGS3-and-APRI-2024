@@ -88,8 +88,6 @@ TEXTES = {
               "fr": "Identifier les leviers"},
     "sx_o4": {"en": "Test Interventions",
               "fr": "Tester des interventions"},
-    "sx_o5": {"en": "See System-Wide Impacts",
-              "fr": "Voir les impacts sur tout le système"},
     "sx_c_rel": {"en": "Relation", "fr": "Relation"},
     "sx_c_src": {"en": "Where the strength comes from",
                  "fr": "D'où vient la force"},
@@ -1318,6 +1316,11 @@ def render_simuler():
     st.markdown(f'<p class="sx-note">{_e(T("sx_borne"))}</p>',
                 unsafe_allow_html=True)
     _note_echelle(m)
+    # LA DÉCOMPOSITION SUIT LE TOTAL, DANS LE MÊME ONGLET. Elle en occupait un
+    # second, qui ne demandait rien de plus : même périmètre, même scénario,
+    # relus depuis les mêmes clés. Deux onglets pour un seul calcul faisaient
+    # croire à deux interventions.
+    _bloc_vagues(m, s, variations)
 
 
 def _note_echelle(m):
@@ -1387,33 +1390,29 @@ def _par_qui(m, cible, variations):
     return ", ".join(m["noms"].get(d, d) for _v, d in contribs[:2])
 
 
-def render_vagues():
-    m = _modele(i18n.get_lang())
-    st.markdown(STYLE, unsafe_allow_html=True)
-    st.markdown(f'<div class="titre-bloc">{_e(T("sx_t5"))}</div>',
-                unsafe_allow_html=True)
-    s = _systeme(m, "v")
-    _rappel(m, s)
+def _bloc_vagues(m, s, variations):
+    """La même poussée, décomposée relais par relais.
+
+    ELLE N'EST PLUS UN ONGLET, ET ELLE N'AURAIT JAMAIS DÛ L'ÊTRE. L'écran des
+    vagues ne demandait aucun scénario : il relisait celui posé sur l'onglet
+    précédent, dans les mêmes clés de session, sur le même système. C'étaient
+    donc deux lectures d'un seul calcul, séparées par un clic — et la seconde
+    s'ouvrait sur les chiffres d'une intervention qu'on croyait avoir laissée
+    derrière soi.
+
+    LES DEUX LECTURES NE DISENT PAS LA MÊME CHOSE, ET C'EST POURQUOI ON GARDE
+    LES DEUX. Le tableau du dessus donne le TOTAL : d'où part chaque variable,
+    de combien on la pousse, ce qu'elle reçoit indirectement, où elle arrive.
+    Celui-ci découpe ce total en RELAIS : ce que la poussée déplace
+    directement, ce que ces variables déplacent à leur tour, et ce qui
+    continue d'arriver ensuite — parce qu'une variable prise dans une boucle
+    renforçante reçoit encore à chaque relais. Un total ne dit pas d'où il
+    vient ; la décomposition, si.
+    """
+    st.markdown(f'<div class="titre-bloc" style="margin-top:26px">'
+                f'{_e(T("sx_t5"))}</div>', unsafe_allow_html=True)
     st.markdown(f'<p class="sx-note" style="margin:0 0 8px">'
                 f'{_e(T("sx_x5"))}</p>', unsafe_allow_html=True)
-
-    # LE SCÉNARIO EST CELUI DE L'ONGLET PRÉCÉDENT. Le redemander ici ferait
-    # deux scénarios pour une seule intervention, et le tableau récapitulatif
-    # ne récapitulerait plus rien.
-    rang, _a = _voisinage(m, s["centre"], s["n"])
-    variations = {}
-    for n in st.session_state.get("sx_pousse_v", []) or []:
-        v = st.session_state.get(f"sx_d_{n}")
-        if v:
-            variations[n] = float(v)
-    if not variations:
-        variations = {s["centre"]: 1.0}
-
-    resume = " · ".join(f'{m["noms"].get(k, k)} {_f(v, 1, True)}'
-                        for k, v in variations.items())
-    st.markdown(f'<p class="sx-note" style="margin:0 0 6px"><b>'
-                f'{_e(T("sx_pousse"))}</b> · {_e(resume)}</p>',
-                unsafe_allow_html=True)
 
     vagues, total, converge, k = _vagues(m, variations)
     etat = M.etat_courant(m["g"], m["par_ligne"], s["pop"])
