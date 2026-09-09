@@ -1,0 +1,145 @@
+{
+ "sections": {
+  "Anse à Drick": {
+   "chl_a": 1.709,
+   "chl_a_mediane": 1.05,
+   "chl_a_max_maille": 4.384,
+   "chl_a_serie": 1.642,
+   "chl_a_debut": 0.677,
+   "chl_a_evolution_pct": 152.6,
+   "chl_a_saison_pluies": 1.495,
+   "chl_a_saison_seche": 0.856,
+   "mois_utiles": 55,
+   "mailles": 4,
+   "distance_min_km": 1.73
+  },
+  "Barbois": {
+   "chl_a": 2.089,
+   "chl_a_mediane": 2.11,
+   "chl_a_max_maille": 4.384,
+   "chl_a_serie": 2.112,
+   "chl_a_debut": 1.259,
+   "chl_a_evolution_pct": 65.9,
+   "chl_a_saison_pluies": 2.217,
+   "chl_a_saison_seche": 1.374,
+   "mois_utiles": 56,
+   "mailles": 8,
+   "distance_min_km": 0.03
+  },
+  "Beaulieu": {
+   "chl_a": 0.568,
+   "chl_a_mediane": 0.47,
+   "chl_a_max_maille": 1.63,
+   "chl_a_serie": 0.509,
+   "chl_a_debut": 0.473,
+   "chl_a_evolution_pct": 19.9,
+   "chl_a_saison_pluies": 0.585,
+   "chl_a_saison_seche": 0.468,
+   "mois_utiles": 55,
+   "mailles": 7,
+   "distance_min_km": 0.45
+  },
+  "Blactote": {
+   "chl_a": 0.302,
+   "chl_a_mediane": 0.298,
+   "chl_a_max_maille": 0.443,
+   "chl_a_serie": 0.308,
+   "chl_a_debut": 0.324,
+   "chl_a_evolution_pct": -6.9,
+   "chl_a_saison_pluies": 0.295,
+   "chl_a_saison_seche": 0.302,
+   "mois_utiles": 56,
+   "mailles": 6,
+   "distance_min_km": 1.15
+  },
+  "Dalmette": {
+   "chl_a": 0.311,
+   "chl_a_mediane": 0.36,
+   "chl_a_max_maille": 0.443,
+   "chl_a_serie": 0.311,
+   "chl_a_debut": 0.322,
+   "chl_a_evolution_pct": -3.2,
+   "chl_a_saison_pluies": 0.302,
+   "chl_a_saison_seche": 0.305,
+   "mois_utiles": 56,
+   "mailles": 6,
+   "distance_min_km": 0.58
+  },
+  "Débouchette": {
+   "chl_a": 1.012,
+   "chl_a_mediane": 0.476,
+   "chl_a_max_maille": 4.003,
+   "chl_a_serie": 1.027,
+   "chl_a_debut": 0.598,
+   "chl_a_evolution_pct": 69.2,
+   "chl_a_saison_pluies": 0.929,
+   "chl_a_saison_seche": 0.598,
+   "mois_utiles": 56,
+   "mailles": 12,
+   "distance_min_km": 0.74
+  },
+  "Dumont": {
+   "chl_a": 1.013,
+   "chl_a_mediane": 0.31,
+   "chl_a_max_maille": 4.003,
+   "chl_a_serie": 0.987,
+   "chl_a_debut": 0.459,
+   "chl_a_evolution_pct": 120.7,
+   "chl_a_saison_pluies": 0.806,
+   "chl_a_saison_seche": 0.48,
+   "mois_utiles": 55,
+   "mailles": 7,
+   "distance_min_km": 0.83
+  },
+  "Mouline": {},
+  "Quentin": {
+   "chl_a": 0.492,
+   "chl_a_mediane": 0.443,
+   "chl_a_max_maille": 0.878,
+   "chl_a_serie": 0.425,
+   "chl_a_debut": 0.389,
+   "chl_a_evolution_pct": 26.6,
+   "chl_a_saison_pluies": 0.515,
+   "chl_a_saison_seche": 0.394,
+   "mois_utiles": 55,
+   "mailles": 4,
+   "distance_min_km": 0.9
+  },
+  "Trichet": {
+   "chl_a": 1.157,
+   "chl_a_mediane": 0.491,
+   "chl_a_max_maille": 4.003,
+   "chl_a_serie": 1.17,
+   "chl_a_debut": 0.723,
+   "chl_a_evolution_pct": 60.0,
+   "chl_a_saison_pluies": 1.054,
+   "chl_a_saison_seche": 0.728,
+   "mois_utiles": 56,
+   "mailles": 11,
+   "distance_min_km": 0.0
+  }
+ },
+ "total": {
+  "chl_a": 0.809,
+  "chl_a_mediane": 0.397,
+  "chl_a_max_maille": 4.384,
+  "chl_a_serie": 0.801,
+  "chl_a_debut": 0.526,
+  "chl_a_evolution_pct": 53.8,
+  "chl_a_saison_pluies": 0.752,
+  "chl_a_saison_seche": 0.544,
+  "mois_utiles": 56,
+  "mailles": 36
+ },
+ "source": "NOAA CoastWatch ERDDAP nesdisVHNSQchlaMonthly (VIIRS SNPP, OCI, 4 km, mensuel)",
+ "fenetre": [
+  2021,
+  2025
+ ],
+ "fenetre_debut": [
+  2012,
+  2016
+ ],
+ "rayon_m": 5000.0,
+ "resolution_m": 4000
+}

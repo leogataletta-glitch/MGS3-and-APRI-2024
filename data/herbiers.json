@@ -1,0 +1,55 @@
+{
+ "sections": {
+  "Anse à Drick": {
+   "surface_ha": 3.46,
+   "polygones": 21,
+   "surface_moy_m2": 1647.0
+  },
+  "Barbois": {
+   "surface_ha": 21.02,
+   "polygones": 41,
+   "surface_moy_m2": 5126.0
+  },
+  "Beaulieu": {
+   "surface_ha": 3.99,
+   "polygones": 25,
+   "surface_moy_m2": 1595.0
+  },
+  "Blactote": {
+   "surface_ha": 100.2,
+   "polygones": 107,
+   "surface_moy_m2": 9365.0
+  },
+  "Dalmette": {
+   "surface_ha": 138.25,
+   "polygones": 120,
+   "surface_moy_m2": 11521.0
+  },
+  "Débouchette": {
+   "surface_ha": 135.08,
+   "polygones": 373,
+   "surface_moy_m2": 3621.0
+  },
+  "Dumont": {
+   "surface_ha": 11.37,
+   "polygones": 56,
+   "surface_moy_m2": 2030.0
+  },
+  "Mouline": {},
+  "Quentin": {
+   "surface_ha": 20.79,
+   "polygones": 88,
+   "surface_moy_m2": 2362.0
+  },
+  "Trichet": {
+   "surface_ha": 135.49,
+   "polygones": 372,
+   "surface_moy_m2": 3642.0
+  }
+ },
+ "total": {
+  "surface_ha": 317.52
+ },
+ "source": "Allen Coral Atlas, couche benthique 10 m (Planet Dove, millésime 2020-2021), WFS public",
+ "rayon_m": 5000.0
+}
