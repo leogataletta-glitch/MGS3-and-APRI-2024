@@ -1,0 +1,167 @@
+{
+ "indicateur": "SDG 9.1.1 — population a moins de 2 km d une route praticable en toute saison",
+ "source_reseau": "OpenStreetMap, extrait Overpass du 9 septembre 2026, emprise 18,00-18,55 N / 74,45-73,75 O",
+ "source_population": {
+  "contrainte": "WorldPop 2020 UN-adjusted constrained, 3 arcsec",
+  "non_contrainte": "WorldPop 2020 UN-adjusted unconstrained, 3 arcsec"
+ },
+ "seuil_m": 2000,
+ "definitions": {
+  "stricte": "reseau classe (primary, secondary, tertiary) hors surface meuble, plus toute voie explicitement revetue",
+  "standard": "ajoute les voies de desserte non etiquetees (unclassified, residential), exclut les surfaces meubles et les etats mauvais",
+  "permissive": "toute voie carrossable, y compris pistes"
+ },
+ "reseau_km": {
+  "stricte": 291.4050301663027,
+  "standard": 1617.9379550113129,
+  "permissive": 3129.222013563946
+ },
+ "population_contrainte": {
+  "sections": {
+   "Anse à Drick": {
+    "pop": 11881.167373657227,
+    "stricte": 92.71983364262843,
+    "standard": 100.0,
+    "permissive": 100.0
+   },
+   "Barbois": {
+    "pop": 11356.33177947998,
+    "stricte": 97.59596068119767,
+    "standard": 100.0,
+    "permissive": 100.0
+   },
+   "Beaulieu": {
+    "pop": 9350.796478271484,
+    "stricte": 90.7155218786376,
+    "standard": 100.0,
+    "permissive": 100.0
+   },
+   "Blactote": {
+    "pop": 9839.848485946655,
+    "stricte": 99.90314902453869,
+    "standard": 100.0,
+    "permissive": 100.0
+   },
+   "Dalmette": {
+    "pop": 3297.925717353821,
+    "stricte": 99.80035552535864,
+    "standard": 99.80035552535864,
+    "permissive": 100.0
+   },
+   "Débouchette": {
+    "pop": 5488.124862670898,
+    "stricte": 86.24978529261973,
+    "standard": 92.25033216652128,
+    "permissive": 100.0
+   },
+   "Dumont": {
+    "pop": 4786.178749084473,
+    "stricte": 55.527170747846306,
+    "standard": 100.0,
+    "permissive": 100.0
+   },
+   "Mouline": {
+    "pop": 447.89617919921875,
+    "stricte": 0.0,
+    "standard": 10.895540314275822,
+    "permissive": 59.39929920713579
+   },
+   "Quentin": {
+    "pop": 3219.971766471863,
+    "stricte": 78.83745234435439,
+    "standard": 90.32307172104092,
+    "permissive": 97.4285456474061
+   },
+   "Trichet": {
+    "pop": 7746.208917617798,
+    "stricte": 55.4835624652847,
+    "standard": 100.0,
+    "permissive": 100.0
+   }
+  },
+  "ensemble": {
+   "stricte": 85.93312753541771,
+   "standard": 98.30513280574299,
+   "permissive": 99.60742972685443
+  },
+  "reseau_km": {
+   "stricte": 291.4050301663027,
+   "standard": 1617.9379550113129,
+   "permissive": 3129.222013563946
+  }
+ },
+ "population_non_contrainte": {
+  "sections": {
+   "Anse à Drick": {
+    "pop": 13490.06460750103,
+    "stricte": 85.8095040109313,
+    "standard": 100.0,
+    "permissive": 100.0
+   },
+   "Barbois": {
+    "pop": 11433.533838152885,
+    "stricte": 95.45497318471455,
+    "standard": 100.0,
+    "permissive": 100.0
+   },
+   "Beaulieu": {
+    "pop": 11230.348931789398,
+    "stricte": 77.91064948111709,
+    "standard": 100.0,
+    "permissive": 100.0
+   },
+   "Blactote": {
+    "pop": 10180.647419214249,
+    "stricte": 68.42962362336856,
+    "standard": 99.49393978797715,
+    "permissive": 100.0
+   },
+   "Dalmette": {
+    "pop": 3281.3896975815296,
+    "stricte": 80.80412377631333,
+    "standard": 83.628376461604,
+    "permissive": 100.0
+   },
+   "Débouchette": {
+    "pop": 5967.534166097641,
+    "stricte": 83.59234774780076,
+    "standard": 97.42086957864905,
+    "permissive": 100.0
+   },
+   "Dumont": {
+    "pop": 5103.156212687492,
+    "stricte": 79.46977892753179,
+    "standard": 100.0,
+    "permissive": 100.0
+   },
+   "Mouline": {
+    "pop": 1264.563852082938,
+    "stricte": 17.137277363389245,
+    "standard": 76.57511950196154,
+    "permissive": 95.09886895379697
+   },
+   "Quentin": {
+    "pop": 3335.1024170815945,
+    "stricte": 35.98898495657078,
+    "standard": 60.57182092618827,
+    "permissive": 76.71828236105299
+   },
+   "Trichet": {
+    "pop": 7311.37793970108,
+    "stricte": 39.146451938961555,
+    "standard": 98.49616434815945,
+    "permissive": 100.0
+   }
+  },
+  "ensemble": {
+   "stricte": 74.63091790858036,
+   "standard": 96.60624145380417,
+   "permissive": 98.84507795854803
+  },
+  "reseau_km": {
+   "stricte": 291.4050301663027,
+   "standard": 1617.9379550113129,
+   "permissive": 3129.222013563946
+  }
+ }
+}
