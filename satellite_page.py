@@ -242,6 +242,26 @@ MESURES = [
     ("sol", "pente_moy_deg", "sat_m_pente", "sol", "pente_moy_deg", "°", 1,
      "eleve_mauvais"),
     ("sol", "K_moy", "sat_m_k", "sol", "K_moy", "", 3, "eleve_mauvais"),
+    # --- LA MER DEVANT LA SECTION. Les seules mesures de cet écran qui ne
+    # décrivent pas le sol de la section mais l'eau qui la borde : elles se
+    # lisent donc autrement, et une section intérieure n'y figure pas — elle
+    # n'a pas une chlorophylle nulle, elle n'a pas la question.
+    ("marin", "chl_a", "sat_m_chl", "chl", "chl_a", " mg/m³", 3,
+     "eleve_mauvais"),
+    ("marin", "chl_a_evolution_pct", "sat_m_chl_evo", "chl",
+     "chl_a_evolution_pct", "%", 1, "eleve_mauvais"),
+    ("marin", "chl_a_debut", "sat_m_chl_debut", "chl", "chl_a_debut",
+     " mg/m³", 3, "eleve_mauvais"),
+    ("marin", "chl_a_saison_pluies", "sat_m_chl_pluies", "chl",
+     "chl_a_saison_pluies", " mg/m³", 3, "eleve_mauvais"),
+    ("marin", "chl_a_saison_seche", "sat_m_chl_seche", "chl",
+     "chl_a_saison_seche", " mg/m³", 3, "eleve_mauvais"),
+    ("marin", "chl_a_mediane", "sat_m_chl_med", "chl", "chl_a_mediane",
+     " mg/m³", 3, "eleve_mauvais"),
+    ("marin", "herbier_ha", "sat_m_herbier", "herb", "surface_ha", "ha", 2,
+     "eleve_bon"),
+    ("marin", "herbier_polygones", "sat_m_herbier_n", "herb", "polygones",
+     "", 0, "eleve_bon"),
 ]
 
 # LA MESURE BRUTE ET SA NOTE SONT LE MÊME OBJET, VU DEUX FOIS. Le référentiel
@@ -258,12 +278,13 @@ LIGNES = {
     "pc_d": 64, "pc_d2": 65, "iic": 66, "iic_d": 67,
     "densite_lisiere_m_ha": 68, "ratio_core_move": 69, "core_pct": 70,
     "acces_axe": 8, "erosion_t_ha_an": 59, "degrade_pct": 60,
+    "chl_a": 61, "herbier_ha": 58,
 }
 
 # LES ONGLETS, DANS L'ORDRE OÙ ON LES PARCOURT : ce qui couvre le sol, puis
 # ce qui l'arrose, puis ce qui l'assèche.
-CATEGORIES = ("foret", "frag", "sol", "vege", "eau", "pluie", "saison",
-              "temp", "aridite", "acces")
+CATEGORIES = ("foret", "frag", "sol", "vege", "eau", "marin", "pluie",
+              "saison", "temp", "aridite", "acces")
 
 
 TEXTES = {
@@ -276,16 +297,18 @@ TEXTES = {
     "sat_intro": {
         "en": "{n} measurements from imagery and open geodata for each of "
               "the ten communal sections: forest, the shape of the habitat, "
-              "vegetation, surface water, rainfall since 1981, the rainy "
-              "season, surface temperature since 2001, the water balance "
-              "and road access. These are raw measurements: where the "
+              "vegetation, surface water, the sea offshore, rainfall since "
+              "1981, the rainy season, surface temperature since 2001, the "
+              "water balance and road access. These are raw measurements: "
+              "where the "
               "framework publishes a scale, the score sits under the "
               "chart.",
         "fr": "{n} mesures tirées de l'imagerie et de données "
               "géographiques ouvertes, pour chacune des dix sections "
               "communales : forêt, forme de l'habitat, végétation, eau de "
-              "surface, pluie depuis 1981, saison des pluies, température "
-              "de surface depuis 2001, bilan hydrique et accès routier. Ce "
+              "surface, mer au large, pluie depuis 1981, saison des pluies, "
+              "température de surface depuis 2001, bilan hydrique et accès "
+              "routier. Ce "
               "sont des mesures brutes : là où le référentiel publie un "
               "barème, la note est sous le graphique."},
     "sat_source": {"en": "Source", "fr": "Source"},
@@ -343,6 +366,31 @@ TEXTES = {
     "sat_c_temp": {"en": "Temperature", "fr": "Température"},
     "sat_c_aridite": {"en": "Water balance", "fr": "Bilan hydrique"},
     "sat_c_sol": {"en": "Soil", "fr": "Sol"},
+    "sat_c_marin": {"en": "The sea offshore", "fr": "La mer au large"},
+    "sat_m_chl": {
+        "en": "Chlorophyll-a offshore, 2021-2025 average",
+        "fr": "Chlorophylle-a au large, moyenne 2021-2025"},
+    "sat_m_chl_evo": {
+        "en": "Change in chlorophyll-a, 2012-2016 to 2021-2025",
+        "fr": "Évolution de la chlorophylle-a, 2012-2016 à 2021-2025"},
+    "sat_m_chl_debut": {
+        "en": "Chlorophyll-a offshore, 2012-2016 average",
+        "fr": "Chlorophylle-a au large, moyenne 2012-2016"},
+    "sat_m_chl_pluies": {
+        "en": "Chlorophyll-a in the rainy months, May to October",
+        "fr": "Chlorophylle-a aux mois pluvieux, mai à octobre"},
+    "sat_m_chl_seche": {
+        "en": "Chlorophyll-a in the dry months, December to April",
+        "fr": "Chlorophylle-a aux mois secs, décembre à avril"},
+    "sat_m_chl_med": {
+        "en": "Chlorophyll-a, median cell",
+        "fr": "Chlorophylle-a, maille médiane"},
+    "sat_m_herbier": {
+        "en": "Mapped seagrass area offshore",
+        "fr": "Surface d'herbiers marins cartographiée au large"},
+    "sat_m_herbier_n": {
+        "en": "Number of mapped seagrass patches",
+        "fr": "Nombre de taches d'herbier cartographiées"},
     "sat_cd_sol": {
         "en": "Soil lost each year, and the share of ground already degraded",
         "fr": "Ce que le sol perd chaque année, et la part déjà dégradée"},
@@ -432,6 +480,11 @@ TEXTES = {
                           "l'autre"},
     "sat_cd_eau": {"en": "Open water and its turbidity",
                    "fr": "Eau libre et sa turbidité"},
+    "sat_cd_marin": {
+        "en": "Chlorophyll-a in the water offshore since 2012, and the "
+              "seagrass mapped there",
+        "fr": "La chlorophylle-a de l'eau au large depuis 2012, et les "
+              "herbiers qui y sont cartographiés"},
     "sat_cd_pluie": {"en": "Annual totals, 1981 to 2025, against the normal",
                      "fr": "Cumuls annuels, 1981 à 2025, rapportés à la "
                            "normale"},
@@ -681,6 +734,113 @@ TEXTES = {
               "connectivité entre deux sections voisines n'est pas comptée. "
               "Chaque section est décrite comme si elle était seule, ce qui "
               "sous-estime la connectivité des sections mitoyennes."},
+    "sat_ref_zonal_marin": {
+        "en": "This figure is not an average over the section's ground: it "
+              "is measured at sea. Each section is given the sea cells "
+              "lying within five kilometres of its territory — five, "
+              "because the cell is four across. Two neighbouring sections "
+              "may therefore share the same water, and they do: the sea off "
+              "Tiburon does not divide into parcels. A section with no "
+              "coast simply does not appear here — it has no chlorophyll "
+              "reading, which is not the same as a reading of zero.",
+        "fr": "Ce chiffre n'est pas une moyenne sur le sol de la section : "
+              "il est mesuré en mer. Chaque section reçoit les mailles de "
+              "mer situées à moins de cinq kilomètres de son territoire — "
+              "cinq, parce que la maille en fait quatre. Deux sections "
+              "voisines peuvent donc partager la même eau, et elles la "
+              "partagent : la mer devant Tiburon ne se découpe pas en "
+              "parcelles. Une section sans côte ne figure pas ici — elle "
+              "n'a pas de mesure de chlorophylle, ce qui n'est pas la même "
+              "chose qu'une mesure nulle."},
+    "sat_calc_chl": {
+        "en": "NOAA CoastWatch, VIIRS SNPP, OCI algorithm, monthly 4 km "
+              "composites. The scored value is the 2021-2025 mean, taken "
+              "per cell and then across cells — the other order would give "
+              "more weight to the least cloudy cells, which are the "
+              "offshore ones, and would pull the coastal figure down. "
+              "THREE CAVEATS, ALL IN THE SAME DIRECTION. At four "
+              "kilometres the first cell straddles the shore, and near the "
+              "coast a bright bottom, suspended sediment and dissolved "
+              "organic matter are all read as pigment: the value is an "
+              "upper bound and the score a lower bound. Monthly composites "
+              "drop cloudy cells, so the rainy season — when runoff is "
+              "strongest — is under-represented. And the referential does "
+              "not say over what period to average, so the 2012-2016 "
+              "window is computed alongside rather than hidden. Sentinel-3 "
+              "OLCI would give 300 m, fourteen times finer along a narrow "
+              "coast, but access needs a Copernicus account.",
+        "fr": "NOAA CoastWatch, VIIRS SNPP, algorithme OCI, composites "
+              "mensuels à 4 km. La valeur notée est la moyenne 2021-2025, "
+              "prise par maille puis entre mailles — l'ordre inverse "
+              "donnerait plus de poids aux mailles les moins nuageuses, "
+              "c'est-à-dire au large, et tirerait le chiffre côtier vers le "
+              "bas. TROIS RÉSERVES, ET TOUTES DANS LE MÊME SENS. À quatre "
+              "kilomètres, la première maille est à cheval sur la côte, et "
+              "près du rivage le fond clair, les sédiments en suspension et "
+              "la matière organique dissoute sont lus comme du pigment : la "
+              "valeur est un majorant, le score un minorant. Les composites "
+              "mensuels perdent les mailles nuageuses, donc la saison des "
+              "pluies, celle où le lessivage est le plus fort, est "
+              "sous-représentée. Enfin le référentiel ne dit pas sur quelle "
+              "période moyenner : la fenêtre 2012-2016 est donc calculée à "
+              "côté plutôt que cachée. Sentinel-3 OLCI donnerait 300 m, "
+              "quatorze fois mieux le long d'une côte étroite, mais son "
+              "accès demande un compte Copernicus."},
+    "sat_calc_herb": {
+        "en": "Allen Coral Atlas global benthic layer: supervised "
+              "classification of 10 m Planet Dove imagery, calibrated on "
+              "field surveys, 2020-2021 vintage, read through its public "
+              "WFS. A patch is assigned to a section when its centre lies "
+              "within five kilometres of that section, and the territory "
+              "total counts each patch once — which is why the sections do "
+              "not add up to the total. THE AREA IS SHOWN, THE SCORE IS "
+              "NOT: the published scale asks for a percentage of historical "
+              "surface, hence two dates, and this mapping has one. Two "
+              "further limits, both downward. Seagrass is the hardest of "
+              "the five benthic classes to separate — over a dark bottom, "
+              "sparse seagrass and an algal bed look alike — and satellite "
+              "bottom mapping stops where light no longer returns, around "
+              "fifteen metres in clear water and far less in turbid water.",
+        "fr": "Allen Coral Atlas, couche benthique mondiale : "
+              "classification supervisée d'images Planet Dove à 10 m, "
+              "calibrée sur des relevés de terrain, millésime 2020-2021, "
+              "lue par son WFS public. Une tache revient à une section "
+              "quand son centre est à moins de cinq kilomètres d'elle, et "
+              "le total du territoire ne compte chaque tache qu'une fois — "
+              "c'est pourquoi les sections ne s'additionnent pas au total. "
+              "LA SURFACE EST AFFICHÉE, LA NOTE NE L'EST PAS : le barème "
+              "publié demande un pourcentage de la surface historique, donc "
+              "deux dates, et cette cartographie n'en a qu'une. Deux "
+              "limites de plus, toutes deux vers le bas. La classe herbier "
+              "est la plus difficile des cinq benthos à séparer — sur un "
+              "fond sombre, un herbier clairsemé et une algueraie se "
+              "ressemblent — et la cartographie du fond s'arrête où la "
+              "lumière ne revient plus, autour de quinze mètres en eau "
+              "claire et bien moins en eau chargée."},
+    "sat_src_chl": {
+        "en": "{s}. Coastal strip of {r} km, {f1}-{f2} window, {n} sea "
+              "cells over the whole coast.",
+        "fr": "{s}. Bande côtière de {r} km, fenêtre {f1}-{f2}, {n} mailles "
+              "de mer sur l'ensemble du littoral."},
+    "sat_src_herb": {
+        "en": "{s}. Patches assigned within {r} km of the section.",
+        "fr": "{s}. Taches attribuées à moins de {r} km de la section."},
+    "sat_p_chl_a": {
+        "en": "Off {s}, the water carries {v} mg of chlorophyll-a per cubic "
+              "metre.",
+        "fr": "Devant {s}, l'eau porte {v} mg de chlorophylle-a par mètre "
+              "cube."},
+    "sat_p_chl_a_evolution_pct": {
+        "en": "Off {s}, chlorophyll-a moved by {v} % between the 2012-2016 "
+              "and the 2021-2025 window.",
+        "fr": "Devant {s}, la chlorophylle-a a bougé de {v} % entre la "
+              "fenêtre 2012-2016 et la fenêtre 2021-2025."},
+    "sat_p_herbier_ha": {
+        "en": "{v} ha of seagrass are mapped off {s} — an area, not a "
+              "retention rate, so the line carries no score.",
+        "fr": "{v} ha d'herbiers sont cartographiés devant {s} — une "
+              "surface, pas un taux de conservation : la ligne ne porte "
+              "donc pas de note."},
     "sat_calc_sol": {
         "en": "RUSLE: A = R x K x LS x C x P, on a 30 m grid. R is rainfall "
               "erosivity from CHIRPS 1981-2024 through Renard & Freimund "
@@ -1202,7 +1362,9 @@ def _charger():
                      ("frag", "fragmentation.json"),
                      ("acces", "acces_routier.json"),
                      ("sol", "erosion.json"),
-                     ("deg", "degradation.json")):
+                     ("deg", "degradation.json"),
+                     ("chl", "chlorophylle.json"),
+                     ("herb", "herbiers.json")):
         p = os.path.join(DATA, nom)
         if not os.path.exists(p):
             p = os.path.join(APP_DIR, nom)
@@ -1327,6 +1489,15 @@ def _source(fichier, d):
         pa = d.get("parametres") or {}
         return T("sat_src_deg", r=pa.get("resolution_m", 30),
                  t=pa.get("tolerance_erosion_t_ha_an", 10))
+    if fichier == "chl":
+        fen = d.get("fenetre") or [2021, 2025]
+        return T("sat_src_chl", s=d.get("source", "—"),
+                 r=int(d.get("rayon_m", 5000)) // 1000,
+                 f1=fen[0], f2=fen[1],
+                 n=(d.get("total") or {}).get("mailles", "—"))
+    if fichier == "herb":
+        return T("sat_src_herb", s=d.get("source", "—"),
+                 r=int(d.get("rayon_m", 5000)) // 1000)
     if fichier == "acces":
         return T("sat_src_acces", s=d.get("source", "—"),
                  p=d.get("population", "—"), d=d.get("seuil_m", 2000),
@@ -1557,7 +1728,9 @@ def _dossier(mesure, vals, unite, dec):
     ligne = LIGNES.get(mesure[1])
     r = _referentiel().get(ligne) if ligne else None
     zonal = {"frag": "sat_ref_zonal_frag",
-             "acces": "sat_ref_zonal_acces"}.get(mesure[3], "sat_ref_zonal")
+             "acces": "sat_ref_zonal_acces",
+             "chl": "sat_ref_zonal_marin",
+             "herb": "sat_ref_zonal_marin"}.get(mesure[3], "sat_ref_zonal")
     if mesure[3] in ("sol", "deg"):
         zonal = "sat_ref_zonal"
     with st.expander(T("sat_ref_t")):
