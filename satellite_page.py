@@ -224,6 +224,24 @@ MESURES = [
      "eleve_bon"),
     ("acces", "dist_med_classe_m", "sat_m_dist_c", "acces",
      "dist_med_classe_m", " m", 0, "eleve_mauvais"),
+    # --- LE SOL, ce qu'il perd et ce qui est déjà dégradé. Un modèle, pas une
+    # mesure : chaque facteur du RUSLE porte sa propre incertitude, et elles
+    # se multiplient. Les mesures brutes qui le composent — pente, pluie,
+    # érodibilité — sont montrées à côté, parce qu'un résultat de modèle sans
+    # ses entrées ne se discute pas.
+    ("sol", "erosion_t_ha_an", "sat_m_erosion", "sol", "erosion_t_ha_an",
+     " t/ha/an", 1, "eleve_mauvais"),
+    ("sol", "degrade_pct", "sat_m_degrade", "deg", "degrade_pct", "%", 1,
+     "eleve_mauvais"),
+    ("sol", "erosion_mediane", "sat_m_erosion_med", "sol", "erosion_mediane",
+     " t/ha/an", 1, "eleve_mauvais"),
+    ("sol", "part_sup_10", "sat_m_ero10", "sol", "part_sup_10", "%", 1,
+     "eleve_mauvais"),
+    ("sol", "couvert_perdu_pct", "sat_m_perdu", "deg", "couvert_perdu_pct",
+     "%", 1, "eleve_mauvais"),
+    ("sol", "pente_moy_deg", "sat_m_pente", "sol", "pente_moy_deg", "°", 1,
+     "eleve_mauvais"),
+    ("sol", "K_moy", "sat_m_k", "sol", "K_moy", "", 3, "eleve_mauvais"),
 ]
 
 # LA MESURE BRUTE ET SA NOTE SONT LE MÊME OBJET, VU DEUX FOIS. Le référentiel
@@ -239,13 +257,13 @@ LIGNES = {
     "taux_annuel_net": 54, "ndti": 63,
     "pc_d": 64, "pc_d2": 65, "iic": 66, "iic_d": 67,
     "densite_lisiere_m_ha": 68, "ratio_core_move": 69, "core_pct": 70,
-    "acces_axe": 8,
+    "acces_axe": 8, "erosion_t_ha_an": 59, "degrade_pct": 60,
 }
 
 # LES ONGLETS, DANS L'ORDRE OÙ ON LES PARCOURT : ce qui couvre le sol, puis
 # ce qui l'arrose, puis ce qui l'assèche.
-CATEGORIES = ("foret", "frag", "vege", "eau", "pluie", "saison", "temp",
-              "aridite", "acces")
+CATEGORIES = ("foret", "frag", "sol", "vege", "eau", "pluie", "saison",
+              "temp", "aridite", "acces")
 
 
 TEXTES = {
@@ -324,6 +342,25 @@ TEXTES = {
     "sat_c_saison": {"en": "Rainy season", "fr": "Saison des pluies"},
     "sat_c_temp": {"en": "Temperature", "fr": "Température"},
     "sat_c_aridite": {"en": "Water balance", "fr": "Bilan hydrique"},
+    "sat_c_sol": {"en": "Soil", "fr": "Sol"},
+    "sat_cd_sol": {
+        "en": "Soil lost each year, and the share of ground already degraded",
+        "fr": "Ce que le sol perd chaque année, et la part déjà dégradée"},
+    "sat_m_erosion": {"en": "Soil loss, RUSLE, section average",
+                      "fr": "Perte de sol, RUSLE, moyenne de la section"},
+    "sat_m_erosion_med": {"en": "Soil loss, median pixel",
+                          "fr": "Perte de sol, pixel médian"},
+    "sat_m_ero10": {
+        "en": "Share of the section losing more than 10 t/ha/yr",
+        "fr": "Part de la section qui perd plus de 10 t/ha/an"},
+    "sat_m_degrade": {"en": "Degraded land, SDG 15.3.1 (lower bound)",
+                      "fr": "Terres dégradées, SDG 15.3.1 (minorant)"},
+    "sat_m_perdu": {"en": "Tree cover lost since 2000, share of the section",
+                    "fr": "Couvert arboré perdu depuis 2000, part de la "
+                          "section"},
+    "sat_m_pente": {"en": "Mean slope", "fr": "Pente moyenne"},
+    "sat_m_k": {"en": "Soil erodibility K, mean",
+                "fr": "Érodibilité du sol K, moyenne"},
     "sat_c_acces": {"en": "Road access", "fr": "Accès routier"},
     "sat_cd_acces": {
         "en": "Population within 2 km of a road, distance to the nearest "
@@ -644,6 +681,63 @@ TEXTES = {
               "connectivité entre deux sections voisines n'est pas comptée. "
               "Chaque section est décrite comme si elle était seule, ce qui "
               "sous-estime la connectivité des sections mitoyennes."},
+    "sat_calc_sol": {
+        "en": "RUSLE: A = R x K x LS x C x P, on a 30 m grid. R is rainfall "
+              "erosivity from CHIRPS 1981-2024 through Renard & Freimund "
+              "(1994); K is soil erodibility from SoilGrids 250 m through "
+              "the Williams (1995) EPIC equation; LS comes from the "
+              "Copernicus 30 m DEM with slope length taken as the cell size; "
+              "C is one value per ESA WorldCover class; P is 1. Every factor "
+              "carries its own uncertainty and they multiply, so read the "
+              "ranking between sections rather than the absolute tonnage. "
+              "Two known biases, and they pull in opposite directions: "
+              "without flow routing the long hillslopes of the Grand'Anse "
+              "are understated, and with P = 1 any stone bund or live hedge "
+              "already in place is ignored.",
+        "fr": "RUSLE : A = R x K x LS x C x P, sur une grille de 30 m. R est "
+              "l'érosivité des pluies, de CHIRPS 1981-2024 par Renard et "
+              "Freimund (1994) ; K l'érodibilité du sol, de SoilGrids 250 m "
+              "par l'équation EPIC de Williams (1995) ; LS vient du MNT "
+              "Copernicus 30 m, la longueur de pente étant prise égale à la "
+              "maille ; C est une valeur par classe ESA WorldCover ; P vaut "
+              "1. Chaque facteur porte son incertitude et elles se "
+              "multiplient : lisez le classement entre sections plutôt que "
+              "le tonnage absolu. Deux biais connus, et ils tirent en sens "
+              "contraire : sans routage d'écoulement, les longs versants de "
+              "la Grand'Anse sont sous-estimés ; avec P = 1, les murets et "
+              "les haies vives déjà en place sont ignorés."},
+    "sat_calc_deg": {
+        "en": "The SDG 15.3.1 « one out, all out » rule, pixel by pixel at "
+              "30 m: ground counts as degraded if it loses more than "
+              "10 t/ha/yr — the usual tolerance — OR if it lost its tree "
+              "cover since 2000 in Hansen/UMD, at the 30 % cover threshold. "
+              "The third official sub-indicator, land productivity dynamics, "
+              "needs a fifteen-year per-pixel NDVI series and is not "
+              "computed here: this figure is therefore a LOWER BOUND, and a "
+              "documented approximation of 15.3.1 rather than the "
+              "Trends.Earth computation.",
+        "fr": "La règle « one out, all out » du SDG 15.3.1, pixel par pixel "
+              "à 30 m : un sol est dégradé s'il perd plus de 10 t/ha/an — la "
+              "tolérance usuelle — OU s'il a perdu son couvert arboré depuis "
+              "2000 selon Hansen/UMD, au seuil de 30 % de couvert. Le "
+              "troisième sous-indicateur officiel, la dynamique de "
+              "productivité des terres, demande une série de NDVI par pixel "
+              "sur quinze ans et n'est pas calculé ici : ce chiffre est donc "
+              "un MINORANT, et une approximation documentée du 15.3.1 plutôt "
+              "que le calcul de Trends.Earth."},
+    "sat_src_sol": {
+        "en": "CHIRPS 1981-2024, SoilGrids 250 m, Copernicus DEM 30 m, ESA "
+              "WorldCover 2021. Model output on a {r} m grid, P = 1.",
+        "fr": "CHIRPS 1981-2024, SoilGrids 250 m, MNT Copernicus 30 m, ESA "
+              "WorldCover 2021. Résultat de modèle sur une grille de {r} m, "
+              "P = 1."},
+    "sat_src_deg": {
+        "en": "RUSLE above plus Hansen/UMD GFC 2023 v1.11. Tolerance "
+              "{t} t/ha/yr, {r} m grid. Productivity sub-indicator not "
+              "included.",
+        "fr": "Le RUSLE ci-dessus et Hansen/UMD GFC 2023 v1.11. Tolérance "
+              "{t} t/ha/an, grille de {r} m. Sous-indicateur de productivité "
+              "non compris."},
     "sat_calc_acces": {
         "en": "The road network comes from OpenStreetMap, the population "
               "from WorldPop 2020 UN-adjusted at 3 arcsec, about 92 m. The "
@@ -809,6 +903,30 @@ TEXTES = {
               "single year.",
         "fr": "Dans {s}, {v} % de toute la forêt perdue depuis {a} l\u2019a "
               "été en une seule année."},
+    "sat_p_erosion_t_ha_an": {
+        "en": "{s} loses on average {v} tonnes of soil per hectare per year.",
+        "fr": "{s} perd en moyenne {v} tonnes de sol par hectare et par "
+              "an."},
+    "sat_p_erosion_mediane": {
+        "en": "On the median pixel of {s}, the loss is {v} t/ha/yr — well "
+              "under the average, which a few very steep pixels pull up.",
+        "fr": "Sur le pixel médian de {s}, la perte est de {v} t/ha/an — "
+              "bien sous la moyenne, que quelques pixels très pentus "
+              "tirent vers le haut."},
+    "sat_p_part_sup_10": {
+        "en": "{v} % of {s} loses more than the 10 t/ha/yr tolerance.",
+        "fr": "{v} % de {s} perd plus que la tolérance de 10 t/ha/an."},
+    "sat_p_degrade_pct": {
+        "en": "{v} % of the ground of {s} counts as degraded — and that is a "
+              "lower bound, one of the three sub-indicators being missing.",
+        "fr": "{v} % du sol de {s} compte comme dégradé — et c'est un "
+              "minorant, l'un des trois sous-indicateurs manquant."},
+    "sat_p_couvert_perdu_pct": {
+        "en": "{v} % of {s} lost its tree cover since 2000.",
+        "fr": "{v} % de {s} a perdu son couvert arboré depuis 2000."},
+    "sat_p_pente_moy_deg": {
+        "en": "The mean slope of {s} is {v} degrees.",
+        "fr": "La pente moyenne de {s} est de {v} degrés."},
     "sat_p_dist_med_m": {
         "en": "Half the inhabitants of {s} live within {v} m of a road.",
         "fr": "La moitié des habitants de {s} vivent à moins de {v} m d'une "
@@ -1082,7 +1200,9 @@ def _charger():
                      ("saison", "pluie_saison.json"),
                      ("thermique", "thermique.json"),
                      ("frag", "fragmentation.json"),
-                     ("acces", "acces_routier.json")):
+                     ("acces", "acces_routier.json"),
+                     ("sol", "erosion.json"),
+                     ("deg", "degradation.json")):
         p = os.path.join(DATA, nom)
         if not os.path.exists(p):
             p = os.path.join(APP_DIR, nom)
@@ -1200,6 +1320,13 @@ def _source(fichier, d):
         return T("sat_src_thermique", s=d.get("source", "—"),
                  d1=per[0], d2=per[-1], n1=nor[0], n2=nor[1],
                  f1=fen[0], f2=fen[1])
+    if fichier == "sol":
+        return T("sat_src_sol",
+                 r=(d.get("parametres") or {}).get("resolution_m", 30))
+    if fichier == "deg":
+        pa = d.get("parametres") or {}
+        return T("sat_src_deg", r=pa.get("resolution_m", 30),
+                 t=pa.get("tolerance_erosion_t_ha_an", 10))
     if fichier == "acces":
         return T("sat_src_acces", s=d.get("source", "—"),
                  p=d.get("population", "—"), d=d.get("seuil_m", 2000),
@@ -1431,6 +1558,8 @@ def _dossier(mesure, vals, unite, dec):
     r = _referentiel().get(ligne) if ligne else None
     zonal = {"frag": "sat_ref_zonal_frag",
              "acces": "sat_ref_zonal_acces"}.get(mesure[3], "sat_ref_zonal")
+    if mesure[3] in ("sol", "deg"):
+        zonal = "sat_ref_zonal"
     with st.expander(T("sat_ref_t")):
         cal0 = "sat_calc_" + mesure[3]
         if not r:
