@@ -293,6 +293,144 @@ TEXTES = {
     "int_sur_dim": {"en": "Dimension", "fr": "Dimension"},
     "int_sur_theme": {"en": "Theme", "fr": "Thématique"},
 
+    # ---------------- les cent vingt-huit choses à améliorer
+    # LE RÉFÉRENTIEL ENTIER EST OFFERT, PAS SEULEMENT LES LIGNES MODÉLISÉES.
+    # La liste ne proposait que les quarante-quatre indicateurs présents dans
+    # le graphe causal : les quatre-vingt-quatre autres étaient mesurés,
+    # affichés partout ailleurs dans la plateforme, et introuvables sur la
+    # seule page où l'on demande quoi faire. Ils y sont tous maintenant, et
+    # formulés comme on formule un objectif — un verbe, puis la ligne.
+    "int_am_plus": {"en": "Improve", "fr": "Améliorer"},
+    "int_am_moins": {"en": "Bring down", "fr": "Faire reculer"},
+    "int_am_neutre": {"en": "Act on", "fr": "Agir sur"},
+    "int_am_nd": {"en": "not scored", "fr": "non noté"},
+    "int_etat_t": {"en": "Where this line stands today",
+                   "fr": "Où en est cette ligne aujourd'hui"},
+    "int_etat_poids": {"en": "Weight in the framework",
+                       "fr": "Poids dans le référentiel"},
+    "int_etat_val": {"en": "Measured value", "fr": "Valeur mesurée"},
+    "int_etat_score": {"en": "Resilience score", "fr": "Score de résilience"},
+    "int_hors_modele": {
+        "en": "This indicator is measured but is not one of the 48 variables "
+              "of the causal model. The levers below are therefore those that "
+              "move its dimension as a whole, not that line in particular: "
+              "read them as a direction, not as a targeted effect.",
+        "fr": "Cet indicateur est mesuré mais ne fait pas partie des 48 "
+              "variables du modèle causal. Les leviers ci-dessous sont donc "
+              "ceux qui déplacent sa dimension entière, pas cette ligne en "
+              "particulier : à lire comme une direction, pas comme un effet "
+              "ciblé."},
+
+    # ---------------- les idées d'activité
+    "int_act_idees": {"en": "Activity ideas", "fr": "Idées d'activité"},
+    "int_act_idees_x": {
+        "en": "Starting points for a workshop, not a work plan. The model "
+              "says which lever to press; it does not say how, and these "
+              "lines are written to be argued with.",
+        "fr": "De quoi ouvrir un atelier, pas un plan de travail. Le modèle "
+              "dit sur quel levier appuyer ; il ne dit pas comment, et ces "
+              "lignes sont écrites pour être discutées."},
+
+    # ---------------- les paquets intégrés
+    "int_aucun_pour": {
+        "en": "In this model, no lever raises this line: everything that "
+              "reaches it pushes it down. What is listed below is therefore "
+              "what works against it, and the room to manoeuvre has to be "
+              "looked for on another line of the same dimension.",
+        "fr": "Dans ce modèle, aucun levier ne relève cette ligne : tout ce "
+              "qui l'atteint la pousse vers le bas. Ce qui suit est donc ce "
+              "qui joue contre elle, et la marge de manœuvre est à chercher "
+              "sur une autre ligne de la même dimension."},
+    "int_contre_t": {"en": "What works against this line",
+                     "fr": "Ce qui joue contre cette ligne"},
+    "int_contre_x": {
+        "en": "Pushed up, these variables move the chosen line down. They are "
+              "named because an intervention elsewhere can hit them without "
+              "meaning to; no activity is proposed for them here.",
+        "fr": "Poussées vers le haut, ces variables font descendre la ligne "
+              "choisie. Elles sont nommées parce qu'une intervention menée "
+              "ailleurs peut les déplacer sans le vouloir ; aucune activité "
+              "n'est proposée pour elles ici."},
+    "int_paq_t": {"en": "Integrated packages", "fr": "Paquets intégrés"},
+    "int_paq_x": {
+        "en": "A lever pressed alone rarely holds. Each package below is "
+              "pushed as a whole in the model, two points on every one of its "
+              "levers at once, and three figures are read off it: what it "
+              "does to the chosen line, what it does to the overall index, "
+              "and how many distinct indicators of the framework it moves. "
+              "The three packages are built on three different criteria and "
+              "do not claim to be worth the same; a workshop chooses between "
+              "them.",
+        "fr": "Un levier poussé seul tient rarement. Chaque paquet ci-dessous "
+              "est poussé en bloc dans le modèle, deux points sur chacun de "
+              "ses leviers à la fois, et on en lit trois chiffres : ce qu'il "
+              "fait à la ligne choisie, ce qu'il fait à l'indice d'ensemble, "
+              "et combien d'indicateurs distincts du référentiel il déplace. "
+              "Les trois paquets sont composés sur trois critères différents "
+              "et ne prétendent pas se valoir ; c'est un atelier qui tranche "
+              "entre eux."},
+    "int_paq_direct_t": {"en": "The direct package",
+                         "fr": "Le paquet direct"},
+    "int_paq_direct_x": {
+        "en": "The three levers that move this line the most, whatever their "
+              "own level. The shortest route.",
+        "fr": "Les trois leviers qui déplacent le plus cette ligne, quel que "
+              "soit leur propre niveau. Le chemin le plus court."},
+    "int_paq_contrainte_t": {"en": "The binding-constraint package",
+                             "fr": "Le paquet des contraintes"},
+    "int_paq_contrainte_x": {
+        "en": "Among the levers that move this line, those that are "
+              "themselves measured at 3 out of 10 or below. Acting where the "
+              "deficit is, not only where the model reaches furthest.",
+        "fr": "Parmi les leviers qui déplacent cette ligne, ceux qui sont "
+              "eux-mêmes mesurés à 3 sur 10 ou moins. Agir là où le déficit "
+              "est, pas seulement là où le modèle porte le plus loin."},
+    "int_paq_bascule_t": {"en": "The tipping package",
+                          "fr": "Le paquet de bascule"},
+    "int_paq_bascule_x": {
+        "en": "Levers that sit in a reinforcing loop and a balancing loop at "
+              "the same time. That is where a system can be turned from a "
+              "degrading dynamic to a resilience-building one.",
+        "fr": "Des leviers présents à la fois dans une boucle renforçante et "
+              "dans une boucle équilibrante. C'est là qu'un système peut "
+              "passer d'une dynamique de dégradation à une dynamique de "
+              "résilience."},
+    "int_paq_effet": {"en": "Effect on the chosen line",
+                      "fr": "Effet sur la ligne choisie"},
+    "int_paq_indice": {"en": "Effect on the resilience index",
+                       "fr": "Effet sur l'indice de résilience"},
+    "int_paq_touchees": {"en": "Framework indicators moved",
+                         "fr": "Indicateurs du référentiel déplacés"},
+    "int_paq_rec": {
+        "en": "The levers overlap on {n} indicators: they act partly through "
+              "the same relationships, so the package moves fewer distinct "
+              "lines than their separate counts add up to.",
+        "fr": "Les leviers se recouvrent sur {n} indicateurs : ils passent en "
+              "partie par les mêmes relations, et le paquet déplace donc "
+              "moins de lignes distinctes que la somme de leurs comptes."},
+    "int_paq_lineaire": {
+        "en": "The model is linear: the effect of a package is exactly the "
+              "sum of the effects of its levers. What a package adds is "
+              "therefore not extra effect but coverage, and the count of "
+              "indicators moved is what says it.",
+        "fr": "Le modèle est linéaire : l'effet d'un paquet vaut exactement "
+              "la somme des effets de ses leviers. Ce qu'un paquet ajoute "
+              "n'est donc pas un supplément d'effet mais une couverture, et "
+              "c'est le nombre d'indicateurs déplacés qui le dit."},
+    "int_paq_vide": {
+        "en": "No package of this kind on this line: not enough levers meet "
+              "the criterion.",
+        "fr": "Pas de paquet de ce type sur cette ligne : trop peu de leviers "
+              "remplissent le critère."},
+    "int_paq_note": {
+        "en": "Effects are read as differences from the measured state, over "
+              "the share of the framework the causal model covers. They "
+              "compare with one another; they are not forecasts of points "
+              "gained.",
+        "fr": "Les effets se lisent en écart à l'état mesuré, sur la part du "
+              "référentiel que le modèle causal couvre. Ils se comparent "
+              "entre eux ; ce ne sont pas des prévisions de points gagnés."},
+
     # ---------------- les thématiques d'intervention
     # ON N'ARRIVE PAS ICI AVEC UN NOM DE VARIABLE EN TÊTE. On arrive avec un
     # métier : l'eau, l'énergie domestique, les risques, le foncier. Les sept
@@ -358,6 +496,24 @@ TEXTES = {
               "or what points to it is not measured.",
         "fr": "Aucun levier du modèle ne déplace cette cible : rien ne pointe "
               "vers elle, ou ce qui pointe vers elle n'est pas mesuré."},
+    "int_aucun_levier_2": {
+        "en": "Nothing else in the model raises this line: it is an entry "
+              "point of the causal graph, with no incoming relationship. "
+              "Acting on it means acting on it directly, above, and its "
+              "effect then travels outward to everything downstream.",
+        "fr": "Rien d'autre dans le modèle ne relève cette ligne : c'est un "
+              "point d'entrée du graphe causal, sans relation entrante. Agir "
+              "dessus, c'est agir dessus directement, ci-dessus, et son effet "
+              "voyage ensuite vers tout ce qui en dépend."},
+    "int_direct_t": {"en": "Act directly on this line",
+                     "fr": "Agir directement sur cette ligne"},
+    "int_direct_x": {
+        "en": "This indicator is itself a variable of the causal model, so "
+              "it can be acted on head-on. What follows are the levers that "
+              "move it from elsewhere.",
+        "fr": "Cet indicateur est lui-même une variable du modèle causal : on "
+              "peut l'attaquer de front. Ce qui suit, ce sont les leviers qui "
+              "le déplacent depuis ailleurs."},
     "int_idee_t": {"en": "What could be done", "fr": "Ce qu'on pourrait faire"},
     "int_prop_x": {
         "en": "Proposals for discussion, drawn from the causal model and the "
@@ -1408,6 +1564,24 @@ STYLE = """
   .int-perf { border:1px solid #cfe6da; border-radius:8px; padding:12px 14px;
               background:#f3faf6; }
 </style>
+
+.int-act { margin: 2px 0 4px; padding-left: 20px; }
+.int-act li { font-size: 13.5px; color: #3c4761; line-height: 1.62;
+              margin-bottom: 4px; }
+.int-act li::marker { color: #1a8a4f; }
+.int-paq { border: 1px solid #e3eaf3; border-left: 4px solid #1a8a4f;
+           border-radius: 11px; padding: 13px 16px; margin: 10px 0; }
+.int-paq-t { font-size: 14px; font-weight: 700; color: #101728; }
+.int-paq-x { font-size: 12.5px; color: #6b7590; line-height: 1.55;
+             margin: 4px 0 9px; }
+.int-paq-l { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; }
+.int-paq-c { font-size: 12px; color: #3c4761; background: #f2f6f3;
+             border: 1px solid #dde7e0; border-radius: 999px;
+             padding: 3px 11px; }
+.int-paq-n { display: flex; gap: 26px; flex-wrap: wrap; }
+.int-paq-n div { font-size: 11.5px; color: #6b7590; }
+.int-paq-n b { display: block; font-size: 17px; color: #101728;
+               font-variant-numeric: tabular-nums; margin-top: 1px; }
 """
 
 
@@ -1723,6 +1897,79 @@ def _propositions():
 
 
 @st.cache_data(show_spinner=False)
+def _activites():
+    """Les idées d'activité, quatre par levier, lues dans un fichier.
+
+    MÊME RÈGLE QUE LES PROPOSITIONS : elles sont dans `data/`, pas dans le
+    code. Un levier sans activités écrites n'affiche rien plutôt qu'une
+    rubrique vide, et le fichier peut être complété sans redéploiement.
+    """
+    chemin = os.path.join(DATA, "activites_leviers.json")
+    if not os.path.exists(chemin):
+        return {}
+    with open(chemin, encoding="utf-8") as f:
+        return (json.load(f) or {}).get("activites") or {}
+
+
+@st.cache_data(show_spinner=False)
+def _dim_par_ligne():
+    """La dimension de chaque ligne, lue une fois.
+
+    CETTE TABLE EST CONSULTÉE UNE FOIS PAR LEVIER. La chercher dans le
+    fichier de résultats à chaque appel relisait quatre cent quarante
+    kilo-octets quarante-huit fois par affichage.
+    """
+    _g, pl = _charger()
+    return {lg: DIM_DE.get(r.get("dimension") or "", "")
+            for lg, r in pl.items()}
+
+
+def _ligne_noeud(graphe):
+    """Quelle variable du modèle porte quelle ligne du référentiel.
+
+    QUARANTE-QUATRE LIGNES SUR CENT VINGT-HUIT. Les autres sont mesurées mais
+    absentes du graphe : on ne peut pas leur calculer de levier propre, et
+    c'est dit à l'écran plutôt que masqué par un chiffre inventé.
+    """
+    return {n["ligne"]: n["id"] for n in graphe["noeuds"] if n.get("ligne")}
+
+
+def _verbe(r):
+    """Améliorer, faire reculer, ou agir sur — selon le sens de l'échelle.
+
+    LE VERBE N'EST PAS UN ORNEMENT. « Améliorer l'insécurité alimentaire »
+    dirait le contraire de ce qu'on veut ; le sens de l'indicateur est écrit
+    dans le référentiel, on s'en sert. Les lignes dont le sens n'est pas
+    renseigné prennent un verbe neutre plutôt qu'un verbe faux.
+    """
+    sens = (r.get("sens") or "").lower()
+    if not sens:
+        return T("int_am_neutre")
+    if "score bas" in sens:
+        return T("int_am_moins")
+    return T("int_am_plus")
+
+
+def _etiquette_ligne(r):
+    """« Améliorer : Accès à l'eau de boisson · 4/10 · III. Environnementale »
+
+    LE DEUX-POINTS PLUTÔT QUE L'ACCORD. Coller le verbe au nom demanderait de
+    connaître le genre et le nombre de cent vingt-huit intitulés, et une
+    élision ratée sur trois d'entre eux suffirait à décrédibiliser la liste
+    entière. Le deux-points est laid d'un cheveu et juste partout.
+    """
+    sc = (r.get("scores_corriges") or r.get("scores") or {}).get("Total")
+    note = f'{sc:.0f}/10' if sc is not None else T("int_am_nd")
+    dim = T(DIM_DE.get(r.get("dimension") or "", "") or "")
+    # L'ESPACE AVANT LE DEUX-POINTS EST FRANÇAIS, il n'est pas anglais. Le
+    # même gabarit pour les deux langues donnait « Improve : » dans une liste
+    # de cent vingt-huit entrées, ce qui se voit.
+    sep = " : " if i18n.get_lang() == "fr" else ": "
+    return (f'{_verbe(r)}{sep}{_nom_indic(r)} · {note}'
+            + (f' · {dim}' if dim else ''))
+
+
+@st.cache_data(show_spinner=False)
 def _effets_leviers():
     """L'effet d'une poussée de +2 sur chaque nœud, vers tous les autres.
 
@@ -1741,7 +1988,7 @@ def _effets_leviers():
     return out
 
 
-def _cibles(graphe):
+def _cibles(graphe, par_ligne=None):
     """Ce sur quoi on peut vouloir intervenir : les thématiques de projet,
     puis les sept dimensions, puis chaque variable mesurée du modèle.
 
@@ -1757,11 +2004,20 @@ def _cibles(graphe):
            for c, _v in THEMES]
     out += [("d:" + d, f'{T("int_sur_dim")} · {T(d)}') for d in
             ("dim1", "dim2", "dim3", "dim4", "dim5", "dim6", "dim7")]
-    noeuds = sorted((n for n in graphe["noeuds"] if n.get("ligne")),
-                    key=lambda n: (n.get("dim") or "", _libelle(n)))
-    for n in noeuds:
-        out.append(("n:" + n["id"],
-                    f'{T(n.get("dim") or "")} · {_libelle(n)}'))
+    # LES CENT VINGT-HUIT LIGNES, LES PLUS BASSES EN PREMIER. L'ordre n'est
+    # pas alphabétique et ce n'est pas un détail : la liste sert à choisir
+    # quoi améliorer, et ce qui est à 0 sur 10 doit se lire avant ce qui est à
+    # 9. Les lignes non notées ferment la liste — on ne peut pas prioriser ce
+    # qu'on n'a pas mesuré.
+    lignes = list((par_ligne or {}).values())
+
+    def _rang(r):
+        sc = (r.get("scores_corriges") or r.get("scores") or {}).get("Total")
+        return (sc is None, sc if sc is not None else 0,
+                DIM_DE.get(r.get("dimension") or "", ""), _nom_indic(r))
+
+    for r in sorted(lignes, key=_rang):
+        out.append(("l:%d" % r["ligne"], _etiquette_ligne(r)))
     return out
 
 
@@ -1784,6 +2040,19 @@ def _effet_sur(cible, effets, par_id, graphe, levier=None):
     if cible.startswith("n:"):
         c = cible[2:]
         return effets.get(c, 0.0)
+    if cible.startswith("l:"):
+        # UNE LIGNE DU RÉFÉRENTIEL, ET DEUX CAS. Portée par une variable du
+        # modèle, c'est l'effet sur cette variable. Absente du modèle, c'est
+        # l'effet sur sa dimension : le seul énoncé que le graphe puisse
+        # tenir à son sujet, et l'écran le dit en clair.
+        lg = int(cible[2:])
+        nid = _ligne_noeud(graphe).get(lg)
+        if nid:
+            return effets.get(nid, 0.0)
+        d = _dim_par_ligne().get(lg) or ""
+        if not d:
+            return 0.0
+        return _effet_sur("d:" + d, effets, par_id, graphe, levier=levier)
     if cible.startswith("t:"):
         cases = [x for x in THEME_VARS.get(cible[2:], []) if x in par_id]
         if not cases:
@@ -1841,16 +2110,156 @@ def _proposition(x):
     """
     txt = (_propositions().get(x["id"]) or {}).get(i18n.get_lang()) \
         or (_propositions().get(x["id"]) or {}).get("fr")
-    if not txt:
+    if txt:
+        st.markdown(f'<p class="int-x">{_e(txt)}</p>', unsafe_allow_html=True)
+
+    # LES IDÉES D'ACTIVITÉ, EN LISTE. Le paragraphe dit l'orientation ; il ne
+    # donne pas de quoi remplir un atelier. Quatre pistes par levier, courtes
+    # et assez précises pour qu'on puisse en refuser une, écrites dans
+    # `data/` pour être relues par qui ne code pas.
+    actes = (_activites().get(x["id"]) or {}).get(i18n.get_lang()) \
+        or (_activites().get(x["id"]) or {}).get("fr") or []
+    if actes:
+        st.markdown(
+            f'<div class="int-lab" style="margin:12px 0 4px">'
+            f'{_e(T("int_act_idees"))}</div>'
+            + '<ul class="int-act">'
+            + "".join(f'<li>{_e(a)}</li>' for a in actes)
+            + '</ul>', unsafe_allow_html=True)
+        st.caption(T("int_act_idees_x"))
+    if not txt and not actes:
         st.caption(T("int_idee_x"))
         return
-    st.markdown(f'<p class="int-x">{_e(txt)}</p>', unsafe_allow_html=True)
     if x["fiche"]:
         # LA FICHE RÉDIGÉE N'EST PAS PERDUE, elle est repliée : huit leviers
         # sur quarante-quatre portent un protocole complet, et qui le veut
         # l'ouvre.
         with st.expander(T("int_fiche_complete")):
             _fiche(x["fiche"])
+
+
+def _paquets(cible, lot, graphe, par_ligne, lst_boucles, par_id):
+    """Trois façons de composer un paquet, et ce que le modèle en fait.
+
+    UN PAQUET N'EST PAS UNE LISTE DE LEVIERS, C'EST UNE POUSSÉE SIMULTANÉE.
+    Pousser trois leviers en bloc ne donne pas la somme de trois poussées
+    séparées : les chemins se recoupent ou se renforcent, et l'écart entre
+    les deux est précisément ce qui justifie le mot « intégré ». Il est donc
+    calculé et affiché, plutôt qu'affirmé.
+
+    LES TROIS CRITÈRES NE SE VALENT PAS ET NE PRÉTENDENT PAS SE VALOIR. Le
+    premier prend ce qui porte le plus loin, le deuxième ce qui est le plus
+    bas, le troisième ce qui peut retourner une dynamique. Un atelier choisit
+    entre eux ; le modèle ne le fait pas à sa place.
+    """
+    utiles = [x for x in lot if x["effet"] > 0]
+    if len(utiles) < 2:
+        return []
+    etat = M.etat_courant(graphe, par_ligne, "Total")
+    bascules = {x["id"] for x in M.leviers(graphe, lst_boucles)
+                if x.get("bascule")}
+
+    familles = [
+        ("direct", utiles[:3]),
+        ("contrainte", [x for x in utiles
+                        if etat.get(x["id"]) is not None
+                        and etat[x["id"]] <= 3.0][:3]),
+        ("bascule", [x for x in utiles if x["id"] in bascules][:3]),
+    ]
+
+    def _touchees(variations):
+        """Les lignes notées du référentiel que cette poussée déplace.
+
+        C'EST LA SEULE MESURE DE RECOUVREMENT QUE LE MODÈLE PERMETTE. Il est
+        linéaire : l'effet d'un paquet vaut exactement la somme des effets de
+        ses leviers, et afficher un « gain de synergie » serait afficher cent
+        pour cent à tous les coups. Ce qui n'est pas additif, en revanche,
+        c'est l'ENSEMBLE des indicateurs touchés — deux leviers qui passent
+        par les mêmes relations en touchent moins à eux deux que la somme de
+        leurs comptes ne le laisse croire, et l'écart se mesure.
+        """
+        eff = M.propager(graphe, variations)
+        vues = set()
+        for n in graphe["noeuds"]:
+            lg = n.get("ligne")
+            if not lg:
+                continue
+            r = par_ligne.get(lg) or {}
+            if (r.get("scores_corriges") or r.get("scores") or {}).get(
+                    "Total") is None:
+                continue
+            bouge = abs(eff.get(n["id"], 0.0)
+                        + variations.get(n["id"], 0.0))
+            if bouge > M.SEUIL_NUL:
+                vues.add(lg)
+        return vues
+
+    sortie, vus = [], set()
+    for code, cases in familles:
+        if len(cases) < 2:
+            sortie.append({"code": code, "cases": cases, "vide": True})
+            continue
+        cle = tuple(sorted(x["id"] for x in cases))
+        if cle in vus:
+            continue
+        vus.add(cle)
+        variations = {x["id"]: POUSSEE for x in cases}
+        effets = M.propager(graphe, variations)
+        ens = _effet_sur(cible, effets, par_id, graphe)
+        ind = M.effet_indice(graphe, effets, variations, par_ligne)
+        union = _touchees(variations)
+        separes = sum(len(_touchees({x["id"]: POUSSEE})) for x in cases)
+        sortie.append({"code": code, "cases": cases, "vide": False,
+                       "ensemble": ens, "indice": ind.get("delta", 0.0),
+                       "touchees": len(union), "separees": separes})
+    return sortie
+
+
+def _bloc_paquets(paquets):
+    # PAS DE TITRE SANS CONTENU. Quand aucun paquet ne se compose — une ligne
+    # que rien ne relève, ou un seul levier utile — la rubrique entière
+    # disparaît plutôt que d'annoncer trois cases vides.
+    if not any(not p["vide"] for p in paquets):
+        return
+    st.markdown(f'<div class="int-lab" style="margin:26px 0 4px">'
+                f'{_e(T("int_paq_t"))}</div>'
+                f'<p class="int-x" style="margin:0 0 8px">'
+                f'{_e(T("int_paq_x"))}</p>', unsafe_allow_html=True)
+    for p in paquets:
+        t = _e(T("int_paq_" + p["code"] + "_t"))
+        x = _e(T("int_paq_" + p["code"] + "_x"))
+        if p["vide"]:
+            st.markdown(f'<div class="int-paq" style="border-left-color:'
+                        f'#d7e0ec"><div class="int-paq-t">{t}</div>'
+                        f'<div class="int-paq-x">{x}</div>'
+                        f'<div class="int-paq-x" style="margin:0">'
+                        f'{_e(T("int_paq_vide"))}</div></div>',
+                        unsafe_allow_html=True)
+            continue
+        chips = "".join(f'<span class="int-paq-c">{_e(_libelle(c["noeud"]))}'
+                        f'</span>' for c in p["cases"])
+        # LE RECOUVREMENT N'EST COMMENTÉ QUE S'IL EXISTE. Deux leviers qui
+        # passent par des chemins disjoints touchent exactement la somme de
+        # leurs indicateurs, et il n'y a alors rien à dire.
+        rec = ""
+        if p["separees"] > p["touchees"]:
+            rec = (f'<div class="int-paq-x" style="margin:9px 0 0">'
+                   f'{_e(T("int_paq_rec", n=p["separees"] - p["touchees"]))}'
+                   f'</div>')
+        st.markdown(
+            f'<div class="int-paq"><div class="int-paq-t">{t}</div>'
+            f'<div class="int-paq-x">{x}</div>'
+            f'<div class="int-paq-l">{chips}</div>'
+            f'<div class="int-paq-n">'
+            f'<div>{_e(T("int_paq_effet"))}'
+            f'<b>{_fmt(p["ensemble"], 2, True)}</b></div>'
+            f'<div>{_e(T("int_paq_indice"))}'
+            f'<b>{_fmt(p["indice"], 3, True)}</b></div>'
+            f'<div>{_e(T("int_paq_touchees"))}'
+            f'<b>{p["touchees"]}</b></div></div>'
+            f'{rec}</div>', unsafe_allow_html=True)
+    st.caption(T("int_paq_note"))
+    st.caption(T("int_paq_lineaire"))
 
 
 def _render():
@@ -1884,8 +2293,15 @@ def _render():
 
     par_id = {n["id"]: n for n in graphe["noeuds"]}
     par_levier = {f["levier"]: f for f in fiches}
-    opts = _cibles(graphe)
+    opts = _cibles(graphe, par_ligne)
     libs = dict(opts)
+    # UNE VALEUR DE SESSION QUI N'EST PLUS DANS LA LISTE FAIT LEVER STREAMLIT.
+    # Les anciennes cibles s'écrivaient « n:foret » ; elles s'écrivent
+    # maintenant « l:54 ». Un onglet resté ouvert pendant la mise à jour
+    # revenait donc sur une clé introuvable, et la page tombait au lieu de
+    # repartir sur l'invite.
+    if st.session_state.get("int_cible") not in libs:
+        st.session_state["int_cible"] = None
     g, _d = st.columns([2.4, 1])
     with g:
         cible = st.selectbox(
@@ -1897,6 +2313,56 @@ def _render():
         st.markdown(f'<p class="int-x" style="color:{ENCRE3};margin-top:8px">'
                     f'{_e(T("int_rien_encore"))}</p>', unsafe_allow_html=True)
         return
+
+    # ---- l'état de la ligne choisie, avant d'aller chercher des leviers ---
+    # ON NE PROPOSE PAS D'AGIR SUR UN CHIFFRE QU'ON NE MONTRE PAS. La valeur
+    # mesurée, le score et le poids tiennent en trois cases ; sans elles, la
+    # liste de leviers qui suit flotte au-dessus d'un problème dont on ignore
+    # l'ampleur.
+    if cible.startswith("l:"):
+        _r = par_ligne.get(int(cible[2:])) or {}
+        _sc = (_r.get("scores_corriges") or _r.get("scores") or {}).get("Total")
+        _va = (_r.get("valeurs") or {}).get("Total")
+        _un = "%" if (_r.get("metrique") or "").strip().startswith(
+            ("Households (%)", "Population (%)")) else ""
+        st.markdown(
+            f'<div class="int-lab" style="margin:14px 0 6px">'
+            f'{_e(T("int_etat_t"))}</div>'
+            f'<div class="int-paq-n" style="margin-bottom:10px">'
+            f'<div>{_e(T("int_etat_score"))}'
+            f'<b>{"—" if _sc is None else "%.0f/10" % _sc}</b></div>'
+            f'<div>{_e(T("int_etat_val"))}'
+            f'<b>{"—" if _va is None else _fmt(_va, 2) + _un}</b></div>'
+            f'<div>{_e(T("int_etat_poids"))}'
+            f'<b>{_fmt(_r.get("ponderation") or 0, 2)}</b></div></div>',
+            unsafe_allow_html=True)
+        if not _ligne_noeud(graphe).get(int(cible[2:])):
+            st.caption(T("int_hors_modele"))
+
+    # ---- agir directement sur la ligne choisie ----------------------------
+    # LA PREMIÈRE CHOSE À FAIRE SUR UNE LIGNE, C'EST CETTE LIGNE. Dix-huit
+    # des cent vingt-huit indicateurs sont des points d'entrée du modèle :
+    # rien n'y mène, donc aucun levier indirect ne les relève, et l'écran
+    # répondait « aucun levier » à des lignes sur lesquelles on peut
+    # parfaitement agir — l'assainissement, le logement, la distance à
+    # l'école. Ses propres idées d'activité se lisent donc en tête, avant
+    # celles des voisins.
+    _direct = None
+    if cible.startswith("l:"):
+        _nid = _ligne_noeud(graphe).get(int(cible[2:]))
+        if _nid and (_activites().get(_nid) or _propositions().get(_nid)):
+            _direct = {"id": _nid, "noeud": par_id[_nid], "effet": 0.0,
+                       "fiche": par_levier.get(_nid),
+                       "cat": CAT_DE_DIM.get(par_id[_nid].get("dim") or "",
+                                             "structurel")}
+    if _direct is not None:
+        st.markdown(
+            f'<div class="int-lab" style="color:{HAUSSE};margin:18px 0 4px">'
+            f'{_e(T("int_direct_t"))}</div>'
+            f'<p class="int-x" style="margin:0 0 6px">'
+            f'{_e(T("int_direct_x"))}</p>', unsafe_allow_html=True)
+        with st.expander(_libelle(_direct["noeud"]), expanded=True):
+            _proposition(_direct)
 
     # ---- les leviers qui déplacent cette cible, et de combien -------------
     # LA LISTE N'EST PAS ÉCRITE, ELLE EST CALCULÉE. Pour chaque nœud qui a un
@@ -1943,14 +2409,25 @@ def _render():
                             else CAT_DE_DIM.get(n.get("dim") or "",
                                                 "structurel"))})
     if not lot:
-        st.info(T("int_aucun_levier"))
+        st.info(T("int_aucun_levier_2") if _direct is not None
+                else T("int_aucun_levier"))
         return
-    lot.sort(key=lambda x: -abs(x["effet"]))
+    # LE SIGNE DE L'EFFET N'EST PAS UN DÉTAIL DE CLASSEMENT. La liste était
+    # triée sur la valeur absolue : un levier qui, poussé, ENFONCE la ligne
+    # choisie arrivait donc en tête d'une liste de choses à faire, avec ses
+    # idées d'activité, sans rien qui le distingue. Ce qui aide et ce qui
+    # nuit sont maintenant deux blocs, et le second ne propose rien : il
+    # avertit.
+    lot.sort(key=lambda x: -x["effet"])
+    pour = [x for x in lot if x["effet"] > 0]
+    contre = [x for x in lot if x["effet"] < 0]
+    if not pour:
+        st.info(T("int_aucun_pour"))
 
-    deduits = any(x["fiche"] is None for x in lot)
+    deduits = any(x["fiche"] is None for x in pour)
     for cat in ("structurel", "technique", "organisationnel",
                 "comportemental"):
-        part = [x for x in lot if x["cat"] == cat]
+        part = [x for x in pour if x["cat"] == cat]
         if not part:
             continue
         cc = CAT_COULEUR[cat]
@@ -1968,9 +2445,36 @@ def _render():
             # cette information.
             with st.expander(_libelle(x["noeud"])):
                 _proposition(x)
-    st.caption(T("int_prop_x"))
-    if deduits:
-        st.caption(T("int_nature_x"))
+    if pour:
+        st.caption(T("int_prop_x"))
+        if deduits:
+            st.caption(T("int_nature_x"))
+
+    # ---- ce qui joue contre -----------------------------------------------
+    # UN LEVIER QUI DÉGRADE LA CIBLE EST UNE INFORMATION, PAS UNE PROPOSITION.
+    # Il est donc nommé, avec son effet, et sans idée d'activité : on ne
+    # suggère pas de faire ce qui enfonce la ligne qu'on a choisi de relever.
+    if contre:
+        st.markdown(
+            f'<div class="int-lab" style="color:{BAISSE};margin:20px 0 4px">'
+            f'{_e(T("int_contre_t"))}</div>'
+            f'<p class="int-x" style="margin:0 0 7px">'
+            f'{_e(T("int_contre_x"))}</p>'
+            + '<div class="int-paq-l">'
+            + "".join(f'<span class="int-paq-c" style="background:#fdf1ee;'
+                      f'border-color:#f0d5cd">{_e(_libelle(c["noeud"]))} '
+                      f'<b style="color:{BAISSE}">{_fmt(c["effet"], 2, True)}'
+                      f'</b></span>' for c in contre)
+            + '</div>', unsafe_allow_html=True)
+
+    # ---- les paquets intégrés ---------------------------------------------
+    # LA PAGE S'ARRÊTAIT SUR UNE LISTE DE LEVIERS, et une liste n'est pas une
+    # intervention : personne ne finance un levier, on finance un ensemble.
+    # Les trois paquets ci-dessous sont composés sur trois critères
+    # différents, poussés en bloc dans le modèle, et comparés à la somme des
+    # mêmes leviers poussés séparément.
+    _bloc_paquets(_paquets(cible, lot, graphe, par_ligne, lst_boucles,
+                           par_id))
 
     # ---- ce qu'il faudrait mesurer la prochaine fois ----------------------
     # UNE RECOMMANDATION DE COLLECTE EST UNE RECOMMANDATION, ET SA PLACE EST
