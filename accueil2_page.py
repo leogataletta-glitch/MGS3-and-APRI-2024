@@ -567,7 +567,7 @@ def render():
 
     # Four photo destinations, followed by the full-width territory map.
     fr = i18n.get_lang() == 'fr'
-    watercolor = _photo_b64(prefere='aquarelles_apri.png')
+    watercolor = _photo_b64(prefere='aquarelles_apri_blanc.png')
     entries = [
         ('methodologie', 'Cadre de résilience' if fr else 'Resilience framework',
          'Comprendre l’approche APRI' if fr else 'Understand the APRI approach',
@@ -580,33 +580,41 @@ def render():
          watercolor, '100% 100%', 'Aquarelle du canal d’irrigation'),
     ]
     st.markdown("""<style>
-    .st-key-a2_photo_links{margin-bottom:35px!important;}
+    .st-key-a2_photo_links{gap:20px!important;}
     .st-key-a2_photo_links [data-testid="stHorizontalBlock"]{gap:18px!important;}
     .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{gap:0!important;}
-    .a2-link-photo{aspect-ratio:2 / 1;background-size:200% 200%;background-repeat:no-repeat;border-radius:9px 9px 0 0;}
+    .a2-link-photo{aspect-ratio:2 / 1;background-size:200% 200%;background-repeat:no-repeat;background-color:#fff;}
     .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button{
         background:#f3f7f4!important;border:1px solid #e3ece6!important;border-top:0!important;
-        border-radius:0 0 9px 9px!important;min-height:145px!important;height:auto!important;
-        padding:18px 12px!important;}
+        border-radius:0 0 9px 9px!important;min-height:120px!important;height:auto!important;
+        padding:14px 10px!important;}
     .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p{
-        font-size:16px!important;color:#123d2c!important;}
-    .st-key-a2_photo_links div[data-testid="stMarkdownContainer"]{margin:0!important;}
+        font-size:15px!important;color:#123d2c!important;}
+    .st-key-a2_photo_links div[data-testid="stMarkdownContainer"],
     .st-key-a2_photo_links div[data-testid="stMarkdown"]{margin:0!important;}
-    @media(min-width:651px) and (max-width:1000px){
-        .st-key-a2_photo_links [data-testid="stHorizontalBlock"]{flex-wrap:wrap!important;}
-        .st-key-a2_photo_links [data-testid="stColumn"]{flex:1 1 45%!important;min-width:45%!important;}}
-    @media(max-width:650px){.st-key-a2_photo_links [data-testid="stHorizontalBlock"]{flex-direction:column!important;}
-        .st-key-a2_photo_links [data-testid="stColumn"]{width:100%!important;flex:1 1 auto!important;}}
+    @media(max-width:1000px){
+        .st-key-a2_map_links>[data-testid="stHorizontalBlock"]{flex-direction:column!important;}
+        .st-key-a2_map_links>[data-testid="stHorizontalBlock"]>[data-testid="stColumn"]{width:100%!important;flex:1 1 auto!important;}}
+    @media(max-width:650px){
+        .st-key-a2_photo_links [data-testid="stHorizontalBlock"]{flex-direction:row!important;flex-wrap:nowrap!important;gap:12px!important;}
+        .st-key-a2_photo_links [data-testid="stColumn"]{width:calc(50% - 6px)!important;min-width:0!important;flex:1 1 0!important;}
+        .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p{font-size:14px!important;}
+        .st-key-a2_photo_links button p em{font-size:11px!important;}}
     </style>""",unsafe_allow_html=True)
-    st.markdown(f'<div class="a2-portes-t">{_e(T("a2_portes_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
-    with st.container(key='a2_photo_links'):
-        for col, (code, title, detail, photo, position, alt) in zip(st.columns(4), entries):
-            with col:
-                with st.container(key=f'a2_porte_{code}'):
-                    st.markdown(f'<div class="a2-link-photo" role="img" aria-label="{_e(alt)}" style="background-image:url(data:image/png;base64,{photo});background-position:{position}"></div>',unsafe_allow_html=True)
-                    if st.button(f'{title}  \n*{detail}*  \n**⟶**',key=f'a2_b_{code}',use_container_width=True):
-                        st.session_state['app_mode'] = code
-                        st.rerun()
-    st.markdown(accueil_apri.STYLE + f'<div class="a2-portes-t">{_e(T("a2_carte_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
-    if not carte_zoom.render():
-        st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',unsafe_allow_html=True)
+    with st.container(key='a2_map_links'):
+        map_col, links_col = st.columns([1.32,1],gap='large')
+        with map_col:
+            st.markdown(accueil_apri.STYLE + f'<div class="a2-portes-t">{_e(T("a2_carte_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
+            if not carte_zoom.render():
+                st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',unsafe_allow_html=True)
+        with links_col:
+            st.markdown(f'<div class="a2-portes-t">{_e(T("a2_portes_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
+            with st.container(key='a2_photo_links'):
+                for start in (0,2):
+                    for col, (code,title,detail,photo,position,alt) in zip(st.columns(2),entries[start:start+2]):
+                        with col:
+                            with st.container(key=f'a2_porte_{code}'):
+                                st.markdown(f'<div class="a2-link-photo" role="img" aria-label="{_e(alt)}" style="background-image:url(data:image/png;base64,{photo});background-position:{position}"></div>',unsafe_allow_html=True)
+                                if st.button(f'{title}  \n*{detail}*  \n**⟶**',key=f'a2_b_{code}',use_container_width=True):
+                                    st.session_state['app_mode']=code
+                                    st.rerun()
