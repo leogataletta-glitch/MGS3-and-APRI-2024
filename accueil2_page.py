@@ -553,52 +553,47 @@ def render():
             + '</div>'
             for n, lab, sous in cases) + '</div>', unsafe_allow_html=True)
 
-    # ---- 3 · la carte, et les quatre destinations -----------------------
-    # LA CARTE PASSE DEVANT. Elle porte dix sections communales et
-    # deux départements dans un carton de six cents pixels ; les quatre
-    # cartes, elles, portent deux lignes chacune et n'ont pas besoin de
-    # la moitié de la page.
-    g, d = st.columns([1.32, 1], gap="large")
-    with g:
-        # LE TITRE EST SORTI DU CARTON. Il y était enfermé, si bien que le
-        # rectangle pâle de gauche commençait soixante pixels plus haut que
-        # ceux de droite, dont le titre, lui, est au-dessus : deux blocs de
-        # même nature, décalés d'une demi-ligne, et la page penchait. Écrit
-        # avec la classe des destinations, il s'aligne au pixel avec elles, et
-        # la carte commence à la hauteur de la première rangée de cartes.
-        st.markdown(
-            accueil_apri.STYLE
-            + f'<div class="a2-portes-t">{_e(T("a2_carte_t"))}</div>'
-            f'<div class="a2-portes-f"></div>', unsafe_allow_html=True)
-        # LA CARTE SE DÉROULE : l'île, la péninsule, les dix sections. Elle
-        # vit dans un composant parce que le déroulé demande du JavaScript,
-        # et elle rend faux si ses géométries manquent — la carte fixe
-        # reprend alors sa place, sans que la page s'en aperçoive.
-        if not carte_zoom.render():
-            st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',
-                        unsafe_allow_html=True)
-    with d:
-        st.markdown(
-            f'<div class="a2-portes-t">{_e(T("a2_portes_t"))}</div>'
-            f'<div class="a2-portes-f"></div>', unsafe_allow_html=True)
-        for rang in (0, 2):
-            c1, c2 = st.columns(2, gap="medium")
-            for col, (code, cle_t, cle_x, fond_c) in zip(
-                    (c1, c2), PORTES[rang:rang + 2]):
-                with col:
-                    with st.container(key=f"a2_porte_{code}"):
-                        st.markdown(
-                            f'<style>div[class*="st-key-a2_porte_{code}"] '
-                            f'div[data-testid="stButton"] > button '
-                            f'{{ background:{fond_c} !important; }}</style>',
-                            unsafe_allow_html=True)
-                        # UNE FLÈCHE LONGUE ET FINE PLUTÔT QU'UN CHEVRON DANS
-                        # UN DISQUE. Le disque faisait une pastille de plus
-                        # dans une page qui en compte déjà beaucoup ; le trait
-                        # dit la même chose et ne pèse rien.
-                        if st.button(f'{T(cle_t)}  \n*{T(cle_x)}*'
-                                     f'  \n**\u27f6**',
-                                     key=f"a2_b_{code}",
-                                     use_container_width=True):
-                            st.session_state["app_mode"] = code
-                            st.rerun()
+    # Four photo destinations, followed by the full-width territory map.
+    fr = i18n.get_lang() == 'fr'
+    entries = [
+        ('methodologie', 'Cadre de résilience' if fr else 'Resilience framework',
+         'Comprendre l’approche APRI' if fr else 'Understand the APRI approach',
+         assets.PAYSAGE_CAMP_PERRIN, '50% 50%', 'Camp Perrin, Sud'),
+        ('dimensions', 'Résultats' if fr else 'Results', T('a2_p1_x'),
+         _photo_b64(prefere='accueil2_hero.jpg'), '50% 65%', 'Vallée de la Voldrogue'),
+        ('boucles', 'Boucles de rétroaction' if fr else 'Feedback loops', T('a2_p3_x'),
+         _photo_b64(prefere='accueil2_hero_b.jpg'), '30% 65%', 'Baie de Corail'),
+        ('actions', 'Fiches d’intervention' if fr else 'Intervention profiles', T('a2_p4_x'),
+         assets.PAYSAGE_CAMP_PERRIN, '85% 60%', 'Camp Perrin, Sud'),
+    ]
+    st.markdown("""<style>
+    .st-key-a2_photo_links{margin-bottom:35px!important;}
+    .st-key-a2_photo_links [data-testid="stHorizontalBlock"]{gap:18px!important;}
+    .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{gap:0!important;}
+    .a2-link-photo{height:165px;background-size:cover;border-radius:9px 9px 0 0;}
+    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button{
+        background:#f3f7f4!important;border:1px solid #e3ece6!important;border-top:0!important;
+        border-radius:0 0 9px 9px!important;min-height:145px!important;height:auto!important;
+        padding:18px 12px!important;}
+    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p{
+        font-size:16px!important;color:#123d2c!important;}
+    .st-key-a2_photo_links div[data-testid="stMarkdownContainer"]{margin:0!important;}
+    .st-key-a2_photo_links div[data-testid="stMarkdown"]{margin:0!important;}
+    @media(min-width:651px) and (max-width:1000px){
+        .st-key-a2_photo_links [data-testid="stHorizontalBlock"]{flex-wrap:wrap!important;}
+        .st-key-a2_photo_links [data-testid="stColumn"]{flex:1 1 45%!important;min-width:45%!important;}}
+    @media(max-width:650px){.st-key-a2_photo_links [data-testid="stHorizontalBlock"]{flex-direction:column!important;}
+        .st-key-a2_photo_links [data-testid="stColumn"]{width:100%!important;flex:1 1 auto!important;}}
+    </style>""",unsafe_allow_html=True)
+    st.markdown(f'<div class="a2-portes-t">{_e(T("a2_portes_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
+    with st.container(key='a2_photo_links'):
+        for col, (code, title, detail, photo, position, alt) in zip(st.columns(4), entries):
+            with col:
+                with st.container(key=f'a2_porte_{code}'):
+                    st.markdown(f'<div class="a2-link-photo" role="img" aria-label="{_e(alt)}" style="background-image:url(data:image/jpeg;base64,{photo});background-position:{position}"></div>',unsafe_allow_html=True)
+                    if st.button(f'{title}  \n*{detail}*  \n**⟶**',key=f'a2_b_{code}',use_container_width=True):
+                        st.session_state['app_mode'] = code
+                        st.rerun()
+    st.markdown(accueil_apri.STYLE + f'<div class="a2-portes-t">{_e(T("a2_carte_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
+    if not carte_zoom.render():
+        st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',unsafe_allow_html=True)
