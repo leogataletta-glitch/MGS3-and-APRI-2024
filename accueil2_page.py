@@ -486,10 +486,6 @@ def _fmt(n):
     return f"{n:,}".replace(",", " ")
 
 
-def _choisir_bandeau(numero):
-    st.session_state['a2_bandeau_version'] = numero
-
-
 def render():
     """La page d'entrée : annoncer, chiffrer, orienter."""
     st.markdown(STYLE, unsafe_allow_html=True)
@@ -520,10 +516,10 @@ def render():
             if photo else "background:#eef3f0;")
     if photo and cadrage:
         fond += f"background-position:{cadrage};"
-    version = st.session_state.get('a2_bandeau_version', 2)
-    aquarelle = _photo_b64(prefere=('dessin_mangrove.png' if version == 2 else 'accueil_aquarelle_haiti.png'))
+    aquarelle = _photo_b64(prefere='accueil_aquarelle_haiti.png')
     if aquarelle:
-        fond = f"background-image:url('data:image/png;base64,{aquarelle}');background-position:65% center;"
+        # Reserve white space above the illustration for the UNEP logo.
+        fond = f"background-image:url('data:image/png;base64,{aquarelle}');background-position:65% 90px;"
     # This illustration is not a documentary photograph of a named location.
     credit = '' if aquarelle else f'<div class="a2-credit">{_e(T("a2_credit"))}</div>'
     st.markdown(
@@ -551,29 +547,6 @@ def render():
         if st.button(T("a2_cta") + " ↗", key="a2_cta_b"):
             st.session_state["app_mode"] = "dimensions"
             st.rerun()
-
-    st.markdown('''<style>
-    .st-key-a2_compare_banner [data-testid="stHorizontalBlock"]{flex-wrap:nowrap!important;gap:10px!important;}
-    .st-key-a2_compare_banner [data-testid="stColumn"]{min-width:0!important;}
-    .st-key-a2_compare_banner button{min-height:42px!important;border-radius:4px!important;box-shadow:none!important;}
-    .st-key-a2_compare_banner button[kind="primary"] p{color:#fff!important;}
-    .st-key-a2_compare_banner [data-testid="stColumn"]:nth-child(-n+2){flex:0 0 44px!important;width:44px!important;}
-    .st-key-a2_compare_banner [data-testid="stColumn"]:last-child{flex:1 1 0!important;}
-    .st-key-a2_compare_banner{margin:0 0 20px!important;}
-    </style>''', unsafe_allow_html=True)
-    with st.container(key='a2_compare_banner'):
-        un, deux, legende = st.columns([1, 1, 8], vertical_alignment='center')
-        with un:
-            st.button('1', key='a2_banner_1', help='Paysage / Landscape',
-                      type='primary' if version == 1 else 'secondary',
-                      on_click=_choisir_bandeau, args=(1,), use_container_width=True)
-        with deux:
-            st.button('2', key='a2_banner_2', help='Mangrove',
-                      type='primary' if version == 2 else 'secondary',
-                      on_click=_choisir_bandeau, args=(2,), use_container_width=True)
-        with legende:
-            st.caption('Comparer : 1 · Paysage  /  2 · Mangrove' if _lang == 'fr'
-                       else 'Compare: 1 · Landscape  /  2 · Mangrove')
 
     # ---- 2 · les quatre nombres ----------------------------------------
     menages, sections = _chiffres()
