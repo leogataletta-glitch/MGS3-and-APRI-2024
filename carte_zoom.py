@@ -307,7 +307,7 @@ def _composer(lang):
      elle demandait neuf cent dix pixels de haut pour six cent vingt
      disponibles, et les commandes se retrouvaient coupées. La carte prend
      donc la hauteur qui reste et s'étend en largeur. */
-  .cz-cadre {{ background:#f4f7f5; border-radius:14px; padding:12px 14px 10px;
+  .cz-cadre {{ background:#ffffff; border-radius:0; padding:0;
                overflow:hidden; height:100%; display:flex;
                flex-direction:column; }}
   .cz-zone {{ flex:1 1 auto; min-height:0; position:relative;
