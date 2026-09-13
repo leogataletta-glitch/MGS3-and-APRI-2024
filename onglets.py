@@ -203,12 +203,14 @@ def barre(cle, codes, titre, description=None, defaut=None, compact=True):
         # temporarily lag behind the rerender when changing language or page.
         actif = list(codes).index(choix) + 1 if choix in codes else 1
         st.markdown(f"""<style>
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]{{gap:0!important;margin:0 0 18px!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{flex:0 1 auto!important;min-height:44px!important;padding:10px 16px!important;background:transparent!important;border:0!important;box-shadow:none!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:first-child{{font:500 14px/1.5 Arial,sans-serif!important;color:#65756c!important;text-transform:none!important;letter-spacing:0!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]{{gap:8px!important;margin:0 0 18px!important;border:0!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{flex:0 1 auto!important;min-height:44px!important;padding:10px 18px!important;background:#f3f6f3!important;border:1px solid #e0e8e2!important;border-radius:24px!important;box-shadow:none!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:first-child{{font:500 14px/1.5 Arial,sans-serif!important;color:#345446!important;text-transform:none!important;letter-spacing:0!important;}}
         .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label strong{{font-weight:500!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}){{box-shadow:inset 0 -2px 0 #123d2c!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}) p:first-child{{color:#123d2c!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:hover{{background:#e8f0e9!important;border-color:#a7bcae!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}){{background:#123d2c!important;border-color:#123d2c!important;box-shadow:none!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}) p:first-child,
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}) strong{{color:#ffffff!important;font-weight:600!important;}}
         .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:has(input:focus-visible){{outline:2px solid #26734f!important;outline-offset:2px;}}
         @media(max-width:760px){{.stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{flex:1 1 44%!important;padding:10px 8px!important;}}}}
         </style>""", unsafe_allow_html=True)
