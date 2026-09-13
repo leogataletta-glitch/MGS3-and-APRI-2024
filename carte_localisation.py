@@ -171,7 +171,7 @@ def _terres():
     CARTO exige désormais une clé et barre ses tuiles d'un filigrane ; le
     canevas clair d'Esri, pris en remplacement, peint la terre et la mer
     dans deux gris si proches que la carte paraissait entièrement bleue. Or
-    ce fond ne demande que deux aplats — la terre en gris, la mer en bleu —
+    ce fond ne demande que deux aplats — la terre en gris, la mer en blanc —
     et le trait de côte est déjà dans le dépôt, puisque la vignette de
     situation s'en sert. Un fond dessiné sur place ne dépend de personne, ne
     peut pas changer de conditions, et s'affiche même sans réseau.
@@ -179,6 +179,8 @@ def _terres():
     out = []
     for nom in ("hti_terre.geojson", "dom_terre.geojson"):
         p = os.path.join(DATA, nom)
+        if not os.path.exists(p):
+            p = os.path.join(APP_DIR, nom)
         if not os.path.exists(p):
             continue
         with open(p, encoding="utf-8") as f:
@@ -235,10 +237,8 @@ __LEAFLET__
 <style>
  html,body{margin:0;padding:0;height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
  #carte{position:absolute;inset:0;border-radius:12px}
- /* LA MER, C'EST LE FOND DU CONTENEUR : le fond sobre ne dessine que la
-    terre, et laisse voir celui-ci. Un bleu franc plutôt que le gris bleuté
-    d'avant — la terre est grise, la mer doit s'en distinguer sans effort. */
- .leaflet-container{background:#c6dcee;border-radius:12px;font-family:inherit}
+ /* Le fond marin blanc prolonge la page ; la terre reste grise. */
+ .leaflet-container{background:#ffffff;border-radius:12px;font-family:inherit}
  /* --- le panneau de couches ------------------------------------------- */
  #panneau{position:absolute;top:10px;right:10px;bottom:10px;width:264px;
    background:rgba(255,255,255,.96);border:1px solid #dbe3ec;border-radius:12px;
@@ -298,22 +298,45 @@ const EMPRISE = [[17.98,-74.55],[18.68,-73.55]];
 function recadrer(){ carte.fitBounds(EMPRISE, {padding:[12,12]}); }
 recadrer();
 
-/* ---- fonds de carte : un seul à la fois ------------------------------- */
-/* LE FOND SOBRE PASSE SOUS LES TUILES, ET C'EST TOUT.
-   Il a d'abord été peint par-dessus : il effaçait l'ombrage. Puis en
-   sandwich, avec un masque marin posé au-dessus des tuiles pour rendre à la
-   mer son bleu — un rectangle grand comme le monde, percé aux contours des
-   terres. Ce masque est une mauvaise idée : Leaflet découpe chaque anneau
-   séparément au bord de la vue, et un trou qui déborde de la vue cesse
-   d'être un trou. Selon la taille de la fenêtre et le niveau de zoom, le
-   rectangle se refermait et couvrait la carte entière d'un bleu uni, terre
-   et relief compris. Une figure qui dépend de la taille de l'écran n'est pas
-   une figure : elle est retirée.
+/* Garder les tuiles satellite et de relief sur les terres uniquement.
+   Le découpage suit les coordonnées de Leaflet lors des zooms et déplacements ;
+   les couches de données, dans les autres panneaux, restent intactes. */
+const NS_SVG = 'http://www.w3.org/2000/svg';
+const masqueSvg = document.createElementNS(NS_SVG, 'svg');
+masqueSvg.setAttribute('width', '0');
+masqueSvg.setAttribute('height', '0');
+masqueSvg.style.position = 'absolute';
+const definitions = document.createElementNS(NS_SVG, 'defs');
+const decoupeTerre = document.createElementNS(NS_SVG, 'clipPath');
+decoupeTerre.id = 'apri-terres';
+decoupeTerre.setAttribute('clipPathUnits', 'userSpaceOnUse');
+definitions.appendChild(decoupeTerre);
+masqueSvg.appendChild(definitions);
+document.body.appendChild(masqueSvg);
+const contoursTerre = (D.terre || []).flatMap(o => o.a || []).map(anneau => {
+  const chemin = document.createElementNS(NS_SVG, 'path');
+  decoupeTerre.appendChild(chemin);
+  return {anneau, chemin};
+});
+function actualiserDecoupeTerre(){
+  const taille = carte.getSize();
+  carte.getPane('tilePane').style.width = taille.x + 'px';
+  carte.getPane('tilePane').style.height = taille.y + 'px';
+  contoursTerre.forEach(({anneau, chemin}) => {
+    chemin.setAttribute('d', anneau.map((c, i) => {
+      const p = carte.latLngToLayerPoint([c[1], c[0]]);
+      return (i ? 'L' : 'M') + p.x + ' ' + p.y;
+    }).join(' ') + 'Z');
+  });
+}
+if (contoursTerre.length) {
+  carte.getPane('tilePane').style.clipPath = 'url(#apri-terres)';
+  carte.on('zoomend moveend viewreset resize', actualiserDecoupeTerre);
+  actualiserDecoupeTerre();
+}
 
-   RESTE LE SIMPLE, QUI MARCHE : la terre grise dans un calque sous les
-   tuiles, la mer bleue au fond du conteneur. L'ombrage, posé sur les deux à
-   moitié transparent, dessine le relief sur la terre et bleuit à peine la
-   mer — c'est exactement l'image d'avant, quand le fond venait de CARTO. */
+/* ---- fonds de carte : un seul à la fois ------------------------------- */
+/* Le fond sobre reste sous les tuiles ; le découpage des tuiles conserve la mer blanche. */
 carte.createPane('fondTerre');
 carte.getPane('fondTerre').style.zIndex = 150;
 const RENDU_TERRE = L.canvas({pane:'fondTerre'});
