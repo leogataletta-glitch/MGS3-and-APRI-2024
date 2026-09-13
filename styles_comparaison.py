@@ -10,7 +10,7 @@ from i18n import T
 
 def choix():
     style = st.session_state.get("style_site", 1)
-    return style if style in (1, 3, 5, 6, 7) else 1
+    return style if style in (1, 3, 5, 6) else 1
 
 
 def _changer(cle):
@@ -21,10 +21,10 @@ def selecteur(prefix):
     fr = i18n.get_lang() == "fr"
     labels = ({1: "Style 1 · Actuel",
                3: "Style 3 · Vert foncé et blanc",
-               5: "Style 5 · Nature, vert et blanc", 6: "Style 6 · Panorama blanc", 7: "Style 7 · Tableau de bord pastel"} if fr else
+               5: "Style 5 · Nature, vert et blanc", 6: "Style 6 · Panorama blanc"} if fr else
               {1: "Style 1 · Original",
                3: "Style 3 · Dark green & white",
-               5: "Style 5 · Nature, green & white", 6: "Style 6 · White panorama", 7: "Style 7 · Pastel dashboard"})
+               5: "Style 5 · Nature, green & white", 6: "Style 6 · White panorama"})
     cle = f"{prefix}_style_site"
     st.markdown('''<style>
         .st-key-zone_nav [data-testid="stExpander"] summary,
@@ -33,15 +33,11 @@ def selecteur(prefix):
         </style>''', unsafe_allow_html=True)
     with st.expander("Changer le style" if fr else "Change style"):
         st.session_state[cle] = choix()
-        st.radio("Style visuel" if fr else "Visual style", [1, 3, 5, 6, 7],
+        st.radio("Style visuel" if fr else "Visual style", [1, 3, 5, 6],
                  format_func=labels.get, key=cle, on_change=_changer, args=(cle,))
 
 
 def appliquer():
-    if choix() == 7:
-        import style_dashboard
-        style_dashboard.appliquer()
-        return
     if choix() == 1:
         return
     if choix() == 6:
@@ -114,10 +110,6 @@ def _go(mode):
 
 def accueil():
     """Accueil Canva avec les vrais boutons, chiffres et carte du site."""
-    if choix() == 7:
-        import style_dashboard
-        style_dashboard.accueil()
-        return
     if choix() == 6:
         import style_panorama
         style_panorama.accueil()
