@@ -9,7 +9,8 @@ from i18n import T
 
 
 def choix():
-    return st.session_state.get("style_site", 1)
+    style = st.session_state.get("style_site", 1)
+    return style if style in (1, 3, 5, 6, 7) else 1
 
 
 def _changer(cle):
@@ -18,11 +19,11 @@ def _changer(cle):
 
 def selecteur(prefix):
     fr = i18n.get_lang() == "fr"
-    labels = ({1: "Style 1 · Actuel", 2: "Style 2 · Vert tendre et forêt",
-               3: "Style 3 · Vert foncé et blanc", 4: "Style 4 · Inspiration Wix",
+    labels = ({1: "Style 1 · Actuel",
+               3: "Style 3 · Vert foncé et blanc",
                5: "Style 5 · Nature, vert et blanc", 6: "Style 6 · Panorama sombre", 7: "Style 7 · Tableau de bord pastel"} if fr else
-              {1: "Style 1 · Original", 2: "Style 2 · Light green & forest",
-               3: "Style 3 · Dark green & white", 4: "Style 4 · Wix inspired",
+              {1: "Style 1 · Original",
+               3: "Style 3 · Dark green & white",
                5: "Style 5 · Nature, green & white", 6: "Style 6 · Dark panorama", 7: "Style 7 · Pastel dashboard"})
     cle = f"{prefix}_style_site"
     st.markdown('''<style>
@@ -32,7 +33,7 @@ def selecteur(prefix):
         </style>''', unsafe_allow_html=True)
     with st.expander("Changer le style" if fr else "Change style"):
         st.session_state[cle] = choix()
-        st.radio("Style visuel" if fr else "Visual style", [1, 2, 3, 4, 5, 6, 7],
+        st.radio("Style visuel" if fr else "Visual style", [1, 3, 5, 6, 7],
                  format_func=labels.get, key=cle, on_change=_changer, args=(cle,))
 
 
@@ -51,12 +52,7 @@ def appliquer():
         import style_nature
         style_nature.appliquer()
         return
-    if choix() == 4:
-        import style_wix
-        style_wix.appliquer()
-        return
-    dark, light = (("#273b16", "#cce0ad") if choix() == 2 else
-                   ("#123d2c", "#ffffff"))
+    dark, light = "#123d2c", "#ffffff"
     st.markdown(f"""<style>
     :root {{ --accent:{dark}; --accent-2:{dark}; --encre:{dark}; }}
     .st-key-zone_page h1,.st-key-zone_page h2,.st-key-zone_page h3,
@@ -130,15 +126,11 @@ def accueil():
         import style_nature
         style_nature.accueil()
         return
-    if choix() == 4:
-        import style_wix
-        style_wix.accueil()
-        return
     fr = i18n.get_lang() == "fr"
     e = html.escape
     river = home._photo_b64(prefere="accueil2_hero.jpg")
     sea = home._photo_b64(prefere="accueil2_hero_b.jpg")
-    dark = "#273b16" if choix() == 2 else "#123d2c"
+    dark = "#123d2c"
     st.markdown(f"""<style>.st-key-cmp_actions {{
         background-image:linear-gradient(90deg,{dark}ee,{dark}99),url('data:image/jpeg;base64,{sea}');
         background-size:cover;background-position:center 60%;}}
