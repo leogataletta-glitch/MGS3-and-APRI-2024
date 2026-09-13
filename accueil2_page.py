@@ -586,9 +586,13 @@ def render():
     .a2-link-photo > svg{position:absolute;bottom:0;left:0;width:100%;height:auto;overflow:visible;display:block;}
     .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{overflow:visible!important;}
     .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button{
-        background:#f3f7f4!important;border:1px solid #e3ece6!important;border-top:0!important;
-        border-radius:0 0 9px 9px!important;min-height:120px!important;height:auto!important;
-        padding:14px 10px!important;}
+        background:transparent!important;border:0!important;box-shadow:none!important;
+        border-radius:0!important;min-height:96px!important;height:auto!important;
+        padding:10px 6px!important;}
+    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button:hover{
+        background:transparent!important;box-shadow:none!important;}
+    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button:focus-visible{
+        outline:2px solid #276448!important;outline-offset:3px;}
     .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p{
         font-size:15px!important;color:#123d2c!important;}
     .st-key-a2_photo_links div[data-testid="stMarkdownContainer"],
