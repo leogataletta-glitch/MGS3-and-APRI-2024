@@ -605,7 +605,13 @@ def render():
     .st-key-a2_photo_links div[data-testid="stButton"] > button p em{
         min-height:0;}
     .st-key-a2_photo_links div[data-testid="stButton"] > button p strong{
-        margin-top:5px;}
+        display:inline-flex;align-items:center;justify-content:center;
+        min-height:44px;min-width:116px;box-sizing:border-box;
+        margin-top:8px;padding:8px 16px;border:1px solid #709583;border-radius:24px;
+        font-size:14px;font-weight:600;line-height:1.2;color:#123d2c;
+        background:#fff;}
+    .st-key-a2_photo_links div[data-testid="stButton"] > button:hover p strong{
+        background:#f3f7f4;transform:none;border-color:#123d2c;}
     .st-key-a2_photo_links div[data-testid="stMarkdownContainer"],
     .st-key-a2_photo_links div[data-testid="stMarkdown"]{margin:0!important;}
     @media(max-width:1000px){
@@ -641,6 +647,7 @@ def render():
                                     f'viewBox="{sx} {sy} 768 {sh}" overflow="hidden">'
                                     f'<image href="data:image/png;base64,{photo}" width="1536" height="1024"/>'
                                     '</svg></svg></div>', unsafe_allow_html=True)
-                                if st.button(f'{title}  \n*{detail}*  \n**⟶**',key=f'a2_b_{code}',use_container_width=True):
+                                action = 'Explorer →' if fr else 'Explore →'
+                                if st.button(f'{title}  \n*{detail}*  \n**{action}**',key=f'a2_b_{code}',use_container_width=True):
                                     st.session_state['app_mode']=code
                                     st.rerun()
