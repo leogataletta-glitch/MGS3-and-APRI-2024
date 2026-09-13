@@ -595,6 +595,10 @@ def render():
         outline:2px solid #276448!important;outline-offset:3px;}
     .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p{
         font-size:15px!important;color:#123d2c!important;}
+    .st-key-a2_photo_links div[data-testid="stButton"] > button p em{
+        min-height:0;}
+    .st-key-a2_photo_links div[data-testid="stButton"] > button p strong{
+        margin-top:5px;}
     .st-key-a2_photo_links div[data-testid="stMarkdownContainer"],
     .st-key-a2_photo_links div[data-testid="stMarkdown"]{margin:0!important;}
     @media(max-width:1000px){
