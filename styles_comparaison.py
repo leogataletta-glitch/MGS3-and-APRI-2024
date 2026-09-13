@@ -21,10 +21,10 @@ def selecteur(prefix):
     fr = i18n.get_lang() == "fr"
     labels = ({1: "Style 1 · Actuel",
                3: "Style 3 · Vert foncé et blanc",
-               5: "Style 5 · Nature, vert et blanc", 6: "Style 6 · Panorama sombre", 7: "Style 7 · Tableau de bord pastel"} if fr else
+               5: "Style 5 · Nature, vert et blanc", 6: "Style 6 · Panorama blanc", 7: "Style 7 · Tableau de bord pastel"} if fr else
               {1: "Style 1 · Original",
                3: "Style 3 · Dark green & white",
-               5: "Style 5 · Nature, green & white", 6: "Style 6 · Dark panorama", 7: "Style 7 · Pastel dashboard"})
+               5: "Style 5 · Nature, green & white", 6: "Style 6 · White panorama", 7: "Style 7 · Pastel dashboard"})
     cle = f"{prefix}_style_site"
     st.markdown('''<style>
         .st-key-zone_nav [data-testid="stExpander"] summary,
