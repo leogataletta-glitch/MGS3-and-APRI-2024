@@ -19,9 +19,11 @@ def _changer(cle):
 def selecteur(prefix):
     fr = i18n.get_lang() == "fr"
     labels = ({1: "Style 1 · Actuel", 2: "Style 2 · Vert tendre et forêt",
-               3: "Style 3 · Vert foncé et blanc", 4: "Style 4 · Inspiration Wix"} if fr else
+               3: "Style 3 · Vert foncé et blanc", 4: "Style 4 · Inspiration Wix",
+               5: "Style 5 · Nature, vert et blanc"} if fr else
               {1: "Style 1 · Original", 2: "Style 2 · Light green & forest",
-               3: "Style 3 · Dark green & white", 4: "Style 4 · Wix inspired"})
+               3: "Style 3 · Dark green & white", 4: "Style 4 · Wix inspired",
+               5: "Style 5 · Nature, green & white"})
     cle = f"{prefix}_style_site"
     st.markdown('''<style>
         .st-key-zone_nav [data-testid="stExpander"] summary,
@@ -30,12 +32,16 @@ def selecteur(prefix):
         </style>''', unsafe_allow_html=True)
     with st.expander("Changer le style" if fr else "Change style"):
         st.session_state[cle] = choix()
-        st.radio("Style visuel" if fr else "Visual style", [1, 2, 3, 4],
+        st.radio("Style visuel" if fr else "Visual style", [1, 2, 3, 4, 5],
                  format_func=labels.get, key=cle, on_change=_changer, args=(cle,))
 
 
 def appliquer():
     if choix() == 1:
+        return
+    if choix() == 5:
+        import style_nature
+        style_nature.appliquer()
         return
     if choix() == 4:
         import style_wix
@@ -104,6 +110,10 @@ def _go(mode):
 
 def accueil():
     """Accueil Canva avec les vrais boutons, chiffres et carte du site."""
+    if choix() == 5:
+        import style_nature
+        style_nature.accueil()
+        return
     if choix() == 4:
         import style_wix
         style_wix.accueil()
