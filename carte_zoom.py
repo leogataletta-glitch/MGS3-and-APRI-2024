@@ -311,7 +311,15 @@ def _composer(lang):
                overflow:hidden; height:100%; display:flex;
                flex-direction:column; }}
   .cz-zone {{ flex:1 1 auto; min-height:0; position:relative;
-              border-radius:10px; overflow:hidden; background:{MER}; }}
+              border-radius:0; overflow:hidden; background:{MER}; }}
+  /* Dissipation au bord du viewport, indépendante du zoom et des commandes. */
+  .cz-zone::after {{ content:""; position:absolute; inset:0; z-index:1;
+      pointer-events:none;
+      background:
+        linear-gradient(to right,#fff,rgba(255,255,255,0)) left/5% 100% no-repeat,
+        linear-gradient(to left,#fff,rgba(255,255,255,0)) right/5% 100% no-repeat,
+        linear-gradient(to bottom,#fff,rgba(255,255,255,0)) top/100% 7% no-repeat,
+        linear-gradient(to top,#fff,rgba(255,255,255,0)) bottom/100% 7% no-repeat; }}
   .cz-carte {{ position:absolute; inset:0; width:100%; height:100%;
                display:block; }}
   /* LES COMMANDES SONT SOUS LA CARTE, PAS DESSUS. Posées en surimpression
