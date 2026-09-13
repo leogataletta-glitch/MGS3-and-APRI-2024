@@ -167,13 +167,13 @@ STYLE = """
   /* LE REMBOURRAGE BAS EST UNE BANDE RÉSERVÉE, PAS UNE RESPIRATION. C'est là
      que le bouton d'appel vient se poser, remonté depuis le flux : sans elle,
      il se serait couché sur la dernière ligne du paragraphe. */
-  .a2-hero-c { position:relative; z-index:2; padding:28px 40px 56px calc(2rem + 46px);
+  .a2-hero-c { position:relative; z-index:2; padding:40px 40px 80px calc(2rem + 46px);
         max-width:680px; }
   /* LE BLOC DE MARQUE : l'emblème, un filet, la ligne institutionnelle. Les
      trois sont alignés sur leur milieu, comme dans le fichier de la charte,
      et le filet monte et descend avec le texte plutôt qu'avec l'image — c'est
      lui qui sépare la marque de ce qu'elle nomme. */
-  .a2-marque { display:flex; align-items:center; gap:20px; margin:0 0 20px; }
+  .a2-marque { display:flex; align-items:center; gap:20px; margin:0 0 26px; }
   .a2-marque img { height:78px; width:auto; display:block; flex:0 0 auto; }
   .a2-filet { width:1px; align-self:stretch; margin:4px 0;
         background:#a9bcc6; flex:0 0 1px; }
@@ -189,7 +189,7 @@ STYLE = """
   .a2-inst span { display:block; font-size:19px; line-height:1.3;
         color:#3d5c74; }
   .a2-kick { font-size:11.5px; font-weight:700; letter-spacing:.19em;
-        text-transform:uppercase; color:#3f8f66; margin:0 0 12px; }
+        text-transform:uppercase; color:#3f8f66; margin:0 0 16px; }
   /* AU FIL DE L'EAU, ET NON JUSTIFIÉ. La feuille de l'application justifie
      les blocs de texte ; sur un titre de quatre mots en corps cinquante-deux,
      la justification écarte les mots jusqu'aux bords du cadre. */
@@ -197,12 +197,12 @@ STYLE = """
   .a2-titre { font-family:Georgia,"Times New Roman",serif;
         font-size:clamp(29px, 3.1vw, 46px);
         line-height:1.08; letter-spacing:-.02em; color:#153b2c;
-        margin:0 0 14px; font-weight:400; text-align:left !important;
+        margin:0 0 18px; font-weight:400; text-align:left !important;
         max-width:none; }
   .a2-titre span { display:block; white-space:normal; text-wrap:balance; }
   /* Un chapeau court, aligné à gauche et sans coupures automatiques des mots. */
   p.a2-intro { font-size:17px !important; color:#33443e !important;
-        line-height:1.6 !important; margin:0 0 12px !important;
+        line-height:1.6 !important; margin:0 0 18px !important;
         max-width:52ch; text-align:left !important; hyphens:none !important; }
   /* LE CRÉDIT EST BLANC, SUR LA PHOTOGRAPHIE. Une ombre portée le détache
      là où le cliché passe clair — une plaque translucide, elle, découperait
@@ -238,7 +238,7 @@ STYLE = """
      un peu plus dans la photographie et en remontant la rangée, l'écart entre
      les deux se creuse au lieu de se combler. */
   .a2-chif { display:grid; grid-template-columns:repeat(4, 1fr);
-        margin:8px 0 12px; }
+        margin:12px 0 26px; }
   .a2-chif > div { padding:4px 26px; }
   .a2-chif > div + div { border-left:1px solid #e6ebe8; }
   .a2-n { font-family:Georgia,"Times New Roman",serif; font-size:34px;
@@ -270,7 +270,7 @@ STYLE = """
      même décalage, les deux colonnes commençaient à deux hauteurs
      différentes et la droite semblait remonter dans les chiffres. */
   .a2-portes-t { font-size:11.5px; font-weight:700; letter-spacing:.15em;
-        text-transform:uppercase; color:#1a4d3a; margin:10px 0 4px; }
+        text-transform:uppercase; color:#1a4d3a; margin:18px 0 4px; }
   .a2-portes-f { width:44px; height:2px; background:#9fc7b3; margin:0 0 14px; }
   /* PLUS DE PICTOGRAMME, ET LE TEXTE AU MILIEU. Quatre cartons pâles coiffés
      chacun d'une petite icône ronde, c'est la vignette que toutes les pages
@@ -347,7 +347,7 @@ STYLE = """
          réglée à l'œil sur une largeur de fenêtre ; mesurée, elle poussait
          le bouton cent pixels plus loin que le premier mot du chapeau, et
          le bandeau paraissait bancal. */
-      margin:-26px 0 0 23px !important;
+      margin:-26px 0 12px 23px !important;
   }
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button:hover {
       background:rgba(18,61,44,.08) !important; transform:none !important;
@@ -360,18 +360,18 @@ STYLE = """
   /* Le texte et les marques gardent leur place sur téléphone. */
   @media (max-width: 1000px) {
     .a2-hero { margin-left:-2.6rem; }
-    .a2-hero-c { padding:88px 24px 140px; max-width:680px; }
+    .a2-hero-c { padding:100px 24px 140px; max-width:680px; }
     .a2-marque { gap:12px; }
     .a2-marque img { height:60px; }
     .a2-inst b { font-size:19px; }
     .a2-inst span { font-size:16px; }
     .a2-titre { font-size:clamp(28px, 5vw, 40px); }
     div[class*="st-key-a2_cta"] { margin:0 !important; }
-    .st-key-a2_cta { margin:8px 0 12px !important; }
+    .st-key-a2_cta { margin:12px 0 20px !important; }
     .a2-hero-aquarelle { background-size:auto 230px; background-position:right bottom!important; }
     .a2-hero-art { inset:auto 0 0; height:230px; }
     .a2-hero-aquarelle::before { background:linear-gradient(180deg,#fff 0%,#fff 60%,rgba(255,255,255,0) 90%); }
-    .a2-hero-aquarelle .a2-hero-c { padding-bottom:150px; }
+    .a2-hero-aquarelle .a2-hero-c { padding-bottom:165px; }
     .a2-credit { max-width:calc(100% - 48px); }
   }
 </style>
