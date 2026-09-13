@@ -2149,6 +2149,7 @@ st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
 # colonnes partent maintenant du même bord haut : le menu à gauche,
 # l'illustration en tête de la page, à sa droite.
 # La colonne de menu est étroite et fixe ; la page prend tout le reste.
+_menu_mobile = st.container(key="menu_mobile")
 _col_nav, _col_page = st.columns([1, 5.0], gap="medium")
 _zone_nav = _col_nav.container(key="zone_nav")
 # LE BANDEAU EST DANS LA COLONNE DE DROITE, ET IL Y VIENT EN PREMIER : c'est
@@ -2332,9 +2333,9 @@ _CSS_ICONES_NAV = "<style>" + "".join(
     for _m, _ic in _NAV) + "</style>"
 
 
-def _entree_nav(mode, icone):
+def _entree_nav(mode, icone, prefix="nav"):
     actif = st.session_state["app_mode"] == mode
-    st.button(LIBELLE_MODE[mode], key=f"nav_{mode}",
+    st.button(LIBELLE_MODE[mode], key=f"{prefix}_{mode}",
               on_click=_bascule, args=(mode,),
               type="primary" if actif else "secondary",
               use_container_width=True)
@@ -2525,6 +2526,35 @@ def _rendre_ruban(avec_image):
             + _bloc_credit(page, bool(_film))
             + '</div>', unsafe_allow_html=True)
 
+
+st.markdown("""
+<style>
+  .st-key-menu_mobile { display:none !important; }
+  @media (min-width:1001px) {
+    div[data-testid="stColumn"]:has(.st-key-zone_nav) {
+      min-width:230px !important;
+    }
+    .st-key-zone_nav button p {
+      overflow-wrap:normal !important; word-break:normal !important;
+    }
+  }
+  @media (max-width:1000px) {
+    .st-key-menu_mobile { display:block !important; padding:12px 0; }
+    div[data-testid="stColumn"]:has(.st-key-zone_nav) { display:none !important; }
+    div[data-testid="stColumn"]:has(.st-key-zone_page) {
+      width:100% !important; flex:1 1 100% !important; min-width:0 !important;
+    }
+  }
+</style>
+""", unsafe_allow_html=True)
+
+with _menu_mobile:
+    with st.popover("☰ Menu", use_container_width=True):
+        for _fam, _entrees in _NAV_FAMILLES:
+            if _fam:
+                st.caption(T(_fam))
+            for _mode, _icone in _entrees:
+                _entree_nav(_mode, _icone, prefix="mobile_nav")
 
 with _zone_nav:
     # LES ENTRÉES SE LISENT DE HAUT EN BAS, UNE PAR LIGNE.

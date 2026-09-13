@@ -77,23 +77,15 @@ TEXTES = {
     # laissait le navigateur choisir où couper, et il en faisait trois lignes
     # bancales. Le @@ dit où passer à la ligne, dans chaque langue, et la
     # coupure tombe alors sur le sens.
-    "a2_titre": {"en": "Data for a more@@resilient Haiti",
-                 "fr": "Des données pour une@@Haïti plus résiliente"},
+    "a2_titre": {"en": "Understanding landscapes@@to strengthen resilience",
+                 "fr": "Comprendre les territoires@@pour renforcer leur résilience"},
     "a2_intro": {
-        "en": "The APRI approach assesses how a landscape maintains and "
-              "improves its essential functions in the face of constant "
-              "pressures and extreme events. This integrated model, a "
-              "diagnostic tool, measures the resilience of a landscape and "
-              "explores, through a set of indicators, specific levers for "
-              "action: making the most of the capacities available, or "
-              "identifying those to be strengthened.",
-        "fr": "L'approche APRI évalue comment un paysage maintient et "
-              "améliore ses fonctions essentielles face à des défis "
-              "constants et à des événements extrêmes. Ce modèle intégré, "
-              "outil de diagnostic, mesure la résilience d'un paysage et "
-              "explore, au travers d'un ensemble d'indicateurs, des leviers "
-              "d'action spécifiques : tirer parti au mieux des compétences "
-              "disponibles, ou identifier celles à améliorer."},
+        "en": "Explore survey results from Sud and Grand'Anse, Haiti, to "
+              "better understand vulnerabilities, local capacities and "
+              "opportunities for action.",
+        "fr": "Explorez les résultats de l'enquête menée dans le Sud et la "
+              "Grand'Anse, en Haïti, pour mieux comprendre les vulnérabilités, "
+              "les capacités locales et les pistes d'action."},
     "a2_cta": {"en": "Explore the results", "fr": "Explorer les résultats"},
     # LA LÉGENDE SUIT LA PHOTOGRAPHIE, ET LES DEUX PHOTOGRAPHIES DIFFÈRENT :
     # la vallée de la Voldrogue côté anglais, le port côté français. Chaque
@@ -162,9 +154,8 @@ STYLE = """
         background-repeat:no-repeat; }
   .a2-hero::before { content:""; position:absolute; inset:0;
         background:linear-gradient(90deg,
-            rgba(255,255,255,.97) 0%, rgba(255,255,255,.93) 28%,
-            rgba(255,255,255,.62) 44%, rgba(255,255,255,.12) 62%,
-            rgba(255,255,255,0) 74%); }
+            rgba(255,255,255,.98) 0%, rgba(255,255,255,.94) 540px,
+            rgba(255,255,255,.78) 680px, rgba(255,255,255,0) 960px); }
   /* LE TEXTE, LUI, GARDE SA MARGE. L'image a débordé de deux rem à gauche ;
      le bloc de texte les reprend en rembourrage, sinon le sur-titre se
      collerait au vert de la colonne. */
@@ -197,31 +188,17 @@ STYLE = """
   /* AU FIL DE L'EAU, ET NON JUSTIFIÉ. La feuille de l'application justifie
      les blocs de texte ; sur un titre de quatre mots en corps cinquante-deux,
      la justification écarte les mots jusqu'aux bords du cadre. */
-  /* DEUX LIGNES, ET LE CORPS CÈDE AVANT ELLES. Le saut de ligne était écrit,
-     mais rien n'empêchait le navigateur d'en ajouter un troisième quand la
-     fenêtre rétrécissait : la première moitié se coupait à son tour. Chaque
-     moitié est donc insécable, et c'est la taille du texte qui suit la largeur
-     de la fenêtre — jamais le nombre de lignes. */
+  /* La coupure éditoriale reste, mais chaque ligne peut se replier sur mobile. */
   .a2-titre { font-family:Georgia,"Times New Roman",serif;
-        font-size:clamp(29px, 3.35vw, 52px);
+        font-size:clamp(29px, 3.1vw, 46px);
         line-height:1.08; letter-spacing:-.02em; color:#153b2c;
         margin:0 0 20px; font-weight:400; text-align:left !important;
         max-width:none; }
-  .a2-titre span { display:block; white-space:nowrap; }
-  /* LA LARGEUR SUIT LA LONGUEUR. Le chapeau tenait en une phrase et se
-     coupait à quarante-quatre signes ; il en fait maintenant plusieurs, et
-     la même colonne étroite en aurait fait dix lignes sous le titre. Il
-     prend donc la largeur du bloc, en corps légèrement réduit.
-
-     ET IL EST JUSTIFIÉ. C'est le seul bloc de la page qui le soit, et il le
-     supporte : quatre lignes pleines sur une colonne large ne creusent pas
-     de rivières entre les mots, là où le titre en cinquante-deux points, lui,
-     en creusait. Le bord droit net referme le bloc de texte contre la
-     photographie. */
-  p.a2-intro { font-size:14.5px !important; color:#3c4761 !important;
+  .a2-titre span { display:block; white-space:normal; text-wrap:balance; }
+  /* Un chapeau court, aligné à gauche et sans coupures automatiques des mots. */
+  p.a2-intro { font-size:17px !important; color:#33443e !important;
         line-height:1.6 !important; margin:0 0 26px !important;
-        max-width:none; text-align:justify !important;
-        text-justify:inter-word; }
+        max-width:52ch; text-align:left !important; hyphens:none !important; }
   /* LE CRÉDIT EST BLANC, SUR LA PHOTOGRAPHIE. Une ombre portée le détache
      là où le cliché passe clair — une plaque translucide, elle, découperait
      un rectangle net dans l'image. */
@@ -374,6 +351,18 @@ STYLE = """
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button p {
       color:#ffffff !important; font-size:14px !important;
       font-weight:600 !important; margin:0 !important;
+  }
+  /* Le texte et les marques gardent leur place sur téléphone. */
+  @media (max-width: 1000px) {
+    .a2-hero { margin-left:-2.6rem; }
+    .a2-hero-c { padding:112px 24px 140px; max-width:680px; }
+    .a2-marque { gap:12px; }
+    .a2-marque img { height:60px; }
+    .a2-inst b { font-size:19px; }
+    .a2-inst span { font-size:16px; }
+    .a2-titre { font-size:clamp(28px, 5vw, 40px); }
+    div[class*="st-key-a2_cta"] { margin:-90px 0 68px -15px !important; }
+    .a2-credit { max-width:calc(100% - 48px); }
   }
 </style>
 """
