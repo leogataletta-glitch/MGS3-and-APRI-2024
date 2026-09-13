@@ -567,22 +567,23 @@ def render():
 
     # Four photo destinations, followed by the full-width territory map.
     fr = i18n.get_lang() == 'fr'
+    watercolor = _photo_b64(prefere='aquarelles_apri.png')
     entries = [
         ('methodologie', 'Cadre de résilience' if fr else 'Resilience framework',
          'Comprendre l’approche APRI' if fr else 'Understand the APRI approach',
-         _photo_b64(prefere='bandeau_apri_dessin.jpg'), '35% 50%', 'Paysage agricole du Cadre de résilience'),
+         watercolor, '0% 0%', 'Aquarelle du paysage agricole'),
         ('dimensions', 'Résultats' if fr else 'Results', T('a2_p1_x'),
-         _photo_b64(prefere='accueil2_hero.jpg'), '50% 65%', 'Vallée de la Voldrogue'),
+         watercolor, '100% 0%', 'Aquarelle de la vallée de la Voldrogue'),
         ('boucles', 'Boucles de rétroaction' if fr else 'Feedback loops', T('a2_p3_x'),
-         _photo_b64(prefere='accueil2_hero_b.jpg'), '30% 65%', 'Baie de Corail'),
+         watercolor, '0% 100%', 'Aquarelle de la baie de Corail'),
         ('actions', 'Fiches d’intervention' if fr else 'Intervention profiles', T('a2_p4_x'),
-         _photo_b64(prefere='bandeau_actions.jpg'), '55% 50%', 'Canal d’irrigation des Fiches d’intervention'),
+         watercolor, '100% 100%', 'Aquarelle du canal d’irrigation'),
     ]
     st.markdown("""<style>
     .st-key-a2_photo_links{margin-bottom:35px!important;}
     .st-key-a2_photo_links [data-testid="stHorizontalBlock"]{gap:18px!important;}
     .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{gap:0!important;}
-    .a2-link-photo{height:165px;background-size:cover;border-radius:9px 9px 0 0;}
+    .a2-link-photo{aspect-ratio:2 / 1;background-size:200% 200%;background-repeat:no-repeat;border-radius:9px 9px 0 0;}
     .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button{
         background:#f3f7f4!important;border:1px solid #e3ece6!important;border-top:0!important;
         border-radius:0 0 9px 9px!important;min-height:145px!important;height:auto!important;
@@ -602,7 +603,7 @@ def render():
         for col, (code, title, detail, photo, position, alt) in zip(st.columns(4), entries):
             with col:
                 with st.container(key=f'a2_porte_{code}'):
-                    st.markdown(f'<div class="a2-link-photo" role="img" aria-label="{_e(alt)}" style="background-image:url(data:image/jpeg;base64,{photo});background-position:{position}"></div>',unsafe_allow_html=True)
+                    st.markdown(f'<div class="a2-link-photo" role="img" aria-label="{_e(alt)}" style="background-image:url(data:image/png;base64,{photo});background-position:{position}"></div>',unsafe_allow_html=True)
                     if st.button(f'{title}  \n*{detail}*  \n**⟶**',key=f'a2_b_{code}',use_container_width=True):
                         st.session_state['app_mode'] = code
                         st.rerun()
