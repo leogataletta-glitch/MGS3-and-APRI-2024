@@ -2975,17 +2975,17 @@ def _v_boucles():
     .st-key-cad_feedback{padding-top:20px!important;}
     .st-key-cad_feedback .cad-bt{font:400 29px/1.3 Georgia,serif;margin:0 0 12px;color:#123d2c;}
     .st-key-cad_feedback .cad-feedback-intro{font:15px/1.75 Arial,sans-serif;color:#506457;margin-bottom:26px;max-width:85ch;}
-    .st-key-cad_feedback .cad-bp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:18px;margin:0 0 32px;}
+    .st-key-cad_feedback .cad-bp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:32px;margin:8px 0 40px;}
     .st-key-cad_feedback .cad-bp-fl{display:none;}
-    .st-key-cad_feedback .cad-bp-e{align-items:flex-start;text-align:left;background:#f2f7f3;border:1px solid #dfe9e2;border-radius:10px;padding:24px;}
-    .st-key-cad_feedback .cad-step-number{font:24px Georgia,serif;color:#779784;margin-bottom:20px;}
-    .st-key-cad_feedback .cad-bp-t{font:400 23px/1.3 Georgia,serif;letter-spacing:0;margin:0;}
+    .st-key-cad_feedback .cad-bp-e{align-items:flex-start;text-align:left;background:transparent;border:0;border-top:1px solid #dfe9e2;border-radius:0;padding:18px 0;}
+    .st-key-cad_feedback .cad-step-number{font:13px Arial,sans-serif;color:#779784;margin-bottom:14px;}
+    .st-key-cad_feedback .cad-bp-t{font:400 21px/1.3 Georgia,serif;letter-spacing:0;margin:0;}
     .st-key-cad_feedback .cad-bp-x{font-size:14px;line-height:1.7;color:#506457;max-width:none;}
     .st-key-cad_feedback .cad-bp-ex{font-size:13px;line-height:1.6;color:#597565;max-width:none;margin-top:16px;}
     .st-key-cad_feedback .cad-bl{border:0;margin:0;padding:0;}
     .st-key-cad_feedback .cad-bl-h{font:400 27px/1.3 Georgia,serif;color:#123d2c;text-align:left;letter-spacing:0;margin:8px 0 24px;}
     .st-key-cad_feedback .cad-bl-g{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:24px;align-items:stretch;}
-    .st-key-cad_feedback .cad-bl-g>div{border:1px solid #dfe9e2;border-radius:10px;padding:26px;background:#fff;}
+    .st-key-cad_feedback .cad-bl-g>div{border:0;border-radius:0;padding:12px 0;background:transparent;}
     .st-key-cad_feedback .cad-bl-g>div:first-child{display:flex;flex-direction:column;justify-content:center;gap:24px;}
     .st-key-cad_feedback .cad-bs{margin:0;}
     .st-key-cad_feedback .cad-bs-t{font:400 20px/1.4 Georgia,serif;}
@@ -2993,13 +2993,13 @@ def _v_boucles():
     .st-key-cad_feedback .cad-bl-d{align-items:center;gap:24px;}
     .st-key-cad_feedback .cad-bl-n{font:400 20px/1.4 Georgia,serif;}
     .st-key-cad_feedback .cad-bl-s{font-size:14px;line-height:1.6;}
-    .st-key-cad_feedback .cad-loop-note{background:#f2f7f3;border-left:3px solid #69977b;padding:20px 24px;margin:24px 0 30px;font:14px/1.8 Arial,sans-serif;color:#506457;}
+    .st-key-cad_feedback .cad-loop-note{background:transparent;border:0;border-top:1px solid #dfe9e2;padding:22px 0 0;margin:28px 0 36px;font:14px/1.8 Arial,sans-serif;color:#506457;}
     .st-key-cad_feedback .cad-bm{border:0;margin:0;padding:0;}
     .st-key-cad_feedback .cad-bm-h{font:400 23px/1.4 Georgia,serif;letter-spacing:0;text-transform:none;}
     .st-key-cad_feedback .cad-bm-x{font-size:14px;line-height:1.8;max-width:100ch;hyphens:none;}
     .st-key-cad_feedback .cad-bm-l{gap:18px 30px;margin-top:20px;}
     @media(max-width:1100px){.st-key-cad_feedback .cad-bp{grid-template-columns:repeat(2,minmax(0,1fr));}.st-key-cad_feedback .cad-bl-g{grid-template-columns:1fr;}}
-    @media(max-width:600px){.st-key-cad_feedback .cad-bp{grid-template-columns:1fr;gap:12px;}.st-key-cad_feedback .cad-bp-e{padding:20px;}.st-key-cad_feedback .cad-step-number{margin-bottom:10px;}.st-key-cad_feedback .cad-bl-g>div{padding:18px;}.st-key-cad_feedback .cad-bl-d{gap:10px;}.st-key-cad_feedback .cad-bl-n{font-size:17px;}.st-key-cad_feedback .cad-bl-s{font-size:12px;}}
+    @media(max-width:600px){.st-key-cad_feedback .cad-bp{grid-template-columns:1fr;gap:12px;}.st-key-cad_feedback .cad-bp-e{padding:18px 0;}.st-key-cad_feedback .cad-step-number{margin-bottom:10px;}.st-key-cad_feedback .cad-bl-g>div{padding:12px 0;}.st-key-cad_feedback .cad-bl-d{gap:10px;}.st-key-cad_feedback .cad-bl-n{font-size:17px;}.st-key-cad_feedback .cad-bl-s{font-size:12px;}}
     </style>""", unsafe_allow_html=True)
     fr = i18n.get_lang() == "fr"
     st.markdown('<div class="cad-bt">' + ("Du constat à l’action" if fr else "From observation to action") + '</div>'
@@ -3123,3 +3123,4 @@ def _v_document(doc_complet):
     # c'est ce que la carte au-dessus propose ; en proposer en plus une
     # transcription repliée mettait deux fois le même contenu sur la page,
     # dont une derrière un clic qui n'annonce rien.
+
