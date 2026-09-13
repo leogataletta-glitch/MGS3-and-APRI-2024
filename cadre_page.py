@@ -2062,7 +2062,7 @@ def _tableau_dimensions(stats):
             '<div class="cad-dl">'
             f'<div class="cad-dl-n"><span class="cad-dl-r">{num}.</span> '
             f'{reste}</div>'
-            f'<div class="cad-dl-v">{_fmt(e["part"])}&thinsp;%</div>'
+            f'<div class="cad-dl-v cad-weight"><span class="cad-weight-track" aria-hidden="true"><span style="width:{max(0,min(100,e["part"])):.3f}%"></span></span><span>{_fmt(e["part"])}&thinsp;%</span></div>'
             f'<div class="cad-dl-v">{e["n"]}</div></div>')
     # L'EN-TÊTE EST UNE BANDE, PAS UNE LIGNE DE PLUS. Un aplat très pâle sous
     # les trois intitulés sépare la légende des données mieux qu'un filet, et
@@ -2147,7 +2147,7 @@ def _attributs():
             '<div class="cad-c">'
             f'<div class="cad-c-n">{i:02d}</div>'
             '<div class="cad-c-b">'
-            f'<div class="cad-c-t">{_e(T(k + "_t"))}</div>'
+            f'<div class="cad-c-t">{_e(T(k + "_t").capitalize())}</div>'
             f'<p class="cad-c-x">{_e(T(k))}</p></div></div>')
     return '<div class="cad-cc">' + "".join(cartes) + '</div>'
 
@@ -2290,11 +2290,32 @@ def render(doc_complet=None):
     st.markdown(STYLE.replace("__BANDES__", _bandes_css()),
                 unsafe_allow_html=True)
 
-    # PAS DE TITRE DE PAGE. La colonne de menu marque déjà la rubrique
-    # courante d'un filet vert et d'un mot en gras ; le répéter en gros
-    # au-dessus des onglets le disait une deuxième fois, et la description
-    # sous l'onglet actif une troisième. La page commence donc par ce qu'elle
-    # apporte.
+    fr = i18n.get_lang() == 'fr'
+    st.markdown('<div class="cad-page-title">'+('Le cadre de résilience' if fr else 'The resilience framework')+'</div><p class="cad-page-intro">'+('Trois capacités complémentaires, étudiées à travers sept dimensions.' if fr else 'Three complementary capacities, explored through seven dimensions.')+'</p>',unsafe_allow_html=True)
+    st.markdown("""<style>
+    .cad-page-title{font:400 36px/1.2 Georgia,'Times New Roman',serif;color:#123d2c;margin:28px 0 12px;}
+    p.cad-page-intro{font:16px/1.7 Arial,sans-serif!important;color:#506457!important;text-align:left!important;margin:0 0 28px!important;}
+    .st-key-cad_model{padding-top:18px!important;}
+    .st-key-cad_model .cad-cc{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px!important;margin:0 0 36px!important;}
+    .st-key-cad_model .cad-c{display:block!important;background:#f2f7f3!important;border:1px solid #dfe9e2!important;border-radius:10px!important;padding:26px!important;}
+    .st-key-cad_model .cad-c-n{font:400 26px/1 Georgia,serif;color:#779784;padding:0;margin-bottom:18px;}
+    .st-key-cad_model .cad-c-t{font:400 25px/1.2 Georgia,serif!important;color:#123d2c;letter-spacing:0;text-transform:none;margin-bottom:12px;}
+    .st-key-cad_model p.cad-c-x{font:14px/1.75 Arial,sans-serif!important;color:#506457!important;hyphens:none!important;}
+    .cad-model-title{font:400 27px/1.3 Georgia,serif;color:#123d2c;margin:0 0 20px;}
+    .st-key-cad_model .cad-dh,.st-key-cad_model .cad-dl{grid-template-columns:minmax(0,1fr) 240px 120px;gap:24px;padding:19px 16px;}
+    .st-key-cad_model .cad-dh{background:#f2f7f3;color:#506457;border-radius:7px 7px 0 0;}
+    .st-key-cad_model .cad-dl-n{font:400 16px/1.5 Georgia,serif;color:#173e2e;text-align:left!important;hyphens:none!important;}
+    .st-key-cad_model .cad-dl-v{font-size:14px;font-weight:400;}
+    .cad-weight{display:flex;align-items:center;justify-content:flex-end;gap:15px;}
+    .cad-weight-track{width:130px;height:6px;background:#e6eee8;border-radius:5px;overflow:hidden;display:block;}
+    .cad-weight-track>span{height:100%;display:block;background:#2d7953;border-radius:5px;}
+    .cad-weight>span:last-child{min-width:65px;}
+    @media(max-width:800px){.st-key-cad_model .cad-cc{grid-template-columns:1fr;gap:14px!important;}
+    .st-key-cad_model .cad-dh,.st-key-cad_model .cad-dl{grid-template-columns:minmax(0,1fr) 78px 72px;gap:8px;padding:16px 4px;}
+    .cad-weight{flex-direction:column-reverse;gap:7px;align-items:flex-end;}.cad-weight-track{width:65px;}
+    .st-key-cad_model .cad-dl-n{font-size:14px;}.st-key-cad_model .cad-dh{letter-spacing:0;font-size:9px;word-break:normal!important;overflow-wrap:normal!important;text-align:left!important;}.cad-page-title{font-size:29px;}}
+    </style>""",unsafe_allow_html=True)
+    names = dict(zip(VUES, ('Modèle','Sources','Calcul des scores','Boucles','Environnement','À compléter','Document complet') if fr else ('Model','Sources','Score calculation','Feedback loops','Environment','To complete','Full document')))
 
     if not stats:
         st.info(T("e_absent"))
@@ -2310,9 +2331,11 @@ def render(doc_complet=None):
     # le reformuler : « Dimensions » suivi de « Les sept dimensions et leurs
     # pondérations ». Le composant accepte de n'en pas avoir.
     vue = onglets.barre("cad_vue", list(VUES),
-                        titre=lambda c: T(_COURT[c]),
-                        description=lambda c: T(_DESC[c]),
-                        defaut=VUES[0])
+                        titre=lambda c: names[c],
+                        compact=True, defaut=VUES[0])
+    active = VUES.index(vue) + 1
+    st.markdown(f'<style>.stApp .st-key-ong_cad_vue [role="radiogroup"] > label:nth-child({active}) {{box-shadow:inset 0 -2px 0 #1f5b46!important;}} .stApp .st-key-ong_cad_vue [role="radiogroup"] > label:nth-child({active}) p {{color:#1f5b46!important;}}</style>',unsafe_allow_html=True)
+
 
     if vue == "sources":
         _v_sources()
@@ -2354,51 +2377,13 @@ def _titre(cle, note=None, marge=4):
 
 # --- 1 · ce que mesure APRI, et en quoi il le découpe -----------------------
 def _v_mesure(stats):
-    """La définition en deux moitiés : les attributs, et les dimensions.
-
-    LE FORMAT SUIT LA MAQUETTE FOURNIE. Deux colonnes, chacune ouverte par un
-    intitulé vert souligné d'un filet et une ligne qui dit ce qu'on va lire ;
-    à gauche trois cartes numérotées, à droite le tableau des sept
-    dimensions ; en dessous, une note qui articule les deux — les attributs
-    disent COMMENT la résilience fonctionne, les dimensions DE QUOI elle est
-    faite. C'est la seule chose que ni la colonne de gauche ni celle de
-    droite ne pouvaient dire seules.
-
-    SANS PICTOGRAMME, ET C'EST LA CONSIGNE QUI TIENT. La maquette en porte un
-    par carte et un par dimension ; ils ont été retirés de cet écran deux
-    fois, parce qu'un œil, un bouclier et une pousse ne disent rien de plus
-    que « anticiper », « absorber » et « s'adapter » écrits juste à côté. Le
-    numéro et le filet tiennent la carte.
-    """
-    # LA DÉFINITION EST PARTIE OUVRIR LES BOUCLES. « Un paysage compris comme
-    # un système complexe adaptatif » ne dit rien des attributs ni des
-    # dimensions : elle annonce un système qui se répond à lui-même, ce qui
-    # est le sujet de l'onglet des boucles. Elle y est maintenant, en tête.
-    # LES DEUX SOUS-TITRES SONT PARTIS. « Attributs de résilience » au-dessus
-    # de trois cartes qui portent chacune son attribut, « Dimensions de
-    # résilience » au-dessus d'un tableau dont la première colonne s'appelle
-    # « Dimension » : la phrase d'ouverture annonce déjà les trois et les
-    # sept, et les deux colonnes se reconnaissent d'elles-mêmes. Ce sont les
-    # deux nombres de cette phrase qui portent maintenant le repérage, en
-    # vert : l'œil saute de « trois attributs » à la colonne de gauche et de
-    # « sept dimensions » à celle de droite.
-    _phrase = _e(T("cad_attr_x"))
-    for _f in (T("cad_attr_f1"), T("cad_attr_f2")):
-        _phrase = _phrase.replace(_e(_f),
-                                  f'<b class="cad-attr-f">{_e(_f)}</b>', 1)
-    st.markdown(f'<p class="cad-attr-x">{_phrase}</p>',
-                unsafe_allow_html=True)
-    g, d = st.columns([1, 1.3], gap="large")
-    with g:
-        st.markdown(_attributs(), unsafe_allow_html=True)
-    with d:
-        st.markdown(_tableau_dimensions(stats), unsafe_allow_html=True)
-    # RIEN SOUS LES DEUX COLONNES. Le bandeau du bas redisait en une phrase ce
-    # que les deux moitiés viennent de montrer : les attributs disent comment,
-    # les dimensions disent quoi. Cette phrase-là se lit dans le dessin.
+    """Three capacity cards followed by all seven weighted dimensions."""
+    with st.container(key='cad_model'):
+        st.markdown(_attributs(),unsafe_allow_html=True)
+        title = 'Les sept dimensions' if i18n.get_lang() == 'fr' else 'The seven dimensions'
+        st.markdown(f'<div class="cad-model-title">{title}</div>'+_tableau_dimensions(stats),unsafe_allow_html=True)
 
 
-# --- 2 · comment la résilience est mesurée ----------------------------------
 def _v_sources():
     """Les quatre sources et ce qui en sort. Tout tient dans l'écran.
 
