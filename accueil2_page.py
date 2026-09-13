@@ -153,6 +153,10 @@ STYLE = """
         background-size:cover; background-position:62% 40%;
         background-repeat:no-repeat; }
   .a2-hero-aquarelle .a2-unep { filter:brightness(0) saturate(100%) invert(22%) sepia(21%) saturate(1030%) hue-rotate(101deg) brightness(85%); }
+  .a2-hero-aquarelle::after { content:""; position:absolute; inset:90px 0 0;
+        z-index:0; pointer-events:none; background-image:var(--a2-aquarelle);
+        background-size:contain; background-position:right bottom;
+        background-repeat:no-repeat; }
   .a2-hero::before { content:""; position:absolute; inset:0; z-index:1;
         background:linear-gradient(90deg,
             rgba(255,255,255,.98) 0%, rgba(255,255,255,.94) 540px,
@@ -365,6 +369,7 @@ STYLE = """
     div[class*="st-key-a2_cta"] { margin:0 !important; }
     .st-key-a2_cta { margin:16px 0 28px !important; }
     .a2-hero-aquarelle { background-size:auto 230px; background-position:right bottom!important; }
+    .a2-hero-aquarelle::after { inset:auto 0 0; height:230px; }
     .a2-hero-aquarelle::before { background:linear-gradient(180deg,#fff 0%,#fff 60%,rgba(255,255,255,0) 90%); }
     .a2-hero-aquarelle .a2-hero-c { padding-bottom:180px; }
     .a2-credit { max-width:calc(100% - 48px); }
@@ -519,7 +524,7 @@ def render():
     aquarelle = _photo_b64(prefere='accueil_aquarelle_haiti.png')
     if aquarelle:
         # Reserve white space above the illustration for the UNEP logo.
-        fond = f"background-image:url('data:image/png;base64,{aquarelle}');background-position:65% 90px;"
+        fond = f"--a2-aquarelle:url('data:image/png;base64,{aquarelle}');"
     # This illustration is not a documentary photograph of a named location.
     credit = '' if aquarelle else f'<div class="a2-credit">{_e(T("a2_credit"))}</div>'
     st.markdown(
