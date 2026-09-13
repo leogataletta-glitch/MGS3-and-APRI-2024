@@ -1563,8 +1563,6 @@ STYLE = """
   .int-box p { margin:0; font-size:12.5px; color:#3c4761; line-height:1.6; }
   .int-perf { border:1px solid #cfe6da; border-radius:8px; padding:12px 14px;
               background:#f3faf6; }
-</style>
-
 .int-act { margin: 2px 0 4px; padding-left: 20px; }
 .int-act li { font-size: 13.5px; color: #3c4761; line-height: 1.62;
               margin-bottom: 4px; }
@@ -1582,6 +1580,7 @@ STYLE = """
 .int-paq-n div { font-size: 11.5px; color: #6b7590; }
 .int-paq-n b { display: block; font-size: 17px; color: #101728;
                font-variant-numeric: tabular-nums; margin-top: 1px; }
+</style>
 """
 
 

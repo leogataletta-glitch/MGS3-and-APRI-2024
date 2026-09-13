@@ -2642,6 +2642,10 @@ app_mode = st.session_state["app_mode"]
 # Chaque page reste écrite comme avant ; c'est le contexte qui change, en un
 # seul endroit, plutôt que quarante modules qui devraient savoir où ils sont.
 with _c_contenu:
+    import design_commun
+    if app_mode != MODE_PORTAIL:
+        design_commun.appliquer()
+        design_commun.entete(app_mode, i18n.get_lang() == "fr")
     if app_mode == MODE_PORTAIL:
         # L'ACCUEIL EST CELUI QUI A ÉTÉ RETENU. Les deux ont vécu côte à côte
         # le temps de trancher ; le premier — l'escalier de quatre nombres et
