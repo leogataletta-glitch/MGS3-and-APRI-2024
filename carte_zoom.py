@@ -48,8 +48,8 @@ APP_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(APP_DIR, "data")
 
 # La palette est celle du site : le vert APRI pour ce qui est enquêté, des
-# gris-verts pour le contexte, un bleu très pâle pour la mer.
-MER = "#dce8f2"
+# Gris-verts pour le contexte, mer blanche pour se fondre dans la page.
+MER = "#ffffff"
 TERRE_ETR = "#eceae4"
 TERRE_HTI = "#e3e7e0"
 DEPT = "#cfe0d2"
