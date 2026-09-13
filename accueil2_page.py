@@ -152,7 +152,8 @@ STYLE = """
         background-color:#eef3f0;
         background-size:cover; background-position:62% 40%;
         background-repeat:no-repeat; }
-  .a2-hero::before { content:""; position:absolute; inset:0;
+  .a2-hero-video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; z-index:0; pointer-events:none; }
+  .a2-hero::before { content:""; position:absolute; inset:0; z-index:1;
         background:linear-gradient(90deg,
             rgba(255,255,255,.98) 0%, rgba(255,255,255,.94) 540px,
             rgba(255,255,255,.78) 680px, rgba(255,255,255,0) 960px); }
@@ -162,7 +163,7 @@ STYLE = """
   /* LE REMBOURRAGE BAS EST UNE BANDE RÉSERVÉE, PAS UNE RESPIRATION. C'est là
      que le bouton d'appel vient se poser, remonté depuis le flux : sans elle,
      il se serait couché sur la dernière ligne du paragraphe. */
-  .a2-hero-c { position:relative; padding:52px 40px 104px calc(2rem + 46px);
+  .a2-hero-c { position:relative; z-index:2; padding:52px 40px 104px calc(2rem + 46px);
         max-width:680px; }
   /* LE BLOC DE MARQUE : l'emblème, un filet, la ligne institutionnelle. Les
      trois sont alignés sur leur milieu, comme dans le fichier de la charte,
@@ -511,8 +512,19 @@ def render():
             if photo else "background:#eef3f0;")
     if photo and cadrage:
         fond += f"background-position:{cadrage};"
+    video = ''
+    film = os.path.join(APP_DIR, 'static', 'bandeau_donnees.mp4')
+    poster = _photo_b64(prefere='bandeau_donnees_poster.jpg')
+    if os.path.exists(film) and poster:
+        fond = f"background-image:url('data:image/jpeg;base64,{poster}');background-position:center;"
+        video = (f'<video class="a2-hero-video" autoplay muted loop playsinline preload="auto" '
+                 f'poster="data:image/jpeg;base64,{poster}" aria-hidden="true">'
+                 '<source src="app/static/bandeau_donnees.mp4" type="video/mp4">'
+                 '<source src="app/static/bandeau_donnees.webm" type="video/webm">'
+                 '</video>')
+    credit = '' if video else f'<div class="a2-credit">{_e(T("a2_credit"))}</div>'
     st.markdown(
-        f'<div class="a2-hero" style="{fond}"><div class="a2-hero-c">'
+        f'<div class="a2-hero" style="{fond}">{video}<div class="a2-hero-c">'
         f'{marque}'
         f'<div class="a2-kick">{_e(T("a2_kicker"))}</div>'
         f'<div class="a2-titre">'
@@ -522,7 +534,7 @@ def render():
         f'</div>'
         f'<img class="a2-unep" alt="UNEP" '
         f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
-        f'<div class="a2-credit">{_e(T("a2_credit"))}</div></div>',
+        f'{credit}</div>',
         unsafe_allow_html=True)
     # LE BOUTON EST DANS LA PHOTOGRAPHIE, ET IL Y ENTRE PAR LE HAUT. Streamlit
     # ne sait pas poser un widget à l'intérieur d'un bloc HTML qu'on a écrit
