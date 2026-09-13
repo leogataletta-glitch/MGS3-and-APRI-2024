@@ -347,7 +347,7 @@ STYLE = """
          réglée à l'œil sur une largeur de fenêtre ; mesurée, elle poussait
          le bouton cent pixels plus loin que le premier mot du chapeau, et
          le bandeau paraissait bancal. */
-      margin:-34px 0 8px 23px !important;
+      margin:-26px 0 0 23px !important;
   }
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button:hover {
       background:rgba(18,61,44,.08) !important; transform:none !important;
