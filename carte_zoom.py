@@ -242,22 +242,22 @@ def _composer(lang):
     c3 = _cadre([r for _n, rs in sections for r in rs], proj, 0.15)
 
     # --- les couches
-    d_dom = _chemin(a_dom, proj, 45.0)
-    d_hti = _chemin(a_hti, proj, 10.0)
-    # LES LIMITES DE DÉPARTEMENT SONT UNE COUCHE, PAS UN LISERÉ. Le projet
-    # travaille dans la Grand'Anse et le Sud : ces limites sont ce qui situe
-    # les dix sections dans une géographie administrative que le lecteur
-    # connaît. Elles sont donc tracées en tirets — la convention des limites
-    # administratives — et restent visibles jusqu'au dernier cadrage.
+    # Une même précision pour toutes les couches conserve les détails
+    # côtiers au zoom et évite les contours anguleux qui se dédoublent.
+    precision = 0.15
+    d_dom = _chemin(a_dom, proj, precision)
+    d_hti = _chemin(a_hti, proj, precision)
+    # Des limites fines et continues situent les départements sans
+    # transformer tout le littoral en une succession de gros tirets.
     g_dept = "".join(
-        f'<path d="{_chemin(rs, proj, 6.0)}" fill="{DEPT}" '
-        f'fill-opacity=".5" stroke="{DEPT_TRAIT}" stroke-width="1.4" '
-        f'stroke-dasharray="5 3.5" stroke-linejoin="round" '
+        f'<path d="{_chemin(rs, proj, precision)}" fill="{DEPT}" '
+        f'fill-opacity=".5" stroke="{DEPT_TRAIT}" stroke-width=".7" '
+        f'stroke-linejoin="round" '
         f'vector-effect="non-scaling-stroke"/>' for _n, rs in depts)
     g_sec = "".join(
         f'<path class="cz-s" data-nom="{i18n.echapper(nom) if hasattr(i18n, "echapper") else nom}" '
-        f'd="{_chemin(rs, proj, 1.5)}" fill="{SECTION}" fill-opacity=".82" '
-        f'stroke="{SECTION_TRAIT}" stroke-width="1.1" '
+        f'd="{_chemin(rs, proj, precision)}" fill="{SECTION}" fill-opacity=".82" '
+        f'stroke="{SECTION_TRAIT}" stroke-width=".8" stroke-linejoin="round" '
         f'vector-effect="non-scaling-stroke"/>' for nom, rs in sections)
 
     # --- les étiquettes, avec le cadrage où elles apparaissent

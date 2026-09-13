@@ -2531,6 +2531,10 @@ st.markdown("""
 <style>
   .st-key-menu_mobile { display:none !important; }
   @media (min-width:1001px) {
+    /* Masquer aussi le wrapper : sinon le gap du parent reste au-dessus du hero. */
+    [data-testid="stLayoutWrapper"]:has(> .st-key-menu_mobile) {
+      display:none !important;
+    }
     div[data-testid="stColumn"]:has(.st-key-zone_nav) {
       min-width:230px !important;
     }
