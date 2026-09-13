@@ -2462,13 +2462,8 @@ def _film_bandeau(page):
 
 
 def _rendre_ruban(avec_image):
-    """One compact header across all internal pages; the home keeps its hero."""
-    if not avec_image:
-        return
-    import design_commun
-    with _ruban:
-        design_commun.ruban(_marque_bloc_b64(), assets.LOGO_UNEP_BLANC,
-                            T("a2_inst"))
+    """Internal pages start with their title; branding remains on the home."""
+    return
 
 
 st.markdown("""
