@@ -320,12 +320,12 @@ STYLE = """
 
   /* --- LE BOUTON D'APPEL DU BANDEAU ------------------------------------ */
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button {
-      background:#1f7a4d !important; border:0 !important;
-      border-radius:8px !important; padding:13px 26px !important;
+      background:transparent !important; border:1px solid #123d2c !important;
+      border-radius:30px !important; padding:10px 22px !important;
       box-shadow:none !important;
       /* SA LARGEUR EST CELLE DE SON MOT. Étiré sur sa colonne, il faisait un
          pavé de quatre cents pixels pour trois mots. */
-      width:auto !important; min-height:0 !important; height:auto !important;
+      width:auto !important; min-height:46px !important; height:auto !important;
   }
   div[class*="st-key-a2_cta"],
   div[class*="st-key-a2_cta"] div[data-testid="stElementContainer"],
@@ -345,11 +345,11 @@ STYLE = """
       margin:-34px 0 24px 23px !important;
   }
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button:hover {
-      background:#186340 !important; transform:none !important;
-      box-shadow:0 6px 16px rgba(12,40,26,.28) !important;
+      background:rgba(18,61,44,.08) !important; transform:none !important;
+      box-shadow:none !important;
   }
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button p {
-      color:#ffffff !important; font-size:14px !important;
+      color:#123d2c !important; font-size:14px !important;
       font-weight:600 !important; margin:0 !important;
   }
   /* Le texte et les marques gardent leur place sur téléphone. */
@@ -533,7 +533,7 @@ def render():
     # sur trois lignes, l'anglais sur deux — et une position comptée depuis le
     # haut aurait glissé de l'une à l'autre.
     with st.container(key="a2_cta"):
-        if st.button(T("a2_cta") + "  →", key="a2_cta_b"):
+        if st.button(T("a2_cta") + " ↗", key="a2_cta_b"):
             st.session_state["app_mode"] = "dimensions"
             st.rerun()
 

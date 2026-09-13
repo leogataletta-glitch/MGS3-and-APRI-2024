@@ -35,7 +35,6 @@ import environnement_cadre
 # propre module et sous sa propre entrée de menu : la retirer, si elle ne
 # convient pas, ne touche à rien d'autre.
 import accueil2_page
-import styles_comparaison
 import actualites
 import assets
 import cadre_page
@@ -2560,7 +2559,6 @@ with _menu_mobile:
                 st.caption(T(_fam))
             for _mode, _icone in _entrees:
                 _entree_nav(_mode, _icone, prefix="mobile_nav")
-        styles_comparaison.selecteur("mobile")
 
 with _zone_nav:
     # LES ENTRÉES SE LISENT DE HAUT EN BAS, UNE PAR LIGNE.
@@ -2570,7 +2568,6 @@ with _zone_nav:
     # l'écran quand la page défile — c'est ce qui la rend « toujours
     # disponible » sans qu'elle ait à flotter par-dessus le contenu.
     st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
-    styles_comparaison.selecteur("desktop")
     # LA MARQUE N'OUVRE PLUS LA COLONNE. Elle a rejoint l'image, en tête de
     # page, où elle est en entier — l'emblème, le mot et la ligne
     # institutionnelle — plutôt qu'en réduction dans une colonne de deux cents
@@ -2597,7 +2594,6 @@ with _zone_nav:
 # l'aiguillage, pour que chaque page se dessine dedans sans avoir à savoir
 # où elle est.
 _c_contenu = _col_page.container(key="zone_page")
-styles_comparaison.appliquer()
 
 # LA LANGUE EST POSÉE DANS L'IMAGE, EN HAUT. Elle a vécu dans l'angle du
 # bandeau, puis en tête de la colonne de menu ; elle revient sur l'image, qui
@@ -2652,10 +2648,7 @@ with _c_contenu:
         # sa carte — n'est plus une destination. Son module reste en place :
         # celui-ci lui emprunte sa carte du territoire, avec son carton de
         # localisation et ses étiquettes.
-        if styles_comparaison.choix() == 1:
-            accueil2_page.render()
-        else:
-            styles_comparaison.accueil()
+        accueil2_page.render()
 
     if app_mode == MODE_ACCUEIL:
         territoire_page.render()
