@@ -60,9 +60,9 @@ ERGONOMIE = """<style>
 .stApp .st-key-zone_langue_r{background:#909d96!important;border:0!important;border-radius:999px!important;backdrop-filter:none!important;top:16px!important;right:24px!important;}
 .stApp .st-key-zone_langue_r div[class*="st-key-lang_"] div[data-testid="stButton"]>button p{color:#ffffff!important;text-shadow:none!important;}
 .stApp .st-key-zone_langue_r div[class*="st-key-lang_"] div[data-testid="stButton"]>button[kind="primary"] p{color:#ffffff!important;font-weight:700!important;}
-.stApp .st-key-zone_page:has(.apri-page-heading){padding:44px 24px 48px!important;}
+.stApp .st-key-zone_page:has(.apri-page-heading){padding:8px 24px 48px!important;}
 .apri-page-heading{padding:4px 0 8px;border-bottom:1px solid #dfe7e1;margin-bottom:24px;}
-.stApp .st-key-zone_page .apri-page-heading h1{margin-top:24px!important;}
+.stApp .st-key-zone_page .apri-page-heading h1{margin-top:0!important;padding-top:0!important;padding-right:120px!important;}
 .stApp .st-key-zone_page .apri-page-heading p{margin-bottom:16px!important;max-width:780px;}
 .stApp .st-key-zone_page:has([data-modele="presentation"]){max-width:1160px;margin-inline:auto;}
 .stApp .st-key-zone_page:has([data-modele="methode"]){max-width:1360px;margin-inline:auto;}
@@ -71,7 +71,7 @@ ERGONOMIE = """<style>
 .stApp .st-key-zone_page :is(.sx-leg-h,.cad-section-t,.int-section-t){font:500 14px/1.5 Arial,sans-serif!important;letter-spacing:0!important;text-transform:none!important;color:#123d2c!important;}
 .stApp .st-key-zone_page [data-testid="stTabs"] [data-baseweb="tab-list"]{gap:8px;border-bottom:1px solid #dfe7e1;}
 @media(max-width:900px){.apri-ruban{padding:18px 16px 58px;gap:12px;min-height:156px;}.apri-ruban .apri-institution{font-size:16px;max-width:52%;}.apri-ruban .apri-institution span{font-size:14px;}.apri-ruban .apri-unep{width:56px;margin-left:auto;}.stApp .st-key-zone_langue_r{position:absolute!important;top:16px!important;right:16px!important;margin:0!important;}}
-@media(max-width:600px){.apri-ruban .apri-brand{width:44px;height:48px;}.apri-ruban .apri-institution{font-size:14px;padding-left:10px;max-width:none;}.apri-ruban .apri-institution span{font-size:12px;}.apri-ruban .apri-unep{width:44px;}.stApp .st-key-zone_page:has(.apri-page-heading){padding:44px 8px 32px!important;}.apri-page-heading{margin-bottom:20px;}.stApp .st-key-zone_page h1{font-size:28px!important;}.stApp .st-key-zone_page h2,.stApp .st-key-zone_page h3{font-size:22px!important;}}
+@media(max-width:600px){.apri-ruban .apri-brand{width:44px;height:48px;}.apri-ruban .apri-institution{font-size:14px;padding-left:10px;max-width:none;}.apri-ruban .apri-institution span{font-size:12px;}.apri-ruban .apri-unep{width:44px;}.stApp .st-key-zone_page:has(.apri-page-heading){padding:8px 8px 32px!important;}.apri-page-heading{margin-bottom:20px;}.stApp .st-key-zone_page h1{font-size:28px!important;}.stApp .st-key-zone_page h2,.stApp .st-key-zone_page h3{font-size:22px!important;}}
 </style>"""
 
 def ruban(marque, unep, institution):
