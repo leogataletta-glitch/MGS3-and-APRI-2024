@@ -558,13 +558,13 @@ def render():
     entries = [
         ('methodologie', 'Cadre de résilience' if fr else 'Resilience framework',
          'Comprendre l’approche APRI' if fr else 'Understand the APRI approach',
-         assets.PAYSAGE_CAMP_PERRIN, '50% 50%', 'Camp Perrin, Sud'),
+         _photo_b64(prefere='bandeau_apri_dessin.jpg'), '35% 50%', 'Paysage agricole du Cadre de résilience'),
         ('dimensions', 'Résultats' if fr else 'Results', T('a2_p1_x'),
          _photo_b64(prefere='accueil2_hero.jpg'), '50% 65%', 'Vallée de la Voldrogue'),
         ('boucles', 'Boucles de rétroaction' if fr else 'Feedback loops', T('a2_p3_x'),
          _photo_b64(prefere='accueil2_hero_b.jpg'), '30% 65%', 'Baie de Corail'),
         ('actions', 'Fiches d’intervention' if fr else 'Intervention profiles', T('a2_p4_x'),
-         assets.PAYSAGE_CAMP_PERRIN, '85% 60%', 'Camp Perrin, Sud'),
+         _photo_b64(prefere='bandeau_actions.jpg'), '55% 50%', 'Canal d’irrigation des Fiches d’intervention'),
     ]
     st.markdown("""<style>
     .st-key-a2_photo_links{margin-bottom:35px!important;}
