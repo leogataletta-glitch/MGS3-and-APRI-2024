@@ -586,31 +586,37 @@ def render():
          watercolor, '100% 100%', 'Aquarelle du canal d’irrigation'),
     ]
     st.markdown("""<style>
-    .st-key-a2_photo_links{gap:20px!important;}
+    .st-key-a2_photo_links{gap:12px!important;}
     .st-key-a2_photo_links [data-testid="stHorizontalBlock"]{gap:18px!important;}
     .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{gap:0!important;}
-    .a2-link-photo{position:relative;aspect-ratio:2 / 1;margin-top:22%;overflow:visible;background:transparent;}
+    .a2-link-photo{position:relative;aspect-ratio:2 / 1;margin-top:20.3125%;overflow:visible;background:transparent;}
+    .a2-link-photo-bottom{margin-top:13.0208%;}
     .a2-link-photo > svg{position:absolute;bottom:0;left:0;width:100%;height:auto;overflow:visible;display:block;}
     .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{overflow:visible!important;}
     .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button{
         background:transparent!important;border:0!important;box-shadow:none!important;
         border-radius:0!important;min-height:96px!important;height:auto!important;
-        padding:10px 6px!important;}
+        padding:8px 6px 0!important;}
     .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button:hover{
         background:transparent!important;box-shadow:none!important;}
     .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button:focus-visible{
         outline:2px solid #276448!important;outline-offset:3px;}
     .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p{
         font-size:15px!important;color:#123d2c!important;}
-    .st-key-a2_photo_links div[data-testid="stButton"] > button p em{
-        min-height:0;}
-    .st-key-a2_photo_links div[data-testid="stButton"] > button p strong{
-        display:inline-flex;align-items:center;justify-content:center;
-        min-height:48px;min-width:64px;box-sizing:border-box;
-        margin-top:4px;padding:0 12px;border:0;border-radius:0;
-        font-size:34px;font-weight:400;line-height:1.2;color:#123d2c;
+    /* Explicit spacing avoids inherited reserved lines and doubled Markdown breaks. */
+    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p{
+        display:flex!important;flex-direction:column;align-items:center;}
+    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p br{
+        display:none!important;}
+    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p em{
+        min-height:0!important;margin-top:4px!important;}
+    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p strong{
+        display:flex!important;align-items:center;justify-content:center;
+        min-height:44px!important;min-width:64px;box-sizing:border-box;
+        margin-top:0!important;padding:0 12px;border:0;border-radius:0;
+        font-size:34px!important;font-weight:400;line-height:1.2!important;color:#123d2c;
         background:transparent;}
-    .st-key-a2_photo_links div[data-testid="stButton"] > button:hover p strong{
+    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button:hover p strong{
         background:transparent;transform:translateX(4px);}
     .st-key-a2_photo_links div[data-testid="stMarkdownContainer"],
     .st-key-a2_photo_links div[data-testid="stMarkdown"]{margin:0!important;}
@@ -641,9 +647,9 @@ def render():
                                 sx = 768 if position.startswith('100%') else 0
                                 sy, sh = (540, 484) if position.endswith('100%') else (0, 540)
                                 st.markdown(
-                                    f'<div class="a2-link-photo" role="img" aria-label="{_e(alt)}">'
-                                    f'<svg viewBox="0 0 768 540" aria-hidden="true">'
-                                    f'<svg x="0" y="{540-sh}" width="768" height="{sh}" '
+                                    f'<div class="a2-link-photo{" a2-link-photo-bottom" if sy else ""}" role="img" aria-label="{_e(alt)}">'
+                                    f'<svg viewBox="0 0 768 {sh}" aria-hidden="true">'
+                                    f'<svg x="0" y="0" width="768" height="{sh}" '
                                     f'viewBox="{sx} {sy} 768 {sh}" overflow="hidden">'
                                     f'<image href="data:image/png;base64,{photo}" width="1536" height="1024"/>'
                                     '</svg></svg></div>', unsafe_allow_html=True)
