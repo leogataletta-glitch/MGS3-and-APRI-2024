@@ -31,6 +31,7 @@ STYLE = """<style>
 </style>"""
 
 PAGES = {
+    "methodologie": ("Le cadre de résilience", "The resilience framework", "Trois capacités complémentaires, étudiées à travers sept dimensions.", "Three complementary capacities, explored through seven dimensions."),
     "accueil": ("Le territoire", "The territory", "Explorer les paysages et les sections communales.", "Explore the landscapes and communal sections."),
     "dimensions": ("Analyse des résultats", "Results analysis", "Choisir une vue, préciser les filtres, puis explorer les résultats.", "Choose a view, set the filters, then explore the results."),
     "boucles": ("Boucles de rétroaction", "Feedback loops", "Construire le système, examiner ses relations et tester les leviers d’action.", "Build the system, examine its relationships and test intervention levers."),
@@ -40,14 +41,56 @@ PAGES = {
     "contact": ("Nous contacter", "Contact us", "", ""),
 }
 
+# Four layouts, one shared visual language. The homepage owns its hero.
+MODELES = {
+    "portail": "accueil",
+    "dimensions": "donnees",
+    "accueil": "presentation", "donnees": "presentation",
+    "apropos": "presentation", "contact": "presentation",
+    "methodologie": "methode", "boucles": "methode", "actions": "methode",
+}
+
+ERGONOMIE = """<style>
+.apri-ruban{display:flex;align-items:center;gap:18px;min-height:112px;padding:20px 26px;background:#fff;border-bottom:1px solid #dfe7e1;}
+.apri-ruban .apri-brand{width:62px;height:64px;object-fit:contain;flex-shrink:0;}
+.apri-ruban .apri-institution{font:18px/1.4 Georgia,serif;color:#123d2c;padding-left:18px;border-left:1px solid #dfe7e1;margin-right:auto;max-width:560px;}
+.apri-ruban .apri-institution span{display:block;font-size:16px;color:#65756c;}
+.apri-ruban .apri-unep{width:70px;height:auto;margin-left:120px;flex-shrink:0;filter:brightness(0) saturate(100%) invert(22%) sepia(21%) saturate(1030%) hue-rotate(101deg) brightness(85%);}
+.stApp .st-key-zone_langue_r{background:#fff!important;border:1px solid #dfe7e1!important;border-radius:4px!important;backdrop-filter:none!important;top:25px!important;right:112px!important;}
+.stApp .st-key-zone_langue_r div[class*="st-key-lang_"] div[data-testid="stButton"]>button p{color:#65756c!important;text-shadow:none!important;}
+.stApp .st-key-zone_langue_r div[class*="st-key-lang_"] div[data-testid="stButton"]>button[kind="primary"] p{color:#123d2c!important;font-weight:700!important;}
+.stApp .st-key-zone_page:has(.apri-page-heading){padding:0 24px 48px!important;}
+.apri-page-heading{padding:4px 0 8px;border-bottom:1px solid #dfe7e1;margin-bottom:24px;}
+.stApp .st-key-zone_page .apri-page-heading h1{margin-top:24px!important;}
+.stApp .st-key-zone_page .apri-page-heading p{margin-bottom:16px!important;max-width:780px;}
+.stApp .st-key-zone_page:has([data-modele="presentation"]){max-width:1160px;margin-inline:auto;}
+.stApp .st-key-zone_page:has([data-modele="methode"]){max-width:1360px;margin-inline:auto;}
+.stApp .st-key-zone_page:has([data-modele="donnees"]){max-width:none;}
+.stApp .st-key-zone_page :is(.sx-note,.cad-note,.ap-note){font-size:14px!important;line-height:1.7!important;color:#65756c!important;}
+.stApp .st-key-zone_page :is(.sx-leg-h,.cad-section-t,.int-section-t){font:500 14px/1.5 Arial,sans-serif!important;letter-spacing:0!important;text-transform:none!important;color:#123d2c!important;}
+.stApp .st-key-zone_page [data-testid="stTabs"] [data-baseweb="tab-list"]{gap:8px;border-bottom:1px solid #dfe7e1;}
+@media(max-width:900px){.apri-ruban{padding:18px 16px 58px;gap:12px;min-height:156px;}.apri-ruban .apri-institution{font-size:16px;max-width:52%;}.apri-ruban .apri-institution span{font-size:14px;}.apri-ruban .apri-unep{width:56px;margin-left:auto;}.stApp .st-key-zone_langue_r{position:absolute!important;top:108px!important;right:16px!important;margin:0!important;}}
+@media(max-width:600px){.apri-ruban .apri-brand{width:44px;height:48px;}.apri-ruban .apri-institution{font-size:14px;padding-left:10px;max-width:none;}.apri-ruban .apri-institution span{font-size:12px;}.apri-ruban .apri-unep{width:44px;}.stApp .st-key-zone_page:has(.apri-page-heading){padding:0 8px 32px!important;}.apri-page-heading{margin-bottom:20px;}.stApp .st-key-zone_page h1{font-size:28px!important;}.stApp .st-key-zone_page h2,.stApp .st-key-zone_page h3{font-size:22px!important;}}
+</style>"""
+
+def ruban(marque, unep, institution):
+    """Stable, compact branding for every internal route, in both languages."""
+    parts = [html.escape(p) for p in institution.split("|")]
+    brand = f'<img class="apri-brand" alt="APRI" src="data:image/png;base64,{marque}">' if marque else ''
+    st.markdown(ERGONOMIE + '<header class="apri-ruban">' + brand
+                + '<div class="apri-institution">' + parts[0]
+                + ''.join(f'<span>{p}</span>' for p in parts[1:]) + '</div>'
+                + f'<img class="apri-unep" alt="UNEP" src="data:image/png;base64,{unep}"></header>', unsafe_allow_html=True)
+
 def appliquer():
-    st.markdown(STYLE, unsafe_allow_html=True)
+    st.markdown(STYLE + ERGONOMIE, unsafe_allow_html=True)
 
 def entete(page, fr=True):
     if page not in PAGES:
         return
     title_fr, title_en, intro_fr, intro_en = PAGES[page]
     title, intro = (title_fr, intro_fr) if fr else (title_en, intro_en)
-    st.markdown(f'<h1 class="apri-page-title">{html.escape(title)}</h1>'
-                + (f'<p class="apri-page-intro">{html.escape(intro)}</p>' if intro else ''), unsafe_allow_html=True)
+    modele = MODELES.get(page, "presentation")
+    st.markdown(f'<div class="apri-page-heading" data-modele="{modele}"><h1 class="apri-page-title">{html.escape(title)}</h1>'
+                + (f'<p class="apri-page-intro">{html.escape(intro)}</p>' if intro else '') + '</div>', unsafe_allow_html=True)
 

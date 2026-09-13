@@ -2291,7 +2291,6 @@ def render(doc_complet=None):
                 unsafe_allow_html=True)
 
     fr = i18n.get_lang() == 'fr'
-    st.markdown('<div class="cad-page-title">'+('Le cadre de résilience' if fr else 'The resilience framework')+'</div><p class="cad-page-intro">'+('Trois capacités complémentaires, étudiées à travers sept dimensions.' if fr else 'Three complementary capacities, explored through seven dimensions.')+'</p>',unsafe_allow_html=True)
     st.markdown("""<style>
     .cad-page-title{font:400 36px/1.2 Georgia,'Times New Roman',serif;color:#123d2c;margin:28px 0 12px;}
     p.cad-page-intro{font:16px/1.7 Arial,sans-serif!important;color:#506457!important;text-align:left!important;margin:0 0 28px!important;}

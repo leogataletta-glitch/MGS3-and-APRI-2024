@@ -2462,69 +2462,13 @@ def _film_bandeau(page):
 
 
 def _rendre_ruban(avec_image):
-    """Le bandeau composé, en tête de l'accueil.
-
-    IL EST DÉJÀ COMPLET, ET ON N'Y AJOUTE RIEN. Le fichier porte la marque
-    APRI, le filet, le titre, le sous-titre et le logo du PNUE : les
-    superposer une seconde fois en CSS ferait dire deux fois chaque chose, et
-    c'est exactement ce que faisaient la couche de titre et la réglette des
-    pages intérieures. Elles sont retirées toutes les deux.
-
-    IL EST SUR TOUTES LES PAGES, SAUF SUR L'ACCUEIL.
-    Il avait été retiré des pages intérieures parce qu'il y prenait le quart
-    de l'écran pour redire de quel site il s'agit ; réduit à sa bande, il
-    tient une centaine de pixels et donne à chaque page la même tête —
-    c'est ce qui fait un site plutôt qu'une suite d'écrans. La seule page
-    qui s'en passe est l'accueil : elle porte déjà sa propre photographie
-    plein cadre avec le titre dedans, et deux bandeaux l'un sur l'autre en
-    feraient deux couvertures.
-
-    IL N'EST PAS ROGNÉ. Sa composition va du logo de gauche à celui de
-    droite : `object-fit: cover` couperait l'un des deux dès que la fenêtre
-    change de proportion. La hauteur suit donc la largeur, et rien ne sort.
-    """
+    """One compact header across all internal pages; the home keeps its hero."""
+    if not avec_image:
+        return
+    import design_commun
     with _ruban:
-        page = st.session_state.get("app_mode", "")
-        img = _bandeau_b64(i18n.get_lang(), page) if avec_image else None
-        if avec_image and not img:
-            avec_image = False
-        if not avec_image:
-            return
-        _l = [html.escape(x) for x in T("a2_inst").split("|")]
-        _bloc = _marque_bloc_b64()
-        _inst = ('<div class="bandeau-inst"><b>' + _l[0] + '</b>'
-                 + "".join(f'<span>{x}</span>' for x in _l[1:]) + '</div>')
-        _marque = (f'<div class="bandeau-marque">'
-                   f'<img alt="APRI" src="data:image/png;base64,{_bloc}">'
-                   f'<div class="bandeau-filet"></div>{_inst}</div>'
-                   if _bloc else
-                   f'<div class="bandeau-marque">{_inst}</div>')
-        # LE BANDEAU DE « DONNÉES » BOUGE. Une vidéo remplace la photographie
-        # sur cette seule page, et rien d'autre ne change : même cadre, même
-        # voile, même marque, même légende. Elle est muette, sans piste
-        # audio du tout, et rejouée en boucle — un bandeau qui demande un
-        # clic pour démarrer serait un bandeau cassé.
-        # LA PHOTOGRAPHIE RESTE DESSOUS, en `poster` : c'est elle qui
-        # s'affiche le temps du téléchargement, et c'est elle qu'on voit si
-        # le navigateur refuse la lecture automatique ou si le fichier
-        # statique n'est pas servi. Le bandeau ne peut donc pas être vide.
-        _film = _film_bandeau(page)
-        _fond = (
-            f'<video class="bandeau-fond" autoplay muted loop playsinline '
-            f'preload="auto" poster="data:image/jpeg;base64,{_film[1]}">'
-            f'<source src="{_film[0]}.mp4" type="video/mp4">'
-            f'<source src="{_film[0]}.webm" type="video/webm"></video>'
-            if _film else
-            f'<img class="bandeau-fond" alt="APRI" '
-            f'src="data:image/jpeg;base64,{img}">')
-        st.markdown(
-            f'<div class="bandeau-haut bandeau-enveloppe">'
-            f'{_fond}'
-            f'<div class="bandeau-voile"></div>{_marque}'
-            f'<img class="bandeau-logo" alt="UNEP" '
-            f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
-            + _bloc_credit(page, bool(_film))
-            + '</div>', unsafe_allow_html=True)
+        design_commun.ruban(_marque_bloc_b64(), assets.LOGO_UNEP_BLANC,
+                            T("a2_inst"))
 
 
 st.markdown("""
