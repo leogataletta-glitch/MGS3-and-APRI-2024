@@ -566,7 +566,7 @@ def render():
 
     # Four photo destinations, followed by the full-width territory map.
     fr = i18n.get_lang() == 'fr'
-    watercolor = _photo_b64(prefere='aquarelles_apri_blanc.png')
+    watercolor = _photo_b64(prefere='aquarelles_apri_cimes.png')
     entries = [
         ('methodologie', 'Cadre de résilience' if fr else 'Resilience framework',
          'Comprendre l’approche APRI' if fr else 'Understand the APRI approach',
@@ -582,7 +582,9 @@ def render():
     .st-key-a2_photo_links{gap:20px!important;}
     .st-key-a2_photo_links [data-testid="stHorizontalBlock"]{gap:18px!important;}
     .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{gap:0!important;}
-    .a2-link-photo{aspect-ratio:2 / 1;background-size:200% 200%;background-repeat:no-repeat;background-color:#fff;}
+    .a2-link-photo{position:relative;aspect-ratio:2 / 1;margin-top:22%;overflow:visible;background:transparent;}
+    .a2-link-photo > svg{position:absolute;bottom:0;left:0;width:100%;height:auto;overflow:visible;display:block;}
+    .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{overflow:visible!important;}
     .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button{
         background:#f3f7f4!important;border:1px solid #e3ece6!important;border-top:0!important;
         border-radius:0 0 9px 9px!important;min-height:120px!important;height:auto!important;
@@ -613,7 +615,17 @@ def render():
                     for col, (code,title,detail,photo,position,alt) in zip(st.columns(2),entries[start:start+2]):
                         with col:
                             with st.container(key=f'a2_porte_{code}'):
-                                st.markdown(f'<div class="a2-link-photo" role="img" aria-label="{_e(alt)}" style="background-image:url(data:image/png;base64,{photo});background-position:{position}"></div>',unsafe_allow_html=True)
+                                # Each complete landscape keeps its natural proportions.
+                                # The taller illustration rises above the nominal card image area.
+                                sx = 768 if position.startswith('100%') else 0
+                                sy, sh = (540, 484) if position.endswith('100%') else (0, 540)
+                                st.markdown(
+                                    f'<div class="a2-link-photo" role="img" aria-label="{_e(alt)}">'
+                                    f'<svg viewBox="0 0 768 540" aria-hidden="true">'
+                                    f'<svg x="0" y="{540-sh}" width="768" height="{sh}" '
+                                    f'viewBox="{sx} {sy} 768 {sh}" overflow="hidden">'
+                                    f'<image href="data:image/png;base64,{photo}" width="1536" height="1024"/>'
+                                    '</svg></svg></div>', unsafe_allow_html=True)
                                 if st.button(f'{title}  \n*{detail}*  \n**⟶**',key=f'a2_b_{code}',use_container_width=True):
                                     st.session_state['app_mode']=code
                                     st.rerun()
