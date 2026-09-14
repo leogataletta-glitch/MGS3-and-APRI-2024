@@ -1429,12 +1429,12 @@ STYLE = """
     .cad-so { grid-template-columns:1fr; }
     .cad-so-b { border-left:0; padding-left:0; }
   }
-  .cad-so-h { display:flex; align-items:center; gap:11px; margin:0 0 12px; }
+  .cad-so-h { display:flex; align-items:center; justify-content:center; gap:11px; margin:0 0 12px; }
   .cad-so-n { font-size:27px; font-weight:200; color:#1a6b52; line-height:1;
               font-variant-numeric:tabular-nums; }
   .cad-so-t { font-size:14px; font-weight:700; color:#1a6b52;
               letter-spacing:-.01em; line-height:1.25;
-              padding-left:11px; border-left:1px solid #cfe0d6; }
+              padding-left:0; border-left:0; text-align:center; }
   p.cad-so-x { font-size:12.5px !important; color:#3c4761 !important;
               line-height:1.55 !important; margin:0 0 12px !important;
               text-align:left !important; }
