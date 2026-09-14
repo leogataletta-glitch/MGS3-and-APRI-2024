@@ -2339,13 +2339,13 @@ def render(doc_complet=None):
     st.markdown("""<style>
     /* One restrained reading column and one grouped navigation bar. */
     .stApp .st-key-zone_page:has(.st-key-ong_cad_vue){max-width:1120px!important;margin-inline:auto!important;}
-    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]{background:#f1f5f2!important;padding:5px!important;border-radius:10px!important;gap:3px!important;margin-bottom:12px!important;}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]{background:transparent!important;padding:0!important;border-radius:0!important;gap:8px!important;margin-bottom:12px!important;}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label{background:transparent!important;border:0!important;border-radius:6px!important;min-height:42px!important;padding:9px 13px!important;}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:hover{background:#e5eee7!important;}
-    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:has(input:checked){background:#123d2c!important;box-shadow:none!important;}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:has(input:checked){background:transparent!important;box-shadow:inset 0 -2px 0 #276448!important;}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label p:first-child,.stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label strong{color:#345446!important;}
     .stApp .st-key-zone_page .st-key-cad_model{padding-top:10px!important;}
-    .stApp .st-key-zone_page .st-key-cad_model .cad-cc{gap:28px!important;padding:4px 0!important;margin-bottom:22px!important;background:transparent;border-radius:0;}
+    .stApp .st-key-zone_page .st-key-cad_model .cad-cc{gap:28px!important;padding:4px 0!important;margin-bottom:28px!important;background:transparent!important;border-radius:0!important;}
     .stApp .st-key-zone_page .st-key-cad_model .cad-c{padding:0!important;border:0!important;background:transparent!important;}
     .stApp .st-key-zone_page .st-key-cad_model .cad-c+.cad-c{border:0!important;}
     .stApp .st-key-zone_page .st-key-cad_model .cad-c-n{font:600 11px/1.4 Arial,sans-serif!important;letter-spacing:.12em;color:#668271!important;margin:0 10px 0 0!important;float:left;line-height:31px!important;}
@@ -2374,9 +2374,9 @@ def render(doc_complet=None):
 
     # Match the selected index used by the shared navigation, including its text specificity.
     st.markdown(f"""<style>
-    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}){{background:#123d2c!important;box-shadow:none!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}){{background:transparent!important;box-shadow:inset 0 -2px 0 #276448!important;}}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}) p:first-child,
-    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}) p:first-child strong{{color:#fff!important;font-weight:600!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}) p:first-child strong{{color:#123d2c!important;font-weight:600!important;}}
     </style>""",unsafe_allow_html=True)
 
 
