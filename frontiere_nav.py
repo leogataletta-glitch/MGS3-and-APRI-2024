@@ -7,8 +7,8 @@ import i18n
 
 def render():
     fr = i18n.get_lang() == "fr"
-    # Keep the soft edge without exposing the temporary comparison selector.
-    choice = "fade"
+    # Shared mosaic edge on every page, without a comparison selector.
+    choice = "mosaic"
     selector = 'div[data-testid="stColumn"]:has(.st-key-zone_nav)'
     if choice == "original":
         effect = "display:none;"
