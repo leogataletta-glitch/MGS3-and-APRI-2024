@@ -6,7 +6,8 @@ def render(callback, mobile=False):
     key = 'navigation_language_mobile' if mobile else 'navigation_language_desktop'
     st.markdown(f'''<style>
     .stApp .st-key-{key}.st-key-{key}{{
-      width:82px!important;max-width:82px!important;margin:4px 48px 12px 12px;
+      width:112px!important;max-width:112px!important;margin:8px 48px 16px 12px;
+      flex-shrink:0!important;overflow:visible!important;
       padding:0!important;border:0!important;border-radius:0;
       background:transparent!important;box-shadow:none!important;
     }}
@@ -14,7 +15,7 @@ def render(callback, mobile=False):
     .stApp .st-key-{key}.st-key-{key} [data-testid="stColumn"]{{min-width:0!important;width:50%!important;flex:1 1 0!important;}}
     .stApp .st-key-{key}.st-key-{key} [data-testid="stElementContainer"]{{margin:0!important;}}
     .stApp .st-key-{key}.st-key-{key} div[data-testid="stButton"] button{{
-      padding:5px 8px!important;min-height:30px!important;height:30px!important;width:100%!important;
+      padding:6px 10px!important;min-height:38px!important;height:38px!important;width:100%!important;
       border:0!important;border-bottom:2px solid transparent!important;border-radius:0!important;justify-content:center!important;
       box-shadow:none!important;background:transparent!important;color:#58786a!important;
     }}
@@ -22,7 +23,7 @@ def render(callback, mobile=False):
       background:transparent!important;color:#17634e!important;border-bottom-color:#257c5d!important;
     }}
     .stApp .st-key-{key}.st-key-{key} div[data-testid="stButton"] button p{{
-      font-size:12px!important;letter-spacing:.08em!important;font-weight:700!important;
+      font-size:16px!important;letter-spacing:.04em!important;font-weight:700!important;
       text-align:center!important;color:#58786a!important;margin:0!important;
     }}
     .stApp .st-key-{key}.st-key-{key} div[data-testid="stButton"] button[kind="primary"] :is(p,div){{color:#17634e!important;}}

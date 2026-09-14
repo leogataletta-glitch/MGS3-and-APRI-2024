@@ -43,7 +43,7 @@ def render():
       }}
       .stApp:has(.st-key-territory_map) {selector}::after{{display:none;}}
       /* One shared overlay cuts backgrounds at exactly the sidebar's mosaic edge. */
-      {selector} .st-key-zone_nav div[data-testid="stButton"]>button{{
+      {selector} .st-key-zone_nav div[data-testid="stElementContainer"][class*="st-key-nav_"] div[data-testid="stButton"]>button{{
         border-top-right-radius:0!important;border-bottom-right-radius:0!important;
         padding-right:48px!important;
       }}
