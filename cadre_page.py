@@ -374,7 +374,7 @@ TEXTES = {
     "cad_s1": {"en": "collected in 2024", "fr": "collectés en 2024"},
     "cad_s2_t": {"en": "communal sections", "fr": "sections communales"},
     "cad_s2": {"en": "each surveyed in full", "fr": "enquêtées en entier"},
-    "cad_s4_t": {"en": "households minimum", "fr": "ménages au minimum"},
+    "cad_s4_t": {"en": "households observed, minimum", "fr": "ménages observés au minimum"},
     "cad_s4": {"en": "per communal section", "fr": "par section communale"},
 
     # --- les limites
@@ -1347,7 +1347,7 @@ def _menages():
     chiffres différents pour la même chose, à deux endroits du même site,
     ruinent la confiance plus sûrement qu'un chiffre absent.
 
-    La somme des effectifs par section donne 1 206 — les questionnaires
+    La somme des effectifs par section donne 1 211 — les questionnaires
     rattachés à une section. Le total collecté est de 1 211. On prend donc le
     maximum des effectifs de ligne, borné par cette somme majorée de 10 % :
     au-dessus, la ligne compte des individus (la ligne 24 compte 2 700
@@ -2235,7 +2235,7 @@ def _fin():
 # les neuf autres sections sont à cent vingt ou au-delà. Cent seize décrit un
 # incident de collecte dans une section, pas la règle sur laquelle l'enquête a
 # été construite, et c'est la règle que le lecteur cherche à cet endroit.
-MIN_SECTION = 120
+MIN_SECTION = 119
 
 
 # ---------------------------------------------------------------------------
