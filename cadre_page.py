@@ -2329,8 +2329,8 @@ def render(doc_complet=None):
     # le reformuler : « Dimensions » suivi de « Les sept dimensions et leurs
     # pondérations ». Le composant accepte de n'en pas avoir.
     vue = onglets.barre("cad_vue", list(VUES),
-                        titre=lambda c: names[c],
-                        compact=True, defaut=VUES[0])
+                        titre=lambda c: names[c], description=lambda c:T(_DESC[c]),
+                        compact=False, defaut=VUES[0])
     active = VUES.index(vue) + 1
     st.markdown(f'<style>.stApp .st-key-ong_cad_vue [role="radiogroup"] > label:nth-child({active}) {{box-shadow:inset 0 -2px 0 #1f5b46!important;}} .stApp .st-key-ong_cad_vue [role="radiogroup"] > label:nth-child({active}) p {{color:#1f5b46!important;}}</style>',unsafe_allow_html=True)
 
@@ -2376,6 +2376,20 @@ def render(doc_complet=None):
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}){{background:#123d2c!important;box-shadow:none!important;}}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}) p:first-child,
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}) p:first-child strong{{color:#fff!important;font-weight:600!important;}}
+    </style>""",unsafe_allow_html=True)
+
+
+    st.markdown(f"""<style>
+    .stApp .st-key-zone_page:has(.st-key-ong_cad_vue){{padding-top:0!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]{{gap:0!important;background:white!important;padding:0!important;border-radius:0!important;border-bottom:1px solid #dfe7e1!important;margin:0 0 20px!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label{{flex:1 1 0!important;min-height:96px!important;padding:14px 12px!important;border:0!important;border-right:1px solid #edf1ee!important;border-radius:0!important;background:white!important;box-shadow:none!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label p:first-child{{font:600 12px/1.4 Arial,sans-serif!important;text-transform:uppercase!important;letter-spacing:.06em!important;color:#123d2c!important;text-align:center!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label p:not(:first-child){{font:400 12px/1.45 Arial,sans-serif!important;color:#7b8895!important;text-align:center!important;margin-top:6px!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}){{background:#f2f7f3!important;box-shadow:inset 0 3px 0 #276448!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}) strong{{color:#123d2c!important;}}
+    .st-key-ong_cad_vue [data-testid="stCaptionContainer"]{{display:none!important;}}
+    .stApp:has(.st-key-ong_cad_vue) .st-key-zone_langue_r{{top:108px!important;}}
+    @media(max-width:760px){{.stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label{{flex:1 1 44%!important;}} .stApp:has(.st-key-ong_cad_vue) .st-key-zone_langue_r{{position:relative!important;top:auto!important;right:auto!important;}}}}
     </style>""",unsafe_allow_html=True)
 
 
