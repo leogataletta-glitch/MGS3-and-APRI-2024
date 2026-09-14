@@ -2980,8 +2980,8 @@ def _v_metadonnees(tous):
         refs = _references_fiche(x, lang)
         bands = _bandes(x.get("echelle") or "")
         scale = '<table><thead><tr><th>' + ("Score" if lang == "fr" else "Score") + '</th><th>' + ("Valeur mesurée" if lang == "fr" else "Measured value") + '</th></tr></thead><tbody>' + ''.join(f'<tr><td>{_e(str(k))}</td><td>{_e(str(v))}</td></tr>' for k,v in bands.items()) + '</tbody></table>' if bands else '<p>' + _e(x.get("echelle") or ("Barème non renseigné." if lang == "fr" else "Scale not recorded.")) + '</p>'
-        with st.expander(nom, expanded=True):
-            st.markdown('<article class="md-sheet"><h2>' + _e(nom) + '</h2><p class="md-status">' + _e(T("aq_e_" + et)) + '</p><div class="md-metrics">'
+        with st.container():
+            st.markdown('<article class="md-sheet"><p class="md-status">' + _e(T("aq_e_" + et)) + '</p><div class="md-metrics">'
                 + '<section><p>' + _e(T("cad_meta_valeur")) + '</p><strong>' + _e(value) + '</strong></section>'
                 + '<section><p>' + _e(T("cad_meta_score")) + '</p><strong>' + _e(score) + '</strong><p class="md-muted">' + ("Score normalisé de cet indicateur" if lang == "fr" else "Normalized score of this indicator") + '</p></section></div><div class="md-body">'
                 + panel(T("cad_meta_quoi"), '<p>' + _e(mesure) + '</p>' + limit)
