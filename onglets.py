@@ -216,7 +216,7 @@ def barre(cle, codes, titre, description=None, defaut=None, compact=False):
         .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}){{background:#edf5ef!important;box-shadow:inset 0 -4px 0 #78a58a!important;}}
         @media(max-width:760px){{.stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{flex:1 1 44%!important;}}}}
         </style>""", unsafe_allow_html=True)
-    if cle == "exb_theme_ong":
+    if cle in {"exb_theme_ong", "sat_cat"}:
         st.markdown(f"""<style>
         .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]{{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:4px!important;}}
         .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{width:100%!important;min-width:0!important;margin:0!important;min-height:82px!important;padding:10px 12px!important;background:white!important;}}
