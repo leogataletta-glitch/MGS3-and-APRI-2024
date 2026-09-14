@@ -1102,7 +1102,7 @@ st.markdown(("""
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button p {
     font-family: "Inter", system-ui, sans-serif !important;
-    font-size: 12.5px !important; font-weight: 500 !important;
+    font-size: 15px !important; font-weight: 500 !important;
     line-height: 1.3 !important;
     color: #26332c !important;
     text-align: left !important; margin: 0 !important;
@@ -2531,9 +2531,6 @@ with _zone_nav:
     # l'écran quand la page défile — c'est ce qui la rend « toujours
     # disponible » sans qu'elle ait à flotter par-dessus le contenu.
     st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
-    if st.session_state["app_mode"] == MODE_METHODO:
-        import nav_framework
-        nav_framework.header(_marque_bloc_b64(), _changer_langue)
     # LA MARQUE N'OUVRE PLUS LA COLONNE. Elle a rejoint l'image, en tête de
     # page, où elle est en entier — l'emblème, le mot et la ligne
     # institutionnelle — plutôt qu'en réduction dans une colonne de deux cents
@@ -2546,8 +2543,7 @@ with _zone_nav:
         for _mode, _icone in _entrees:
             _entree_nav(_mode, _icone)
     import frontiere_nav
-    if st.session_state["app_mode"] != MODE_METHODO:
-        frontiere_nav.render()
+    frontiere_nav.render()
     # LA DEVISE FERME LA COLONNE. Un filet la sépare de la dernière rubrique :
     # sans lui, elle se lirait comme une entrée de menu qui ne mène nulle part.
     st.markdown(
@@ -2559,8 +2555,6 @@ with _zone_nav:
         + '</div>',
         unsafe_allow_html=True)
 
-    if st.session_state["app_mode"] == MODE_METHODO:
-        nav_framework.landscape(_dessin_b64("dessin_mangrove.png"))
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
 # l'aiguillage, pour que chaque page se dessine dedans sans avoir à savoir
@@ -2607,18 +2601,17 @@ st.markdown("""<style>
 @media(prefers-reduced-motion:reduce){.stApp .st-key-zone_page *{transition:none!important;}}
 </style>""",unsafe_allow_html=True)
 
-if st.session_state["app_mode"] != MODE_METHODO:
-    with _zone_langue:
-        _cl = st.columns(2)
-        # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie est en tête.
-        _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
-        for _col, _code in zip(_cl, _ordre):
-            with _col:
-                st.button(_code.upper(), key=f"lang_{_code}",
-                          on_click=_changer_langue, args=(_code,),
-                          type=("primary"
-                                if st.session_state["choix_langue"] == _code
-                                else "secondary"))
+with _zone_langue:
+    _cl = st.columns(2)
+    # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie est en tête.
+    _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
+    for _col, _code in zip(_cl, _ordre):
+        with _col:
+            st.button(_code.upper(), key=f"lang_{_code}",
+                      on_click=_changer_langue, args=(_code,),
+                      type=("primary"
+                            if st.session_state["choix_langue"] == _code
+                            else "secondary"))
 
 # Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par

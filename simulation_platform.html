@@ -1,0 +1,44 @@
+<!doctype html><html lang="__LANG__"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>body{margin:0;font:15px/1.5 system-ui;color:#214c3b;background:white}header,.controls{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}h2{font:28px Georgia;margin:0}p{margin:10px 0}button{font:600 14px system-ui;border:1px solid #aac9b5;border-radius:10px;background:#edf6ef;color:#214c3b;padding:12px 20px;cursor:pointer;touch-action:none}button:focus-visible,canvas:focus-visible{outline:3px solid #d58c31;outline-offset:3px}canvas{width:100%;max-height:430px;aspect-ratio:900/400;display:block;background:#d9efed;border-radius:14px;touch-action:none}.controls{margin-top:12px}.keys{display:flex;gap:8px}#status{font-weight:600}small{color:#60786c}.controls button{min-width:65px}</style>
+<header><h2 id="title"></h2><span id="status" role="status" aria-live="polite"></span></header><p id="instructions"></p>
+<canvas id="game" width="900" height="400" tabindex="0"></canvas>
+<div class="controls"><div class="keys"><button id="left">←</button><button id="right">→</button><button id="jump"></button></div><div><button id="pause"></button> <button id="reset"></button></div></div><p><small id="note"></small></p>
+<script>
+const fr=document.documentElement.lang==='fr',t=(a,b)=>fr?a:b,$=x=>document.getElementById(x),c=$('game'),g=c.getContext('2d');
+$('title').textContent=t('Le passage · Parcours 2D','The crossing · 2D platformer');
+$('instructions').textContent=t('Incarnez un personnage haïtien : avancez et sautez au-dessus des agents de migration jusqu’à la frontière dominicaine. Flèches pour avancer, Espace ou ↑ pour sauter. Cliquez sur le jeu pour activer le clavier.','Play a Haitian character: move and jump over migration officers to reach the Dominican border. Arrow keys to move, Space or ↑ to jump. Click the game to enable keyboard controls.');
+$('note').textContent=t('Parcours entièrement fictif, sans géographie réelle. Un contact renvoie au dernier point de reprise. Aucun combat.','Entirely fictional course, without real geography. Contact returns you to the last checkpoint. No combat.');
+$('jump').textContent=t('Sauter','Jump');$('reset').textContent=t('Recommencer','Restart');$('left').ariaLabel=t('Gauche','Left');$('right').ariaLabel=t('Droite','Right');c.ariaLabel=t('Jeu de plateforme, personnage haïtien et frontière fictive','Platform game, Haitian character and fictional border');
+const platforms=[{x:0,y:340,w:3400},{x:470,y:276,w:150},{x:980,y:267,w:170},{x:1470,y:270,w:160},{x:2040,y:266,w:170},{x:2600,y:267,w:160}];
+const agents=[280,740,1260,1770,2330,2900].map(x=>({x,y:292,w:28,h:48}));
+let p,cam,checkpoint,contacts,won,paused,invincible,keys={left:false,right:false},last=0,noticeTimer=0;
+function status(message){$('status').textContent=message|| (won?t('Frontière atteinte !','Border reached!'):t('Progression : ','Progress: ')+Math.min(100,Math.round(p.x/3200*100))+'% · '+t('Reprises : ','Retries: ')+contacts)}
+function reset(){p={x:40,y:300,w:24,h:40,vy:0,ground:true};cam=0;checkpoint=40;contacts=0;won=false;paused=true;invincible=0;keys.left=keys.right=false;$('pause').textContent=t('Jouer','Play');status(t('Prêt à partir','Ready'));draw()}
+function jump(){if(!won){paused=false;$('pause').textContent=t('Pause','Pause');if(p.ground){p.vy=-620;p.ground=false}}}
+function checkpointAt(x){return x>=2200?2200:x>=1100?1100:40}
+function hit(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
+function update(dt){if(paused||won)return;invincible=Math.max(0,invincible-dt);const prev=p.y+p.h;
+ p.x=Math.max(0,Math.min(3230,p.x+((keys.right?1:0)-(keys.left?1:0))*235*dt));p.vy+=1600*dt;p.y+=p.vy*dt;p.ground=false;
+ for(const b of platforms)if(p.vy>=0&&prev<=b.y+1&&p.y+p.h>=b.y&&p.x+p.w>b.x&&p.x<b.x+b.w){p.y=b.y-p.h;p.vy=0;p.ground=true;break}
+ checkpoint=Math.max(checkpoint,checkpointAt(p.x));
+ if(!invincible&&agents.some(a=>hit(p,a))){contacts++;p.x=checkpoint;p.y=300;p.vy=0;invincible=1.2;status(t('Contrôle : retour au point de reprise.','Checkpoint: return to your restart point.'));noticeTimer=1.5}
+ if(p.x>=3200){won=true;keys.left=keys.right=false;status();}
+ cam=Math.max(0,Math.min(2500,p.x-210));noticeTimer-=dt;if(noticeTimer<=0&&!won)status();
+}
+function person(x,y,officer=false){g.fillStyle=officer?'#405667':'#248eaa';g.fillRect(x+3,y+13,20,22);g.fillStyle='#865239';g.beginPath();g.arc(x+13,y+7,8,0,Math.PI*2);g.fill();if(officer){g.fillStyle='#263a47';g.fillRect(x+3,y-3,23,5)}g.fillStyle='#263a47';g.fillRect(x+4,y+34,7,officer?14:6);g.fillRect(x+17,y+34,7,officer?14:6);}
+function draw(){g.clearRect(0,0,900,400);const sky=g.createLinearGradient(0,0,0,340);sky.addColorStop(0,'#d3eded');sky.addColorStop(1,'#fff5d8');g.fillStyle=sky;g.fillRect(0,0,900,400);g.fillStyle='#f3c665';g.beginPath();g.arc(750,65,34,0,Math.PI*2);g.fill();
+ for(let i=0;i<8;i++){let x=i*240-(cam*.22%240);g.fillStyle=i%2?'#9db8a1':'#b4cbb1';g.beginPath();g.moveTo(x-100,340);g.lineTo(x+100,115+(i%3)*24);g.lineTo(x+270,340);g.fill()}
+ g.save();g.translate(-cam,0);for(let x=100;x<3300;x+=380){g.fillStyle='#a77b4f';g.fillRect(x,273,12,67);g.fillStyle='#58986a';g.beginPath();g.arc(x+6,256,32,0,Math.PI*2);g.fill()}
+ for(const b of platforms){g.fillStyle='#b39868';g.fillRect(b.x,b.y,b.w,400-b.y);g.fillStyle='#6b9d64';g.fillRect(b.x,b.y,b.w,9)}
+ g.font='13px system-ui';for(const x of [1100,2200]){g.fillStyle='#73928a';g.fillRect(x,293,3,47);g.fillStyle='#edf7ec';g.fillRect(x+3,294,74,22);g.fillStyle='#315544';g.fillText(t('Reprise','Restart'),x+7,310)}
+ agents.forEach(a=>{person(a.x,a.y,true);g.fillStyle='#344d53';g.fillText(t('Migration','Migration'),a.x-18,a.y-12)});
+ g.fillStyle='#eee3c8';g.fillRect(3140,180,240,55);g.fillStyle='#57644c';g.fillRect(3150,235,6,105);g.fillRect(3330,235,6,105);g.font='bold 16px system-ui';g.fillText(t('Frontière dominicaine','Dominican border'),3150,203);g.font='12px system-ui';g.fillText(t('Arrivée fictive →','Fictional finish →'),3170,222);
+ if(invincible<=0||Math.floor(invincible*12)%2===0)person(p.x,p.y);g.restore();
+ if(paused||won){g.fillStyle='#ffffffd9';g.fillRect(245,120,410,110);g.fillStyle='#234f3e';g.textAlign='center';g.font='bold 23px system-ui';g.fillText(won?t('Arrivée !','You made it!'):t('Prêt ?','Ready?'),450,162);g.font='16px system-ui';g.fillText(won?t('Recommencez pour essayer un autre parcours.','Restart to try the course again.'):t('Appuyez sur Jouer ou sur une flèche.','Press Play or an arrow.'),450,197);g.textAlign='left'}
+}
+function frame(now){const dt=Math.min(.025,(now-last)/1000||0);last=now;update(dt);draw();requestAnimationFrame(frame)}
+c.onclick=()=>c.focus();c.onkeydown=e=>{if(['ArrowLeft','ArrowRight','ArrowUp',' '].includes(e.key)){e.preventDefault();paused=false;$('pause').textContent='Pause';if(e.key==='ArrowLeft')keys.left=true;if(e.key==='ArrowRight')keys.right=true;if(['ArrowUp',' '].includes(e.key)&&!e.repeat)jump()}};c.onkeyup=e=>{if(e.key==='ArrowLeft')keys.left=false;if(e.key==='ArrowRight')keys.right=false};
+function release(){keys.left=keys.right=false}window.addEventListener('blur',()=>{release();paused=true;$('pause').textContent=t('Reprendre','Resume')});document.addEventListener('visibilitychange',()=>{if(document.hidden){release();paused=true;$('pause').textContent=t('Reprendre','Resume')}});
+for(const id of ['left','right']){$(id).onpointerdown=e=>{e.preventDefault();$(id).setPointerCapture(e.pointerId);keys[id]=true;paused=false;$('pause').textContent='Pause'};$(id).onpointerup=$(id).onpointercancel=()=>keys[id]=false;$(id).onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();keys[id]=true;paused=false}};$(id).onkeyup=()=>keys[id]=false}
+$('jump').onclick=jump;$('pause').onclick=()=>{paused=!paused;release();$('pause').textContent=paused?t('Reprendre','Resume'):'Pause';c.focus()};$('reset').onclick=reset;reset();requestAnimationFrame(frame);
+</script></html>

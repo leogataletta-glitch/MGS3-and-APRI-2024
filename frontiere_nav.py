@@ -7,16 +7,8 @@ import i18n
 
 def render():
     fr = i18n.get_lang() == "fr"
-    labels = {
-        "fade": "Fondu doux" if fr else "Soft fade",
-        "watercolor": "Aquarelle" if fr else "Watercolour",
-        "mosaic": "Mosaïque" if fr else "Mosaic",
-        "original": "Bord droit" if fr else "Straight edge",
-    }
-    choice = st.selectbox(
-        "Bordure du menu" if fr else "Menu edge",
-        list(labels), format_func=labels.get, key="nav_edge_choice",
-    )
+    # Keep the soft edge without exposing the temporary comparison selector.
+    choice = "fade"
     selector = 'div[data-testid="stColumn"]:has(.st-key-zone_nav)'
     if choice == "original":
         effect = "display:none;"
