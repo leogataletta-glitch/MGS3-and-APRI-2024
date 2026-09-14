@@ -3064,7 +3064,7 @@ def _v_boucles():
     .st-key-cad_feedback .cad-loop-note{background:transparent;border:0;border-top:1px solid #dfe9e2;padding:22px 0 0;margin:28px 0 36px;font:14px/1.8 Arial,sans-serif;color:#506457;}
     .st-key-cad_feedback .cad-bm{border:0;margin:0;padding:0;}
     .st-key-cad_feedback .cad-bm-h{font:400 23px/1.4 Georgia,serif;letter-spacing:0;text-transform:none;}
-    .st-key-cad_feedback .cad-bm-x{font-size:14px;line-height:1.8;max-width:100ch;hyphens:none;}
+    .stApp .st-key-zone_page .st-key-cad_feedback p.cad-bm-x{font-size:14px;line-height:1.8;max-width:none!important;width:100%!important;hyphens:none;}
     .st-key-cad_feedback .cad-bm-l{gap:18px 30px;margin-top:20px;}
     @media(max-width:1100px){.st-key-cad_feedback .cad-bp{grid-template-columns:repeat(2,minmax(0,1fr));}.st-key-cad_feedback .cad-bl-g{grid-template-columns:1fr;}}
     @media(max-width:600px){.st-key-cad_feedback .cad-bp{grid-template-columns:1fr;gap:12px;}.st-key-cad_feedback .cad-bp-e{padding:18px 0;}.st-key-cad_feedback .cad-step-number{margin-bottom:10px;}.st-key-cad_feedback .cad-bl-g>div{padding:12px 0;}.st-key-cad_feedback .cad-bl-d{gap:10px;}.st-key-cad_feedback .cad-bl-n{font-size:17px;}.st-key-cad_feedback .cad-bl-s{font-size:12px;}}
