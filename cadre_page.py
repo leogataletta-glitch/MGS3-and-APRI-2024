@@ -2393,6 +2393,16 @@ def render(doc_complet=None):
     </style>""",unsafe_allow_html=True)
 
 
+    st.markdown(f"""<style>
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}),
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:has(input:checked){{background:#edf5ef!important;box-shadow:inset 0 3px 0 #78a58a!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}) p:first-child,
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}) p:first-child strong{{color:#35664b!important;font-weight:600!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label p:not(:first-child){{color:#75867c!important;font-size:12px!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:hover{{background:#f5f9f5!important;}}
+    </style>""",unsafe_allow_html=True)
+
+
     if vue == "sources":
         _v_sources()
     elif vue == "indicateurs":
