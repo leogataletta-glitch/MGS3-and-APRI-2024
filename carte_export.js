@@ -48,7 +48,7 @@ async function exporterCarte(format){
     }
     // Match the 64px white dissolve around the on-screen viewport.
     ctx.save();ctx.beginPath();ctx.rect(0,0,width,height);ctx.clip();
-    for(const [x0,y0,x1,y1] of [[0,0,64,0],[width,0,width-64,0],[0,0,0,64],[0,height,0,height-64]]){
+    for(const [x0,y0,x1,y1] of [[width,0,width-64,0],[0,0,0,64],[0,height,0,height-64]]){
       const fade=ctx.createLinearGradient(x0,y0,x1,y1);fade.addColorStop(0,'white');fade.addColorStop(1,'rgba(255,255,255,0)');
       ctx.fillStyle=fade;ctx.fillRect(0,0,width,height);
     }ctx.restore();

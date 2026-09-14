@@ -33,6 +33,15 @@ def render():
       {selector}::after{{content:"";position:absolute;right:0;top:0;bottom:0;width:48px;
         pointer-events:none;z-index:2;{effect}}}
       {selector}>div{{position:relative;z-index:1;}}
+      /* On the map page, mosaic gaps reveal the actual map underneath. */
+      .stApp:has(.st-key-territory_map) {selector}{{
+        mask-image:linear-gradient(black,black),url("data:image/svg+xml,{quote(svg)}");
+        mask-size:100% 100%,48px 250px;
+        mask-position:left top,right top;
+        mask-repeat:no-repeat,repeat-y;
+        mask-composite:exclude;
+      }}
+      .stApp:has(.st-key-territory_map) {selector}::after{{display:none;}}
       /* One shared overlay cuts backgrounds at exactly the sidebar's mosaic edge. */
       {selector} .st-key-zone_nav div[data-testid="stButton"]>button{{
         border-top-right-radius:0!important;border-bottom-right-radius:0!important;

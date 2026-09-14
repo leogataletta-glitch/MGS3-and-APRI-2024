@@ -2515,8 +2515,11 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+import langue_nav
+
 with _menu_mobile:
     with st.popover("☰ Menu", use_container_width=True):
+        langue_nav.render(_changer_langue, mobile=True)
         for _fam, _entrees in _NAV_FAMILLES:
             if _fam:
                 st.caption(T(_fam))
@@ -2524,6 +2527,7 @@ with _menu_mobile:
                 _entree_nav(_mode, _icone, prefix="mobile_nav")
 
 with _zone_nav:
+    langue_nav.render(_changer_langue)
     # LES ENTRÉES SE LISENT DE HAUT EN BAS, UNE PAR LIGNE.
     # Rien n'est replié derrière un déroulant et rien ne passe à la ligne :
     # la colonne se lit comme une table des matières, et la rubrique où l'on
@@ -2544,16 +2548,8 @@ with _zone_nav:
             _entree_nav(_mode, _icone)
     import frontiere_nav
     frontiere_nav.render()
-    # LA DEVISE FERME LA COLONNE. Un filet la sépare de la dernière rubrique :
-    # sans lui, elle se lirait comme une entrée de menu qui ne mène nulle part.
-    st.markdown(
-        # LA POUSSE A ÉTÉ RETIRÉE. Un pictogramme de quinze pixels devant une
-        # phrase de deux lignes, dans une colonne qui porte déjà une aquarelle
-        # en pied : c'était un signe de trop pour une seule idée.
-        '<div class="nav-pied"><div class="nav-mot">'
-        + f'<div class="nav-devise">{T("pied_devise")}</div></div>'
-        + '</div>',
-        unsafe_allow_html=True)
+    import navigation_fixe
+    navigation_fixe.appliquer()
 
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
@@ -2561,26 +2557,6 @@ with _zone_nav:
 # où elle est.
 _c_contenu = _col_page.container(key="zone_page")
 
-# LA LANGUE EST POSÉE DANS L'IMAGE, EN HAUT. Elle a vécu dans l'angle du
-# bandeau, puis en tête de la colonne de menu ; elle revient sur l'image, qui
-# est maintenant la même sur toutes les pages — la photographie sur l'accueil,
-# le bandeau dessiné ailleurs. C'est la place où un site institutionnel range
-# ses langues, et c'est la seule qui ne bouge pas d'une page à l'autre.
-#
-# ELLE EST DANS LA COLONNE DE LA PAGE, PAS DANS L'IMAGE ELLE-MÊME. Streamlit ne
-# sait pas poser un widget à l'intérieur d'un bloc HTML qu'on a écrit soi-même :
-# les deux boutons sont donc des enfants de la colonne, et la feuille de style
-# les déplace en absolu par-dessus l'image. Deux faux liens dessinés dans le
-# HTML ne changeraient aucune langue.
-#
-# DEUX CLÉS POUR DEUX PLACES. Sur l'accueil, l'angle haut-droit de la
-# photographie est libre. Sur les autres pages, le même angle du bandeau porte
-# déjà l'emblème du Programme des Nations unies pour l'environnement : le
-# sélecteur s'arrête donc avant lui. Une seule clé aurait fait passer les
-# codes de langue par-dessus le logo quinze fois sur seize.
-_zone_langue = _col_page.container(
-    key=("zone_langue_h" if st.session_state["app_mode"] == MODE_PORTAIL
-         else "zone_langue_r"))
 # Comfortable reading applies to text, summaries and interactive labels.
 st.markdown("""<style>
 .stApp .st-key-zone_page :is(p,li,h1,h2,h3,h4,td,th,small,[class$="-t"],[class$="-x"],[class$="-n"],.cad-dim-simple li>span){
@@ -2600,18 +2576,6 @@ st.markdown("""<style>
 }
 @media(prefers-reduced-motion:reduce){.stApp .st-key-zone_page *{transition:none!important;}}
 </style>""",unsafe_allow_html=True)
-
-with _zone_langue:
-    _cl = st.columns(2)
-    # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie est en tête.
-    _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
-    for _col, _code in zip(_cl, _ordre):
-        with _col:
-            st.button(_code.upper(), key=f"lang_{_code}",
-                      on_click=_changer_langue, args=(_code,),
-                      type=("primary"
-                            if st.session_state["choix_langue"] == _code
-                            else "secondary"))
 
 # Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par

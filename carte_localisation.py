@@ -248,8 +248,7 @@ __LEAFLET__
  /* Dissolve the rectangular viewport, independently of the coastline. */
  #carte,#carte3d{border-radius:0!important;}
  #carte::after,#carte3d::after{content:"";position:absolute;inset:0;pointer-events:none;
-   background:linear-gradient(to right,white,transparent 64px),
-              linear-gradient(to left,white,transparent 64px),
+   background:linear-gradient(to left,white,transparent 64px),
               linear-gradient(to bottom,white,transparent 64px),
               linear-gradient(to top,white,transparent 64px);}
  #carte::after{z-index:450;}
