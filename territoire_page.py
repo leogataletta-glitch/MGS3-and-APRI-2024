@@ -607,7 +607,7 @@ def render():
     rapport. Elles ne sont simplement plus posées ici.
     """
     st.markdown("""<style>
-    .block-container:has(.st-key-territory_map){padding-left:8px!important;padding-right:8px!important;max-width:none!important;}
+    .block-container:has(.st-key-territory_map){padding-left:2.6rem!important;padding-right:8px!important;max-width:none!important;}
     .stApp .st-key-zone_page:has(.st-key-territory_map){padding-left:0!important;padding-right:0!important;max-width:none!important;margin-inline:0!important;}
     @media(min-width:1001px){
       [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] .st-key-territory_map){gap:12px!important;}
@@ -617,3 +617,4 @@ def render():
     </style>""", unsafe_allow_html=True)
     with st.container(key="territory_map"):
         carte_localisation.render()
+
