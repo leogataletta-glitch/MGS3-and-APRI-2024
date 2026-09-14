@@ -249,6 +249,8 @@ __LEAFLET__
  #carte,#carte3d{border-radius:0!important;}
  @media(min-width:621px){
    .leaflet-right,.maplibregl-ctrl-top-right,.maplibregl-ctrl-bottom-right{right:286px!important;}
+   /* Keep zoom and scale clear of the sidebar's 48px mosaic overlap. */
+   .leaflet-left,.maplibregl-ctrl-top-left,.maplibregl-ctrl-bottom-left{left:48px!important;}
  }
  /* Le fond marin blanc prolonge la page ; la terre reste grise. */
  .leaflet-container{background:#ffffff;border-radius:12px;font-family:inherit}

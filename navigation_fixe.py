@@ -4,8 +4,12 @@ import streamlit as st
 
 def appliquer():
     st.markdown('''<style>
-    .stApp.stApp .a2-hero{margin-right:0!important;max-width:100%!important;}
-    .stApp.stApp .a2-unep{right:24px!important;max-width:78px!important;object-fit:contain;}
+    /* Compensate the left bleed so the hero ends at the same right edge
+       as the statistics and destination cards. */
+    .stApp.stApp .a2-hero{margin-right:0!important;width:calc(100% + 2rem)!important;max-width:none!important;}
+    .stApp.stApp .a2-unep{right:0!important;max-width:78px!important;object-fit:contain;}
+    .stApp.stApp .a2-chif>div:last-child{padding-right:0!important;text-align:right;}
+    @media(max-width:1000px){.stApp.stApp .a2-hero{width:calc(100% + 2.6rem)!important;}}
     .stApp.stApp .st-key-navigation_language_desktop{flex-shrink:0!important;position:relative;z-index:4;}
     .stApp.stApp .st-key-zone_page:has(.st-key-territory_map){padding:0!important;}
     .st-key-zone_page:has(.st-key-territory_map) [data-testid="stElementContainer"]:has(.apri-page-heading){display:none!important;}

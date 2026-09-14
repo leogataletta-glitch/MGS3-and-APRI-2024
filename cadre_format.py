@@ -15,6 +15,10 @@ def appliquer(active):
         '<path d="m5 3 16 9-16 9z"/>',
     ]
     icons = ''
+    if st.session_state.get('cad_format_choice') == 'Format 3':
+        paths[0] = '<path d="m12 2 9 5v10l-9 5-9-5V7zM3 7l9 5 9-5M12 12v10"/>'
+        paths[4] = '<rect x="5" y="2" width="14" height="20" rx="1"/><path d="M8 7h8m-8 5h8m-8 5h6"/>'
+        paths[6] = '<path d="M3 21h19M4 16l6-6 4 4 7-10m-5 0h5v5"/>'
     for i, path in enumerate(paths, 1):
         svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23123d2c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+path+'</svg>'
         svg = svg.replace('%23', '#')
@@ -54,4 +58,24 @@ def appliquer(active):
         .stApp.stApp [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] .st-key-cad_i_dim){{background:#f7f8f7!important;border:1px solid #e7e9eb;border-radius:10px;padding:26px 28px!important;}}
         .stApp.stApp .st-key-cad_i_ind [data-baseweb="select"]>div:focus-within{{border-color:#176344!important;box-shadow:0 0 0 1px #176344!important;}}
         @media(max-width:600px){{.stApp.stApp p.cad-explorer-subtitle{{font-size:17px!important;}}}}
+        </style>''', unsafe_allow_html=True)
+    if st.session_state.get('cad_format_choice') == 'Format 3':
+        sub = '.stApp.stApp .st-key-zone_page .st-key-ong_cad_i_vue'
+        st.markdown(f'''<style>
+        {root} [role="radiogroup"]{{background:#f4f6f5!important;border:1px solid #ced6d5!important;border-radius:34px!important;padding:11px!important;gap:8px!important;}}
+        {root} [role="radiogroup"]>label{{min-height:108px!important;border:0!important;border-radius:32px!important;padding:59px 10px 22px!important;}}
+        {root} [role="radiogroup"]>label p:first-child{{font-family:Georgia,serif!important;}}
+        {root} [role="radiogroup"]>label:nth-child({active}){{background:white!important;box-shadow:0 8px 22px #153b2829!important;}}
+        {root} [role="radiogroup"]>label:nth-child({active})::after{{content:"";position:absolute;bottom:8px;left:calc(50% - 4px);width:8px;height:8px;border-radius:50%;background:#34956d;}}
+        .stApp.stApp .cad-explorer-title{{font-size:clamp(34px,4.5vw,72px)!important;text-align:center!important;margin:45px 0 8px!important;}}
+        .stApp.stApp p.cad-explorer-subtitle{{font:400 clamp(18px,2vw,26px)/1.5 Georgia,serif!important;color:#586671!important;text-align:center!important;margin:0 0 24px!important;}}
+        {sub} [role="radiogroup"]{{margin:0 auto 24px!important;border-radius:32px!important;background:white!important;padding:4px!important;box-shadow:0 3px 9px #163c2514!important;}}
+        {sub} [role="radiogroup"]>label{{border-radius:28px!important;}}
+        {sub} [role="radiogroup"]>label p:first-child{{font-family:Georgia,serif!important;}}
+        {sub} [role="radiogroup"]>label:has(input:checked){{background:#104c3e!important;}}
+        .stApp.stApp [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] .st-key-cad_i_dim){{width:82%!important;margin:12px auto 0!important;}}
+        .stApp.stApp :is(.st-key-cad_i_dim,.st-key-cad_i_ind) label p{{font:700 20px/1.4 Georgia,serif!important;color:#104c3e!important;}}
+        .stApp.stApp :is(.st-key-cad_i_dim,.st-key-cad_i_ind) [data-baseweb="select"]>div{{border-color:#cdd6d5!important;border-radius:13px!important;min-height:60px!important;}}
+        .stApp.stApp .st-key-cad_i_ind [data-baseweb="select"]>div:focus-within{{border-color:#104c3e!important;box-shadow:0 0 0 1px #104c3e!important;}}
+        @media(max-width:700px){{.stApp.stApp [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] .st-key-cad_i_dim){{width:100%!important;}}}}
         </style>''', unsafe_allow_html=True)
