@@ -239,6 +239,7 @@ __LEAFLET__
  #carte{position:absolute;left:0;top:0;bottom:0;right:302px;border-radius:12px}
  /* Le fond marin blanc prolonge la page ; la terre reste grise. */
  .leaflet-container{background:#ffffff;border-radius:12px;font-family:inherit}
+ .leaflet-control-scale-line,.maplibregl-ctrl-scale{text-align:center!important}
  /* --- le panneau de couches ------------------------------------------- */
  #panneau{position:absolute;top:0;right:0;bottom:0;width:286px;
    background:rgba(255,255,255,.96);border:1px solid #dbe3ec;border-radius:12px;
