@@ -1,0 +1,54 @@
+<!doctype html><html lang="__LANG__"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>*{box-sizing:border-box}body{font:15px/1.5 system-ui;color:#214c3b;margin:0;background:white}h1{font:32px Georgia;margin:0}p{margin:10px 0}button,select{font:inherit}button{cursor:pointer;border:1px solid #bad0c0;border-radius:9px;background:white;color:#214c3b;padding:10px}button:hover:enabled{background:#eaf4ed}button:disabled{opacity:.5;cursor:not-allowed}.top{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.stats,.choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0}.stat{background:#eff6f0;padding:12px;border-radius:10px}.stat b{display:block;font-size:23px}.choices{grid-template-columns:repeat(3,minmax(0,1fr))}.choices button{text-align:left;min-height:135px}.choices strong{display:block;font-size:16px}.choices small{display:block;margin-top:8px}.notice{background:#fff5df;border-left:3px solid #cf9635;padding:12px}.scene{height:115px;background:linear-gradient(#f5faf5,#e1efdc);border-radius:14px;display:flex;align-items:end;justify-content:space-around;font-size:42px;padding:10px}.log{max-height:200px;overflow:auto;border-top:1px solid #dce6df;margin-top:15px}.log p{padding:8px;margin:0;border-bottom:1px solid #edf2ee}#end{padding:15px;background:#edf5ef;border-radius:12px}small{color:#60786b}select{padding:8px;border:1px solid #bdd0c1;border-radius:8px}@media(max-width:650px){.stats{grid-template-columns:repeat(2,1fr)}.choices{grid-template-columns:repeat(2,1fr)}h1{font-size:25px}}</style>
+<div class="top"><h1 id="title"></h1><div><select id="place" aria-label="Scenario"><option value="coast">Littoral / Coast</option><option value="inland">Intérieur / Inland</option></select> <button id="restart"></button></div></div>
+<p id="intro"></p><small id="scope"></small><div class="scene" aria-hidden="true"><span id="trees">🌳🌳🌳</span><span>🏠 🐐</span><span id="sea">🌊 🐟</span><span>🌱</span></div>
+<div class="stats" id="stats"></div><div class="notice" id="event" role="status"></div><div id="end" hidden></div><div class="choices" id="choices"></div>
+<button id="download"></button><div class="log" id="log" aria-live="polite"></div>
+<script>
+const fr=document.documentElement.lang==='fr',t=(a,b)=>fr?a:b,$=id=>document.getElementById(id);
+let s;const actions=[
+ ['sow','🌱',t('Semer','Sow'),2,t('Récolte dans 2 tours : 5 rations. Sol −4.','Harvest in 2 turns: 5 rations. Soil −4.')],
+ ['fish','🐟',t('Pêcher','Fish'),0,t('2 rations et 1 crédit si le stock est suffisant. Poissons −9.','2 rations and 1 credit if stocks suffice. Fish −9.')],
+ ['wood','🪵',t('Vendre du bois','Sell wood'),0,t('5 crédits maintenant. Forêt −12 ; sol −3.','5 credits now. Forest −12; soil −3.')],
+ ['work','🧺',t('Travail journalier','Day labour'),0,t('3 crédits. Indisponible pendant la tempête.','3 credits. Unavailable during the storm.')],
+ ['mixed','🌾',t('Cultures diversifiées','Diversify crops'),6,t('7 rations dans 2 tours, plus résistantes à la sécheresse. Sol +4.','7 rations in 2 turns, more drought resistant. Soil +4.')],
+ ['stove','♨',t('Foyer économe','Efficient stove'),6,t('Supprime la dépense de combustible à chaque tour.','Removes the fuel expense each turn.')],
+ ['fence','🐐',t('Protéger les plantations','Protect seedlings'),6,t('Clôture contre les animaux en divagation. Nécessaire avant de planter des arbres.','Fence against roaming livestock. Required before planting trees.')],
+ ['trees','🌳',t('Planter des arbres','Plant trees'),8,t('Forêt +18 et sol +8 dans 3 tours. Clôture nécessaire.','Forest +18 and soil +8 in 3 turns. Fence required.')],
+ ['group','🤝',t('Organiser un appui collectif','Organise collective support'),0,t('Une seule fois : 5 crédits au tour suivant. Cela mobilise votre tour.','Once only: 5 credits next turn. Uses this turn.')]
+];
+function reset(){s={turn:1,cash:8,food:4,forest:70,fish:70,soil:65,stove:false,fence:false,group:false,coast:$('place').value==='coast',pending:[],history:[],shortage:0};draw()}
+function blocked(a){if(s.turn>10)return t('Partie terminée','Game over');if(s.cash<a[3])return t('Budget insuffisant','Insufficient budget');if(a[0]==='fish'&&!s.coast)return t('Pas d’accès à la mer','No access to the sea');if(['fish','work'].includes(a[0])&&s.turn===4)return t('Tempête : accès bloqué','Storm: access blocked');if(a[0]==='trees'&&!s.fence)return t('Animaux en divagation : clôture nécessaire','Roaming livestock: fence required');if(['stove','fence','group'].includes(a[0])&&s[a[0]])return t('Déjà réalisé','Already completed');if(a[0]==='wood'&&s.forest<12)return t('Bois insuffisant','Insufficient wood');return ''}
+function play(id){const a=actions.find(x=>x[0]===id);if(blocked(a))return;s.cash-=a[3];let notes=[];
+ if(id==='sow'||id==='mixed'){s.pending.push({due:s.turn+2,type:'crop',amount:id==='mixed'?7:5,mixed:id==='mixed'});s.soil+=id==='mixed'?4:-4}
+ if(id==='fish'){s.food+=s.fish>=30?2:1;s.cash+=s.fish>=30?1:0;s.fish-=9}
+ if(id==='wood'){s.cash+=5;s.forest-=12;s.soil-=3}
+ if(id==='work')s.cash+=3;
+ if(id==='stove'||id==='fence')s[id]=true;
+ if(id==='trees')s.pending.push({due:s.turn+3,type:'trees'});
+ if(id==='group'){s.group=true;s.pending.push({due:s.turn+1,type:'aid'})}
+ if(!s.stove){if(s.cash>=1)s.cash--;else{s.forest-=2;notes.push(t('Faute de budget combustible : collecte de bois pour cuisiner.','No fuel budget: wood collected for cooking.'))}}
+ if(s.food<1&&s.cash>=2){s.cash-=2;s.food++;notes.push(t('Une ration achetée : 2 crédits.','One ration purchased: 2 credits.'))}
+ if(s.food>=1)s.food--;else{s.shortage++;notes.push(t('Besoin alimentaire non couvert ce tour.','Food need unmet this turn.'))}
+ s.history.push(t('Tour ','Turn ')+s.turn+' — '+a[2]+'. '+notes.join(' '));s.turn++;if(s.turn>10){draw();return;}
+ for(const p of s.pending.filter(p=>p.due===s.turn)){
+  if(p.type==='aid'){s.cash+=5;s.history.push(t('Appui collectif reçu : +5 crédits.','Collective support received: +5 credits.'))}
+  if(p.type==='trees'){s.forest+=18;s.soil+=8;s.history.push(t('Les plantations protégées commencent à se développer.','Protected seedlings begin to grow.'))}
+  if(p.type==='crop'){let n=Math.max(1,Math.round(p.amount*(s.soil<35?.5:1)*(s.turn===7?(p.mixed?.7:.3):1)));s.food+=n;s.history.push(t('Récolte : +','Harvest: +')+n+t(' rations.',' rations.'))}
+ }
+ s.pending=s.pending.filter(p=>p.due>s.turn);s.fish+=2;s.forest+=1;for(const k of ['fish','forest','soil'])s[k]=Math.max(0,Math.min(100,s[k]));draw();
+}
+function draw(){
+ $('title').textContent=t('Vivre du paysage','Living from the landscape');$('restart').textContent=t('Recommencer','Restart');$('download').textContent=t('Télécharger le bilan','Download the summary');
+ $('intro').textContent=t('10 tours, une action par tour. Nourrir le ménage aujourd’hui tout en préservant les ressources de demain. Chaque tour consomme 1 ration et 1 crédit de combustible, sauf avec un foyer économe.','10 turns, one action each turn. Feed the household today while protecting tomorrow’s resources. Each turn consumes 1 ration and 1 fuel credit, unless you own an efficient stove.');
+ $('scope').textContent=t('Scénario fictif inspiré d’arbitrages ruraux : crédits et indices illustratifs, sans calibration aux ménages haïtiens ni aux scores APRI.','Fictional scenario inspired by rural trade-offs: illustrative credits and indices, not calibrated to Haitian households or APRI scores.');
+ const stats=[[t('Tour','Turn'),Math.min(10,s.turn)+'/10'],[t('Budget','Budget'),s.cash+' '+t('crédits','credits')],[t('Nourriture','Food'),s.food+' '+t('rations','rations')],[t('Forêt / Sol / Poissons','Forest / Soil / Fish'),s.forest+' / '+s.soil+' / '+(s.coast?s.fish:'—')]];
+ $('stats').replaceChildren(...stats.map(([name,value])=>{let e=document.createElement('div');e.className='stat';e.textContent=name;let b=document.createElement('b');b.textContent=value;e.append(b);return e}));
+ $('event').textContent=(s.turn===4?t('Tempête : pêche et travail bloqués. ','Storm: fishing and labour blocked. '):s.turn===7?t('Sécheresse : récoltes réduites. ','Drought: reduced harvests. '):t('Prévision connue : tempête au tour 4, sécheresse au tour 7. ','Known forecast: storm on turn 4, drought on turn 7. '))+t('Investissements en attente : ','Pending investments: ')+s.pending.length;
+ $('trees').textContent=s.forest>55?'🌳🌳🌳':s.forest>25?'🌳🌳':'🪵';$('sea').textContent=s.coast?'🌊 🐟':'⛰';$('choices').replaceChildren();
+ actions.forEach(a=>{let b=document.createElement('button'),h=document.createElement('strong'),d=document.createElement('small'),r=blocked(a);h.textContent=a[1]+' '+a[2];d.textContent=a[4]+' '+t('Coût : ','Cost: ')+a[3]+t(' crédits.',' credits.')+(r?' '+r:'');b.append(h,d);b.disabled=!!r;b.onclick=()=>play(a[0]);$('choices').append(b)});
+ $('end').hidden=s.turn<=10;$('end').textContent=t('Bilan : ','Summary: ')+s.shortage+t(' tour(s) avec un besoin alimentaire non couvert. Comparez revenu, nourriture et ressources : aucun choix n’est sans contrepartie. Rejouez avec une autre stratégie. Les investissements encore en attente ne sont pas comptés comme des bénéfices acquis.',' turn(s) with unmet food needs. Compare income, food and resources: every choice has a trade-off. Replay with another strategy. Pending investments are not counted as realised benefits.');
+ $('log').replaceChildren(...s.history.slice().reverse().map(x=>{let p=document.createElement('p');p.textContent=x;return p}));
+}
+ $('restart').onclick=reset;$('place').onchange=reset;$('download').onclick=()=>{const b=new Blob([JSON.stringify(s,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='APRI-simulation.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};reset();
+</script></html>

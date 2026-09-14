@@ -2533,7 +2533,7 @@ with _zone_nav:
     st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
     if st.session_state["app_mode"] == MODE_METHODO:
         import nav_framework
-        nav_framework.header(_marque_bloc_b64())
+        nav_framework.header(_marque_bloc_b64(), _changer_langue)
     # LA MARQUE N'OUVRE PLUS LA COLONNE. Elle a rejoint l'image, en tête de
     # page, où elle est en entier — l'emblème, le mot et la ligne
     # institutionnelle — plutôt qu'en réduction dans une colonne de deux cents
@@ -2607,17 +2607,18 @@ st.markdown("""<style>
 @media(prefers-reduced-motion:reduce){.stApp .st-key-zone_page *{transition:none!important;}}
 </style>""",unsafe_allow_html=True)
 
-with _zone_langue:
-    _cl = st.columns(2)
-    # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie est en tête.
-    _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
-    for _col, _code in zip(_cl, _ordre):
-        with _col:
-            st.button(_code.upper(), key=f"lang_{_code}",
-                      on_click=_changer_langue, args=(_code,),
-                      type=("primary"
-                            if st.session_state["choix_langue"] == _code
-                            else "secondary"))
+if st.session_state["app_mode"] != MODE_METHODO:
+    with _zone_langue:
+        _cl = st.columns(2)
+        # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie est en tête.
+        _ordre = ("en", "fr") if i18n.DEFAUT == "en" else ("fr", "en")
+        for _col, _code in zip(_cl, _ordre):
+            with _col:
+                st.button(_code.upper(), key=f"lang_{_code}",
+                          on_click=_changer_langue, args=(_code,),
+                          type=("primary"
+                                if st.session_state["choix_langue"] == _code
+                                else "secondary"))
 
 # Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par

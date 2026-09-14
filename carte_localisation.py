@@ -601,6 +601,7 @@ construire();
 GROUPES.forEach(function(g){ g.lignes.forEach(function(l){
   if (!l.fond && l.on) basculer(l.cle, true); }); });
 __EXPORT_JS__
+__MEASURE_JS__
 __HD_JS__
 __TERRAIN_JS__
 L.control.scale({imperial:false, position:'bottomleft'}).addTo(carte);
@@ -686,6 +687,7 @@ def html(d):
             .replace("__LEAFLET__", _leaflet())
             .replace("__HD_JS__", open(os.path.join(APP_DIR, "carte_haiti_hd.js"), encoding="utf-8").read().replace("__HD_INDEX__", open(os.path.join(APP_DIR, "haiti_hd_index.json"), encoding="utf-8").read()))
             .replace("__TERRAIN_JS__", open(os.path.join(APP_DIR, "carte_terrain.js"), encoding="utf-8").read())
+            .replace("__MEASURE_JS__", open(os.path.join(APP_DIR, "carte_mesure.js"), encoding="utf-8").read())
             .replace("__EXPORT_JS__", open(os.path.join(APP_DIR, "carte_export.js"), encoding="utf-8").read())
             .replace("__DONNEES__", json.dumps(d, ensure_ascii=False,
                                                separators=(",", ":")))

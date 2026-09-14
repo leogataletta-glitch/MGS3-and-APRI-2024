@@ -27,7 +27,7 @@ async function exporterCarte(format){
     const root=document.getElementById(gl?'carte3d':'carte'),bounds=root.getBoundingClientRect(),width=Math.round(bounds.width),height=Math.round(bounds.height);
     const active=GROUPES.flatMap(g=>g.lignes).filter(l=>(l.fond?l.cle===fondActif:ETAT[l.cle])&&(l.cle!=='haiti_hd'||gl&&gl.getZoom()>=15));
     const selected=[...sectionsChoisies];
-    const exportHeight=Math.max(height+72,110+active.length*34+selected.length*20);
+    const exportHeight=Math.max(height+94,110+active.length*34+selected.length*20);
     const canvas=document.createElement('canvas');canvas.width=(width+300)*2;canvas.height=exportHeight*2;
     const ctx=canvas.getContext('2d');ctx.scale(2,2);ctx.fillStyle='white';ctx.fillRect(0,0,width+300,exportHeight);
     if(gl){ctx.drawImage(gl.getCanvas(),0,0,width,height);}else{
@@ -60,6 +60,7 @@ async function exporterCarte(format){
     ctx.fillStyle='#294b3d';ctx.font='bold 14px Arial';ctx.fillText('APRI · '+L_.section,12,height+18);
     ctx.font='10px Arial';ctx.fillStyle='#546b60';ctx.fillText(root.querySelector(gl?'.maplibregl-ctrl-attrib':'.leaflet-control-attribution')?.textContent||'',12,height+38,width-24);
     if(gl){ctx.fillText((L_.legend==='Légende'?'Inclinaison ':'Tilt ')+Math.round(gl.getPitch())+'° · '+(L_.legend==='Légende'?'Hauteur du relief ×':'Relief height ×')+(gl.getTerrain()?.exaggeration||1).toFixed(1)+(gl.getPitch()>1?(L_.legend==='Légende'?' · Échelle indicative en bas de vue':' · Approximate scale at bottom of view'):''),12,height+50,width-24);}
+    if(window.apriMeasure?.text()){ctx.font='12px Arial';ctx.fillStyle='#8f4d1b';ctx.fillText(window.apriMeasure.text()+' · '+(L_.legend==='Légende'?'Mesure horizontale approximative':'Approximate horizontal measurement'),12,height+70,width-24);}
     // Export a static legend of visible layers, without interactive controls.
     const lx=width+20;let ly=30;ctx.fillStyle='#294b3d';ctx.font='bold 16px Arial';ctx.fillText(L_.legend,lx,ly);ly+=30;
     active.forEach(l=>{const sym=l.sym||{type:'tuile'},c=sym.c||'#9daeb1';ctx.fillStyle=c;ctx.strokeStyle=c;ctx.lineWidth=2;
