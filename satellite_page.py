@@ -1728,7 +1728,7 @@ def render():
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(
         f'<div class="titre-bloc">{_e(T("sat_titre"))}</div>'
-        f'<p class="sat-note" style="margin:0 0 10px">{_e(T("sat_intro", n=len(MESURES)))}</p>',
+        f'<p class="sat-note" style="margin:0 0 10px;max-width:none!important;width:100%">{_e(T("sat_intro", n=len(MESURES)))}</p>',
         unsafe_allow_html=True)
 
     d = _charger()
