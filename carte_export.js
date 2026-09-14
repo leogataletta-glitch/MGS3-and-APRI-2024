@@ -53,7 +53,7 @@ async function exporterCarte(format){
     if(scale){const r=scale.getBoundingClientRect(),w=r.width;ctx.fillStyle='rgba(255,255,255,.94)';ctx.fillRect(12,height-49,w+24,39);ctx.strokeStyle='#243e34';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(22,height-29);ctx.lineTo(22,height-20);ctx.lineTo(22+w,height-20);ctx.lineTo(22+w,height-29);ctx.stroke();ctx.fillStyle='#243e34';ctx.font='12px Arial';ctx.fillText(scale.textContent,24,height-36);}
     ctx.fillStyle='#294b3d';ctx.font='bold 14px Arial';ctx.fillText('APRI · '+L_.section,12,height+18);
     ctx.font='10px Arial';ctx.fillStyle='#546b60';ctx.fillText(root.querySelector(gl?'.maplibregl-ctrl-attrib':'.leaflet-control-attribution')?.textContent||'',12,height+38,width-24);
-    if(gl&&gl.getPitch()>1){ctx.fillText(L_.legend==='Légende'?'Vue inclinée · échelle indicative au bas de la vue':'Tilted view · approximate scale at bottom of view',12,height+50,width-24);}
+    if(gl){ctx.fillText((L_.legend==='Légende'?'Inclinaison ':'Tilt ')+Math.round(gl.getPitch())+'° · '+(L_.legend==='Légende'?'Hauteur du relief ×':'Relief height ×')+(gl.getTerrain()?.exaggeration||1).toFixed(1)+(gl.getPitch()>1?(L_.legend==='Légende'?' · Échelle indicative en bas de vue':' · Approximate scale at bottom of view'):''),12,height+50,width-24);}
     // Export a static legend of visible layers, without interactive controls.
     const lx=width+20;let ly=30;ctx.fillStyle='#294b3d';ctx.font='bold 16px Arial';ctx.fillText(L_.legend,lx,ly);ly+=30;
     active.forEach(l=>{const sym=l.sym||{type:'tuile'},c=sym.c||'#9daeb1';ctx.fillStyle=c;ctx.strokeStyle=c;ctx.lineWidth=2;
