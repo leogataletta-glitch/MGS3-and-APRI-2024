@@ -2940,6 +2940,19 @@ def _v_metadonnees(tous):
 .stApp .st-key-zone_page .cad-meta-number{font:30px/1.2 Georgia,serif;color:#245b43;margin:0 0 5px;}
 .stApp .st-key-zone_page .cad-meta-limit{font:14px/1.6 Arial,sans-serif;color:#6f613f;border-left:2px solid #c7b789;padding:8px 14px;margin:16px 0;}
 .stApp .st-key-zone_page .cad-meta-effects{padding-left:18px;margin:0;font:14px/1.7 Arial,sans-serif;color:#40564a;}
+
+.stApp .st-key-zone_page .md-sheet{padding:18px 8px;color:#40564a;}
+.stApp .st-key-zone_page .md-sheet h2{font:600 26px/1.3 Arial,sans-serif!important;color:#164b3d!important;margin:0 0 8px!important;}
+.stApp .st-key-zone_page .md-sheet h3{font:600 18px/1.4 Arial,sans-serif!important;color:#245b43!important;margin:0 0 16px!important;}
+.stApp .st-key-zone_page .md-sheet p,.stApp .st-key-zone_page .md-sheet li{font:400 15px/1.7 Arial,sans-serif!important;color:#53675e!important;max-width:none!important;margin:0 0 12px!important;}
+.md-status{margin-bottom:18px!important;}.md-metrics{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0;}
+.md-metrics section{padding:24px 28px;background:#f4f9f6;border:1px solid #deebe3;border-radius:12px;}
+.stApp .st-key-zone_page .md-metrics strong{font:600 48px/1.2 Arial,sans-serif!important;color:#164b3d!important;}
+.md-body{display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:start;}.md-panel,.md-detail{background:white;border:1px solid #e1eae5;border-radius:12px;padding:24px;box-shadow:0 4px 18px #164b3d05;}
+.md-panel ul{list-style:none;padding:0;margin:0;}.md-panel li{display:flex;gap:12px;}.md-dot{color:#6d9b82;font-size:24px;}
+.md-sheet aside{background:#fcf8ef;border-left:3px solid #d8b86a;border-radius:6px;padding:16px 18px;margin-top:22px;}.md-sheet aside b{color:#79633a;}
+.md-details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:20px;align-items:start;}.md-detail summary{cursor:pointer;font:600 16px/1.5 Arial,sans-serif;color:#245b43;}.md-detail>div{padding-top:18px;}.md-detail table{width:100%;border-collapse:collapse;font:14px/1.5 Arial,sans-serif;}.md-detail td,.md-detail th{padding:8px;text-align:left;border-bottom:1px solid #edf2ee;}.md-muted{font-size:13px!important;}
+@media(max-width:760px){.md-body,.md-details{grid-template-columns:1fr;}.md-metrics{gap:10px;}.md-metrics section{padding:16px;}.stApp .st-key-zone_page .md-metrics strong{font-size:32px!important;}}
 </style>""", unsafe_allow_html=True)
     for x in lot:
         nom = (x.get("nom_fr") or x["nom"]) if lang == "fr" else x["nom"]
@@ -2947,35 +2960,27 @@ def _v_metadonnees(tous):
         mesure = ((x.get("metrique_fr") if lang == "fr" else x.get("metrique_en")) or x.get("metrique") or "")
         note = (x.get("note") if lang == "fr" else x.get("note_en")) or x.get("note") or ""
         pourquoi = _meta_pourquoi(x, par_ligne, graphe, lang)
+        def panel(title, body):
+            return f'<section class="md-panel"><h3>{_e(title)}</h3>{body}</section>'
+        def detail(title, body):
+            return f'<details class="md-detail"><summary>{_e(title)}</summary><div>{body}</div></details>'
+        unit = x.get("unite") or ("%" if "%" in (x.get("echelle") or "") else "")
+        value = "—" if x.get("valeur") is None else _fmt(x["valeur"]) + (" " + unit if unit else "")
+        score = "—" if x.get("score") is None else _fmt(x["score"], 1) + " / 10"
+        effects = '<ul>' + ''.join(f'<li><span class="md-dot">◦</span><span>{_e(t)}</span></li>' for t, r in pourquoi) + '</ul>' if pourquoi else '<p>' + _e(T("cad_meta_pourquoi_absent")) + '</p>'
+        limit = '<aside><b>' + ("Limites de la mesure" if lang == "fr" else "Measurement limitations") + '</b><p>' + _e(note) + '</p></aside>' if note else ''
+        refs = ''.join(f'<p><b>{_e(t)}</b><br>{_e(r)}</p>' for t, r in pourquoi if r) or '<p>' + ("Aucune référence renseignée pour cet indicateur." if lang == "fr" else "No reference recorded for this indicator.") + '</p>'
+        bands = _bandes(x.get("echelle") or "")
+        scale = '<table><thead><tr><th>' + ("Score" if lang == "fr" else "Score") + '</th><th>' + ("Valeur mesurée" if lang == "fr" else "Measured value") + '</th></tr></thead><tbody>' + ''.join(f'<tr><td>{_e(str(k))}</td><td>{_e(str(v))}</td></tr>' for k,v in bands.items()) + '</tbody></table>' if bands else '<p>' + _e(x.get("echelle") or ("Barème non renseigné." if lang == "fr" else "Scale not recorded.")) + '</p>'
         with st.expander(nom):
-            st.caption(T("aq_e_" + et))
-            valeur, score = st.columns(2)
-            with valeur:
-                if x.get("valeur") is not None:
-                    st.markdown(f'<div class="cad-meta-number">{_e(_fmt(x["valeur"]))} {_e(x.get("unite") or "")}</div><p class="cad-meta-label">{_e(T("cad_meta_valeur"))}</p>', unsafe_allow_html=True)
-            with score:
-                if x.get("score") is not None:
-                    st.markdown(f'<div class="cad-meta-number">{_e(str(x["score"]))}/10</div><p class="cad-meta-label">{_e(T("cad_meta_score"))}</p>', unsafe_allow_html=True)
-            gauche, droite = st.columns(2, gap="large")
-            with gauche:
-                st.markdown(f'<p class="cad-meta-label">{_e(T("cad_meta_quoi"))}</p><p class="cad-meta-text">{_e(mesure)}</p>', unsafe_allow_html=True)
-            with droite:
-                st.markdown(f'<p class="cad-meta-label">{_e(T("cad_meta_pourquoi"))}</p>', unsafe_allow_html=True)
-                if pourquoi:
-                    st.markdown('<ul class="cad-meta-effects">' + ''.join(f'<li>{_e(t)}</li>' for t, r in pourquoi) + '</ul>', unsafe_allow_html=True)
-                else:
-                    st.markdown(f'<p class="cad-meta-text">{_e(T("cad_meta_pourquoi_dim", d=T(x["dim"]), p=_fmt(x["poids"])))}</p><p class="cad-meta-text">{_e(T("cad_meta_pourquoi_absent"))}</p>', unsafe_allow_html=True)
-            if note:
-                label = "Limites de la mesure" if lang == "fr" else "Measurement limitations"
-                st.markdown(f'<div class="cad-meta-limit"><b>{label}</b><br>{_e(note)}</div>', unsafe_allow_html=True)
-            def detail(label, body):
-                st.markdown(f'<details style="margin:12px 0"><summary style="cursor:pointer;color:#35664b;font:500 14px/1.6 Arial,sans-serif">{_e(label)}</summary><div style="padding:12px 0">{body}</div></details>', unsafe_allow_html=True)
-            detail("Calcul et méthode" if lang == "fr" else "Calculation and method", f'<p class="cad-meta-text">{_e(_meta_source(x, lang))}</p><p class="cad-meta-label">{_e(T(x["dim"]))} · {_e(T("cad_meta_poids"))} {_fmt(x["poids"])}</p>')
-            refs = [(t, r) for t, r in pourquoi if r]
-            if refs:
-                detail("Références scientifiques" if lang == "fr" else "Scientific references", ''.join(f'<p class="cad-meta-label">{_e(t)}</p><p class="cad-meta-text">{_e(r)}</p>' for t, r in refs))
-            if x.get("echelle"):
-                detail(T("cad_meta_bareme"), ''.join(f'<p class="cad-meta-text">{_e(seuil)}</p>' for seuil in x["echelle"].split(", ")))
+            st.markdown('<article class="md-sheet"><h2>' + _e(nom) + '</h2><p class="md-status">' + _e(T("aq_e_" + et)) + '</p><div class="md-metrics">'
+                + '<section><p>' + _e(T("cad_meta_valeur")) + '</p><strong>' + _e(value) + '</strong></section>'
+                + '<section><p>' + _e(T("cad_meta_score")) + '</p><strong>' + _e(score) + '</strong><p class="md-muted">' + ("Score normalisé de cet indicateur" if lang == "fr" else "Normalized score of this indicator") + '</p></section></div><div class="md-body">'
+                + panel(T("cad_meta_quoi"), '<p>' + _e(mesure) + '</p>' + limit)
+                + panel(T("cad_meta_pourquoi"), effects) + '</div><div class="md-details">'
+                + detail("Calcul et méthode" if lang == "fr" else "Calculation and method", '<p>' + _e(_meta_source(x,lang)) + '</p><p class="md-muted">' + _e(T(x["dim"])) + ' · ' + _e(T("cad_meta_poids")) + ' ' + _fmt(x["poids"],2) + '</p>')
+                + detail("Références scientifiques" if lang == "fr" else "Scientific references", refs)
+                + detail(T("cad_meta_bareme"), scale) + '</div></article>', unsafe_allow_html=True)
 
 
 
