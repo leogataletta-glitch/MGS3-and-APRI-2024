@@ -2960,18 +2960,14 @@ def _v_metadonnees(tous):
             if note:
                 label = "Limites de la mesure" if lang == "fr" else "Measurement limitations"
                 st.markdown(f'<div class="cad-meta-limit"><b>{label}</b><br>{_e(note)}</div>', unsafe_allow_html=True)
-            with st.expander("Calcul et méthode" if lang == "fr" else "Calculation and method"):
-                st.markdown(f'<p class="cad-meta-text">{_e(_meta_source(x, lang))}</p>', unsafe_allow_html=True)
-                st.caption(f'{T(x["dim"])} · {T("cad_meta_poids")} {_fmt(x["poids"])}')
+            def detail(label, body):
+                st.markdown(f'<details style="margin:12px 0"><summary style="cursor:pointer;color:#35664b;font:500 14px/1.6 Arial,sans-serif">{_e(label)}</summary><div style="padding:12px 0">{body}</div></details>', unsafe_allow_html=True)
+            detail("Calcul et méthode" if lang == "fr" else "Calculation and method", f'<p class="cad-meta-text">{_e(_meta_source(x, lang))}</p><p class="cad-meta-label">{_e(T(x["dim"]))} · {_e(T("cad_meta_poids"))} {_fmt(x["poids"])}</p>')
             refs = [(t, r) for t, r in pourquoi if r]
             if refs:
-                with st.expander("Références scientifiques" if lang == "fr" else "Scientific references"):
-                    for t, r in refs:
-                        st.markdown(f'<p class="cad-meta-label">{_e(t)}</p><p class="cad-meta-text">{_e(r)}</p>', unsafe_allow_html=True)
+                detail("Références scientifiques" if lang == "fr" else "Scientific references", ''.join(f'<p class="cad-meta-label">{_e(t)}</p><p class="cad-meta-text">{_e(r)}</p>' for t, r in refs))
             if x.get("echelle"):
-                with st.expander(T("cad_meta_bareme")):
-                    for seuil in x["echelle"].split(", "):
-                        st.markdown(f'<p class="cad-meta-text">{_e(seuil)}</p>', unsafe_allow_html=True)
+                detail(T("cad_meta_bareme"), ''.join(f'<p class="cad-meta-text">{_e(seuil)}</p>' for seuil in x["echelle"].split(", ")))
 
 
 
