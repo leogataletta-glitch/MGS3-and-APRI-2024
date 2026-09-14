@@ -2339,10 +2339,10 @@ def render(doc_complet=None):
     st.markdown("""<style>
     /* One restrained reading column and one grouped navigation bar. */
     .stApp .st-key-zone_page:has(.st-key-ong_cad_vue){max-width:1120px!important;margin-inline:auto!important;}
-    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]{background:transparent!important;padding:0!important;border-radius:0!important;gap:8px!important;margin-bottom:12px!important;}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]{background:#f1f5f2!important;padding:5px!important;border-radius:10px!important;gap:3px!important;margin-bottom:12px!important;}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label{background:transparent!important;border:0!important;border-radius:6px!important;min-height:42px!important;padding:9px 13px!important;}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:hover{background:#e5eee7!important;}
-    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:has(input:checked){background:transparent!important;box-shadow:inset 0 -2px 0 #276448!important;}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:has(input:checked){background:#123d2c!important;box-shadow:none!important;}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label p:first-child,.stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label strong{color:#345446!important;}
     .stApp .st-key-zone_page .st-key-cad_model{padding-top:10px!important;}
     .stApp .st-key-zone_page .st-key-cad_model .cad-cc{gap:28px!important;padding:4px 0!important;margin-bottom:28px!important;background:transparent!important;border-radius:0!important;}
@@ -2374,9 +2374,9 @@ def render(doc_complet=None):
 
     # Match the selected index used by the shared navigation, including its text specificity.
     st.markdown(f"""<style>
-    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}){{background:transparent!important;box-shadow:inset 0 -2px 0 #276448!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}){{background:#123d2c!important;box-shadow:none!important;}}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}) p:first-child,
-    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}) p:first-child strong{{color:#123d2c!important;font-weight:600!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}) p:first-child strong{{color:#fff!important;font-weight:600!important;}}
     </style>""",unsafe_allow_html=True)
 
 
@@ -2425,7 +2425,16 @@ def _v_mesure(stats):
     with st.container(key='cad_model'):
         st.markdown(_attributs(),unsafe_allow_html=True)
         title = 'Les sept dimensions' if i18n.get_lang() == 'fr' else 'The seven dimensions'
-        st.markdown(f'<div class="cad-model-title">{title}</div>'+_tableau_dimensions(stats),unsafe_allow_html=True)
+        items = []
+        fr = i18n.get_lang() == 'fr'
+        for cle in ORDRE:
+            e = stats['dims'].get(cle)
+            if not e:
+                continue
+            label = 'indicateurs' if fr else 'indicators'
+            items.append(f'<li><span>{_e(T(cle))}</span><small>{e["n"]} {label} · {_fmt(e["part"])} %</small></li>')
+        st.markdown('<style>.stApp .st-key-zone_page .cad-dim-simple{list-style:none;padding:0;margin:0;max-width:850px;display:grid;gap:12px}.cad-dim-simple li{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;justify-content:space-between;font:15px/1.5 Arial,sans-serif;color:#34483e}.cad-dim-simple small{font:13px/1.5 Arial,sans-serif;color:#65756c;white-space:nowrap}</style>'
+                    +f'<div class="cad-model-title">{title}</div><ul class="cad-dim-simple">'+''.join(items)+'</ul>',unsafe_allow_html=True)
 
 
 def _v_sources():
