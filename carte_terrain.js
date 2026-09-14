@@ -2,9 +2,10 @@
 (async function(){
  const fr=L_.legend==='Légende';
  const controls=document.createElement('div');controls.className='boutons';
- const top=document.createElement('button'),tilt=document.createElement('button');
+ const top=document.createElement('button'),tilt=document.createElement('button'),atlas=document.createElement('button');
  top.textContent=fr?'Vue de dessus':'Top view';tilt.textContent=fr?'Vue relief':'Relief view';
- top.disabled=tilt.disabled=true;controls.append(top,tilt);
+ atlas.textContent=fr?'Style atlas 2D':'2D atlas style';
+ top.disabled=tilt.disabled=atlas.disabled=true;controls.append(top,tilt,atlas);
  document.querySelector('#panneau .tete').append(controls);
  const note=document.createElement('div');note.setAttribute('role','status');note.style.cssText='font-size:11px;color:#587264;padding-top:6px';
  note.textContent=fr?'Chargement du relief…':'Loading terrain…';controls.after(note);
@@ -150,8 +151,16 @@
    slider(fr?'Hauteur du relief':'Relief height',1,3,.1,1,v=>'×'+v.toFixed(1),v=>gl.setTerrain({source:'dem',exaggeration:v}));
    const ratio=document.createElement('div');ratio.style.cssText='font-size:10px;color:#6c7c73;margin-top:4px';ratio.textContent=fr?'×1 : sans exagération · ×2 : hauteurs doublées':'×1: no exaggeration · ×2: doubled heights';note.before(ratio);
    if(installerHD)installerHD(gl);
+   // The original 2D look: satellite imagery softened by Esri hillshade.
+   gl.addSource('atlas-shade',{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:16,attribution:'Esri'});
+   gl.addLayer({id:'atlas-shade',type:'raster',source:'atlas-shade',layout:{visibility:'none'},paint:{'raster-opacity':.5}},'white-ocean');
+   let atlasOn=false;
+   const atlasState=on=>{atlasOn=on;atlas.setAttribute('aria-pressed',String(on));gl.setLayoutProperty('atlas-shade','visibility',on&&ETAT.ombrage?'visible':'none');gl.setLayoutProperty('ombrage-hillshade','visibility',!on&&ETAT.ombrage?'visible':'none');};
+   atlas.disabled=false;atlasState(false);
+   atlas.onclick=()=>{choisirFond('sat');const radio=document.querySelector('input[name="fond"][value="sat"]');if(radio)radio.checked=true;ETAT.ombrage=true;basculer('ombrage',true);const shade=document.querySelector('input[data-cle="ombrage"]');if(shade)shade.checked=true;atlasState(true);gl.easeTo({pitch:0,bearing:0,duration:700});};
+   top.addEventListener('click',()=>atlasState(false));tilt.addEventListener('click',()=>atlasState(false));
    const oldFond=choisirFond,oldToggle=basculer,oldFilter=filtrerSections,oldReset=recadrer;
-   choisirFond=k=>{oldFond(k);sync();};basculer=(k,on)=>{oldToggle(k,on);sync();};filtrerSections=()=>{oldFilter();sync();};
+   choisirFond=k=>{oldFond(k);sync();atlasState(false);};basculer=(k,on)=>{oldToggle(k,on);sync();atlasState(atlasOn);};filtrerSections=()=>{oldFilter();sync();atlasState(atlasOn);};
    recadrer=()=>{if(failed)return oldReset();gl.fitBounds([[-74.55,17.98],[-73.55,18.68]],{padding:25,pitch:0,bearing:0});};
   });
  }catch(e){clearTimeout(timeout);fallback();}
