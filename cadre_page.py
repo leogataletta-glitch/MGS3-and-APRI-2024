@@ -2995,15 +2995,49 @@ def _v_metadonnees(tous):
         else:
             scale = '<p>' + _e(x.get("echelle") or ("Barème non renseigné." if lang == "fr" else "Scale not recorded.")) + '</p>'
 
-        with st.container():
-            st.markdown('<article class="md-sheet"><p class="md-status">' + _e(T("aq_e_" + et)) + '</p><div class="md-metrics">'
-                + '<section><p>' + _e(T("cad_meta_valeur")) + '</p><strong>' + _e(value) + '</strong></section>'
-                + '<section><p>' + _e(T("cad_meta_score")) + '</p><strong>' + _e(score) + '</strong><p class="md-muted">' + ("Score normalisé de cet indicateur" if lang == "fr" else "Normalized score of this indicator") + '</p></section></div><div class="md-body">'
-                + panel(T("cad_meta_quoi"), '<p>' + _e(mesure) + '</p>' + limit)
-                + panel(T("cad_meta_pourquoi"), effects) + '</div><div class="md-details">'
-                + detail("Calcul et méthode" if lang == "fr" else "Calculation and method", '<p>' + _e(_meta_source(x,lang)) + '</p><p class="md-muted">' + _e(T(x["dim"])) + ' · ' + _e(T("cad_meta_poids")) + ' ' + _fmt(x["poids"],2) + '</p>')
-                + detail("Références scientifiques" if lang == "fr" else "Scientific references", refs)
-                + detail(T("cad_meta_bareme"), scale) + '</div></article>', unsafe_allow_html=True)
+        fr = lang == "fr"
+        def section(title, content):
+            return f'<section class="pdf-section"><h3>{_e(title)}</h3>{content}</section>'
+        colors = ['#efa39b','#f3bd98','#f6db91','#faf0ad','#e3efb0','#c4dfbb','#b1e1cf','#bce3e7','#a9c7e7','#899ed2','#ab9bd1']
+        scale_rows = []
+        for k, v in bands.items():
+            n = int(k)
+            active = x.get("score") is not None and float(x["score"]) == n
+            scale_rows.append(f'<div class="pdf-step{" pdf-current" if active else ""}" style="--rank:{colors[max(0,min(10,n))]}">'
+                              f'<span>{_e(str(v))}</span><b>{n}</b>'
+                              + ('<em>◀</em>' if active else '') + '</div>')
+        scale_html = '<div class="pdf-scale">'+''.join(scale_rows)+'</div>' if scale_rows else scale
+        missing = "Non renseigné dans les données disponibles." if fr else "Not recorded in the available data."
+        comparisons = ''.join('<div class="pdf-comparison"><b>'+_e(label)+'</b><span>—</span></div>' for label in
+                             (["Amérique latine et Caraïbes", "Monde", "Haïti"] if fr else ["Latin America & Caribbean", "World", "Haiti"]))
+        comparisons += '<p class="pdf-note">'+("Comparaisons nationales et internationales non renseignées ; le résultat de l’enquête ci-dessous concerne uniquement les territoires étudiés." if fr else "National and international comparisons are not recorded; the survey result below covers only the studied territories.")+'</p>'
+        comparisons += '<div class="pdf-observed"><span>'+_e(T("cad_meta_valeur"))+'</span><strong>'+_e(value)+'</strong><span>'+_e(T("cad_meta_score"))+'</span><strong>'+_e(score)+'</strong></div>'
+        import re
+        sdg = re.search(r'(?:SDG|ODD)\s*([0-9]+(?:\.[0-9A-Za-z]+)+)', nom)
+        left = section("Impact sur la résilience" if fr else "Impact on resilience", effects)
+        left += section("Définitions" if fr else "Definitions", '<p>'+_e(mesure)+'</p>'+limit)
+        if sdg:
+            left += section(("ODD " if fr else "SDG ")+sdg.group(1), '<p>'+_e(x.get("metrique") or missing)+'</p>')
+        left += section("Mode de levée" if fr else "Data collection", '<p>'+_e(_meta_source(x,lang))+'</p>')
+        left += section("Questions contributives" if fr else "Contributing questions", '<p>'+_e(x.get("question") or missing)+'</p>'+('<p>'+_e(x["modalites"])+'</p>' if x.get("modalites") else ''))
+        right = section("Données comparatives" if fr else "Comparative data", comparisons)
+        right += section("Échelles de résilience" if fr else "Resilience scales", '<p class="pdf-note">'+("Barème publié du référentiel · score de 0 à 10" if fr else "Published framework scale · score from 0 to 10")+'</p>'+scale_html)
+        st.markdown("""<style>
+.pdf-record{max-width:1160px;margin:20px auto;color:#304f68;font-family:Arial,sans-serif;}
+.pdf-dimension{display:inline-block;background:#edf1f2;border-radius:0 24px 24px 0;padding:10px 22px;color:#35597a;font-size:21px;font-weight:700;margin-bottom:22px;}
+.pdf-columns{display:grid;grid-template-columns:1.08fr 1fr;gap:40px;align-items:start;}
+.pdf-section{margin-bottom:28px;}.stApp .pdf-record .pdf-section h3{font:700 19px/1.4 Arial,sans-serif!important;color:#35597a!important;text-transform:uppercase;border-bottom:1px solid #35597a;padding-bottom:7px;margin:0 0 12px!important;}
+.stApp .pdf-record p,.stApp .pdf-record li{font:400 15px/1.7 Arial,sans-serif!important;color:#344754!important;max-width:none!important;}
+.pdf-record ul{padding-left:18px;}.pdf-record li{margin-bottom:8px;}.pdf-record .md-dot{display:none;}
+.pdf-record aside{background:#fff9e9;padding:12px 16px;border-left:2px solid #d8b86a;margin-top:18px;}
+.pdf-comparison{display:flex;justify-content:space-between;gap:20px;padding:15px 5px;color:#35597a;font-size:14px;}
+.stApp .pdf-record .pdf-note{font-size:12px!important;color:#71808d!important;}
+.pdf-observed{display:grid;grid-template-columns:1fr auto;gap:10px;padding:16px 0;color:#35597a;}.pdf-observed strong{font-size:25px;}
+.pdf-scale{position:relative;padding-right:25px;display:grid;gap:7px;}.pdf-step{background:var(--rank);border-radius:0 24px 24px 0;min-height:38px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 10px 5px 16px;color:#25384b;font:14px/1.5 Arial,sans-serif;position:relative;}
+.pdf-step b{background:white;border:1px solid #62717b;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}.pdf-step em{position:absolute;right:-24px;color:#35597a;font-style:normal;}.pdf-current{outline:2px solid #35597a;outline-offset:1px;}
+.pdf-references{margin-top:10px;}.pdf-references a{color:#35597a;}.pdf-references p{margin-bottom:14px;}
+@media(max-width:760px){.pdf-columns{grid-template-columns:1fr;gap:10px;}.pdf-dimension{font-size:17px;}.pdf-record{margin-top:12px;}}
+</style>"""+'<article class="pdf-record"><div class="pdf-dimension">'+_e(T(x["dim"]))+'</div><div class="pdf-columns"><div>'+left+'</div><div>'+right+'</div></div><div class="pdf-references">'+detail("Références scientifiques" if fr else "Scientific references",refs)+'</div></article>',unsafe_allow_html=True)
 
 
 
