@@ -2429,16 +2429,28 @@ def _v_mesure(stats):
         if not e:
             continue
         label = 'indicateurs' if fr else 'indicators'
-        items.append(f'<li><span>{_e(T(cle))}</span><small>{e["n"]} {label} · {_fmt(e["part"])} %</small></li>')
+        items.append(f'<li><span>{_e(T(cle))}</span><small><span class="cad-dim-count">{e["n"]} {label}</span> <span class="cad-dim-percent">{_fmt(e["part"])} %</span></small></li>')
     title = 'Les sept dimensions' if fr else 'The seven dimensions'
     attributes = 'Les trois attributs' if fr else 'The three attributes'
     with st.container(key='cad_model'):
         st.markdown("""<style>
-        .cad-overview{display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1.3fr);gap:48px;align-items:start;}
-        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-cc{grid-template-columns:1fr!important;gap:24px!important;margin:0!important;padding:0!important;}
+        .cad-overview{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:60px;align-items:start;max-width:1080px;margin:8px auto 0;}
+        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-model-title{font:400 22px/1.4 Georgia,serif!important;margin-bottom:22px!important;}
+        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-cc{grid-template-columns:1fr!important;gap:26px!important;margin:0!important;padding:0!important;}
+        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c{position:relative;padding-left:40px!important;}
+        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c-n{position:absolute;left:0;top:2px;float:none!important;font:400 20px/1.4 Georgia,serif!important;letter-spacing:0;color:#7a9a87!important;}
+        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c-t{font-size:21px!important;margin-bottom:6px!important;}
+        .stApp .st-key-zone_page .st-key-cad_model .cad-overview p.cad-c-x{font-size:14px!important;line-height:1.65!important;max-width:34ch;}
+        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c-n{font-size:0!important;width:24px;height:24px;border:1px solid #88a491;border-radius:50%;}
+        .cad-overview .cad-c-n::after{content:"";position:absolute;inset:7px;border:1px solid #88a491;border-radius:50%;}
+        .cad-overview .cad-c:nth-child(2) .cad-c-n{border-radius:12px 12px 16px 16px!important;height:22px!important;}
+        .cad-overview .cad-c:nth-child(2) .cad-c-n::after{inset:5px 7px 7px;border-width:0 0 1px 1px;border-radius:0;transform:rotate(-45deg);}
+        .cad-overview .cad-c:nth-child(3) .cad-c-n{border-style:dashed!important;}
         .cad-dim-simple{list-style:none;padding:0;margin:0;display:grid;gap:0;}
-        .cad-dim-simple li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;justify-content:space-between;padding:10px 0;border-bottom:1px solid #edf1ee;font:14px/1.5 Arial,sans-serif;color:#34483e;}
+        .cad-dim-simple li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:14px;padding:12px 0;border-bottom:1px solid #edf1ee;font:14px/1.5 Arial,sans-serif;color:#34483e;}
         .cad-dim-simple small{font:13px/1.5 Arial,sans-serif;color:#65756c;white-space:nowrap;}
+        .cad-dim-simple .cad-dim-count{color:#65756c;}
+        .cad-dim-simple .cad-dim-percent{display:inline-block;min-width:50px;text-align:right;color:#24583e;font-weight:500;font-variant-numeric:tabular-nums;}
         @media(max-width:800px){.cad-overview{grid-template-columns:1fr;gap:28px;}}
         </style>"""+f'<div class="cad-overview"><section><div class="cad-model-title">{attributes}</div>'+_attributs()
                     +f'</section><section><div class="cad-model-title">{title}</div><ul class="cad-dim-simple">'+''.join(items)+'</ul></section></div>',unsafe_allow_html=True)
