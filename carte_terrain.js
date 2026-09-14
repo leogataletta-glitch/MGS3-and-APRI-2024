@@ -17,13 +17,15 @@
  try{
   const m=await import('https://unpkg.com/maplibre-gl@6.9.0/dist/maplibre-gl.mjs');
   if(failed)return;
+  const installerHD=await preparerHaitiHD(m);
+  if(failed)return;
   const raster=(tiles,attribution,maxzoom=19)=>({type:'raster',tiles:[tiles],tileSize:256,attribution,maxzoom});
-  gl=new m.Map({container:host,center:[-74.05,18.33],zoom:9,pitch:0,maxPitch:80,maxZoom:18,dragRotate:true,pitchWithRotate:true,canvasContextAttributes:{preserveDrawingBuffer:true},
+  gl=new m.Map({container:host,center:[-74.05,18.33],zoom:9,pitch:0,maxPitch:80,maxZoom:21,dragRotate:true,pitchWithRotate:true,canvasContextAttributes:{preserveDrawingBuffer:true},
    style:{version:8,sources:{
-    sat:raster('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}','Esri, Maxar, Earthstar Geographics'),
+    sat:raster('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}','Esri, Maxar, Earthstar Geographics',17),
     plan:raster('https://tile.openstreetmap.org/{z}/{x}/{y}.png','© OpenStreetMap'),
     relief:raster('https://a.tile.opentopomap.org/{z}/{x}/{y}.png','© OpenTopoMap, © OpenStreetMap',17),
-    dem:{type:'raster-dem',tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],encoding:'terrarium',tileSize:256,maxzoom:15,attribution:'Terrain © Mapzen / AWS Open Data'}
+    dem:{type:'raster-dem',tiles:[installerHD?'aprihd://be/{z}/{x}/{y}':'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],encoding:'terrarium',tileSize:256,maxzoom:installerHD?17:15,attribution:'Terrain © Mapzen / AWS Open Data'}
    },layers:[{id:'background',type:'background',paint:{'background-color':'#ffffff'}},...['sat','plan','relief'].map(id=>({id,type:'raster',source:id,layout:{visibility:id==='sat'?'visible':'none'}}))],terrain:{source:'dem',exaggeration:1}}});
   gl.addControl(new m.NavigationControl({visualizePitch:true}),'top-left');gl.addControl(new m.ScaleControl({unit:'metric'}),'bottom-left');
   gl.getCanvas().addEventListener('webglcontextlost',fallback);
@@ -38,7 +40,7 @@
   gl.on('load',()=>{
    if(failed)return;
    add('terre',polygons(D.terre),'fill',{'fill-color':'#dce2df'});
-   gl.addLayer({id:'ombrage-hillshade',type:'hillshade',source:'dem'});ids.ombrage=['ombrage-hillshade'];
+   gl.addLayer({id:'ombrage-hillshade',type:'hillshade',source:'dem',paint:{'hillshade-exaggeration':.15}});ids.ombrage=['ombrage-hillshade'];
    // White outside the same land contours used by the 2D map. This layer
    // sits above imagery/hillshade but below the study layers, and is also
    // captured by JPEG/PDF exports directly from the WebGL canvas.
@@ -76,6 +78,7 @@
    gl.on('pitch',()=>{angle.input.value=gl.getPitch();angle.out.textContent=angle.format(gl.getPitch());});
    slider(fr?'Hauteur du relief':'Relief height',1,3,.1,1,v=>'×'+v.toFixed(1),v=>gl.setTerrain({source:'dem',exaggeration:v}));
    const ratio=document.createElement('div');ratio.style.cssText='font-size:10px;color:#6c7c73;margin-top:4px';ratio.textContent=fr?'×1 : sans exagération · ×2 : hauteurs doublées':'×1: no exaggeration · ×2: doubled heights';note.before(ratio);
+   if(installerHD)installerHD(gl);
    const oldFond=choisirFond,oldToggle=basculer,oldFilter=filtrerSections,oldReset=recadrer;
    choisirFond=k=>{oldFond(k);sync();};basculer=(k,on)=>{oldToggle(k,on);sync();};filtrerSections=()=>{oldFilter();sync();};
    recadrer=()=>{if(failed)return oldReset();gl.fitBounds([[-74.55,17.98],[-73.55,18.68]],{padding:25,pitch:0,bearing:0});};

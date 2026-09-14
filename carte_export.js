@@ -25,7 +25,7 @@ async function exporterCarte(format){
     if(document.querySelector('.leaflet-zoom-anim'))throw Error('Map moving');
     const gl=window.apriTerrain; if(gl && (gl.isMoving()||!gl.areTilesLoaded()))throw Error('Tiles loading');
     const root=document.getElementById(gl?'carte3d':'carte'),bounds=root.getBoundingClientRect(),width=Math.round(bounds.width),height=Math.round(bounds.height);
-    const active=GROUPES.flatMap(g=>g.lignes).filter(l=>l.fond?l.cle===fondActif:ETAT[l.cle]);
+    const active=GROUPES.flatMap(g=>g.lignes).filter(l=>(l.fond?l.cle===fondActif:ETAT[l.cle])&&(l.cle!=='haiti_hd'||gl&&gl.getZoom()>=15));
     const selected=[...sectionsChoisies];
     const exportHeight=Math.max(height+72,110+active.length*34+selected.length*20);
     const canvas=document.createElement('canvas');canvas.width=(width+300)*2;canvas.height=exportHeight*2;
