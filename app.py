@@ -2573,27 +2573,24 @@ _c_contenu = _col_page.container(key="zone_page")
 _zone_langue = _col_page.container(
     key=("zone_langue_h" if st.session_state["app_mode"] == MODE_PORTAIL
          else "zone_langue_r"))
-# Comfortable reading is always active.
+# Comfortable reading applies to text, summaries and interactive labels.
 st.markdown("""<style>
-.stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p{
- position:relative;transition:transform .16s,background .16s,box-shadow .16s;
- border-radius:6px;transform-origin:left center;
+.stApp .st-key-zone_page :is(p,li,h1,h2,h3,h4,td,th,small,[class$="-t"],[class$="-x"],[class$="-n"],.cad-dim-simple li>span){
+ position:relative;border-radius:5px;transform-origin:center;
+ transition:transform .16s,background .16s,box-shadow .16s;
 }
 @media(hover:hover){
- .stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p:hover{
+ .stApp .st-key-zone_page :is(p,li,h1,h2,h3,h4,td,th,small,[class$="-t"],[class$="-x"],[class$="-n"],.cad-dim-simple li>span):hover{
   z-index:20;background:#edf5ef!important;color:#244b37!important;
-  transform:scale(1.04);
-  box-shadow:0 0 0 8px #edf5ef,0 5px 16px 5px #123d2c18;
+  transform:scale(1.04);box-shadow:0 0 0 5px #edf5ef,0 4px 12px 3px #123d2c12;
  }
-}
-.stApp .st-key-zone_page [data-testid="stButton"] p:hover{
- background:transparent!important;box-shadow:none!important;transform:none!important;max-width:none;
+ .stApp .st-key-zone_page :is(p,li,td,th):has(:hover){transform:none;box-shadow:none;}
 }
 @media(hover:none){
- .stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p{font-size:1.05em;}
- .stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p:active{background:#edf5ef;box-shadow:0 0 0 6px #edf5ef;}
+ .stApp .st-key-zone_page :is(p,li){font-size:1.05em;}
+ .stApp .st-key-zone_page :is(p,li,h2,h3,td,th):active{background:#edf5ef;}
 }
-@media(prefers-reduced-motion:reduce){.stApp .st-key-zone_page p{transition:none!important;}}
+@media(prefers-reduced-motion:reduce){.stApp .st-key-zone_page *{transition:none!important;}}
 </style>""",unsafe_allow_html=True)
 
 with _zone_langue:
