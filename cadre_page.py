@@ -1235,9 +1235,11 @@ def _etat_ligne(r):
     """
     sco = r.get("scores_corriges") or r.get("scores") or {}
     val = r.get("valeurs") or {}
-    n_sco = sum(1 for s in SECTIONS_REF if sco.get(s) is not None)
-    n_val = sum(1 for s in SECTIONS_REF if val.get(s) is not None)
-    if sco.get("Total") is not None and n_sco >= len(SECTIONS_REF):
+    applicables = [s for s in SECTIONS_REF
+                   if not (r.get("ligne") in (61, 86, 87) and s == "Mouline")]
+    n_sco = sum(1 for s in applicables if sco.get(s) is not None)
+    n_val = sum(1 for s in applicables if val.get(s) is not None)
+    if sco.get("Total") is not None and n_sco >= len(applicables):
         return "calcule"
     if n_val or n_sco or sco.get("Total") is not None:
         return "partiel"
@@ -2444,37 +2446,25 @@ def _titre(cle, note=None, marge=4):
 
 # --- 1 · ce que mesure APRI, et en quoi il le découpe -----------------------
 def _v_mesure(stats):
-    """Capacities on the left, compact dimension summary on the right."""
-    fr = i18n.get_lang() == 'fr'
+    """Le modèle reprend les quatre colonnes et les styles de Sources."""
+    fr = i18n.get_lang() == "fr"
+    blocs = []
+    for k in ("cad_a1", "cad_a2", "cad_a3"):
+        blocs.append('<section class="cad-so-b"><div class="cad-so-h">'
+                     f'<span class="cad-so-t">{_e(T(k + "_t").capitalize())}</span></div>'
+                     f'<p class="cad-so-x">{_e(T(k))}</p></section>')
+    label = "indicateurs" if fr else "indicators"
     items = []
     for cle in ORDRE:
-        e = stats['dims'].get(cle)
-        if not e:
-            continue
-        label = 'indicateurs' if fr else 'indicators'
-        items.append(f'<li><span>{_e(T(cle))}</span><small><span class="cad-dim-count">{e["n"]} {label}</span></small></li>')
-    title = 'Les sept dimensions' if fr else 'The seven dimensions'
-    attributes = 'Les trois attributs' if fr else 'The three attributes'
-    with st.container(key='cad_model'):
-        st.markdown("""<style>
-        .cad-overview{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:60px;align-items:start;max-width:1080px;margin:8px auto 0;}
-        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-model-title{font:400 22px/1.4 Georgia,serif!important;margin-bottom:22px!important;}
-        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-cc{grid-template-columns:1fr!important;gap:26px!important;margin:0!important;padding:0!important;}
-        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c{position:relative;padding-left:40px!important;}
-        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c-n{position:absolute;left:0;top:2px;float:none!important;font:400 20px/1.4 Georgia,serif!important;letter-spacing:0;color:#7a9a87!important;}
-        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c-t{font-size:21px!important;margin-bottom:6px!important;}
-        .stApp .st-key-zone_page .st-key-cad_model .cad-overview p.cad-c-x{font-size:14px!important;line-height:1.65!important;max-width:34ch;}
-        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c-n{font-size:0!important;width:7px;height:7px;top:10px;border:0!important;background:#658b75;border-radius:50%!important;}
-        .cad-overview .cad-c-n::after{content:none!important;}
-        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c{padding-left:24px!important;}
-        .cad-dim-simple{list-style:none;padding:0;margin:0;display:grid;gap:0;}
-        .cad-dim-simple li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:14px;padding:12px 0;border-bottom:1px solid #edf1ee;font:14px/1.5 Arial,sans-serif;color:#34483e;}
-        .cad-dim-simple small{font:13px/1.5 Arial,sans-serif;color:#65756c;white-space:nowrap;}
-        .cad-dim-simple .cad-dim-count{color:#65756c;}
-        .cad-dim-simple .cad-dim-percent{display:inline-block;min-width:50px;text-align:right;color:#24583e;font-weight:500;font-variant-numeric:tabular-nums;}
-        @media(max-width:800px){.cad-overview{grid-template-columns:1fr;gap:28px;}}
-        </style>"""+f'<div class="cad-overview"><section><div class="cad-model-title">{attributes}</div>'+_attributs()
-                    +f'</section><section><div class="cad-model-title">{title}</div><ul class="cad-dim-simple">'+''.join(items)+'</ul></section></div>',unsafe_allow_html=True)
+        dim = stats["dims"].get(cle)
+        if dim:
+            items.append(f'<li>{_e(T(cle))}<br><span>{dim["n"]} {label}</span></li>')
+    title = "Les sept dimensions" if fr else "The seven dimensions"
+    blocs.append('<section class="cad-so-b"><div class="cad-so-h">'
+                 f'<span class="cad-so-t">{title}</span></div>'
+                 '<ul class="cad-so-l">' + ''.join(items) + '</ul></section>')
+    st.markdown('<div class="cad-so">' + ''.join(blocs) + '</div>',
+                unsafe_allow_html=True)
 
 
 def _v_sources():
@@ -2960,6 +2950,21 @@ def _v_metadonnees(tous):
 .md-panel ul{list-style:none;padding:0;margin:0;}.md-panel li{display:flex;gap:12px;}.md-dot{color:#6d9b82;font-size:24px;}
 .md-sheet aside{background:#fcf8ef;border-left:3px solid #d8b86a;border-radius:6px;padding:16px 18px;margin-top:22px;}.md-sheet aside b{color:#79633a;}
 .md-details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:20px;align-items:start;}.md-detail summary{cursor:pointer;font:600 16px/1.5 Arial,sans-serif;color:#245b43;}.md-detail>div{padding-top:18px;}.md-detail table{width:100%;border-collapse:collapse;font:13px/1.5 Arial,sans-serif;}.md-detail td,.md-detail th{padding:5px 8px;text-align:left;border-bottom:1px solid #edf2ee;}.md-muted{font-size:13px!important;}
+/* Une fiche ouverte, une lecture continue et une échelle sans quadrillage. */
+.stApp .st-key-zone_page .md-sheet{padding:8px 0 24px;}
+.stApp .st-key-zone_page .md-sheet h3{font:400 23px/1.3 Georgia,serif!important;margin-bottom:18px!important;}
+.stApp .st-key-zone_page .md-sheet p,.stApp .st-key-zone_page .md-sheet li{font-size:16px!important;line-height:1.75!important;}
+.md-body{gap:40px;margin:14px 0 24px;}.md-panel{padding:14px 0;}
+.md-details{grid-template-columns:1fr 1fr;gap:24px;}
+.md-detail{background:white;border:0;border-radius:0;padding:16px 0;}
+.md-detail:last-child{grid-column:1/-1;}
+.md-detail summary{font:400 21px/1.4 Georgia,serif;color:#245b43;}
+.md-detail a{color:#287452;text-decoration:none;border-bottom:1px solid #b8d3c1;}
+.md-ranks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 24px;}
+.md-rank{display:flex;align-items:center;gap:12px;padding:10px 0;font:15px/1.5 Arial,sans-serif;color:#53675e;}
+.md-rank-number{display:flex;align-items:center;justify-content:center;flex:0 0 34px;height:34px;border-radius:50%;background:#eff6f1;color:#377454;font-weight:600;}
+.md-rank-active .md-rank-number{background:#377454;color:white;}.md-rank-active{color:#245b43;font-weight:600;}
+@media(max-width:760px){.md-ranks{grid-template-columns:repeat(2,minmax(0,1fr));}.md-detail:last-child{grid-column:auto;}}
 @media(max-width:760px){.md-body,.md-details{grid-template-columns:1fr;}.md-metrics{gap:10px;}.md-metrics section{padding:16px;}.stApp .st-key-zone_page .md-metrics strong{font-size:32px!important;}}
 </style>""", unsafe_allow_html=True)
     for x in lot:
@@ -2979,7 +2984,17 @@ def _v_metadonnees(tous):
         limit = '<aside><b>' + ("Limites de la mesure" if lang == "fr" else "Measurement limitations") + '</b><p>' + _e(note) + '</p></aside>' if note else ''
         refs = _references_fiche(x, lang)
         bands = _bandes(x.get("echelle") or "")
-        scale = '<table><thead><tr><th>' + ("Score" if lang == "fr" else "Score") + '</th><th>' + ("Valeur mesurée" if lang == "fr" else "Measured value") + '</th></tr></thead><tbody>' + ''.join(f'<tr><td>{_e(str(k))}</td><td>{_e(str(v))}</td></tr>' for k,v in bands.items()) + '</tbody></table>' if bands else '<p>' + _e(x.get("echelle") or ("Barème non renseigné." if lang == "fr" else "Scale not recorded.")) + '</p>'
+        if bands:
+            ranks = []
+            for k, v in bands.items():
+                active = x.get("score") is not None and float(x["score"]) == float(k)
+                ranks.append(f'<div class="md-rank{" md-rank-active" if active else ""}">'
+                             f'<span class="md-rank-number">{_e(str(k))}</span>'
+                             f'<span>{_e(str(v))}</span></div>')
+            scale = '<div class="md-ranks">' + ''.join(ranks) + '</div>'
+        else:
+            scale = '<p>' + _e(x.get("echelle") or ("Barème non renseigné." if lang == "fr" else "Scale not recorded.")) + '</p>'
+
         with st.container():
             st.markdown('<article class="md-sheet"><p class="md-status">' + _e(T("aq_e_" + et)) + '</p><div class="md-metrics">'
                 + '<section><p>' + _e(T("cad_meta_valeur")) + '</p><strong>' + _e(value) + '</strong></section>'

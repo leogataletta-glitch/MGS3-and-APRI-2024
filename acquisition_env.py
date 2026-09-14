@@ -252,10 +252,12 @@ def _indicateurs():
     for r in lst or []:
         val = r.get("valeurs") or {}
         sco = r.get("scores") or {}
-        n_val = sum(1 for s in SECTIONS if val.get(s) is not None)
-        n_sco = sum(1 for s in SECTIONS if sco.get(s) is not None)
+        non_applicables = ["Mouline"] if r.get("ligne") in (61, 86, 87) else []
+        applicables = [s for s in SECTIONS if s not in non_applicables]
+        n_val = sum(1 for s in applicables if val.get(s) is not None)
+        n_sco = sum(1 for s in applicables if sco.get(s) is not None)
         total = sco.get("Total")
-        if total is not None and n_sco >= len(SECTIONS):
+        if total is not None and n_sco >= len(applicables):
             etat = "calcule"
         elif n_val or n_sco or total is not None:
             etat = "partiel"
@@ -268,7 +270,9 @@ def _indicateurs():
             "nom_en": r.get("indicateur") or "",
             "source": (r.get("source") or "").strip(),
             "etat": etat, "n_val": n_val, "n_sco": n_sco,
-            "total": total,
+            "total": total, "echelle": (r.get("echelle") or "").strip(),
+            "n_applicables": len(applicables),
+            "non_applicables": non_applicables,
         })
     return out
 
@@ -298,11 +302,20 @@ def _couverture(r):
     manque un barème ou la moitié du territoire : ce sont deux travaux
     différents, l'un d'une journée, l'autre d'une campagne.
     """
+    if r.get("non_applicables"):
+        n = max(r["n_sco"], r["n_val"])
+        return (f"{n}/{r['n_applicables']} · Mouline : non applicable"
+                if i18n.get_lang() == "fr" else
+                f"{n}/{r['n_applicables']} · Mouline: not applicable")
     if r["etat"] == "calcule":
         return ""
     if r["etat"] == "absent":
         return ""
     if r["n_val"] and not r["n_sco"]:
+        if r.get("echelle"):
+            return ("Barème disponible · scores non calculés"
+                    if i18n.get_lang() == "fr" else
+                    "Scale available · scores not computed")
         return T("aq_sans_note")
     return T("aq_sections", n=max(r["n_sco"], r["n_val"]))
 
@@ -314,7 +327,7 @@ def _ligne(r, fiche, lang):
         f'<div class="aq-l"><div>'
         f'<div class="aq-n">{_e(nom)}</div>'
         f'<div class="aq-p">{T("aq_l_source")} · '
-        f'{_e(r["source"] or T("aq_b_" + ((fiche or {}).get("bloc") or "satellite")))}'
+        f'{_e(r["source"] or (("Barème disponible" if lang == "fr" else "Scale available") if r.get("echelle") and (fiche or {}).get("bloc") == "bareme" else T("aq_b_" + ((fiche or {}).get("bloc") or "satellite"))))}'
         f'</div>'
         f'</div>'
         f'<div class="aq-et" style="color:{coul}">'
