@@ -22,6 +22,12 @@ function pdfJpeg(canvas) {
 (function(){
 const P=window.parent,D=P.document,fr=__FR__;
 if(P.__apriExportObserver)P.__apriExportObserver.disconnect();
+// Rebuild controls on Streamlit reruns, including language changes.
+function clearControls(doc){
+ doc.querySelectorAll('.apri-export-tools').forEach(el=>el.remove());
+ doc.querySelectorAll('iframe').forEach(f=>{try{if(f.contentDocument)clearControls(f.contentDocument);}catch(e){}});
+}
+clearControls(D);
 const seen=new WeakSet();let pending=false;
 function download(blob,ext){const url=URL.createObjectURL(blob),a=D.createElement('a');a.href=url;a.download='APRI-resultat.'+ext;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);}
 async function capture(el){
