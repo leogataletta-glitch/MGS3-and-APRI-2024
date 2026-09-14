@@ -1,0 +1,350 @@
+[
+  {
+    "site_id": 199,
+    "name": "La Citadelle, Sans Souci, Ramiers",
+    "anap_match": [
+      "Sans-Souci Ramiers",
+      2500
+    ],
+    "reported_km2": 25.2845993,
+    "geometry_km2": 25.2521217,
+    "status_year": 1968,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 13648,
+    "name": "Zone ReservÃ©e PÃ©ligre",
+    "anap_match": [
+      "Péligre",
+      29995
+    ],
+    "reported_km2": 292.89498901,
+    "geometry_km2": 292.3686733,
+    "status_year": 1968,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 7879,
+    "name": "Parc Macaya",
+    "anap_match": [
+      "Macaya",
+      8726
+    ],
+    "reported_km2": 99.01610565,
+    "geometry_km2": 131.36159667,
+    "status_year": 1983,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Écart de superficie : ANAP 87,26 km² ; WDPA déclarée 99,02 km² ; géométrie 131,36 km². Contour WDPA conservé, concordance juridique non établie."
+  },
+  {
+    "site_id": 7880,
+    "name": "La Visite",
+    "anap_match": [
+      "La Visite",
+      11426
+    ],
+    "reported_km2": 114.33999634,
+    "geometry_km2": 114.19385840999999,
+    "status_year": 1983,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555643708,
+    "name": "BaradÃ©res-Cayemites",
+    "anap_match": [
+      "Baradères-Cayemites",
+      87621.5
+    ],
+    "reported_km2": 876.21,
+    "geometry_km2": 876.46918443,
+    "status_year": 2017,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555643709,
+    "name": "JÃ©rÃ©mie-Abricots",
+    "anap_match": [
+      "Jérémie-Abricots",
+      7574.53
+    ],
+    "reported_km2": 75.74,
+    "geometry_km2": 75.75515405,
+    "status_year": 2017,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555643710,
+    "name": "Parc Martissant",
+    "anap_match": [
+      "Martissant",
+      12.55
+    ],
+    "reported_km2": 0.12000000000000001,
+    "geometry_km2": 0.12537397,
+    "status_year": 2017,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555643711,
+    "name": "PÃ©lerin",
+    "anap_match": [
+      "Pèlerin",
+      97.77
+    ],
+    "reported_km2": 0.9700000000000001,
+    "geometry_km2": 0.98147602,
+    "status_year": 2017,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555643712,
+    "name": "CanapÃ©-Vert",
+    "anap_match": [
+      "Canapé-Vert",
+      33.47
+    ],
+    "reported_km2": 0.33,
+    "geometry_km2": 0.35125112000000003,
+    "status_year": 2017,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555643713,
+    "name": "Lagon des huÃ®tres",
+    "anap_match": [
+      "Lagon des Huîtres",
+      9640
+    ],
+    "reported_km2": 96.4,
+    "geometry_km2": 96.25922681,
+    "status_year": 2017,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555643714,
+    "name": "Sant d'Eau",
+    "anap_match": [
+      "Saut-d’Eau",
+      648
+    ],
+    "reported_km2": 6.48,
+    "geometry_km2": 6.47220191,
+    "status_year": 2017,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555643715,
+    "name": "ForÃªt des pins 1",
+    "anap_match": null,
+    "reported_km2": 65,
+    "geometry_km2": 67.77497111,
+    "status_year": 2014,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Pas de correspondance individuelle confirmée dans la liste ANAP consultée."
+  },
+  {
+    "site_id": 555643716,
+    "name": "Les Trois Baies",
+    "anap_match": [
+      "Trois Baies",
+      75613.9
+    ],
+    "reported_km2": 756.13,
+    "geometry_km2": 752.78119252,
+    "status_year": 2014,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555643717,
+    "name": "ForÃªt des pins 2",
+    "anap_match": null,
+    "reported_km2": 140,
+    "geometry_km2": 139.76395193000002,
+    "status_year": 2014,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Pas de correspondance individuelle confirmée dans la liste ANAP consultée."
+  },
+  {
+    "site_id": 555643718,
+    "name": "Port Salut-Aquin",
+    "anap_match": null,
+    "reported_km2": 874.22,
+    "geometry_km2": 875.0976979100001,
+    "status_year": 2013,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Le périmètre WDPA Port Salut–Aquin ne correspond pas à une entrée unique de la liste ANAP ; ne pas le confondre avec le seul site de Port-Salut."
+  },
+  {
+    "site_id": 555643719,
+    "name": "La Cahouane",
+    "anap_match": [
+      "La Cahouane",
+      5940
+    ],
+    "reported_km2": 59.4,
+    "geometry_km2": 59.2091725,
+    "status_year": 2013,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555643720,
+    "name": "Les Matheux",
+    "anap_match": [
+      "Matheux",
+      20655.57
+    ],
+    "reported_km2": 206.55,
+    "geometry_km2": 206.37147457999998,
+    "status_year": 2015,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555643721,
+    "name": "Grand Bois",
+    "anap_match": [
+      "Grand-Bois",
+      370.15
+    ],
+    "reported_km2": 3.7,
+    "geometry_km2": 3.70403027,
+    "status_year": 2015,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555643722,
+    "name": "Deux Mamelles",
+    "anap_match": [
+      "Deux Mamelles",
+      2264.97
+    ],
+    "reported_km2": 22.65,
+    "geometry_km2": 22.66426546,
+    "status_year": 2015,
+    "verification": "State Verified",
+    "repair": "make_valid; polygon parts retained; zero-area line artefacts removed; area difference <1e-10 square degrees",
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555643723,
+    "name": "Grotte marie Jeanne",
+    "anap_match": [
+      "Grotte Marie Jeanne",
+      31
+    ],
+    "reported_km2": 0.31,
+    "geometry_km2": 0.30925387000000004,
+    "status_year": 2013,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Nom rapproché de la liste ANAP ; le PDF ne permet pas de valider le tracé."
+  },
+  {
+    "site_id": 555720400,
+    "name": "Etang De Miragone",
+    "anap_match": null,
+    "reported_km2": 74.0085,
+    "geometry_km2": 73.98824172,
+    "status_year": 2021,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Pas de correspondance individuelle confirmée dans la liste ANAP consultée."
+  },
+  {
+    "site_id": 555720401,
+    "name": "Fort Royal",
+    "anap_match": null,
+    "reported_km2": 16.4822,
+    "geometry_km2": 16.47556013,
+    "status_year": 2021,
+    "verification": "State Verified",
+    "repair": "make_valid; polygon parts retained; zero-area line artefacts removed; area difference <1e-10 square degrees",
+    "note": "Pas de correspondance individuelle confirmée dans la liste ANAP consultée."
+  },
+  {
+    "site_id": 555720402,
+    "name": "Lac AzueÃ¯",
+    "anap_match": null,
+    "reported_km2": 287.361,
+    "geometry_km2": 286.87684159,
+    "status_year": 2021,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Pas de correspondance individuelle confirmée dans la liste ANAP consultée."
+  },
+  {
+    "site_id": 555720403,
+    "name": "Source Royer",
+    "anap_match": null,
+    "reported_km2": 5.45881,
+    "geometry_km2": 5.4480743700000005,
+    "status_year": 2021,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Pas de correspondance individuelle confirmée dans la liste ANAP consultée."
+  },
+  {
+    "site_id": 555720404,
+    "name": "Trois Etangs",
+    "anap_match": null,
+    "reported_km2": 22.5544,
+    "geometry_km2": 22.56376667,
+    "status_year": 2021,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Pas de correspondance individuelle confirmée dans la liste ANAP consultée."
+  },
+  {
+    "site_id": 555720405,
+    "name": "Soucailles",
+    "anap_match": null,
+    "reported_km2": 3.99263,
+    "geometry_km2": 3.9877126300000003,
+    "status_year": 2021,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Pas de correspondance individuelle confirmée dans la liste ANAP consultée."
+  },
+  {
+    "site_id": 555720406,
+    "name": "Source Zabeth",
+    "anap_match": null,
+    "reported_km2": 5.10836,
+    "geometry_km2": 5.10072321,
+    "status_year": 2021,
+    "verification": "State Verified",
+    "repair": null,
+    "note": "Pas de correspondance individuelle confirmée dans la liste ANAP consultée."
+  }
+]
