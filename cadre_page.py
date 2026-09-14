@@ -2467,11 +2467,13 @@ def _v_mesure(stats):
 .model-dot{width:11px;height:11px;flex:0 0 11px;margin-top:6px;border-radius:50%;background:#6da188;box-shadow:0 0 0 6px #f0f6f2;}
 .stApp .model-layout .cad-so-t{font-family:inherit;text-align:left;font-size:18px;line-height:1.4;color:#1a6b52;margin:0 0 10px;}
 .stApp .model-layout p.cad-so-x{font-size:14px!important;line-height:1.75!important;text-align:left!important;margin:0!important;}
+.model-dimensions{position:relative;}
+.model-dimensions::before{content:"";position:absolute;left:-32px;top:4px;bottom:4px;width:1px;background:#e2e5e4;}
 .model-dimensions .cad-so-t{margin-bottom:16px!important;}
 .model-dimensions ul{list-style:none;padding:0;margin:0;display:grid;gap:15px;}
 .model-dimensions li{display:flex;justify-content:space-between;gap:20px;align-items:baseline;color:#3c4761;font-size:14px;line-height:1.55;}
 .model-dimensions small{font:inherit;font-size:12px;white-space:nowrap;color:#718579;}
-@media(max-width:760px){.model-layout{grid-template-columns:1fr;gap:32px;}.model-attributes{gap:24px;}.model-dimensions li{gap:12px;}}
+@media(max-width:760px){.model-layout{grid-template-columns:1fr;gap:32px;}.model-attributes{gap:24px;}.model-dimensions::before{left:0;right:0;top:-16px;bottom:auto;width:auto;height:1px;}.model-dimensions li{gap:12px;}}
 </style>"""+'<div class="model-layout"><div class="model-attributes">'+''.join(attrs)
                 +'</div><section class="model-dimensions"><div class="cad-so-t">'+title+'</div><ul>'+''.join(dims)+'</ul></section></div>',unsafe_allow_html=True)
 
