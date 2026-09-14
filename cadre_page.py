@@ -2446,25 +2446,34 @@ def _titre(cle, note=None, marge=4):
 
 # --- 1 · ce que mesure APRI, et en quoi il le découpe -----------------------
 def _v_mesure(stats):
-    """Le modèle reprend les quatre colonnes et les styles de Sources."""
+    """Trois attributs à gauche, sept dimensions à droite, police commune."""
     fr = i18n.get_lang() == "fr"
-    blocs = []
+    attrs = []
     for k in ("cad_a1", "cad_a2", "cad_a3"):
-        blocs.append('<section class="cad-so-b"><div class="cad-so-h">'
-                     f'<span class="cad-so-t">{_e(T(k + "_t").capitalize())}</span></div>'
-                     f'<p class="cad-so-x">{_e(T(k))}</p></section>')
+        attrs.append('<section class="model-attribute"><span class="model-dot" aria-hidden="true"></span><div>'
+                     f'<div class="cad-so-t">{_e(T(k + "_t").capitalize())}</div>'
+                     f'<p class="cad-so-x">{_e(T(k))}</p></div></section>')
     label = "indicateurs" if fr else "indicators"
-    items = []
+    dims = []
     for cle in ORDRE:
-        dim = stats["dims"].get(cle)
-        if dim:
-            items.append(f'<li>{_e(T(cle))}<br><span>{dim["n"]} {label}</span></li>')
+        d = stats["dims"].get(cle)
+        if d:
+            dims.append(f'<li><span>{_e(T(cle))}</span><small>{d["n"]} {label}</small></li>')
     title = "Les sept dimensions" if fr else "The seven dimensions"
-    blocs.append('<section class="cad-so-b"><div class="cad-so-h">'
-                 f'<span class="cad-so-t">{title}</span></div>'
-                 '<ul class="cad-so-l">' + ''.join(items) + '</ul></section>')
-    st.markdown('<div class="cad-so">' + ''.join(blocs) + '</div>',
-                unsafe_allow_html=True)
+    st.markdown("""<style>
+.model-layout{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:64px;margin:22px 0 28px;align-items:start;}
+.model-attributes{display:grid;gap:30px;padding-top:4px;}
+.model-attribute{display:flex;gap:18px;align-items:flex-start;padding:0;}
+.model-dot{width:11px;height:11px;flex:0 0 11px;margin-top:6px;border-radius:50%;background:#6da188;box-shadow:0 0 0 6px #f0f6f2;}
+.stApp .model-layout .cad-so-t{font-family:inherit;text-align:left;font-size:18px;line-height:1.4;color:#1a6b52;margin:0 0 10px;}
+.stApp .model-layout p.cad-so-x{font-size:14px!important;line-height:1.75!important;text-align:left!important;margin:0!important;}
+.model-dimensions .cad-so-t{margin-bottom:16px!important;}
+.model-dimensions ul{list-style:none;padding:0;margin:0;display:grid;gap:15px;}
+.model-dimensions li{display:flex;justify-content:space-between;gap:20px;align-items:baseline;color:#3c4761;font-size:14px;line-height:1.55;}
+.model-dimensions small{font:inherit;font-size:12px;white-space:nowrap;color:#718579;}
+@media(max-width:760px){.model-layout{grid-template-columns:1fr;gap:32px;}.model-attributes{gap:24px;}.model-dimensions li{gap:12px;}}
+</style>"""+'<div class="model-layout"><div class="model-attributes">'+''.join(attrs)
+                +'</div><section class="model-dimensions"><div class="cad-so-t">'+title+'</div><ul>'+''.join(dims)+'</ul></section></div>',unsafe_allow_html=True)
 
 
 def _v_sources():
