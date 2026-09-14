@@ -1943,6 +1943,39 @@ def _table_paires(lignes):
     return "".join(r)
 
 
+def _resultats_bruts_scores(cat, indicateurs, filtre, dims):
+    """Show measurement and score from the same filtered profile, in native units."""
+    fr = i18n.get_lang() == "fr"
+    ids = {x["ligne"] for x in indicateurs}
+    reduced = {**cat,
+               "indicateurs": [x for x in cat["indicateurs"] if x["ligne"] in ids],
+               "territoriaux": [x for x in cat.get("territoriaux", []) if x["ligne"] in ids]}
+    groups = list(_croisements_choisis(cat, dims)) if dims else [(T("ex_tout_ech"), "tout", np.ones(cat["n"], dtype=bool))]
+    rows = []
+    for label, _key, mask in groups:
+        for item in M.profil(reduced, mask & filtre):
+            unit = item.get("unite") or ("" if item.get("moyenne") or item.get("territorial") else "%")
+            raw = "—" if item["valeur"] is None else _f(item["valeur"], 4 if item.get("ligne") == 53 else 2) + (" " + unit if unit else "")
+            score = "—" if item["score"] is None else _f(item["score"], 2) + " / 10"
+            rows.append('<tr><td style="border:0;padding:12px 14px;background:#f1f7f3">' + _e(_nom_ind(item)) + '<small style="display:block;color:#718278">' + _e(label) + '</small></td>'
+                        '<td style="border:0;padding:12px 14px;background:#f1f7f3;font-size:20px;color:#245f49">' + _e(raw) + '</td>'
+                        '<td style="border:0;padding:12px 14px;background:#f1f7f3;font-size:20px;color:#245f49">' + _e(score) + '</td></tr>')
+    if not rows:
+        return ""
+    title = "Valeurs brutes et scores" if fr else "Raw values and scores"
+    heads = ["Indicateur · population", "Valeur brute", "Score de résilience"] if fr else ["Indicator · population", "Raw value", "Resilience score"]
+    note = ("Même sélection et mêmes filtres. Les unités restent propres à chaque mesure ; une absence de donnée est indiquée par —." if fr else
+            "Same selection and filters. Each measurement keeps its own unit; missing data are shown as —.")
+    cdi = ("CDI : estimation à parts égales entre cultures, faute de superficies exploitables ; ce n’est pas un pourcentage de ménages en polyculture." if fr else
+           "CDI: estimated with equal shares across crops because usable areas are unavailable; it is not the percentage of households practising polyculture.")
+    return ('<div class="raw-score-results" style="margin:18px 0 26px">'
+            '<h3 style="color:#245f49;font:600 19px Arial,sans-serif">' + title + '</h3>'
+            '<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:0 8px;text-align:left">'
+            '<thead><tr>' + ''.join('<th style="border:0;padding:8px 14px">' + h + '</th>' for h in heads) + '</tr></thead>'
+            '<tbody>' + ''.join(rows) + '</tbody></table></div>'
+            '<p style="font-size:12px;color:#718278">' + note + ('<br>' + cdi if 53 in ids else '') + '</p></div>')
+
+
 def render_scores(cat):
     """Les scores de résilience : ce qu'on mesure, puis le résultat.
 
@@ -2038,6 +2071,7 @@ def render_scores(cat):
                 max_selections=8, label_visibility="collapsed",
                 format_func=lambda i: _nom_ind(inds[i]))
         compares = [inds[i] for i in compare]
+        st.markdown(_resultats_bruts_scores(cat, compares or ([ind] if ind else inds), filtre, dims), unsafe_allow_html=True)
 
         n_f = int(filtre.sum())
         if n_f == 0:
