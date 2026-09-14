@@ -28,8 +28,10 @@ def appliquer():
         min-height:0!important;max-height:calc(100dvh * var(--dz,1))!important;
         margin-bottom:0!important;padding-bottom:0!important;
         align-self:stretch!important;
-        /* Match the original 1:5 columns, accounting for the left bleed. */
-        flex:0 0 calc(16.666667% + .3rem)!important;
+        /* Leave room for long menu labels and the mosaic at normal zoom. */
+        flex:0 0 max(340px, 19%)!important;
+        min-width:340px!important;
+        background-size:max(370px, 20vw) auto!important;
       }
       .stApp.stApp .st-key-zone_nav{
         position:relative!important;top:0!important;
