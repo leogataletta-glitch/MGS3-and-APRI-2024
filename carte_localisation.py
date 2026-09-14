@@ -236,13 +236,13 @@ GABARIT = r"""<!DOCTYPE html><html><head><meta charset="utf-8">
 __LEAFLET__
 <style>
  html,body{margin:0;padding:0;height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
- #carte{position:absolute;inset:0;border-radius:12px}
+ #carte{position:absolute;left:0;top:0;bottom:0;right:302px;border-radius:12px}
  /* Le fond marin blanc prolonge la page ; la terre reste grise. */
  .leaflet-container{background:#ffffff;border-radius:12px;font-family:inherit}
  /* --- le panneau de couches ------------------------------------------- */
- #panneau{position:absolute;top:10px;right:10px;bottom:10px;width:264px;
+ #panneau{position:absolute;top:0;right:0;bottom:0;width:286px;
    background:rgba(255,255,255,.96);border:1px solid #dbe3ec;border-radius:12px;
-   box-shadow:0 6px 24px rgba(16,23,40,.16);z-index:1000;display:flex;
+   box-shadow:none;z-index:1000;display:flex;
    flex-direction:column;overflow:hidden}
  #panneau .tete{padding:10px 12px 8px;border-bottom:1px solid #eef2f7}
  #panneau .titre{font-size:10.5px;font-weight:700;letter-spacing:.1em;
@@ -273,7 +273,7 @@ __LEAFLET__
  .leaflet-popup-content b{color:#101728}
  .pop-t{font-size:10px;letter-spacing:.08em;text-transform:uppercase;
    color:#8a93a5;font-weight:700;display:block;margin-bottom:2px}
- @media(max-width:820px){#panneau{width:210px}}
+ @media(max-width:620px){#carte{right:0;bottom:240px}#panneau{top:auto;height:224px;width:100%}}
 </style></head><body>
 <div id="carte"></div>
 <div id="panneau">
@@ -285,6 +285,8 @@ __LEAFLET__
       <button onclick="recadrer()">__T_EMPRISE__</button>
     </div>
   </div>
+  <div class="boutons" style="padding:4px 12px"><button id="jpg" onclick="exporterCarte('jpeg')">JPEG ↓</button><button id="pdf" onclick="exporterCarte('pdf')">PDF ↓</button></div>
+  <div id="exportEtat" role="status" style="font-size:11px;padding:0 12px"></div>
   <div id="liste"></div>
 </div>
 <script>
@@ -343,11 +345,11 @@ const RENDU_TERRE = L.canvas({pane:'fondTerre'});
 
 const FONDS = {
   plan:  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          {maxZoom:19, attribution:'© OpenStreetMap'}),
+          {crossOrigin:true, maxZoom:19, attribution:'© OpenStreetMap'}),
   relief:L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-          {maxZoom:17, attribution:'© OpenTopoMap, © OpenStreetMap'}),
+          {crossOrigin:true, maxZoom:17, attribution:'© OpenTopoMap, © OpenStreetMap'}),
   sat:   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-          {maxZoom:19, attribution:'Esri, Maxar, Earthstar Geographics'}),
+          {crossOrigin:true, maxZoom:19, attribution:'Esri, Maxar, Earthstar Geographics'}),
   /* LE FOND SOBRE EST DESSINÉ, PAS TÉLÉCHARGÉ. Deux aplats suffisent à ce
      qu'on lui demande, et le trait de côte est déjà dans le dépôt. Ni l'un
      ni l'autre n'intercepte les clics : les couches de données restent
@@ -421,13 +423,25 @@ COUCHES.paysage = polys(D.paysage_ga, 'paysage', STYLE_PAYSAGE,
 COUCHES.paysage_sud = polys(D.paysage_sud, 'paysage_sud', STYLE_PAYSAGE,
   p => pop(L_.paysage_t, '<b>' + L_.paysage_sud + '</b>' +
       (p && p.NAME ? '<br><span style="color:#8a93a5">'+p.NAME+'</span>' : '')));
-COUCHES.sections = polys(D.sections, 'sections',
-  {color:'#ffffff', weight:1.6, fillColor:C.sections, fillOpacity:.34},
-  function(p){
-    if (!p || !p.section) return null;
-    return pop(L_.section, '<b>'+p.section+'</b><br>'+
-      (p.commune||'') + (p.departement ? ' · ' + p.departement : ''));
-  });
+const sectionsChoisies = new Set((D.sections||[]).map(o=>o.p.section));
+const sectionsGeometries = new Map();
+(D.sections||[]).forEach(o=>{
+  const name=o.p.section;
+  if(!sectionsGeometries.has(name)) sectionsGeometries.set(name,L.layerGroup());
+  sectionsGeometries.get(name).addLayer(polys([o], 'sections',
+    {color:'#ffffff',weight:1.6,fillColor:C.sections,fillOpacity:.34},
+    p=>pop(L_.section,'<b>'+p.section+'</b><br>'+(p.commune||''))));
+});
+COUCHES.sections=L.layerGroup([...sectionsGeometries.values()]);
+const pointsParSection=[];
+function normaliserSection(s){return (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z]/g,'');}
+function filtrerSections(){
+  COUCHES.sections.clearLayers();COUCHES.pts_l.clearLayers();COUCHES.pts_m.clearLayers();
+  const noms=new Set([...sectionsChoisies].map(normaliserSection));
+  sectionsGeometries.forEach((layer,name)=>{if(sectionsChoisies.has(name))COUCHES.sections.addLayer(layer);});
+  pointsParSection.forEach(p=>{if(noms.has(normaliserSection(p.section)))COUCHES[p.cle].addLayer(p.marker);});
+  reordonner();
+}
 
 COUCHES.villes = L.layerGroup();
 (D.villes||[]).forEach(function(v){
@@ -451,13 +465,14 @@ COUCHES.pts_m = L.layerGroup();
   m.bindPopup(pop(L_.point, '<b>n° '+(e[4]||'')+'</b><br>'+e[2]+
                   '<br><span style="color:#8a93a5">'+e[3]+'</span>'));
   (mont ? COUCHES.pts_m : COUCHES.pts_l).addLayer(m);
+  pointsParSection.push({section:e[2],cle:mont?'pts_m':'pts_l',marker:m});
 });
 
 /* L'ombrage est une couche de tuiles, pas un vecteur : le relief se lit à
    toutes les échelles et ne pèse rien dans la page. */
 COUCHES.ombrage = L.tileLayer(
   'https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
-  {maxZoom:16, opacity:.5, attribution:'Esri'});
+  {crossOrigin:true, maxZoom:16, opacity:.5, attribution:'Esri'});
 
 /* ---- le panneau ------------------------------------------------------- */
 const GROUPES = __GROUPES__;
@@ -480,6 +495,12 @@ function symbole(s){
 
 function construire(){
   const hote = document.getElementById('liste');
+  const selection=document.createElement('div');selection.className='groupe';
+  const title=document.createElement('div');title.className='entete';title.textContent=L_.section;selection.appendChild(title);
+  const actions=document.createElement('div');actions.className='boutons';actions.style.padding='0 10px';
+  [true,false].forEach(on=>{const btn=document.createElement('button');btn.textContent=on?L_.all:L_.none;btn.onclick=()=>{selection.querySelectorAll('input').forEach(i=>{i.checked=on;if(on)sectionsChoisies.add(i.value);else sectionsChoisies.delete(i.value);});filtrerSections();};actions.appendChild(btn);});selection.appendChild(actions);
+  [...sectionsChoisies].sort().forEach(name=>{const label=document.createElement('label');label.className='ligne';const input=document.createElement('input');input.type='checkbox';input.checked=true;input.value=name;input.onchange=()=>{if(input.checked)sectionsChoisies.add(name);else sectionsChoisies.delete(name);filtrerSections();};label.appendChild(input);const text=document.createElement('span');text.className='lib';text.textContent=name;label.appendChild(text);selection.appendChild(label);});
+  hote.appendChild(selection);
   GROUPES.forEach(function(g, ig){
     const div = document.createElement('div');
     div.className = 'groupe' + (g.ferme ? ' ferme' : '');
@@ -526,7 +547,7 @@ function reordonner(){
 }
 
 function tout(on){
-  document.querySelectorAll('#liste input[type=checkbox]').forEach(function(i){
+  document.querySelectorAll('#liste input[data-cle]').forEach(function(i){
     i.checked = on; basculer(i.dataset.cle, on);
   });
 }
@@ -534,6 +555,7 @@ function tout(on){
 construire();
 GROUPES.forEach(function(g){ g.lignes.forEach(function(l){
   if (!l.fond && l.on) basculer(l.cle, true); }); });
+__EXPORT_JS__
 L.control.scale({imperial:false, position:'bottomleft'}).addTo(carte);
 </script>
 <style>.etq-ville{background:none;border:none;box-shadow:none;color:#101728;
@@ -606,9 +628,13 @@ def html(d):
         "section": T("cl_pop_section"), "point": T("cl_pop_point"),
         "paysage": T("cl_paysage"), "paysage_sud": T("cl_paysage_sud"),
         "paysage_t": T("cl_g_etude"),
+        "all": T("cl_tout"), "none": T("cl_rien"),
+        "export_wait": "Préparation…" if i18n.get_lang()=="fr" else "Preparing…",
+        "export_fail": "Export impossible : attendez le chargement des tuiles ou choisissez le fond sobre." if i18n.get_lang()=="fr" else "Export unavailable: wait for tiles to load or choose the plain base map.",
     }
     return (GABARIT
             .replace("__LEAFLET__", _leaflet())
+            .replace("__EXPORT_JS__", open(os.path.join(APP_DIR, "carte_export.js"), encoding="utf-8").read())
             .replace("__DONNEES__", json.dumps(d, ensure_ascii=False,
                                                separators=(",", ":")))
             .replace("__COULEURS__", json.dumps(COULEURS))
