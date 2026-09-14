@@ -1022,25 +1022,25 @@ st.markdown(("""
      depuis que le dessin monte jusque-là, c'est lui qui fait la séparation,
      et le trait venait le barrer en travers. */
   div[class*="st-key-zone_nav"] .nav-pied {
-    margin: 28px 0 4px; padding: 16px 10px 0;
+    margin: 24px 0 4px; padding: 12px 48px 0 16px;
   }
   /* LA POUSSE SE MET À CÔTÉ DE LA DEVISE, PAS AU-DESSUS. Seule sur sa ligne,
      elle avait l'air d'une puce orpheline en haut d'un paragraphe ; posée
      contre la première ligne du texte, elle en devient la marque. */
   div[class*="st-key-zone_nav"] .nav-pied .nav-mot {
-    display: flex; justify-content: flex-end;
+    display: flex; justify-content: center; width: 100%;
   }
   div[class*="st-key-zone_nav"] .nav-pied svg { display: block;
     flex: none; margin-top: 2px; }
   /* AU FIL DE L'EAU, LES DEUX. La feuille de l'application justifie les
      blocs de texte ; sur une colonne de deux cents pixels, la justification
      creuse des rivières entre les mots. */
-  /* LA DEVISE EST FERRÉE À DROITE. Au fer à gauche elle s'alignait sur les
-     rubriques et se lisait comme une entrée de plus ; à droite elle s'en
-     détache et referme la colonne. */
+  /* Center the short signature inside the solid area, clear of the mosaic. */
   div[class*="st-key-zone_nav"] .nav-devise {
-    font-size: 12px; line-height: 1.5; color: #4d5c53;
-    font-style: italic; text-align: right !important;
+    font-size: 12px; line-height: 1.75; color: #60766a;
+    width: 100%; max-width: 25ch; margin: 0 auto;
+    font-style: italic; text-align: center !important;
+    text-wrap: balance; overflow-wrap: break-word;
   }
   /* LA LIGNE DE CRÉDIT A ÉTÉ RETIRÉE, L'EMBLÈME EST RESTÉ. La phrase de
      copyright redisait en petit ce que le bandeau porte déjà ; l'emblème,
@@ -2693,22 +2693,22 @@ with _c_contenu:
         # profils sur une mesure choisie répond à la même question, et à
         # celle que l'autre écran ne posait pas — comment ce groupe se situe
         # par rapport à un autre.
-        _CODES_RA = ["brut", "scores", "comparer", "solutions"]
+        _CODES_RA = ["brut", "scores", "comparer", "relations", "solutions"]
         # TOUTES LES BARRES DU SITE SONT AU MÊME FORMAT, celui à deux
         # lignes. Celle-ci avait été mise en compact pour gagner de la
         # hauteur ; elle était alors la seule à ne pas dire ce que ses
         # onglets contiennent, et un lecteur qui passait de la page des
         # boucles à celle-ci changeait d'outil sans changer de site.
         _ra = onglets.barre("ra_vue", _CODES_RA,
-                            titre=lambda c: T("ra_o_" + c),
-                            description=lambda c: T("ra_d_" + c),
+                            titre=lambda c: ("Relations entre variables" if i18n.get_lang() == "fr" else "Relationships between variables") if c == "relations" else T("ra_o_" + c),
+                            description=lambda c: ("Comparer les réponses observées" if i18n.get_lang() == "fr" else "Compare observed answers") if c == "relations" else T("ra_d_" + c),
                             defaut="brut")
 
         # LE CATALOGUE EST CHARGÉ UNE FOIS POUR LES CINQ PREMIERS ONGLETS.
         # C'est le même fichier de réponses individuelles ; le charger dans
         # chaque module en ferait cinq copies en mémoire.
         _cat = croisement_resultats._catalogue() \
-            if _ra in ("brut", "scores", "comparer",
+            if _ra in ("brut", "scores", "comparer", "relations",
                        "solutions") \
             else None
 
@@ -2789,6 +2789,10 @@ with _c_contenu:
             # quoi tout déplier. Ce qui s'affiche ici, désormais, c'est le
             # mode d'affichage choisi et rien d'autre.
             explorateur.render_scores(_cat)
+
+        elif _ra == "relations":
+            import relations_resultats
+            relations_resultats.render(_cat)
 
         elif _ra == "comparer":
             explorateur.render_comparaison(_cat)

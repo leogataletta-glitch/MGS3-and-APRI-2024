@@ -31,8 +31,13 @@ def render():
     @media(min-width:1001px){{
       {selector}{{position:relative;border-right:{border}!important;}}
       {selector}::after{{content:"";position:absolute;right:0;top:0;bottom:0;width:48px;
-        pointer-events:none;z-index:0;{effect}}}
+        pointer-events:none;z-index:2;{effect}}}
       {selector}>div{{position:relative;z-index:1;}}
+      /* One shared overlay cuts backgrounds at exactly the sidebar's mosaic edge. */
+      {selector} .st-key-zone_nav div[data-testid="stButton"]>button{{
+        border-top-right-radius:0!important;border-bottom-right-radius:0!important;
+        padding-right:48px!important;
+      }}
     }}
     .st-key-nav_edge_choice{{margin-top:16px;margin-right:14px;}}
     .st-key-nav_edge_choice label p{{font-size:12px!important;color:#526c5f!important;}}
