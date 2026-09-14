@@ -2356,10 +2356,12 @@ def render(doc_complet=None):
     # titres nomment déjà leur contenu, et la ligne en dessous ne faisait que
     # le reformuler : « Dimensions » suivi de « Les sept dimensions et leurs
     # pondérations ». Le composant accepte de n'en pas avoir.
-    vue = onglets.barre("cad_vue", list(VUES),
-                        titre=lambda c: names[c], description=lambda c: T(_DESC[c]),
+    names['simulation'] = 'Simulation'
+    game_views = (*VUES, 'simulation')
+    vue = onglets.barre("cad_vue", list(game_views),
+                        titre=lambda c: names[c], description=lambda c: ('Vivre du paysage' if fr else 'Living from the landscape') if c == 'simulation' else T(_DESC[c]),
                         compact=False, defaut=VUES[0])
-    active = VUES.index(vue) + 1
+    active = game_views.index(vue) + 1
     st.markdown(f'<style>.stApp .st-key-ong_cad_vue [role="radiogroup"] > label:nth-child({active}) {{box-shadow:inset 0 -2px 0 #1f5b46!important;}} .stApp .st-key-ong_cad_vue [role="radiogroup"] > label:nth-child({active}) p {{color:#1f5b46!important;}}</style>',unsafe_allow_html=True)
 
 
@@ -2430,7 +2432,10 @@ def render(doc_complet=None):
     </style>""",unsafe_allow_html=True)
 
 
-    if vue == "sources":
+    if vue == "simulation":
+        import simulation_page
+        simulation_page.render()
+    elif vue == "sources":
         _v_sources()
     elif vue == "indicateurs":
         _v_indicateurs()
