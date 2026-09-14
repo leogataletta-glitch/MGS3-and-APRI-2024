@@ -3209,6 +3209,11 @@ def _v_boucles():
     st.markdown(f'<div class="cad-bp">{"".join(cases)}</div>',
                 unsafe_allow_html=True)
 
+    # Illustrative dynamics are isolated from the calibrated indicator scores.
+    import streamlit.components.v1 as components
+    from reforestation_demo import document
+    components.html(document(fr), height=850, scrolling=True)
+
     # ---- comment lire une boucle -----------------------------------------
     signes = "".join(
         f'<div class="cad-bs">'
