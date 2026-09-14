@@ -245,6 +245,15 @@ __LEAFLET__
 <style>
  html,body{margin:0;padding:0;height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
  #carte{position:absolute;left:0;top:0;bottom:0;right:302px;border-radius:12px}
+ /* Dissolve the rectangular viewport, independently of the coastline. */
+ #carte,#carte3d{border-radius:0!important;}
+ #carte::after,#carte3d::after{content:"";position:absolute;inset:0;pointer-events:none;
+   background:linear-gradient(to right,white,transparent 64px),
+              linear-gradient(to left,white,transparent 64px),
+              linear-gradient(to bottom,white,transparent 64px),
+              linear-gradient(to top,white,transparent 64px);}
+ #carte::after{z-index:450;}
+ #carte3d::after{z-index:1;}
  /* Le fond marin blanc prolonge la page ; la terre reste grise. */
  .leaflet-container{background:#ffffff;border-radius:12px;font-family:inherit}
  .leaflet-control-scale-line,.maplibregl-ctrl-scale{text-align:center!important}

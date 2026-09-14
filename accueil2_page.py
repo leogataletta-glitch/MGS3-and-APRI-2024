@@ -80,12 +80,12 @@ TEXTES = {
     "a2_titre": {"en": "Understanding landscapes@@to strengthen resilience",
                  "fr": "Comprendre les territoires@@pour renforcer leur résilience"},
     "a2_intro": {
-        "en": "Explore survey results from Sud and Grand'Anse, Haiti, to "
-              "better understand vulnerabilities, local capacities and "
-              "opportunities for action.",
-        "fr": "Explorez les résultats de l'enquête menée dans le Sud et la "
-              "Grand'Anse, en Haïti, pour mieux comprendre les vulnérabilités, "
-              "les capacités locales et les pistes d'action."},
+        "en": "APRI is an approach to development through landscape resilience, "
+              "combining monitoring and decision support to guide action "
+              "at any scale.",
+        "fr": "APRI est une approche du développement par la résilience "
+              "paysagère, qui associe suivi et aide à la décision pour "
+              "orienter l’action à toutes les échelles."},
     "a2_cta": {"en": "Explore the results", "fr": "Explorer les résultats"},
     # LA LÉGENDE SUIT LA PHOTOGRAPHIE, ET LES DEUX PHOTOGRAPHIES DIFFÈRENT :
     # la vallée de la Voldrogue côté anglais, le port côté français. Chaque

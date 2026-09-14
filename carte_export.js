@@ -46,6 +46,12 @@ async function exporterCarte(format){
       }ctx.restore();
     }
     }
+    // Match the 64px white dissolve around the on-screen viewport.
+    ctx.save();ctx.beginPath();ctx.rect(0,0,width,height);ctx.clip();
+    for(const [x0,y0,x1,y1] of [[0,0,64,0],[width,0,width-64,0],[0,0,0,64],[0,height,0,height-64]]){
+      const fade=ctx.createLinearGradient(x0,y0,x1,y1);fade.addColorStop(0,'white');fade.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle=fade;ctx.fillRect(0,0,width,height);
+    }ctx.restore();
     // Permanent town names are DOM tooltips, not part of Leaflet's canvas.
     ctx.font='bold 12px Arial';ctx.textBaseline='middle';
     root.querySelectorAll('.etq-ville').forEach(el=>{const r=el.getBoundingClientRect(),x=r.left-bounds.left+(gl?parseFloat(getComputedStyle(el).paddingLeft)||0:0),y=r.top-bounds.top+r.height/2;if(x<0||x>width||y<0||y>height)return;ctx.lineWidth=3;ctx.strokeStyle='white';ctx.strokeText(el.textContent,x,y);ctx.fillStyle='#20382f';ctx.fillText(el.textContent,x,y);});

@@ -2365,7 +2365,6 @@ def render(doc_complet=None):
 
     st.markdown("""<style>
     /* One restrained reading column and one grouped navigation bar. */
-    .stApp .st-key-zone_page:has(.st-key-ong_cad_vue){max-width:1120px!important;margin-inline:auto!important;}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]{background:#f1f5f2!important;padding:5px!important;border-radius:10px!important;gap:3px!important;margin-bottom:12px!important;}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label{background:transparent!important;border:0!important;border-radius:6px!important;min-height:42px!important;padding:9px 13px!important;}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:hover{background:#e5eee7!important;}

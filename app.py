@@ -1451,7 +1451,12 @@ st.markdown(("""
      ouvre celle de droite. Le filet de blanc qui le séparait du contenu est
      porté par son propre conteneur : sur les pages sans illustration, la
      colonne de droite commence donc au même pixel que le menu. */
-  div[class*="st-key-zone_page"] { margin-top: 0 !important; }
+  /* One full-width page frame, shared with the territory map. */
+  .stApp div.st-key-zone_page {
+    width:100% !important; max-width:none !important;
+    margin:0 !important; padding-left:0 !important; padding-right:0 !important;
+    min-width:0; box-sizing:border-box;
+  }
   div[class*="st-key-zone_ruban"] { margin: 0 0 14px !important; }
   /* LE SÉLECTEUR EST POSÉ DANS L'IMAGE, EN HAUT. Il a vécu dans l'angle du
      bandeau, puis en tête de la colonne de menu ; l'image est redevenue le

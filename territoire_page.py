@@ -606,9 +606,7 @@ def render():
     l'accueil se sert de la première, et la seconde reste disponible pour un
     rapport. Elles ne sont simplement plus posées ici.
     """
-    st.markdown("""<style>
-    .stApp .st-key-zone_page:has(.st-key-territory_map){padding-left:0!important;padding-right:0!important;max-width:none!important;margin-inline:0!important;}
-    </style>""", unsafe_allow_html=True)
+    # Page width and margins are shared by every section in app.py.
     with st.container(key="territory_map"):
         carte_localisation.render()
 
