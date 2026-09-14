@@ -195,7 +195,7 @@ def barre(cle, codes, titre, description=None, defaut=None, compact=False):
         # de style distingue par leur rang. Un <br> serait échappé.
         return f"**{t}**\n\n{d}" if d else f"**{t}**"
 
-    if cle in {"exb_theme_ong", "cad_i_vue", "sat_cat"}:
+    if cle in {"exb_theme_ong", "sat_cat"}:
         from i18n import get_lang
         label = ("Explorer par thème" if get_lang() == "fr" else "Explore by theme") if cle != "cad_i_vue" else ("Explorer l’indicateur" if get_lang() == "fr" else "Explore the indicator")
         st.markdown(f'<p style="font:600 11px/1.5 Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#75867c;margin:8px 0 10px">{label}</p>', unsafe_allow_html=True)

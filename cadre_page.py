@@ -1434,29 +1434,30 @@ STYLE = """
   .cad-so-h { display:flex; align-items:center; justify-content:center; gap:11px; margin:0 0 12px; }
   .cad-so-n { font-size:27px; font-weight:200; color:#1a6b52; line-height:1;
               font-variant-numeric:tabular-nums; }
-  .cad-so-t { font-size:14px; font-weight:700; color:#1a6b52;
+  .cad-so-t { font-size:18px; font-weight:700; color:#1a6b52;
               letter-spacing:-.01em; line-height:1.25;
               padding-left:0; border-left:0; text-align:center; }
-  p.cad-so-x { font-size:12.5px !important; color:#3c4761 !important;
-              line-height:1.55 !important; margin:0 0 12px !important;
+  p.cad-so-x { font-size:16px !important; color:#3c4761 !important;
+              line-height:1.65 !important; margin:0 0 16px !important;
               text-align:left !important; }
   .cad-so-l { list-style:none; padding:0; margin:10px 0 0; }
   /* AU FIL DE L'EAU, ET NON JUSTIFIÉ. Une phrase de quatre lignes dans une
      colonne de quatre creusait des rivières blanches entre les mots ; la
      colonne est trop étroite pour que la justification tienne. */
   .cad-so-l li { position:relative; padding-left:16px; margin-bottom:7px;
-              font-size:12px; color:#3c4761; line-height:1.45;
+              font-size:16px; color:#3c4761; line-height:1.6;
               text-align:left; }
   .cad-so-l li::before { content:"–"; position:absolute; left:0;
               color:#8a93a5; }
   .cad-so-k { margin:0 0 9px; }
   .cad-so-k > div { display:flex; align-items:baseline; gap:9px;
               padding:2px 0; }
-  .cad-so-k b { flex:0 0 auto; min-width:38px; font-size:14px;
+  .cad-so-k b { flex:0 0 auto; min-width:48px; font-size:18px;
               font-weight:700; color:#101728; letter-spacing:-.02em;
               font-variant-numeric:tabular-nums; }
-  .cad-so-k span { font-size:11.5px; color:#5a6a80; line-height:1.35;
+  .cad-so-k span { font-size:15px; color:#5a6a80; line-height:1.5;
               text-align:left !important; }
+  .cad-so + .cad-fin .cad-fin-t { font-size:17px; line-height:1.5; }
 
   /* --- la méthode de calcul, en trois temps -------------------------------
      TROIS SECTIONS NUMÉROTÉES, SÉPARÉES PAR UN FILET. Le calcul est une
@@ -2452,6 +2453,8 @@ def render(doc_complet=None):
         _v_document(doc_complet)
     else:
         _v_mesure(stats)
+    import cadre_format
+    cadre_format.appliquer(active)
 
 
 def _titre(cle, note=None, marge=4):
@@ -2763,11 +2766,13 @@ def _v_indicateurs():
     # d'un coup, chacune dépliable là où elle est. Ce sont deux questions
     # différentes posées par deux lecteurs différents, et les empiler sur un
     # seul écran aurait obligé chacun à traverser la réponse de l'autre.
+    fr = i18n.get_lang() == "fr"
+    st.markdown('<h2 class="cad-explorer-title">'+('Explorer un indicateur' if fr else 'Explore an indicator')+'</h2>', unsafe_allow_html=True)
     vue = onglets.barre(
         "cad_i_vue", ["bareme", "meta"],
         titre=lambda c: T("cad_iv_" + c),
         description=lambda c: T("cad_ivd_" + c), defaut="bareme")
-    g, d = st.columns([1, 2])
+    g, d = st.columns([2, 3])
     with g:
         dim = st.selectbox(T("cad_ind_dim"), [None] + ORDRE, key="cad_i_dim",
                            format_func=lambda c: (T("cad_ind_all") if c is None
@@ -3192,8 +3197,7 @@ def _v_boucles():
     @media(max-width:600px){.st-key-cad_feedback .cad-bp{grid-template-columns:1fr;gap:12px;}.st-key-cad_feedback .cad-bp-e{padding:18px 0;}.st-key-cad_feedback .cad-step-number{margin-bottom:10px;}.st-key-cad_feedback .cad-bl-g>div{padding:12px 0;}.st-key-cad_feedback .cad-bl-d{gap:10px;}.st-key-cad_feedback .cad-bl-n{font-size:17px;}.st-key-cad_feedback .cad-bl-s{font-size:12px;}}
     </style>""", unsafe_allow_html=True)
     fr = i18n.get_lang() == "fr"
-    st.markdown('<div class="cad-bt">' + ("Du constat à l’action" if fr else "From observation to action") + '</div>'
-                + f'<div class="cad-feedback-intro">{_e(T("cad_uma"))}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="cad-feedback-intro">{_e(T("cad_uma"))}</div>', unsafe_allow_html=True)
     ETAPES = ("cad_b1", "cad_b2", "cad_b3", "cad_b4")
     VERT = "#1a6b52"
     cases = []
