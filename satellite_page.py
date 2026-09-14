@@ -1455,6 +1455,7 @@ STYLE = """
   .sat-puces li { font-size:12.5px; color:#3c4761; line-height:1.6;
        margin:0 0 4px; text-align:left !important; }
   .sat-puces li b { color:#3c4761; }
+ .stApp .st-key-zone_page p.sat-note.sat-intro-wide { max-width:none!important; width:100%!important; }
 </style>
 """
 
@@ -1728,7 +1729,7 @@ def render():
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(
         f'<div class="titre-bloc">{_e(T("sat_titre"))}</div>'
-        f'<p class="sat-note" style="margin:0 0 10px;max-width:none!important;width:100%">{_e(T("sat_intro", n=len(MESURES)))}</p>',
+        f'<p class="sat-note sat-intro-wide" style="margin:0 0 10px">{_e(T("sat_intro", n=len(MESURES)))}</p>',
         unsafe_allow_html=True)
 
     d = _charger()
