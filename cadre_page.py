@@ -2898,6 +2898,42 @@ def _meta_pourquoi(x, par_ligne, graphe, lang):
     return out
 
 
+def _references_fiche(x, lang):
+    """Verified references, with explicit scope; never substitute graph notes for citations."""
+    fr = lang == "fr"
+    n = int(x.get("ligne") or 0)
+    refs = []
+    def add(title, url, scope_fr, scope_en):
+        refs.append(f'<p><a href="{url}" target="_blank" rel="noopener">{_e(title)}</a><br><span>{_e(scope_fr if fr else scope_en)}</span></p>')
+    if n <= 18:
+        add("Birkmann et al. (2022). Poverty, Livelihoods and Sustainable Development. IPCC AR6 WGII, Chapter 8.", "https://www.ipcc.ch/report/ar6/wg2/chapter/chapter-8/", "Contexte : accès aux services et ressources, vulnérabilité et adaptation. Ne valide pas cet indice local.", "Context: services, resources, vulnerability and adaptation. Does not validate this local index.")
+    elif n <= 31:
+        add("UNDRR (2015). Sendai Framework for Disaster Risk Reduction 2015–2030.", "https://www.undrr.org/implementing-sendai-framework/what-sendai-framework", "Cadre institutionnel de gouvernance et préparation aux risques ; pas une étude causale de cet indicateur.", "Institutional framework for risk governance and preparedness; not a causal study of this indicator.")
+    elif n <= 70:
+        add("IPCC (2022). AR6 WGII, Technical Summary, TS.D.4.2.", "https://www.ipcc.ch/report/ar6/wg2/chapter/technical-summary/", "Synthèse : biodiversité, habitats et connectivité dans l’adaptation. Les seuils APRI restent locaux.", "Synthesis: biodiversity, habitats and connectivity in adaptation. APRI thresholds remain local.")
+    elif n <= 99 or n >= 118:
+        add("Birkmann et al. (2022). Poverty, Livelihoods and Sustainable Development. IPCC AR6 WGII, Chapter 8.", "https://www.ipcc.ch/report/ar6/wg2/chapter/chapter-8/", "Synthèse sur les ressources économiques, sociales et culturelles de l’adaptation ; justification thématique, pas validation de la formule locale.", "Synthesis on economic, social and cultural resources for adaptation; thematic context, not validation of the local formula.")
+    else:
+        add("IPCC (2022). Health, Wellbeing and the Changing Structure of Communities. AR6 WGII, Chapter 7.", "https://www.ipcc.ch/report/ar6/wg2/chapter/chapter-7/", "Contexte : santé, bien-être et vulnérabilité des communautés ; pas validation du barème APRI.", "Context: health, wellbeing and community vulnerability; not validation of APRI thresholds.")
+    if "SDG" in x["nom"]:
+        add("UN Statistics Division. SDG indicator metadata repository.", "https://unstats.un.org/sdgs/metadata/", "Définition et méthode officielles de l’ODD mentionné. Vérifier les écarts avec le proxy mesuré localement.", "Official definition and method of the named SDG indicator. Check deviations of the locally measured proxy.")
+    if n in {3,4,12,13}:
+        add("WHO (2023). Drinking-water.", "https://www.who.int/news-room/fact-sheets/detail/drinking-water", "Définitions des services d’eau ; le type de source seul ne mesure pas l’ODD 6.1.1 complet.", "Water service definitions; source type alone does not measure the full SDG 6.1.1.")
+        add("Wolf et al. (2018). Impact of drinking water, sanitation and handwashing with soap on childhood diarrhoeal disease: updated meta-analysis and meta-regression. Tropical Medicine & International Health, 23(5), 508–525.", "https://doi.org/10.1111/tmi.13051", "Effets des interventions WASH sur les diarrhées ; pas un coefficient calibré pour Haïti.", "WASH intervention effects on diarrhoea; not a coefficient calibrated for Haiti.")
+    if n in {33,34,37,38}:
+        add("USGS (2023). Landsat Surface Reflectance and Spectral Indices.", "https://www.usgs.gov/media/images/landsat-surface-reflectance-and-spectral-indices-animation", "Documentation des indices NDVI, NDMI, EVI et SAVI ; ne valide pas les agrégations saisonnières APRI.", "Documentation of NDVI, NDMI, EVI and SAVI; does not validate APRI seasonal aggregations.")
+    if n == 46:
+        add("Svoboda, Hayes & Wood (2012). Standardized Precipitation Index User Guide. WMO No. 1090.", "https://digitalcommons.unl.edu/droughtfacpub/209/", "Méthode du SPI météorologique ; le passage au score APRI est distinct.", "Meteorological SPI method; conversion to the APRI score is separate.")
+    if n == 48:
+        add("Simpson (1949). Measurement of Diversity. Nature, 163, 688.", "https://doi.org/10.1038/163688a0", "Origine de l’indice de diversité ; préciser la convention 1−D utilisée.", "Original diversity index; specify the 1−D convention used.")
+    if n in {64,65}:
+        add("Saura & Pascual-Hortal (2007). A new habitat availability index to integrate connectivity in landscape conservation planning. Landscape and Urban Planning.", "https://doi.org/10.1016/j.landurbplan.2007.03.005", "Fondement du Probability of Connectivity ; le choix des distances et leur division par deux reste une hypothèse locale.", "Probability of Connectivity foundation; distance choices and halving remain local assumptions.")
+    if n == 108:
+        add("FAO. About the Food Insecurity Experience Scale (FIES).", "https://www.fao.org/measuring-hunger/access-to-food/about-the-food-insecurity-experience-scale-%28fies%29/en", "Méthode de mesure de l’insécurité alimentaire ; vérifier l’équivalence du questionnaire et l’étalonnage.", "Food insecurity measurement method; check questionnaire equivalence and calibration.")
+    warning = "Portée : ces sources ne démontrent pas les liens causaux ni les coefficients du modèle APRI. Lorsqu’une référence spécifique manque, la méthode locale et ses seuils restent à documenter." if fr else "Scope: these sources do not establish APRI causal links or model coefficients. Where a specific reference is missing, the local method and thresholds still require documentation."
+    return ''.join(refs) + f'<p class="md-muted">{_e(warning)}</p>'
+
+
 def _v_metadonnees(tous):
     """Les cent vingt-huit indicateurs et ce qu'on sait de chacun.
 
@@ -2973,9 +3009,7 @@ def _v_metadonnees(tous):
         score = "—" if x.get("score") is None else _fmt(x["score"], 1) + " / 10"
         effects = '<ul>' + ''.join(f'<li><span class="md-dot">◦</span><span>{_e(t)}</span></li>' for t, r in pourquoi) + '</ul>' if pourquoi else '<p>' + _e(T("cad_meta_pourquoi_absent")) + '</p>'
         limit = '<aside><b>' + ("Limites de la mesure" if lang == "fr" else "Measurement limitations") + '</b><p>' + _e(note) + '</p></aside>' if note else ''
-        refs = ''.join(f'<p><b>{_e(t)}</b><br>{_e(r)}</p>' for t, r in pourquoi if r) or '<p>' + ("Aucune référence renseignée pour cet indicateur." if lang == "fr" else "No reference recorded for this indicator.") + '</p>'
-        if "Access to Improved Drinking Water" in x["nom"]:
-            refs = '<p><a href="https://www.who.int/news-room/fact-sheets/detail/drinking-water" target="_blank" rel="noopener">WHO (2023). Drinking-water.</a></p><p>' + ("Définitions officielles : source améliorée, service de base et service géré en toute sécurité. Le type de source seul ne mesure pas l’ODD 6.1.1 complet." if lang == "fr" else "Official definitions: improved source, basic service and safely managed service. Source type alone does not measure the full SDG 6.1.1 indicator.") + '</p><p><a href="https://doi.org/10.1111/tmi.13051" target="_blank" rel="noopener">Wolf et al. (2018). Impact of drinking water, sanitation and handwashing with soap on childhood diarrhoeal disease: updated meta-analysis and meta-regression. Tropical Medicine & International Health, 23(5), 508–525.</a></p><p>' + ("Synthèse des effets des interventions WASH sur les diarrhées ; elle ne fournit pas un coefficient causal calibré pour Haïti." if lang == "fr" else "Evidence synthesis of WASH interventions and diarrhoea; it does not provide a causal coefficient calibrated for Haiti.") + '</p>'
+        refs = _references_fiche(x, lang)
         bands = _bandes(x.get("echelle") or "")
         scale = '<table><thead><tr><th>' + ("Score" if lang == "fr" else "Score") + '</th><th>' + ("Valeur mesurée" if lang == "fr" else "Measured value") + '</th></tr></thead><tbody>' + ''.join(f'<tr><td>{_e(str(k))}</td><td>{_e(str(v))}</td></tr>' for k,v in bands.items()) + '</tbody></table>' if bands else '<p>' + _e(x.get("echelle") or ("Barème non renseigné." if lang == "fr" else "Scale not recorded.")) + '</p>'
         with st.expander(nom):
