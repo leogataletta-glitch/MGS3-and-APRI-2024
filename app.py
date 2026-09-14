@@ -2469,6 +2469,25 @@ def _rendre_ruban(avec_image):
 st.markdown("""
 <style>
   .st-key-menu_mobile { display:none !important; }
+  .stApp div[class*="st-key-mobile_nav_"] div[data-testid="stButton"] > button,
+  div[data-testid="stPopoverBody"] div[class*="st-key-mobile_nav_"] div[data-testid="stButton"] > button {
+    background:transparent!important;border:0!important;border-radius:0!important;
+    box-shadow:none!important;min-height:46px!important;height:auto!important;
+    padding:10px 12px!important;justify-content:flex-start!important;
+  }
+  div[class*="st-key-mobile_nav_"] div[data-testid="stButton"] > button p {
+    font:400 15px/1.5 Arial,sans-serif!important;color:#345446!important;text-align:left!important;
+  }
+  div[class*="st-key-mobile_nav_"] div[data-testid="stButton"] > button[kind="primary"] {
+    border-left:2px solid #276448!important;
+  }
+  div[class*="st-key-mobile_nav_"] div[data-testid="stButton"] > button[kind="primary"] p {
+    color:#123d2c!important;font-weight:600!important;
+  }
+  div[class*="st-key-mobile_nav_"] div[data-testid="stButton"] > button:hover {
+    background:#f4f7f4!important;
+  }
+
   @media (min-width:1001px) {
     /* Masquer aussi le wrapper : sinon le gap du parent reste au-dessus du hero. */
     [data-testid="stLayoutWrapper"]:has(> .st-key-menu_mobile) {
