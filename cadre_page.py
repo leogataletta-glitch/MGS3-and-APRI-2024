@@ -3028,6 +3028,17 @@ def _v_metadonnees(tous):
 .pdf-columns{display:grid;grid-template-columns:1.08fr 1fr;gap:40px;align-items:start;}
 .pdf-section{margin-bottom:28px;}.stApp .pdf-record .pdf-section h3{font:700 19px/1.4 Arial,sans-serif!important;color:#35597a!important;text-transform:uppercase;border-bottom:1px solid #35597a;padding-bottom:7px;margin:0 0 12px!important;}
 .stApp .pdf-record p,.stApp .pdf-record li{font:400 15px/1.7 Arial,sans-serif!important;color:#344754!important;max-width:none!important;}
+.stApp .pdf-record .pdf-section h3{font:600 21px/1.35 Georgia,'Times New Roman',serif!important;text-transform:none;letter-spacing:0;color:#304f68!important;border-bottom-color:#97acb8;padding-bottom:10px;margin-bottom:16px!important;}
+.stApp .pdf-record .pdf-section p{text-align:justify!important;text-justify:inter-word;hyphens:auto;overflow-wrap:break-word;line-height:1.8!important;margin:0 0 14px!important;}
+.stApp .pdf-record .pdf-section li{text-align:left!important;line-height:1.7!important;}
+.stApp .pdf-record .pdf-note{text-align:left!important;font-size:13px!important;line-height:1.65!important;}
+.pdf-dimension{font:600 16px/1.5 Georgia,serif;padding:9px 18px;margin-bottom:28px;}
+.pdf-section{margin-bottom:30px;}.pdf-columns{gap:48px;}
+.pdf-references .md-detail{border:0;background:#f7f9fa;border-radius:8px;padding:18px 22px;}
+.pdf-references .md-detail summary{font:600 19px/1.4 Georgia,serif;color:#304f68;}
+.stApp .pdf-record .pdf-references p{font-size:14px!important;line-height:1.7!important;}
+.pdf-step{min-height:40px;font-size:14px;padding-left:18px;}
+@media(max-width:760px){.stApp .pdf-record .pdf-section p{text-align:left!important;}.pdf-columns{gap:12px;}}
 .pdf-record ul{padding-left:18px;}.pdf-record li{margin-bottom:8px;}.pdf-record .md-dot{display:none;}
 .pdf-record aside{background:#fff9e9;padding:12px 16px;border-left:2px solid #d8b86a;margin-top:18px;}
 .pdf-comparison{display:flex;justify-content:space-between;gap:20px;padding:15px 5px;color:#35597a;font-size:14px;}
@@ -3037,7 +3048,7 @@ def _v_metadonnees(tous):
 .pdf-step b{background:white;border:1px solid #62717b;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}.pdf-step em{position:absolute;right:-24px;color:#35597a;font-style:normal;}.pdf-current{outline:2px solid #35597a;outline-offset:1px;}
 .pdf-references{margin-top:10px;}.pdf-references a{color:#35597a;}.pdf-references p{margin-bottom:14px;}
 @media(max-width:760px){.pdf-columns{grid-template-columns:1fr;gap:10px;}.pdf-dimension{font-size:17px;}.pdf-record{margin-top:12px;}}
-</style>"""+'<article class="pdf-record"><div class="pdf-dimension">'+_e(T(x["dim"]))+'</div><div class="pdf-columns"><div>'+left+'</div><div>'+right+'</div></div><div class="pdf-references">'+detail("Références scientifiques" if fr else "Scientific references",refs)+'</div></article>',unsafe_allow_html=True)
+</style>"""+'<article class="pdf-record" lang="'+lang+'"><div class="pdf-dimension">'+_e(T(x["dim"]))+'</div><div class="pdf-columns"><div>'+left+'</div><div>'+right+'</div></div><div class="pdf-references">'+detail("Références scientifiques" if fr else "Scientific references",refs)+'</div></article>',unsafe_allow_html=True)
 
 
 
