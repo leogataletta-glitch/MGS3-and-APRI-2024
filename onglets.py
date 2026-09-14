@@ -168,7 +168,7 @@ _CSS_COMPACT = """
 """
 
 
-def barre(cle, codes, titre, description=None, defaut=None, compact=True):
+def barre(cle, codes, titre, description=None, defaut=None, compact=False):
     """Une barre d'onglets, et le code de celui qui est choisi.
 
     `titre` et `description` prennent un code et rendent une chaîne déjà
@@ -189,7 +189,7 @@ def barre(cle, codes, titre, description=None, defaut=None, compact=True):
 
     def _lib(c):
         t = titre(c)
-        d = description(c) if description and not compact else None
+        d = description(c) if description else None
         # DEUX PARAGRAPHES, PAS UN SAUT DE LIGNE. Le libellé d'un radio est
         # rendu en markdown : une ligne vide y fait deux <p>, que la feuille
         # de style distingue par leur rang. Un <br> serait échappé.
@@ -203,20 +203,14 @@ def barre(cle, codes, titre, description=None, defaut=None, compact=True):
         # temporarily lag behind the rerender when changing language or page.
         actif = list(codes).index(choix) + 1 if choix in codes else 1
         st.markdown(f"""<style>
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]{{gap:8px!important;margin:0 0 18px!important;border:0!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{flex:0 1 auto!important;min-height:44px!important;padding:10px 18px!important;background:#f3f6f3!important;border:1px solid #e0e8e2!important;border-radius:24px!important;box-shadow:none!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:first-child{{font:500 14px/1.5 Arial,sans-serif!important;color:#345446!important;text-transform:none!important;letter-spacing:0!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label strong{{font-weight:500!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:hover{{background:#e8f0e9!important;border-color:#a7bcae!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}){{background:#123d2c!important;border-color:#123d2c!important;box-shadow:none!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}) p:first-child,
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}) strong{{color:#ffffff!important;font-weight:600!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:has(input:focus-visible){{outline:2px solid #26734f!important;outline-offset:2px;}}
-        @media(max-width:760px){{.stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{flex:1 1 44%!important;padding:10px 8px!important;}}}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]{{gap:0!important;margin:0 0 20px!important;background:white!important;border-bottom:1px solid #dfe7e1!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{flex:1 1 0!important;min-height:96px!important;padding:14px 12px!important;background:white!important;border:0!important;border-right:1px solid #edf1ee!important;border-radius:0!important;box-shadow:none!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:first-child{{font:600 12px/1.4 Arial,sans-serif!important;color:#35664b!important;text-transform:uppercase!important;letter-spacing:.06em!important;text-align:center!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label strong{{color:#35664b!important;font-weight:600!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:not(:first-child){{font:400 12px/1.45 Arial,sans-serif!important;color:#75867c!important;text-align:center!important;margin-top:6px!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:hover{{background:#f5f9f5!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}){{background:#edf5ef!important;box-shadow:inset 0 3px 0 #78a58a!important;}}
+        @media(max-width:760px){{.stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{flex:1 1 44%!important;}}}}
         </style>""", unsafe_allow_html=True)
-        if description:
-            texte = description(choix)
-            if texte:
-                st.caption(texte)
     return choix
 

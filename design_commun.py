@@ -23,9 +23,10 @@ STYLE = """<style>
 .stApp .st-key-zone_page [data-testid="stExpander"] summary{min-height:44px;padding:12px 4px!important;}
 .stApp .st-key-zone_page table{border-collapse:collapse!important;}
 .stApp .st-key-zone_page th,.stApp .st-key-zone_page td{padding-top:12px!important;padding-bottom:12px!important;border-bottom:1px solid #edf1ee!important;}
-.stApp .st-key-zone_page [data-testid="stTabs"] [data-baseweb="tab"]{min-height:44px;background:transparent!important;border-radius:0!important;}
+.stApp .st-key-zone_page [data-testid="stTabs"] [data-baseweb="tab"]{min-height:64px;background:#fff!important;border-radius:0!important;border-right:1px solid #edf1ee!important;padding:12px 18px!important;}
 .stApp .st-key-zone_page [data-testid="stTabs"] [data-baseweb="tab"] p{font:500 14px/1.5 Arial,sans-serif!important;}
-.stApp .st-key-zone_page [data-testid="stTabs"] [aria-selected="true"] p{color:var(--apri-green)!important;}
+.stApp .st-key-zone_page [data-testid="stTabs"] [aria-selected="true"] p{color:#35664b!important;}
+.stApp .st-key-zone_page [data-testid="stTabs"] [aria-selected="true"]{background:#edf5ef!important;box-shadow:inset 0 3px 0 #78a58a!important;}
 .stApp .st-key-zone_page [data-testid="stTabs"] [data-baseweb="tab-highlight"]{background:var(--apri-green)!important;height:2px!important;}
 @media(max-width:700px){.stApp .st-key-zone_page .apri-page-title,.stApp .st-key-zone_page .cad-page-title{font-size:28px!important;}.stApp .st-key-zone_page :is(.stButton,.stDownloadButton) button{min-height:44px;}}
 </style>"""
