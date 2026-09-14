@@ -3013,7 +3013,7 @@ def _v_metadonnees(tous):
             n = int(k)
             active = x.get("score") is not None and float(x["score"]) == n
             scale_rows.append(f'<div class="pdf-step{" pdf-current" if active else ""}" style="--rank:{colors[max(0,min(10,n))]}">'
-                              f'<span>{_e(str(v))}</span><b>{n}</b>'
+                              f'<span>{_e(str(v).strip().strip(chr(40) + chr(41)))}</span><b>{n}</b>'
                               + ('<em>◀</em>' if active else '') + '</div>')
         scale_html = '<div class="pdf-scale">'+''.join(scale_rows)+'</div>' if scale_rows else scale
         missing = "Non renseigné dans les données disponibles." if fr else "Not recorded in the available data."
@@ -3047,6 +3047,7 @@ def _v_metadonnees(tous):
 .pdf-references .md-detail summary{font:600 19px/1.4 Georgia,serif;color:#304f68;}
 .stApp .pdf-record .pdf-references p{font-size:14px!important;line-height:1.7!important;}
 .pdf-step{min-height:40px;font-size:14px;padding-left:18px;}
+.pdf-step>span{font:500 16px/1.5 Georgia,serif;letter-spacing:.015em;color:#263e51;text-shadow:0 1px 1px rgba(255,255,255,.85);}
 @media(max-width:760px){.stApp .pdf-record .pdf-section p{text-align:left!important;}.pdf-columns{gap:12px;}}
 .pdf-record ul{padding-left:18px;}.pdf-record li{margin-bottom:8px;}.pdf-record .md-dot{display:none;}
 .pdf-record aside{background:#fff9e9;padding:12px 16px;border-left:2px solid #d8b86a;margin-top:18px;}
