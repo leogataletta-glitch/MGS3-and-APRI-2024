@@ -2421,20 +2421,27 @@ def _titre(cle, note=None, marge=4):
 
 # --- 1 · ce que mesure APRI, et en quoi il le découpe -----------------------
 def _v_mesure(stats):
-    """Three capacity cards followed by all seven weighted dimensions."""
+    """Capacities on the left, compact dimension summary on the right."""
+    fr = i18n.get_lang() == 'fr'
+    items = []
+    for cle in ORDRE:
+        e = stats['dims'].get(cle)
+        if not e:
+            continue
+        label = 'indicateurs' if fr else 'indicators'
+        items.append(f'<li><span>{_e(T(cle))}</span><small>{e["n"]} {label} · {_fmt(e["part"])} %</small></li>')
+    title = 'Les sept dimensions' if fr else 'The seven dimensions'
+    attributes = 'Les trois attributs' if fr else 'The three attributes'
     with st.container(key='cad_model'):
-        st.markdown(_attributs(),unsafe_allow_html=True)
-        title = 'Les sept dimensions' if i18n.get_lang() == 'fr' else 'The seven dimensions'
-        items = []
-        fr = i18n.get_lang() == 'fr'
-        for cle in ORDRE:
-            e = stats['dims'].get(cle)
-            if not e:
-                continue
-            label = 'indicateurs' if fr else 'indicators'
-            items.append(f'<li><span>{_e(T(cle))}</span><small>{e["n"]} {label} · {_fmt(e["part"])} %</small></li>')
-        st.markdown('<style>.stApp .st-key-zone_page .cad-dim-simple{list-style:none;padding:0;margin:0;max-width:850px;display:grid;gap:12px}.cad-dim-simple li{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;justify-content:space-between;font:15px/1.5 Arial,sans-serif;color:#34483e}.cad-dim-simple small{font:13px/1.5 Arial,sans-serif;color:#65756c;white-space:nowrap}</style>'
-                    +f'<div class="cad-model-title">{title}</div><ul class="cad-dim-simple">'+''.join(items)+'</ul>',unsafe_allow_html=True)
+        st.markdown("""<style>
+        .cad-overview{display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1.3fr);gap:48px;align-items:start;}
+        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-cc{grid-template-columns:1fr!important;gap:24px!important;margin:0!important;padding:0!important;}
+        .cad-dim-simple{list-style:none;padding:0;margin:0;display:grid;gap:0;}
+        .cad-dim-simple li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;justify-content:space-between;padding:10px 0;border-bottom:1px solid #edf1ee;font:14px/1.5 Arial,sans-serif;color:#34483e;}
+        .cad-dim-simple small{font:13px/1.5 Arial,sans-serif;color:#65756c;white-space:nowrap;}
+        @media(max-width:800px){.cad-overview{grid-template-columns:1fr;gap:28px;}}
+        </style>"""+f'<div class="cad-overview"><section><div class="cad-model-title">{attributes}</div>'+_attributs()
+                    +f'</section><section><div class="cad-model-title">{title}</div><ul class="cad-dim-simple">'+''.join(items)+'</ul></section></div>',unsafe_allow_html=True)
 
 
 def _v_sources():
