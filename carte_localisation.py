@@ -86,7 +86,7 @@ TEXTES = {
     "cl_deps": {"en": "Departments", "fr": "Départements"},
     "cl_communes": {"en": "Communes", "fr": "Communes"},
     "cl_ombrage": {"en": "Hillshade", "fr": "Ombrage du relief"},
-    "cl_ap": {"en": "Protected areas", "fr": "Aires protégées"},
+    "cl_ap": {"en": "Protected areas · WDPA 08/2026", "fr": "Aires protégées · WDPA 08/2026"},
     "cl_riv": {"en": "Rivers", "fr": "Cours d'eau"},
     "cl_rp": {"en": "Main roads", "fr": "Routes principales"},
     "cl_rs": {"en": "Secondary roads", "fr": "Routes secondaires"},
@@ -111,11 +111,11 @@ TEXTES = {
 
     # --- pied
     "cl_source": {
-        "en": "Boundaries, protected areas and sample: UNEP Haiti GIS layers "
+        "en": "Protected areas: UNEP-WCMC / Protected Planet, August 2026. Boundaries and sample: UNEP Haiti GIS layers "
               "(WGS 84). Roads and rivers: OpenStreetMap. Local service roads "
               "are not a vector layer here, the street base map already "
               "carries them. Relief: Esri hillshade tiles.",
-        "fr": "Limites, aires protégées et échantillon : couches SIG du PNUE "
+        "fr": "Aires protégées : UNEP-WCMC / Protected Planet, août 2026. Limites et échantillon : couches SIG du PNUE "
               "Haïti (WGS 84). Routes et cours d'eau : OpenStreetMap. Les "
               "routes de desserte locale ne sont pas une couche vectorielle "
               "ici, le fond de plan les porte déjà. Relief : tuiles "
@@ -201,6 +201,14 @@ def _couches():
         return None
     with open(p, encoding="utf-8") as f:
         d = json.load(f)
+    # Never fall back to the old, user-rejected protected-area contours.
+    d["aires_protegees"] = []
+    ap_path = os.path.join(DATA, "protected_areas_wdpa.geojson")
+    if os.path.exists(ap_path):
+        with open(ap_path, encoding="utf-8") as f:
+            ap = json.load(f)
+        d["aires_protegees"] = [{"geometry": v["geometry"], "p": v["properties"]}
+                                for v in ap["features"]]
     d["terre"] = _terres()
     return d
 
@@ -380,10 +388,22 @@ function choisirFond(k){
 
 /* ---- fabrication des couches vectorielles ----------------------------- */
 function pop(titre, corps){ return '<span class="pop-t">'+titre+'</span>'+corps; }
+function protectedPopup(p){
+  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fr=L_.legend==='Légende';
+  return pop(L_.ap,'<b>'+esc(p.Name)+'</b><br>'+esc(p.desig)+' · '+esc(p.status_yr)+
+    '<br>WDPA · 08/2026 · '+esc(p.verif)+'<br><small>'+esc(fr?p.note_fr:p.note_en)+'</small><br>'+
+    '<a target="_blank" rel="noopener" href="https://www.protectedplanet.net/'+Number(p.site_id)+'">Protected Planet</a> · '+
+    '<a target="_blank" rel="noopener" href="https://anap.gouv.ht/documents/Liste_des_APs.pdf">ANAP</a>');
+}
 
 function polys(items, cle, opt, popup){
   const g = L.layerGroup();
   (items||[]).forEach(function(o){
+    if(o.geometry){
+      const p=L.geoJSON({type:'Feature',geometry:o.geometry,properties:o.p},{style:opt});
+      if(popup)p.bindPopup(popup(o.p));g.addLayer(p);return;
+    }
     (o.a||[]).forEach(function(anneau){
       const p = L.polygon(anneau.map(c => [c[1], c[0]]), opt);
       if (popup) { const h = popup(o.p); if (h) p.bindPopup(h); }
@@ -411,7 +431,9 @@ COUCHES.deps = polys(D.departements, 'deps',
   p => p && p.nom ? pop(L_.dep, '<b>'+p.nom+'</b>') : null);
 COUCHES.ap = polys(D.aires_protegees, 'ap',
   {color:C.ap, weight:1.6, fillColor:C.ap, fillOpacity:.16},
-  p => p && p.Name ? pop(L_.ap, '<b>'+p.Name+'</b>') : null);
+  p => p && p.Name ? protectedPopup(p) : null);
+COUCHES.ap.on('add',()=>carte.attributionControl.addAttribution('Protected areas © UNEP-WCMC / IUCN · 08/2026'));
+COUCHES.ap.on('remove',()=>carte.attributionControl.removeAttribution('Protected areas © UNEP-WCMC / IUCN · 08/2026'));
 COUCHES.riv = lignes(D.rivieres, {color:C.riv, weight:1.3, opacity:.75});
 COUCHES.rp = lignes(D.routes_p, {color:C.rp, weight:2.4, opacity:.9});
 const STYLE_PAYSAGE = {color:C.paysage, weight:2, dashArray:'4 4',
@@ -531,6 +553,12 @@ function construire(){
     hote.appendChild(div);
     div.innerHTML = h + '</div>';
   });
+  const apDetails=document.createElement('details');apDetails.style.cssText='margin:4px 12px 12px;font:11px/1.5 system-ui;color:#486456';
+  const apFrench=L_.legend==='Légende';
+  apDetails.innerHTML='<summary>'+(apFrench?'Source et limites des aires protégées':'Protected areas: source and limitations')+'</summary><p>'+
+    (apFrench?'27 sites WDPA, édition août 2026, récupérés le 14 septembre 2026. La liste ANAP ne concorde pas entièrement : Grande Colline n’a pas de fiche individuelle dans cet extrait ; Port Salut–Aquin est regroupé ; la superficie de Macaya diffère. Les contours WDPA ne constituent pas une validation des limites juridiques.':'27 WDPA sites, August 2026 edition, retrieved 14 September 2026. The ANAP list does not fully match: Grande Colline has no individual record in this extract; Port Salut–Aquin is grouped; Macaya areas differ. WDPA boundaries do not establish legal boundary validation.')+
+    '</p><a href="https://www.protectedplanet.net/country/HTI" target="_blank" rel="noopener">Protected Planet</a> · <a href="https://anap.gouv.ht/documents/Liste_des_APs.pdf" target="_blank" rel="noopener">ANAP</a>';
+  hote.appendChild(apDetails);
 }
 
 function basculer(cle, on){

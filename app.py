@@ -2526,6 +2526,9 @@ with _zone_nav:
     # l'écran quand la page défile — c'est ce qui la rend « toujours
     # disponible » sans qu'elle ait à flotter par-dessus le contenu.
     st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
+    if st.session_state["app_mode"] == MODE_METHODO:
+        import nav_framework
+        nav_framework.header(_marque_bloc_b64())
     # LA MARQUE N'OUVRE PLUS LA COLONNE. Elle a rejoint l'image, en tête de
     # page, où elle est en entier — l'emblème, le mot et la ligne
     # institutionnelle — plutôt qu'en réduction dans une colonne de deux cents
@@ -2538,7 +2541,8 @@ with _zone_nav:
         for _mode, _icone in _entrees:
             _entree_nav(_mode, _icone)
     import frontiere_nav
-    frontiere_nav.render()
+    if st.session_state["app_mode"] != MODE_METHODO:
+        frontiere_nav.render()
     # LA DEVISE FERME LA COLONNE. Un filet la sépare de la dernière rubrique :
     # sans lui, elle se lirait comme une entrée de menu qui ne mène nulle part.
     st.markdown(
@@ -2549,6 +2553,9 @@ with _zone_nav:
         + f'<div class="nav-devise">{T("pied_devise")}</div></div>'
         + '</div>',
         unsafe_allow_html=True)
+
+    if st.session_state["app_mode"] == MODE_METHODO:
+        nav_framework.landscape(_dessin_b64("dessin_mangrove.png"))
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
 # l'aiguillage, pour que chaque page se dessine dedans sans avoir à savoir

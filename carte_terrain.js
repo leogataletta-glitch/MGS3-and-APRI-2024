@@ -63,11 +63,11 @@
   window.addEventListener('pagehide',()=>mapResize.disconnect(),{once:true});
   const fc=features=>({type:'FeatureCollection',features});
   const feature=(geometry,properties={})=>({type:'Feature',geometry,properties});
-  const polygons=items=>fc((items||[]).flatMap(o=>(o.a||[]).filter(a=>a.length>2).map(a=>feature({type:'Polygon',coordinates:[[...a,a[0]]]},o.p))));
+  const polygons=items=>fc((items||[]).flatMap(o=>o.geometry?[feature(o.geometry,o.p)]:(o.a||[]).filter(a=>a.length>2).map(a=>feature({type:'Polygon',coordinates:[[...a,a[0]]]},o.p))));
   const lines=items=>fc((items||[]).filter(o=>o.l?.length>1).map(o=>feature({type:'LineString',coordinates:o.l},o.p)));
   const pointData=key=>fc((D.entretiens||[]).filter(e=>(e[3]==='Montagne'?'pts_m':'pts_l')===key&&new Set([...sectionsChoisies].map(normaliserSection)).has(normaliserSection(e[2]))).map(e=>feature({type:'Point',coordinates:[e[0],e[1]]},{section:e[2],paysage:e[3],numero:e[4]})));
   const ids={};
-  function add(key,data,type,paint){if(!gl.getSource(key))gl.addSource(key,{type:'geojson',data});const id=key+'-'+type;gl.addLayer({id,type,source:key,paint});(ids[key]||=[]).push(id);}
+  function add(key,data,type,paint){if(!gl.getSource(key))gl.addSource(key,{type:'geojson',data,...(key==='ap'?{attribution:'Protected areas © UNEP-WCMC / IUCN · 08/2026'}:{})});const id=key+'-'+type;gl.addLayer({id,type,source:key,paint});(ids[key]||=[]).push(id);}
   function sync(){if(!ready||failed)return;for(const k of ['sat','plan','relief'])gl.setLayoutProperty(k,'visibility',fondActif===k?'visible':'none');for(const [k,list]of Object.entries(ids))for(const id of list)gl.setLayoutProperty(id,'visibility',(k==='terre'?fondActif==='sobre':!!ETAT[k])?'visible':'none');gl.getSource('sections').setData(polygons((D.sections||[]).filter(o=>sectionsChoisies.has(o.p.section))));for(const k of ['pts_l','pts_m'])gl.getSource(k).setData(pointData(k));}
   gl.on('load',()=>{
    if(failed)return;
@@ -95,7 +95,7 @@
    // Labels use local system fonts through DOM markers, avoiding a glyph service.
    const labels=(D.villes||[]).map(v=>{const el=document.createElement('span');el.textContent=v.p.Nom;el.className='etq-ville';el.style.paddingLeft='18px';return new m.Marker({element:el,anchor:'left'}).setLngLat(v.pt).addTo(gl);});
    gl.on('render',()=>labels.forEach(x=>x.getElement().style.display=ETAT.villes?'':'none'));
-   gl.on('click',e=>{const hits=gl.queryRenderedFeatures(e.point,{layers:['pts_l-circle','pts_m-circle','sections-fill','villes-circle']});if(!hits.length)return;const p=hits[0].properties,body=document.createElement('div');body.textContent=p.numero?('n° '+p.numero+' · '+p.section+' · '+p.paysage):(p.section||p.nom||'');new m.Popup().setLngLat(e.lngLat).setDOMContent(body).addTo(gl);});
+   gl.on('click',e=>{const hits=gl.queryRenderedFeatures(e.point,{layers:['pts_l-circle','pts_m-circle','sections-fill','villes-circle','ap-fill']});if(!hits.length)return;const p=hits[0].properties;if(hits[0].layer.id==='ap-fill'){new m.Popup({maxWidth:'340px'}).setLngLat(e.lngLat).setHTML(protectedPopup(p)).addTo(gl);return;}const body=document.createElement('div');body.textContent=p.numero?('n° '+p.numero+' · '+p.section+' · '+p.paysage):(p.section||p.nom||'');new m.Popup().setLngLat(e.lngLat).setDOMContent(body).addTo(gl);});
    ready=true;clearTimeout(timeout);window.apriTerrain=gl;sync();
    const positionBox=document.createElement('div');positionBox.setAttribute('role','group');positionBox.setAttribute('aria-label',fr?'Position sur la carte':'Map position');
    positionBox.style.cssText='margin:8px 10px;padding:11px;background:#f3f7f4;border-radius:9px;font:12px/1.6 system-ui;color:#315d4a;font-variant-numeric:tabular-nums';
