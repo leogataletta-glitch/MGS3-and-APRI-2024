@@ -23,12 +23,14 @@ async function exporterCarte(format){
   buttons.forEach(b=>b.disabled=true);status.textContent=L_.export_wait;
   try{
     if(document.querySelector('.leaflet-zoom-anim'))throw Error('Map moving');
-    const root=document.getElementById('carte'),bounds=root.getBoundingClientRect(),width=Math.round(bounds.width),height=Math.round(bounds.height);
+    const gl=window.apriTerrain; if(gl && (gl.isMoving()||!gl.areTilesLoaded()))throw Error('Tiles loading');
+    const root=document.getElementById(gl?'carte3d':'carte'),bounds=root.getBoundingClientRect(),width=Math.round(bounds.width),height=Math.round(bounds.height);
     const active=GROUPES.flatMap(g=>g.lignes).filter(l=>l.fond?l.cle===fondActif:ETAT[l.cle]);
     const selected=[...sectionsChoisies];
-    const exportHeight=Math.max(height+52,110+active.length*34+selected.length*20);
+    const exportHeight=Math.max(height+72,110+active.length*34+selected.length*20);
     const canvas=document.createElement('canvas');canvas.width=(width+300)*2;canvas.height=exportHeight*2;
     const ctx=canvas.getContext('2d');ctx.scale(2,2);ctx.fillStyle='white';ctx.fillRect(0,0,width+300,exportHeight);
+    if(gl){ctx.drawImage(gl.getCanvas(),0,0,width,height);}else{
     const panes=[...root.querySelectorAll('.leaflet-pane')].filter(p=>p.classList.contains('leaflet-tile-pane')||p.querySelector(':scope > canvas'));
     panes.sort((a,b)=>(+getComputedStyle(a).zIndex||0)-(+getComputedStyle(b).zIndex||0));
     for(const pane of panes){
@@ -43,13 +45,15 @@ async function exporterCarte(format){
         ctx.globalAlpha=opacity;ctx.drawImage(el,r.left-bounds.left,r.top-bounds.top,r.width,r.height);
       }ctx.restore();
     }
+    }
     // Permanent town names are DOM tooltips, not part of Leaflet's canvas.
     ctx.font='bold 12px Arial';ctx.textBaseline='middle';
-    root.querySelectorAll('.etq-ville').forEach(el=>{const r=el.getBoundingClientRect(),x=r.left-bounds.left,y=r.top-bounds.top+r.height/2;if(x<0||x>width||y<0||y>height)return;ctx.lineWidth=3;ctx.strokeStyle='white';ctx.strokeText(el.textContent,x,y);ctx.fillStyle='#20382f';ctx.fillText(el.textContent,x,y);});
-    const scale=root.querySelector('.leaflet-control-scale-line');
+    root.querySelectorAll('.etq-ville').forEach(el=>{const r=el.getBoundingClientRect(),x=r.left-bounds.left+(gl?parseFloat(getComputedStyle(el).paddingLeft)||0:0),y=r.top-bounds.top+r.height/2;if(x<0||x>width||y<0||y>height)return;ctx.lineWidth=3;ctx.strokeStyle='white';ctx.strokeText(el.textContent,x,y);ctx.fillStyle='#20382f';ctx.fillText(el.textContent,x,y);});
+    const scale=root.querySelector(gl?'.maplibregl-ctrl-scale':'.leaflet-control-scale-line');
     if(scale){const r=scale.getBoundingClientRect(),w=r.width;ctx.fillStyle='rgba(255,255,255,.94)';ctx.fillRect(12,height-49,w+24,39);ctx.strokeStyle='#243e34';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(22,height-29);ctx.lineTo(22,height-20);ctx.lineTo(22+w,height-20);ctx.lineTo(22+w,height-29);ctx.stroke();ctx.fillStyle='#243e34';ctx.font='12px Arial';ctx.fillText(scale.textContent,24,height-36);}
     ctx.fillStyle='#294b3d';ctx.font='bold 14px Arial';ctx.fillText('APRI · '+L_.section,12,height+18);
-    ctx.font='10px Arial';ctx.fillStyle='#546b60';ctx.fillText(root.querySelector('.leaflet-control-attribution')?.textContent||'',12,height+38,width-24);
+    ctx.font='10px Arial';ctx.fillStyle='#546b60';ctx.fillText(root.querySelector(gl?'.maplibregl-ctrl-attrib':'.leaflet-control-attribution')?.textContent||'',12,height+38,width-24);
+    if(gl&&gl.getPitch()>1){ctx.fillText(L_.legend==='Légende'?'Vue inclinée · échelle indicative au bas de la vue':'Tilted view · approximate scale at bottom of view',12,height+50,width-24);}
     // Export a static legend of visible layers, without interactive controls.
     const lx=width+20;let ly=30;ctx.fillStyle='#294b3d';ctx.font='bold 16px Arial';ctx.fillText(L_.legend,lx,ly);ly+=30;
     active.forEach(l=>{const sym=l.sym||{type:'tuile'},c=sym.c||'#9daeb1';ctx.fillStyle=c;ctx.strokeStyle=c;ctx.lineWidth=2;
