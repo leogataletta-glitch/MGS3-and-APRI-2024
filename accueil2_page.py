@@ -614,10 +614,11 @@ def render():
         display:flex!important;align-items:center;justify-content:center;
         min-height:44px!important;min-width:64px;box-sizing:border-box;
         margin-top:0!important;padding:0 12px;border:0;border-radius:0;
-        font-size:34px!important;font-weight:400;line-height:1.2!important;color:#123d2c;
+        font-size:0!important;font-weight:400;line-height:1.2!important;color:#123d2c;
         background:transparent;}
+    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p strong::after{content:"";display:block;width:28px;height:28px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2228%22%20height%3D%2228%22%20viewBox%3D%220%200%2028%2028%22%3E%3Cpath%20d%3D%22M6%2022%2022%206M7%206h15v15%22%20fill%3D%22none%22%20stroke%3D%22%23123d2c%22%20stroke-width%3D%221.3%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat;}
     .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button:hover p strong{
-        background:transparent;transform:translateX(4px);}
+        background:transparent;transform:translate(2px,-2px);}
     .st-key-a2_photo_links div[data-testid="stMarkdownContainer"],
     .st-key-a2_photo_links div[data-testid="stMarkdown"]{margin:0!important;}
     @media(max-width:1000px){
@@ -653,7 +654,7 @@ def render():
                                     f'viewBox="{sx} {sy} 768 {sh}" overflow="hidden">'
                                     f'<image href="data:image/png;base64,{photo}" width="1536" height="1024"/>'
                                     '</svg></svg></div>', unsafe_allow_html=True)
-                                action = '→'
+                                action = '↗'
                                 if st.button(f'{title}  \n*{detail}*  \n**{action}**',key=f'a2_b_{code}',use_container_width=True):
                                     st.session_state['app_mode']=code
                                     st.rerun()
