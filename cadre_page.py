@@ -2934,6 +2934,10 @@ def _v_metadonnees(tous):
     if not lot:
         return
 
+    pages = (len(lot) + 7) // 8
+    if pages > 1:
+        page = st.selectbox("Page", list(range(1, pages + 1)), key="cad_meta_page")
+        lot = lot[(page - 1) * 8:page * 8]
     st.markdown("""<style>
 .stApp .st-key-zone_page .cad-meta-label{font:600 12px/1.5 Arial,sans-serif;color:#65796c;margin:0 0 8px;}
 .stApp .st-key-zone_page .cad-meta-text{font:400 15px/1.7 Arial,sans-serif;color:#40564a;margin:0 0 12px;max-width:62ch;}
