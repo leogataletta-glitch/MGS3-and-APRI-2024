@@ -2127,6 +2127,7 @@ def _tableau_echelle(bandes, score=None):
             + ('<em aria-label="Score">◀</em>' if actif else '') + '</div>')
     return """<style>
 .irla-scale{display:grid;gap:7px;padding-right:25px;margin-top:14px;}
+.cad-duo>.irla-scale{flex:1 1 100%;width:100%;box-sizing:border-box;}
 .irla-step{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:38px;padding:5px 10px 5px 16px;border-radius:0 24px 24px 0;background:var(--rank);}
 .stApp .irla-step>span{font:500 16px/1.5 Georgia,serif;color:var(--ink)!important;letter-spacing:.015em;}
 .irla-step>b{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#fff;color:#25384b;border:1px solid #62717b;font:600 14px/1 Arial,sans-serif;}
