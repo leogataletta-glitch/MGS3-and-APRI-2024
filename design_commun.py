@@ -32,14 +32,14 @@ STYLE = """<style>
 </style>"""
 
 PAGES = {
-    "methodologie": ("Le cadre de résilience", "The resilience framework", "", ""),
-    "accueil": ("Le territoire", "The territory", "Explorer les paysages et les sections communales.", "Explore the landscapes and communal sections."),
+    "methodologie": ("Le cadre de résilience", "The resilience framework", "Découvrir le modèle de résilience ; choisir un onglet pour explorer sa méthode.", "Discover the resilience model; choose a tab to explore its method."),
+    "accueil": ("Le territoire", "The territory", "Explorer les territoires ; activer les couches et zoomer sur la carte.", "Explore the territories; turn on layers and zoom into the map."),
     "dimensions": ("Analyse des résultats", "Results analysis", "Choisir une vue, préciser les filtres, puis explorer les résultats.", "Choose a view, set the filters, then explore the results."),
     "boucles": ("Boucles de rétroaction", "Feedback loops", "Construire le système, examiner ses relations et tester les leviers d’action.", "Build the system, examine its relationships and test intervention levers."),
     "actions": ("Fiches d’intervention", "Intervention profiles", "Identifier les leviers et consulter les actions associées.", "Identify levers and explore the associated actions."),
     "donnees": ("Données et documents", "Data and documents", "Consulter et télécharger les ressources de l’observatoire.", "Browse and download the observatory’s resources."),
-    "apropos": ("À propos d’APRI", "About APRI", "L’initiative, ses paysages et ses objectifs.", "The initiative, its landscapes and its objectives."),
-    "contact": ("Nous contacter", "Contact us", "", ""),
+    "apropos": ("À propos d’APRI", "About APRI", "Découvrir APRI ; parcourir ses objectifs et ses territoires.", "Discover APRI; browse its objectives and territories."),
+    "contact": ("Nous contacter", "Contact us", "Une question sur APRI ? Utiliser les coordonnées ci-dessous.", "A question about APRI? Use the contact details below."),
 }
 
 # Four layouts, one shared visual language. The homepage owns its hero.
