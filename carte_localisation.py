@@ -496,7 +496,14 @@ function symbole(s){
 function construire(){
   const hote = document.getElementById('liste');
   const selection=document.createElement('div');selection.className='groupe';
-  const title=document.createElement('div');title.className='entete';title.textContent=L_.section;selection.appendChild(title);
+  const pointsOnly=document.createElement('button');pointsOnly.textContent=L_.legend==='Légende'?'Tous les points, sans contours':'All interview points, no section outlines';pointsOnly.style.cssText='margin:8px 10px;white-space:normal';
+  pointsOnly.onclick=()=>{
+    selection.querySelectorAll('input').forEach(input=>{input.checked=true;sectionsChoisies.add(input.value);});filtrerSections();
+    for(const [key,on] of [['sections',false],['pts_l',true],['pts_m',true]]){
+      const input=hote.querySelector('input[data-cle="'+key+'"]');if(input)input.checked=on;basculer(key,on);
+    }
+  };hote.appendChild(pointsOnly);
+  const title=document.createElement('div');title.className='entete';title.textContent=L_.legend==='Légende'?'Filtrer par section communale':'Filter by communal section';selection.appendChild(title);
   const actions=document.createElement('div');actions.className='boutons';actions.style.padding='0 10px';
   [true,false].forEach(on=>{const btn=document.createElement('button');btn.textContent=on?L_.all:L_.none;btn.onclick=()=>{selection.querySelectorAll('input').forEach(i=>{i.checked=on;if(on)sectionsChoisies.add(i.value);else sectionsChoisies.delete(i.value);});filtrerSections();};actions.appendChild(btn);});selection.appendChild(actions);
   [...sectionsChoisies].sort().forEach(name=>{const label=document.createElement('label');label.className='ligne';const input=document.createElement('input');input.type='checkbox';input.checked=true;input.value=name;input.onchange=()=>{if(input.checked)sectionsChoisies.add(name);else sectionsChoisies.delete(name);filtrerSections();};label.appendChild(input);const text=document.createElement('span');text.className='lib';text.textContent=name;label.appendChild(text);selection.appendChild(label);});
