@@ -24,7 +24,7 @@
     plan:raster('https://tile.openstreetmap.org/{z}/{x}/{y}.png','© OpenStreetMap'),
     relief:raster('https://a.tile.opentopomap.org/{z}/{x}/{y}.png','© OpenTopoMap, © OpenStreetMap',17),
     dem:{type:'raster-dem',tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],encoding:'terrarium',tileSize:256,maxzoom:15,attribution:'Terrain © Mapzen / AWS Open Data'}
-   },layers:[{id:'background',type:'background',paint:{'background-color':'#e8eef0'}},...['sat','plan','relief'].map(id=>({id,type:'raster',source:id,layout:{visibility:id==='sat'?'visible':'none'}}))],terrain:{source:'dem',exaggeration:1}}});
+   },layers:[{id:'background',type:'background',paint:{'background-color':'#ffffff'}},...['sat','plan','relief'].map(id=>({id,type:'raster',source:id,layout:{visibility:id==='sat'?'visible':'none'}}))],terrain:{source:'dem',exaggeration:1}}});
   gl.addControl(new m.NavigationControl({visualizePitch:true}),'top-left');gl.addControl(new m.ScaleControl({unit:'metric'}),'bottom-left');
   gl.getCanvas().addEventListener('webglcontextlost',fallback);
   const fc=features=>({type:'FeatureCollection',features});
@@ -39,6 +39,13 @@
    if(failed)return;
    add('terre',polygons(D.terre),'fill',{'fill-color':'#dce2df'});
    gl.addLayer({id:'ombrage-hillshade',type:'hillshade',source:'dem'});ids.ombrage=['ombrage-hillshade'];
+   // White outside the same land contours used by the 2D map. This layer
+   // sits above imagery/hillshade but below the study layers, and is also
+   // captured by JPEG/PDF exports directly from the WebGL canvas.
+   const ring=a=>{const r=a.map(p=>p.slice());if(r[0][0]!==r.at(-1)[0]||r[0][1]!==r.at(-1)[1])r.push(r[0].slice());return r;};
+   const coast=(D.terre||[]).flatMap(o=>o.a||[]).filter(a=>a.length>2).map(ring);
+   gl.addSource('white-ocean',{type:'geojson',data:fc([feature({type:'Polygon',coordinates:[[[ -180,-85],[180,-85],[180,85],[-180,85],[-180,-85]],...coast]})])});
+   gl.addLayer({id:'white-ocean',type:'fill',source:'white-ocean',paint:{'fill-color':'#ffffff','fill-opacity':1,'fill-antialias':false}});
    for(const [k,source]of Object.entries({paysage:'paysage_ga',paysage_sud:'paysage_sud',ap:'aires_protegees',sections:'sections',deps:'departements',pays:'pays'})){
     const color=C[k]||C.paysage;
     if(['paysage','paysage_sud','ap','sections'].includes(k))add(k,polygons(D[source]),'fill',{'fill-color':color,'fill-opacity':k==='sections'?.25:.08});
