@@ -1378,7 +1378,7 @@ def _barres(lignes, ens, mesure, mg=None):
     # effectif formaient une bouillie de chiffres. La réserve de droite passe
     # de quatre-vingt-seize à cent soixante pixels, la part se pose au bout de
     # la barre et l'effectif tient le bord droit ; entre les deux, du blanc.
-    RESERVE, X_N = 160, LARG - 2
+    RESERVE, X_N = (300 if any(l.get("raw") is not None for l in lignes) else 160), LARG - 2
     utile = LARG - MG_G - RESERVE
     parts, axe_vu, y = [], None, MG_H
 
@@ -1428,6 +1428,9 @@ def _barres(lignes, ens, mesure, mg=None):
                 f'<text x="{MG_G + utile + 14}" y="{y + 15}" font-size="12.5" '
                 f'font-weight="700" fill="{ENCRE}">'
                 f'{_f(l["part"], dec)}{unite}</text>')
+        if mesure == "score" and l.get("raw") is not None:
+            label = "brut" if i18n.get_lang() == "fr" else "raw"
+            parts.append(f'<text x="{MG_G + utile + 88}" y="{y + 15}" font-size="12.5" font-family="Georgia,serif" font-style="italic" fill="#466c91">{label} : {_e(l["raw"])}</text>')
         if mesure == "part":
             parts.append(
                 f'<text x="{X_N}" y="{y + 15}" font-size="11" '
@@ -1464,7 +1467,7 @@ def _tableau(lignes, ens, mesure):
                   f'border-radius:50%;background:{c};margin-right:8px;'
                   f'vertical-align:middle"></span>')
         r.append(f'<tr><td>{pt}{_e(l["nom"])}</td>'
-                 f'<td class="n v">{_f(l["part"], dec)}{unite}</td>'
+                 f'<td class="n v">{_f(l["part"], dec)}{unite}{_brut_inline(l.get("raw"))}</td>'
                  f'<td class="n">{n}</td></tr>')
     n = (f'{ens["k"]} / {ens["n"]}' if mesure == "part" else str(ens["n"]))
     r.append(f'<tr><td>{_e(T("ex_ens"))}</td>'
@@ -1810,7 +1813,7 @@ def _lignes_ventil_choisis(cat, dims, cible, ind, filtre):
         return ([] if nb <= 0 else
                 [{"nom": T("ex_tout_ech"), "cle": "tout",
                   "axe": T("ex_tout_ech"), "axe_code": "tout",
-                  "n": nb, "k": None, "part": sc, "score": sc}])
+                  "n": nb, "k": None, "part": sc, "score": sc, "raw": _valeur_brute(ind, filtre)}])
     axe_lib = (T(dict(_REGISTRES_S)[dims[0][0]]) if len(dims) == 1
                else T("ex_croise"))
     axe_code = dims[0][0] if len(dims) == 1 else "croisement"
@@ -1819,7 +1822,7 @@ def _lignes_ventil_choisis(cat, dims, cible, ind, filtre):
         nb, sc = _score_cible(cat, g & filtre, cible, ind)
         out.append({"nom": lib, "cle": cle, "axe": axe_lib,
                     "axe_code": axe_code, "n": nb, "k": None,
-                    "part": sc, "score": sc})
+                    "part": sc, "score": sc, "raw": _valeur_brute(ind, g & filtre)})
     return [l for l in out if l["n"] > 0]
 
 
@@ -1875,7 +1878,7 @@ def _lignes_indicateurs(cat, inds, filtre):
         if nb and sc is not None:
             out.append({"nom": _nom_ind(x), "cle": x["dim"],
                         "axe": T(x["dim"]), "axe_code": "indicateur",
-                        "n": nb, "k": None, "part": sc, "score": sc})
+                        "n": nb, "k": None, "part": sc, "score": sc, "raw": _valeur_brute(x, filtre)})
     return out
 
 
@@ -1943,37 +1946,23 @@ def _table_paires(lignes):
     return "".join(r)
 
 
-def _resultats_bruts_scores(cat, indicateurs, filtre, dims):
-    """Show measurement and score from the same filtered profile, in native units."""
-    fr = i18n.get_lang() == "fr"
-    ids = {x["ligne"] for x in indicateurs}
-    reduced = {**cat,
-               "indicateurs": [x for x in cat["indicateurs"] if x["ligne"] in ids],
-               "territoriaux": [x for x in cat.get("territoriaux", []) if x["ligne"] in ids]}
-    groups = list(_croisements_choisis(cat, dims)) if dims else [(T("ex_tout_ech"), "tout", np.ones(cat["n"], dtype=bool))]
-    rows = []
-    for label, _key, mask in groups:
-        for item in M.profil(reduced, mask & filtre):
-            unit = item.get("unite") or ("" if item.get("moyenne") or item.get("territorial") else "%")
-            raw = "—" if item["valeur"] is None else _f(item["valeur"], 4 if item.get("ligne") == 53 else 2) + (" " + unit if unit else "")
-            score = "—" if item["score"] is None else _f(item["score"], 2) + " / 10"
-            rows.append('<tr><td style="border:0;padding:12px 14px;background:#f1f7f3">' + _e(_nom_ind(item)) + '<small style="display:block;color:#718278">' + _e(label) + '</small></td>'
-                        '<td style="border:0;padding:12px 14px;background:#f1f7f3;font-size:20px;color:#245f49">' + _e(raw) + '</td>'
-                        '<td style="border:0;padding:12px 14px;background:#f1f7f3;font-size:20px;color:#245f49">' + _e(score) + '</td></tr>')
-    if not rows:
+def _valeur_brute(ind, masque):
+    if ind is None:
+        return None
+    cat = {"indicateurs": [] if ind.get("territorial") else [ind],
+           "territoriaux": [ind] if ind.get("territorial") else []}
+    item = M.profil(cat, masque)[0]
+    unit = item.get("unite") or ("" if item.get("moyenne") or item.get("territorial") else "%")
+    if item["valeur"] is None:
+        return "—"
+    return _f(item["valeur"], 4 if ind["ligne"] == 53 else 2) + (" " + unit if unit else "")
+
+
+def _brut_inline(raw):
+    if raw is None:
         return ""
-    title = "Valeurs brutes et scores" if fr else "Raw values and scores"
-    heads = ["Indicateur · population", "Valeur brute", "Score de résilience"] if fr else ["Indicator · population", "Raw value", "Resilience score"]
-    note = ("Même sélection et mêmes filtres. Les unités restent propres à chaque mesure ; une absence de donnée est indiquée par —." if fr else
-            "Same selection and filters. Each measurement keeps its own unit; missing data are shown as —.")
-    cdi = ("CDI : estimation à parts égales entre cultures, faute de superficies exploitables ; ce n’est pas un pourcentage de ménages en polyculture." if fr else
-           "CDI: estimated with equal shares across crops because usable areas are unavailable; it is not the percentage of households practising polyculture.")
-    return ('<div class="raw-score-results" style="margin:18px 0 26px">'
-            '<h3 style="color:#245f49;font:600 19px Arial,sans-serif">' + title + '</h3>'
-            '<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:0 8px;text-align:left">'
-            '<thead><tr>' + ''.join('<th style="border:0;padding:8px 14px">' + h + '</th>' for h in heads) + '</tr></thead>'
-            '<tbody>' + ''.join(rows) + '</tbody></table></div>'
-            '<p style="font-size:12px;color:#718278">' + note + ('<br>' + cdi if 53 in ids else '') + '</p></div>')
+    label = "brut" if i18n.get_lang() == "fr" else "raw"
+    return f'<span style="margin-left:16px;color:#466c91;font:italic 15px Georgia,serif">{label} : {_e(raw)}</span>'
 
 
 def render_scores(cat):
@@ -2071,7 +2060,6 @@ def render_scores(cat):
                 max_selections=8, label_visibility="collapsed",
                 format_func=lambda i: _nom_ind(inds[i]))
         compares = [inds[i] for i in compare]
-        st.markdown(_resultats_bruts_scores(cat, compares or ([ind] if ind else inds), filtre, dims), unsafe_allow_html=True)
 
         n_f = int(filtre.sum())
         if n_f == 0:
@@ -2144,6 +2132,9 @@ def render_scores(cat):
             titre = T("ex_s_bas_i" if mode == "bas" else "ex_s_haut_i")
             lignes = _lignes_indicateurs(cat, inds, filtre)
         else:
+            if ind is not None:
+                score_text = "—" if sc_sel is None else _f(sc_sel, 2) + " / 10"
+                st.markdown(f'<p style="font-size:22px;color:#245f49"><strong>{score_text}</strong>{_brut_inline(_valeur_brute(ind, filtre))}</p>', unsafe_allow_html=True)
             if sc_sel is None:
                 st.info(T("ex_s_rien"))
             if poses:
@@ -2191,6 +2182,10 @@ def render_scores(cat):
         elif forme == "barres":
             st.markdown(_barres(lignes, ens, "score"), unsafe_allow_html=True)
 
+        if forme in ("radar", "carte"):
+            st.markdown('<div style="display:flex;flex-wrap:wrap;gap:12px 24px">' + ''.join(
+                f'<span>{_e(l["nom"])} · <strong>{_f(l["score"], 2)} / 10</strong>{_brut_inline(l.get("raw"))}</span>'
+                for l in lignes) + '</div>', unsafe_allow_html=True)
         st.markdown(_synthese(lignes, "score"), unsafe_allow_html=True)
         st.markdown(_note_territoriale(cat, dim, ind),
                     unsafe_allow_html=True)
