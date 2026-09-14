@@ -2342,13 +2342,13 @@ def render(doc_complet=None):
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]{background:#f1f5f2!important;padding:5px!important;border-radius:10px!important;gap:3px!important;margin-bottom:12px!important;}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label{background:transparent!important;border:0!important;border-radius:6px!important;min-height:42px!important;padding:9px 13px!important;}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:hover{background:#e5eee7!important;}
-    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:has(input:checked){background:#fff!important;box-shadow:0 1px 4px #153b2c18!important;}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:has(input:checked){background:#123d2c!important;box-shadow:none!important;}
     .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label p:first-child,.stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label strong{color:#345446!important;}
     .stApp .st-key-zone_page .st-key-cad_model{padding-top:10px!important;}
-    .stApp .st-key-zone_page .st-key-cad_model .cad-cc{gap:0!important;padding:24px 0!important;margin-bottom:28px!important;background:#f4f7f3;border-radius:12px;}
-    .stApp .st-key-zone_page .st-key-cad_model .cad-c{padding:0 24px!important;border:0!important;background:transparent!important;}
-    .stApp .st-key-zone_page .st-key-cad_model .cad-c+.cad-c{border-left:1px solid #d7e2d9!important;}
-    .stApp .st-key-zone_page .st-key-cad_model .cad-c-n{font:600 11px/1.4 Arial,sans-serif!important;letter-spacing:.12em;color:#668271!important;margin:0 0 10px!important;}
+    .stApp .st-key-zone_page .st-key-cad_model .cad-cc{gap:28px!important;padding:4px 0!important;margin-bottom:22px!important;background:transparent;border-radius:0;}
+    .stApp .st-key-zone_page .st-key-cad_model .cad-c{padding:0!important;border:0!important;background:transparent!important;}
+    .stApp .st-key-zone_page .st-key-cad_model .cad-c+.cad-c{border:0!important;}
+    .stApp .st-key-zone_page .st-key-cad_model .cad-c-n{font:600 11px/1.4 Arial,sans-serif!important;letter-spacing:.12em;color:#668271!important;margin:0 10px 0 0!important;float:left;line-height:31px!important;}
     .stApp .st-key-zone_page .st-key-cad_model .cad-c-t{font:400 24px/1.3 Georgia,serif!important;margin-bottom:8px!important;}
     .stApp .st-key-zone_page .st-key-cad_model p.cad-c-x{font:14px/1.6 Arial,sans-serif!important;color:#506457!important;margin:0!important;}
     .stApp .st-key-zone_page .st-key-cad_model .cad-model-title{font-size:24px!important;margin:0 0 12px!important;}
@@ -2362,13 +2362,21 @@ def render(doc_complet=None):
     .stApp .st-key-zone_page .st-key-cad_model .cad-weight-track{width:112px;height:5px;}
     .stApp .st-key-zone_page .st-key-cad_model .cad-weight>span:last-child{min-width:54px;}
     @media(max-width:800px){
-      .stApp .st-key-zone_page .st-key-cad_model .cad-cc{padding:4px 20px!important;gap:0!important;}
-      .stApp .st-key-zone_page .st-key-cad_model .cad-c{padding:18px 0!important;}
-      .stApp .st-key-zone_page .st-key-cad_model .cad-c+.cad-c{border-left:0!important;border-top:1px solid #d7e2d9!important;}
+      .stApp .st-key-zone_page .st-key-cad_model .cad-cc{padding:0!important;gap:18px!important;}
+      .stApp .st-key-zone_page .st-key-cad_model .cad-c{padding:0!important;}
+      .stApp .st-key-zone_page .st-key-cad_model .cad-c+.cad-c{border:0!important;}
       .stApp .st-key-zone_page .st-key-cad_model .cad-dh,.stApp .st-key-zone_page .st-key-cad_model .cad-dl{grid-template-columns:minmax(0,1fr) 76px 65px;gap:10px;padding:14px 0;}
       .stApp .st-key-zone_page .st-key-cad_model .cad-weight-track{width:65px;}
       .stApp .st-key-zone_page .st-key-cad_model .cad-dl-n{font-size:14px!important;}
     }
+    </style>""",unsafe_allow_html=True)
+
+
+    # Match the selected index used by the shared navigation, including its text specificity.
+    st.markdown(f"""<style>
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}){{background:#123d2c!important;box-shadow:none!important;}}
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}) p:first-child,
+    .stApp .st-key-zone_page .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child({active}) p:first-child strong{{color:#fff!important;font-weight:600!important;}}
     </style>""",unsafe_allow_html=True)
 
 
