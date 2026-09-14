@@ -2113,6 +2113,17 @@ def _formule(sens, haut):
             + _fraction(haut, bas) + '</div></div>')
 
 
+IRLA_SCALE_STYLE = """<style>
+.irla-scale{display:grid;gap:7px;padding-right:25px;margin-top:14px;}
+.cad-duo>.irla-scale{flex:1 1 100%;width:100%;box-sizing:border-box;}
+.irla-step{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:38px;padding:5px 10px 5px 16px;border-radius:0 24px 24px 0;background:var(--rank);}
+.stApp .irla-step>span{font:500 16px/1.5 Georgia,serif;color:var(--ink)!important;letter-spacing:.015em;}
+.irla-step>b{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#fff;color:#25384b;border:1px solid #62717b;font:600 14px/1 Arial,sans-serif;}
+.irla-current{outline:2px solid #35597a;outline-offset:1px;}
+.irla-step>em{position:absolute;right:-24px;color:#35597a;font-style:normal;}
+</style>"""
+
+
 def _tableau_echelle(bandes, score=None):
     """Même tableau et même nuancier que la règle interactive, dans les deux vues."""
     maximum = max(bandes) if bandes else 10
@@ -2125,15 +2136,7 @@ def _tableau_echelle(bandes, score=None):
             f'style="--rank:{couleur};--ink:{_encre(couleur)}">'
             f'<span>{_e(str(borne).strip().strip("()"))}</span><b>{rang}</b>'
             + ('<em aria-label="Score">◀</em>' if actif else '') + '</div>')
-    return """<style>
-.irla-scale{display:grid;gap:7px;padding-right:25px;margin-top:14px;}
-.cad-duo>.irla-scale{flex:1 1 100%;width:100%;box-sizing:border-box;}
-.irla-step{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:38px;padding:5px 10px 5px 16px;border-radius:0 24px 24px 0;background:var(--rank);}
-.stApp .irla-step>span{font:500 16px/1.5 Georgia,serif;color:var(--ink)!important;letter-spacing:.015em;}
-.irla-step>b{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#fff;color:#25384b;border:1px solid #62717b;font:600 14px/1 Arial,sans-serif;}
-.irla-current{outline:2px solid #35597a;outline-offset:1px;}
-.irla-step>em{position:absolute;right:-24px;color:#35597a;font-style:normal;}
-</style>""" + '<div class="irla-scale">' + ''.join(lignes) + '</div>'
+    return '<div class="irla-scale">' + ''.join(lignes) + '</div>'
 
 
 def _seuils(brut, unite=""):
@@ -2311,7 +2314,7 @@ _DESC = {"mesure": "cad_d1", "sources": "cad_d2",
 
 def render(doc_complet=None):
     stats = _stats()
-    st.markdown(STYLE.replace("__BANDES__", _bandes_css()),
+    st.markdown(STYLE.replace("__BANDES__", _bandes_css()) + IRLA_SCALE_STYLE,
                 unsafe_allow_html=True)
 
     fr = i18n.get_lang() == 'fr'
