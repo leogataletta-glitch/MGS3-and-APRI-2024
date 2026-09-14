@@ -21,6 +21,7 @@ function pdfJpeg(canvas) {
 
 (function(){
 const P=window.parent,D=P.document,fr=__FR__;
+P.__apriExportsEnabled=__ENABLED__;
 if(P.__apriExportObserver)P.__apriExportObserver.disconnect();
 // Rebuild controls on Streamlit reruns, including language changes.
 function clearControls(doc){
@@ -28,6 +29,7 @@ function clearControls(doc){
  doc.querySelectorAll('iframe').forEach(f=>{try{if(f.contentDocument)clearControls(f.contentDocument);}catch(e){}});
 }
 clearControls(D);
+if(!P.__apriExportsEnabled)return;
 const seen=new WeakSet();let pending=false;
 function download(blob,ext){const url=URL.createObjectURL(blob),a=D.createElement('a');a.href=url;a.download='APRI-resultat.'+ext;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);}
 async function capture(el){
@@ -56,7 +58,7 @@ function toolbar(el,table=false){
  const anchor=el.namespaceURI==='http://www.w3.org/2000/svg'?el.closest('svg'):el;anchor.parentNode.insertBefore(bar,anchor.nextSibling);
 }
 function scan(doc,root){
- if(!root)return;
+ if(!root||!P.__apriExportsEnabled)return;
  if(doc.getElementById('carte')&&doc.getElementById('jpg'))return;
  root.querySelectorAll('svg,canvas,img,table').forEach(el=>{
    if(el.closest('.apri-export-tools,.st-key-zone_nav,.leaflet-container,button,[role="button"]'))return;

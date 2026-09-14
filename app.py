@@ -2910,4 +2910,4 @@ with _c_contenu:
 
 # Download the visible result, without an extra result table.
 import result_export
-result_export.activer()
+result_export.activer(enabled=app_mode != MODE_PORTAIL)
