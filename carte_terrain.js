@@ -90,6 +90,14 @@
    explore.append(destination);document.getElementById('liste').prepend(explore);
    const detail=document.createElement('details');detail.className='map-camera';
    const summary=document.createElement('summary');summary.textContent=fr?'Réglages du relief':'Terrain settings';detail.append(summary);controls.after(detail);detail.append(note);
+   const compass=document.createElement('div');compass.style.cssText='margin-top:10px;font-size:12px;color:#315d4a';
+   const compassTitle=document.createElement('div');compassTitle.textContent=fr?'Orientation · en haut de la carte':'Orientation · top of the map';
+   const compassButtons=document.createElement('div');compassButtons.className='boutons';
+   const directions=(fr?['Nord','Est','Sud','Ouest']:['North','East','South','West']).map((name,i)=>{
+    const button=document.createElement('button');button.textContent=name;button.setAttribute('aria-label',fr?name+' en haut':name+' at top');
+    button.onclick=()=>gl.easeTo({bearing:i*90,duration:550});compassButtons.append(button);return button;
+   });
+   compass.append(compassTitle,compassButtons);controls.after(compass);
    note.textContent=fr?'Maintenez le clic droit et glissez verticalement pour incliner, horizontalement pour tourner.':'Hold the right mouse button: drag vertically to tilt, horizontally to rotate.';
    function slider(label,min,max,step,value,format,change){
     const box=document.createElement('label');box.style.cssText='display:block;font-size:11px;color:#365b49;margin-top:9px';
@@ -99,6 +107,9 @@
    }
    const angle=slider(fr?'Inclinaison':'Tilt',0,80,1,0,v=>Math.round(v)+'°',v=>{gl.stop();gl.setPitch(v);});
    gl.on('pitch',()=>{angle.input.value=gl.getPitch();angle.out.textContent=angle.format(gl.getPitch());});
+   const rotation=slider(fr?'Rotation':'Rotation',0,359,1,0,v=>Math.round(v)+'°',v=>{gl.stop();gl.setBearing(v);});
+   const syncRotation=()=>{const bearing=(gl.getBearing()%360+360)%360;rotation.input.value=Math.round(bearing)%360;rotation.out.textContent=rotation.format(bearing%360);directions.forEach((button,i)=>button.setAttribute('aria-pressed',String(Math.abs(((bearing-i*90+540)%360)-180)<.5)));};
+   gl.on('rotate',syncRotation);syncRotation();
    tilt.addEventListener('click',()=>{detail.open=true;});
    slider(fr?'Hauteur du relief':'Relief height',1,3,.1,1,v=>'×'+v.toFixed(1),v=>gl.setTerrain({source:'dem',exaggeration:v}));
    const ratio=document.createElement('div');ratio.style.cssText='font-size:10px;color:#6c7c73;margin-top:4px';ratio.textContent=fr?'×1 : sans exagération · ×2 : hauteurs doublées':'×1: no exaggeration · ×2: doubled heights';note.before(ratio);
