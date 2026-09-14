@@ -315,8 +315,8 @@ TEXTES = {
     "cad_p2b_x": {"en": "The scale this indicator is read against.",
                   "fr": "L'échelle sur laquelle cet indicateur se lit."},
     "cad_p2b_vide": {
-        "en": "They appear once an indicator is chosen above.",
-        "fr": "Ils apparaissent une fois un indicateur choisi ci-dessus."},
+        "en": "Choose an indicator above to display its thresholds.",
+        "fr": "Choisissez un indicateur ci-dessus pour afficher ses seuils."},
     # Les paliers sont écrits « borne → score », séparés par des barres.
     "cad_p2b_r": {"en": "≥ 120 min→0|60–120 min→2.5|30–60 min→5|"
                         "15–30 min→7.5|≤ 15 min→10",
@@ -2113,6 +2113,28 @@ def _formule(sens, haut):
             + _fraction(haut, bas) + '</div></div>')
 
 
+def _tableau_echelle(bandes, score=None):
+    """Même tableau et même nuancier que la règle interactive, dans les deux vues."""
+    maximum = max(bandes) if bandes else 10
+    lignes = []
+    for rang, borne in sorted(bandes.items()):
+        couleur = _teinte(rang / (maximum or 10))
+        actif = score is not None and float(score) == rang
+        lignes.append(
+            f'<div class="irla-step{" irla-current" if actif else ""}" '
+            f'style="--rank:{couleur};--ink:{_encre(couleur)}">'
+            f'<span>{_e(str(borne).strip().strip("()"))}</span><b>{rang}</b>'
+            + ('<em aria-label="Score">◀</em>' if actif else '') + '</div>')
+    return """<style>
+.irla-scale{display:grid;gap:7px;padding-right:25px;margin-top:14px;}
+.irla-step{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:38px;padding:5px 10px 5px 16px;border-radius:0 24px 24px 0;background:var(--rank);}
+.stApp .irla-step>span{font:500 16px/1.5 Georgia,serif;color:var(--ink)!important;letter-spacing:.015em;}
+.irla-step>b{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#fff;color:#25384b;border:1px solid #62717b;font:600 14px/1 Arial,sans-serif;}
+.irla-current{outline:2px solid #35597a;outline-offset:1px;}
+.irla-step>em{position:absolute;right:-24px;color:#35597a;font-style:normal;}
+</style>""" + '<div class="irla-scale">' + ''.join(lignes) + '</div>'
+
+
 def _seuils(brut, unite=""):
     """Le tableau des paliers : la valeur brute a gauche, le score a droite."""
     tete = T("cad_ex_c_val") + (f" ({unite})" if unite else "")
@@ -2682,9 +2704,9 @@ def _normalisations(x=None):
             + '</div><div>'
             + f'<div class="cad-nrm-t">{_e(titre_b)}</div>'
             + f'<div class="cad-nrm-x">{_e(sous_b)}</div>'
-            + ('<div class="cad-duo">' + _seuils(brut, unite)
+            + ('<div class="cad-duo">' + _tableau_echelle(par, x.get("score") if x else None)
                + f'<div class="cad-seu-n">{_e(T("cad_p2b_n"))}</div>'
-               + '</div>' if brut else '')
+               + '</div>' if brut else _tableau_echelle({i: "—" for i in range(11)}) if x is None else '')
             + '</div></div>')
 
 
@@ -3009,15 +3031,7 @@ def _v_metadonnees(tous):
         fr = lang == "fr"
         def section(title, content):
             return f'<section class="pdf-section"><h3>{_e(title)}</h3>{content}</section>'
-        colors = ['#efa39b','#f3bd98','#f6db91','#faf0ad','#e3efb0','#c4dfbb','#b1e1cf','#bce3e7','#a9c7e7','#899ed2','#ab9bd1']
-        scale_rows = []
-        for k, v in bands.items():
-            n = int(k)
-            active = x.get("score") is not None and float(x["score"]) == n
-            scale_rows.append(f'<div class="pdf-step{" pdf-current" if active else ""}" style="--rank:{colors[max(0,min(10,n))]}">'
-                              f'<span>{_e(str(v).strip().strip(chr(40) + chr(41)))}</span><b>{n}</b>'
-                              + ('<em>◀</em>' if active else '') + '</div>')
-        scale_html = '<div class="pdf-scale">'+''.join(scale_rows)+'</div>' if scale_rows else scale
+        scale_html = _tableau_echelle(bands, x.get("score")) if bands else scale
         missing = "Non renseigné dans les données disponibles." if fr else "Not recorded in the available data."
         comparisons = ''.join('<div class="pdf-comparison"><b>'+_e(label)+'</b><span>—</span></div>' for label in
                              (["Amérique latine et Caraïbes", "Monde", "Haïti"] if fr else ["Latin America & Caribbean", "World", "Haiti"]))
