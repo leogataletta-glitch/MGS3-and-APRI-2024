@@ -2537,6 +2537,8 @@ with _zone_nav:
                         unsafe_allow_html=True)
         for _mode, _icone in _entrees:
             _entree_nav(_mode, _icone)
+    import frontiere_nav
+    frontiere_nav.render()
     # LA DEVISE FERME LA COLONNE. Un filet la sépare de la dernière rubrique :
     # sans lui, elle se lirait comme une entrée de menu qui ne mène nulle part.
     st.markdown(
