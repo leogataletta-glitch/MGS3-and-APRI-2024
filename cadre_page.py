@@ -2429,7 +2429,7 @@ def _v_mesure(stats):
         if not e:
             continue
         label = 'indicateurs' if fr else 'indicators'
-        items.append(f'<li><span>{_e(T(cle))}</span><small><span class="cad-dim-count">{e["n"]} {label}</span> <span class="cad-dim-percent">{_fmt(e["part"])} %</span></small></li>')
+        items.append(f'<li><span>{_e(T(cle))}</span><small><span class="cad-dim-count">{e["n"]} {label}</span></small></li>')
     title = 'Les sept dimensions' if fr else 'The seven dimensions'
     attributes = 'Les trois attributs' if fr else 'The three attributes'
     with st.container(key='cad_model'):
@@ -2441,11 +2441,9 @@ def _v_mesure(stats):
         .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c-n{position:absolute;left:0;top:2px;float:none!important;font:400 20px/1.4 Georgia,serif!important;letter-spacing:0;color:#7a9a87!important;}
         .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c-t{font-size:21px!important;margin-bottom:6px!important;}
         .stApp .st-key-zone_page .st-key-cad_model .cad-overview p.cad-c-x{font-size:14px!important;line-height:1.65!important;max-width:34ch;}
-        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c-n{font-size:0!important;width:24px;height:24px;border:1px solid #88a491;border-radius:50%;}
-        .cad-overview .cad-c-n::after{content:"";position:absolute;inset:7px;border:1px solid #88a491;border-radius:50%;}
-        .cad-overview .cad-c:nth-child(2) .cad-c-n{border-radius:12px 12px 16px 16px!important;height:22px!important;}
-        .cad-overview .cad-c:nth-child(2) .cad-c-n::after{inset:5px 7px 7px;border-width:0 0 1px 1px;border-radius:0;transform:rotate(-45deg);}
-        .cad-overview .cad-c:nth-child(3) .cad-c-n{border-style:dashed!important;}
+        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c-n{font-size:0!important;width:7px;height:7px;top:10px;border:0!important;background:#658b75;border-radius:50%!important;}
+        .cad-overview .cad-c-n::after{content:none!important;}
+        .stApp .st-key-zone_page .st-key-cad_model .cad-overview .cad-c{padding-left:24px!important;}
         .cad-dim-simple{list-style:none;padding:0;margin:0;display:grid;gap:0;}
         .cad-dim-simple li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:14px;padding:12px 0;border-bottom:1px solid #edf1ee;font:14px/1.5 Arial,sans-serif;color:#34483e;}
         .cad-dim-simple small{font:13px/1.5 Arial,sans-serif;color:#65756c;white-space:nowrap;}
