@@ -2512,7 +2512,6 @@ st.markdown("""
 
 with _menu_mobile:
     with st.popover("☰ Menu", use_container_width=True):
-        st.toggle("Lecture confortable" if i18n.get_lang() == "fr" else "Comfortable reading", key="apri_lecture_mobile", value=st.session_state.get("apri_lecture_confort", False), on_change=lambda: st.session_state.update(apri_lecture_confort=st.session_state["apri_lecture_mobile"]))
         for _fam, _entrees in _NAV_FAMILLES:
             if _fam:
                 st.caption(T(_fam))
@@ -2574,17 +2573,28 @@ _c_contenu = _col_page.container(key="zone_page")
 _zone_langue = _col_page.container(
     key=("zone_langue_h" if st.session_state["app_mode"] == MODE_PORTAIL
          else "zone_langue_r"))
-with _zone_nav:
-    st.toggle("Lecture confortable" if i18n.get_lang() == "fr" else "Comfortable reading", key="apri_lecture_confort", help="Met le texte en relief au survol." if i18n.get_lang() == "fr" else "Highlights text when you hover over it.")
-
-# Paragraph backgrounds are painted without changing their dimensions.
-if st.session_state.get("apri_lecture_confort", False):
-    st.markdown("""<style>
-    .stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p{transition:background .15s,box-shadow .15s;border-radius:6px;}
-    .stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p:hover{background:#edf5ef!important;color:#244b37!important;box-shadow:0 0 0 8px #edf5ef,0 4px 12px 5px #123d2c10;}
-    .stApp .st-key-zone_page [data-testid="stButton"] p:hover{background:transparent!important;box-shadow:none!important;}
-    @media(hover:none){.stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p{background:#f3f7f3;}}
-    </style>""",unsafe_allow_html=True)
+# Comfortable reading is always active.
+st.markdown("""<style>
+.stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p{
+ position:relative;transition:transform .16s,background .16s,box-shadow .16s;
+ border-radius:6px;transform-origin:left center;
+}
+@media(hover:hover){
+ .stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p:hover{
+  z-index:20;background:#edf5ef!important;color:#244b37!important;
+  transform:scale(1.04);
+  box-shadow:0 0 0 8px #edf5ef,0 5px 16px 5px #123d2c18;
+ }
+}
+.stApp .st-key-zone_page [data-testid="stButton"] p:hover{
+ background:transparent!important;box-shadow:none!important;transform:none!important;max-width:none;
+}
+@media(hover:none){
+ .stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p{font-size:1.05em;}
+ .stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p:active{background:#edf5ef;box-shadow:0 0 0 6px #edf5ef;}
+}
+@media(prefers-reduced-motion:reduce){.stApp .st-key-zone_page p{transition:none!important;}}
+</style>""",unsafe_allow_html=True)
 
 with _zone_langue:
     _cl = st.columns(2)
@@ -2897,4 +2907,5 @@ with _c_contenu:
 # bandes de la même couleur qui se rejoignent dans l'angle, et une page prise
 # en tenaille. La devise et le crédit tiennent au pied de la colonne, où ils
 # ferment la liste des rubriques sans coûter une bande de plus.
+
 
