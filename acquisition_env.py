@@ -185,7 +185,7 @@ STYLE = """
   .aq-h { font-family:Georgia,"Times New Roman",serif; font-size:19px;
         color:#16241c; margin:26px 0 2px; font-weight:400; }
   .aq-hx { font-size:12px; color:#8a93a5; margin:0 0 10px; }
-  .aq-l { display:grid; grid-template-columns:1fr 96px 118px;
+  .aq-l { display:grid; grid-template-columns:minmax(0,1fr) 96px minmax(220px,.7fr);
         gap:10px; align-items:center; padding:9px 2px;
         border-bottom:1px solid #eef1ef; }
   .aq-n { font-size:13.5px; color:#26332c; line-height:1.35; }
@@ -270,6 +270,8 @@ def _indicateurs():
             "nom_en": r.get("indicateur") or "",
             "source": (r.get("source") or "").strip(),
             "etat": etat, "n_val": n_val, "n_sco": n_sco,
+            "raison_non_calcul_fr": r.get("raison_non_calcul_fr"),
+            "raison_non_calcul_en": r.get("raison_non_calcul_en"),
             "total": total, "echelle": (r.get("echelle") or "").strip(),
             "n_applicables": len(applicables),
             "non_applicables": non_applicables,
@@ -312,6 +314,9 @@ def _couverture(r):
     if r["etat"] == "absent":
         return ""
     if r["n_val"] and not r["n_sco"]:
+        raison = r.get("raison_non_calcul_" + i18n.get_lang())
+        if raison:
+            return raison
         if r.get("echelle"):
             return ("Barème disponible · scores non calculés"
                     if i18n.get_lang() == "fr" else
