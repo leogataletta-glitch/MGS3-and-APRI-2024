@@ -31,7 +31,7 @@ STYLE = """<style>
 </style>"""
 
 PAGES = {
-    "methodologie": ("Le cadre de résilience", "The resilience framework", "Trois capacités complémentaires, étudiées à travers sept dimensions.", "Three complementary capacities, explored through seven dimensions."),
+    "methodologie": ("Le cadre de résilience", "The resilience framework", "", ""),
     "accueil": ("Le territoire", "The territory", "Explorer les paysages et les sections communales.", "Explore the landscapes and communal sections."),
     "dimensions": ("Analyse des résultats", "Results analysis", "Choisir une vue, préciser les filtres, puis explorer les résultats.", "Choose a view, set the filters, then explore the results."),
     "boucles": ("Boucles de rétroaction", "Feedback loops", "Construire le système, examiner ses relations et tester les leviers d’action.", "Build the system, examine its relationships and test intervention levers."),
@@ -61,6 +61,7 @@ ERGONOMIE = """<style>
 .stApp .st-key-zone_langue_r div[class*="st-key-lang_"] div[data-testid="stButton"]>button p{color:#ffffff!important;text-shadow:none!important;}
 .stApp .st-key-zone_langue_r div[class*="st-key-lang_"] div[data-testid="stButton"]>button[kind="primary"] p{color:#ffffff!important;font-weight:700!important;}
 .stApp .st-key-zone_page:has(.apri-page-heading){padding:8px 24px 48px!important;}
+.apri-page-heading:not(:has(p)){padding:0!important;border:0!important;margin:0!important;height:0!important;}
 .apri-page-heading{position:relative;padding:8px 120px 12px 0;border-bottom:1px solid #dfe7e1;margin-bottom:16px;}
 .stApp .st-key-zone_page .apri-page-heading h1{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important;}
 .stApp .st-key-zone_page .apri-page-heading p{margin:0!important;max-width:780px;}
