@@ -10,7 +10,7 @@
  const note=document.createElement('div');note.setAttribute('role','status');note.style.cssText='font-size:11px;color:#587264;padding-top:6px';
  note.textContent=fr?'Chargement du relief…':'Loading terrain…';controls.after(note);
  const css=document.createElement('link');css.rel='stylesheet';css.href='https://unpkg.com/maplibre-gl@6.9.0/dist/maplibre-gl.css';document.head.append(css);
- const styles=document.createElement('style');styles.textContent='#carte3d{position:absolute;left:0;top:0;bottom:0;right:302px;border-radius:12px;overflow:hidden;visibility:hidden}.maplibregl-popup-content{font:12px system-ui;color:#234c3e}.maplibregl-ctrl-attrib{font-size:10px}#panneau button[aria-pressed="true"]{background:#dceee3;border-color:#62967c;color:#164a35}@media(max-width:620px){#carte,#carte3d{right:0;bottom:50%}#panneau{height:48%;overflow-y:auto}#panneau .tete{flex-shrink:0}#liste{overflow:visible;flex:none}}';document.head.append(styles);
+ const styles=document.createElement('style');styles.textContent='#carte3d{position:absolute;left:0;top:0;bottom:0;right:0;border-radius:0;overflow:hidden;visibility:hidden}.maplibregl-popup-content{font:12px system-ui;color:#234c3e}.maplibregl-ctrl-attrib{font-size:10px}#panneau button[aria-pressed="true"]{background:#dceee3;border-color:#62967c;color:#164a35}@media(max-width:620px){#carte,#carte3d{right:0;bottom:50%}#panneau{height:48%;overflow-y:auto}#panneau .tete{flex-shrink:0}#liste{overflow:visible;flex:none}}';document.head.append(styles);
  const host=document.createElement('div');host.id='carte3d';document.getElementById('carte').after(host);
  // Streamlit's initial iframe height is only a fallback: fill the viewport.
  try{
@@ -20,7 +20,7 @@
    let resizeFrame;
    const fitHeight=()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>{
     const rect=frame.getBoundingClientRect(),scale=rect.height/frame.offsetHeight||1;
-    const height=Math.max(480,Math.round((parentWindow.innerHeight-Math.max(0,rect.top)-12)/scale));
+    const height=Math.max(480,Math.round((parentWindow.innerHeight-Math.max(0,rect.top))/scale));
     if(Math.abs(frame.offsetHeight-height)>1)frame.style.setProperty('height',height+'px','important');
    });};
    parentWindow.addEventListener('resize',fitHeight);main?.addEventListener('scroll',fitHeight,{passive:true});fitHeight();
@@ -116,7 +116,7 @@
    gl.on('mousemove',track);gl.on('click',track);gl.on('moveend',updatePosition);gl.on('idle',updatePosition);
    gl.getCanvas().addEventListener('mouseleave',()=>{pointer=null;cancelAnimationFrame(pointerFrame);place.textContent=fr?'Survolez la carte':'Move over the map';altitude.textContent=fr?'Altitude estimée : —':'Estimated elevation: —';coordinates.textContent='WGS84 · —';});
    host.style.visibility='visible';document.getElementById('carte').style.visibility='hidden';
-   gl.fitBounds([[-74.55,17.98],[-73.55,18.68]],{padding:25,duration:0});
+   gl.fitBounds([[-74.55,17.98],[-73.55,18.68]],{padding:{top:25,bottom:25,left:25,right:window.innerWidth>620?311:25},duration:0});
    top.disabled=tilt.disabled=false;
    const state=()=>{top.setAttribute('aria-pressed',String(gl.getPitch()<1));tilt.setAttribute('aria-pressed',String(gl.getPitch()>=1));};gl.on('moveend',state);state();
    top.onclick=()=>gl.easeTo({pitch:0,bearing:0,duration:700});
@@ -127,7 +127,7 @@
    const destination=document.createElement('select');destination.setAttribute('aria-label',explore.textContent);
    const placeholder=new Option(fr?'Choisir une section…':'Choose a section…','');destination.add(placeholder);
    [...new Set((D.sections||[]).map(o=>o.p.section))].sort().forEach(name=>destination.add(new Option(name,name)));
-   destination.onchange=()=>{if(!destination.value)return;const points=(D.sections||[]).filter(o=>o.p.section===destination.value).flatMap(o=>(o.a||[]).flat());if(!points.length)return;const bounds=points.reduce((b,p)=>b.extend(p),new m.LngLatBounds(points[0],points[0]));gl.fitBounds(bounds,{padding:55,maxZoom:15,duration:1000});};
+   destination.onchange=()=>{if(!destination.value)return;const points=(D.sections||[]).filter(o=>o.p.section===destination.value).flatMap(o=>(o.a||[]).flat());if(!points.length)return;const bounds=points.reduce((b,p)=>b.extend(p),new m.LngLatBounds(points[0],points[0]));gl.fitBounds(bounds,{padding:{top:55,bottom:55,left:55,right:window.innerWidth>620?341:55},maxZoom:15,duration:1000});};
    explore.append(destination);document.getElementById('liste').prepend(explore);
    const detail=document.createElement('details');detail.className='map-camera';
    const summary=document.createElement('summary');summary.textContent=fr?'Réglages du relief':'Terrain settings';detail.append(summary);controls.after(detail);detail.append(note);
@@ -165,7 +165,7 @@
    top.addEventListener('click',()=>atlasState(false));tilt.addEventListener('click',()=>atlasState(false));
    const oldFond=choisirFond,oldToggle=basculer,oldFilter=filtrerSections,oldReset=recadrer;
    choisirFond=k=>{oldFond(k);sync();atlasState(false);};basculer=(k,on)=>{oldToggle(k,on);sync();atlasState(atlasOn);};filtrerSections=()=>{oldFilter();sync();atlasState(atlasOn);};
-   recadrer=()=>{if(failed)return oldReset();gl.fitBounds([[-74.55,17.98],[-73.55,18.68]],{padding:25,pitch:0,bearing:0});};
+   recadrer=()=>{if(failed)return oldReset();gl.fitBounds([[-74.55,17.98],[-73.55,18.68]],{padding:{top:25,bottom:25,left:25,right:window.innerWidth>620?311:25},pitch:0,bearing:0});};
   });
  }catch(e){clearTimeout(timeout);fallback();}
 })();

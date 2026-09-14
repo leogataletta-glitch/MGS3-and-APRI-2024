@@ -24,13 +24,16 @@ async function exporterCarte(format){
   try{
     if(document.querySelector('.leaflet-zoom-anim'))throw Error('Map moving');
     const gl=window.apriTerrain; if(gl && (gl.isMoving()||!gl.areTilesLoaded()))throw Error('Tiles loading');
-    const root=document.getElementById(gl?'carte3d':'carte'),bounds=root.getBoundingClientRect(),width=Math.round(bounds.width),height=Math.round(bounds.height);
+    const root=document.getElementById(gl?'carte3d':'carte'),bounds=root.getBoundingClientRect();
+    const legendBounds=document.getElementById('panneau').getBoundingClientRect();
+    // Export the unobscured map, followed by its static legend.
+    const width=Math.round(legendBounds.left>bounds.left && legendBounds.top<bounds.bottom ? Math.min(bounds.width,legendBounds.left-bounds.left) : bounds.width),height=Math.round(bounds.height);
     const active=GROUPES.flatMap(g=>g.lignes).filter(l=>(l.fond?l.cle===fondActif:ETAT[l.cle])&&(l.cle!=='haiti_hd'||gl&&gl.getZoom()>=15));
     const selected=[...sectionsChoisies];
     const exportHeight=Math.max(height+94,110+active.length*34+selected.length*20);
     const canvas=document.createElement('canvas');canvas.width=(width+300)*2;canvas.height=exportHeight*2;
     const ctx=canvas.getContext('2d');ctx.scale(2,2);ctx.fillStyle='white';ctx.fillRect(0,0,width+300,exportHeight);
-    if(gl){ctx.drawImage(gl.getCanvas(),0,0,width,height);}else{
+    if(gl){const source=gl.getCanvas();ctx.drawImage(source,0,0,source.width*width/bounds.width,source.height,0,0,width,height);}else{
     const panes=[...root.querySelectorAll('.leaflet-pane')].filter(p=>p.classList.contains('leaflet-tile-pane')||p.querySelector(':scope > canvas'));
     panes.sort((a,b)=>(+getComputedStyle(a).zIndex||0)-(+getComputedStyle(b).zIndex||0));
     for(const pane of panes){
@@ -46,12 +49,6 @@ async function exporterCarte(format){
       }ctx.restore();
     }
     }
-    // Match the 64px white dissolve around the on-screen viewport.
-    ctx.save();ctx.beginPath();ctx.rect(0,0,width,height);ctx.clip();
-    for(const [x0,y0,x1,y1] of [[width,0,width-64,0],[0,0,0,64],[0,height,0,height-64]]){
-      const fade=ctx.createLinearGradient(x0,y0,x1,y1);fade.addColorStop(0,'white');fade.addColorStop(1,'rgba(255,255,255,0)');
-      ctx.fillStyle=fade;ctx.fillRect(0,0,width,height);
-    }ctx.restore();
     // Permanent town names are DOM tooltips, not part of Leaflet's canvas.
     ctx.font='bold 12px Arial';ctx.textBaseline='middle';
     root.querySelectorAll('.etq-ville').forEach(el=>{const r=el.getBoundingClientRect(),x=r.left-bounds.left+(gl?parseFloat(getComputedStyle(el).paddingLeft)||0:0),y=r.top-bounds.top+r.height/2;if(x<0||x>width||y<0||y>height)return;ctx.lineWidth=3;ctx.strokeStyle='white';ctx.strokeText(el.textContent,x,y);ctx.fillStyle='#20382f';ctx.fillText(el.textContent,x,y);});

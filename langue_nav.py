@@ -34,6 +34,5 @@ def render(callback, mobile=False):
         for col, code in zip(cols, ('en','fr')):
             with col:
                 st.button(code.upper(),key=f'{key}_{code}',
-                    help='English' if code=='en' else 'Français',
                     on_click=callback,args=(code,),
                     type='primary' if st.session_state['choix_langue']==code else 'secondary')

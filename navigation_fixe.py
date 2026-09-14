@@ -4,6 +4,8 @@ import streamlit as st
 
 def appliquer():
     st.markdown('''<style>
+    .stApp.stApp .st-key-zone_page:has(.st-key-territory_map){padding:0!important;}
+    .st-key-zone_page:has(.st-key-territory_map) [data-testid="stElementContainer"]:has(.apri-page-heading){display:none!important;}
     @media(min-width:1001px){
       section[data-testid="stMain"],div[data-testid="stMain"]{
         height:calc(100dvh * var(--dz,1))!important;
@@ -30,8 +32,18 @@ def appliquer():
       div[data-testid="stColumn"]:has(.st-key-zone_page){
         height:calc(100dvh * var(--dz,1))!important;
         min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;
-        overscroll-behavior-y:contain!important;scrollbar-gutter:stable;
+        overscroll-behavior-y:contain!important;scrollbar-gutter:auto!important;
+        scrollbar-width:none!important;
+        /* The scroll viewport itself reaches the screen edge, so artwork
+           no longer gets clipped at the main container's right padding. */
+        margin-right:-2.6rem!important;
         padding-bottom:32px!important;
+      }
+      div[data-testid="stColumn"]:has(.st-key-zone_page)::-webkit-scrollbar{
+        display:none!important;width:0!important;height:0!important;
+      }
+      .stApp .st-key-zone_ruban .bandeau-haut.bandeau-enveloppe{
+        width:100%!important;max-width:100%!important;margin-right:0!important;
       }
       /* Overlap the map and navigation without altering the sidebar width. */
       div[data-testid="stHorizontalBlock"]:has(.st-key-territory_map):has(> div[data-testid="stColumn"] .st-key-zone_nav){

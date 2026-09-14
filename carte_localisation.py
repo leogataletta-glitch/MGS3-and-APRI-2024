@@ -244,21 +244,18 @@ GABARIT = r"""<!DOCTYPE html><html><head><meta charset="utf-8">
 __LEAFLET__
 <style>
  html,body{margin:0;padding:0;height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
- #carte{position:absolute;left:0;top:0;bottom:0;right:302px;border-radius:12px}
- /* Dissolve the rectangular viewport, independently of the coastline. */
+ #carte{position:absolute;inset:0}
+ /* The map continues behind the opaque legend; no viewport-edge dissolve. */
  #carte,#carte3d{border-radius:0!important;}
- #carte::after,#carte3d::after{content:"";position:absolute;inset:0;pointer-events:none;
-   background:linear-gradient(to left,white,transparent 64px),
-              linear-gradient(to bottom,white,transparent 64px),
-              linear-gradient(to top,white,transparent 64px);}
- #carte::after{z-index:450;}
- #carte3d::after{z-index:1;}
+ @media(min-width:621px){
+   .leaflet-right,.maplibregl-ctrl-top-right,.maplibregl-ctrl-bottom-right{right:286px!important;}
+ }
  /* Le fond marin blanc prolonge la page ; la terre reste grise. */
  .leaflet-container{background:#ffffff;border-radius:12px;font-family:inherit}
  .leaflet-control-scale-line,.maplibregl-ctrl-scale{text-align:center!important}
  /* --- le panneau de couches ------------------------------------------- */
  #panneau{position:absolute;top:0;right:0;bottom:0;width:286px;
-   background:rgba(255,255,255,.96);border:1px solid #dbe3ec;border-radius:12px;
+   background:#ffffff;border:1px solid #dbe3ec;border-radius:0;
    box-shadow:none;z-index:1000;display:flex;
    flex-direction:column;overflow:hidden}
  #panneau .tete{padding:10px 12px 8px;border-bottom:1px solid #eef2f7}
