@@ -2926,65 +2926,52 @@ def _v_metadonnees(tous):
     if not lot:
         return
 
-    coul = {"calcule": "#1a8a4f", "partiel": "#d1730c", "absent": "#b0464b"}
+    st.markdown("""<style>
+.stApp .st-key-zone_page .cad-meta-label{font:600 12px/1.5 Arial,sans-serif;color:#65796c;margin:0 0 8px;}
+.stApp .st-key-zone_page .cad-meta-text{font:400 15px/1.7 Arial,sans-serif;color:#40564a;margin:0 0 12px;max-width:62ch;}
+.stApp .st-key-zone_page .cad-meta-number{font:30px/1.2 Georgia,serif;color:#245b43;margin:0 0 5px;}
+.stApp .st-key-zone_page .cad-meta-limit{font:14px/1.6 Arial,sans-serif;color:#6f613f;border-left:2px solid #c7b789;padding:8px 14px;margin:16px 0;}
+.stApp .st-key-zone_page .cad-meta-effects{padding-left:18px;margin:0;font:14px/1.7 Arial,sans-serif;color:#40564a;}
+</style>""", unsafe_allow_html=True)
     for x in lot:
         nom = (x.get("nom_fr") or x["nom"]) if lang == "fr" else x["nom"]
-        num = T(x["dim"]).split(".")[0]
         et = x.get("etat") or "absent"
-        titre = f"{nom}  ·  {num}  ·  {T('cad_meta_poids')} {_fmt(x['poids'])}"
-        with st.expander(titre):
-            st.markdown(
-                f'<div class="cad-md-et" style="color:{coul[et]}">'
-                f'{_e(T("aq_e_" + et))}</div>'
-                + (f'<div class="cad-md-v">{_e(T("cad_meta_valeur"))} '
-                   f'<b>{_fmt(x["valeur"])}'
-                   f'{(" " + x["unite"]) if x.get("unite") else ""}</b>'
-                   f'{" · " + _e(T("cad_meta_score")) + " <b>" + str(x["score"]) + "/10</b>" if x.get("score") is not None else ""}'
-                   f'</div>' if x.get("valeur") is not None else ""),
-                unsafe_allow_html=True)
-
-            mesure = ((x.get("metrique_fr") if lang == "fr"
-                       else x.get("metrique_en")) or x.get("metrique") or "")
-            st.markdown(f'<div class="cad-md-l">{_e(T("cad_meta_quoi"))}</div>'
-                        f'<div class="cad-md-p">{_e(mesure)}</div>'
-                        if mesure else "", unsafe_allow_html=True)
-
-            st.markdown(f'<div class="cad-md-l">{_e(T("cad_meta_comment"))}'
-                        f'</div>'
-                        f'<div class="cad-md-p">{_e(_meta_source(x, lang))}'
-                        f'</div>', unsafe_allow_html=True)
-            note = (x.get("note") if lang == "fr" else x.get("note_en")) \
-                or x.get("note") or ""
+        mesure = ((x.get("metrique_fr") if lang == "fr" else x.get("metrique_en")) or x.get("metrique") or "")
+        note = (x.get("note") if lang == "fr" else x.get("note_en")) or x.get("note") or ""
+        pourquoi = _meta_pourquoi(x, par_ligne, graphe, lang)
+        with st.expander(nom):
+            st.caption(T("aq_e_" + et))
+            valeur, score = st.columns(2)
+            with valeur:
+                if x.get("valeur") is not None:
+                    st.markdown(f'<div class="cad-meta-number">{_e(_fmt(x["valeur"]))} {_e(x.get("unite") or "")}</div><p class="cad-meta-label">{_e(T("cad_meta_valeur"))}</p>', unsafe_allow_html=True)
+            with score:
+                if x.get("score") is not None:
+                    st.markdown(f'<div class="cad-meta-number">{_e(str(x["score"]))}/10</div><p class="cad-meta-label">{_e(T("cad_meta_score"))}</p>', unsafe_allow_html=True)
+            gauche, droite = st.columns(2, gap="large")
+            with gauche:
+                st.markdown(f'<p class="cad-meta-label">{_e(T("cad_meta_quoi"))}</p><p class="cad-meta-text">{_e(mesure)}</p>', unsafe_allow_html=True)
+            with droite:
+                st.markdown(f'<p class="cad-meta-label">{_e(T("cad_meta_pourquoi"))}</p>', unsafe_allow_html=True)
+                if pourquoi:
+                    st.markdown('<ul class="cad-meta-effects">' + ''.join(f'<li>{_e(t)}</li>' for t, r in pourquoi) + '</ul>', unsafe_allow_html=True)
+                else:
+                    st.markdown(f'<p class="cad-meta-text">{_e(T("cad_meta_pourquoi_dim", d=T(x["dim"]), p=_fmt(x["poids"])))}</p><p class="cad-meta-text">{_e(T("cad_meta_pourquoi_absent"))}</p>', unsafe_allow_html=True)
             if note:
-                st.markdown(f'<div class="cad-md-p cad-md-note">{_e(note)}'
-                            f'</div>', unsafe_allow_html=True)
-
-            pourquoi = _meta_pourquoi(x, par_ligne, graphe, lang)
-            st.markdown(f'<div class="cad-md-l">{_e(T("cad_meta_pourquoi"))}'
-                        f'</div>', unsafe_allow_html=True)
-            if pourquoi:
-                st.markdown(
-                    "".join(
-                        f'<div class="cad-md-p"><b>{_e(t)}</b>'
-                        + (f'<span class="cad-md-r">{_e(r)}</span>'
-                           if r else "")
-                        + '</div>'
-                        for t, r in pourquoi), unsafe_allow_html=True)
-            else:
-                st.markdown(
-                    f'<div class="cad-md-p">'
-                    f'{_e(T("cad_meta_pourquoi_dim", d=T(x["dim"]), p=_fmt(x["poids"])))}'
-                    f'</div>'
-                    f'<div class="cad-md-p cad-md-note">'
-                    f'{_e(T("cad_meta_pourquoi_absent"))}</div>',
-                    unsafe_allow_html=True)
-
+                label = "Limites de la mesure" if lang == "fr" else "Measurement limitations"
+                st.markdown(f'<div class="cad-meta-limit"><b>{label}</b><br>{_e(note)}</div>', unsafe_allow_html=True)
+            with st.expander("Calcul et méthode" if lang == "fr" else "Calculation and method"):
+                st.markdown(f'<p class="cad-meta-text">{_e(_meta_source(x, lang))}</p>', unsafe_allow_html=True)
+                st.caption(f'{T(x["dim"])} · {T("cad_meta_poids")} {_fmt(x["poids"])}')
+            refs = [(t, r) for t, r in pourquoi if r]
+            if refs:
+                with st.expander("Références scientifiques" if lang == "fr" else "Scientific references"):
+                    for t, r in refs:
+                        st.markdown(f'<p class="cad-meta-label">{_e(t)}</p><p class="cad-meta-text">{_e(r)}</p>', unsafe_allow_html=True)
             if x.get("echelle"):
-                st.markdown(f'<div class="cad-md-l">'
-                            f'{_e(T("cad_meta_bareme"))}</div>'
-                            f'<div class="cad-md-p cad-md-note">'
-                            f'{_e(x["echelle"])}</div>',
-                            unsafe_allow_html=True)
+                with st.expander(T("cad_meta_bareme")):
+                    for seuil in x["echelle"].split(", "):
+                        st.markdown(f'<p class="cad-meta-text">{_e(seuil)}</p>', unsafe_allow_html=True)
 
 
 
