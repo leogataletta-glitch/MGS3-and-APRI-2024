@@ -2907,3 +2907,7 @@ with _c_contenu:
 # ferment la liste des rubriques sans coûter une bande de plus.
 
 
+
+# Download the visible result, without an extra result table.
+import result_export
+result_export.activer()

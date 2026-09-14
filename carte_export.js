@@ -24,8 +24,11 @@ async function exporterCarte(format){
   try{
     if(document.querySelector('.leaflet-zoom-anim'))throw Error('Map moving');
     const root=document.getElementById('carte'),bounds=root.getBoundingClientRect(),width=Math.round(bounds.width),height=Math.round(bounds.height);
-    const canvas=document.createElement('canvas');canvas.width=width*2;canvas.height=(height+52)*2;
-    const ctx=canvas.getContext('2d');ctx.scale(2,2);ctx.fillStyle='white';ctx.fillRect(0,0,width,height+52);
+    const active=GROUPES.flatMap(g=>g.lignes).filter(l=>l.fond?l.cle===fondActif:ETAT[l.cle]);
+    const selected=[...sectionsChoisies];
+    const exportHeight=Math.max(height+52,110+active.length*34+selected.length*20);
+    const canvas=document.createElement('canvas');canvas.width=(width+300)*2;canvas.height=exportHeight*2;
+    const ctx=canvas.getContext('2d');ctx.scale(2,2);ctx.fillStyle='white';ctx.fillRect(0,0,width+300,exportHeight);
     const panes=[...root.querySelectorAll('.leaflet-pane')].filter(p=>p.classList.contains('leaflet-tile-pane')||p.querySelector(':scope > canvas'));
     panes.sort((a,b)=>(+getComputedStyle(a).zIndex||0)-(+getComputedStyle(b).zIndex||0));
     for(const pane of panes){
@@ -47,6 +50,15 @@ async function exporterCarte(format){
     if(scale){const r=scale.getBoundingClientRect(),w=r.width;ctx.fillStyle='rgba(255,255,255,.94)';ctx.fillRect(12,height-49,w+24,39);ctx.strokeStyle='#243e34';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(22,height-29);ctx.lineTo(22,height-20);ctx.lineTo(22+w,height-20);ctx.lineTo(22+w,height-29);ctx.stroke();ctx.fillStyle='#243e34';ctx.font='12px Arial';ctx.fillText(scale.textContent,24,height-36);}
     ctx.fillStyle='#294b3d';ctx.font='bold 14px Arial';ctx.fillText('APRI · '+L_.section,12,height+18);
     ctx.font='10px Arial';ctx.fillStyle='#546b60';ctx.fillText(root.querySelector('.leaflet-control-attribution')?.textContent||'',12,height+38,width-24);
+    // Export a static legend of visible layers, without interactive controls.
+    const lx=width+20;let ly=30;ctx.fillStyle='#294b3d';ctx.font='bold 16px Arial';ctx.fillText(L_.legend,lx,ly);ly+=30;
+    active.forEach(l=>{const sym=l.sym||{type:'tuile'},c=sym.c||'#9daeb1';ctx.fillStyle=c;ctx.strokeStyle=c;ctx.lineWidth=2;
+      if(sym.type==='ligne'){ctx.setLineDash(sym.d?[4,3]:[]);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(lx+20,ly);ctx.stroke();ctx.setLineDash([]);}
+      else if(sym.type==='point'){ctx.beginPath();ctx.arc(lx+10,ly,5,0,Math.PI*2);ctx.fill();}
+      else{ctx.globalAlpha=.4;ctx.fillRect(lx,ly-6,20,12);ctx.globalAlpha=1;ctx.strokeRect(lx,ly-6,20,12);}
+      ctx.fillStyle='#385348';ctx.font='12px Arial';const words=l.titre.split(' ');let line='',lines=[];words.forEach(w=>{if(ctx.measureText(line+w).width>238){lines.push(line);line='';}line+=w+' ';});lines.push(line);lines.forEach((t,i)=>ctx.fillText(t,lx+30,ly+i*14));ly+=Math.max(28,lines.length*14+8);
+    });
+    ly+=16;ctx.font='bold 12px Arial';ctx.fillText(L_.section,lx,ly);ly+=23;ctx.font='12px Arial';selected.forEach(name=>{ctx.fillText(name,lx,ly);ly+=20;});
     const blob=format==='pdf'?pdfJpeg(canvas):await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.94));
     if(!blob)throw Error('No image');const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='APRI-carte.'+(format==='pdf'?'pdf':'jpg');a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);status.textContent='';
   }catch(e){status.textContent=L_.export_fail;}

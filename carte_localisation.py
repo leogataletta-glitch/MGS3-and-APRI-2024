@@ -629,10 +629,13 @@ def html(d):
         "paysage": T("cl_paysage"), "paysage_sud": T("cl_paysage_sud"),
         "paysage_t": T("cl_g_etude"),
         "all": T("cl_tout"), "none": T("cl_rien"),
+        "legend": "Légende" if i18n.get_lang()=="fr" else "Legend",
         "export_wait": "Préparation…" if i18n.get_lang()=="fr" else "Preparing…",
         "export_fail": "Export impossible : attendez le chargement des tuiles ou choisissez le fond sobre." if i18n.get_lang()=="fr" else "Export unavailable: wait for tiles to load or choose the plain base map.",
     }
     return (GABARIT
+            .replace("JPEG ↓", ("Télécharger JPEG ↓" if i18n.get_lang()=="fr" else "Download JPEG ↓"))
+            .replace("PDF ↓", ("Télécharger PDF ↓" if i18n.get_lang()=="fr" else "Download PDF ↓"))
             .replace("__LEAFLET__", _leaflet())
             .replace("__EXPORT_JS__", open(os.path.join(APP_DIR, "carte_export.js"), encoding="utf-8").read())
             .replace("__DONNEES__", json.dumps(d, ensure_ascii=False,
