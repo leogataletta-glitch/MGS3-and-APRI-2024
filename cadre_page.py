@@ -2624,9 +2624,17 @@ def _chaine_indicateur(x):
         _case(3, T("cad_e3_t"), sc_v, sc_x),
         _case(4, T("cad_e4_t"), T("cad_ex_p_v", p=_fmt(x["poids"], 1)),
               T("cad_ex_p_x")),
-        _case(5, T("cad_e5_t"),
-              "—" if dsc is None else _fmt(dsc, 2) + " / 10",
-              T("cad_ex_dim_x"), sous=T(x["dim"]))])
+        _case(5, "Score × poids" if i18n.get_lang() == "fr" else "Score × weight",
+              "—" if x["score"] is None else _fmt(x["score"] * x["poids"], 2),
+              "Terme ajouté à la somme pondérée, avant division par la somme des poids. Ce n’est pas un score sur 10." if i18n.get_lang() == "fr" else "Term added to the weighted sum, before dividing by the sum of weights. This is not a score out of 10."),
+    ]) + (
+        '<div style="margin:24px 0;padding:16px 0;border-top:1px solid #edf1ee">'
+        + '<p style="font:20px Georgia,serif;color:#245b43">'
+        + _e("Score global de la dimension" if i18n.get_lang() == "fr" else "Overall dimension score")
+        + ' : ' + ("—" if dsc is None else _fmt(dsc, 2) + " / 10") + '</p><p>'
+        + _e(T(x["dim"])) + ' · '
+        + _e("Moyenne pondérée de tous les indicateurs renseignés de cette dimension : somme des (scores × poids) ÷ somme des poids. Les indicateurs sans score sont exclus." if i18n.get_lang() == "fr" else "Weighted mean of all scored indicators in this dimension: sum of (scores × weights) ÷ sum of weights. Indicators without scores are excluded.")
+        + '</p></div>')
 
 
 def _normalisations(x=None):
