@@ -2265,7 +2265,7 @@ MIN_SECTION = 120
 # barèmes réels sans dire ce qu'ils produisent. Les deux se lisent maintenant
 # au même endroit, et la chaîne tourne sur l'indicateur qu'on a ouvert.
 VUES = ("mesure", "sources", "indicateurs", "boucles",
-        "environnement", "acquisition", "document")
+        "acquisition", "document")
 # `_LIB` porte les intitulés longs ; ils ne sont plus rendus depuis que la
 # barre a pris les titres courts, mais la table reste la carte des sept vues.
 _LIB = {"mesure": "cad_o1", "sources": "cad_o2",
@@ -2313,7 +2313,7 @@ def render(doc_complet=None):
     .cad-weight{flex-direction:column-reverse;gap:7px;align-items:flex-end;}.cad-weight-track{width:65px;}
     .st-key-cad_model .cad-dl-n{font-size:14px;}.st-key-cad_model .cad-dh{letter-spacing:0;font-size:9px;word-break:normal!important;overflow-wrap:normal!important;text-align:left!important;}.cad-page-title{font-size:29px;}}
     </style>""",unsafe_allow_html=True)
-    names = dict(zip(VUES, ('Modèle','Sources','Calcul des scores','Boucles','Environnement','À compléter','Document complet') if fr else ('Model','Sources','Score calculation','Feedback loops','Environment','To complete','Full document')))
+    names = dict(zip(VUES, ('Modèle','Sources','Calcul des scores','Boucles','À compléter','Document complet') if fr else ('Model','Sources','Score calculation','Feedback loops','To complete','Full document')))
 
     if not stats:
         st.info(T("e_absent"))
@@ -2736,10 +2736,6 @@ def _v_indicateurs():
         "cad_i_vue", ["bareme", "meta"],
         titre=lambda c: T("cad_iv_" + c),
         description=lambda c: T("cad_ivd_" + c), defaut="bareme")
-    if vue == "meta":
-        _v_metadonnees(tous)
-        return
-
     g, d = st.columns([1, 2])
     with g:
         dim = st.selectbox(T("cad_ind_dim"), [None] + ORDRE, key="cad_i_dim",
@@ -2759,6 +2755,10 @@ def _v_indicateurs():
         cle = st.selectbox(T("cad_ind_ind"), cles, key="cad_i_ind",
                            index=None, placeholder=T("cad_ind_tous"),
                            format_func=lambda k: par_cle[k]["nom"])
+
+    if vue == "meta":
+        _v_metadonnees([par_cle[cle]] if cle is not None else [])
+        return
 
     if cle is None:
         st.markdown(f'<p class="cad-attr-x" style="margin:10px 0 18px">'
@@ -2935,45 +2935,13 @@ def _references_fiche(x, lang):
 
 
 def _v_metadonnees(tous):
-    """Les cent vingt-huit indicateurs et ce qu'on sait de chacun.
-
-    UN INDICATEUR PAR LIGNE, DÉPLIABLE SUR PLACE. Cent vingt-huit fiches
-    ouvertes feraient trente écrans ; cent vingt-huit liens vers une autre
-    page feraient perdre la liste à chaque consultation. Le dépliant garde
-    les deux : on parcourt la liste, on ouvre celui qu'on cherche, on le
-    referme, on est toujours au même endroit.
-
-    TROIS QUESTIONS, TOUJOURS DANS LE MÊME ORDRE. Ce qui est mesuré, comment
-    c'est obtenu, pourquoi cela compte pour la résilience. La troisième est
-    la seule qui ne soit pas toujours renseignée, et quand elle ne l'est pas
-    la fiche le dit au lieu de la combler.
-    """
+    """Afficher uniquement la fiche de l'indicateur sélectionné."""
+    if not tous:
+        st.info(T("cad_ind_vide"))
+        return
     lang = i18n.get_lang()
     par_ligne, graphe = _causal()
-    c1, c2 = st.columns([1, 1.2])
-    with c1:
-        dim = st.selectbox(T("cad_ind_dim"), [None] + ORDRE, key="cad_m_dim",
-                           format_func=lambda c: (T("cad_ind_all")
-                                                  if c is None else T(c)))
-    with c2:
-        etat = st.selectbox(
-            T("cad_meta_etat"), [None, "calcule", "partiel", "absent"],
-            key="cad_m_etat",
-            format_func=lambda c: (T("cad_meta_etat_tous") if c is None
-                                   else T("aq_e_" + c)))
-    lot = [x for x in tous
-           if (dim is None or x["dim"] == dim)
-           and (etat is None or x.get("etat") == etat)]
-    st.markdown(f'<p class="cad-attr-x" style="margin:6px 0 10px">'
-                f'{_e(T("cad_meta_x", n=len(lot), t=len(tous)))}</p>',
-                unsafe_allow_html=True)
-    if not lot:
-        return
-
-    pages = (len(lot) + 7) // 8
-    if pages > 1:
-        page = st.selectbox("Page", list(range(1, pages + 1)), key="cad_meta_page")
-        lot = lot[(page - 1) * 8:page * 8]
+    lot = tous[:1]
     st.markdown("""<style>
 .stApp .st-key-zone_page .cad-meta-label{font:600 12px/1.5 Arial,sans-serif;color:#65796c;margin:0 0 8px;}
 .stApp .st-key-zone_page .cad-meta-text{font:400 15px/1.7 Arial,sans-serif;color:#40564a;margin:0 0 12px;max-width:62ch;}
@@ -3012,7 +2980,7 @@ def _v_metadonnees(tous):
         refs = _references_fiche(x, lang)
         bands = _bandes(x.get("echelle") or "")
         scale = '<table><thead><tr><th>' + ("Score" if lang == "fr" else "Score") + '</th><th>' + ("Valeur mesurée" if lang == "fr" else "Measured value") + '</th></tr></thead><tbody>' + ''.join(f'<tr><td>{_e(str(k))}</td><td>{_e(str(v))}</td></tr>' for k,v in bands.items()) + '</tbody></table>' if bands else '<p>' + _e(x.get("echelle") or ("Barème non renseigné." if lang == "fr" else "Scale not recorded.")) + '</p>'
-        with st.expander(nom):
+        with st.expander(nom, expanded=True):
             st.markdown('<article class="md-sheet"><h2>' + _e(nom) + '</h2><p class="md-status">' + _e(T("aq_e_" + et)) + '</p><div class="md-metrics">'
                 + '<section><p>' + _e(T("cad_meta_valeur")) + '</p><strong>' + _e(value) + '</strong></section>'
                 + '<section><p>' + _e(T("cad_meta_score")) + '</p><strong>' + _e(score) + '</strong><p class="md-muted">' + ("Score normalisé de cet indicateur" if lang == "fr" else "Normalized score of this indicator") + '</p></section></div><div class="md-body">'

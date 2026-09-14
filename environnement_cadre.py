@@ -382,49 +382,6 @@ def render(complement=None):
     if complement is not None:
         complement()
 
-    # ===================== STRATE 3 — APPROFONDIR =========================
-    # LE TITRE D'ÉTAGE SUFFIT. Les deux lignes qui le suivaient disaient que
-    # ce qui vient est la note de cadrage repliée et que ses seuils sont
-    # reproduits tels quels : la première décrit ce que les volets montrent
-    # déjà d'eux-mêmes, la seconde s'excusait d'un français que le lecteur
-    # voit sans qu'on le lui annonce.
-    st.markdown(f'<div class="ev-etage">{_e(T("env_s3"))}</div>',
-                unsafe_allow_html=True)
-
-    with st.expander(T("env_v_terrain")):
-        st.markdown(f'<p class="ev-x">{_e(c["intro"]["bareme"])}</p>',
-                    unsafe_allow_html=True)
-        _bloc_terrain(c)
-
-    with st.expander(T("env_v_veg")):
-        st.markdown(_tableau(c["vegetation"]), unsafe_allow_html=True)
-
-    with st.expander(T("env_v_frag")):
-        st.markdown(f'<p class="ev-x">{_e(c["intro"]["fragmentation"])}</p>',
-                    unsafe_allow_html=True)
-        st.markdown(_tableau(c["fragmentation"]), unsafe_allow_html=True)
-
-    with st.expander(T("env_v_conn")):
-        st.markdown(f'<p class="ev-x">{_e(c["intro"]["connectivite"])}</p>',
-                    unsafe_allow_html=True)
-        st.markdown(_tableau(c["connectivite"]), unsafe_allow_html=True)
-
-    with st.expander(T("env_v_cot")):
-        _bloc_cotier(c)
-
-    with st.expander(T("env_v_hydro")):
-        st.markdown(f'<p class="ev-x">'
-                    f'{_e(c["intro"]["pression"])}</p>'
-                    '<ul class="ev-puce" style="margin-top:8px">'
-                    + "".join(f'<li>{_e(p)}</li>' for p in c["hydro"])
-                    + '</ul>', unsafe_allow_html=True)
-
-    with st.expander(T("env_v_men")):
-        st.markdown(f'<p class="ev-x">'
-                    f'{_e(c["intro"]["menages2"])}</p>'
-                    '<ul class="ev-puce" style="margin-top:8px">'
-                    + "".join(f'<li>{_e(p)}</li>' for p in c["menages"])
-                    + '</ul>', unsafe_allow_html=True)
 
 
 def render_terrain():
@@ -486,3 +443,48 @@ def render_enquete():
         '<ul class="ev-puce" style="margin-top:8px">'
         + "".join(f'<li>{_e(p)}</li>' for p in c["menages"]) + '</ul>',
         unsafe_allow_html=True)
+
+    with st.expander(T("env_v_terrain")):
+        st.markdown(f'<p class="ev-x">{_e(c["intro"]["bareme"])}</p>',
+                    unsafe_allow_html=True)
+        _bloc_terrain(c)
+
+
+def render_satellite():
+    """Les cinq rubriques de méthode consultables dans Results → Satellite."""
+    c = _contenu(i18n.get_lang())
+    if not c or not c.get("intro"):
+        return
+    st.markdown(STYLE, unsafe_allow_html=True)
+    # ===================== STRATE 3 — APPROFONDIR =========================
+    # LE TITRE D'ÉTAGE SUFFIT. Les deux lignes qui le suivaient disaient que
+    # ce qui vient est la note de cadrage repliée et que ses seuils sont
+    # reproduits tels quels : la première décrit ce que les volets montrent
+    # déjà d'eux-mêmes, la seconde s'excusait d'un français que le lecteur
+    # voit sans qu'on le lui annonce.
+    st.markdown(f'<div class="ev-etage">{_e(T("env_s3"))}</div>',
+                unsafe_allow_html=True)
+
+    with st.expander(T("env_v_veg")):
+        st.markdown(_tableau(c["vegetation"]), unsafe_allow_html=True)
+
+    with st.expander(T("env_v_frag")):
+        st.markdown(f'<p class="ev-x">{_e(c["intro"]["fragmentation"])}</p>',
+                    unsafe_allow_html=True)
+        st.markdown(_tableau(c["fragmentation"]), unsafe_allow_html=True)
+
+    with st.expander(T("env_v_conn")):
+        st.markdown(f'<p class="ev-x">{_e(c["intro"]["connectivite"])}</p>',
+                    unsafe_allow_html=True)
+        st.markdown(_tableau(c["connectivite"]), unsafe_allow_html=True)
+
+    with st.expander(T("env_v_cot")):
+        _bloc_cotier(c)
+
+    with st.expander(T("env_v_hydro")):
+        st.markdown(f'<p class="ev-x">'
+                    f'{_e(c["intro"]["pression"])}</p>'
+                    '<ul class="ev-puce" style="margin-top:8px">'
+                    + "".join(f'<li>{_e(p)}</li>' for p in c["hydro"])
+                    + '</ul>', unsafe_allow_html=True)
+

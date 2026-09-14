@@ -2734,6 +2734,7 @@ with _c_contenu:
                 format_func=lambda c: T("ra_src_" + c)) or "menages"
 
             if _src == "satellite":
+                environnement_cadre.render_satellite()
                 satellite_page.render()
             elif _src in ("institutions", "biodiversite"):
                 _msg = T("ra_attente_inst" if _src == "institutions"
