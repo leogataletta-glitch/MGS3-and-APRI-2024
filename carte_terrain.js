@@ -80,6 +80,10 @@
    const coast=(D.terre||[]).flatMap(o=>o.a||[]).filter(a=>a.length>2).map(ring);
    gl.addSource('white-ocean',{type:'geojson',data:fc([feature({type:'Polygon',coordinates:[[[ -180,-85],[180,-85],[180,85],[-180,85],[-180,-85]],...coast]})])});
    gl.addLayer({id:'white-ocean',type:'fill',source:'white-ocean',paint:{'fill-color':'#ffffff','fill-opacity':1,'fill-antialias':false}});
+   // Feather the land into the white page; keep study overlays above the fade.
+   // Render in WebGL so the same soft coastline appears in JPEG/PDF exports.
+   gl.addSource('coast-fade',{type:'geojson',data:fc([feature({type:'MultiLineString',coordinates:coast})])});
+   gl.addLayer({id:'coast-fade',type:'line',source:'coast-fade',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#ffffff','line-width':12,'line-blur':12,'line-opacity':1}});
    for(const [k,source]of Object.entries({paysage:'paysage_ga',paysage_sud:'paysage_sud',ap:'aires_protegees',sections:'sections',deps:'departements',pays:'pays'})){
     const color=C[k]||C.paysage;
     if(['paysage','paysage_sud','ap','sections'].includes(k))add(k,polygons(D[source]),'fill',{'fill-color':color,'fill-opacity':k==='sections'?.25:.08});
