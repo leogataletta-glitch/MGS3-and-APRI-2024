@@ -18,13 +18,13 @@
    const parentWindow=window.parent,main=frame.closest('[data-testid="stMain"]');
    let resizeFrame;
    const fitHeight=()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>{
-    const top=frame.getBoundingClientRect().top+(main?.scrollTop||0);
-    const height=Math.max(480,Math.round(parentWindow.innerHeight-Math.max(0,top)-12));
-    if(Math.abs(frame.getBoundingClientRect().height-height)>1)frame.style.setProperty('height',height+'px','important');
+    const rect=frame.getBoundingClientRect(),scale=rect.height/frame.offsetHeight||1;
+    const height=Math.max(480,Math.round((parentWindow.innerHeight-Math.max(0,rect.top)-12)/scale));
+    if(Math.abs(frame.offsetHeight-height)>1)frame.style.setProperty('height',height+'px','important');
    });};
-   parentWindow.addEventListener('resize',fitHeight);fitHeight();
+   parentWindow.addEventListener('resize',fitHeight);main?.addEventListener('scroll',fitHeight,{passive:true});fitHeight();
    const observer=new ResizeObserver(fitHeight);observer.observe(parentWindow.document.documentElement);
-   window.addEventListener('pagehide',()=>{parentWindow.removeEventListener('resize',fitHeight);observer.disconnect();cancelAnimationFrame(resizeFrame);},{once:true});
+   window.addEventListener('pagehide',()=>{parentWindow.removeEventListener('resize',fitHeight);main?.removeEventListener('scroll',fitHeight);observer.disconnect();cancelAnimationFrame(resizeFrame);},{once:true});
   }
  }catch(error){/* Cross-origin embedding retains the initial usable height. */}
  const polish=document.createElement('style');polish.textContent=`
