@@ -2512,6 +2512,7 @@ st.markdown("""
 
 with _menu_mobile:
     with st.popover("☰ Menu", use_container_width=True):
+        st.toggle("Lecture confortable" if i18n.get_lang() == "fr" else "Comfortable reading", key="apri_lecture_mobile", value=st.session_state.get("apri_lecture_confort", False), on_change=lambda: st.session_state.update(apri_lecture_confort=st.session_state["apri_lecture_mobile"]))
         for _fam, _entrees in _NAV_FAMILLES:
             if _fam:
                 st.caption(T(_fam))
@@ -2573,6 +2574,18 @@ _c_contenu = _col_page.container(key="zone_page")
 _zone_langue = _col_page.container(
     key=("zone_langue_h" if st.session_state["app_mode"] == MODE_PORTAIL
          else "zone_langue_r"))
+with _zone_nav:
+    st.toggle("Lecture confortable" if i18n.get_lang() == "fr" else "Comfortable reading", key="apri_lecture_confort", help="Met le texte en relief au survol." if i18n.get_lang() == "fr" else "Highlights text when you hover over it.")
+
+# Paragraph backgrounds are painted without changing their dimensions.
+if st.session_state.get("apri_lecture_confort", False):
+    st.markdown("""<style>
+    .stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p{transition:background .15s,box-shadow .15s;border-radius:6px;}
+    .stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p:hover{background:#edf5ef!important;color:#244b37!important;box-shadow:0 0 0 8px #edf5ef,0 4px 12px 5px #123d2c10;}
+    .stApp .st-key-zone_page [data-testid="stButton"] p:hover{background:transparent!important;box-shadow:none!important;}
+    @media(hover:none){.stApp .st-key-zone_page [data-testid="stMarkdownContainer"] p{background:#f3f7f3;}}
+    </style>""",unsafe_allow_html=True)
+
 with _zone_langue:
     _cl = st.columns(2)
     # L'ORDRE SUIT LA LANGUE PAR DÉFAUT : la langue servie est en tête.
