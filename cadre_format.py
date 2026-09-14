@@ -38,3 +38,20 @@ def appliquer(active):
     .stApp.stApp :is(.st-key-cad_i_dim,.st-key-cad_i_ind) [data-baseweb="select"]>div{{min-height:56px!important;background:white!important;border:1px solid #aeb5bd!important;border-radius:10px!important;font-size:18px!important;}}
     @media(max-width:600px){{{root} [role="radiogroup"]>label p:first-child{{font-size:15px!important;}}}}
     </style>''', unsafe_allow_html=True)
+    if st.session_state.get('cad_format_choice') == 'Format 2':
+        sub = '.stApp.stApp .st-key-zone_page .st-key-ong_cad_i_vue'
+        st.markdown(f'''<style>
+        {root} [role="radiogroup"]{{background:transparent!important;padding:0!important;gap:12px!important;}}
+        {root} [role="radiogroup"]>label{{min-height:126px!important;border:1px solid #dce0e4!important;border-radius:9px!important;background:white!important;padding-top:67px!important;}}
+        {root} [role="radiogroup"]>label::before{{top:20px;}}
+        {root} [role="radiogroup"]>label:nth-child({active}){{background:#eef4ef!important;border-color:#1f6549!important;}}
+        .stApp.stApp .cad-explorer-title{{font-size:clamp(30px,3vw,46px)!important;margin:35px 0 8px!important;}}
+        .stApp.stApp p.cad-explorer-subtitle{{font-size:22px!important;color:#6b7280!important;line-height:1.5!important;margin:0 0 24px!important;text-align:left!important;}}
+        {sub} [role="radiogroup"]{{border:0!important;background:white!important;border-radius:0!important;margin-bottom:0!important;}}
+        {sub} [role="radiogroup"]>label{{border-radius:0!important;border-bottom:3px solid transparent!important;}}
+        {sub} [role="radiogroup"]>label:has(input:checked){{background:white!important;border-bottom-color:#176344!important;}}
+        {sub} [role="radiogroup"]>label:has(input:checked) :is(p,strong){{color:#176344!important;}}
+        .stApp.stApp [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] .st-key-cad_i_dim){{background:#f7f8f7!important;border:1px solid #e7e9eb;border-radius:10px;padding:26px 28px!important;}}
+        .stApp.stApp .st-key-cad_i_ind [data-baseweb="select"]>div:focus-within{{border-color:#176344!important;box-shadow:0 0 0 1px #176344!important;}}
+        @media(max-width:600px){{.stApp.stApp p.cad-explorer-subtitle{{font-size:17px!important;}}}}
+        </style>''', unsafe_allow_html=True)

@@ -2314,6 +2314,8 @@ _DESC = {"mesure": "cad_d1", "sources": "cad_d2",
 
 
 def render(doc_complet=None):
+    st.radio("Format", ["Format 1", "Format 2"], horizontal=True,
+             key="cad_format_choice", label_visibility="collapsed")
     stats = _stats()
     st.markdown(STYLE.replace("__BANDES__", _bandes_css()) + IRLA_SCALE_STYLE,
                 unsafe_allow_html=True)
@@ -2768,6 +2770,8 @@ def _v_indicateurs():
     # seul écran aurait obligé chacun à traverser la réponse de l'autre.
     fr = i18n.get_lang() == "fr"
     st.markdown('<h2 class="cad-explorer-title">'+('Explorer un indicateur' if fr else 'Explore an indicator')+'</h2>', unsafe_allow_html=True)
+    if st.session_state.get("cad_format_choice") == "Format 2":
+        st.markdown('<p class="cad-explorer-subtitle">'+('Comprendre sa mesure, son barème et sa contribution à la résilience.' if fr else 'Understand its measurement, scale and contribution to resilience.')+'</p>', unsafe_allow_html=True)
     vue = onglets.barre(
         "cad_i_vue", ["bareme", "meta"],
         titre=lambda c: T("cad_iv_" + c),
@@ -2790,7 +2794,7 @@ def _v_indicateurs():
     with d:
         cle = st.selectbox(T("cad_ind_ind"), cles, key="cad_i_ind",
                            index=None, placeholder=T("cad_ind_tous"),
-                           format_func=lambda k: par_cle[k]["nom"])
+                           format_func=lambda k: (par_cle[k]["nom"] + " · " + T(par_cle[k]["dim"]) if st.session_state.get("cad_format_choice") == "Format 2" else par_cle[k]["nom"]))
 
     if vue == "meta":
         _v_metadonnees([par_cle[cle]] if cle is not None else [])
