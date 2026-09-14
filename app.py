@@ -2340,10 +2340,11 @@ _CSS_ICONES_NAV = "<style>" + "".join(
 
 def _entree_nav(mode, icone, prefix="nav"):
     actif = st.session_state["app_mode"] == mode
-    st.button(LIBELLE_MODE[mode], key=f"{prefix}_{mode}",
-              on_click=_bascule, args=(mode,),
+    if st.button(LIBELLE_MODE[mode], key=f"{prefix}_{mode}",
               type="primary" if actif else "secondary",
-              use_container_width=True)
+              use_container_width=True):
+        _bascule(mode)
+        st.rerun()
 
 
 # ---------------------------------------------------------------- le ruban

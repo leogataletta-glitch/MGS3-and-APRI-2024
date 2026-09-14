@@ -33,6 +33,7 @@ def render(callback, mobile=False):
         cols = st.columns(2, gap='small')
         for col, code in zip(cols, ('en','fr')):
             with col:
-                st.button(code.upper(),key=f'{key}_{code}',
-                    on_click=callback,args=(code,),
-                    type='primary' if st.session_state['choix_langue']==code else 'secondary')
+                if st.button(code.upper(),key=f'{key}_{code}',
+                    type='primary' if st.session_state['choix_langue']==code else 'secondary'):
+                    callback(code)
+                    st.rerun()
