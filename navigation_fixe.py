@@ -14,13 +14,15 @@ def appliquer():
         min-height:0!important;align-items:stretch!important;
         overflow:visible!important;
       }
-      div[data-testid="stColumn"]:has(.st-key-zone_nav){
+      .stApp.stApp div[data-testid="stColumn"]:has(.st-key-zone_nav){
         height:calc(100dvh * var(--dz,1))!important;
         min-height:0!important;max-height:calc(100dvh * var(--dz,1))!important;
         margin-bottom:0!important;padding-bottom:0!important;
         align-self:stretch!important;
+        /* Match the original 1:5 columns, accounting for the left bleed. */
+        flex:0 0 calc(16.666667% + .3rem)!important;
       }
-      .st-key-zone_nav{
+      .stApp.stApp .st-key-zone_nav{
         position:relative!important;top:0!important;
         min-height:0!important;max-height:calc(100dvh * var(--dz,1))!important;
         overflow-y:auto!important;overscroll-behavior:contain!important;
