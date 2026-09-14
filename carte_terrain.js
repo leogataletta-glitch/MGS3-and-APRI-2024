@@ -11,6 +11,22 @@
  const css=document.createElement('link');css.rel='stylesheet';css.href='https://unpkg.com/maplibre-gl@6.9.0/dist/maplibre-gl.css';document.head.append(css);
  const styles=document.createElement('style');styles.textContent='#carte3d{position:absolute;left:0;top:0;bottom:0;right:302px;border-radius:12px;overflow:hidden;visibility:hidden}.maplibregl-popup-content{font:12px system-ui;color:#234c3e}.maplibregl-ctrl-attrib{font-size:10px}#panneau button[aria-pressed="true"]{background:#dceee3;border-color:#62967c;color:#164a35}@media(max-width:620px){#carte,#carte3d{right:0;bottom:50%}#panneau{height:48%;overflow-y:auto}#panneau .tete{flex-shrink:0}#liste{overflow:visible;flex:none}}';document.head.append(styles);
  const host=document.createElement('div');host.id='carte3d';document.getElementById('carte').after(host);
+ // Streamlit's initial iframe height is only a fallback: fill the viewport.
+ try{
+  const frame=window.frameElement;
+  if(frame){
+   const parentWindow=window.parent,main=frame.closest('[data-testid="stMain"]');
+   let resizeFrame;
+   const fitHeight=()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>{
+    const top=frame.getBoundingClientRect().top+(main?.scrollTop||0);
+    const height=Math.max(480,Math.round(parentWindow.innerHeight-Math.max(0,top)-12));
+    if(Math.abs(frame.getBoundingClientRect().height-height)>1)frame.style.setProperty('height',height+'px','important');
+   });};
+   parentWindow.addEventListener('resize',fitHeight);fitHeight();
+   const observer=new ResizeObserver(fitHeight);observer.observe(parentWindow.document.documentElement);
+   window.addEventListener('pagehide',()=>{parentWindow.removeEventListener('resize',fitHeight);observer.disconnect();cancelAnimationFrame(resizeFrame);},{once:true});
+  }
+ }catch(error){/* Cross-origin embedding retains the initial usable height. */}
  const polish=document.createElement('style');polish.textContent=`
  #panneau{font-family:system-ui,sans-serif;color:#294d40}
  #panneau .ligne .lib{font-size:13px;line-height:1.4}#panneau .ligne{min-height:30px}
@@ -42,6 +58,8 @@
    },layers:[{id:'background',type:'background',paint:{'background-color':'#ffffff'}},...['sat','plan','relief'].map(id=>({id,type:'raster',source:id,layout:{visibility:id==='sat'?'visible':'none'}}))],terrain:{source:'dem',exaggeration:1}}});
   gl.addControl(new m.NavigationControl({visualizePitch:true}),'top-left');gl.addControl(new m.ScaleControl({unit:'metric'}),'bottom-left');
   gl.getCanvas().addEventListener('webglcontextlost',fallback);
+  const mapResize=new ResizeObserver(()=>{gl.resize();carte.invalidateSize();});mapResize.observe(host);
+  window.addEventListener('pagehide',()=>mapResize.disconnect(),{once:true});
   const fc=features=>({type:'FeatureCollection',features});
   const feature=(geometry,properties={})=>({type:'Feature',geometry,properties});
   const polygons=items=>fc((items||[]).flatMap(o=>(o.a||[]).filter(a=>a.length>2).map(a=>feature({type:'Polygon',coordinates:[[...a,a[0]]]},o.p))));
