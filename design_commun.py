@@ -86,7 +86,14 @@ def ruban(marque, unep, institution):
                 + f'<img class="apri-unep" alt="UNEP" src="data:image/png;base64,{unep}"></header>', unsafe_allow_html=True)
 
 def appliquer():
-    st.markdown(STYLE + ERGONOMIE, unsafe_allow_html=True)
+    st.markdown(STYLE + ERGONOMIE + """<style>
+.stApp .st-key-zone_page [data-testid="stTabs"] [data-baseweb="tab-list"]{border:0!important;background:white!important;}
+.stApp .st-key-zone_page [data-testid="stTabs"] [data-baseweb="tab"]{background:white!important;border:0!important;min-height:48px!important;padding:10px 14px!important;box-shadow:none!important;}
+.stApp .st-key-zone_page [data-testid="stTabs"] [data-baseweb="tab"] p{font:500 12px/1.4 Arial,sans-serif!important;color:#75867c!important;}
+.stApp .st-key-zone_page [data-testid="stTabs"] [data-baseweb="tab"][aria-selected="true"]{background:white!important;box-shadow:inset 0 -2px 0 #78a58a!important;}
+.stApp .st-key-zone_page [data-testid="stTabs"] [data-baseweb="tab"][aria-selected="true"] p{color:#35664b!important;font-weight:600!important;}
+.stApp .st-key-zone_page [data-testid="stTabs"] [data-baseweb="tab-highlight"],.stApp .st-key-zone_page [data-testid="stTabs"] [data-baseweb="tab-border"]{display:none!important;}
+</style>""", unsafe_allow_html=True)
 
 def entete(page, fr=True):
     if page not in PAGES:

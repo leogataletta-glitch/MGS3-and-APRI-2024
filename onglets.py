@@ -195,9 +195,9 @@ def barre(cle, codes, titre, description=None, defaut=None, compact=False):
         # de style distingue par leur rang. Un <br> serait échappé.
         return f"**{t}**\n\n{d}" if d else f"**{t}**"
 
-    if cle == "exb_theme_ong":
+    if cle in {"exb_theme_ong", "cad_i_vue", "sat_cat"}:
         from i18n import get_lang
-        label = "Explorer par thème" if get_lang() == "fr" else "Explore by theme"
+        label = ("Explorer par thème" if get_lang() == "fr" else "Explore by theme") if cle != "cad_i_vue" else ("Explorer l’indicateur" if get_lang() == "fr" else "Explore the indicator")
         st.markdown(f'<p style="font:600 11px/1.5 Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#75867c;margin:8px 0 10px">{label}</p>', unsafe_allow_html=True)
     with st.container(key=_k):
         choix = st.radio(cle, codes, horizontal=True,
@@ -225,6 +225,13 @@ def barre(cle, codes, titre, description=None, defaut=None, compact=False):
         .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}){{background:white!important;box-shadow:inset 0 -2px 0 #78a58a!important;}}
         @media(max-width:1000px){{.stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]{{grid-template-columns:repeat(3,minmax(0,1fr))!important;}}}}
         @media(max-width:600px){{.stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]{{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}}}
+        </style>""", unsafe_allow_html=True)
+    if cle in {"cad_i_vue", "sat_cat"}:
+        st.markdown(f"""<style>
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{background:white!important;min-height:82px!important;padding:10px 12px!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:first-child{{font-size:11px!important;letter-spacing:.025em!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:not(:first-child){{font-size:11px!important;color:#859087!important;}}
+        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}){{background:white!important;box-shadow:inset 0 -2px 0 #78a58a!important;}}
         </style>""", unsafe_allow_html=True)
     return choix
 
