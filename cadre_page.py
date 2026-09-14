@@ -2191,7 +2191,6 @@ def _sources(extras=None):
         blocs.append(
             '<div class="cad-so-b">'
             '<div class="cad-so-h">'
-            f'<span class="cad-so-n">{i:02d}</span>'
             f'<span class="cad-so-t">{_e(T(k + "_t"))}</span></div>'
             f'<p class="cad-so-x">{_e(T(k + "_x"))}</p>'
             + extras.get(k, "")
