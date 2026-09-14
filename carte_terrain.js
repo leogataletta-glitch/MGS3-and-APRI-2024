@@ -11,6 +11,19 @@
  const css=document.createElement('link');css.rel='stylesheet';css.href='https://unpkg.com/maplibre-gl@6.9.0/dist/maplibre-gl.css';document.head.append(css);
  const styles=document.createElement('style');styles.textContent='#carte3d{position:absolute;left:0;top:0;bottom:0;right:302px;border-radius:12px;overflow:hidden;visibility:hidden}.maplibregl-popup-content{font:12px system-ui;color:#234c3e}.maplibregl-ctrl-attrib{font-size:10px}#panneau button[aria-pressed="true"]{background:#dceee3;border-color:#62967c;color:#164a35}@media(max-width:620px){#carte,#carte3d{right:0;bottom:50%}#panneau{height:48%;overflow-y:auto}#panneau .tete{flex-shrink:0}#liste{overflow:visible;flex:none}}';document.head.append(styles);
  const host=document.createElement('div');host.id='carte3d';document.getElementById('carte').after(host);
+ const polish=document.createElement('style');polish.textContent=`
+ #panneau{font-family:system-ui,sans-serif;color:#294d40}
+ #panneau .ligne .lib{font-size:13px;line-height:1.4}#panneau .ligne{min-height:30px}
+ #panneau button{font-size:12px;min-height:30px}#panneau .titre{color:#345e4d;font-size:12px}
+ #panneau input[type=checkbox],#panneau input[type=radio]{accent-color:#27694e;width:15px;height:15px}
+ #panneau :focus-visible{outline:2px solid #27694e;outline-offset:3px}
+ .map-camera{margin-top:10px;padding:9px 10px;border-radius:9px;background:#f3f7f4}
+ .map-camera summary{font-size:12px;font-weight:600;cursor:pointer;color:#2c604b}
+ .map-explore{display:block;margin:6px 8px 12px;font-size:12px;font-weight:600;color:#315d4a}
+ .map-explore select{display:block;margin-top:7px;padding:9px;width:100%;border:1px solid #d8e5dc;border-radius:8px;background:white;color:#284c3e;font:13px system-ui}
+ #liste{scrollbar-width:thin;scrollbar-color:#b5c9bc transparent}
+ .maplibregl-popup-content{border-radius:10px;padding:14px;box-shadow:0 4px 18px #234c3e22}
+ `;document.head.append(polish);
  let gl,ready=false,failed=false;
  function fallback(){if(failed)return;failed=true;window.apriTerrain=null;host.remove();if(gl)gl.remove();document.getElementById('carte').style.visibility='';carte.invalidateSize();top.disabled=tilt.disabled=true;note.textContent=fr?'Relief indisponible : la carte 2D reste accessible.':'Terrain unavailable: the 2D map remains available.';}
  const timeout=setTimeout(()=>{if(!ready)fallback();},25000);
@@ -67,6 +80,16 @@
    const state=()=>{top.setAttribute('aria-pressed',String(gl.getPitch()<1));tilt.setAttribute('aria-pressed',String(gl.getPitch()>=1));};gl.on('moveend',state);state();
    top.onclick=()=>gl.easeTo({pitch:0,bearing:0,duration:700});
    tilt.onclick=()=>gl.easeTo({pitch:60,duration:900});
+   // Move to a territory without changing the user's visible layers.
+   const explore=document.createElement('label');explore.className='map-explore';
+   explore.textContent=fr?'Aller à une section':'Go to a section';
+   const destination=document.createElement('select');destination.setAttribute('aria-label',explore.textContent);
+   const placeholder=new Option(fr?'Choisir une section…':'Choose a section…','');destination.add(placeholder);
+   [...new Set((D.sections||[]).map(o=>o.p.section))].sort().forEach(name=>destination.add(new Option(name,name)));
+   destination.onchange=()=>{if(!destination.value)return;const points=(D.sections||[]).filter(o=>o.p.section===destination.value).flatMap(o=>(o.a||[]).flat());if(!points.length)return;const bounds=points.reduce((b,p)=>b.extend(p),new m.LngLatBounds(points[0],points[0]));gl.fitBounds(bounds,{padding:55,maxZoom:15,duration:1000});};
+   explore.append(destination);document.getElementById('liste').prepend(explore);
+   const detail=document.createElement('details');detail.className='map-camera';
+   const summary=document.createElement('summary');summary.textContent=fr?'Réglages du relief':'Terrain settings';detail.append(summary);controls.after(detail);detail.append(note);
    note.textContent=fr?'Maintenez le clic droit et glissez verticalement pour incliner, horizontalement pour tourner.':'Hold the right mouse button: drag vertically to tilt, horizontally to rotate.';
    function slider(label,min,max,step,value,format,change){
     const box=document.createElement('label');box.style.cssText='display:block;font-size:11px;color:#365b49;margin-top:9px';
@@ -76,6 +99,7 @@
    }
    const angle=slider(fr?'Inclinaison':'Tilt',0,80,1,0,v=>Math.round(v)+'°',v=>{gl.stop();gl.setPitch(v);});
    gl.on('pitch',()=>{angle.input.value=gl.getPitch();angle.out.textContent=angle.format(gl.getPitch());});
+   tilt.addEventListener('click',()=>{detail.open=true;});
    slider(fr?'Hauteur du relief':'Relief height',1,3,.1,1,v=>'×'+v.toFixed(1),v=>gl.setTerrain({source:'dem',exaggeration:v}));
    const ratio=document.createElement('div');ratio.style.cssText='font-size:10px;color:#6c7c73;margin-top:4px';ratio.textContent=fr?'×1 : sans exagération · ×2 : hauteurs doublées':'×1: no exaggeration · ×2: doubled heights';note.before(ratio);
    if(installerHD)installerHD(gl);
