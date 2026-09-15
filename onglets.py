@@ -233,5 +233,17 @@ def barre(cle, codes, titre, description=None, defaut=None, compact=False):
         .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:not(:first-child){{font-size:11px!important;color:#859087!important;}}
         .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}){{background:white!important;box-shadow:inset 0 -2px 0 #78a58a!important;}}
         </style>""", unsafe_allow_html=True)
+    if cle in {'cad_vue', 'ra_vue', 'bcl_vue', 'int_vue'}:
+        import onglets_principaux
+        with st.container(key=_k + '_description'):
+            # CSS targets the original radio container; the panel is its sibling.
+            onglets_principaux.render(_k, codes, choix, None)
+        with st.container(key=_k + '_detail'):
+            from html import escape
+            st.markdown('<div class="main-tab-description"><p>'+escape(description(choix) if description else titre(choix))+'</p></div>',unsafe_allow_html=True)
+        st.markdown(f'''<style>
+        .stApp.stApp.stApp.stApp .st-key-{_k}_detail .main-tab-description{{background:white;border:1px solid #d9dfe1;border-top:0;border-radius:0 0 18px 18px;padding:25px 30px;margin:-16px 0 20px;}}
+        .stApp.stApp.stApp.stApp .st-key-{_k}_detail .main-tab-description p{{font:400 18px/1.5 Arial,sans-serif!important;color:#64716c!important;margin:0!important;}}
+        </style>''',unsafe_allow_html=True)
     return choix
 
