@@ -58,6 +58,10 @@ def appliquer():
       .stApp .st-key-zone_ruban .bandeau-haut.bandeau-enveloppe{
         width:100%!important;max-width:100%!important;margin-right:0!important;
       }
+      /* Keep a compact gutter between the sidebar and ordinary pages. */
+      .stApp.stApp div[data-testid="stHorizontalBlock"]:has(> div[data-testid="stColumn"] .st-key-zone_nav):not(:has(.st-key-territory_map)):not(:has(.a2-hero)){
+        gap:12px!important;
+      }
       /* Overlap the map and navigation without altering the sidebar width. */
       div[data-testid="stHorizontalBlock"]:has(.st-key-territory_map):has(> div[data-testid="stColumn"] .st-key-zone_nav){
         gap:0!important;
