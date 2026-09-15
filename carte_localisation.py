@@ -688,8 +688,6 @@ def html(d):
         "export_fail": _locale_text("Export impossible : attendez le chargement des tuiles ou choisissez le fond sobre." if i18n.get_lang()=="fr" else "Export unavailable: wait for tiles to load or choose the plain base map."),
     }
     return (GABARIT
-            .replace("JPEG ↓", (_locale_text("Télécharger JPEG ↓" if i18n.get_lang()=="fr" else "Download JPEG ↓")))
-            .replace("PDF ↓", (_locale_text("Télécharger PDF ↓" if i18n.get_lang()=="fr" else "Download PDF ↓")))
             .replace("__T_LOADING_MAP__", _locale_text("Chargement de la carte…" if i18n.get_lang()=="fr" else "Loading map…"))
             .replace("__LEAFLET__", _leaflet())
             .replace("__HD_JS__", open(os.path.join(APP_DIR, "carte_haiti_hd.js"), encoding="utf-8").read().replace("__HD_INDEX__", open(os.path.join(APP_DIR, "haiti_hd_index.json"), encoding="utf-8").read()))
