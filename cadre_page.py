@@ -3232,7 +3232,7 @@ def _v_boucles():
     # Illustrative dynamics are isolated from the calibrated indicator scores.
     import streamlit.components.v1 as components
     from reforestation_demo import document
-    components.html(_locale_html(document(fr)), height=850, scrolling=True)
+    components.html(_locale_html(document(fr)), height=650, scrolling=True)
 
     # ---- comment lire une boucle -----------------------------------------
     signes = "".join(
