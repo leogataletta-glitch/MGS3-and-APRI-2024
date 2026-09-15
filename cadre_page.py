@@ -2777,11 +2777,15 @@ def _v_indicateurs():
     # différentes posées par deux lecteurs différents, et les empiler sur un
     # seul écran aurait obligé chacun à traverser la réponse de l'autre.
     fr = i18n.get_lang() == "fr"
-    vue = onglets.barre(
-        "cad_i_vue", ["bareme", "meta"],
-        titre=lambda c: T("cad_iv_" + c),
-        description=lambda c: T("cad_ivd_" + c), defaut="bareme")
-    g, d = st.columns([2, 3])
+    st.markdown("""<style>
+    .stApp.stApp.stApp.stApp.stApp .st-key-zone_page [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] .st-key-cad_i_dim){border:0!important;padding:0!important;background:transparent!important;box-shadow:none!important;align-items:flex-start!important;gap:14px!important;}
+    </style>""", unsafe_allow_html=True)
+    v, g, d = st.columns([1.25, 1.25, 2.5], gap="small")
+    with v:
+        vue = onglets.barre(
+            "cad_i_vue", ["bareme", "meta"],
+            titre=lambda c: T("cad_iv_" + c),
+            description=lambda c: T("cad_ivd_" + c), defaut="bareme")
     with g:
         dim = st.selectbox(_locale_text(T("cad_ind_dim")), [None] + ORDRE, key="cad_i_dim",
                            format_func=_locale_formatter(lambda c: (T("cad_ind_all") if c is None
