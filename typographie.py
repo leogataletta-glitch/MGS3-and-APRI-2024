@@ -17,5 +17,5 @@ def appliquer(mode=None):
     {root} .st-key-menu_mobile {text}{exclude}{{font-size:var(--apri-nav-size)!important;}}
     {root} .st-key-zone_nav {text}{exclude}.nav-famille{{font-size:12px!important;text-align:center!important;}}
     {root} .st-key-zone_page :is([role="radiogroup"],[role="tablist"]) {text}{exclude}{{font-size:var(--apri-tab-size)!important;}}
-    {root} :is(.st-key-navigation_language_desktop,.st-key-navigation_language_mobile) button {text}{exclude}{{font-size:12px!important;}}
+    {root} :is(.st-key-navigation_language_desktop,.st-key-navigation_language_mobile) button {text}{exclude}{{font-size:10px!important;}}
     </style>''', unsafe_allow_html=True)
