@@ -6,11 +6,11 @@ def render(key, codes, selected, description=None):
     root = '.stApp' * 24 + ' .st-key-zone_page .st-key-' + key
     active = list(codes).index(selected) + 1
     st.markdown(f'''<style>
-    {root}{{position:relative!important;margin-top:16px!important;}}
+    {root}{{position:relative!important;margin-top:8px!important;}}
     .stApp.stApp.stApp.stApp.stApp .st-key-zone_page:has(.st-key-{key}){{padding-top:0!important;}}
     @media(min-width:1001px){{
       .stApp.stApp.stApp.stApp.stApp .st-key-zone_page:has(.st-key-{key}) [data-testid="stElementContainer"]:has(.apri-page-heading){{display:none!important;}}
-      {root}{{margin-top:24px!important;}}
+      {root}{{margin-top:16px!important;}}
     }}
     {root}::before,{root}::after{{display:none!important;}}
     .stApp.stApp.stApp.stApp.stApp .st-key-{key}_detail{{display:none!important;}}
