@@ -2597,6 +2597,8 @@ app_mode = st.session_state["app_mode"]
 # Chaque page reste écrite comme avant ; c'est le contexte qui change, en un
 # seul endroit, plutôt que quarante modules qui devraient savoir où ils sont.
 with _c_contenu:
+    import typographie
+    typographie.appliquer(app_mode)
     import design_commun
     if app_mode != MODE_PORTAIL:
         design_commun.appliquer()
