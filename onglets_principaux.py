@@ -3,7 +3,7 @@ import streamlit as st
 
 
 def render(key, codes, selected, description=None):
-    root = '.stApp' * 14 + ' .st-key-zone_page .st-key-' + key
+    root = '.stApp' * 24 + ' .st-key-zone_page .st-key-' + key
     active = list(codes).index(selected) + 1
     st.markdown(f'''<style>
     {root}{{position:relative!important;margin-top:16px!important;}}
