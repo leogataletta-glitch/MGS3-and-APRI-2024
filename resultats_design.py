@@ -25,6 +25,17 @@ def render(active, fr):
     {source} [role="radiogroup"]>label:has(input:checked) :is(p,strong),{theme} [role="radiogroup"]>label:has(input:checked) :is(p,strong){{color:white!important;font-weight:600!important;}}
     {source} [role="radiogroup"]>label:focus-within,{theme} [role="radiogroup"]>label:focus-within{{outline:2px solid #438d70!important;outline-offset:2px!important;}}
     {page} .st-key-exb_q_zone [data-baseweb="select"]>div{{min-height:50px!important;border:1px solid #cdd7d8!important;border-radius:12px!important;background:white!important;}}
+    /* Hide the native radio decoration while preserving the accessible input. */
+    {source} [role="radiogroup"]>label input[type="radio"]{{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;margin:0!important;}}
+    {source} [role="radiogroup"]>label input[type="radio"] + div{{display:none!important;}}
+    {source} [role="radiogroup"]>label::before,{source} [role="radiogroup"]>label::after{{display:none!important;}}
+    /* Match the floating white active card used by the main navigation. */
+    {source} [role="radiogroup"],{theme} [role="radiogroup"]{{border:0!important;background:white!important;overflow:visible!important;}}
+    {theme} [role="radiogroup"]::before,{theme} [role="radiogroup"]::after{{display:none!important;}}
+    {source} [role="radiogroup"]>label,{theme} [role="radiogroup"]>label{{background:white!important;border:1px solid transparent!important;border-radius:18px!important;}}
+    {source} [role="radiogroup"]>label:has(input:checked),{theme} [role="radiogroup"]>label:has(input:checked){{background:white!important;border:1px solid #dce2df!important;box-shadow:0 4px 14px #193c2526!important;}}
+    {source} [role="radiogroup"]>label:has(input:checked) :is(p,strong),{theme} [role="radiogroup"]>label:has(input:checked) :is(p,strong){{color:#104b3b!important;font-weight:600!important;}}
+    {source} [role="radiogroup"]>label>div:not(:has([data-testid="stMarkdownContainer"])){{display:none!important;}}
     @media(max-width:760px){{
       {source} [role="radiogroup"]{{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
       {source} [role="radiogroup"]>label{{flex:1 1 40%!important;}}
