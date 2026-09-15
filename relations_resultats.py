@@ -94,6 +94,18 @@ def render(cat):
     if not cat:
         st.info(t('Les réponses individuelles ne sont pas disponibles.', 'Individual responses are unavailable.'))
         return
+    import relations_guide
+    relations_guide.render(fr)
+    view = st.radio(t('Explorer les relations', 'Explore relationships'), ['manual', 'individual', 'indicators', 'mixed'],
+        format_func=lambda k: {'manual':t('Comparaison détaillée','Detailed comparison'), 'individual':t('Variables ↔ variables','Variables ↔ variables'), 'indicators':t('Indicateurs ↔ indicateurs','Indicators ↔ indicators'), 'mixed':t('Indicateurs ↔ variables','Indicators ↔ variables')}[k], horizontal=True)
+    if view == 'individual':
+        import associations_individuelles
+        associations_individuelles.render(cat)
+        return
+    if view in ('indicators', 'mixed'):
+        import correlations_sections
+        correlations_sections.render(cat, fixed_mode='indicators' if view == 'indicators' else 'variables')
+        return
     questions = [q for q in cat['questions'] if len(q['modalites']) > 1]
     lookup = {q['i']: q for q in questions}
     rice = next((q['i'] for q in questions if 'Riz' in q['modalites'] and M._norm(q['question']) == 'cultures pratiquees'), questions[0]['i'])

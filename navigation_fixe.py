@@ -35,6 +35,7 @@ def appliquer():
       }
       .stApp.stApp .st-key-zone_nav{
         position:relative!important;top:0!important;
+        padding-top:8px!important;
         min-height:0!important;max-height:calc(100dvh * var(--dz,1))!important;
         overflow-y:auto!important;overscroll-behavior:contain!important;
       }
