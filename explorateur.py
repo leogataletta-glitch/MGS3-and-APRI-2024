@@ -2408,6 +2408,13 @@ def _zone_projection(cat, prefixe="exb", first_row=None):
                     f'<b style="color:#101728">{_e(T("ex_tout_ech"))}</b> · '
                     f'{_e(T("ex_tout_x"))}</p>', unsafe_allow_html=True)
     if len(dims) < len(dispo):
+        action_root = '.stApp' * 24 + f' .st-key-{prefixe}_dim_plus'
+        st.markdown(f'''<style>
+        {action_root}{{width:100%!important;}}
+        {action_root} button{{width:100%!important;min-height:60px!important;justify-content:flex-start!important;padding:12px!important;border:0!important;border-top:1px solid #dce5df!important;border-bottom:1px solid #dce5df!important;border-radius:0!important;background:white!important;box-shadow:none!important;}}
+        {action_root} button p{{font:600 14px/1.4 Georgia,serif!important;color:#245b43!important;text-align:left!important;}}
+        {action_root} button:hover{{background:#eef2ed!important;}}
+        </style>''', unsafe_allow_html=True)
         if st.button(_locale_text("＋ " + T("ex_dim_plus")), key=f"{prefixe}_dim_plus",
                      type="tertiary"):
             manque = [a for a in dispo if a not in dims]
