@@ -1076,13 +1076,13 @@ st.markdown(("""
     flex: 1 1 auto !important; display: flex !important;
     flex-direction: column !important; min-height: 0 !important;
   }
-  div[class*="st-key-zone_nav"] .nav-famille {
+  .stApp.stApp.stApp.stApp div[class*="st-key-zone_nav"] .nav-famille {
     font-size: 10px; font-weight: 700; letter-spacing: .11em;
     /* SUR FOND CLAIR, L'ÉTIQUETTE REDESCEND DU CÔTÉ SOMBRE DU CONTRASTE,
        mais en gris-vert éteint : elle garde son rôle, qui est de peser moins
        que les rubriques qu'elle coiffe. */
     text-transform: uppercase; color: #7d8d83;
-    margin: 20px 48px 7px 0; padding-left: 0; text-align: right;
+    margin: 20px 48px 7px 0 !important; padding-left: 0 !important; text-align: right !important;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button {
     display: flex !important; align-items: center !important;
