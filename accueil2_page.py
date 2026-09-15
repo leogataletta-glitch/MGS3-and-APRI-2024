@@ -82,12 +82,11 @@ TEXTES = {
     "a2_titre": {"en": "Understanding landscapes@@to strengthen resilience",
                  "fr": "Comprendre les territoires@@pour renforcer leur résilience"},
     "a2_intro": {
-        "en": "APRI is an approach to development through landscape resilience, "
-              "combining monitoring and decision support to guide action "
-              "at any scale.",
-        "fr": "APRI est une approche du développement par la résilience "
-              "paysagère, qui associe suivi et aide à la décision pour "
-              "orienter l’action à toutes les échelles."},
+        "en": "APRI reads a territory as a system: its capacity to anticipate, absorb and adapt, measured before a shock rather than after it. It is not a damage report and not a forecast.",
+        "fr": "APRI lit un territoire comme un système : sa capacité à anticiper, absorber et s'adapter, mesurée avant le choc et non après. Ce n'est ni un relevé de dégâts ni une prévision.",
+        "es": "APRI interpreta un territorio como un sistema: su capacidad para anticipar, absorber y adaptarse, medida antes de una perturbación y no después. No es un informe de daños ni una predicción.",
+        "ht": "APRI konsidere yon teritwa kòm yon sistèm: kapasite li pou antisipe, absòbe chòk epi adapte li, mezire anvan chòk la olye de apre. Se pa yon rapò sou domaj ni yon prediksyon."
+},
     "a2_cta": {"en": "Explore the results", "fr": "Explorer les résultats"},
     # LA LÉGENDE SUIT LA PHOTOGRAPHIE, ET LES DEUX PHOTOGRAPHIES DIFFÈRENT :
     # la vallée de la Voldrogue côté anglais, le port côté français. Chaque
