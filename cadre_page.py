@@ -1464,6 +1464,9 @@ STYLE = """
               font-variant-numeric:tabular-nums; }
   .cad-so-k span { font-size:15px; color:#5a6a80; line-height:1.5;
               text-align:left !important; }
+  /* Compact typography for the four data-source columns. */
+  .stApp .cad-so .cad-so-t, .stApp .cad-so .cad-so-k b { font-size:16px !important; }
+  .stApp .cad-so p.cad-so-x, .stApp .cad-so .cad-so-l li, .stApp .cad-so .cad-so-k span { font-size:14px !important; }
   .cad-so + .cad-fin .cad-fin-t { font-size:17px; line-height:1.5; }
 
   /* --- la méthode de calcul, en trois temps -------------------------------
