@@ -1733,11 +1733,6 @@ def render(cat, mode=None, controls=None):
             _txt += ('<br>' + _e(T("ex_croise_x", k=_n(len(lignes)),
                                    n=_n(_poss))))
         st.markdown(f'<p class="ex-res-x">{_txt}</p>', unsafe_allow_html=True)
-    with _d:
-        st.download_button(
-            _locale_text(T("ex_dl")), data=_csv(montrees, mesure),
-            file_name="resultats_apri.csv", mime="text/csv",
-            key=f"ex_dl_{mesure}", use_container_width=True)
     # LE TABLEAU EST UN MODE, PAS UNE ANNEXE. Il était accroché sous chaque
     # dessin : on lisait la même colonne de chiffres deux fois, une fois au
     # bout des barres et une fois dessous, et l'écran doublait de hauteur pour
@@ -2732,11 +2727,6 @@ def _render_brut(cat, controls=None):
             if _txt:
                 st.markdown(f'<p class="ex-note" style="margin:6px 0 0">'
                             f'{_txt}</p>', unsafe_allow_html=True)
-        with d:
-            st.download_button(
-                _locale_text(T("ex_dl")), data=_csv(montrees, mesure),
-                file_name="resultats_apri.csv", mime="text/csv",
-                key="exb_dl", use_container_width=True)
 
 
 # ====================================================== comparer et profiler

@@ -567,11 +567,12 @@ def render():
         df = pd.DataFrame(lignes_tab)
         st.dataframe(df, use_container_width=True, hide_index=True)
 
-        st.download_button(
-            _locale_text(T("r_telecharger_csv")),
-            data=df.to_csv(index=False).encode("utf-8-sig"),
-            file_name=f"resilience_{titre[:30].replace(' ', '_')}.csv",
-            mime="text/csv")
+        if indic is None:
+            st.download_button(
+                _locale_text(T("r_telecharger_csv")),
+                data=df.to_csv(index=False).encode("utf-8-sig"),
+                file_name=f"resilience_{titre[:30].replace(' ', '_')}.csv",
+                mime="text/csv")
 
     # ---------------------------------------------------------- réserves
     with st.expander(_locale_text(T("r_reserves_titre"))):
