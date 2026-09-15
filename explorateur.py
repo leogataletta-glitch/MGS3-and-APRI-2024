@@ -99,8 +99,8 @@ TEXTES = {
     "ex_dim_plus": {"en": "Add a criterion", "fr": "Ajouter un critère"},
     "ex_tout_ech": {"en": "Whole sample", "fr": "Tout l'échantillon"},
     # --- comparer, et profiler
-    "ex_b_choisir_q": {"en": "Choose a question",
-                       "fr": "Choisir une question"},
+    "ex_b_choisir_q": {"en": "Type the first letters of a question…",
+                       "fr": "Tapez les premières lettres d’une question…"},
     "ex_b_vide": {
         "en": "Pick a question to see how households answered it, and how "
               "the answers split across groups.",
