@@ -2664,7 +2664,7 @@ with _c_contenu:
         # profils sur une mesure choisie répond à la même question, et à
         # celle que l'autre écran ne posait pas — comment ce groupe se situe
         # par rapport à un autre.
-        _CODES_RA = ["brut", "scores", "comparer", "relations", "facteurs", "solutions"]
+        _CODES_RA = ["brut", "scores", "comparer", "liens", "solutions"]
         import resultats_design
         # TOUTES LES BARRES DU SITE SONT AU MÊME FORMAT, celui à deux
         # lignes. Celle-ci avait été mise en compact pour gagner de la
@@ -2672,8 +2672,8 @@ with _c_contenu:
         # onglets contiennent, et un lecteur qui passait de la page des
         # boucles à celle-ci changeait d'outil sans changer de site.
         _ra = onglets.barre("ra_vue", _CODES_RA,
-                            titre=lambda c: ({"fr":"Facteurs associés","en":"Associated factors","es":"Factores asociados","ht":"Faktè ki asosye"}.get(i18n.get_lang(),"Associated factors")) if c == "facteurs" else (_locale_text("Relations entre variables" if i18n.get_lang() == "fr" else "Relationships between variables")) if c == "relations" else T("ra_o_" + c),
-                            description=lambda c: ({"fr":"Tenir compte de plusieurs facteurs","en":"Account for several factors","es":"Analizar varios factores juntos","ht":"Teste plizyè faktè ansanm"}.get(i18n.get_lang(),"Account for several factors")) if c == "facteurs" else (_locale_text("Repérer les liens deux par deux" if i18n.get_lang() == "fr" else "Explore relationships two at a time")) if c == "relations" else T("ra_d_" + c),
+                            titre=lambda c: ({"fr":"Liens et profils","en":"Links and profiles","es":"Relaciones y perfiles","ht":"Lyen ak pwofil"}.get(i18n.get_lang(),"Links and profiles")) if c == "liens" else T("ra_o_" + c),
+                            description=lambda c: ({"fr":"Comparer, repérer les profils et les liens","en":"Compare groups, profiles and related answers","es":"Comparar grupos, perfiles y respuestas","ht":"Konpare gwoup, pwofil ak repons"}.get(i18n.get_lang(),"Compare groups, profiles and related answers")) if c == "liens" else T("ra_d_" + c),
                             defaut="brut")
         resultats_design.render(_CODES_RA.index(_ra) + 1, i18n.get_lang() == 'fr')
 
@@ -2681,7 +2681,7 @@ with _c_contenu:
         # C'est le même fichier de réponses individuelles ; le charger dans
         # chaque module en ferait cinq copies en mémoire.
         _cat = croisement_resultats._catalogue() \
-            if _ra in ("brut", "scores", "comparer", "relations", "facteurs",
+            if _ra in ("brut", "scores", "comparer", "liens",
                        "solutions") \
             else None
 
@@ -2765,13 +2765,9 @@ with _c_contenu:
             # mode d'affichage choisi et rien d'autre.
             explorateur.render_scores(_cat)
 
-        elif _ra == "facteurs":
-            import facteurs_associes
-            facteurs_associes.render(_cat)
-
-        elif _ra == "relations":
-            import relations_resultats
-            relations_resultats.render(_cat)
+        elif _ra == "liens":
+            import liens_profils
+            liens_profils.render(_cat)
 
         elif _ra == "comparer":
             explorateur.render_comparaison(_cat)
