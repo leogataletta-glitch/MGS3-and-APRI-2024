@@ -2660,7 +2660,6 @@ with _c_contenu:
         # par rapport à un autre.
         _CODES_RA = ["brut", "scores", "comparer", "relations", "solutions"]
         import resultats_design
-        _results_format = resultats_design.choose_format()
         # TOUTES LES BARRES DU SITE SONT AU MÊME FORMAT, celui à deux
         # lignes. Celle-ci avait été mise en compact pour gagner de la
         # hauteur ; elle était alors la seule à ne pas dire ce que ses
@@ -2670,7 +2669,7 @@ with _c_contenu:
                             titre=lambda c: ("Relations entre variables" if i18n.get_lang() == "fr" else "Relationships between variables") if c == "relations" else T("ra_o_" + c),
                             description=lambda c: ("Comparer les réponses observées" if i18n.get_lang() == "fr" else "Compare observed answers") if c == "relations" else T("ra_d_" + c),
                             defaut="brut")
-        resultats_design.render(_CODES_RA.index(_ra) + 1, i18n.get_lang() == 'fr', _results_format)
+        resultats_design.render(_CODES_RA.index(_ra) + 1, i18n.get_lang() == 'fr')
 
         # LE CATALOGUE EST CHARGÉ UNE FOIS POUR LES CINQ PREMIERS ONGLETS.
         # C'est le même fichier de réponses individuelles ; le charger dans
@@ -2681,7 +2680,6 @@ with _c_contenu:
             else None
 
         if _ra == "brut":
-            resultats_design.heading(i18n.get_lang() == 'fr')
             # LES RÉSULTATS BRUTS SONT CE QUI A ÉTÉ MESURÉ, et rien d'autre :
             # aucun barème, aucune pondération. Deux instruments l'ont mesuré
             # et ils ont leur place au même endroit — le questionnaire, qui
@@ -2706,8 +2704,8 @@ with _c_contenu:
             # lit une fois, sur la page « À propos », pas à chaque ouverture
             # de l'écran d'analyse.
             st.session_state.setdefault("ra_source", "menages")
-            _src = st.segmented_control(
-                T("ex_b_source"), _srcs, key="ra_source",
+            _src = st.radio(
+                T("ex_b_source"), _srcs, key="ra_source", horizontal=True,
                 format_func=lambda c: T("ra_src_" + c)) or "menages"
 
             if _src == "satellite":

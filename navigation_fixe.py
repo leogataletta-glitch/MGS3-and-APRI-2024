@@ -8,7 +8,10 @@ def appliquer():
        as the statistics and destination cards. */
     .stApp.stApp .a2-hero{margin-right:0!important;width:calc(100% + 2rem)!important;max-width:none!important;}
     .stApp.stApp .a2-unep{right:20px!important;max-width:78px!important;object-fit:contain;}
-    .stApp.stApp .a2-chif>div:last-child{padding-right:20px!important;text-align:right;}
+    .stApp.stApp .a2-chif>div{padding:4px 20px!important;text-align:center!important;min-width:0;}
+    .stApp.stApp .a2-chif .a2-n{font-size:30px!important;}
+    .stApp.stApp .a2-chif .a2-l{font-size:11px!important;}
+    .stApp.stApp .a2-chif .a2-s{font-size:12px!important;}
     @media(max-width:1000px){.stApp.stApp .a2-hero{width:calc(100% + 2.6rem)!important;}}
     .stApp.stApp .st-key-navigation_language_desktop{flex-shrink:0!important;position:relative;z-index:4;}
     .stApp.stApp .st-key-zone_page:has(.st-key-territory_map){padding:0!important;}

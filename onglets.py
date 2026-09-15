@@ -245,5 +245,15 @@ def barre(cle, codes, titre, description=None, defaut=None, compact=False):
         .stApp.stApp.stApp.stApp .st-key-{_k}_detail .main-tab-description{{background:white;border:1px solid #d9dfe1;border-top:0;border-radius:0 0 18px 18px;padding:25px 30px;margin:-16px 0 20px;}}
         .stApp.stApp.stApp.stApp .st-key-{_k}_detail .main-tab-description p{{font:400 18px/1.5 Arial,sans-serif!important;color:#64716c!important;margin:0!important;}}
         </style>''',unsafe_allow_html=True)
+    if cle not in {'cad_vue', 'ra_vue', 'bcl_vue', 'int_vue'}:
+        root = '.stApp.stApp.stApp.stApp.stApp .st-key-zone_page .st-key-' + _k
+        st.markdown(f"""<style>
+        {root} [role="radiogroup"]{{gap:0!important;padding:4px!important;border:1px solid #dce5df!important;border-radius:24px!important;background:white!important;}}
+        {root} [role="radiogroup"]>label{{min-height:44px!important;min-width:0!important;padding:9px 12px!important;margin:0!important;border:0!important;border-radius:20px!important;background:white!important;box-shadow:none!important;}}
+        {root} [role="radiogroup"]>label :is(p,strong){{font:400 14px/1.35 Arial,sans-serif!important;text-transform:none!important;letter-spacing:0!important;color:#35594c!important;}}
+        {root} [role="radiogroup"]>label p:not(:first-child){{display:none!important;}}
+        {root} [role="radiogroup"]>label:nth-child({actif}){{background:#07543f!important;box-shadow:none!important;}}
+        {root} [role="radiogroup"]>label:nth-child({actif}) :is(p,strong){{color:white!important;font-weight:600!important;}}
+        </style>""", unsafe_allow_html=True)
     return choix
 
