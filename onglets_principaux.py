@@ -19,10 +19,15 @@ def render(key, codes, selected, description):
         icons += f'{root} [role="radiogroup"]>label:nth-child({i})::before{{background-image:url("data:image/svg+xml,{quote(svg)}")!important;}}'
     active = list(codes).index(selected)+1
     st.markdown(f'''<style>
-    {root} [role="radiogroup"]{{display:flex!important;flex-wrap:nowrap!important;gap:0!important;padding:7px 0 0!important;margin:0!important;background:#f5f6f8!important;border:0!important;border-radius:26px 26px 0 0!important;overflow-x:auto!important;}}
+    .stApp.stApp.stApp.stApp .st-key-zone_page:has(.st-key-{key}){{padding-top:0!important;}}
+    @media(min-width:1001px){{
+      .stApp.stApp.stApp.stApp .st-key-zone_page:has(.st-key-{key}) [data-testid="stElementContainer"]:has(.apri-page-heading){{display:none!important;}}
+      {root}{{margin-top:-20px!important;}}
+    }}
+    {root} [role="radiogroup"]{{display:flex!important;flex-wrap:nowrap!important;gap:0!important;padding:0!important;margin:0!important;background:#eef2ed!important;border:0!important;border-radius:26px 26px 0 0!important;overflow-x:auto!important;}}
     {root} [role="radiogroup"]>label{{flex:1 0 140px!important;grid-column:auto!important;position:relative!important;min-height:76px!important;padding:18px 25px 18px 48px!important;margin:0!important;border:1px solid transparent!important;border-bottom:1px solid #d9dfe1!important;border-radius:20px 20px 0 0!important;background:transparent!important;box-shadow:none!important;}}
     {root} [role="radiogroup"]>label::before{{display:block!important;content:""!important;position:absolute!important;top:calc(50% - 13px)!important;left:15px!important;width:26px!important;height:26px!important;background-size:contain!important;background-repeat:no-repeat!important;}}
-    {root} [role="radiogroup"]>label p:first-child,{root} [role="radiogroup"]>label strong{{font:400 16px/1.3 Arial,sans-serif!important;text-transform:none!important;letter-spacing:0!important;color:#263a35!important;}}
+    {root} [role="radiogroup"]>label p:first-child,{root} [role="radiogroup"]>label strong{{font:400 14px/1.3 Arial,sans-serif!important;text-transform:none!important;letter-spacing:0!important;color:#263a35!important;}}
     {root} [role="radiogroup"]>label p:not(:first-child){{display:none!important;}}
     {root} [role="radiogroup"]>label:nth-child({active}){{background:white!important;border-color:#d9dfe1!important;border-bottom-color:white!important;box-shadow:inset 0 3px 0 #176344!important;}}
     {root} [role="radiogroup"]>label:nth-child({active}) :is(p,strong){{color:#176344!important;font-weight:700!important;}}
