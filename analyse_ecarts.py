@@ -871,10 +871,7 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False,
                     f'{_e(T("ec_sec_res"))}</div>', unsafe_allow_html=True)
     with r2:
         with st.container(key=f"ec_vue_{titre}"):
-            quoi = st.segmented_control(
-                T("ec_quoi"), ["profil", "indic", "tout"],
-                key=f"ec_quoi_{titre}", label_visibility="collapsed",
-                format_func=lambda c: T("ec_quoi_" + c))
+            quoi = st.selectbox(T('ec_quoi'), ['profil', 'indic', 'tout'], key=f'ec_quoi_{titre}', label_visibility='visible', format_func=lambda c: T('ec_quoi_' + c), index=None)
     if quoi is None:
         st.markdown(f'<p class="ec-note" style="margin:8px 0 0">'
                     f'{_e(T("ec_rien_encore"))}</p>', unsafe_allow_html=True)
@@ -898,11 +895,7 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False,
         st.markdown(f'<div class="titre-bloc">{_e(T("ec_profil"))}</div>',
                     unsafe_allow_html=True)
         with st.container(key=f"ec_vue_f_{titre}"):
-            forme = st.segmented_control(
-                T("ec_format"), ["radar", "barres", "tableau", "carte"],
-                key=f"ec_forme_{titre}", default="radar",
-                label_visibility="collapsed",
-                format_func=lambda f: T("ec_" + f)) or "radar"
+            forme = st.selectbox(T('ec_format'), ['radar', 'barres', 'tableau', 'carte'], key=f'ec_forme_{titre}', label_visibility='visible', format_func=lambda f: T('ec_' + f), index=['radar', 'barres', 'tableau', 'carte'].index('radar')) or "radar"
         if forme == "radar" and sum(1 for v in s_g if v is not None) < 3:
             st.info(T("ec_radar_court"))
             forme = "barres"

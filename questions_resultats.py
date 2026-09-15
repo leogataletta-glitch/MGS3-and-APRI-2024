@@ -538,9 +538,7 @@ def _bloc_comparaison_question(groupes):
         mods = st.multiselect(T("qr_quelle_m"), [r[0] for r in rows],
                               default=defaut, key=f"qr_bm_{choix}")
     with c3:
-        par = st.radio(T("qr_comparer"), ["groupe", "localite"],
-                       format_func=lambda k: T("qr_par_" + k),
-                       key="qr_bpar", horizontal=True)
+        par = st.selectbox(T('qr_comparer'), ['groupe', 'localite'], format_func=lambda k: T('qr_par_' + k), key='qr_bpar')
     if not mods:
         return
     retenues = [r for r in rows if r[0] in mods]
@@ -713,9 +711,7 @@ def render(cle_dim, dimension):
                              f'{_nom_indic(lignes[i])}',
                              key=f"qr_bi_{cle_dim}")
         with c2:
-            par = st.radio(T("qr_comparer"), ["groupe", "localite"],
-                           format_func=lambda x: T("qr_par_" + x),
-                           key=f"qr_bp_{cle_dim}", horizontal=True)
+            par = st.selectbox(T('qr_comparer'), ['groupe', 'localite'], format_func=lambda x: T('qr_par_' + x), key=f'qr_bp_{cle_dim}')
         sc = lignes[k].get("scores_corriges") or {}
         cles = GROUPES if par == "groupe" else SECTIONS
         st.markdown(_barres({c: sc.get(c) for c in cles}, sc.get("Total"), 1,

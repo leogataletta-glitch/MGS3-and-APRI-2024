@@ -33,8 +33,7 @@ def selecteur(prefix):
         </style>''', unsafe_allow_html=True)
     with st.expander("Changer le style" if fr else "Change style"):
         st.session_state[cle] = choix()
-        st.radio("Style visuel" if fr else "Visual style", [1, 3],
-                 format_func=labels.get, key=cle, on_change=_changer, args=(cle,))
+        st.selectbox('Style visuel' if fr else 'Visual style', [1, 3], format_func=labels.get, key=cle, on_change=_changer, args=(cle,))
 
 
 def appliquer():

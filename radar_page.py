@@ -224,11 +224,7 @@ def render(dim=None, cle="r"):
     if dim is None:
         c1, c2 = st.columns([1.6, 1.4])
         with c1:
-            niveau = st.radio(
-                T("rd_niveau"), ["dims", "indic"],
-                format_func=lambda k: T("rd_n_dims") if k == "dims"
-                else T("rd_n_indic"),
-                horizontal=True, key=f"rd_niv_{cle}")
+            niveau = st.selectbox(T('rd_niveau'), ['dims', 'indic'], format_func=lambda k: T('rd_n_dims') if k == 'dims' else T('rd_n_indic'), key=f'rd_niv_{cle}')
         with c2:
             if niveau == "indic":
                 dim = dict(DIMENSIONS)[st.selectbox(
@@ -274,10 +270,7 @@ def render(dim=None, cle="r"):
     # choix qui manquait : le radar d'avant ne comparait que des sections.
     g, d = st.columns([1.5, 2.5])
     with g:
-        registre = st.radio(
-            T("rd_registre"), ["sections", "paysages", "groupes"],
-            format_func=lambda k: T("rd_r_" + k), horizontal=False,
-            key=f"rd_reg_{cle}")
+        registre = st.selectbox(T('rd_registre'), ['sections', 'paysages', 'groupes'], format_func=lambda k: T('rd_r_' + k), key=f'rd_reg_{cle}')
     options, libelle = _entites(registre)
     with d:
         choisies = st.multiselect(

@@ -67,13 +67,15 @@ def appliquer():
       }
       div[data-testid="stColumn"]:has(.st-key-zone_nav){z-index:3;}
     }
-    /* Compact searchable dropdowns shared by all content pages. */
-    .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page [data-testid="stSelectbox"]{background:white!important;border:1px solid #d4dce0!important;border-radius:9px!important;padding:6px 10px!important;}
-    .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page [data-testid="stSelectbox"]:focus-within{border-color:#28745c!important;box-shadow:0 2px 7px #194b3220!important;}
-    .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page [data-testid="stSelectbox"] label p{font:400 11px/1.3 Arial,sans-serif!important;color:#68758a!important;letter-spacing:0!important;text-transform:none!important;}
-    .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page [data-testid="stSelectbox"] [data-baseweb="select"]>div{background:transparent!important;border:0!important;min-height:28px!important;border-radius:0!important;box-shadow:none!important;}
-    .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page [data-testid="stSelectbox"] [role="combobox"]{font-size:14px!important;background:transparent!important;}
+    /* One dropdown format for single and multiple selections on every page. */
+    .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page :is([data-testid="stSelectbox"],[data-testid="stMultiSelect"]){background:white!important;border:1px solid #d4dce0!important;border-radius:10px!important;padding:8px 12px!important;}
+    .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page :is([data-testid="stSelectbox"],[data-testid="stMultiSelect"]):focus-within{border-color:#28745c!important;box-shadow:0 2px 7px #194b3220!important;}
+    .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page :is([data-testid="stSelectbox"],[data-testid="stMultiSelect"]) label p{font:400 11px/1.3 Arial,sans-serif!important;color:#68758a!important;letter-spacing:0!important;text-transform:none!important;}
+    .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page :is([data-testid="stSelectbox"],[data-testid="stMultiSelect"]) [data-baseweb="select"]>div{background:#f5f7fa!important;border:0!important;min-height:42px!important;border-radius:8px!important;box-shadow:none!important;}
+    .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page :is([data-testid="stSelectbox"],[data-testid="stMultiSelect"]) [role="combobox"]{font-size:14px!important;background:transparent!important;}
     .stApp.stApp.stApp.stApp.stApp.stApp [role="listbox"]{background:white!important;border:1px solid #dce2df!important;border-radius:10px!important;box-shadow:0 6px 18px #193c2520!important;padding:5px!important;}
     .stApp.stApp.stApp.stApp.stApp.stApp [role="option"]{border-radius:7px!important;font-size:14px!important;}
     .stApp.stApp.stApp.stApp.stApp.stApp [role="option"][aria-selected="true"]{background:#e8f1eb!important;color:#104b3b!important;}
+    .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page :is([data-testid="stSelectbox"],[data-testid="stMultiSelect"]) [role="combobox"]{min-height:32px!important;color:#3c4761!important;}
+    .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page :is([data-testid="stSelectbox"],[data-testid="stMultiSelect"]) label{margin-bottom:6px!important;}
     </style>''',unsafe_allow_html=True)

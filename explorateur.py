@@ -1550,7 +1550,7 @@ def _libelles_liste(vues):
     return out
 
 
-def render(cat, mode=None):
+def render(cat, mode=None, controls=None):
     """L'explorateur, dans l'ordre : mesure, question, ventilation, format.
 
     `mode` fige la mesure quand la page n'en propose qu'une : « brut » pour
@@ -1568,7 +1568,7 @@ def render(cat, mode=None):
     # avec les scores, et la mise en page numérotée qui convenait à l'un
     # noyait l'autre sous huit blocs de même poids. Voir `_render_brut`.
     if mode == "brut":
-        return _render_brut(cat)
+        return _render_brut(cat, controls=controls)
     st.markdown(STYLE, unsafe_allow_html=True)
 
     questions = cat["questions"]
@@ -1591,9 +1591,7 @@ def render(cat, mode=None):
             f'{_e(T("ex_intro_score"))}</p>', unsafe_allow_html=True)
 
     if mesure is None:
-        mesure = st.radio(
-            T("ex_mesure"), ["part", "score"], horizontal=True, key="ex_mes",
-            format_func=lambda m: T("ex_m_" + m))
+        mesure = st.selectbox(T('ex_mesure'), ['part', 'score'], key='ex_mes', format_func=lambda m: T('ex_m_' + m))
 
     q, modalite, cible = None, None, None
     if mesure == "score":
@@ -1681,9 +1679,7 @@ def render(cat, mode=None):
         # le plus souvent de tout l'écran.
         formes = ["barres", "tableau", "carte", "radar"]
         with st.container(key="ex_forme_zone"):
-            forme = st.radio(T("ex_voir"), formes, key="ex_forme",
-                             horizontal=True,
-                             format_func=lambda f: T("ex_" + f))
+            forme = st.selectbox(T('ex_voir'), formes, key='ex_forme', format_func=lambda f: T('ex_' + f))
 
     # ---- 4 · les cinq registres, cumulables ------------------------------
     filtre, poses = _panneau_filtres(cat, "ex_pan", _REGISTRES_F,
@@ -2087,11 +2083,7 @@ def render_scores(cat):
         formes += ["radar", "tableau"]
         with r3:
             with st.container(key="exb_vue_s"):
-                forme = st.segmented_control(
-                    T("ex_format"), formes,
-                    key="exs_forme", default="barres",
-                    label_visibility="collapsed",
-                    format_func=lambda f: T("ex_" + f)) or "barres"
+                forme = st.selectbox(T('ex_format'), formes, key='exs_forme', label_visibility='visible', format_func=lambda f: T('ex_' + f), index=formes.index('barres')) or "barres"
         if "carte" not in formes:
             st.markdown(f'<p class="ex-note" style="margin:2px 0 6px">'
                         f'{_e(T("ex_pourquoi_carte"))}</p>',
@@ -2563,7 +2555,7 @@ def _synthese(lignes, mesure):
         f'<b>{_f(haut[1] - bas[1], dec)}{u}</b></span></div>')
 
 
-def _render_brut(cat):
+def _render_brut(cat, controls=None):
     """Question → filtres facultatifs → résultat, sur un seul écran."""
     questions = cat["questions"]
     mesure = "part"
@@ -2598,40 +2590,27 @@ def _render_brut(cat):
         # chaque question.
         cats = {x.get("category") or "" for x in questions}
         codes = themes_enquete.codes_presents(cats)
-        theme = onglets.barre(
-            "exb_theme_ong", codes,
-            titre=lambda c: T(themes_enquete.libelle(c)),
-            description=lambda c: T(themes_enquete.description(c)),
-            defaut=codes[0] if codes else None)
-        st.caption(T(themes_enquete.description(theme)))
-        with st.container(key="exb_q_zone"):
-            with st.container(horizontal=True, horizontal_alignment="right"):
-                c0 = st.container()
-            with c0:
-                if st.button(T("ex_b_raz"), key="exb_raz", type="tertiary"):
-                    st.session_state["ra_raz"] = True
-                    st.rerun()
-            vues = [x for x in questions
-                    if themes_enquete.theme_de(x.get("category")) == theme]
-            with st.container():
-                # AUCUNE QUESTION N'EST CHOISIE D'AVANCE. La première de la
-                # liste s'ouvrait toute seule, et l'écran affichait donc,
-                # dès l'arrivée, la ventilation complète d'une question que
-                # personne n'avait demandée : dix sections, vingt barres, et
-                # un lecteur qui croit lire un résultat.
-                #
-                # LA QUESTION SEULE, ET LE MODULE UNIQUEMENT S'IL SÉPARE DEUX
-                # HOMONYMES. L'onglet au-dessus dit déjà la thématique ; la
-                # répéter en capitales devant chacune des deux cent vingt-sept
-                # questions agricoles poussait la question elle-même hors de
-                # vue. Voir `_libelles_liste`.
-                libs = _libelles_liste(vues)
+        theme_slot, question_slot = controls if controls else st.columns([1, 2])
+        with theme_slot:
+            theme = onglets.barre(
+                "exb_theme_ong", codes,
+                titre=lambda c: T(themes_enquete.libelle(c)),
+                description=lambda c: T(themes_enquete.description(c)),
+                defaut=codes[0] if codes else None)
+        vues = [x for x in questions
+                if themes_enquete.theme_de(x.get("category")) == theme]
+        with question_slot:
+            libs = _libelles_liste(vues)
+            with st.container(key="exb_q_zone"):
                 qi = st.selectbox(
                     T("ex_question"), [x["i"] for x in vues],
-                    key=f"exb_q_{theme or 'tous'}",
-                    index=None, placeholder=T("ex_b_choisir_q"),
-                    help=T("ex_chercher"),
+                    key=f"exb_q_{theme or 'tous'}", index=None,
+                    placeholder=T("ex_b_choisir_q"), help=T("ex_chercher"),
                     format_func=lambda i: libs.get(i, ""))
+        with st.container(horizontal=True, horizontal_alignment="right"):
+            if st.button(T("ex_b_raz"), key="exb_raz", type="tertiary"):
+                st.session_state["ra_raz"] = True
+                st.rerun()
         if qi is None:
             st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'
                         f'{_e(T("ex_b_vide"))}</p>', unsafe_allow_html=True)
@@ -2693,10 +2672,7 @@ def _render_brut(cat):
                      "topflop": "ex_topflop", "ecart": "ex_ecart"}[c]))
         with r3:
             with st.container(key="exb_vue"):
-                forme = st.segmented_control(
-                    T("ex_voir"), formes, key="exb_vue_sel",
-                    default="barres", label_visibility="collapsed",
-                    format_func=lambda f: T("ex_" + f)) or "barres"
+                forme = st.selectbox(T('ex_voir'), formes, key='exb_vue_sel', label_visibility='visible', format_func=lambda f: T('ex_' + f), index=formes.index('barres')) or "barres"
         if forme not in formes:
             forme = "barres"
         # POURQUOI UNE VUE MANQUE, PLUTÔT QUE SON ABSENCE SILENCIEUSE. Retirer
@@ -3018,10 +2994,7 @@ def render_comparaison(cat):
         formes = ["barres"] + (["radar"] if len(branches) >= 3 else [])
         with r3:
             with st.container(key="exb_vue_c"):
-                forme = st.segmented_control(
-                    T("ex_format"), formes, key="exc_forme",
-                    default="barres", label_visibility="collapsed",
-                    format_func=lambda f: T("ex_" + f)) or "barres"
+                forme = st.selectbox(T('ex_format'), formes, key='exc_forme', label_visibility='visible', format_func=lambda f: T('ex_' + f), index=formes.index('barres')) or "barres"
         if len(branches) < 3:
             st.markdown(f'<p class="ex-note" style="margin:2px 0 6px">'
                         f'{_e(T("ex_c_radar_3"))}</p>',

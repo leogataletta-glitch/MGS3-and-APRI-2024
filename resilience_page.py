@@ -163,12 +163,7 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
     """Deux niveaux de radar : le profil des dimensions, puis le détail des
     indicateurs à l'intérieur d'une dimension — la même logique de zoom que
     dans le cadre théorique APRI."""
-    niveau = st.radio(
-        T("r_niveau"),
-        ["dimensions", "indicateurs"],
-        format_func=lambda k: {"dimensions": T("r_niveau1"),
-                               "indicateurs": T("r_niveau2")}[k],
-        horizontal=True, key=f"radar_niveau_{i18n.get_lang()}")
+    niveau = st.selectbox(T('r_niveau'), ['dimensions', 'indicateurs'], format_func=lambda k: {'dimensions': T('r_niveau1'), 'indicateurs': T('r_niveau2')}[k], key=f'radar_niveau_{i18n.get_lang()}')
 
     NOTION_DIM = {"dim1": "dim_physique", "dim2": "dim_institutionnelle",
                   "dim3": "dim_environnementale", "dim4": "dim_economique",
@@ -424,12 +419,7 @@ def render():
         st.markdown(f'<div class="titre-bloc ambre">{T("r_bloc2")}</div>',
                     unsafe_allow_html=True)
         # ---------------------------------------------------------- carte
-        afficher = st.radio(
-            T("r_colorier"),
-            ["score", "pourcentage"] if indic is not None else ["score"],
-            format_func=lambda k: {"score": T("r_par_score"),
-                                   "pourcentage": T("r_par_brut")}[k],
-            horizontal=True, key=f"aff_{choix}_{pop}_{i18n.get_lang()}")
+        afficher = st.selectbox(T('r_colorier'), ['score', 'pourcentage'] if indic is not None else ['score'], format_func=lambda k: {'score': T('r_par_score'), 'pourcentage': T('r_par_brut')}[k], key=f'aff_{choix}_{pop}_{i18n.get_lang()}')
 
         if afficher == "score":
             valeurs = scores

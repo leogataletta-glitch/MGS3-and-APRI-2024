@@ -106,8 +106,7 @@ def render(cat):
                'Each observation is a respondent. Ranking uses phi between two selected responses (present/absent among valid answers), from −1 to +1, sorted by absolute value. Absent means another valid answer, never missing data.'))
     fs = features(cat)
     names = {f['source']: f['question'] for f in fs}
-    kind = st.radio(t('Rechercher', 'Search'), ['all','landscape'],
-                    format_func=lambda x:t('Toutes les associations','All associations') if x=='all' else t('Avec le paysage','With landscape'), horizontal=True)
+    kind = st.selectbox(t('Rechercher', 'Search'), ['all', 'landscape'], format_func=lambda x: t('Toutes les associations', 'All associations') if x == 'all' else t('Avec le paysage', 'With landscape'))
     focus = st.selectbox(t('Question à explorer','Question to explore'),[None]+list(names),
                          format_func=lambda x:t('Toutes les questions','All questions') if x is None else names[x])
     population = np.ones(cat['n'],bool)

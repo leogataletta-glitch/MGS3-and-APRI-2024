@@ -303,11 +303,7 @@ def render(entete=True):
                   else "section")
     c1, c2 = st.columns([1, 2])
     with c1:
-        mode = st.radio(T("s_mode"), _modes,
-                        format_func=lambda m: T("s_mode_" + m),
-                        horizontal=True,
-                        index=_modes.index(_pref_mode),
-                        key=f"syn_mode_{i18n.get_lang()}")
+        mode = st.selectbox(T('s_mode'), _modes, format_func=lambda m: T('s_mode_' + m), index=_modes.index(_pref_mode), key=f'syn_mode_{i18n.get_lang()}')
     with c2:
         options = (SECTIONS if mode == "section"
                    else PAYSAGES if mode == "paysage" else GROUPES)

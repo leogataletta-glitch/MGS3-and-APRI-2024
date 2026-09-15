@@ -1421,10 +1421,7 @@ def render(entete=True):
         with onglets[2 + i]:
             choix = cles[0]
             if len(cles) > 1:
-                choix = st.radio(
-                    T("e_i_choix"), cles,
-                    format_func=lambda c: T("e_o_" + c), horizontal=True,
-                    key=f"env_ind_{groupe}_{i18n.get_lang()}")
+                choix = st.selectbox(T('e_i_choix'), cles, format_func=lambda c: T('e_o_' + c), key=f'env_ind_{groupe}_{i18n.get_lang()}')
             cle, ligne, champ, source, mode, coul = par_cle[choix]
             _onglet_indice(cle, ligne, champ, mode, coul, res,
                            thermo if source == "thermo" else indices, focus)

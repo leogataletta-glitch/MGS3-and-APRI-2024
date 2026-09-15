@@ -355,10 +355,7 @@ def _constructeur(cat, cle, couleur, titre):
         f'<div style="font-size:14px;font-weight:700;color:{couleur};'
         f'margin:2px 0 6px">{_e(titre)}</div>', unsafe_allow_html=True)
 
-    liaison = st.radio(
-        T("cx_liaison"), ["ET", "OU"],
-        format_func=lambda k: T("cx_et") if k == "ET" else T("cx_ou"),
-        horizontal=True, key=f"cx_li_{cle}_{i18n.get_lang()}")
+    liaison = st.selectbox(T('cx_liaison'), ['ET', 'OU'], format_func=lambda k: T('cx_et') if k == 'ET' else T('cx_ou'), key=f'cx_li_{cle}_{i18n.get_lang()}')
 
     a_retirer = None
     for k, cl in enumerate(clauses):
@@ -664,12 +661,7 @@ def render():
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc vert">{T("cx_carte")}</div>',
                     unsafe_allow_html=True)
-        mesure = st.radio(
-            T("cx_carte_mesure"), ["section", "n", "groupe", "score"],
-            format_func=lambda k: {"n": T("cx_m_n"), "groupe": T("cx_m_groupe"),
-                                   "section": T("cx_m_section"),
-                                   "score": T("cx_m_score")}[k],
-            horizontal=True, key=f"cx_carte_{i18n.get_lang()}")
+        mesure = st.selectbox(T('cx_carte_mesure'), ['section', 'n', 'groupe', 'score'], format_func=lambda k: {'n': T('cx_m_n'), 'groupe': T('cx_m_groupe'), 'section': T('cx_m_section'), 'score': T('cx_m_score')}[k], key=f'cx_carte_{i18n.get_lang()}')
         html, h = _carte(cat, sections, mesure)
         if html:
             components.html(html, height=h + 46, scrolling=False)

@@ -87,8 +87,7 @@ def render(cat, fixed_mode=None):
     st.subheader(t('Les associations les plus fortes', 'Strongest associations'))
     st.caption(t('Unité : section communale (10 au maximum). Classement exploratoire par |ρ de Spearman|, sans preuve de causalité ni test de significativité. Une association entre sections ne décrit pas nécessairement les ménages.',
                  'Unit: communal section (at most 10). Exploratory ranking by absolute Spearman rho, without causal claims or significance tests. Section associations do not necessarily describe households.'))
-    measure = st.radio(t('Mesure des indicateurs', 'Indicator measure'), ['valeurs', 'scores_corriges'],
-        format_func=lambda x: t('Valeurs brutes', 'Raw values') if x == 'valeurs' else t('Scores de résilience', 'Resilience scores'), horizontal=True, key='corr_measure')
+    measure = st.selectbox(t('Mesure des indicateurs', 'Indicator measure'), ['valeurs', 'scores_corriges'], format_func=lambda x: t('Valeurs brutes', 'Raw values') if x == 'valeurs' else t('Scores de résilience', 'Resilience scores'), key='corr_measure')
     minimum_n = st.slider(t('Réponses valides minimum par section pour les variables', 'Minimum valid responses per section for survey variables'), 10, 100, 30, 10)
     path = M._trouver('resultats.json')
     if not path:
@@ -99,8 +98,7 @@ def render(cat, fixed_mode=None):
     if isinstance(results, dict):
         results = results['indicateurs']
     frame, meta = build_frame(cat, results, measure, minimum_n)
-    mode = fixed_mode or st.radio(t('Relations recherchées', 'Relationship types'), ['all', 'indicators', 'variables'],
-        format_func=lambda x: {'all':t('Toutes', 'All'), 'indicators':t('Indicateur ↔ indicateur', 'Indicator ↔ indicator'), 'variables':t('Indicateur ↔ variable', 'Indicator ↔ variable')}[x], horizontal=True)
+    mode = fixed_mode or st.selectbox(t('Relations recherchées', 'Relationship types'), ['all', 'indicators', 'variables'], format_func=lambda x: {'all': t('Toutes', 'All'), 'indicators': t('Indicateur ↔ indicateur', 'Indicator ↔ indicator'), 'variables': t('Indicateur ↔ variable', 'Indicator ↔ variable')}[x])
     focus = st.selectbox(t('Centrer sur un indicateur', 'Focus on an indicator'),
                         [None] + [k for k in frame if meta[k]['kind'] == 'indicator'],
                         format_func=lambda k: t('Tous', 'All') if k is None else meta[k]['label'])

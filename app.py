@@ -2704,9 +2704,11 @@ with _c_contenu:
             # lit une fois, sur la page « À propos », pas à chaque ouverture
             # de l'écran d'analyse.
             st.session_state.setdefault("ra_source", "menages")
-            _src = st.radio(
-                T("ex_b_source"), _srcs, key="ra_source", horizontal=True,
-                format_func=lambda c: T("ra_src_" + c)) or "menages"
+            _source_col, _theme_col, _question_col = st.columns([1, 1, 1.5])
+            with _source_col:
+                _src = st.selectbox(
+                    T("ex_b_source"), _srcs, key="ra_source",
+                    format_func=lambda c: T("ra_src_" + c)) or "menages"
 
             if _src == "satellite":
                 environnement_cadre.render_satellite()
@@ -2742,7 +2744,7 @@ with _c_contenu:
                     environnement_cadre.render_terrain()
                     acquisition_env.render_bloc("terrain")
             else:
-                explorateur.render(_cat, mode="brut")
+                explorateur.render(_cat, mode="brut", controls=(_theme_col, _question_col))
 
         elif _ra == "scores":
             # LES SCORES SE DEMANDENT, ILS NE SE DÉVERSENT PAS, et le volet

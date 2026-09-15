@@ -548,10 +548,7 @@ def render(entete=True):
                          k=(len(cat["indicateurs"])
                             + len(cat.get("territoriaux") or [])),
                          p=_f(100 * couv["global"], 0)))
-            registre = st.radio(
-                T("fp_croiser"), [r for r, _v in REGISTRES],
-                format_func=lambda r: T("fp_r_" + r), horizontal=True,
-                key="fp_reg")
+            registre = st.selectbox(T('fp_croiser'), [r for r, _v in REGISTRES], format_func=lambda r: T('fp_r_' + r), key='fp_reg')
             for p in PAYSAGES:
                 for g in dict(REGISTRES)[registre]:
                     # Une localité appartient à un seul paysage : croiser

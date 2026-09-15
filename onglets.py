@@ -169,91 +169,26 @@ _CSS_COMPACT = """
 
 
 def barre(cle, codes, titre, description=None, defaut=None, compact=False):
-    """Une barre d'onglets, et le code de celui qui est choisi.
-
-    `titre` et `description` prennent un code et rendent une chaîne déjà
-    traduite : la barre ne connaît pas i18n, elle ne connaît que du texte.
-    Une description absente donne une carte à une ligne — utile pour deux
-    onglets dont les titres se suffisent.
-
-    LE CODE EST RETENU, PAS L'INDEX. Un index de liste change de sens dès que
-    l'ordre des onglets change ou que la langue réordonne quoi que ce soit ;
-    un code stable retrouve toujours le même écran.
-    """
-    st.markdown(STYLE, unsafe_allow_html=True)
-    _k = cle if cle.startswith("ong_") else f"ong_{cle}"
-    if compact:
-        st.markdown(_CSS_COMPACT.replace("KEY", _k), unsafe_allow_html=True)
+    """Keep main navigation as tabs and secondary navigation as searchable menus."""
+    from i18n import get_lang
+    main = cle in {'cad_vue', 'ra_vue', 'bcl_vue', 'int_vue'}
+    key = cle if cle.startswith('ong_') else 'ong_' + cle
     if defaut and st.session_state.get(cle) not in codes:
         st.session_state[cle] = defaut
-
-    def _lib(c):
-        t = titre(c)
-        d = description(c) if description else None
-        # DEUX PARAGRAPHES, PAS UN SAUT DE LIGNE. Le libellé d'un radio est
-        # rendu en markdown : une ligne vide y fait deux <p>, que la feuille
-        # de style distingue par leur rang. Un <br> serait échappé.
-        return f"**{t}**\n\n{d}" if d else f"**{t}**"
-
-    if cle in {"exb_theme_ong", "sat_cat"}:
-        from i18n import get_lang
-        label = ("Explorer par thème" if get_lang() == "fr" else "Explore by theme") if cle != "cad_i_vue" else ("Explorer l’indicateur" if get_lang() == "fr" else "Explore the indicator")
-        st.markdown(f'<p style="font:600 11px/1.5 Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#75867c;margin:8px 0 10px">{label}</p>', unsafe_allow_html=True)
-    with st.container(key=_k):
-        choix = st.radio(cle, codes, horizontal=True,
-                        label_visibility="collapsed", key=cle,
-                        format_func=_lib)
-        # Use the selected value returned by Streamlit; input attributes can
-        # temporarily lag behind the rerender when changing language or page.
-        actif = list(codes).index(choix) + 1 if choix in codes else 1
-        st.markdown(f"""<style>
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]{{gap:0!important;margin:0 0 20px!important;background:white!important;border-bottom:0!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{flex:1 1 0!important;min-height:96px!important;padding:14px 12px!important;background:white!important;border:0!important;border-right:0!important;border-radius:0!important;box-shadow:none!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:first-child{{font:600 12px/1.4 Arial,sans-serif!important;color:#35664b!important;text-transform:uppercase!important;letter-spacing:.06em!important;text-align:center!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label strong{{color:#35664b!important;font-weight:600!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:not(:first-child){{font:400 12px/1.45 Arial,sans-serif!important;color:#75867c!important;text-align:center!important;margin-top:6px!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:hover{{background:#f5f9f5!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}){{background:#edf5ef!important;box-shadow:inset 0 -4px 0 #78a58a!important;}}
-        @media(max-width:760px){{.stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{flex:1 1 44%!important;}}}}
-        </style>""", unsafe_allow_html=True)
-    if cle in {"exb_theme_ong", "sat_cat"}:
-        st.markdown(f"""<style>
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]{{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:4px!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{width:100%!important;min-width:0!important;margin:0!important;min-height:82px!important;padding:10px 12px!important;background:white!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:first-child{{font-size:11px!important;letter-spacing:.025em!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:not(:first-child){{font-size:11px!important;color:#859087!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}){{background:white!important;box-shadow:inset 0 -2px 0 #78a58a!important;}}
-        @media(max-width:1000px){{.stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]{{grid-template-columns:repeat(3,minmax(0,1fr))!important;}}}}
-        @media(max-width:600px){{.stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]{{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}}}
-        </style>""", unsafe_allow_html=True)
-    if cle in {"cad_i_vue", "sat_cat"}:
-        st.markdown(f"""<style>
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label{{background:white!important;min-height:82px!important;padding:10px 12px!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:first-child{{font-size:11px!important;letter-spacing:.025em!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label p:not(:first-child){{font-size:11px!important;color:#859087!important;}}
-        .stApp .st-key-zone_page .st-key-{_k} [role="radiogroup"]>label:nth-child({actif}){{background:white!important;box-shadow:inset 0 -2px 0 #78a58a!important;}}
-        </style>""", unsafe_allow_html=True)
-    if cle in {'cad_vue', 'ra_vue', 'bcl_vue', 'int_vue'}:
+    with st.container(key=key):
+        if not main:
+            labels = {'exb_theme_ong': ('Thème', 'Theme'),
+                      'sat_cat': ('Thème', 'Theme'),
+                      'cad_i_vue': ('Vue', 'View')}
+            pair = labels.get(cle, ('Afficher', 'Display'))
+            return st.selectbox(pair[0 if get_lang() == 'fr' else 1], codes,
+                                key=cle, format_func=titre)
+        st.markdown(STYLE, unsafe_allow_html=True)
+        def label(code):
+            detail = description(code) if description else None
+            return f"**{titre(code)}**\n\n{detail}" if detail else f"**{titre(code)}**"
+        selected = st.radio(cle, codes, horizontal=True, label_visibility='collapsed',
+                            key=cle, format_func=label)
         import onglets_principaux
-        with st.container(key=_k + '_description'):
-            # CSS targets the original radio container; the panel is its sibling.
-            onglets_principaux.render(_k, codes, choix, None)
-        with st.container(key=_k + '_detail'):
-            from html import escape
-            st.markdown('<div class="main-tab-description"><p>'+escape(description(choix) if description else titre(choix))+'</p></div>',unsafe_allow_html=True)
-        st.markdown(f'''<style>
-        .stApp.stApp.stApp.stApp .st-key-{_k}_detail .main-tab-description{{background:white;border:1px solid #d9dfe1;border-top:0;border-radius:0 0 18px 18px;padding:25px 30px;margin:-16px 0 20px;}}
-        .stApp.stApp.stApp.stApp .st-key-{_k}_detail .main-tab-description p{{font:400 18px/1.5 Arial,sans-serif!important;color:#64716c!important;margin:0!important;}}
-        </style>''',unsafe_allow_html=True)
-    if cle not in {'cad_vue', 'ra_vue', 'bcl_vue', 'int_vue'}:
-        root = '.stApp.stApp.stApp.stApp.stApp .st-key-zone_page .st-key-' + _k
-        st.markdown(f"""<style>
-        {root} [role="radiogroup"]{{gap:0!important;padding:4px!important;border:0!important;border-radius:24px!important;background:white!important;}}
-        {root} [role="radiogroup"]>label{{min-height:44px!important;min-width:0!important;padding:9px 12px!important;margin:0!important;border:0!important;border-radius:20px!important;background:white!important;box-shadow:none!important;}}
-        {root} [role="radiogroup"]>label :is(p,strong){{font:400 14px/1.35 Arial,sans-serif!important;text-transform:none!important;letter-spacing:0!important;color:#35594c!important;}}
-        {root} [role="radiogroup"]>label p:not(:first-child){{display:none!important;}}
-        {root} [role="radiogroup"]>label:nth-child({actif}){{background:white!important;border:1px solid #dce2df!important;border-radius:18px!important;box-shadow:0 4px 14px #193c2526!important;}}
-        {root} [role="radiogroup"]>label:nth-child({actif}) :is(p,strong){{color:#104b3b!important;font-weight:600!important;}}
-        </style>""", unsafe_allow_html=True)
-    return choix
-
+        onglets_principaux.render(key, codes, selected)
+        return selected

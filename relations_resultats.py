@@ -96,8 +96,7 @@ def render(cat):
         return
     import relations_guide
     relations_guide.render(fr)
-    view = st.radio(t('Explorer les relations', 'Explore relationships'), ['manual', 'individual', 'indicators', 'mixed'],
-        format_func=lambda k: {'manual':t('Comparaison détaillée','Detailed comparison'), 'individual':t('Variables ↔ variables','Variables ↔ variables'), 'indicators':t('Indicateurs ↔ indicateurs','Indicators ↔ indicators'), 'mixed':t('Indicateurs ↔ variables','Indicators ↔ variables')}[k], horizontal=True)
+    view = st.selectbox(t('Explorer les relations', 'Explore relationships'), ['manual', 'individual', 'indicators', 'mixed'], format_func=lambda k: {'manual': t('Comparaison détaillée', 'Detailed comparison'), 'individual': t('Variables ↔ variables', 'Variables ↔ variables'), 'indicators': t('Indicateurs ↔ indicateurs', 'Indicators ↔ indicators'), 'mixed': t('Indicateurs ↔ variables', 'Indicators ↔ variables')}[k])
     if view == 'individual':
         import associations_individuelles
         associations_individuelles.render(cat)
