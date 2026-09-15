@@ -244,7 +244,9 @@ GABARIT = r"""<!DOCTYPE html><html><head><meta charset="utf-8">
 __LEAFLET__
 <style>
  html,body{margin:0;padding:0;height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
- #carte{position:absolute;inset:0}
+ #carte{position:absolute;inset:0;visibility:hidden}
+ #map-loading{position:absolute;inset:0 286px 0 48px;display:grid;place-items:center;background:white;color:#587264;font-size:13px;pointer-events:none}
+ @media(max-width:620px){#map-loading{inset:0 0 50% 0}}
  /* The map continues behind the opaque legend; no viewport-edge dissolve. */
  #carte,#carte3d{border-radius:0!important;}
  @media(min-width:621px){
@@ -292,6 +294,7 @@ __LEAFLET__
  @media(max-width:620px){#carte{right:0;bottom:240px}#panneau{top:auto;height:224px;width:100%}}
 </style></head><body>
 <div id="carte"></div>
+<div id="map-loading" role="status" aria-live="polite">__T_LOADING_MAP__</div>
 <div id="panneau">
   <div class="tete">
     <div class="titre">__T_COUCHES__</div>
@@ -682,6 +685,7 @@ def html(d):
     return (GABARIT
             .replace("JPEG ↓", ("Télécharger JPEG ↓" if i18n.get_lang()=="fr" else "Download JPEG ↓"))
             .replace("PDF ↓", ("Télécharger PDF ↓" if i18n.get_lang()=="fr" else "Download PDF ↓"))
+            .replace("__T_LOADING_MAP__", "Chargement de la carte…" if i18n.get_lang()=="fr" else "Loading map…")
             .replace("__LEAFLET__", _leaflet())
             .replace("__HD_JS__", open(os.path.join(APP_DIR, "carte_haiti_hd.js"), encoding="utf-8").read().replace("__HD_INDEX__", open(os.path.join(APP_DIR, "haiti_hd_index.json"), encoding="utf-8").read()))
             .replace("__TERRAIN_JS__", open(os.path.join(APP_DIR, "carte_terrain.js"), encoding="utf-8").read())

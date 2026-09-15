@@ -1661,7 +1661,7 @@ def render(cat, mode=None, controls=None):
         # maximum : au-delà, les effectifs tombent sous ce qu'on peut lire.
         st.session_state.setdefault(f"ex_axes_{mesure}", [dispo[0]])
         axes = st.multiselect(
-            T("ex_axe"), dispo, key=f"ex_axes_{mesure}", max_selections=3,
+            T("ex_axe"), dispo, key=f"ex_axes_{mesure}", max_selections=3, label_visibility="collapsed",
             format_func=lambda a: T(dict(AXES)[a]))
         if not axes:
             axes = [dispo[0]]
@@ -2342,7 +2342,7 @@ def _projection(cle, dispo, libelle, facultatif=False):
     return [a for a in (a1, a2, a3) if a is not None]
 
 
-def _zone_projection(cat, prefixe="exb"):
+def _zone_projection(cat, prefixe="exb", first_row=None):
     """Les dimensions de projection, et pour chacune ses catégories.
 
     DEUX GESTES DISTINCTS, ET C'EST TOUT L'OBJET DE CE BLOC. Choisir une
@@ -2369,13 +2369,10 @@ def _zone_projection(cat, prefixe="exb"):
     st.session_state.setdefault(cle_dims, [dispo[0]])
     dims = [a for a in st.session_state[cle_dims] if a in dispo]
 
-    st.markdown(f'<div class="exb-sec" style="margin:6px 0 2px">'
-                f'{_e(T("ex_axe"))}<span class="l"></span></div>',
-                unsafe_allow_html=True)
     choisies = []
     for i, axe in enumerate(list(dims)):
-        c1, c2, c3 = st.columns([1.3, 2.2, 0.5],
-                                vertical_alignment="bottom")
+        c1, c2, c3 = (first_row if i == 0 and first_row is not None else
+                      st.columns([1.3, 2.2, 0.5], vertical_alignment="bottom"))
         libres = [a for a in dispo if a == axe or a not in dims]
         with c1:
             nouveau = st.selectbox(
@@ -2574,31 +2571,20 @@ def _render_brut(cat, controls=None):
         # zéro n'a donc plus de rangée à elle : elle se range au bout de la
         # première, à hauteur du menu des questions.
 
-        # LA THÉMATIQUE EST UNE BARRE D'ONGLETS, COMME SUR L'ÉCRAN
-        # SATELLITAIRE, ET POUR LA MÊME RAISON. Un menu déroulant ne dit pas
-        # ce qu'il contient : il fallait le dérouler pour découvrir que
-        # l'enquête portait un module de pêche, et le lecteur qui n'y pensait
-        # pas ne le trouvait jamais. Une barre annonce ses dix rubriques avant
-        # le clic, chacune avec sa ligne de description, et le menu qui reste
-        # ne porte plus que les questions de la rubrique ouverte.
-        #
-        # CE SONT DES THÉMATIQUES, PAS LES MODULES DU QUESTIONNAIRE. Il y a
-        # quarante-six modules, qui suivent l'ordre de passation sur le
-        # terrain : onze d'entre eux sont agricoles. Une barre de
-        # quarante-six onglets ne se lit pas. Le regroupement est dans
-        # `themes_enquete`, et le module d'origine reste écrit à côté de
-        # chaque question.
+        # All themes exposes the complete question catalogue for keyword search.
+        # A specific theme narrows it without changing question identifiers.
         cats = {x.get("category") or "" for x in questions}
         codes = themes_enquete.codes_presents(cats)
         theme_slot, question_slot = controls if controls else st.columns([1, 2])
         with theme_slot:
             theme = onglets.barre(
-                "exb_theme_ong", codes,
-                titre=lambda c: T(themes_enquete.libelle(c)),
-                description=lambda c: T(themes_enquete.description(c)),
-                defaut=codes[0] if codes else None)
-        vues = [x for x in questions
-                if themes_enquete.theme_de(x.get("category")) == theme]
+                "exb_theme_ong", ["__all__"] + codes,
+                titre=lambda c: ("Tous les thèmes" if i18n.get_lang() == "fr" else "All themes")
+                    if c == "__all__" else T(themes_enquete.libelle(c)),
+                defaut="__all__")
+        vues = questions if theme == "__all__" else [
+            x for x in questions
+            if themes_enquete.theme_de(x.get("category")) == theme]
         with question_slot:
             libs = _libelles_liste(vues)
             with st.container(key="exb_q_zone"):
@@ -2607,16 +2593,12 @@ def _render_brut(cat, controls=None):
                     key=f"exb_q_{theme or 'tous'}", index=None,
                     placeholder=T("ex_b_choisir_q"), help=T("ex_chercher"),
                     format_func=lambda i: libs.get(i, ""))
-        with st.container(horizontal=True, horizontal_alignment="right"):
-            if st.button(T("ex_b_raz"), key="exb_raz", type="tertiary"):
-                st.session_state["ra_raz"] = True
-                st.rerun()
         if qi is None:
-            st.markdown(f'<p class="exb-x" style="margin:10px 0 0">'
-                        f'{_e(T("ex_b_vide"))}</p>', unsafe_allow_html=True)
             return
         q = next(x for x in vues if x["i"] == qi)
-        with st.container():
+        answer_col, criterion_col, categories_col, remove_col = st.columns(
+            [1.3, 1.3, 2.6, 0.22], vertical_alignment="bottom")
+        with answer_col:
             # LA RÉPONSE APPARTIENT À LA QUESTION, PAS À LA POPULATION. Elle
             # était rangée avec les filtres de profil ; elle revient à côté
             # de la question dont elle est une modalité, vide par défaut —
@@ -2627,7 +2609,7 @@ def _render_brut(cat, controls=None):
                 format_func=libelles_enquete.modalite)
 
         # ---- comment le résultat est découpé, et sur quoi ---------------
-        dims = _zone_projection(cat)
+        dims = _zone_projection(cat, first_row=(criterion_col, categories_col, remove_col))
         axes = [a for a, _v in dims]
         filtre = _croisement_questions(cat, questions,
                                        np.ones(cat["n"], dtype=bool))

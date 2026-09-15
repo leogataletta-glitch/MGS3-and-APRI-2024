@@ -42,7 +42,7 @@
  .maplibregl-popup-content{border-radius:10px;padding:14px;box-shadow:0 4px 18px #234c3e22}
  `;document.head.append(polish);
  let gl,ready=false,failed=false;
- function fallback(){if(failed)return;failed=true;window.apriTerrain=null;host.remove();if(gl)gl.remove();document.getElementById('carte').style.visibility='';carte.invalidateSize();top.disabled=tilt.disabled=true;note.textContent=fr?'Relief indisponible : la carte 2D reste accessible.':'Terrain unavailable: the 2D map remains available.';}
+ function fallback(){if(failed)return;failed=true;window.apriTerrain=null;host.remove();if(gl)gl.remove();document.getElementById('carte').style.visibility='visible';document.getElementById('map-loading')?.remove();carte.invalidateSize();top.disabled=tilt.disabled=true;note.textContent=fr?'Relief indisponible : la carte 2D reste accessible.':'Terrain unavailable: the 2D map remains available.';}
  const timeout=setTimeout(()=>{if(!ready)fallback();},25000);
  try{
   const m=await import('https://unpkg.com/maplibre-gl@6.9.0/dist/maplibre-gl.mjs');
@@ -115,7 +115,12 @@
    const track=e=>{pointer=e.point;cancelAnimationFrame(pointerFrame);pointerFrame=requestAnimationFrame(updatePosition);};
    gl.on('mousemove',track);gl.on('click',track);gl.on('moveend',updatePosition);gl.on('idle',updatePosition);
    gl.getCanvas().addEventListener('mouseleave',()=>{pointer=null;cancelAnimationFrame(pointerFrame);place.textContent=fr?'Survolez la carte':'Move over the map';altitude.textContent=fr?'Altitude estimée : —':'Estimated elevation: —';coordinates.textContent='WGS84 · —';});
-   host.style.visibility='visible';document.getElementById('carte').style.visibility='hidden';
+   // Reveal only after the configured camera and layers have rendered.
+   gl.once('render',()=>{
+    if(failed)return;
+    host.style.visibility='visible';
+    document.getElementById('map-loading')?.remove();
+   });
    gl.fitBounds([[-74.55,17.98],[-73.55,18.68]],{padding:{top:25,bottom:25,left:25,right:window.innerWidth>620?311:25},duration:0});
    top.disabled=tilt.disabled=false;
    const state=()=>{top.setAttribute('aria-pressed',String(gl.getPitch()<1));tilt.setAttribute('aria-pressed',String(gl.getPitch()>=1));};gl.on('moveend',state);state();
