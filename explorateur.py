@@ -2603,6 +2603,7 @@ def _render_brut(cat):
             titre=lambda c: T(themes_enquete.libelle(c)),
             description=lambda c: T(themes_enquete.description(c)),
             defaut=codes[0] if codes else None)
+        st.caption(T(themes_enquete.description(theme)))
         with st.container(key="exb_q_zone"):
             c2, c4, c0 = st.columns([3.2, 1.1, 0.55],
                                     vertical_alignment="bottom")
