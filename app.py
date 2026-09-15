@@ -2664,7 +2664,7 @@ with _c_contenu:
         # profils sur une mesure choisie répond à la même question, et à
         # celle que l'autre écran ne posait pas — comment ce groupe se situe
         # par rapport à un autre.
-        _CODES_RA = ["brut", "scores", "comparer", "relations", "solutions"]
+        _CODES_RA = ["brut", "scores", "comparer", "relations", "facteurs", "solutions"]
         import resultats_design
         # TOUTES LES BARRES DU SITE SONT AU MÊME FORMAT, celui à deux
         # lignes. Celle-ci avait été mise en compact pour gagner de la
@@ -2672,8 +2672,8 @@ with _c_contenu:
         # onglets contiennent, et un lecteur qui passait de la page des
         # boucles à celle-ci changeait d'outil sans changer de site.
         _ra = onglets.barre("ra_vue", _CODES_RA,
-                            titre=lambda c: (_locale_text("Relations entre variables" if i18n.get_lang() == "fr" else "Relationships between variables")) if c == "relations" else T("ra_o_" + c),
-                            description=lambda c: (_locale_text("Comparer les réponses observées" if i18n.get_lang() == "fr" else "Compare observed answers")) if c == "relations" else T("ra_d_" + c),
+                            titre=lambda c: ({"fr":"Facteurs associés","en":"Associated factors","es":"Factores asociados","ht":"Faktè ki asosye"}.get(i18n.get_lang(),"Associated factors")) if c == "facteurs" else (_locale_text("Relations entre variables" if i18n.get_lang() == "fr" else "Relationships between variables")) if c == "relations" else T("ra_o_" + c),
+                            description=lambda c: ({"fr":"Tester plusieurs facteurs ensemble","en":"Test several factors together","es":"Analizar varios factores juntos","ht":"Teste plizyè faktè ansanm"}.get(i18n.get_lang(),"Test several factors together")) if c == "facteurs" else (_locale_text("Comparer les réponses observées" if i18n.get_lang() == "fr" else "Compare observed answers")) if c == "relations" else T("ra_d_" + c),
                             defaut="brut")
         resultats_design.render(_CODES_RA.index(_ra) + 1, i18n.get_lang() == 'fr')
 
@@ -2681,7 +2681,7 @@ with _c_contenu:
         # C'est le même fichier de réponses individuelles ; le charger dans
         # chaque module en ferait cinq copies en mémoire.
         _cat = croisement_resultats._catalogue() \
-            if _ra in ("brut", "scores", "comparer", "relations",
+            if _ra in ("brut", "scores", "comparer", "relations", "facteurs",
                        "solutions") \
             else None
 
@@ -2764,6 +2764,10 @@ with _c_contenu:
             # quoi tout déplier. Ce qui s'affiche ici, désormais, c'est le
             # mode d'affichage choisi et rien d'autre.
             explorateur.render_scores(_cat)
+
+        elif _ra == "facteurs":
+            import facteurs_associes
+            facteurs_associes.render(_cat)
 
         elif _ra == "relations":
             import relations_resultats
