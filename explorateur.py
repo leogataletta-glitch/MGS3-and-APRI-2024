@@ -2655,8 +2655,8 @@ def _render_brut(cat, controls=None):
         with r2:
             extremes = st.selectbox(
                 _locale_text(T("ex_extremes")), ["tous", "top", "flop", "topflop", "ecart"],
-                key="exb_ext", label_visibility="collapsed",
-                format_func=_locale_formatter(lambda c: T("ex_extremes") + " : " + T(
+                key="exb_ext", label_visibility="visible",
+                format_func=_locale_formatter(lambda c: T(
                     {"tous": "ex_tous", "top": "ex_top", "flop": "ex_flop",
                      "topflop": "ex_topflop", "ecart": "ex_ecart"}[c])))
         with r3:
