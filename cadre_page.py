@@ -2867,7 +2867,7 @@ def _v_indicateurs():
     # l'onglet des sources, où elle annonçait une opération sur des
     # indicateurs qui n'avaient pas encore été montrés. Ici, elle ouvre les
     # cinq étapes qui l'exécutent, sur les chiffres de l'indicateur ouvert.
-    st.markdown(f'<p class="cad-attr-x" style="margin:16px 0 4px">'
+    st.markdown(f'<p class="cad-attr-x cad-indicator-note" style="margin:16px 0 4px">'
                 f'{_e(T("cad_band_x"))}</p>'
                 f'<div class="cad-ex-t">{_e(T("cad_ex_titre"))}</div>'
                 + _chaine_indicateur(vus[0])

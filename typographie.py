@@ -11,6 +11,7 @@ def appliquer(mode=None):
     {root}{{ --apri-font:Georgia, serif; --apri-content-size:14px; --apri-tab-size:13px; --apri-nav-size:14px; }}
     {root} {text}{exclude}{{font-family:var(--apri-font)!important;}}
     {content_rule}
+    {root} .st-key-zone_page :is(.cad-it,.cad-indicator-note){{ --apri-content-size:12px; }}
     {root} .st-key-zone_page :is(.cad-ch,.cad-nrm){{ --apri-content-size:13px; }}
     {root} .st-key-zone_nav {text}{exclude},
     {root} .st-key-menu_mobile {text}{exclude}{{font-size:var(--apri-nav-size)!important;}}
