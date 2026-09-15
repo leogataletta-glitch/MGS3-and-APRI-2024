@@ -204,10 +204,10 @@ TEXTES = {
     "cad_e3_v": {"en": "3.5 / 10", "fr": "3,5 / 10"},
     "cad_e3_x": {"en": "Standardized score for this indicator.",
                  "fr": "Score normalisé de cet indicateur."},
-    "cad_e4_t": {"en": "Weight & combine", "fr": "Pondérer et agréger"},
+    "cad_e4_t": {"en": "Weight", "fr": "Poids", "es": "Peso", "ht": "Pwa"},
     "cad_e4_x": {"en": "Relative importance of this indicator.",
                  "fr": "Importance relative de cet indicateur."},
-    "cad_e5_t": {"en": "Resilience score", "fr": "Score de résilience"},
+    "cad_e5_t": {"en": "Score × weight", "fr": "Score × poids", "es": "Puntuación × peso", "ht": "Nòt × pwa"},
     "cad_e5_v": {"en": "6.1 / 10", "fr": "6,1 / 10"},
     "cad_e5_x": {"en": "Weighted contribution to the dimension score.",
                  "fr": "Contribution pondérée au score de la dimension."},
@@ -2126,7 +2126,9 @@ def _formule(sens, haut):
 
 IRLA_SCALE_STYLE = """<style>
 .irla-scale{display:grid;gap:7px;padding-right:25px;margin-top:14px;}
-.cad-duo>.irla-scale{flex:1 1 100%;width:100%;box-sizing:border-box;}
+.cad-nrm .irla-scale{width:50%;box-sizing:border-box;}
+.cad-duo>.irla-scale{flex:0 0 50%;width:50%;box-sizing:border-box;}
+@media(max-width:700px){.cad-nrm .irla-scale,.cad-duo>.irla-scale{width:100%;flex-basis:100%;}}
 .irla-step{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:38px;padding:5px 10px 5px 16px;border-radius:0 24px 24px 0;background:var(--rank);}
 .stApp .irla-step>span{font:500 16px/1.5 Georgia,serif;color:var(--ink)!important;letter-spacing:.015em;}
 .irla-step>b{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#fff;color:#25384b;border:1px solid #62717b;font:600 14px/1 Arial,sans-serif;}

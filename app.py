@@ -1082,7 +1082,7 @@ st.markdown(("""
        mais en gris-vert éteint : elle garde son rôle, qui est de peser moins
        que les rubriques qu'elle coiffe. */
     text-transform: uppercase; color: #7d8d83;
-    margin: 20px 48px 7px 0 !important; padding-left: 0 !important; text-align: right !important;
+    margin: 18px 48px 9px 0 !important; padding-left: 0 !important; text-align: right !important;
   }
   div[class*="st-key-zone_nav"] div[data-testid="stButton"] > button {
     display: flex !important; align-items: center !important;

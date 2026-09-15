@@ -200,7 +200,8 @@ STYLE = """
         line-height:1.08; letter-spacing:-.02em; color:#153b2c;
         margin:0 0 18px; font-weight:400; text-align:left !important;
         max-width:none; }
-  .a2-titre span { display:block; white-space:normal; text-wrap:balance; }
+  .a2-titre span { display:block; white-space:normal; text-wrap:balance; hyphens:none!important; overflow-wrap:normal!important; word-break:normal!important; }
+  @media(min-width:1100px){.a2-hero-c.a2-hero-fr{max-width:760px;}}
   /* Un chapeau court, aligné à gauche et sans coupures automatiques des mots. */
   p.a2-intro { font-size:17px !important; color:#33443e !important;
         line-height:1.6 !important; margin:0 0 18px !important;
@@ -532,7 +533,7 @@ def render():
     st.markdown(
         f'<div class="a2-hero a2-hero-aquarelle" style="{fond}">'
         + (f'<div class="a2-hero-art" aria-hidden="true" style="background-image:url(data:image/png;base64,{aquarelle})"></div>' if aquarelle else '')
-        + '<div class="a2-hero-c">'
+        + f'<div class="a2-hero-c{" a2-hero-fr" if i18n.get_lang() == "fr" else ""}">'
         f'{marque}'
         f'<div class="a2-kick">{_e(T("a2_kicker"))}</div>'
         f'<div class="a2-titre">'
