@@ -168,7 +168,7 @@ STYLE = """
   /* LE REMBOURRAGE BAS EST UNE BANDE RÉSERVÉE, PAS UNE RESPIRATION. C'est là
      que le bouton d'appel vient se poser, remonté depuis le flux : sans elle,
      il se serait couché sur la dernière ligne du paragraphe. */
-  .a2-hero-c { position:relative; z-index:2; padding:40px 40px 80px calc(2rem + 46px);
+  .a2-hero-c { position:relative; z-index:2; padding:40px 40px 80px calc(2rem + 30px);
         max-width:680px; }
   /* LE BLOC DE MARQUE : l'emblème, un filet, la ligne institutionnelle. Les
      trois sont alignés sur leur milieu, comme dans le fichier de la charte,
@@ -349,7 +349,7 @@ STYLE = """
          réglée à l'œil sur une largeur de fenêtre ; mesurée, elle poussait
          le bouton cent pixels plus loin que le premier mot du chapeau, et
          le bandeau paraissait bancal. */
-      margin:-26px 0 12px 23px !important;
+      margin:-26px 0 12px 7px !important;
   }
   div[class*="st-key-a2_cta"] div[data-testid="stButton"] > button:hover {
       background:rgba(18,61,44,.08) !important; transform:none !important;
