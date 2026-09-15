@@ -109,8 +109,8 @@ def run(y, X, groups):
 def render(cat):
     fr = i18n.get_lang() == 'fr'
     def t(a,b): return tr(a if fr else b)
-    st.caption(t('Associations ajustées entre réponses de ménages · analyse exploratoire, sans interprétation causale.',
-                 'Adjusted associations between household responses · exploratory analysis, not causal effects.'))
+    from relations_guide import render_steps
+    render_steps('facteurs', fr)
     with st.expander(t('Ce que cette analyse permet de dire', 'What this analysis can tell us')):
         st.write(t('Le modèle compare les ménages d’une même section communale, en tenant compte simultanément des facteurs choisis. Chaque modalité est comparée à son absence parmi les réponses valides de sa question. Un coefficient de +10 signifie un écart ajusté de +10 points de pourcentage, pas une hausse de 10 %. Le choix des facteurs doit être motivé avant de lire les résultats : ne retenez pas uniquement ceux qui donnent un grand coefficient.',
                    'The model compares households within the same communal section while adjusting for the selected factors. Each response category is compared with its absence among valid answers to that question. A +10 coefficient means an adjusted difference of +10 percentage points, not a 10% increase. Choose factors on substantive grounds before inspecting results, not because they produce large coefficients.'))

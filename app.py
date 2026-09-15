@@ -2673,7 +2673,7 @@ with _c_contenu:
         # boucles à celle-ci changeait d'outil sans changer de site.
         _ra = onglets.barre("ra_vue", _CODES_RA,
                             titre=lambda c: ({"fr":"Facteurs associés","en":"Associated factors","es":"Factores asociados","ht":"Faktè ki asosye"}.get(i18n.get_lang(),"Associated factors")) if c == "facteurs" else (_locale_text("Relations entre variables" if i18n.get_lang() == "fr" else "Relationships between variables")) if c == "relations" else T("ra_o_" + c),
-                            description=lambda c: ({"fr":"Tester plusieurs facteurs ensemble","en":"Test several factors together","es":"Analizar varios factores juntos","ht":"Teste plizyè faktè ansanm"}.get(i18n.get_lang(),"Test several factors together")) if c == "facteurs" else (_locale_text("Comparer les réponses observées" if i18n.get_lang() == "fr" else "Compare observed answers")) if c == "relations" else T("ra_d_" + c),
+                            description=lambda c: ({"fr":"Tenir compte de plusieurs facteurs","en":"Account for several factors","es":"Analizar varios factores juntos","ht":"Teste plizyè faktè ansanm"}.get(i18n.get_lang(),"Account for several factors")) if c == "facteurs" else (_locale_text("Repérer les liens deux par deux" if i18n.get_lang() == "fr" else "Explore relationships two at a time")) if c == "relations" else T("ra_d_" + c),
                             defaut="brut")
         resultats_design.render(_CODES_RA.index(_ra) + 1, i18n.get_lang() == 'fr')
 
