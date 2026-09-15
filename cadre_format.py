@@ -24,7 +24,14 @@ def appliquer(active):
     </style>''', unsafe_allow_html=True)
     sub = '.stApp.stApp .st-key-zone_page .st-key-ong_cad_i_vue'
     st.markdown(f'''<style>
-    {root} [role="radiogroup"]{{background:transparent!important;padding:0!important;gap:12px!important;}}
+    {root} [role="radiogroup"]{{display:grid!important;grid-template-columns:repeat(12,minmax(0,1fr))!important;background:transparent!important;padding:0!important;gap:12px!important;}}
+    {root} [role="radiogroup"]>label{{grid-column:span 3;min-width:0!important;}}
+    {root} [role="radiogroup"]>label:nth-child(n+5){{grid-column:span 4;}}
+    @media(max-width:760px){{
+      {root} [role="radiogroup"]{{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
+      {root} [role="radiogroup"]>label:nth-child(n){{grid-column:span 1;}}
+      {root} [role="radiogroup"]>label:last-child{{grid-column:1 / -1;}}
+    }}
     {root} [role="radiogroup"]>label{{min-height:126px!important;border:1px solid #dce0e4!important;border-radius:9px!important;background:white!important;padding:20px 16px!important;}}
     {root} [role="radiogroup"]>label p:first-child strong{{font-weight:700!important;}}
     {root} [role="radiogroup"]>label:nth-child({active}){{background:white!important;border-color:#1f6549!important;box-shadow:inset 0 -5px 0 #176344!important;}}
