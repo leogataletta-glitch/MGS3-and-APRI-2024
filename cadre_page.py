@@ -2767,8 +2767,6 @@ def _v_indicateurs():
     # différentes posées par deux lecteurs différents, et les empiler sur un
     # seul écran aurait obligé chacun à traverser la réponse de l'autre.
     fr = i18n.get_lang() == "fr"
-    st.markdown('<h2 class="cad-explorer-title">'+('Explorer un indicateur' if fr else 'Explore an indicator')+'</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="cad-explorer-subtitle">'+('Comprendre sa mesure, son barème et sa contribution à la résilience.' if fr else 'Understand its measurement, scale and contribution to resilience.')+'</p>', unsafe_allow_html=True)
     vue = onglets.barre(
         "cad_i_vue", ["bareme", "meta"],
         titre=lambda c: T("cad_iv_" + c),

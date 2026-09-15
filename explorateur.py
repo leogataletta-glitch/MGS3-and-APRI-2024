@@ -2605,15 +2605,15 @@ def _render_brut(cat):
             defaut=codes[0] if codes else None)
         st.caption(T(themes_enquete.description(theme)))
         with st.container(key="exb_q_zone"):
-            c2, c4, c0 = st.columns([3.2, 1.1, 0.55],
-                                    vertical_alignment="bottom")
+            with st.container(horizontal=True, horizontal_alignment="right"):
+                c0 = st.container()
             with c0:
                 if st.button(T("ex_b_raz"), key="exb_raz", type="tertiary"):
                     st.session_state["ra_raz"] = True
                     st.rerun()
             vues = [x for x in questions
                     if themes_enquete.theme_de(x.get("category")) == theme]
-            with c2:
+            with st.container():
                 # AUCUNE QUESTION N'EST CHOISIE D'AVANCE. La première de la
                 # liste s'ouvrait toute seule, et l'écran affichait donc,
                 # dès l'arrivée, la ventilation complète d'une question que
@@ -2637,7 +2637,7 @@ def _render_brut(cat):
                         f'{_e(T("ex_b_vide"))}</p>', unsafe_allow_html=True)
             return
         q = next(x for x in vues if x["i"] == qi)
-        with c4:
+        with st.container():
             # LA RÉPONSE APPARTIENT À LA QUESTION, PAS À LA POPULATION. Elle
             # était rangée avec les filtres de profil ; elle revient à côté
             # de la question dont elle est une modalité, vide par défaut —
