@@ -2347,6 +2347,8 @@ def _entree_nav(mode, icone, prefix="nav"):
     if st.button(_locale_text(LIBELLE_MODE[mode]), key=f"{prefix}_{mode}",
               type="primary" if actif else "secondary",
               use_container_width=True):
+        if prefix == "mobile_nav":
+            st.session_state["mobile_menu_generation"] = st.session_state.get("mobile_menu_generation", 0) + 1
         _bascule(mode)
         st.rerun()
 
@@ -2523,7 +2525,8 @@ st.markdown("""
 import langue_nav
 
 with _menu_mobile:
-    with st.popover(_locale_text("☰ Menu"), use_container_width=True):
+    with st.popover(_locale_text("☰ Menu"), use_container_width=True,
+                    key=f"mobile_menu_{st.session_state.get('mobile_menu_generation', 0)}_{st.session_state['choix_langue']}"):
         langue_nav.render(_changer_langue, mobile=True)
         for _fam, _entrees in _NAV_FAMILLES:
             if _fam:
