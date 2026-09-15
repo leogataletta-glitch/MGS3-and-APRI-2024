@@ -8,7 +8,7 @@ def appliquer(mode=None):
     exclude = ':not([data-testid="stIconMaterial"]):not([class*="material-icons"]):not([class*="material-symbols"]):not([aria-hidden="true"])'
     content_rule = '' if mode == 'portail' else f'{root} .st-key-zone_page {text}{exclude}{{font-size:var(--apri-content-size)!important;}}'
     st.markdown(f'''<style>
-    {root}{{ --apri-font:Georgia, serif; --apri-content-size:14px; --apri-tab-size:15px; --apri-nav-size:14px; }}
+    {root}{{ --apri-font:Georgia, serif; --apri-content-size:14px; --apri-tab-size:13px; --apri-nav-size:14px; }}
     {root} {text}{exclude}{{font-family:var(--apri-font)!important;}}
     {content_rule}
     {root} .st-key-zone_nav {text}{exclude},
