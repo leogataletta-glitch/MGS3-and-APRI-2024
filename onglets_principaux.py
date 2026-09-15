@@ -18,7 +18,12 @@ def render(key, codes, selected, description):
         svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#244739" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+paths.get(code,document)+'</svg>'
         icons += f'{root} [role="radiogroup"]>label:nth-child({i})::before{{background-image:url("data:image/svg+xml,{quote(svg)}")!important;}}'
     active = list(codes).index(selected)+1
+    edge = quote('<svg xmlns="http://www.w3.org/2000/svg" width="12" height="80" viewBox="0 0 12 80"><path fill="white" d="M0 0h8v10H3v10h7v10H5v10h7v10H4v10h5v10H2v10H0z"/></svg>')
     st.markdown(f'''<style>
+    {root}{{position:relative!important;}}
+    {root}::before,{root}::after{{content:"";position:absolute;top:0;bottom:0;width:12px;z-index:3;pointer-events:none;background:url("data:image/svg+xml,{edge}") left top/12px 80px repeat-y;}}
+    {root}::before{{left:0;}}
+    {root}::after{{right:0;transform:scaleX(-1);}}
     .stApp.stApp.stApp.stApp .st-key-zone_page:has(.st-key-{key}){{padding-top:0!important;}}
     @media(min-width:1001px){{
       .stApp.stApp.stApp.stApp .st-key-zone_page:has(.st-key-{key}) [data-testid="stElementContainer"]:has(.apri-page-heading){{display:none!important;}}

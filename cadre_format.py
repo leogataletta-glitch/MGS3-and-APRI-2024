@@ -41,7 +41,7 @@ def appliquer(active):
     {sub} [role="radiogroup"]>label{{border-radius:0!important;border-bottom:3px solid transparent!important;}}
     {sub} [role="radiogroup"]>label:has(input:checked){{background:white!important;border-bottom-color:#176344!important;}}
     {sub} [role="radiogroup"]>label:has(input:checked) :is(p,strong){{color:#176344!important;}}
-    .stApp.stApp [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] .st-key-cad_i_dim){{background:white!important;border:1px solid #e7e9eb;border-radius:10px;padding:26px 28px!important;}}
+    .stApp.stApp [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] .st-key-cad_i_dim):not(:has(.st-key-zone_nav)){{background:white!important;border:1px solid #e7e9eb;border-radius:10px;padding:26px 28px!important;}}
     .stApp.stApp .st-key-cad_i_ind [data-baseweb="select"]>div:focus-within{{border-color:#176344!important;box-shadow:0 0 0 1px #176344!important;}}
     @media(max-width:600px){{.stApp.stApp p.cad-explorer-subtitle{{font-size:17px!important;}}}}
     </style>''', unsafe_allow_html=True)
