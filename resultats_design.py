@@ -29,6 +29,7 @@ def render(active, fr):
     {source} [role="radiogroup"]>label input[type="radio"]{{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;margin:0!important;}}
     {source} [role="radiogroup"]>label input[type="radio"] + div{{display:none!important;}}
     {source} [role="radiogroup"]>label::before,{source} [role="radiogroup"]>label::after{{display:none!important;}}
+    {source} [data-testid="stRadioOption"] div:has(> [data-testid="stMarkdownContainer"]) > div:not([data-testid="stMarkdownContainer"]){{display:none!important;}}
     /* Match the floating white active card used by the main navigation. */
     {source} [role="radiogroup"],{theme} [role="radiogroup"]{{border:0!important;background:white!important;overflow:visible!important;}}
     {theme} [role="radiogroup"]::before,{theme} [role="radiogroup"]::after{{display:none!important;}}
