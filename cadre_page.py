@@ -2615,7 +2615,7 @@ def _chaine(cases):
 
 
 def _chaine_generique():
-    """Les cinq étapes, sans chiffres, tant qu'aucun indicateur n'est ouvert.
+    """Les quatre étapes, sans chiffres, tant qu'aucun indicateur n'est ouvert.
 
     UN CHIFFRE AFFICHÉ EST UN RÉSULTAT, MÊME QUAND C'EST UN EXEMPLE. « 45
     min », « 3,5 / 10 » et « 6,1 / 10 » sur un écran où rien n'a été choisi
@@ -2631,12 +2631,11 @@ def _chaine_generique():
         _case(2, T("cad_e2_t"), T("cad_e2_v"), T("cad_e2_x"),
               operation=True),
         _case(3, T("cad_e3_t"), RIEN, T("cad_e3_x")),
-        _case(4, T("cad_e4_t"), RIEN, T("cad_e4_x")),
-        _case(5, T("cad_e5_t"), RIEN, T("cad_e5_x"))])
+        _case(4, T("cad_e4_t"), RIEN, T("cad_e4_x"))])
 
 
 def _chaine_indicateur(x):
-    """La même chaîne, déroulée sur l'indicateur que le lecteur regarde.
+    """La même chaîne à quatre étapes, déroulée sur l'indicateur que le lecteur regarde.
 
     LA CHAÎNE NE S'EXPLIQUE QUE SUR UN CAS. Cinq cases avec « 45 min » et
     « 3,5 / 10 » disent la mécanique sur une donnée qui n'est pas dans le
@@ -2670,9 +2669,7 @@ def _chaine_indicateur(x):
         _case(3, T("cad_e3_t"), sc_v, sc_x),
         _case(4, T("cad_e4_t"), T("cad_ex_p_v", p=_fmt(x["poids"], 1)),
               T("cad_ex_p_x")),
-        _case(5, _locale_text("Score × poids" if i18n.get_lang() == "fr" else "Score × weight"),
-              "—" if x["score"] is None else _fmt(x["score"] * x["poids"], 2),
-              _locale_text("Terme ajouté à la somme pondérée, avant division par la somme des poids. Ce n’est pas un score sur 10." if i18n.get_lang() == "fr" else "Term added to the weighted sum, before dividing by the sum of weights. This is not a score out of 10.")),
+
     ]) + (
         '<div style="margin:24px 0;padding:16px 0;border-top:1px solid #edf1ee">'
         + '<p style="font:20px Georgia,serif;color:#245b43">'
