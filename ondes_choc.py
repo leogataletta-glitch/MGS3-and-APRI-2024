@@ -43,6 +43,10 @@ calendrier — rien ici ne dit qu'une vague dure un mois ou dix ans. C'est
 l'ordre des relais, pas leur durée.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import text as _locale_text
+
 import json
 
 import streamlit as st
@@ -166,6 +170,7 @@ for _c, _v in TEXTES.items():
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -633,7 +638,7 @@ def render(entete=True):
     lang = i18n.get_lang()
     d = _graphe(lang)
     if not d:
-        st.info(T("oc_absent"))
+        st.info(_locale_text(T("oc_absent")))
         return
 
     if entete:
@@ -653,13 +658,13 @@ def render(entete=True):
     # LA HAUTEUR EST FIXE ET GÉNÉREUSE. Une iframe trop courte coupe le panneau
     # du bas sans rien dire ; personne ne devine qu'il faut faire défiler à
     # l'intérieur d'un cadre qui n'a pas de barre.
-    components.html(_html(d, lang), height=1150, scrolling=False)
-    st.caption(T("oc_avert"))
+    components.html(_locale_html(_html(d, lang)), height=1150, scrolling=False)
+    st.caption(_locale_text(T("oc_avert")))
 
     # LE BARÈME EST REPLIÉ, MAIS IL EST LÀ. Il ne se lit pas en même temps que
     # l'onde ; il se lit quand on conteste une valeur, et ce jour-là il doit
     # être sous la main plutôt que dans une annexe.
-    with st.expander(T("oc_bareme_t")):
+    with st.expander(_locale_text(T("oc_bareme_t"))):
         st.markdown(f'<p style="font-size:14px;line-height:1.6;color:{ENCRE2};'
                     f'text-align:left;max-width:92ch">{T("oc_bareme_x")}</p>',
                     unsafe_allow_html=True)

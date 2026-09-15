@@ -22,6 +22,8 @@ que l'indice ne prétend pas — appartient au cadre de résilience, qui l'expos
 onglet par onglet. Deux exposés de la même méthode divergent toujours.
 """
 
+from traductions import text as _locale_text
+
 import streamlit as st
 
 import i18n
@@ -377,6 +379,7 @@ _STYLE = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 

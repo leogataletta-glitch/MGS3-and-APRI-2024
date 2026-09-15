@@ -41,6 +41,10 @@ derrière un résultat. Elle ne prédit pas ce qui arriverait sur le terrain : e
 dit ce que le modèle implique, ce qui est autre chose et doit se lire comme tel.
 """
 
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import numpy as np
 import streamlit as st
 
@@ -268,6 +272,7 @@ for _c, _v in TEXTES.items():
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -732,28 +737,28 @@ def render(entete=True):
     lang = i18n.get_lang()
     m = _modele(lang)
     if not m:
-        st.info(T("bcl_absent") if "bcl_absent" in i18n.DICO else "—")
+        st.info(_locale_text(T("bcl_absent") if "bcl_absent" in i18n.DICO else "—"))
         return
 
     if entete:
-        st.title(T("mode_levier"))
+        st.title(_locale_text(T("mode_levier")))
 
     choix = sorted(m["ids"], key=lambda i_: m["noms"][i_])
     g, d = st.columns([1.4, 1], gap="large")
     with g:
-        source = st.selectbox(T("sc_quoi"), choix,
+        source = st.selectbox(_locale_text(T("sc_quoi")), choix,
                               index=choix.index("elec") if "elec" in choix else 0,
-                              format_func=lambda i_: m["noms"][i_],
+                              format_func=_locale_formatter(lambda i_: m["noms"][i_]),
                               key=f"sc_src_{lang}")
     with d:
-        delta = st.slider(T("sc_combien"), -3.0, 3.0, 2.0, 0.5,
+        delta = st.slider(_locale_text(T("sc_combien")), -3.0, 3.0, 2.0, 0.5,
                           key=f"sc_delta_{lang}")
 
     if not m["sortants"].get(source):
-        st.info(T("sc_rien"))
+        st.info(_locale_text(T("sc_rien")))
         return
     if abs(delta) < 1e-9:
-        st.info(T("sc_nul"))
+        st.info(_locale_text(T("sc_nul")))
         return
 
     total, tours, reste = _propager(m, source, delta)
@@ -771,7 +776,7 @@ def _ecran_liste(m, total, tours, source, delta, lignes):
     st.markdown(f'<div class="sc-h">{_e(T("sc_titre"))}</div>'
                 f'<p class="sc-x">{_e(T("sc_intro"))}</p>',
                 unsafe_allow_html=True)
-    st.caption(T("sc_pose", n=m["noms"][source], d=_f(delta, 1, True)))
+    st.caption(_locale_text(T("sc_pose", n=m["noms"][source], d=_f(delta, 1, True))))
     _tableau(m, total, tours, source)
     st.markdown(f'<p class="sc-x" style="margin-top:8px">'
                 f'{_e(T("sc_liste_x", k=len(lignes), n=len(m["ids"])))}</p>',
@@ -791,8 +796,8 @@ def _ecran_pourquoi(m, total, tours, reste, source, delta, lignes, lang):
     st.markdown(f'<div class="sc-h">{_e(T("sc_pourquoi_t"))}</div>',
                 unsafe_allow_html=True)
     cibles = [x["id"] for x in lignes]
-    cible = st.selectbox(T("sc_cible"), cibles,
-                         format_func=lambda i_: m["noms"][i_],
+    cible = st.selectbox(_locale_text(T("sc_cible")), cibles,
+                         format_func=_locale_formatter(lambda i_: m["noms"][i_]),
                          key=f"sc_cible_{lang}_{source}")
     i = m["idx"][cible]
 

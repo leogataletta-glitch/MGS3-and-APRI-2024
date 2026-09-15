@@ -9,6 +9,8 @@ qu'elle porte — le format même de la « fiche d'action » de l'article, à ce
 près que l'atelier n'a pas encore eu lieu et que la page le dit.
 """
 
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -60,6 +62,7 @@ def _t(o, champ):
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -89,14 +92,14 @@ def render():
     pistes, saillants = _charger()
     st.markdown(_styles(), unsafe_allow_html=True)
 
-    st.title(T("p_titre"))
+    st.title(_locale_text(T("p_titre")))
     st.markdown(
         '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
         'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
         + T("p_sous_titre") + "</p>", unsafe_allow_html=True)
 
     if pistes is None:
-        st.error("pistes.json")
+        st.error(_locale_text("pistes.json"))
         st.stop()
 
     # ---- le cadre, avant toute piste --------------------------------------
@@ -160,5 +163,5 @@ def render():
                                     "#a8690a", "#fdf7ec"),
                             unsafe_allow_html=True)
 
-    st.caption(T("p_source"))
-    st.caption(T("credit"))
+    st.caption(_locale_text(T("p_source")))
+    st.caption(_locale_text(T("credit")))

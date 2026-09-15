@@ -12,6 +12,11 @@ Tous les chiffres viennent de saillants.json, recalculé à chaque exécution de
 compute_saillants.py depuis le cache d'enquête. Aucun n'est écrit en dur ici.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import text as _locale_text
+from traductions import formatter as _locale_formatter
+
 import json
 import os
 
@@ -117,8 +122,8 @@ def _barres(figures, hauteur_min=0):
     svg = map_render.render_score_bars_svg(rows, vmax=100, width=1040,
                                            unite="%", annotations=annot)
     components.html(
-        '<div style="background:#ffffff;font-family:system-ui,-apple-system,'
-        "'Segoe UI',sans-serif\">" + svg + "</div>",
+        _locale_html('<div style="background:#ffffff;font-family:system-ui,-apple-system,'
+        "'Segoe UI',sans-serif\">" + svg + "</div>"),
         height=max(len(rows) * 28 + 30, hauteur_min), scrolling=False)
 
 
@@ -126,14 +131,14 @@ def render():
     doc = _charger()
     st.markdown(_styles(), unsafe_allow_html=True)
 
-    st.title(T("s_titre"))
+    st.title(_locale_text(T("s_titre")))
     st.markdown(
         '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
         'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
         + T("s_sous_titre") + "</p>", unsafe_allow_html=True)
 
     if doc is None:
-        st.error("saillants.json")
+        st.error(_locale_text("saillants.json"))
         st.stop()
 
     constats = {c["cle"]: c for c in doc["constats"]}
@@ -163,7 +168,7 @@ def render():
                         _lib(f), round(f["pct"], 1), "%",
                         T("s_des_menages"), couleur=coul),
                     unsafe_allow_html=True)
-        st.caption(T("s_bloc0_note"))
+        st.caption(_locale_text(T("s_bloc0_note")))
 
     # ------------------------------------------------- les huit constats
     for k, cle in enumerate(ordre):
@@ -182,11 +187,11 @@ def render():
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc vert">{T("s_bloc_profil")}</div>',
                     unsafe_allow_html=True)
-        st.caption(T("s_bloc_profil_note"))
+        st.caption(_locale_text(T("s_bloc_profil_note")))
 
         choix = st.selectbox(
-            T("s_choisir_profil"), doc["profils"] + SECTIONS,
-            format_func=lambda c: _profil_nom(c),
+            _locale_text(T("s_choisir_profil")), doc["profils"] + SECTIONS,
+            format_func=_locale_formatter(lambda c: _profil_nom(c)),
             key=f"saillants_profil_{i18n.get_lang()}")
         n_profil = doc["effectifs"].get(choix, 0)
         est_section = choix in SECTIONS
@@ -204,14 +209,14 @@ def render():
                     continue
                 lignes.append((_lib(f), v, v - f["pct"]))
         st.markdown(_tableau_ecarts(lignes), unsafe_allow_html=True)
-        st.caption(T("s_profil_lecture"))
+        st.caption(_locale_text(T("s_profil_lecture")))
 
     # ---------------------------------------------------- liste automatique
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc">{T("s_bloc_auto")}</div>',
                     unsafe_allow_html=True)
-        st.caption(T("s_bloc_auto_note"))
-        combien = st.slider(T("s_combien"), 5, 40, 15,
+        st.caption(_locale_text(T("s_bloc_auto_note")))
+        combien = st.slider(_locale_text(T("s_combien")), 5, 40, 15,
                             key=f"saillants_n_{i18n.get_lang()}")
         indic = doc["auto_indicateurs"][:combien]
         rows = [(_lib(r), r["pct"]) for r in indic]
@@ -219,12 +224,12 @@ def render():
         svg = map_render.render_score_bars_svg(
             rows, vmax=100, width=1040, unite="%", annotations=annot)
         components.html(
-            '<div style="background:#ffffff;font-family:system-ui,-apple-system,'
-            "'Segoe UI',sans-serif\">" + svg + "</div>",
+            _locale_html('<div style="background:#ffffff;font-family:system-ui,-apple-system,'
+            "'Segoe UI',sans-serif\">" + svg + "</div>"),
             height=len(rows) * 28 + 30, scrolling=False)
 
-        with st.expander(T("s_reponses_massives")):
-            st.caption(T("s_reponses_massives_note"))
+        with st.expander(_locale_text(T("s_reponses_massives"))):
+            st.caption(_locale_text(T("s_reponses_massives_note")))
             for r in doc["auto_reponses"][:combien]:
                 st.markdown(
                     f'<div style="border-bottom:1px solid #eef2f7;padding:7px 0">'
@@ -235,8 +240,8 @@ def render():
                     f'{r["question"]} — « {r["modalite"]} »</span></div>',
                     unsafe_allow_html=True)
 
-    st.caption(T("s_source", n=doc["base"], q=doc["n_questions"]))
-    st.caption(T("credit"))
+    st.caption(_locale_text(T("s_source", n=doc["base"], q=doc["n_questions"])))
+    st.caption(_locale_text(T("credit")))
 
 
 def _tableau_ecarts(lignes):

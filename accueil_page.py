@@ -21,6 +21,10 @@ données, et personne ne s'en aperçoit — c'est le pire défaut possible pour 
 vitrine.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -74,6 +78,7 @@ VEDETTES = [
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -336,7 +341,7 @@ def render(actualites=None):
     # là. La page commence donc par le premier fait — le périmètre — au lieu
     # de se présenter une deuxième fois.
     if not res:
-        st.info(T("e_absent"))
+        st.info(_locale_text(T("e_absent")))
         st.stop()
 
     scores_sec = {s: score_pondere(res, s) for s in SECTIONS}
@@ -421,7 +426,7 @@ def render(actualites=None):
                 + f'<div class="a-liens-t">{_e(T("a_acces"))}</div>',
                 unsafe_allow_html=True)
             for mode, _ico, _c, _f in ACCES:
-                st.button(f'**{T("mode_" + mode)}**\n{T("a_acces_" + mode)}',
+                st.button(_locale_text(f'**{T("mode_" + mode)}**\n{T("a_acces_" + mode)}'),
                           key=f"acces_{mode}", use_container_width=True,
                           on_click=_aller, args=(mode,))
 
@@ -458,8 +463,8 @@ def render(actualites=None):
                 f'</div></div>')
         st.markdown('<div style="display:flex;gap:12px;flex-wrap:wrap">'
                     + ''.join(cartes) + '</div>', unsafe_allow_html=True)
-        st.caption(T("a_bloc_saillants_texte"))
-        st.caption(T("a_bloc_saillants_note"))
+        st.caption(_locale_text(T("a_bloc_saillants_texte")))
+        st.caption(_locale_text(T("a_bloc_saillants_note")))
 
     # ------------------------------------------------------------- la carte
     # Le diagramme en barres est retiré. Il disait la même chose que la carte
@@ -472,13 +477,13 @@ def render(actualites=None):
                     unsafe_allow_html=True)
         carte = _carte_vignette(res)
         if carte[0]:
-            components.html(carte[0], height=carte[1] + 40, scrolling=False)
-        st.caption(T("a_bloc_carte_note",
+            components.html(_locale_html(carte[0]), height=carte[1] + 40, scrolling=False)
+        st.caption(_locale_text(T("a_bloc_carte_note",
                      h=max(scores_sec, key=scores_sec.get),
-                     b=min(scores_sec, key=scores_sec.get)))
+                     b=min(scores_sec, key=scores_sec.get))))
 
     if actualites is not None:
         actualites()
 
-    st.caption(T("e_source"))
-    st.caption(T("credit"))
+    st.caption(_locale_text(T("e_source")))
+    st.caption(_locale_text(T("credit")))

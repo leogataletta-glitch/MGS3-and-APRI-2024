@@ -20,6 +20,10 @@ sa saison : deux capteurs et deux fenêtres donnent deux chiffres différents
 pour la même forêt, et le lecteur doit savoir lequel il lit.
 """
 
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -1461,6 +1465,7 @@ STYLE = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -1735,7 +1740,7 @@ def render():
     d = _charger()
     dispo = [m for m in MESURES if d.get(m[3])]
     if not dispo:
-        st.info(T("sat_indispo"))
+        st.info(_locale_text(T("sat_indispo")))
         return
 
     # LES CATÉGORIES SONT DES ONGLETS, ET C'EST CE QUI REND LES MESURES
@@ -1750,15 +1755,15 @@ def render():
                         defaut=cats[0])
     lot = [m for m in dispo if m[0] == cat]
     if not lot:
-        st.info(T("sat_indispo"))
+        st.info(_locale_text(T("sat_indispo")))
         return
 
     c1, c2, c3 = st.columns([2, 0.8, 1])
     with c1:
         k = st.selectbox(
-            T("sat_mesure"), list(range(len(lot))), key=f"sat_m_{cat}",
-            format_func=lambda i: _libelle(lot[i][2], lot[i],
-                                           d[lot[i][3]], None))
+            _locale_text(T("sat_mesure")), list(range(len(lot))), key=f"sat_m_{cat}",
+            format_func=_locale_formatter(lambda i: _libelle(lot[i][2], lot[i],
+                                           d[lot[i][3]], None)))
     mesure = lot[k]
     _cat, _code, cle_lib, fichier, spec, unite, dec, polarite = mesure
     src = d[fichier]
@@ -1766,16 +1771,16 @@ def render():
     annee = None
     with c2:
         if ans and not spec.endswith(":delta"):
-            annee = st.selectbox(T("sat_annee"), list(reversed(ans)),
-                                 key="sat_a")
+            annee = st.selectbox(_locale_text(T("sat_annee")), list(reversed(ans)),
+                                 key="sat_a", format_func=_locale_formatter(str))
     with c3:
-        forme = st.selectbox(T("sat_format"), ["barres", "carte", "tableau"],
+        forme = st.selectbox(_locale_text(T("sat_format")), ["barres", "carte", "tableau"],
                              key="sat_forme",
-                             format_func=lambda f: T("sat_" + f))
+                             format_func=_locale_formatter(lambda f: T("sat_" + f)))
 
     vals, _a0, _a1 = _valeurs(src, spec, annee)
     if not vals:
-        st.info(T("sat_indispo"))
+        st.info(_locale_text(T("sat_indispo")))
         return
     lib = _libelle(cle_lib, mesure, src, annee)
     # LA MOYENNE DU TERRITOIRE EST CELLE DES SECTIONS, PAS UN TOTAL. Additionner
@@ -1867,7 +1872,7 @@ def _dossier(mesure, vals, unite, dec):
              "fin": "sat_ref_zonal_fin"}.get(mesure[3], "sat_ref_zonal")
     if mesure[3] in ("sol", "deg"):
         zonal = "sat_ref_zonal"
-    with st.expander(T("sat_ref_t")):
+    with st.expander(_locale_text(T("sat_ref_t"))):
         cal0 = "sat_calc_" + mesure[3]
         if not r:
             st.markdown(

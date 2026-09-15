@@ -9,6 +9,12 @@ Un tableau de bord qui ne montre que ce qu'il possède laisse croire que le rest
 n'existe pas.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -105,6 +111,7 @@ def _styles():
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -215,7 +222,7 @@ def _bloc_grille(grille, foret, focus=ENSEMBLE):
 
         annees = sorted({c["a"] for c in grille["cellules"]})
         a0, a1 = min(annees), max(annees)
-        bornes = st.slider(T("e_grille_periode"), a0, a1, (a0, a1),
+        bornes = st.slider(_locale_text(T("e_grille_periode")), a0, a1, (a0, a1),
                            key=f"env_grille_{i18n.get_lang()}")
         retenues = [c for c in grille["cellules"]
                     if bornes[0] <= c["a"] <= bornes[1]]
@@ -262,12 +269,12 @@ def _bloc_grille(grille, foret, focus=ENSEMBLE):
             f'<span style="font-size:11.5px;color:#52514e">{a}</span></span>'
             for a in (2001, 2006, 2011, 2016, 2021, 2025))
         components.html(
-            '<div style="font-family:system-ui,-apple-system,\'Segoe UI\','
+            _locale_html('<div style="font-family:system-ui,-apple-system,\'Segoe UI\','
             'sans-serif;background:#ffffff"><div style="margin:0 0 8px">'
             f'<span style="font-size:11.5px;color:#898781;letter-spacing:.05em;'
             f'margin-right:12px">{T("e_grille_legende")}</span>{legende}</div>'
-            f'{svg}</div>', height=hauteur + 46, scrolling=False)
-        st.caption(T("e_bloc_grille_note"))
+            f'{svg}</div>'), height=hauteur + 46, scrolling=False)
+        st.caption(_locale_text(T("e_bloc_grille_note")))
 
 
 def _serie_pluie_svg(serie, normale, largeur=1040,
@@ -400,7 +407,7 @@ def _bloc_pluie(pluie, focus=ENSEMBLE):
 
         if focus == ENSEMBLE or focus not in pluie["sections"]:
             d = _pluie_ensemble(pluie)
-            st.caption(T("e_vue_ensemble_note"))
+            st.caption(_locale_text(T("e_vue_ensemble_note")))
         else:
             d = pluie["sections"][focus]
 
@@ -423,14 +430,14 @@ def _bloc_pluie(pluie, focus=ENSEMBLE):
 
         svg = _serie_pluie_svg(d["serie_mm"], d["normale_mm"])
         components.html(
-            '<div style="background:#ffffff;font-family:system-ui,-apple-system,'
-            "'Segoe UI',sans-serif\">" + svg + "</div>",
+            _locale_html('<div style="background:#ffffff;font-family:system-ui,-apple-system,'
+            "'Segoe UI',sans-serif\">" + svg + "</div>"),
             height=245, scrolling=False)
-        st.caption(T("e_bloc_pluie_note"))
+        st.caption(_locale_text(T("e_bloc_pluie_note")))
 
         st.markdown('<div style="height:14px"></div>', unsafe_allow_html=True)
         st.markdown(_tableau_pluie(pluie), unsafe_allow_html=True)
-        st.caption(T("e_pc_note"))
+        st.caption(_locale_text(T("e_pc_note")))
 
 
 def _tableau_saison(saison):
@@ -548,7 +555,7 @@ def _bloc_saison(saison, focus=ENSEMBLE):
 
         if focus == ENSEMBLE or focus not in saison["sections"]:
             d = _saison_ensemble(saison)
-            st.caption(T("e_vue_ensemble_note"))
+            st.caption(_locale_text(T("e_vue_ensemble_note")))
         else:
             d = saison["sections"][focus]
         norm = saison["normale_periode"]
@@ -585,14 +592,14 @@ def _bloc_saison(saison, focus=ENSEMBLE):
         svg = _serie_pluie_svg(d["serie_mam"], d["mam_normale_mm"],
                                cle_normale="e_normale_mam_ligne")
         components.html(
-            '<div style="background:#ffffff;font-family:system-ui,-apple-system,'
-            "'Segoe UI',sans-serif\">" + svg + "</div>",
+            _locale_html('<div style="background:#ffffff;font-family:system-ui,-apple-system,'
+            "'Segoe UI',sans-serif\">" + svg + "</div>"),
             height=245, scrolling=False)
-        st.caption(T("e_bloc_saison_note"))
+        st.caption(_locale_text(T("e_bloc_saison_note")))
 
         st.markdown('<div style="height:14px"></div>', unsafe_allow_html=True)
         st.markdown(_tableau_saison(saison), unsafe_allow_html=True)
-        st.caption(T("e_s_tableau_note"))
+        st.caption(_locale_text(T("e_s_tableau_note")))
         st.markdown(
             f'<div style="border-left:3px solid #cfe2f3;padding:2px 0 2px 14px;'
             f'margin:14px 0 0;font-size:13px;line-height:1.6;color:#6b7590;'
@@ -658,7 +665,7 @@ def _onglet_foret(foret, focus):
         st.markdown(f'<div class="titre-bloc vert">{T("e_bloc1")}</div>',
                     unsafe_allow_html=True)
         if focus != ENSEMBLE:
-            st.caption(T("e_vue_section_note", s=focus))
+            st.caption(_locale_text(T("e_vue_section_note", s=focus)))
 
         def sous(cle, meilleur_haut, base):
             if focus == ENSEMBLE:
@@ -709,18 +716,18 @@ def _onglet_foret(foret, focus):
         svg = _serie_annuelle_svg(d["pertes_annuelles_ha"],
                                   chocs=d.get("annees_choc") or ())
         components.html(
-            '<div style="background:#ffffff;font-family:system-ui,-apple-system,'
-            "'Segoe UI',sans-serif\">" + svg + "</div>",
+            _locale_html('<div style="background:#ffffff;font-family:system-ui,-apple-system,'
+            "'Segoe UI',sans-serif\">" + svg + "</div>"),
             height=225, scrolling=False)
-        st.caption(T("e_bloc2_note"))
+        st.caption(_locale_text(T("e_bloc2_note")))
 
     # ------------------------------------------------------------- la carte
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc">{T("e_bloc3")}</div>',
                     unsafe_allow_html=True)
         cle, unite, polarite = CARTES[
-            st.selectbox(T("e_quoi_carto"), range(len(CARTES)),
-                         format_func=lambda i: T("e_carte_" + CARTES[i][0]),
+            st.selectbox(_locale_text(T("e_quoi_carto")), range(len(CARTES)),
+                         format_func=_locale_formatter(lambda i: T("e_carte_" + CARTES[i][0])),
                          key=f"env_carte_{i18n.get_lang()}")]
         valeurs = {s: secs.get(s, {}).get(cle) for s in SECTIONS}
         seuils = map_render.nice_thresholds(
@@ -739,18 +746,18 @@ def _onglet_foret(foret, focus):
             f'color:#52514e">{lab}</span></span>'
             for c, lab in map_render.legend_items(seuils_ret, polarite, unite))
         components.html(
-            '<div style="font-family:system-ui,-apple-system,\'Segoe UI\','
+            _locale_html('<div style="font-family:system-ui,-apple-system,\'Segoe UI\','
             'sans-serif;background:#ffffff"><div style="margin:0 0 8px">'
             f'<span style="font-size:11.5px;color:#898781;letter-spacing:.05em;'
             f'margin-right:14px">{T("legende_seuils")}</span>{legende}</div>'
-            f'{svg}</div>', height=hauteur + 46, scrolling=False)
-        st.caption(T("e_carte_toujours_note"))
+            f'{svg}</div>'), height=hauteur + 46, scrolling=False)
+        st.caption(_locale_text(T("e_carte_toujours_note")))
 
     # ------------------------------------------------------------ le détail
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc vert">{T("e_bloc4")}</div>',
                     unsafe_allow_html=True)
-        st.caption(T("e_bloc4_note"))
+        st.caption(_locale_text(T("e_bloc4_note")))
         st.markdown(_tableau_sections(foret), unsafe_allow_html=True)
 
 
@@ -795,7 +802,7 @@ def _fiche_section(foret, pluie, saison, grille, res, focus):
                 unsafe_allow_html=True)
             st.markdown(_tableau_recap(foret, pluie, saison),
                         unsafe_allow_html=True)
-            st.caption(T("e_fiche_recap_note"))
+            st.caption(_locale_text(T("e_fiche_recap_note")))
             return
 
         st.markdown(
@@ -885,7 +892,7 @@ def _fiche_section(foret, pluie, saison, grille, res, focus):
 
         if res:
             st.markdown(_tableau_scores(res, focus), unsafe_allow_html=True)
-            st.caption(T("e_fiche_scores_note"))
+            st.caption(_locale_text(T("e_fiche_scores_note")))
 
 
 def _tableau_scores(res, focus):
@@ -1062,8 +1069,8 @@ def _onglet_indice(cle, ligne, champ, mode, coul, res, jeu, focus):
                 f'margin:0">{T("e_i_attente_etapes")}</p></div>',
                 unsafe_allow_html=True)
             if entree and entree.get("echelle"):
-                st.caption(f'{T("e_i_echelle")} : {entree["echelle"]}')
-            st.caption(T("e_i_fenetre"))
+                st.caption(_locale_text(f'{T("e_i_echelle")} : {entree["echelle"]}'))
+            st.caption(_locale_text(T("e_i_fenetre")))
             return
 
         _rendu_indice(cle, champ, mode, coul, entree, jeu, focus)
@@ -1082,14 +1089,14 @@ def _rendu_indice(cle, champ, mode, coul, entree, indices, focus):
     annees = sorted(indices["periode_annees"], key=int)
     if focus == ENSEMBLE or focus not in secs:
         serie = _moyenne_series(secs, "serie_" + champ)
-        st.caption(T("e_vue_ensemble_note"))
+        st.caption(_locale_text(T("e_vue_ensemble_note")))
     else:
         serie = secs[focus]["serie_" + champ]
 
     ref = indices["reference"]
     dispo = [a for a in annees if str(a) in serie]
     if not dispo:
-        st.info(T("e_absent"))
+        st.info(_locale_text(T("e_absent")))
         return
     val_ref = [serie[str(a)] for a in dispo if a <= ref]
     val_rec = [serie[str(a)] for a in dispo if a > ref]
@@ -1132,14 +1139,14 @@ def _rendu_indice(cle, champ, mode, coul, entree, indices, focus):
                  if mode == "niveau" else m_ref)
     svg = _serie_indice_svg(serie, reference, coul)
     components.html(
-        '<div style="background:#ffffff;font-family:system-ui,-apple-system,'
-        "'Segoe UI',sans-serif\">" + svg + "</div>",
+        _locale_html('<div style="background:#ffffff;font-family:system-ui,-apple-system,'
+        "'Segoe UI',sans-serif\">" + svg + "</div>"),
         height=235, scrolling=False)
-    st.caption(T("e_i_serie_niveau_note") if mode == "niveau"
-               else T("e_i_serie_note"))
+    st.caption(_locale_text(T("e_i_serie_niveau_note") if mode == "niveau"
+               else T("e_i_serie_note")))
     st.markdown(_tableau_indice(indices, champ, ref), unsafe_allow_html=True)
     if entree and entree.get("echelle"):
-        st.caption(f'{T("e_i_echelle")} : {entree["echelle"]}')
+        st.caption(_locale_text(f'{T("e_i_echelle")} : {entree["echelle"]}'))
 
 
 def _serie_indice_svg(serie, reference, couleur, largeur=1040):
@@ -1268,7 +1275,7 @@ def _onglet_aires(aires, res, focus):
         st.markdown(f'<div class="titre-bloc">{T("e_ap_titre")}</div>',
                     unsafe_allow_html=True)
         if not aires:
-            st.info(T("e_absent"))
+            st.info(_locale_text(T("e_absent")))
             return
         st.markdown(
             f'<p style="font-size:14.5px;line-height:1.65;color:#3c4761;'
@@ -1319,7 +1326,7 @@ def _onglet_aires(aires, res, focus):
             f'<div style="font-size:14.5px;color:#3c4761;line-height:1.6;'
             f'margin-top:3px">{T("e_ap_mangrove_texte")}</div></div>',
             unsafe_allow_html=True)
-        st.caption(T("e_ap_non_score"))
+        st.caption(_locale_text(T("e_ap_non_score")))
 
 
 def _onglet_lacunes(res):
@@ -1359,14 +1366,14 @@ def render(entete=True):
     st.markdown(_styles(), unsafe_allow_html=True)
 
     if entete:
-        st.title(T("e_titre"))
+        st.title(_locale_text(T("e_titre")))
         st.markdown(
             '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
             'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
             + T("e_sous_titre") + "</p>", unsafe_allow_html=True)
 
     if foret is None:
-        st.info(T("e_absent"))
+        st.info(_locale_text(T("e_absent")))
         st.stop()
 
     st.markdown(
@@ -1384,8 +1391,8 @@ def render(entete=True):
     dispo = [s for s in SECTIONS if s in foret["sections"]]
     col_sel, col_txt = st.columns([2, 3])
     with col_sel:
-        focus = st.selectbox(T("e_focus"), [ENSEMBLE] + dispo,
-                             format_func=_libelle_focus,
+        focus = st.selectbox(_locale_text(T("e_focus")), [ENSEMBLE] + dispo,
+                             format_func=_locale_formatter(_libelle_focus),
                              key=f"env_focus_{i18n.get_lang()}")
     with col_txt:
         st.markdown(
@@ -1414,14 +1421,14 @@ def render(entete=True):
         if grille:
             _bloc_grille(grille, foret, focus)
         else:
-            st.info(T("e_absent"))
+            st.info(_locale_text(T("e_absent")))
 
     par_cle = {c[0]: c for c in INDICES}
     for i, (groupe, cles) in enumerate(GROUPES):
         with onglets[2 + i]:
             choix = cles[0]
             if len(cles) > 1:
-                choix = st.selectbox(T('e_i_choix'), cles, format_func=lambda c: T('e_o_' + c), key=f'env_ind_{groupe}_{i18n.get_lang()}')
+                choix = st.selectbox(_locale_text(T('e_i_choix')), cles, format_func=_locale_formatter(lambda c: T('e_o_' + c)), key=f'env_ind_{groupe}_{i18n.get_lang()}')
             cle, ligne, champ, source, mode, coul = par_cle[choix]
             _onglet_indice(cle, ligne, champ, mode, coul, res,
                            thermo if source == "thermo" else indices, focus)
@@ -1434,13 +1441,13 @@ def render(entete=True):
         if pluie:
             _bloc_pluie(pluie, focus)
         else:
-            st.info(T("e_absent"))
+            st.info(_locale_text(T("e_absent")))
 
     with onglets[n + 2]:
         if saison:
             _bloc_saison(saison, focus)
         else:
-            st.info(T("e_absent"))
+            st.info(_locale_text(T("e_absent")))
 
     with onglets[n + 3]:
         _fiche_section(foret, pluie, saison, grille, res, focus)
@@ -1449,5 +1456,5 @@ def render(entete=True):
         if res:
             _onglet_lacunes(res)
 
-    st.caption(T("e_source"))
-    st.caption(T("credit"))
+    st.caption(_locale_text(T("e_source")))
+    st.caption(_locale_text(T("credit")))

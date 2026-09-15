@@ -21,6 +21,8 @@ qu'on ne peut pas écrire au milieu d'une page de dimension sans l'alourdir, et
 qui manque dès qu'on met la figure entre les mains de quelqu'un d'autre.
 """
 
+from traductions import text as _locale_text
+
 import streamlit as st
 
 import i18n
@@ -106,6 +108,7 @@ for _c, _v in TEXTES.items():
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -121,7 +124,7 @@ def render(entete=True):
             f'<p style="font-size:11.5px;color:{ENCRE3};letter-spacing:.06em;'
             f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
             f'{T("rda_sous_titre")}</p>', unsafe_allow_html=True)
-    st.info(T("rda_intro"))
+    st.info(_locale_text(T("rda_intro")))
 
     # LA FIGURE D'ABORD, LE MODE D'EMPLOI ENSUITE. Qui arrive ici veut voir un
     # radar ; l'obliger à traverser quatre encadrés de méthode avant d'y
@@ -142,4 +145,4 @@ def render(entete=True):
                         f'<p style="font-size:13px;color:#3c4761;'
                         f'line-height:1.6;margin:0 0 10px">{T(cle)}</p>',
                         unsafe_allow_html=True)
-        st.caption(T("rda_ailleurs"))
+        st.caption(_locale_text(T("rda_ailleurs")))

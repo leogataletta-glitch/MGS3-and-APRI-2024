@@ -25,6 +25,12 @@ contraste sur le fond. Elles ne servent jamais seules : chaque pastille est
 accompagnée du nom de la dimension en toutes lettres.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import json
 import re
 import os
@@ -909,6 +915,7 @@ for _c, _v in TEXTES.items():
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -2345,7 +2352,7 @@ def render(doc_complet=None):
     names = dict(zip(VUES, ('Modèle','Sources','Calcul des scores','Boucles','À compléter','Document complet') if fr else ('Model','Sources','Score calculation','Feedback loops','To complete','Full document')))
 
     if not stats:
-        st.info(T("e_absent"))
+        st.info(_locale_text(T("e_absent")))
         return
 
     # LA BARRE EST CELLE DE TOUT LE SITE. Elle était recopiée ici avec sa
@@ -2360,7 +2367,7 @@ def render(doc_complet=None):
     names['simulation'] = 'Simulation'
     game_views = (*VUES, 'simulation')
     vue = onglets.barre("cad_vue", list(game_views),
-                        titre=lambda c: names[c], description=lambda c: ('Vivre du paysage' if fr else 'Living from the landscape') if c == 'simulation' else T(_DESC[c]),
+                        titre=lambda c: names[c], description=lambda c: (_locale_text('Vivre du paysage' if fr else 'Living from the landscape')) if c == 'simulation' else T(_DESC[c]),
                         compact=False, defaut=VUES[0])
     active = game_views.index(vue) + 1
     st.markdown(f'<style>.stApp .st-key-ong_cad_vue [role="radiogroup"] > label:nth-child({active}) {{box-shadow:inset 0 -2px 0 #1f5b46!important;}} .stApp .st-key-ong_cad_vue [role="radiogroup"] > label:nth-child({active}) p {{color:#1f5b46!important;}}</style>',unsafe_allow_html=True)
@@ -2486,13 +2493,13 @@ def _v_mesure(stats):
         attrs.append('<section class="model-attribute"><span class="model-dot" aria-hidden="true"></span><div>'
                      f'<div class="cad-so-t">{_e(T(k + "_t").capitalize())}</div>'
                      f'<p class="cad-so-x">{_e(T(k))}</p></div></section>')
-    label = "indicateurs" if fr else "indicators"
+    label = _locale_text("indicateurs" if fr else "indicators")
     dims = []
     for cle in ORDRE:
         d = stats["dims"].get(cle)
         if d:
             dims.append(f'<li><span>{_e(T(cle))}</span><small>{d["n"]} {label}</small></li>')
-    title = "Les sept dimensions" if fr else "The seven dimensions"
+    title = _locale_text("Les sept dimensions" if fr else "The seven dimensions")
     st.markdown("""<style>
 .model-layout{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:64px;margin:22px 0 28px;align-items:start;}
 .model-attributes{display:grid;gap:30px;padding-top:4px;}
@@ -2658,16 +2665,16 @@ def _chaine_indicateur(x):
         _case(3, T("cad_e3_t"), sc_v, sc_x),
         _case(4, T("cad_e4_t"), T("cad_ex_p_v", p=_fmt(x["poids"], 1)),
               T("cad_ex_p_x")),
-        _case(5, "Score × poids" if i18n.get_lang() == "fr" else "Score × weight",
+        _case(5, _locale_text("Score × poids" if i18n.get_lang() == "fr" else "Score × weight"),
               "—" if x["score"] is None else _fmt(x["score"] * x["poids"], 2),
-              "Terme ajouté à la somme pondérée, avant division par la somme des poids. Ce n’est pas un score sur 10." if i18n.get_lang() == "fr" else "Term added to the weighted sum, before dividing by the sum of weights. This is not a score out of 10."),
+              _locale_text("Terme ajouté à la somme pondérée, avant division par la somme des poids. Ce n’est pas un score sur 10." if i18n.get_lang() == "fr" else "Term added to the weighted sum, before dividing by the sum of weights. This is not a score out of 10.")),
     ]) + (
         '<div style="margin:24px 0;padding:16px 0;border-top:1px solid #edf1ee">'
         + '<p style="font:20px Georgia,serif;color:#245b43">'
-        + _e("Score global de la dimension" if i18n.get_lang() == "fr" else "Overall dimension score")
+        + _e(_locale_text("Score global de la dimension" if i18n.get_lang() == "fr" else "Overall dimension score"))
         + ' : ' + ("—" if dsc is None else _fmt(dsc, 2) + " / 10") + '</p><p>'
         + _e(T(x["dim"])) + ' · '
-        + _e("Moyenne pondérée de tous les indicateurs renseignés de cette dimension : somme des (scores × poids) ÷ somme des poids. Les indicateurs sans score sont exclus." if i18n.get_lang() == "fr" else "Weighted mean of all scored indicators in this dimension: sum of (scores × weights) ÷ sum of weights. Indicators without scores are excluded.")
+        + _e(_locale_text("Moyenne pondérée de tous les indicateurs renseignés de cette dimension : somme des (scores × poids) ÷ somme des poids. Les indicateurs sans score sont exclus." if i18n.get_lang() == "fr" else "Weighted mean of all scored indicators in this dimension: sum of (scores × weights) ÷ sum of weights. Indicators without scores are excluded."))
         + '</p></div>')
 
 
@@ -2754,7 +2761,7 @@ def _v_indicateurs():
     """
     tous = _referentiel()
     if not tous:
-        st.info(T("e_absent"))
+        st.info(_locale_text(T("e_absent")))
         return
 
     # DEUX LECTURES DU MÊME RÉFÉRENTIEL, ET UN SOUS-ONGLET POUR PASSER DE
@@ -2773,9 +2780,9 @@ def _v_indicateurs():
         description=lambda c: T("cad_ivd_" + c), defaut="bareme")
     g, d = st.columns([2, 3])
     with g:
-        dim = st.selectbox(T("cad_ind_dim"), [None] + ORDRE, key="cad_i_dim",
-                           format_func=lambda c: (T("cad_ind_all") if c is None
-                                                  else T(c)))
+        dim = st.selectbox(_locale_text(T("cad_ind_dim")), [None] + ORDRE, key="cad_i_dim",
+                           format_func=_locale_formatter(lambda c: (T("cad_ind_all") if c is None
+                                                  else T(c))))
     # LA LISTE SUIT LA DIMENSION, ET LA SÉLECTION NE SURVIT PAS À UN
     # CHANGEMENT DE DIMENSION. Streamlit garde la valeur d'un selectbox même
     # quand elle a quitté ses options ; sans ce nettoyage, choisir une
@@ -2787,9 +2794,9 @@ def _v_indicateurs():
         st.session_state["cad_i_ind"] = None
     par_cle = {x["ligne"]: x for x in choix}
     with d:
-        cle = st.selectbox(T("cad_ind_ind"), cles, key="cad_i_ind",
+        cle = st.selectbox(_locale_text(T("cad_ind_ind")), cles, key="cad_i_ind",
                            index=None, placeholder=T("cad_ind_tous"),
-                           format_func=lambda k: (par_cle[k]["nom"] + " · " + T(par_cle[k]["dim"])))
+                           format_func=_locale_formatter(lambda k: (par_cle[k]["nom"] + " · " + T(par_cle[k]["dim"]))))
 
     if vue == "meta":
         _v_metadonnees([par_cle[cle]] if cle is not None else [])
@@ -2923,7 +2930,7 @@ def _meta_pourquoi(x, par_ligne, graphe, lang):
         for a in sortants[:3]:
             cible = noeuds.get(a.get("vers"), {})
             nom = cible.get("fr" if lang == "fr" else "en", a.get("vers"))
-            ref = a.get("ref_fr" if lang == "fr" else "ref_en") or ""
+            ref = a.get(_locale_text("ref_fr" if lang == "fr" else "ref_en")) or ""
             signe = "+" if (a.get("signe") or 1) > 0 else "−"
             out.append((T("cad_meta_agit", n=nom, s=signe), ref))
         for a in entrants[:2]:
@@ -2965,14 +2972,14 @@ def _references_fiche(x, lang):
         add("Saura & Pascual-Hortal (2007). A new habitat availability index to integrate connectivity in landscape conservation planning. Landscape and Urban Planning.", "https://doi.org/10.1016/j.landurbplan.2007.03.005", "Fondement du Probability of Connectivity ; le choix des distances et leur division par deux reste une hypothèse locale.", "Probability of Connectivity foundation; distance choices and halving remain local assumptions.")
     if n == 108:
         add("FAO. About the Food Insecurity Experience Scale (FIES).", "https://www.fao.org/measuring-hunger/access-to-food/about-the-food-insecurity-experience-scale-%28fies%29/en", "Méthode de mesure de l’insécurité alimentaire ; vérifier l’équivalence du questionnaire et l’étalonnage.", "Food insecurity measurement method; check questionnaire equivalence and calibration.")
-    warning = "Portée : ces sources ne démontrent pas les liens causaux ni les coefficients du modèle APRI. Lorsqu’une référence spécifique manque, la méthode locale et ses seuils restent à documenter." if fr else "Scope: these sources do not establish APRI causal links or model coefficients. Where a specific reference is missing, the local method and thresholds still require documentation."
+    warning = _locale_text("Portée : ces sources ne démontrent pas les liens causaux ni les coefficients du modèle APRI. Lorsqu’une référence spécifique manque, la méthode locale et ses seuils restent à documenter." if fr else "Scope: these sources do not establish APRI causal links or model coefficients. Where a specific reference is missing, the local method and thresholds still require documentation.")
     return ''.join(refs) + f'<p class="md-muted">{_e(warning)}</p>'
 
 
 def _v_metadonnees(tous):
     """Afficher uniquement la fiche de l'indicateur sélectionné."""
     if not tous:
-        st.info(T("cad_ind_vide"))
+        st.info(_locale_text(T("cad_ind_vide")))
         return
     lang = i18n.get_lang()
     par_ligne, graphe = _causal()
@@ -3026,7 +3033,7 @@ def _v_metadonnees(tous):
         value = "—" if x.get("valeur") is None else _fmt(x["valeur"]) + (" " + unit if unit else "")
         score = "—" if x.get("score") is None else _fmt(x["score"], 1) + " / 10"
         effects = '<ul>' + ''.join(f'<li><span class="md-dot">◦</span><span>{_e(t)}</span></li>' for t, r in pourquoi) + '</ul>' if pourquoi else '<p>' + _e(T("cad_meta_pourquoi_absent")) + '</p>'
-        limit = '<aside><b>' + ("Limites de la mesure" if lang == "fr" else "Measurement limitations") + '</b><p>' + _e(note) + '</p></aside>' if note else ''
+        limit = '<aside><b>' + (_locale_text("Limites de la mesure" if lang == "fr" else "Measurement limitations")) + '</b><p>' + _e(note) + '</p></aside>' if note else ''
         refs = _references_fiche(x, lang)
         bands = _bandes(x.get("echelle") or "")
         if bands:
@@ -3038,27 +3045,27 @@ def _v_metadonnees(tous):
                              f'<span>{_e(str(v))}</span></div>')
             scale = '<div class="md-ranks">' + ''.join(ranks) + '</div>'
         else:
-            scale = '<p>' + _e(x.get("echelle") or ("Barème non renseigné." if lang == "fr" else "Scale not recorded.")) + '</p>'
+            scale = '<p>' + _e(x.get("echelle") or (_locale_text("Barème non renseigné." if lang == "fr" else "Scale not recorded."))) + '</p>'
 
         fr = lang == "fr"
         def section(title, content):
             return f'<section class="pdf-section"><h3>{_e(title)}</h3>{content}</section>'
         scale_html = _tableau_echelle(bands, x.get("score")) if bands else scale
-        missing = "Non renseigné dans les données disponibles." if fr else "Not recorded in the available data."
+        missing = _locale_text("Non renseigné dans les données disponibles." if fr else "Not recorded in the available data.")
         comparisons = ''.join('<div class="pdf-comparison"><b>'+_e(label)+'</b><span>—</span></div>' for label in
                              (["Amérique latine et Caraïbes", "Monde", "Haïti"] if fr else ["Latin America & Caribbean", "World", "Haiti"]))
-        comparisons += '<p class="pdf-note">'+("Comparaisons nationales et internationales non renseignées ; le résultat de l’enquête ci-dessous concerne uniquement les territoires étudiés." if fr else "National and international comparisons are not recorded; the survey result below covers only the studied territories.")+'</p>'
+        comparisons += '<p class="pdf-note">'+(_locale_text("Comparaisons nationales et internationales non renseignées ; le résultat de l’enquête ci-dessous concerne uniquement les territoires étudiés." if fr else "National and international comparisons are not recorded; the survey result below covers only the studied territories."))+'</p>'
         comparisons += '<div class="pdf-observed"><span>'+_e(T("cad_meta_valeur"))+'</span><strong>'+_e(value)+'</strong><span>'+_e(T("cad_meta_score"))+'</span><strong>'+_e(score)+'</strong></div>'
         import re
         sdg = re.search(r'(?:SDG|ODD)\s*([0-9]+(?:\.[0-9A-Za-z]+)+)', nom)
-        left = section("Impact sur la résilience" if fr else "Impact on resilience", effects)
-        left += section("Définitions" if fr else "Definitions", '<p>'+_e(mesure)+'</p>'+limit)
+        left = section(_locale_text("Impact sur la résilience" if fr else "Impact on resilience"), effects)
+        left += section(_locale_text("Définitions" if fr else "Definitions"), '<p>'+_e(mesure)+'</p>'+limit)
         if sdg:
-            left += section(("ODD " if fr else "SDG ")+sdg.group(1), '<p>'+_e(x.get("metrique") or missing)+'</p>')
-        left += section("Mode de levée" if fr else "Data collection", '<p>'+_e(_meta_source(x,lang))+'</p>')
-        left += section("Questions contributives" if fr else "Contributing questions", '<p>'+_e(x.get("question") or missing)+'</p>'+('<p>'+_e(x["modalites"])+'</p>' if x.get("modalites") else ''))
-        right = section("Données comparatives" if fr else "Comparative data", comparisons)
-        right += section("Échelles de résilience" if fr else "Resilience scales", '<p class="pdf-note">'+("Barème publié du référentiel · score de 0 à 10" if fr else "Published framework scale · score from 0 to 10")+'</p>'+scale_html)
+            left += section((_locale_text("ODD " if fr else "SDG "))+sdg.group(1), '<p>'+_e(x.get("metrique") or missing)+'</p>')
+        left += section(_locale_text("Mode de levée" if fr else "Data collection"), '<p>'+_e(_meta_source(x,lang))+'</p>')
+        left += section(_locale_text("Questions contributives" if fr else "Contributing questions"), '<p>'+_e(x.get("question") or missing)+'</p>'+('<p>'+_e(x["modalites"])+'</p>' if x.get("modalites") else ''))
+        right = section(_locale_text("Données comparatives" if fr else "Comparative data"), comparisons)
+        right += section(_locale_text("Échelles de résilience" if fr else "Resilience scales"), '<p class="pdf-note">'+(_locale_text("Barème publié du référentiel · score de 0 à 10" if fr else "Published framework scale · score from 0 to 10"))+'</p>'+scale_html)
         st.markdown("""<style>
 .pdf-record{max-width:1160px;margin:20px auto;color:#304f68;font-family:Arial,sans-serif;}
 .pdf-dimension{display:inline-block;background:#edf1f2;border-radius:0 24px 24px 0;padding:10px 22px;color:#35597a;font-size:21px;font-weight:700;margin-bottom:22px;}
@@ -3086,7 +3093,7 @@ def _v_metadonnees(tous):
 .pdf-step b{background:white;border:1px solid #62717b;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}.pdf-step em{position:absolute;right:-24px;color:#35597a;font-style:normal;}.pdf-current{outline:2px solid #35597a;outline-offset:1px;}
 .pdf-references{margin-top:10px;}.pdf-references a{color:#35597a;}.pdf-references p{margin-bottom:14px;}
 @media(max-width:760px){.pdf-columns{grid-template-columns:1fr;gap:10px;}.pdf-dimension{font-size:17px;}.pdf-record{margin-top:12px;}}
-</style>"""+'<article class="pdf-record" lang="'+lang+'"><div class="pdf-dimension">'+_e(T(x["dim"]))+'</div><div class="pdf-columns"><div>'+left+'</div><div>'+right+'</div></div><div class="pdf-references">'+detail("Références scientifiques" if fr else "Scientific references",refs)+'</div></article>',unsafe_allow_html=True)
+</style>"""+'<article class="pdf-record" lang="'+lang+'"><div class="pdf-dimension">'+_e(T(x["dim"]))+'</div><div class="pdf-columns"><div>'+left+'</div><div>'+right+'</div></div><div class="pdf-references">'+detail(_locale_text("Références scientifiques" if fr else "Scientific references"),refs)+'</div></article>',unsafe_allow_html=True)
 
 
 
@@ -3219,7 +3226,7 @@ def _v_boucles():
     # Illustrative dynamics are isolated from the calibrated indicator scores.
     import streamlit.components.v1 as components
     from reforestation_demo import document
-    components.html(document(fr), height=850, scrolling=True)
+    components.html(_locale_html(document(fr)), height=850, scrolling=True)
 
     # ---- comment lire une boucle -----------------------------------------
     signes = "".join(
@@ -3306,19 +3313,31 @@ def _v_document(doc_complet):
     téléchargement, le format et le poids annoncés avant le clic. Le rendu à
     l'écran reste dessous, pour qui préfère lire sans télécharger.
     """
+    langue = i18n.get_lang()
+    if langue in ("es", "ht"):
+        traduit = os.path.join(DATA, f"irla_reference_{langue}.html")
+        if os.path.exists(traduit):
+            libelle, note = {
+                "es": ("Leer la traducción al español · HTML", "Traducción automática pendiente de revisión científica. Las figuras conservan su idioma original; el documento original sigue disponible debajo."),
+                "ht": ("Li tradiksyon an kreyòl ayisyen · HTML", "Tradiksyon otomatik ki poko resevwa revizyon syantifik. Figi yo rete nan lang orijinal yo; dokiman orijinal la disponib anba a."),
+            }[langue]
+            with open(traduit, "rb") as f:
+                st.download_button(libelle, f.read(), file_name=f"IRLA_{langue}.html",
+                                   mime="text/html", use_container_width=True,
+                                   key=f"cad_doc_traduit_{langue}")
+            st.caption(note)
     chemin = _document_irla()
     if chemin:
         st.markdown(_css_telechargement(_poids(chemin)), unsafe_allow_html=True)
         with st.container(key="cad_tel"):
             with open(chemin, "rb") as f:
                 st.download_button(
-                    T("cad_doc"), f.read(),
+                    _locale_text(T("cad_doc")), f.read(),
                     file_name=os.path.basename(chemin),
                     mime="application/msword", use_container_width=True)
     else:
-        st.info(T("cad_doc_absent"))
+        st.info(_locale_text(T("cad_doc_absent")))
     # LE VOLET « OU LE LIRE À L'ÉCRAN » A SAUTÉ. Le document se télécharge, et
     # c'est ce que la carte au-dessus propose ; en proposer en plus une
     # transcription repliée mettait deux fois le même contenu sur la page,
     # dont une derrière un clic qui n'annonce rien.
-

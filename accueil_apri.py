@@ -31,6 +31,8 @@ LES DIX sections. L'indice global publié, lui, reste celui du référentiel
 entier.
 """
 
+from traductions import text as _locale_text
+
 import json
 import os
 import re
@@ -322,6 +324,7 @@ STYLE = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -743,7 +746,7 @@ def render():
     st.markdown(STYLE, unsafe_allow_html=True)
     m = _mesures(i18n.get_lang())
     if not m:
-        st.info(T("po_absent"))
+        st.info(_locale_text(T("po_absent")))
         return
     # LA PHRASE D'OUVERTURE PASSE AVANT LES PORTES, et c'est tout son
     # intérêt : on lit ce que fait l'observatoire avant de choisir où aller.

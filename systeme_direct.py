@@ -41,6 +41,10 @@ du périmètre se règle dans le premier onglet, et l'effet total, lui, se lit
 dans « Tester des interventions ».
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import text as _locale_text
+
 import json
 import math
 
@@ -243,6 +247,7 @@ for _c, _v in TEXTES.items():
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -1232,7 +1237,7 @@ def render():
     s = SX._systeme(m, "d")
     d = _donnees(m, s["centre"], s["n"])
     if not d["liens"]:
-        st.info(T("sd_court"))
+        st.info(_locale_text(T("sd_court")))
         return
 
     st.markdown(
@@ -1249,5 +1254,5 @@ def render():
     # besoin de neuf cents pixels, et un périmètre de vingt-six ne tient pas
     # dans six cents : l'iframe est taillée sur le rapport de la boîte.
     haut = int(max(560, min(940, 1180 * d["vb"][3] / max(d["vb"][2], 1) + 210)))
-    components.html(_html(d, lang), height=haut, scrolling=False)
-    st.caption(T("sd_perim"))
+    components.html(_locale_html(_html(d, lang)), height=haut, scrolling=False)
+    st.caption(_locale_text(T("sd_perim")))

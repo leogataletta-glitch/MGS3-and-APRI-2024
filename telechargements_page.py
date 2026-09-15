@@ -6,6 +6,8 @@ ce qui est affiché. Chaque classeur s'ouvre sur une feuille « Lisez-moi » qui
 dit d'où viennent les chiffres et comment lire les colonnes.
 """
 
+from traductions import text as _locale_text
+
 import io
 import json
 import os
@@ -49,6 +51,7 @@ FILET = Border(bottom=Side("thin", color="D8DEE8"))
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -569,7 +572,7 @@ def _bloc(cle_titre, nom_fichier, mime, format_txt, volume, fabrique):
                   f'<b>{_e(format_txt)}</b></div>', unsafe_allow_html=True)
         with d:
             st.download_button(
-                "\u2193", data=data, help=T("d_bouton"),
+                _locale_text("\u2193"), data=data, help=T("d_bouton"),
                 file_name=nom_fichier, mime=mime,
                 key=f"dl_{nom_fichier}_{i18n.get_lang()}")
 

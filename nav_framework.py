@@ -1,12 +1,14 @@
 """Reference-design comparison, enabled only on Resilience Framework."""
+
+from traductions import text as _locale_text
 import streamlit as st
 import i18n
 
 
 def header(logo, change_language):
-    title = ("Observatoire de la résilience<br>des paysages et populations<br>d’Haïti"
+    title = (_locale_text("Observatoire de la résilience<br>des paysages et populations<br>d’Haïti"
              if i18n.get_lang() == "fr" else
-             "Observatory for the<br>Resilience of Haiti’s<br>Landscapes and Populations")
+             "Observatory for the<br>Resilience of Haiti’s<br>Landscapes and Populations"))
     st.markdown('''<style>
     .stApp div[data-testid="stColumn"]:has(.framework-nav-brand){
       background:white!important;border-right:0!important;
@@ -56,7 +58,7 @@ def header(logo, change_language):
     with st.container(key="framework_language"):
         for col, code in zip(st.columns(2, gap=None), ("en", "fr")):
             with col:
-                st.button(code.upper(), key=f"framework_lang_{code}",
+                st.button(_locale_text(code.upper()), key=f"framework_lang_{code}",
                           on_click=change_language, args=(code,),
                           type="primary" if i18n.get_lang() == code else "secondary",
                           use_container_width=True)

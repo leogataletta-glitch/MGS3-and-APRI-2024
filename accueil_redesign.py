@@ -9,6 +9,10 @@ Design moderne et épuré avec :
 - Navigation fluide et narrative
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import text as _locale_text
+
 import streamlit as st
 import pandas as pd
 from i18n import T
@@ -343,11 +347,11 @@ def render():
             <div style="margin-top: 20px; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,23,40,.05);">
             """, unsafe_allow_html=True)
             
-            st.components.v1.html(svg, height=340, scrolling=False)
+            st.components.v1.html(_locale_html(svg), height=340, scrolling=False)
             
             st.markdown("</div>", unsafe_allow_html=True)
         except Exception as e:
-            st.info("📍 Map unavailable")
+            st.info(_locale_text("📍 Map unavailable"))
     
     # =====================================================================
     # HIDDEN BUTTONS (pour navigation)
@@ -355,17 +359,17 @@ def render():
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        if st.button("Go to The Territory", use_container_width=True, key="btn_territory"):
+        if st.button(_locale_text("Go to The Territory"), use_container_width=True, key="btn_territory"):
             st.session_state["app_mode"] = "accueil"
             st.rerun()
     
     with col2:
-        if st.button("View Resilience Framework", use_container_width=True, key="btn_framework"):
+        if st.button(_locale_text("View Resilience Framework"), use_container_width=True, key="btn_framework"):
             st.session_state["app_mode"] = "methodologie"
             st.rerun()
     
     with col3:
-        if st.button("Start Analysis", use_container_width=True, key="btn_results"):
+        if st.button(_locale_text("Start Analysis"), use_container_width=True, key="btn_results"):
             st.session_state["app_mode"] = "dimensions"
             st.rerun()
     

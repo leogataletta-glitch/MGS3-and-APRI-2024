@@ -5,6 +5,8 @@ titre et un corps en anglais et en français. Le texte est repris de la note de
 cadrage méthodologique IRLA — on ne le reformule pas ici, on le met en page.
 """
 
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -92,14 +94,14 @@ def render():
     doc = _charger()
     st.markdown(_styles_bulle(), unsafe_allow_html=True)
 
-    st.title(T("m_titre"))
+    st.title(_locale_text(T("m_titre")))
     st.markdown(
         '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
         'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
         + T("m_sous_titre") + "</p>", unsafe_allow_html=True)
 
     if doc is None:
-        st.error("methodologie.json")
+        st.error(_locale_text("methodologie.json"))
         st.stop()
 
     sections = doc.get("sections", [])
@@ -147,5 +149,5 @@ def render():
                     + " &nbsp;·&nbsp; ".join(bulles) + "</p>",
                     unsafe_allow_html=True)
 
-    st.caption(T("m_source"))
-    st.caption(T("credit"))
+    st.caption(_locale_text(T("m_source")))
+    st.caption(_locale_text(T("credit")))

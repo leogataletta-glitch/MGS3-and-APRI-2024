@@ -37,6 +37,11 @@ celui du cadre et non une propriété des données. On compare des rayons, pas d
 surfaces — le tableau sous la figure porte les chiffres exacts, pour cela.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import text as _locale_text
+from traductions import formatter as _locale_formatter
+
 import json
 import os
 
@@ -216,7 +221,7 @@ def render(dim=None, cle="r"):
     """
     res = _charger()
     if not res:
-        st.info(T("rd_manque"))
+        st.info(_locale_text(T("rd_manque")))
         return
 
     st.markdown(T("rd_intro"))
@@ -224,12 +229,12 @@ def render(dim=None, cle="r"):
     if dim is None:
         c1, c2 = st.columns([1.6, 1.4])
         with c1:
-            niveau = st.selectbox(T('rd_niveau'), ['dims', 'indic'], format_func=lambda k: T('rd_n_dims') if k == 'dims' else T('rd_n_indic'), key=f'rd_niv_{cle}')
+            niveau = st.selectbox(_locale_text(T('rd_niveau')), ['dims', 'indic'], format_func=_locale_formatter(lambda k: T('rd_n_dims') if k == 'dims' else T('rd_n_indic')), key=f'rd_niv_{cle}')
         with c2:
             if niveau == "indic":
                 dim = dict(DIMENSIONS)[st.selectbox(
-                    T("rd_dim"), [d for d, _ in DIMENSIONS],
-                    format_func=_court, key=f"rd_dim_{cle}")]
+                    _locale_text(T("rd_dim")), [d for d, _ in DIMENSIONS],
+                    format_func=_locale_formatter(_court), key=f"rd_dim_{cle}")]
     else:
         niveau = "indic"
 
@@ -247,7 +252,7 @@ def render(dim=None, cle="r"):
         dedans = [r for r in res if r["dimension"] == dim
                   and (r.get("scores_corriges") or {}).get("Total") is not None]
         if len(dedans) < 3:
-            st.info(T("rd_trop_peu", n=len(dedans)))
+            st.info(_locale_text(T("rd_trop_peu", n=len(dedans))))
             return
         # PLAFOND D'AXES, ET IL EST DIT. La dimension environnementale porte
         # dix-sept indicateurs : à dix-sept sommets, les libellés se
@@ -270,15 +275,15 @@ def render(dim=None, cle="r"):
     # choix qui manquait : le radar d'avant ne comparait que des sections.
     g, d = st.columns([1.5, 2.5])
     with g:
-        registre = st.selectbox(T('rd_registre'), ['sections', 'paysages', 'groupes'], format_func=lambda k: T('rd_r_' + k), key=f'rd_reg_{cle}')
+        registre = st.selectbox(_locale_text(T('rd_registre')), ['sections', 'paysages', 'groupes'], format_func=_locale_formatter(lambda k: T('rd_r_' + k)), key=f'rd_reg_{cle}')
     options, libelle = _entites(registre)
     with d:
         choisies = st.multiselect(
-            T("rd_choix"), [TOUT] + options,
-            format_func=lambda c: T("rd_ensemble") if c == TOUT else libelle(c),
+            _locale_text(T("rd_choix")), [TOUT] + options,
+            format_func=_locale_formatter(lambda c: T("rd_ensemble") if c == TOUT else libelle(c)),
             default=[TOUT], max_selections=3, key=f"rd_sel_{registre}_{cle}")
     if not choisies:
-        st.info(T("rd_vide"))
+        st.info(_locale_text(T("rd_vide")))
         return
 
     def _valeurs(ent):
@@ -290,15 +295,15 @@ def render(dim=None, cle="r"):
 
     svg = radar.render_radar_svg(axes, series, taille=620)
     components.html(
-        '<div style="background:#fff;font-family:Inter,system-ui,sans-serif">'
+        _locale_html('<div style="background:#fff;font-family:Inter,system-ui,sans-serif">'
         f'<div style="margin:0 0 6px 8px">{radar.legende_html(series)}</div>'
-        f'{svg}</div>', height=690, scrolling=False)
+        f'{svg}</div>'), height=690, scrolling=False)
 
-    st.caption(T("rd_note_dims") if niveau == "dims" else T("rd_note_indic"))
+    st.caption(_locale_text(T("rd_note_dims") if niveau == "dims" else T("rd_note_indic")))
     if niveau == "indic" and coupes:
-        st.caption(T("rd_coupe", t=total_dim, n=MAX_AXES))
+        st.caption(_locale_text(T("rd_coupe", t=total_dim, n=MAX_AXES)))
     if registre == "groupes":
-        st.caption(T("rd_note_groupe"))
+        st.caption(_locale_text(T("rd_note_groupe")))
 
     # LE TABLEAU N'EST PAS UN DOUBLON. L'œil lit mal un rayon ; deux séries
     # proches sur un axe sont indiscernables sur la figure et se distinguent

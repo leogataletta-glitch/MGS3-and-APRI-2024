@@ -30,6 +30,12 @@ utilisent le charbon », être au-dessus de la moyenne est mauvais ; sur « acc�
 le porte déjà. Le graphique ne montre donc que la direction et l'ampleur.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -68,6 +74,7 @@ DIMENSIONS = [
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -262,14 +269,14 @@ def render(entete=True):
     res, _vent = _charger()
 
     if entete:
-        st.title(T("mode_synthese"))
+        st.title(_locale_text(T("mode_synthese")))
         st.markdown(
             '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
             'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
             + T("syn_sous_titre") + "</p>", unsafe_allow_html=True)
 
     if not res:
-        st.info(T("e_absent"))
+        st.info(_locale_text(T("e_absent")))
         st.stop()
 
     st.markdown(
@@ -303,7 +310,7 @@ def render(entete=True):
                   else "section")
     c1, c2 = st.columns([1, 2])
     with c1:
-        mode = st.selectbox(T('s_mode'), _modes, format_func=lambda m: T('s_mode_' + m), index=_modes.index(_pref_mode), key=f'syn_mode_{i18n.get_lang()}')
+        mode = st.selectbox(_locale_text(T('s_mode')), _modes, format_func=_locale_formatter(lambda m: T('s_mode_' + m)), index=_modes.index(_pref_mode), key=f'syn_mode_{i18n.get_lang()}')
     with c2:
         options = (SECTIONS if mode == "section"
                    else PAYSAGES if mode == "paysage" else GROUPES)
@@ -311,14 +318,14 @@ def render(entete=True):
                  else filtres.paysage() if mode == "paysage"
                  else filtres.groupe())
         _idx = options.index(_pref) if _pref in options else 0
-        cible = st.selectbox(T("s_cible"), options, index=_idx,
-                             format_func=lambda c: _libelle(c, mode),
+        cible = st.selectbox(_locale_text(T("s_cible")), options, index=_idx,
+                             format_func=_locale_formatter(lambda c: _libelle(c, mode)),
                              key=f"syn_cible_{mode}_{i18n.get_lang()}")
 
     if mode == "groupe":
-        st.caption(T("s_note_groupe"))
+        st.caption(_locale_text(T("s_note_groupe")))
     elif mode == "paysage":
-        st.caption(T("s_note_paysage"))
+        st.caption(_locale_text(T("s_note_paysage")))
 
     profil = _profil(res, cible, mode)
     dispo = [p for p in profil if p["valeur"] is not None]
@@ -362,28 +369,28 @@ def render(entete=True):
         svg = _haltere_svg(profil, mode)
         if svg:
             components.html(
-                '<div style="background:#ffffff;font-family:system-ui,'
-                "-apple-system,'Segoe UI',sans-serif\">" + svg + "</div>",
+                _locale_html('<div style="background:#ffffff;font-family:system-ui,'
+                "-apple-system,'Segoe UI',sans-serif\">" + svg + "</div>"),
                 height=TOPHAUT(profil), scrolling=False)
-        st.caption(T("s_haltere_note", c=_libelle(cible, mode)))
+        st.caption(_locale_text(T("s_haltere_note", c=_libelle(cible, mode))))
 
     # ------------------------------------------------------- les écarts
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc ambre">{T("s_bloc_bas")}</div>',
                     unsafe_allow_html=True)
-        st.caption(T("s_bloc_bas_note"))
+        st.caption(_locale_text(T("s_bloc_bas_note")))
         st.markdown(_tableau_ecarts(res, cible, mode, "bas"),
                     unsafe_allow_html=True)
 
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc vert">{T("s_bloc_haut")}</div>',
                     unsafe_allow_html=True)
-        st.caption(T("s_bloc_haut_note"))
+        st.caption(_locale_text(T("s_bloc_haut_note")))
         st.markdown(_tableau_ecarts(res, cible, mode, "haut"),
                     unsafe_allow_html=True)
 
-    st.caption(T("e_source"))
-    st.caption(T("credit"))
+    st.caption(_locale_text(T("e_source")))
+    st.caption(_locale_text(T("credit")))
 
 
 def TOPHAUT(profil):

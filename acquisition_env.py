@@ -29,6 +29,8 @@ indicateur, modifiable sans toucher au code — et par quelqu'un qui n'en écrit
 pas.
 """
 
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -206,6 +208,7 @@ STYLE = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -318,9 +321,9 @@ def _couverture(r):
         if raison:
             return raison
         if r.get("echelle"):
-            return ("Barème disponible · scores non calculés"
+            return (_locale_text("Barème disponible · scores non calculés"
                     if i18n.get_lang() == "fr" else
-                    "Scale available · scores not computed")
+                    "Scale available · scores not computed"))
         return T("aq_sans_note")
     return T("aq_sections", n=max(r["n_sco"], r["n_val"]))
 
@@ -332,7 +335,7 @@ def _ligne(r, fiche, lang):
         f'<div class="aq-l"><div>'
         f'<div class="aq-n">{_e(nom)}</div>'
         f'<div class="aq-p">{T("aq_l_source")} · '
-        f'{_e(r["source"] or (("Barème disponible" if lang == "fr" else "Scale available") if r.get("echelle") and (fiche or {}).get("bloc") == "bareme" else T("aq_b_" + ((fiche or {}).get("bloc") or "satellite"))))}'
+        f'{_e(r["source"] or ((_locale_text("Barème disponible" if lang == "fr" else "Scale available")) if r.get("echelle") and (fiche or {}).get("bloc") == "bareme" else T("aq_b_" + ((fiche or {}).get("bloc") or "satellite"))))}'
         f'</div>'
         f'</div>'
         f'<div class="aq-et" style="color:{coul}">'
@@ -357,7 +360,7 @@ def render():
     st.markdown(STYLE, unsafe_allow_html=True)
     lst = _indicateurs()
     if not lst:
-        st.info(T("aq_rien"))
+        st.info(_locale_text(T("aq_rien")))
         return
     fiches = _fiches()
 

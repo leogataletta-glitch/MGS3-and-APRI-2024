@@ -28,6 +28,7 @@ import os
 import streamlit as st
 
 import i18n
+from traductions import text as _locale_text
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -60,11 +61,11 @@ def ajouter(quoi, fr, en):
 
 
 def _tr(quoi, texte):
-    if not texte or i18n.get_lang() != "en":
+    if not texte or i18n.get_lang() == "fr":
         return texte
     cats, questions, mods = _table()
     t = {"c": cats, "q": questions, "m": mods}[quoi]
-    return _AJOUTS.get(quoi, {}).get(texte) or t.get(texte, texte)
+    return _locale_text(_AJOUTS.get(quoi, {}).get(texte) or t.get(texte, texte))
 
 
 def module(nom):

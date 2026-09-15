@@ -1,4 +1,6 @@
 """Style 5 : modèle Wix 2500 adapté à APRI, en vert et blanc."""
+
+from traductions import text as _locale_text
 import html
 import streamlit as st
 import accueil2_page as home
@@ -90,37 +92,37 @@ def accueil():
     sea=home._photo_b64(prefere='accueil2_hero_b.jpg')
     st.markdown(f'''<style>.st-key-n5_mosaic [data-testid="stColumn"]:has(.st-key-n5_photo){{background-image:url('data:image/jpeg;base64,{sea}');}}</style>''',unsafe_allow_html=True)
     with st.container(key='n5_home'):
-        st.markdown(f'<div class="n5-brand"><img src="data:image/png;base64,{assets.EMBLEME_APRI}" alt="APRI"><div>APRI<small>{"PAYSAGES & RÉSILIENCE" if fr else "LANDSCAPES & RESILIENCE"}</small></div></div>',unsafe_allow_html=True)
-        title=('Renforcer<br><span>la résilience.</span>' if fr else 'Strengthen<br><span>resilience.</span>')
+        st.markdown(f'<div class="n5-brand"><img src="data:image/png;base64,{assets.EMBLEME_APRI}" alt="APRI"><div>APRI<small>{_locale_text("PAYSAGES & RÉSILIENCE" if fr else "LANDSCAPES & RESILIENCE")}</small></div></div>',unsafe_allow_html=True)
+        title=(_locale_text('Renforcer<br><span>la résilience.</span>' if fr else 'Strengthen<br><span>resilience.</span>'))
         st.markdown(f'''<div class="n5-hero" style="background-image:linear-gradient(90deg,#ffffffed 0%,#ffffffc9 38%,#ffffff22 100%),url('data:image/jpeg;base64,{river}')">
         <div class="n5-line"></div><h1 class="n5-title">{title}</h1><p class="n5-intro">{e(T('a2_intro'))}</p>
-        <div class="n5-credit">{'Vallée de la Voldrogue · Grand’Anse · Haïti, 2024' if fr else 'Voldrogue valley · Grand’Anse · Haiti, 2024'}</div></div>''',unsafe_allow_html=True)
+        <div class="n5-credit">{_locale_text('Vallée de la Voldrogue · Grand’Anse · Haïti, 2024' if fr else 'Voldrogue valley · Grand’Anse · Haiti, 2024')}</div></div>''',unsafe_allow_html=True)
         with st.container(key='n5_cta'):
-            st.button(T('a2_cta')+' →',key='n5_results',on_click=_go,args=('dimensions',))
+            st.button(_locale_text(T('a2_cta')+' →'),key='n5_results',on_click=_go,args=('dimensions',))
         menages,sections=home._chiffres()
         stats=[(home._fmt(menages)+'+' if menages else '1 200+',T('a2_c1_x')),
-               (str(sections or 10),T('a2_c2_x')),('2',T('a2_c3_x')),('10+','mois de terrain' if fr else 'months of fieldwork')]
+               (str(sections or 10),T('a2_c2_x')),('2',T('a2_c3_x')),('10+',_locale_text('mois de terrain' if fr else 'months of fieldwork'))]
         st.markdown('<div class="n5-stats">'+''.join(f'<div><strong>{e(n)}</strong><span>{e(t)}</span></div>' for n,t in stats)+'</div>',unsafe_allow_html=True)
         with st.container(key='n5_mosaic'):
             left,photo,right=st.columns([1,1,1],gap='small')
             with left:
                 with st.container(key='n5_about'):
-                    st.markdown('<div class="n5-heading">'+('Comprendre<br>les territoires' if fr else 'Understand<br>the territories')+'</div><p class="n5-copy">'+('Paysages, populations et capacités locales : une lecture intégrée du Sud et de la Grand’Anse.' if fr else 'Landscapes, communities and local capacities: an integrated understanding of Sud and Grand’Anse.')+'</p>',unsafe_allow_html=True)
-                    st.button(T('a2_p2_t')+' →',key='n5_territory',on_click=_go,args=('accueil',))
+                    st.markdown('<div class="n5-heading">'+(_locale_text('Comprendre<br>les territoires' if fr else 'Understand<br>the territories'))+'</div><p class="n5-copy">'+(_locale_text('Paysages, populations et capacités locales : une lecture intégrée du Sud et de la Grand’Anse.' if fr else 'Landscapes, communities and local capacities: an integrated understanding of Sud and Grand’Anse.'))+'</p>',unsafe_allow_html=True)
+                    st.button(_locale_text(T('a2_p2_t')+' →'),key='n5_territory',on_click=_go,args=('accueil',))
             with photo:
                 with st.container(key='n5_photo'):
                     st.markdown('<div class="n5-image" role="img" aria-label="Baie de Corail, Grand’Anse"></div>',unsafe_allow_html=True)
             with right:
                 with st.container(key='n5_projects'):
-                    st.markdown('<div class="n5-heading">'+('Relier les<br>dimensions' if fr else 'Connect the<br>dimensions')+'</div><p class="n5-copy">'+('Explorer les boucles de rétroaction pour comprendre les interactions entre les dimensions de la résilience.' if fr else 'Explore feedback loops to understand the interactions between dimensions of resilience.')+'</p>',unsafe_allow_html=True)
-                    st.button(T('a2_p3_t')+' →',key='n5_system',on_click=_go,args=('boucles',))
+                    st.markdown('<div class="n5-heading">'+(_locale_text('Relier les<br>dimensions' if fr else 'Connect the<br>dimensions'))+'</div><p class="n5-copy">'+(_locale_text('Explorer les boucles de rétroaction pour comprendre les interactions entre les dimensions de la résilience.' if fr else 'Explore feedback loops to understand the interactions between dimensions of resilience.'))+'</p>',unsafe_allow_html=True)
+                    st.button(_locale_text(T('a2_p3_t')+' →'),key='n5_system',on_click=_go,args=('boucles',))
         with st.container(key='n5_help'):
             left,right=st.columns([1.1,1],gap='large')
             with left:
-                st.markdown('<div class="n5-help-title">'+('Passer de la lecture<br>à l’action.' if fr else 'From understanding<br>to action.')+'</div>',unsafe_allow_html=True)
+                st.markdown('<div class="n5-help-title">'+(_locale_text('Passer de la lecture<br>à l’action.' if fr else 'From understanding<br>to action.'))+'</div>',unsafe_allow_html=True)
             with right:
-                st.markdown('<p class="n5-copy">'+('Retrouver les fiches d’intervention et les pistes d’action éclairées par les observations et les résultats de l’enquête.' if fr else 'Explore intervention profiles and opportunities for action informed by field observations and survey results.')+'</p>',unsafe_allow_html=True)
-                st.button(T('a2_p4_t')+' →',key='n5_actions',on_click=_go,args=('actions',))
+                st.markdown('<p class="n5-copy">'+(_locale_text('Retrouver les fiches d’intervention et les pistes d’action éclairées par les observations et les résultats de l’enquête.' if fr else 'Explore intervention profiles and opportunities for action informed by field observations and survey results.'))+'</p>',unsafe_allow_html=True)
+                st.button(_locale_text(T('a2_p4_t')+' →'),key='n5_actions',on_click=_go,args=('actions',))
         with st.container(key='n5_map'):
             st.markdown(f'<div class="n5-heading">{e(T("a2_carte_t"))}.</div>',unsafe_allow_html=True)
             if not carte_zoom.render():

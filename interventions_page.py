@@ -50,6 +50,10 @@ levier qu'on sait mettre en œuvre : la faisabilité est donc affichée à côt�
 c'est à l'atelier de trancher. Le modèle propose, il ne décide pas.
 """
 
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -1359,6 +1363,7 @@ for _c, _v in TEXTES.items():
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -1587,8 +1592,8 @@ STYLE = """
 def _bloc_justification(f):
     """D'où vient le chiffre — le calcul déplié, pas un ordre de grandeur."""
     d = f["dec"]
-    with st.expander(f'{T("int_dou")} : {_fmt(f["delta"], 3, True)}'):
-        st.caption(T("int_dou_f"))
+    with st.expander(_locale_text(f'{T("int_dou")} : {_fmt(f["delta"], 3, True)}')):
+        st.caption(_locale_text(T("int_dou_f")))
         c1, c2, c3, c4 = st.columns(4)
         for col, lab, val in (
                 (c1, T("int_dou_pose"),
@@ -1654,7 +1659,7 @@ def _bloc_justification(f):
                 f'{_fmt(x["ct"], 3, True)}</div></div>')
         st.markdown("".join(li), unsafe_allow_html=True)
         if any(x["apres"] >= 9.999 for x in d["lignes"]):
-            st.caption("⊤ — " + T("int_dou_plaf"))
+            st.caption(_locale_text("⊤ — " + T("int_dou_plaf")))
 
 
 def render(anciennes=None):
@@ -1777,7 +1782,7 @@ def _fiche(f):
                 f'white-space:nowrap">'
                 f'{"↑" if dd > 0 else "↓"} {_fmt(dd, 2, True)}</div></div>'
                 for n, r, dd in f["suivi"]), unsafe_allow_html=True)
-        st.caption(T("int_suivi_note"))
+        st.caption(_locale_text(T("int_suivi_note")))
 
         ga, dr = st.columns(2)
         with ga:
@@ -2081,7 +2086,7 @@ def _plans():
         fichiers = sorted(f for f in os.listdir(dossier)
                           if not f.startswith("."))
     if not fichiers:
-        st.info(T("int_plans_vide"))
+        st.info(_locale_text(T("int_plans_vide")))
         return
     for nom in fichiers:
         chemin = os.path.join(dossier, nom)
@@ -2092,7 +2097,7 @@ def _plans():
                         f'</div>', unsafe_allow_html=True)
         with d:
             with open(chemin, "rb") as fh:
-                st.download_button(T("d_bouton"), data=fh.read(),
+                st.download_button(_locale_text(T("d_bouton")), data=fh.read(),
                                    file_name=nom, key=f"plan_{nom}",
                                    use_container_width=True)
 
@@ -2125,15 +2130,15 @@ def _proposition(x):
             + '<ul class="int-act">'
             + "".join(f'<li>{_e(a)}</li>' for a in actes)
             + '</ul>', unsafe_allow_html=True)
-        st.caption(T("int_act_idees_x"))
+        st.caption(_locale_text(T("int_act_idees_x")))
     if not txt and not actes:
-        st.caption(T("int_idee_x"))
+        st.caption(_locale_text(T("int_idee_x")))
         return
     if x["fiche"]:
         # LA FICHE RÉDIGÉE N'EST PAS PERDUE, elle est repliée : huit leviers
         # sur quarante-quatre portent un protocole complet, et qui le veut
         # l'ouvre.
-        with st.expander(T("int_fiche_complete")):
+        with st.expander(_locale_text(T("int_fiche_complete"))):
             _fiche(x["fiche"])
 
 
@@ -2257,8 +2262,8 @@ def _bloc_paquets(paquets):
             f'<div>{_e(T("int_paq_touchees"))}'
             f'<b>{p["touchees"]}</b></div></div>'
             f'{rec}</div>', unsafe_allow_html=True)
-    st.caption(T("int_paq_note"))
-    st.caption(T("int_paq_lineaire"))
+    st.caption(_locale_text(T("int_paq_note")))
+    st.caption(_locale_text(T("int_paq_lineaire")))
 
 
 def _render():
@@ -2304,10 +2309,10 @@ def _render():
     g, _d = st.columns([2.4, 1])
     with g:
         cible = st.selectbox(
-            T("int_sur_quoi"), [None] + [c for c, _l in opts],
+            _locale_text(T("int_sur_quoi")), [None] + [c for c, _l in opts],
             key="int_cible",
-            format_func=lambda c: (T("int_sur_rien") if c is None
-                                   else libs.get(c, c)))
+            format_func=_locale_formatter(lambda c: (T("int_sur_rien") if c is None
+                                   else libs.get(c, c))))
     if cible is None:
         st.markdown(f'<p class="int-x" style="color:{ENCRE3};margin-top:8px">'
                     f'{_e(T("int_rien_encore"))}</p>', unsafe_allow_html=True)
@@ -2336,7 +2341,7 @@ def _render():
             f'<b>{_fmt(_r.get("ponderation") or 0, 2)}</b></div></div>',
             unsafe_allow_html=True)
         if not _ligne_noeud(graphe).get(int(cible[2:])):
-            st.caption(T("int_hors_modele"))
+            st.caption(_locale_text(T("int_hors_modele")))
 
     # ---- agir directement sur la ligne choisie ----------------------------
     # LA PREMIÈRE CHOSE À FAIRE SUR UNE LIGNE, C'EST CETTE LIGNE. Dix-huit
@@ -2360,7 +2365,7 @@ def _render():
             f'{_e(T("int_direct_t"))}</div>'
             f'<p class="int-x" style="margin:0 0 6px">'
             f'{_e(T("int_direct_x"))}</p>', unsafe_allow_html=True)
-        with st.expander(_libelle(_direct["noeud"]), expanded=True):
+        with st.expander(_locale_text(_libelle(_direct["noeud"])), expanded=True):
             _proposition(_direct)
 
     # ---- les leviers qui déplacent cette cible, et de combien -------------
@@ -2388,7 +2393,7 @@ def _render():
                 f'border-radius:999px;padding:3px 11px">'
                 f'{_e(_libelle(n))}</span>' for n in cases)
             + '</div>', unsafe_allow_html=True)
-        st.caption(T("int_th_x"))
+        st.caption(_locale_text(T("int_th_x")))
 
     tous = _effets_leviers()
     cle_cible = cible[2:] if cible.startswith("n:") else None
@@ -2408,8 +2413,8 @@ def _render():
                             else CAT_DE_DIM.get(n.get("dim") or "",
                                                 "structurel"))})
     if not lot:
-        st.info(T("int_aucun_levier_2") if _direct is not None
-                else T("int_aucun_levier"))
+        st.info(_locale_text(T("int_aucun_levier_2") if _direct is not None
+                else T("int_aucun_levier")))
         return
     # LE SIGNE DE L'EFFET N'EST PAS UN DÉTAIL DE CLASSEMENT. La liste était
     # triée sur la valeur absolue : un levier qui, poussé, ENFONCE la ligne
@@ -2421,7 +2426,7 @@ def _render():
     pour = [x for x in lot if x["effet"] > 0]
     contre = [x for x in lot if x["effet"] < 0]
     if not pour:
-        st.info(T("int_aucun_pour"))
+        st.info(_locale_text(T("int_aucun_pour")))
 
     deduits = any(x["fiche"] is None for x in pour)
     for cat in ("structurel", "technique", "organisationnel",
@@ -2442,12 +2447,12 @@ def _render():
             # accolé à un intitulé faisait lire un classement là où il y a
             # une liste de choses à faire ; l'ordre de la liste porte déjà
             # cette information.
-            with st.expander(_libelle(x["noeud"])):
+            with st.expander(_locale_text(_libelle(x["noeud"]))):
                 _proposition(x)
     if pour:
-        st.caption(T("int_prop_x"))
+        st.caption(_locale_text(T("int_prop_x")))
         if deduits:
-            st.caption(T("int_nature_x"))
+            st.caption(_locale_text(T("int_nature_x")))
 
     # ---- ce qui joue contre -----------------------------------------------
     # UN LEVIER QUI DÉGRADE LA CIBLE EST UNE INFORMATION, PAS UNE PROPOSITION.
@@ -2487,7 +2492,7 @@ def _render():
     # une consigne.
     st.markdown(f'<div class="int-lab" style="margin:22px 0 6px">'
                 f'{_e(T("int_futur"))}</div>', unsafe_allow_html=True)
-    with st.expander(T("int_futur_enq")):
+    with st.expander(_locale_text(T("int_futur_enq"))):
         st.markdown(f'<p class="int-x" style="margin:0 0 6px">'
                     f'{_e(T("int_futur_x"))}</p>', unsafe_allow_html=True)
         environnement_cadre.render_enquete()

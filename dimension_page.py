@@ -15,6 +15,10 @@ existaient déjà — le détail environnemental et les fiches d'organisations �
 plutôt que d'en dupliquer la logique.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -112,6 +116,7 @@ for _c, _v in TEXTES.items():
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -374,7 +379,7 @@ def render(cle_dim, complement=None):
     # déjà le nom de la dimension ; le répéter en 21 px poussait les filtres —
     # qui commandent tout ce qui suit — sous la ligne de flottaison.
     if not res:
-        st.info(T("e_absent"))
+        st.info(_locale_text(T("e_absent")))
         st.stop()
 
     filtres.barre(cle=cle_dim)
@@ -466,13 +471,13 @@ def _accordeon_indicateurs(lignes, vent, teinte, cle_dim):
 
     ordre = sorted(lignes, key=lambda r: (_sc(r) is None, _sc(r) or 0,
                                           r["ligne"]))
-    cherche = (st.text_input(T("d_chercher"), key=f"d_rech_{cle_dim}",
+    cherche = (st.text_input(_locale_text(T("d_chercher")), key=f"d_rech_{cle_dim}",
                              placeholder="…") or "").strip().lower()
     if cherche:
         ordre = [r for r in ordre if cherche in nom_indic(r).lower()
                  or cherche in (r.get("question") or "").lower()]
         if not ordre:
-            st.info(T("d_rien"))
+            st.info(_locale_text(T("d_rien")))
             return
 
     for r in ordre:
@@ -484,7 +489,7 @@ def _accordeon_indicateurs(lignes, vent, teinte, cle_dim):
         titre = (f'{nom_indic(r)}   ·   '
                  + (f'{_fmt(sc, 1)} / 10' if sc is not None
                     else T("d_non_calcule")))
-        with st.expander(titre, expanded=bool(cherche) and len(ordre) == 1):
+        with st.expander(_locale_text(titre), expanded=bool(cherche) and len(ordre) == 1):
             unite = r.get("unite") or ("%" if source_de(r) == "menage" else "")
             aff = (f'{_fmt(val, 2)} {unite}'.strip()
                    if isinstance(val, (int, float)) else "—")
@@ -568,7 +573,7 @@ def _rendre_indicateurs(cle_dim, res, vent, dimension, teinte, complement):
                     map_render.cartouche_html(lib, val, unite, sous,
                                               couleur=coul),
                     unsafe_allow_html=True)
-        st.caption(T("d_c_note"))
+        st.caption(_locale_text(T("d_c_note")))
 
     # --------------------------------------------------------------- radar
     # « Indicateurs clés → graphiques → cartes » : le radar est le graphique,
@@ -587,8 +592,8 @@ def _rendre_indicateurs(cle_dim, res, vent, dimension, teinte, complement):
         with st.container(border=True):
             st.markdown(f'<div class="titre-bloc vert">{T("d_bloc_carte")}</div>',
                         unsafe_allow_html=True)
-            st.caption(T("d_bloc_carte_note"))
-            components.html(html, height=hauteur + 46, scrolling=False)
+            st.caption(_locale_text(T("d_bloc_carte_note")))
+            components.html(_locale_html(html), height=hauteur + 46, scrolling=False)
 
     # --------------------------------------------- LA LISTE DES INDICATEURS
     # Une seule liste, fermée, à la place des deux blocs d'avant — un tableau
@@ -602,21 +607,21 @@ def _rendre_indicateurs(cle_dim, res, vent, dimension, teinte, complement):
             f'<div class="titre-bloc">{T("d_indics_titre")} · '
             f'{T("d_n_indics", n=len(lignes))}</div>', unsafe_allow_html=True)
         st.markdown(T("d_indics_note"))
-        st.caption(filtres.resume() + " — " + T("d_ferme_note"))
+        st.caption(_locale_text(filtres.resume() + " — " + T("d_ferme_note")))
         _accordeon_indicateurs(lignes, vent, teinte, cle_dim)
-        st.caption(T("d_bloc_indicateurs_note"))
+        st.caption(_locale_text(T("d_bloc_indicateurs_note")))
         if filtres.groupe() != filtres.TOUS:
-            st.caption(T("f_note_satellite"))
+            st.caption(_locale_text(T("f_note_satellite")))
 
     # ------------------------------------------------ le tableau, en dernier
     # « Indicateurs clés → graphiques → cartes → comparaisons → tableaux
     # détaillés » : le tableau ferme la marche, replié, pour qui veut tout
     # voir d'un coup ou copier des chiffres.
-    with st.expander(T("d_bloc_tableau")):
+    with st.expander(_locale_text(T("d_bloc_tableau"))):
         cible = filtres.cible() or filtres.section()
         st.markdown(_tableau_indicateurs(lignes, cible, teinte, vent),
                     unsafe_allow_html=True)
-        st.caption(T("d_bloc_sources_texte"))
+        st.caption(_locale_text(T("d_bloc_sources_texte")))
 
     # Le détail propre à deux dimensions — environnement, organisations de
     # base — vient ici, à la fin des indicateurs, et non dans l'onglet des
@@ -624,5 +629,5 @@ def _rendre_indicateurs(cle_dim, res, vent, dimension, teinte, complement):
     if complement is not None:
         complement()
 
-    st.caption(T("e_source"))
-    st.caption(T("credit"))
+    st.caption(_locale_text(T("e_source")))
+    st.caption(_locale_text(T("credit")))

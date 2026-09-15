@@ -15,6 +15,8 @@ suit la liste NOUVEAUTES ci-dessous, qu'on met à jour en même temps que le
 contenu qu'elle annonce.
 """
 
+from traductions import text as _locale_text
+
 import streamlit as st
 
 from i18n import T
@@ -30,6 +32,7 @@ ENTREES = [
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -56,6 +59,6 @@ def rendre(bascule):
                 + f'</div>'
                 f'<div class="n-texte">{_e(T("n_" + cle + "_texte"))}</div>'
                 f'</div></div>', unsafe_allow_html=True)
-            st.button(T("n_ouvrir"), key=f"n_btn_{cle}",
+            st.button(_locale_text(T("n_ouvrir")), key=f"n_btn_{cle}",
                       on_click=bascule, args=(onglet,),
                       use_container_width=True)

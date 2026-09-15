@@ -35,6 +35,10 @@ là où elles se touchent. Elles sont en revanche parfaitement comparables
 CHACUNE AVEC ELLE-MÊME, ce qui est tout ce qu'un classement demande.
 """
 
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -294,6 +298,7 @@ STYLE = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -458,9 +463,9 @@ def render(entete=True):
     res = _resultats()
     cat = _catalogue()
     if not res:
-        st.info(T("fp_absent"))
+        st.info(_locale_text(T("fp_absent")))
         return
-    st.info(T("fp_intro"))
+    st.info(_locale_text(T("fp_intro")))
 
     scores = {p: _pondere(res, p) for p in PAYSAGES}
     n_ind = sum(1 for r in res
@@ -495,18 +500,18 @@ def render(entete=True):
             f'<div style="font-size:17.5px;font-weight:700;color:{ENCRE2};'
             f'font-variant-numeric:tabular-nums">{_f(ec)}</div></div>'
             f'{cotes[1]}</div>', unsafe_allow_html=True)
-        st.caption(T("fp_publie", n=n_ind))
+        st.caption(_locale_text(T("fp_publie", n=n_ind)))
         st.markdown(f'<div class="titre-bloc" style="margin-top:14px">'
                     f'{T("fp_dims")}</div>' + _barres_dimensions(res),
                     unsafe_allow_html=True)
-        st.caption(T("fp_dims_note"))
+        st.caption(_locale_text(T("fp_dims_note")))
 
     # --------------------------------------------------------- 2 · écarts
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc vert">{T("fp_s2")}</div>',
                     unsafe_allow_html=True)
         st.markdown(T("fp_s2_note"))
-        combien = st.slider(T("fp_combien"), 5, min(30, len(ecarts)), 12,
+        combien = st.slider(_locale_text(T("fp_combien")), 5, min(30, len(ecarts)), 12,
                             key="fp_n")
         ent = [T("fp_c_rang"), T("fp_c_var"), T("fp_c_dim"), _lib("Littoral"),
                _lib("Montagne"), T("fp_ecart"), T("fp_c_fav")]
@@ -532,7 +537,7 @@ def render(entete=True):
         st.markdown(f'<div class="titre-bloc" style="margin-top:16px">'
                     f'{T("fp_visuel")}</div>' + _diverge(ecarts, combien),
                     unsafe_allow_html=True)
-        st.caption(T("fp_visuel_note"))
+        st.caption(_locale_text(T("fp_visuel_note")))
 
     # ------------------------------------------------- 3 · paysage × groupe
     cellules, registre = [], "socio"
@@ -541,14 +546,14 @@ def render(entete=True):
                     unsafe_allow_html=True)
         st.markdown(T("fp_s3_note"))
         if not cat:
-            st.info(T("fp_absent"))
+            st.info(_locale_text(T("fp_absent")))
         else:
             couv = CM.couverture(cat)
-            st.warning(T("fp_recalc",
+            st.warning(_locale_text(T("fp_recalc",
                          k=(len(cat["indicateurs"])
                             + len(cat.get("territoriaux") or [])),
-                         p=_f(100 * couv["global"], 0)))
-            registre = st.selectbox(T('fp_croiser'), [r for r, _v in REGISTRES], format_func=lambda r: T('fp_r_' + r), key='fp_reg')
+                         p=_f(100 * couv["global"], 0))))
+            registre = st.selectbox(_locale_text(T('fp_croiser')), [r for r, _v in REGISTRES], format_func=_locale_formatter(lambda r: T('fp_r_' + r)), key='fp_reg')
             for p in PAYSAGES:
                 for g in dict(REGISTRES)[registre]:
                     # Une localité appartient à un seul paysage : croiser
@@ -587,8 +592,8 @@ def render(entete=True):
                     f'<td><span class="fp-pill" style="background:{cn}1a;'
                     f'color:{cn}">{_e(T("fp_n_" + niv))}</span></td></tr>')
             st.markdown("".join(li) + "</table>", unsafe_allow_html=True)
-            st.caption(T("fp_niv_note"))
-            st.caption(T("fp_fragile", n=CM.N_FRAGILE))
+            st.caption(_locale_text(T("fp_niv_note")))
+            st.caption(_locale_text(T("fp_fragile", n=CM.N_FRAGILE)))
 
     # ------------------------------------------------ 4 · les deux extrémités
     if cellules:
@@ -643,7 +648,7 @@ def render(entete=True):
                 li.append(f'<tr><td class="g">{_e(T(cle))}</td>'
                           + "".join(cells) + '</tr>')
             st.markdown("".join(li) + "</table>", unsafe_allow_html=True)
-            st.caption(T("fp_m_note"))
+            st.caption(_locale_text(T("fp_m_note")))
 
     # ---------------------------------------------------- 6 · à retenir
     with st.container(border=True):

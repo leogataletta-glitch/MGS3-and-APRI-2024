@@ -37,6 +37,10 @@ n'est pas mesurée, il est dit que la corrélation n'est pas calculable — plut
 que d'afficher un chiffre qui n'existe pas.
 """
 
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import math
 
 import numpy as np
@@ -494,6 +498,7 @@ STYLE = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -807,10 +812,10 @@ def render_construire():
     # `_systeme` retombe sur « Total », qui était déjà son défaut.
     c1, c3 = st.columns([2.4, 0.8])
     with c1:
-        st.selectbox(T("sx_centre"), s["ids"], key="bcl_centre",
-                     format_func=lambda i: m["noms"][i])
+        st.selectbox(_locale_text(T("sx_centre")), s["ids"], key="bcl_centre",
+                     format_func=_locale_formatter(lambda i: m["noms"][i]))
     with c3:
-        st.selectbox(T("sx_prof"), TAILLES, key="bcl_n")
+        st.selectbox(_locale_text(T("sx_prof")), TAILLES, key="bcl_n", format_func=_locale_formatter(str))
     st.markdown(f'<p class="sx-note" style="margin:-4px 0 10px">'
                 f'{T("sx_sens")}</p>', unsafe_allow_html=True)
     s = _systeme(m, "c")
@@ -826,18 +831,18 @@ def render_construire():
     # manquant continue d'être signalé, lui, parce qu'il change la lecture du
     # dessin.
     if v is None:
-        st.info(T("sx_non_mesure_x"))
+        st.info(_locale_text(T("sx_non_mesure_x")))
 
     isoler = None
     if bcls:
         choix = st.selectbox(
-            T("sx_boucles_c"), [None] + list(range(len(bcls))),
+            _locale_text(T("sx_boucles_c")), [None] + list(range(len(bcls))),
             key="bcl_iso",
-            format_func=lambda i: "—" if i is None else _lib_boucle(m, bcls[i]))
+            format_func=_locale_formatter(lambda i: "—" if i is None else _lib_boucle(m, bcls[i])))
         isoler = bcls[choix] if choix is not None else None
 
     if len(rang) > NOEUDS_LISIBLES:
-        st.warning(T("sx_trop", n=len(rang)))
+        st.warning(_locale_text(T("sx_trop", n=len(rang))))
     st.markdown(_svg_cld(m, rang, aretes, s["centre"], isoler),
                 unsafe_allow_html=True)
     # QUATRE NOTES SOUS LE SCHÉMA, ET PLUS AUCUNE. La lecture des flèches,
@@ -848,7 +853,7 @@ def render_construire():
     # les flèches, le décompte se voit, et le type de chaque boucle est écrit
     # en tête de son libellé dans le menu au-dessus.
     if not bcls:
-        st.info(T("sx_boucles_0"))
+        st.info(_locale_text(T("sx_boucles_0")))
 
 
 # ================================================================= onglet 2
@@ -1063,8 +1068,8 @@ def render_relations():
     ids = sorted(m["ids"], key=lambda i: m["noms"].get(i, i))
     if st.session_state.get("sx_var_rel") not in ids:
         st.session_state["sx_var_rel"] = s["centre"]
-    x = st.selectbox(T("sx_rel_var"), ids, key="sx_var_rel",
-                     format_func=lambda i: m["noms"].get(i, i))
+    x = st.selectbox(_locale_text(T("sx_rel_var")), ids, key="sx_var_rel",
+                     format_func=_locale_formatter(lambda i: m["noms"].get(i, i)))
     aretes = [a for (de, vers), a in m["aretes"].items()
               if de == x or vers == x]
     n_sort = sum(1 for a in aretes if a["de"] == x)
@@ -1087,7 +1092,7 @@ def render_relations():
     st.markdown(f'<p class="sx-note" style="margin:2px 0 0">{_e(bilan)}</p>',
                 unsafe_allow_html=True)
     if not gardees:
-        st.info(T("sx_rel_0"))
+        st.info(_locale_text(T("sx_rel_0")))
         return
 
     lang = i18n.get_lang()
@@ -1153,7 +1158,7 @@ def render_leviers():
         lignes.append({**lv, "portee": portee,
                        "nom": m["noms"].get(lv["id"], lv["id"])})
     if not lignes:
-        st.info(T("sx_boucles_0"))
+        st.info(_locale_text(T("sx_boucles_0")))
         return
     lignes.sort(key=lambda x: -x["portee"])
 
@@ -1231,15 +1236,15 @@ def _scenario(m, s, dedans):
     else:
         opt = {"default": [s["centre"]] if s["centre"] in dispo else []}
     choisies = st.multiselect(
-        T("sx_pousser"), dispo, key="sx_pousse_v",
-        format_func=lambda i: m["noms"][i], **opt)
+        _locale_text(T("sx_pousser")), dispo, key="sx_pousse_v",
+        format_func=_locale_formatter(lambda i: m["noms"][i]), **opt)
     variations = {}
     if choisies:
         cols = st.columns(min(len(choisies), 3))
         for i, n in enumerate(choisies):
             with cols[i % len(cols)]:
                 variations[n] = st.slider(
-                    m["noms"][n], -3.0, 3.0,
+                    _locale_text(m["noms"][n]), -3.0, 3.0,
                     float(st.session_state.get(f"sx_d_{n}", 1.0)), 0.5,
                     key=f"sx_d_{n}")
     return {k: v for k, v in variations.items() if abs(v) > 1e-9}
@@ -1257,11 +1262,11 @@ def render_simuler():
 
     rang, _a = _voisinage(m, s["centre"], s["n"])
     variations = _scenario(m, s, set(rang))
-    if st.button(T("sx_remise"), key="sx_raz"):
+    if st.button(_locale_text(T("sx_remise")), key="sx_raz"):
         st.session_state["sx_raz_demande"] = True
         st.rerun()
     if not variations:
-        st.info(T("sx_pousser_0"))
+        st.info(_locale_text(T("sx_pousser_0")))
         return
 
     etat = M.etat_courant(m["g"], m["par_ligne"], s["pop"])
@@ -1289,7 +1294,7 @@ def render_simuler():
          if k not in variations and abs(v) >= M.SEUIL_NUL],
         key=lambda kv: -abs(kv[1]))
     if not bouge:
-        st.info(T("sx_rien_bouge", s=_f(M.SEUIL_NUL, 2)))
+        st.info(_locale_text(T("sx_rien_bouge", s=_f(M.SEUIL_NUL, 2))))
         return
 
     r = ['<table class="sx-tab"><thead><tr>'

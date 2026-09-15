@@ -34,6 +34,8 @@ TROIS RÈGLES, ÉCRITES ICI PARCE QU'ELLES SE VOIENT À L'ÉCRAN
      montre que ce qu'elle sait faire n'est pas une note, c'est une plaquette.
 """
 
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -358,6 +360,7 @@ STYLE = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -705,7 +708,7 @@ def render():
 
     tout = _tout()
     if not tout:
-        st.warning(T("nb_absent"))
+        st.warning(_locale_text(T("nb_absent")))
         return
 
     par_ligne = tout["par_ligne"]
@@ -715,7 +718,7 @@ def render():
     classe, res, manque = _classement(par_ligne)
     constats = _constats(par_ligne)
 
-    st.info(T("nb_intro"))
+    st.info(_locale_text(T("nb_intro")))
 
     # ---- les quatre chiffres
     bases = [int((r.get("n") or {}).get("Total") or 0) for r in res]
@@ -758,7 +761,7 @@ def render():
             with col:
                 _carte_constat(i + j + 1, d, r, dims)
 
-    with st.expander(T("nb_autres")):
+    with st.expander(_locale_text(T("nb_autres"))):
         _tableau_ecarts(classe)
 
     # ---- 2 · les réponses
@@ -805,17 +808,17 @@ def render():
         # ce qui est une information à part entière et qu'il aurait été faux
         # d'annoncer comme un recouvrement.
         if abs(somme - pf["delta"]) < 0.005:
-            st.caption(T("nb_somme_egal").format(c=_f(pf["delta"], 3)))
+            st.caption(_locale_text(T("nb_somme_egal").format(c=_f(pf["delta"], 3))))
         else:
-            st.caption(T("nb_somme").format(c=_f(pf["delta"], 3),
-                                            s=_f(somme, 3)))
+            st.caption(_locale_text(T("nb_somme").format(c=_f(pf["delta"], 3),
+                                            s=_f(somme, 3))))
 
     st.markdown(
         f'<p class="nb-p">{_gras(T("nb_manque").format(g=_f(pf["delta"], 2), m=_f(reste_pts, 2), p=_f(pf["delta"] / reste_pts * 100, 1)))}</p>',
         unsafe_allow_html=True)
-    st.caption(T("nb_couvert").format(
+    st.caption(_locale_text(T("nb_couvert").format(
         p=_f(pf["part_couverte"] * 100, 0),
-        q=_f(100 - pf["part_couverte"] * 100, 0)))
+        q=_f(100 - pf["part_couverte"] * 100, 0))))
 
     # LES CONSTATS ORPHELINS. C'est le bloc qu'une plaquette n'écrirait pas :
     # il dit quelle part du diagnostic reste sans réponse dans ce portefeuille.
@@ -864,9 +867,9 @@ def render():
                     f'{_e(T("nb_lot_n").format(n=len(lot["ids"])))} : {noms}'
                     f'</div>', unsafe_allow_html=True)
     if pf["delta"]:
-        st.caption(T("nb_lot_part").format(
+        st.caption(_locale_text(T("nb_lot_part").format(
             n=len(tout["lot1"]["ids"]), t=len(fiches),
-            p=_f(tout["lot1"]["eff"]["delta"] / pf["delta"] * 100, 0)))
+            p=_f(tout["lot1"]["eff"]["delta"] / pf["delta"] * 100, 0))))
 
     # ---- 5 · les réserves
     st.markdown(f'<h3 style="font-size:17.5px;font-weight:700;color:{ENCRE};'
@@ -877,4 +880,4 @@ def render():
         # rendus par Streamlit, et cette liste est du texte, pas une mise en page.
         st.markdown("\n".join(
             f"- {T(k)}" for k in ("nb_r1", "nb_r2", "nb_r3", "nb_r4", "nb_r5")))
-    st.caption(T("nb_ou"))
+    st.caption(_locale_text(T("nb_ou")))

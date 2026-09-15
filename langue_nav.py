@@ -6,13 +6,13 @@ def render(callback, mobile=False):
     key = 'navigation_language_mobile' if mobile else 'navigation_language_desktop'
     st.markdown(f'''<style>
     .stApp .st-key-{key}.st-key-{key}{{
-      width:88px!important;max-width:88px!important;margin:8px 48px 16px 12px;
+      width:176px!important;max-width:calc(100% - 60px)!important;margin:8px 48px 16px auto!important;
       flex-shrink:0!important;overflow:visible!important;
       padding:0!important;border:0!important;border-radius:0;
       background:transparent!important;box-shadow:none!important;
     }}
     .stApp .st-key-{key}.st-key-{key} [data-testid="stHorizontalBlock"]{{gap:0!important;}}
-    .stApp .st-key-{key}.st-key-{key} [data-testid="stColumn"]{{min-width:0!important;width:50%!important;flex:1 1 0!important;}}
+    .stApp .st-key-{key}.st-key-{key} [data-testid="stColumn"]{{min-width:0!important;width:25%!important;flex:1 1 0!important;}}
     .stApp .st-key-{key}.st-key-{key} [data-testid="stElementContainer"]{{margin:0!important;}}
     .stApp .st-key-{key}.st-key-{key} div[data-testid="stButton"] button{{
       padding:6px 10px!important;min-height:32px!important;height:32px!important;width:100%!important;
@@ -31,8 +31,8 @@ def render(callback, mobile=False):
     .stApp .st-key-{key}.st-key-{key} button:focus-visible{{outline:2px solid #679881!important;outline-offset:2px;}}
     </style>''', unsafe_allow_html=True)
     with st.container(key=key):
-        cols = st.columns(2, gap='small')
-        for col, code in zip(cols, ('en','fr')):
+        cols = st.columns(4, gap='small')
+        for col, code in zip(cols, ('en','fr','es','ht')):
             with col:
                 if st.button(code.upper(),key=f'{key}_{code}',
                     type='primary' if st.session_state['choix_langue']==code else 'secondary'):

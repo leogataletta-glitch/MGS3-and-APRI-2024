@@ -23,6 +23,9 @@ vise `class*="st-key-ong_"` : un appel qui nommerait sa clé autrement
 n'hériterait de rien et retomberait sur les pastilles par défaut.
 """
 
+from traductions import text as _locale_text
+from traductions import formatter as _locale_formatter
+
 import streamlit as st
 
 STYLE = """
@@ -171,6 +174,7 @@ _CSS_COMPACT = """
 def barre(cle, codes, titre, description=None, defaut=None, compact=False):
     """Keep main navigation as tabs and secondary navigation as searchable menus."""
     from i18n import get_lang
+    from traductions import text
     main = cle in {'cad_vue', 'ra_vue', 'bcl_vue', 'int_vue'}
     key = cle if cle.startswith('ong_') else 'ong_' + cle
     if defaut and st.session_state.get(cle) not in codes:
@@ -181,14 +185,15 @@ def barre(cle, codes, titre, description=None, defaut=None, compact=False):
                       'sat_cat': ('Thème', 'Theme'),
                       'cad_i_vue': ('Vue', 'View')}
             pair = labels.get(cle, ('Afficher', 'Display'))
-            return st.selectbox(pair[0 if get_lang() == 'fr' else 1], codes,
-                                key=cle, format_func=titre)
+            return st.selectbox(_locale_text(text(pair[0 if get_lang() == 'fr' else 1])), codes,
+                                key=cle, format_func=_locale_formatter(lambda value: text(titre(value))))
         st.markdown(STYLE, unsafe_allow_html=True)
         def label(code):
-            detail = description(code) if description else None
-            return f"**{titre(code)}**\n\n{detail}" if detail else f"**{titre(code)}**"
+            detail = text(description(code)) if description else None
+            return f"**{text(titre(code))}**\n\n{detail}" if detail else f"**{text(titre(code))}**"
+        rendered_labels = {code: label(code) for code in codes}
         selected = st.radio(cle, codes, horizontal=True, label_visibility='collapsed',
-                            key=cle, format_func=label)
+                            key=cle, format_func=lambda code: rendered_labels[code])
         import onglets_principaux
         onglets_principaux.render(key, codes, selected)
         return selected

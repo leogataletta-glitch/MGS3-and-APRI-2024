@@ -1,4 +1,6 @@
 """Composition grand écran inspirée du modèle Wix 3104, avec les contenus APRI."""
+
+from traductions import text as _locale_text
 import html
 import streamlit as st
 import accueil2_page as home
@@ -108,29 +110,29 @@ def accueil():
     river = home._photo_b64(prefere='accueil2_hero.jpg')
     sea = home._photo_b64(prefere='accueil2_hero_b.jpg')
     with st.container(key='wx_home'):
-        st.markdown(f'<div class="wx-brand"><img src="data:image/png;base64,{assets.EMBLEME_APRI}" alt="APRI"><span>APRI · {"Paysages & résilience" if fr else "Landscapes & resilience"}</span></div>', unsafe_allow_html=True)
-        title = ('Comprendre les territoires.<br>Renforcer la résilience.' if fr else
-                 'Understanding landscapes.<br>Strengthening resilience.')
+        st.markdown(f'<div class="wx-brand"><img src="data:image/png;base64,{assets.EMBLEME_APRI}" alt="APRI"><span>APRI · {_locale_text("Paysages & résilience" if fr else "Landscapes & resilience")}</span></div>', unsafe_allow_html=True)
+        title = (_locale_text('Comprendre les territoires.<br>Renforcer la résilience.' if fr else
+                 'Understanding landscapes.<br>Strengthening resilience.'))
         st.markdown(f'''<div class="wx-hero" style="--wx-photo:url('data:image/jpeg;base64,{river}')">
             <div class="wx-kicker">{e(T('a2_inst')).replace('|', ' ')}</div>
             <h1 class="wx-title">{title}</h1><p class="wx-lead">{e(T('a2_intro'))}</p>
-            <div class="wx-credit">{'Vallée de la Voldrogue · Grand’Anse · Haïti, 2024' if fr else 'Voldrogue valley · Grand’Anse · Haiti, 2024'}</div></div>''', unsafe_allow_html=True)
+            <div class="wx-credit">{_locale_text('Vallée de la Voldrogue · Grand’Anse · Haïti, 2024' if fr else 'Voldrogue valley · Grand’Anse · Haiti, 2024')}</div></div>''', unsafe_allow_html=True)
         with st.container(key='wx_cta'):
-            st.button(T('a2_cta'), key='wx_results', on_click=_go, args=('dimensions',))
+            st.button(_locale_text(T('a2_cta')), key='wx_results', on_click=_go, args=('dimensions',))
         with st.container(key='wx_round'):
-            st.button('Explorer ↗' if fr else 'Explore ↗', key='wx_round_results', on_click=_go, args=('dimensions',))
+            st.button(_locale_text('Explorer ↗' if fr else 'Explore ↗'), key='wx_round_results', on_click=_go, args=('dimensions',))
         with st.container(key='wx_agenda'):
-            st.markdown('<div class="wx-heading">' + ('Au cœur de l’approche' if fr else 'At the heart of the approach') + '</div>', unsafe_allow_html=True)
+            st.markdown('<div class="wx-heading">' + (_locale_text('Au cœur de l’approche' if fr else 'At the heart of the approach')) + '</div>', unsafe_allow_html=True)
             cols=st.columns(3,gap='large')
             for col, (mode, tk, xk) in zip(cols,[('accueil','a2_p2_t','a2_p2_x'),('boucles','a2_p3_t','a2_p3_x'),('actions','a2_p4_t','a2_p4_x')]):
                 with col:
                     st.markdown(f'<div class="wx-topic"><span>○</span>{e(T(tk))}</div><p class="wx-description">{e(T(xk))}</p>', unsafe_allow_html=True)
-                    st.button('Découvrir →' if fr else 'Discover →', key=f'wx_go_{mode}', on_click=_go, args=(mode,), use_container_width=True)
-        about_title='Observer les paysages,<br>écouter les populations.' if fr else 'Observing landscapes.<br>Listening to communities.'
-        about_text=('L’approche APRI met en relation les conditions de vie des ménages, les caractéristiques des paysages et les capacités locales. Le Sud et la Grand’Anse constituent les deux territoires pilotes de cette démarche.' if fr else 'APRI connects household living conditions, landscape characteristics and local capacities. Sud and Grand’Anse are the two pilot territories for this approach.')
+                    st.button(_locale_text('Découvrir →' if fr else 'Discover →'), key=f'wx_go_{mode}', on_click=_go, args=(mode,), use_container_width=True)
+        about_title=_locale_text('Observer les paysages,<br>écouter les populations.' if fr else 'Observing landscapes.<br>Listening to communities.')
+        about_text=(_locale_text('L’approche APRI met en relation les conditions de vie des ménages, les caractéristiques des paysages et les capacités locales. Le Sud et la Grand’Anse constituent les deux territoires pilotes de cette démarche.' if fr else 'APRI connects household living conditions, landscape characteristics and local capacities. Sud and Grand’Anse are the two pilot territories for this approach.'))
         st.markdown(f'''<div class="wx-about"><div class="wx-about-photo" role="img" aria-label="Baie de Corail, Grand’Anse" style="background-image:url('data:image/jpeg;base64,{sea}')"></div><div class="wx-about-copy"><div class="wx-heading">{about_title}</div><p>{e(about_text)}</p></div></div>''', unsafe_allow_html=True)
         with st.container(key='wx_numbers'):
-            st.markdown('<div class="wx-heading">' + ('Une enquête ancrée sur le terrain' if fr else 'An inquiry grounded in fieldwork') + '</div>', unsafe_allow_html=True)
+            st.markdown('<div class="wx-heading">' + (_locale_text('Une enquête ancrée sur le terrain' if fr else 'An inquiry grounded in fieldwork')) + '</div>', unsafe_allow_html=True)
             households, sections=home._chiffres()
             stats=[(home._fmt(households)+'+' if households else '1 200+',T('a2_c1_x')),
                    (str(sections or 10),T('a2_c2_x')),('2',T('a2_c3_x')),(T('a2_c4_n'),T('a2_c4_x'))]

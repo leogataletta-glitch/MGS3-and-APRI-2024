@@ -11,6 +11,10 @@ avec les filtres choisis passés par variables d'environnement, on récupère
 le résultat, et on l'affiche.
 """
 
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import html
 import io
 import json
@@ -100,14 +104,14 @@ def check_password():
         return True  # pas de mot de passe configuré -> accès libre (usage local)
     if st.session_state.get("authed"):
         return True
-    st.title("Household resilience survey 2024 — Haiti")
-    pw = st.text_input("Mot de passe", type="password")
-    if st.button("Entrer") or pw:
+    st.title(_locale_text("Household resilience survey 2024 — Haiti"))
+    pw = st.text_input(_locale_text("Mot de passe"), type="password")
+    if st.button(_locale_text("Entrer")) or pw:
         if pw == expected:
             st.session_state["authed"] = True
             st.rerun()
         elif pw:
-            st.error("Mot de passe incorrect.")
+            st.error(_locale_text("Mot de passe incorrect."))
     return False
 
 
@@ -2096,7 +2100,7 @@ I18N_CLES_REQUISES = [
 _manquantes = [c for c in I18N_CLES_REQUISES if c not in getattr(i18n, "DICO", {})]
 if _manquantes:
     st.error(
-        f"**i18n.py n'est pas à jour** — il manque "
+        _locale_text(f"**i18n.py n'est pas à jour** — il manque "
         f"{len(_manquantes)} clé(s) de traduction que le reste de "
         f"l'application appelle : `" + "`, `".join(_manquantes[:6]) + "`"
         + ("…" if len(_manquantes) > 6 else "") + ".\n\n"
@@ -2106,7 +2110,7 @@ if _manquantes:
         f"sur GitHub le `i18n.py` livré avec cette mise à jour, à la racine du "
         f"dépôt, corrige l'affichage.\n\n"
         f"*i18n.py is missing translation keys — re-upload the version "
-        f"delivered with this update to the repository root.*")
+        f"delivered with this update to the repository root.*"))
     # On ARRÊTE ici. L'application continuait autrefois de se dessiner avec des
     # noms de clés en guise de textes, et le message rouge se perdait au-dessus
     # d'une page qui semblait fonctionner — au point qu'on a pris plusieurs
@@ -2340,7 +2344,7 @@ _CSS_ICONES_NAV = "<style>" + "".join(
 
 def _entree_nav(mode, icone, prefix="nav"):
     actif = st.session_state["app_mode"] == mode
-    if st.button(LIBELLE_MODE[mode], key=f"{prefix}_{mode}",
+    if st.button(_locale_text(LIBELLE_MODE[mode]), key=f"{prefix}_{mode}",
               type="primary" if actif else "secondary",
               use_container_width=True):
         _bascule(mode)
@@ -2519,11 +2523,11 @@ st.markdown("""
 import langue_nav
 
 with _menu_mobile:
-    with st.popover("☰ Menu", use_container_width=True):
+    with st.popover(_locale_text("☰ Menu"), use_container_width=True):
         langue_nav.render(_changer_langue, mobile=True)
         for _fam, _entrees in _NAV_FAMILLES:
             if _fam:
-                st.caption(T(_fam))
+                st.caption(_locale_text(T(_fam)))
             for _mode, _icone in _entrees:
                 _entree_nav(_mode, _icone, prefix="mobile_nav")
 
@@ -2666,8 +2670,8 @@ with _c_contenu:
         # onglets contiennent, et un lecteur qui passait de la page des
         # boucles à celle-ci changeait d'outil sans changer de site.
         _ra = onglets.barre("ra_vue", _CODES_RA,
-                            titre=lambda c: ("Relations entre variables" if i18n.get_lang() == "fr" else "Relationships between variables") if c == "relations" else T("ra_o_" + c),
-                            description=lambda c: ("Comparer les réponses observées" if i18n.get_lang() == "fr" else "Compare observed answers") if c == "relations" else T("ra_d_" + c),
+                            titre=lambda c: (_locale_text("Relations entre variables" if i18n.get_lang() == "fr" else "Relationships between variables")) if c == "relations" else T("ra_o_" + c),
+                            description=lambda c: (_locale_text("Comparer les réponses observées" if i18n.get_lang() == "fr" else "Compare observed answers")) if c == "relations" else T("ra_d_" + c),
                             defaut="brut")
         resultats_design.render(_CODES_RA.index(_ra) + 1, i18n.get_lang() == 'fr')
 
@@ -2707,8 +2711,8 @@ with _c_contenu:
             _source_col, _theme_col, _question_col = st.columns([1, 1, 1.5])
             with _source_col:
                 _src = st.selectbox(
-                    T("ex_b_source"), _srcs, key="ra_source",
-                    format_func=lambda c: T("ra_src_" + c)) or "menages"
+                    _locale_text(T("ex_b_source")), _srcs, key="ra_source",
+                    format_func=_locale_formatter(lambda c: T("ra_src_" + c))) or "menages"
 
             if _src == "satellite":
                 environnement_cadre.render_satellite()

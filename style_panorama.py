@@ -1,4 +1,6 @@
 """Style 6 : panorama blanc, inspiré du modèle Wix wh-1176."""
+
+from traductions import text as _locale_text
 import html
 import streamlit as st
 import accueil2_page as home
@@ -70,20 +72,20 @@ def accueil():
     river=home._photo_b64(prefere='accueil2_hero.jpg')
     sea=home._photo_b64(prefere='accueil2_hero_b.jpg')
     with st.container(key='p6_home'):
-        st.markdown(f'<div class="p6-brand"><img src="data:image/png;base64,{assets.EMBLEME_APRI}" alt="APRI">APRI · {"Paysages et résilience" if fr else "Landscapes and resilience"}</div>',unsafe_allow_html=True)
-        title=('Comprendre aujourd’hui.<br>Renforcer la résilience de demain.' if fr else 'Understanding today.<br>Building tomorrow’s resilience.')
+        st.markdown(f'<div class="p6-brand"><img src="data:image/png;base64,{assets.EMBLEME_APRI}" alt="APRI">APRI · {_locale_text("Paysages et résilience" if fr else "Landscapes and resilience")}</div>',unsafe_allow_html=True)
+        title=(_locale_text('Comprendre aujourd’hui.<br>Renforcer la résilience de demain.' if fr else 'Understanding today.<br>Building tomorrow’s resilience.'))
         st.markdown(f'''<div class="p6-hero" style="background-image:linear-gradient(90deg,#ffffffdd,#ffffff66),url('data:image/jpeg;base64,{river}')"><h1 class="p6-title">{title}</h1></div>''',unsafe_allow_html=True)
         with st.container(key='p6_intro'):
             st.markdown(f'<p class="p6-intro">{e(T("a2_intro"))}</p>',unsafe_allow_html=True)
-            st.button(T('a2_cta')+' →',key='p6_results',on_click=_go,args=('dimensions',))
-        label='NOTRE DÉMARCHE' if fr else 'OUR APPROACH'
-        subtitle='Le paysage et les populations, une lecture commune.' if fr else 'Landscapes and communities, a shared perspective.'
-        text=('APRI rapproche les observations de terrain, les conditions de vie des ménages et les caractéristiques des paysages. Le Sud et la Grand’Anse sont les deux territoires pilotes de cette approche intégrée.' if fr else 'APRI brings together field observations, household living conditions and landscape characteristics. Sud and Grand’Anse are the two pilot territories for this integrated approach.')
+            st.button(_locale_text(T('a2_cta')+' →'),key='p6_results',on_click=_go,args=('dimensions',))
+        label=_locale_text('NOTRE DÉMARCHE' if fr else 'OUR APPROACH')
+        subtitle=_locale_text('Le paysage et les populations, une lecture commune.' if fr else 'Landscapes and communities, a shared perspective.')
+        text=(_locale_text('APRI rapproche les observations de terrain, les conditions de vie des ménages et les caractéristiques des paysages. Le Sud et la Grand’Anse sont les deux territoires pilotes de cette approche intégrée.' if fr else 'APRI brings together field observations, household living conditions and landscape characteristics. Sud and Grand’Anse are the two pilot territories for this integrated approach.'))
         st.markdown(f'<div class="p6-row"><div class="p6-label">{label}</div><div><div class="p6-subtitle">{subtitle}</div><p class="p6-copy">{e(text)}</p></div></div>',unsafe_allow_html=True)
         menages,sections=home._chiffres()
         stats=[(home._fmt(menages)+'+' if menages else '1 200+',T('a2_c1_x')),(str(sections or 10),T('a2_c2_x')),('2',T('a2_c3_x'))]
         st.markdown('<div class="p6-stats">'+''.join(f'<div class="p6-stat"><strong>{e(n)}</strong><span>{e(t)}</span></div>' for n,t in stats)+'</div>',unsafe_allow_html=True)
-        st.markdown('<div class="p6-row"><div class="p6-label">'+('EXPLORER APRI' if fr else 'EXPLORE APRI')+'</div><div><div class="p6-subtitle">'+('Des données aux pistes d’action.' if fr else 'From data to opportunities for action.')+'</div><p class="p6-copy">'+('Choisissez une entrée pour découvrir les territoires, comprendre les interactions et consulter les fiches d’intervention.' if fr else 'Choose a starting point to discover the territories, understand interactions and explore intervention profiles.')+'</p></div></div>',unsafe_allow_html=True)
+        st.markdown('<div class="p6-row"><div class="p6-label">'+(_locale_text('EXPLORER APRI' if fr else 'EXPLORE APRI'))+'</div><div><div class="p6-subtitle">'+(_locale_text('Des données aux pistes d’action.' if fr else 'From data to opportunities for action.'))+'</div><p class="p6-copy">'+(_locale_text('Choisissez une entrée pour découvrir les territoires, comprendre les interactions et consulter les fiches d’intervention.' if fr else 'Choose a starting point to discover the territories, understand interactions and explore intervention profiles.'))+'</p></div></div>',unsafe_allow_html=True)
         with st.container(key='p6_services'):
             photo,links=st.columns([1,1],gap='large')
             with photo:
@@ -91,7 +93,7 @@ def accueil():
             with links:
                 with st.container(key='p6_options'):
                     for mode,tk,xk in [('accueil','a2_p2_t','a2_p2_x'),('boucles','a2_p3_t','a2_p3_x'),('actions','a2_p4_t','a2_p4_x')]:
-                        st.button(f'{T(tk)}  \n*{T(xk)}*  \n→',key=f'p6_{mode}',on_click=_go,args=(mode,),use_container_width=True)
+                        st.button(_locale_text(f'{T(tk)}  \n*{T(xk)}*  \n→'),key=f'p6_{mode}',on_click=_go,args=(mode,),use_container_width=True)
         with st.container(key='p6_map'):
             st.markdown(f'<div class="p6-subtitle">{e(T("a2_carte_t"))}</div>',unsafe_allow_html=True)
             if not carte_zoom.render():

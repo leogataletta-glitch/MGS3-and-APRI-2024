@@ -27,6 +27,10 @@ son effectif, plutôt que retirée — retirer une barre laisse croire qu'il n'y
 a rien à cet endroit.
 """
 
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -666,6 +670,7 @@ _CSS_PANNEAU = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -759,25 +764,25 @@ def _condition_question(cat, questions, filtre):
     with c1:
         themes = sorted({x.get("category") or "" for x in questions},
                         key=lambda c: _nom_theme(c).lower())
-        th = st.selectbox(T("ex_theme"), [None] + themes, key="ex_c_th",
-                          format_func=lambda c: (T("ex_theme_tous")
-                                                 if c is None else _nom_theme(c)))
+        th = st.selectbox(_locale_text(T("ex_theme")), [None] + themes, key="ex_c_th",
+                          format_func=_locale_formatter(lambda c: (T("ex_theme_tous")
+                                                 if c is None else _nom_theme(c))))
     vues = [x for x in questions if th is None or (x.get("category") or "") == th]
     with c2:
         qi = st.selectbox(
-            T("ex_cond_q"), [None] + [x["i"] for x in vues],
+            _locale_text(T("ex_cond_q")), [None] + [x["i"] for x in vues],
             key=f"ex_c_q_{th or 'tous'}",
-            format_func=lambda i: (T("ex_cond_aucune") if i is None
+            format_func=_locale_formatter(lambda i: (T("ex_cond_aucune") if i is None
                                    else _libelle_question(
                                        next(x for x in vues if x["i"] == i),
-                                       avec_theme=th is None)))
+                                       avec_theme=th is None))))
     if qi is None:
         return filtre, None
     q2 = next(x for x in vues if x["i"] == qi)
     with c3:
-        reps = st.multiselect(T("ex_cond_r"), q2["modalites"],
+        reps = st.multiselect(_locale_text(T("ex_cond_r")), q2["modalites"],
                               key=f"ex_c_r_{qi}",
-                              format_func=libelles_enquete.modalite)
+                              format_func=_locale_formatter(libelles_enquete.modalite))
     if not reps:
         return filtre, None
     m = np.zeros(cat["n"], dtype=bool)
@@ -817,7 +822,7 @@ def _panneau_filtres(cat, cle, registres, num, titre_cle, note=None):
                 f'<p class="ex-pan-x">{_e(T("ex_filtres_x"))}</p>',
                 unsafe_allow_html=True)
         with h2:
-            if st.button(T("ex_raz"), key=f"{cle}_raz"):
+            if st.button(_locale_text(T("ex_raz")), key=f"{cle}_raz"):
                 for k in cles.values():
                     st.session_state[k] = []
         cols = st.columns(len(registres))
@@ -825,8 +830,8 @@ def _panneau_filtres(cat, cle, registres, num, titre_cle, note=None):
         for (axe, lab), col in zip(registres, cols):
             with col:
                 choix[axe] = st.multiselect(
-                    T(lab), list(_VALEURS.get(axe, [])), key=cles[axe],
-                    placeholder=T("ex_f_tous"), format_func=_lib)
+                    _locale_text(T(lab)), list(_VALEURS.get(axe, [])), key=cles[axe],
+                    placeholder=T("ex_f_tous"), format_func=_locale_formatter(_lib))
     poses = [(a, v) for a, vs in choix.items() for v in (vs or [])]
     return _masque_multi(cat, choix), poses
 
@@ -1591,16 +1596,16 @@ def render(cat, mode=None, controls=None):
             f'{_e(T("ex_intro_score"))}</p>', unsafe_allow_html=True)
 
     if mesure is None:
-        mesure = st.selectbox(T('ex_mesure'), ['part', 'score'], key='ex_mes', format_func=lambda m: T('ex_m_' + m))
+        mesure = st.selectbox(_locale_text(T('ex_mesure')), ['part', 'score'], key='ex_mes', format_func=_locale_formatter(lambda m: T('ex_m_' + m)))
 
     q, modalite, cible = None, None, None
     if mesure == "score":
         # ---- 1 · la cible : l'indice, une dimension ou un indicateur -----
         opts = _cibles(cat)
         libs = {c: lib for c, lib, _i in opts}
-        cible = st.selectbox(T("ex_cible"), [c for c, _l, _i in opts],
+        cible = st.selectbox(_locale_text(T("ex_cible")), [c for c, _l, _i in opts],
                              key="ex_cible_sel",
-                             format_func=lambda c: libs.get(c, c))
+                             format_func=_locale_formatter(lambda c: libs.get(c, c)))
     if mesure == "part":
         # ---- 2 · la question, la réponse, la ventilation, le dessin ------
         # LE THÈME D'ABORD, LA QUESTION ENSUITE. Quatre cent quatre-vingt-
@@ -1617,21 +1622,21 @@ def render(cat, mode=None, controls=None):
         t1, t2, t3 = st.columns([1.5, 2.4, 1.05])
         with t1:
             theme = st.selectbox(
-                T("ex_theme"), [None] + _themes, key="ex_theme",
+                _locale_text(T("ex_theme")), [None] + _themes, key="ex_theme",
                 help=T("ex_chercher"),
-                format_func=lambda c: (T("ex_theme_tous") if c is None
-                                       else _nom_theme(c)))
+                format_func=_locale_formatter(lambda c: (T("ex_theme_tous") if c is None
+                                       else _nom_theme(c))))
         vues = [x for x in questions
                 if theme is None or (x.get("category") or "") == theme]
         with t2:
             # LA CLÉ DÉPEND DU THÈME : sans cela, changer de thème garderait
             # la question du thème précédent, qui n'est plus dans la liste.
             qi = st.selectbox(
-                T("ex_question"), [x["i"] for x in vues],
+                _locale_text(T("ex_question")), [x["i"] for x in vues],
                 key=f"ex_q_{theme or 'tous'}", help=T("ex_chercher"),
-                format_func=lambda i: _libelle_question(
+                format_func=_locale_formatter(lambda i: _libelle_question(
                     next(x for x in vues if x["i"] == i),
-                    avec_theme=theme is None))
+                    avec_theme=theme is None)))
         q = next(x for x in vues if x["i"] == qi)
         with t3:
             # LA CLÉ DE LA RÉPONSE DÉPEND DE LA QUESTION : sans cela, changer
@@ -1639,9 +1644,9 @@ def render(cat, mode=None, controls=None):
             # afficherait une modalité qui n'a rien à voir.
             # LA VALEUR RETENUE RESTE LE LIBELLÉ FRANÇAIS : c'est lui qui
             # indexe les masques binaires. Seul l'affichage est traduit.
-            modalite = st.selectbox(T("ex_reponse"), q["modalites"],
+            modalite = st.selectbox(_locale_text(T("ex_reponse")), q["modalites"],
                                     key=f"ex_m_{qi}",
-                                    format_func=libelles_enquete.modalite)
+                                    format_func=_locale_formatter(libelles_enquete.modalite))
 
     # ---- 2 · la ventilation, le format, les extrêmes ---------------------
     # UNE SEULE VENTILATION À LA FOIS, ET C'EST UN CHOIX, PAS UNE LIMITE. Le
@@ -1661,25 +1666,25 @@ def render(cat, mode=None, controls=None):
         # maximum : au-delà, les effectifs tombent sous ce qu'on peut lire.
         st.session_state.setdefault(f"ex_axes_{mesure}", [dispo[0]])
         axes = st.multiselect(
-            T("ex_axe"), dispo, key=f"ex_axes_{mesure}", max_selections=3, label_visibility="collapsed",
-            format_func=lambda a: T(dict(AXES)[a]))
+            _locale_text(T("ex_axe")), dispo, key=f"ex_axes_{mesure}", max_selections=3, label_visibility="collapsed",
+            format_func=_locale_formatter(lambda a: T(dict(AXES)[a])))
         if not axes:
             axes = [dispo[0]]
     with c2:
         extremes = st.selectbox(
-            T("ex_extremes"), ["tous", "top", "flop", "topflop", "ecart"],
+            _locale_text(T("ex_extremes")), ["tous", "top", "flop", "topflop", "ecart"],
             key="ex_ext",
-            format_func=lambda c: T({"tous": "ex_tous", "top": "ex_top",
+            format_func=_locale_formatter(lambda c: T({"tous": "ex_tous", "top": "ex_top",
                                      "flop": "ex_flop",
                                      "topflop": "ex_topflop",
-                                     "ecart": "ex_ecart"}[c]))
+                                     "ecart": "ex_ecart"}[c])))
     with c3:
         # LE FORMAT SE CHOISIT D'UN CLIC, PAS D'UN MENU : quatre boutons
         # accolés, celui qui est actif en vert. C'est le réglage qu'on change
         # le plus souvent de tout l'écran.
         formes = ["barres", "tableau", "carte", "radar"]
         with st.container(key="ex_forme_zone"):
-            forme = st.selectbox(T('ex_voir'), formes, key='ex_forme', format_func=lambda f: T('ex_' + f))
+            forme = st.selectbox(_locale_text(T('ex_voir')), formes, key='ex_forme', format_func=_locale_formatter(lambda f: T('ex_' + f)))
 
     # ---- 4 · les cinq registres, cumulables ------------------------------
     filtre, poses = _panneau_filtres(cat, "ex_pan", _REGISTRES_F,
@@ -1690,7 +1695,7 @@ def render(cat, mode=None, controls=None):
         cond = None
     n_f = int(filtre.sum())
     if n_f == 0:
-        st.info(T("ex_filtre_vide"))
+        st.info(_locale_text(T("ex_filtre_vide")))
         return
     if poses:
         st.markdown(
@@ -1701,7 +1706,7 @@ def render(cat, mode=None, controls=None):
     lignes, ens = _ventiler(cat, mesure, q, modalite, axes, filtre, cible)
     lignes = [l for l in lignes if l["n"] > 0]
     if not lignes:
-        st.info(T("ex_vide"))
+        st.info(_locale_text(T("ex_vide")))
         return
     montrees = _filtrer(lignes, extremes, ens)
 
@@ -1730,7 +1735,7 @@ def render(cat, mode=None, controls=None):
         st.markdown(f'<p class="ex-res-x">{_txt}</p>', unsafe_allow_html=True)
     with _d:
         st.download_button(
-            T("ex_dl"), data=_csv(montrees, mesure),
+            _locale_text(T("ex_dl")), data=_csv(montrees, mesure),
             file_name="resultats_apri.csv", mime="text/csv",
             key=f"ex_dl_{mesure}", use_container_width=True)
     # LE TABLEAU EST UN MODE, PAS UNE ANNEXE. Il était accroché sous chaque
@@ -1738,13 +1743,13 @@ def render(cat, mode=None, controls=None):
     # bout des barres et une fois dessous, et l'écran doublait de hauteur pour
     # rien. Qui veut les chiffres choisit « Tableau ».
     if forme == "radar" and len(montrees) < 3:
-        st.info(T("ex_radar_court"))
+        st.info(_locale_text(T("ex_radar_court")))
         forme = "barres"
 
     if forme == "carte":
         svg = _carte(montrees)
         if svg is None:
-            st.info(T("ex_carte_sec"))
+            st.info(_locale_text(T("ex_carte_sec")))
             forme = "barres"
         else:
             st.markdown(
@@ -1984,7 +1989,7 @@ def render_scores(cat):
     with st.container(key="ex_brut_s"):
         _h1, h2 = st.columns([4, 1], vertical_alignment="center")
         with h2:
-            if st.button(T("ex_b_raz"), key="exs_raz", type="tertiary"):
+            if st.button(_locale_text(T("ex_b_raz")), key="exs_raz", type="tertiary"):
                 raz_scores()
                 st.rerun()
 
@@ -1993,21 +1998,21 @@ def render_scores(cat):
             c1, c2, c3 = st.columns([1, 2, 1.3])
             with c1:
                 dim = st.selectbox(
-                    T("ex_s_dim"), [None] + _DIMS, key="exs_dim",
-                    format_func=lambda c: (T("ex_s_toutes") if c is None
-                                           else T(c)))
+                    _locale_text(T("ex_s_dim")), [None] + _DIMS, key="exs_dim",
+                    format_func=_locale_formatter(lambda c: (T("ex_s_toutes") if c is None
+                                           else T(c))))
             inds = [x for x in _inds_tries(cat)
                     if dim is None or x["dim"] == dim]
             with c2:
                 k = st.selectbox(
-                    T("ex_s_ind"), [None] + list(range(len(inds))),
+                    _locale_text(T("ex_s_ind")), [None] + list(range(len(inds))),
                     key=f"exs_ind_{dim}",
-                    format_func=lambda i: (
+                    format_func=_locale_formatter(lambda i: (
                         T("ex_s_tous_i" if dim else "ex_s_tous_i0")
                         if i is None
                         else (_nom_ind(inds[i]) if dim
                               else f'{T(inds[i]["dim"])} · '
-                                   f'{_nom_ind(inds[i])}')))
+                                   f'{_nom_ind(inds[i])}'))))
         # LA MÊME ZONE DE PROJECTION QUE LES RÉSULTATS BRUTS. L'écran des
         # scores avait gardé la cascade « puis par », plus une case à cocher
         # « Dimension » à côté d'elle : deux grammaires pour un même geste,
@@ -2050,16 +2055,16 @@ def render_scores(cat):
         # Replié, ce champ ne coûte rien à qui ne s'en sert pas.
         _cmp_cle = f"exs_cmp_{dim}"
         _cmp_pose = bool(st.session_state.get(_cmp_cle))
-        with st.expander(T("ex_s_comp"), expanded=_cmp_pose):
+        with st.expander(_locale_text(T("ex_s_comp")), expanded=_cmp_pose):
             compare = st.multiselect(
-                T("ex_s_comp"), list(range(len(inds))), key=_cmp_cle,
+                _locale_text(T("ex_s_comp")), list(range(len(inds))), key=_cmp_cle,
                 max_selections=8, label_visibility="collapsed",
-                format_func=lambda i: _nom_ind(inds[i]))
+                format_func=_locale_formatter(lambda i: _nom_ind(inds[i])))
         compares = [inds[i] for i in compare]
 
         n_f = int(filtre.sum())
         if n_f == 0:
-            st.info(T("ex_s_vide"))
+            st.info(_locale_text(T("ex_s_vide")))
             return
 
         # ---- le résultat, et ses seuls réglages d'affichage -------------
@@ -2069,9 +2074,9 @@ def render_scores(cat):
                         f'{_e(T("ex_res"))}</div>', unsafe_allow_html=True)
         with r2:
             mode = st.selectbox(
-                T("ex_s_mode"), ["actuel", "bas", "haut", "ecarts"],
+                _locale_text(T("ex_s_mode")), ["actuel", "bas", "haut", "ecarts"],
                 key="exs_mode", label_visibility="collapsed",
-                format_func=lambda m: T("ex_s_m_" + m))
+                format_func=_locale_formatter(lambda m: T("ex_s_m_" + m)))
         # LA CARTE ET LE RADAR NE S'OFFRENT QUE S'ILS PEUVENT SE DESSINER,
         # comme sur les résultats bruts. La carte se trace par section
         # communale et par elle seule ; le radar demande au moins trois
@@ -2083,7 +2088,7 @@ def render_scores(cat):
         formes += ["radar", "tableau"]
         with r3:
             with st.container(key="exb_vue_s"):
-                forme = st.selectbox(T('ex_format'), formes, key='exs_forme', label_visibility='visible', format_func=lambda f: T('ex_' + f), index=formes.index('barres')) or "barres"
+                forme = st.selectbox(_locale_text(T('ex_format')), formes, key='exs_forme', label_visibility='visible', format_func=_locale_formatter(lambda f: T('ex_' + f)), index=formes.index('barres')) or "barres"
         if "carte" not in formes:
             st.markdown(f'<p class="ex-note" style="margin:2px 0 6px">'
                         f'{_e(T("ex_pourquoi_carte"))}</p>',
@@ -2093,11 +2098,11 @@ def render_scores(cat):
         if mode == "ecarts":
             st.markdown(f'<p class="ex-note" style="margin:2px 0 6px">'
                         f'{_e(T("ex_s_ec_x"))}</p>', unsafe_allow_html=True)
-            combien = st.selectbox(T("ex_s_combien"), [5, 10, 20],
-                                   key="exs_k_ec")
+            combien = st.selectbox(_locale_text(T("ex_s_combien")), [5, 10, 20],
+                                   key="exs_k_ec", format_func=_locale_formatter(str))
             paires = _paires_ecarts(cat, cible, ind, filtre, None)
             if not paires:
-                st.info(T("ex_s_ec_rien"))
+                st.info(_locale_text(T("ex_s_ec_rien")))
                 return
             st.markdown(_table_paires(paires[:combien]),
                         unsafe_allow_html=True)
@@ -2128,19 +2133,19 @@ def render_scores(cat):
                 score_text = "—" if sc_sel is None else _f(sc_sel, 2) + " / 10"
                 st.markdown(f'<p style="font-size:22px;color:#245f49"><strong>{score_text}</strong>{_brut_inline(_valeur_brute(ind, filtre))}</p>', unsafe_allow_html=True)
             if sc_sel is None:
-                st.info(T("ex_s_rien"))
+                st.info(_locale_text(T("ex_s_rien")))
             if poses:
                 st.markdown(f'<p class="ex-note" style="margin:8px 0 0">'
                             f'{_e(T("ex_s_n", n=_n(n_f), t=_n(cat["n"])))}</p>',
                             unsafe_allow_html=True)
             return
         if not lignes:
-            st.info(T("ex_s_rien"))
+            st.info(_locale_text(T("ex_s_rien")))
             return
 
         if mode in ("bas", "haut"):
-            combien = st.selectbox(T("ex_s_combien"), [5, 10, 20],
-                                   key="exs_k")
+            combien = st.selectbox(_locale_text(T("ex_s_combien")), [5, 10, 20],
+                                   key="exs_k", format_func=_locale_formatter(str))
             lignes = sorted(lignes, key=lambda x: x["score"],
                             reverse=(mode == "haut"))[:combien]
 
@@ -2149,13 +2154,13 @@ def render_scores(cat):
         ens = {"n": nb_sel, "k": None, "part": sc_sel, "score": sc_sel}
 
         if forme == "radar" and len(lignes) < 3:
-            st.info(T("ex_radar_court"))
+            st.info(_locale_text(T("ex_radar_court")))
             forme = "barres"
         if forme == "carte":
             svg = (_carte(lignes, unite="")
                    if len(dims) == 1 and dims[0][0] == "section" else None)
             if svg is None:
-                st.info(T("ex_s_carte_sec"))
+                st.info(_locale_text(T("ex_s_carte_sec")))
                 forme = "barres"
             else:
                 st.markdown(
@@ -2322,23 +2327,23 @@ def _projection(cle, dispo, libelle, facultatif=False):
     cols = st.columns(3)
     with cols[0]:
         a1 = st.selectbox(
-            libelle, dispo, key=f"{cle}_1",
+            _locale_text(libelle), dispo, key=f"{cle}_1",
             index=None if facultatif else 0,
             placeholder=T("ex_axe_non"),
-            format_func=lambda a: T(dict(AXES)[a]))
+            format_func=_locale_formatter(lambda a: T(dict(AXES)[a])))
     a2 = a3 = None
     if a1 is not None:
         with cols[1]:
             a2 = st.selectbox(
-                T("ex_axe2"), [a for a in dispo if a != a1], key=f"{cle}_2",
+                _locale_text(T("ex_axe2")), [a for a in dispo if a != a1], key=f"{cle}_2",
                 index=None, placeholder=T("ex_axe_non"),
-                format_func=lambda a: T(dict(AXES)[a]))
+                format_func=_locale_formatter(lambda a: T(dict(AXES)[a])))
         if a2 is not None:
             with cols[2]:
                 a3 = st.selectbox(
-                    T("ex_axe2"), [a for a in dispo if a not in (a1, a2)],
+                    _locale_text(T("ex_axe2")), [a for a in dispo if a not in (a1, a2)],
                     key=f"{cle}_3", index=None, placeholder=T("ex_axe_non"),
-                    format_func=lambda a: T(dict(AXES)[a]))
+                    format_func=_locale_formatter(lambda a: T(dict(AXES)[a])))
     return [a for a in (a1, a2, a3) if a is not None]
 
 
@@ -2376,9 +2381,9 @@ def _zone_projection(cat, prefixe="exb", first_row=None):
         libres = [a for a in dispo if a == axe or a not in dims]
         with c1:
             nouveau = st.selectbox(
-                T("ex_dim_n", n=i + 1), libres, index=libres.index(axe),
+                _locale_text(T("ex_dim_n", n=i + 1)), libres, index=libres.index(axe),
                 key=f"{prefixe}_dim_{i}",
-                format_func=lambda a: T(dict(AXES)[a]))
+                format_func=_locale_formatter(lambda a: T(dict(AXES)[a])))
         if nouveau != axe:
             # LE CHANGEMENT DE DIMENSION EMPORTE SES CATÉGORIES : celles de
             # l'ancienne n'ont aucun sens sous la nouvelle.
@@ -2389,13 +2394,13 @@ def _zone_projection(cat, prefixe="exb", first_row=None):
         st.session_state.setdefault(f"{prefixe}_cat_{axe}", list(vals))
         with c2:
             gardees = st.multiselect(
-                T("ex_dim_cat"), vals, key=f"{prefixe}_cat_{axe}",
-                placeholder=T("ex_dim_toutes"), format_func=_lib)
+                _locale_text(T("ex_dim_cat")), vals, key=f"{prefixe}_cat_{axe}",
+                placeholder=T("ex_dim_toutes"), format_func=_locale_formatter(_lib))
         with c3:
             # LE DERNIER CRITÈRE S'ENLÈVE AUSSI, et c'est ce qui donne le
             # résultat sur tout l'échantillon : sans critère, il n'y a pas de
             # découpage, donc un seul groupe — tous les ménages retenus.
-            if st.button("✕", key=f"{prefixe}_dim_x_{i}", type="tertiary",
+            if st.button(_locale_text("✕"), key=f"{prefixe}_dim_x_{i}", type="tertiary",
                          help=T("ex_dim_oter")):
                 st.session_state[cle_dims] = [
                     a for a in st.session_state[cle_dims] if a != axe]
@@ -2408,7 +2413,7 @@ def _zone_projection(cat, prefixe="exb", first_row=None):
                     f'<b style="color:#101728">{_e(T("ex_tout_ech"))}</b> · '
                     f'{_e(T("ex_tout_x"))}</p>', unsafe_allow_html=True)
     if len(dims) < len(dispo):
-        if st.button("＋ " + T("ex_dim_plus"), key=f"{prefixe}_dim_plus",
+        if st.button(_locale_text("＋ " + T("ex_dim_plus")), key=f"{prefixe}_dim_plus",
                      type="tertiary"):
             manque = [a for a in dispo if a not in dims]
             st.session_state[cle_dims] = list(dims) + [manque[0]]
@@ -2432,7 +2437,7 @@ def _croisement_questions(cat, questions, filtre):
     n = sum(1 for i in posees
             if st.session_state.get(f"exb_q2_r_{i}"))
     lib = T("ex_croiser_q") + (" · " + T("ex_croiser_n", n=n) if n else "")
-    with st.expander(lib, expanded=bool(posees)):
+    with st.expander(_locale_text(lib), expanded=bool(posees)):
         for rang, qi in enumerate(list(posees)):
             q2 = next(x for x in questions if x["i"] == qi)
             c1, c2, c3 = st.columns([2.2, 1.6, 0.5],
@@ -2441,20 +2446,20 @@ def _croisement_questions(cat, questions, filtre):
                 autres = [x["i"] for x in questions
                           if x["i"] == qi or x["i"] not in posees]
                 nq = st.selectbox(
-                    T("ex_cond_q"), autres, index=autres.index(qi),
+                    _locale_text(T("ex_cond_q")), autres, index=autres.index(qi),
                     key=f"exb_q2_s_{rang}",
-                    format_func=lambda i: _libelle_question(
-                        next(x for x in questions if x["i"] == i)))
+                    format_func=_locale_formatter(lambda i: _libelle_question(
+                        next(x for x in questions if x["i"] == i))))
             if nq != qi:
                 st.session_state["exb_q2"][rang] = nq
                 st.session_state.pop(f"exb_q2_r_{qi}", None)
                 st.rerun()
             with c2:
                 reps = st.multiselect(
-                    T("ex_cond_r"), q2["modalites"], key=f"exb_q2_r_{qi}",
-                    format_func=libelles_enquete.modalite)
+                    _locale_text(T("ex_cond_r")), q2["modalites"], key=f"exb_q2_r_{qi}",
+                    format_func=_locale_formatter(libelles_enquete.modalite))
             with c3:
-                if st.button("✕", key=f"exb_q2_x_{rang}", type="tertiary",
+                if st.button(_locale_text("✕"), key=f"exb_q2_x_{rang}", type="tertiary",
                              help=T("ex_dim_oter")):
                     st.session_state["exb_q2"] = [
                         i for i in st.session_state["exb_q2"] if i != qi]
@@ -2466,7 +2471,7 @@ def _croisement_questions(cat, questions, filtre):
                     m |= cat["bits"][q2["debut"] + q2["modalites"].index(r)]
                 filtre = filtre & m
         libres = [x["i"] for x in questions if x["i"] not in posees]
-        if libres and st.button("＋ " + T("ex_croiser_plus"),
+        if libres and st.button(_locale_text("＋ " + T("ex_croiser_plus")),
                                 key="exb_q2_plus", type="tertiary"):
             st.session_state["exb_q2"] = list(posees) + [libres[0]]
             st.rerun()
@@ -2496,14 +2501,14 @@ def _filtres_population(cat, prefixe="exb_f_", registres=None,
     if n_actifs:
         lib += " · " + T("ex_b_pop_n", n=n_actifs)
     choix = {}
-    with st.expander(lib, expanded=bool(n_actifs)):
+    with st.expander(_locale_text(lib), expanded=bool(n_actifs)):
         # PAS DE LIGNE QUI ÉNUMÈRE CE QUI SUIT. « Une réponse, section
         # communale, sexe, âge, catégorie économique, paysage » listait, en
         # gris, les intitulés des six champs posés juste dessous.
         # LE BOUTON DE VIDAGE VIENT AVANT LES CHAMPS : posé après, il
         # écrirait dans l'état de widgets déjà construits, ce que Streamlit
         # refuse. Avant, il les vide pendant qu'ils n'existent pas encore.
-        if n_actifs and st.button(T("ex_raz"), key=f"{prefixe}raz",
+        if n_actifs and st.button(_locale_text(T("ex_raz")), key=f"{prefixe}raz",
                                   type="tertiary"):
             for k in cles.values():
                 st.session_state[k] = []
@@ -2515,16 +2520,16 @@ def _filtres_population(cat, prefixe="exb_f_", registres=None,
             cr = st.columns(len(registres))
             with cr[0]:
                 modalite = st.selectbox(
-                    T("ex_reponse"), list(question["modalites"]),
+                    _locale_text(T("ex_reponse")), list(question["modalites"]),
                     key=f"exb_m_{question['i']}", index=None,
                     placeholder=T("ex_b_toutes"),
-                    format_func=libelles_enquete.modalite)
+                    format_func=_locale_formatter(libelles_enquete.modalite))
         cols = st.columns(len(registres))
         for (axe, lab), col in zip(registres, cols):
             with col:
                 choix[axe] = st.multiselect(
-                    T(lab), list(_VALEURS.get(axe, [])), key=cles[axe],
-                    placeholder=T("ex_f_tous"), format_func=_lib)
+                    _locale_text(T(lab)), list(_VALEURS.get(axe, [])), key=cles[axe],
+                    placeholder=T("ex_f_tous"), format_func=_locale_formatter(_lib))
     poses = [(a, v) for a, vs in choix.items() for v in (vs or [])]
     if question is not None:
         return _masque_multi(cat, choix), poses, modalite
@@ -2579,7 +2584,7 @@ def _render_brut(cat, controls=None):
         with theme_slot:
             theme = onglets.barre(
                 "exb_theme_ong", ["__all__"] + codes,
-                titre=lambda c: ("Tous les thèmes" if i18n.get_lang() == "fr" else "All themes")
+                titre=lambda c: (_locale_text("Tous les thèmes" if i18n.get_lang() == "fr" else "All themes"))
                     if c == "__all__" else T(themes_enquete.libelle(c)),
                 defaut="__all__")
         vues = questions if theme == "__all__" else [
@@ -2589,10 +2594,10 @@ def _render_brut(cat, controls=None):
             libs = _libelles_liste(vues)
             with st.container(key="exb_q_zone"):
                 qi = st.selectbox(
-                    T("ex_question"), [x["i"] for x in vues],
+                    _locale_text(T("ex_question")), [x["i"] for x in vues],
                     key=f"exb_q_{theme or 'tous'}", index=None,
                     placeholder=T("ex_b_choisir_q"), help=T("ex_chercher"),
-                    format_func=lambda i: libs.get(i, ""))
+                    format_func=_locale_formatter(lambda i: libs.get(i, "")))
         if qi is None:
             return
         q = next(x for x in vues if x["i"] == qi)
@@ -2604,9 +2609,9 @@ def _render_brut(cat, controls=None):
             # de la question dont elle est une modalité, vide par défaut —
             # sans réponse choisie, l'écran montre la répartition complète.
             modalite = st.selectbox(
-                T("ex_reponse"), list(q["modalites"]), key=f"exb_m_{qi}",
+                _locale_text(T("ex_reponse")), list(q["modalites"]), key=f"exb_m_{qi}",
                 index=None, placeholder=T("ex_b_toutes"),
-                format_func=libelles_enquete.modalite)
+                format_func=_locale_formatter(libelles_enquete.modalite))
 
         # ---- comment le résultat est découpé, et sur quoi ---------------
         dims = _zone_projection(cat, first_row=(criterion_col, categories_col, remove_col))
@@ -2615,13 +2620,13 @@ def _render_brut(cat, controls=None):
                                        np.ones(cat["n"], dtype=bool))
         n_f = int(filtre.sum())
         if n_f == 0:
-            st.info(T("ex_filtre_vide"))
+            st.info(_locale_text(T("ex_filtre_vide")))
             return
 
         lignes, ens = _ventiler_dims(cat, q, modalite, dims, filtre)
         lignes = [l for l in lignes if l["n"] > 0]
         if not lignes:
-            st.info(T("ex_vide"))
+            st.info(_locale_text(T("ex_vide")))
             return
 
         # ---- le résultat, et ses seuls réglages d'affichage -------------
@@ -2647,14 +2652,14 @@ def _render_brut(cat, controls=None):
                         f'{_e(T("ex_res"))}</div>', unsafe_allow_html=True)
         with r2:
             extremes = st.selectbox(
-                T("ex_extremes"), ["tous", "top", "flop", "topflop", "ecart"],
+                _locale_text(T("ex_extremes")), ["tous", "top", "flop", "topflop", "ecart"],
                 key="exb_ext", label_visibility="collapsed",
-                format_func=lambda c: T("ex_extremes") + " : " + T(
+                format_func=_locale_formatter(lambda c: T("ex_extremes") + " : " + T(
                     {"tous": "ex_tous", "top": "ex_top", "flop": "ex_flop",
-                     "topflop": "ex_topflop", "ecart": "ex_ecart"}[c]))
+                     "topflop": "ex_topflop", "ecart": "ex_ecart"}[c])))
         with r3:
             with st.container(key="exb_vue"):
-                forme = st.selectbox(T('ex_voir'), formes, key='exb_vue_sel', label_visibility='visible', format_func=lambda f: T('ex_' + f), index=formes.index('barres')) or "barres"
+                forme = st.selectbox(_locale_text(T('ex_voir')), formes, key='exb_vue_sel', label_visibility='visible', format_func=_locale_formatter(lambda f: T('ex_' + f)), index=formes.index('barres')) or "barres"
         if forme not in formes:
             forme = "barres"
         # POURQUOI UNE VUE MANQUE, PLUTÔT QUE SON ABSENCE SILENCIEUSE. Retirer
@@ -2675,7 +2680,7 @@ def _render_brut(cat, controls=None):
         if forme == "carte":
             svg = _carte(montrees)
             if svg is None:
-                st.info(T("ex_carte_sec"))
+                st.info(_locale_text(T("ex_carte_sec")))
                 forme = "barres"
             else:
                 st.markdown(
@@ -2729,7 +2734,7 @@ def _render_brut(cat, controls=None):
                             f'{_txt}</p>', unsafe_allow_html=True)
         with d:
             st.download_button(
-                T("ex_dl"), data=_csv(montrees, mesure),
+                _locale_text(T("ex_dl")), data=_csv(montrees, mesure),
                 file_name="resultats_apri.csv", mime="text/csv",
                 key="exb_dl", use_container_width=True)
 
@@ -2755,17 +2760,17 @@ def _cible_scores(cat, prefixe):
     c1, c2 = st.columns([1, 2])
     with c1:
         dim = st.selectbox(
-            T("ex_s_dim"), [None] + _DIMS, key=f"{prefixe}_dim",
-            format_func=lambda c: (T("ex_s_toutes") if c is None else T(c)))
+            _locale_text(T("ex_s_dim")), [None] + _DIMS, key=f"{prefixe}_dim",
+            format_func=_locale_formatter(lambda c: (T("ex_s_toutes") if c is None else T(c))))
     inds = [x for x in _inds_tries(cat) if dim is None or x["dim"] == dim]
     with c2:
         k = st.selectbox(
-            T("ex_s_ind"), [None] + list(range(len(inds))),
+            _locale_text(T("ex_s_ind")), [None] + list(range(len(inds))),
             key=f"{prefixe}_ind_{dim}",
-            format_func=lambda i: (
+            format_func=_locale_formatter(lambda i: (
                 T("ex_s_tous_i" if dim else "ex_s_tous_i0") if i is None
                 else (_nom_ind(inds[i]) if dim
-                      else f'{T(inds[i]["dim"])} · {_nom_ind(inds[i])}')))
+                      else f'{T(inds[i]["dim"])} · {_nom_ind(inds[i])}'))))
     if k is not None:
         ind = inds[k]
         return ind, f"i:{_inds_tries(cat).index(ind)}", _nom_ind(ind)
@@ -2797,10 +2802,10 @@ def _profil_choix(cat, prefixe, titre):
         cases = _cases(cat, axe)
         with col:
             v = st.selectbox(
-                T(lab), [None] + [c[0] for c in cases],
+                _locale_text(T(lab)), [None] + [c[0] for c in cases],
                 key=f"{prefixe}_{axe}", index=0,
-                format_func=lambda x: (T("ex_p_tous") if x is None
-                                       else _lib(x)))
+                format_func=_locale_formatter(lambda x: (T("ex_p_tous") if x is None
+                                       else _lib(x))))
         if v is not None and cat["groupes"].get(v) is not None:
             masque &= cat["groupes"][v]
             nom.append(_lib(v))
@@ -2839,21 +2844,21 @@ def _branches_questions(cat):
                                 vertical_alignment="bottom")
         with c1:
             qi = st.selectbox(
-                T("ex_c_q_n", n=i + 1), [x["i"] for x in questions],
+                _locale_text(T("ex_c_q_n", n=i + 1)), [x["i"] for x in questions],
                 key=f"exc_q_{i}", index=None,
                 placeholder=T("ex_b_choisir_q"),
-                format_func=lambda k: _libelle_question(
+                format_func=_locale_formatter(lambda k: _libelle_question(
                     next(x for x in questions if x["i"] == k),
-                    avec_theme=True))
+                    avec_theme=True)))
         q = next((x for x in questions if x["i"] == qi), None)
         with c2:
             mod = (st.selectbox(
-                T("ex_reponse"), list(q["modalites"]), key=f"exc_r_{i}_{qi}",
+                _locale_text(T("ex_reponse")), list(q["modalites"]), key=f"exc_r_{i}_{qi}",
                 index=None, placeholder=T("ex_c_choisir_r"),
-                format_func=libelles_enquete.modalite)
+                format_func=_locale_formatter(libelles_enquete.modalite))
                 if q is not None else None)
         with c3:
-            if st.button("✕", key=f"exc_q_x_{i}", type="tertiary",
+            if st.button(_locale_text("✕"), key=f"exc_q_x_{i}", type="tertiary",
                          help=T("ex_dim_oter")):
                 del st.session_state["exc_qs"][i]
                 if not st.session_state["exc_qs"]:
@@ -2862,7 +2867,7 @@ def _branches_questions(cat):
         if q is not None and mod is not None:
             out.append((f'{libelles_enquete.modalite(mod)}', ("q", q, mod),
                         None))
-    if st.button("＋ " + T("ex_c_q_plus"), key="exc_q_plus",
+    if st.button(_locale_text("＋ " + T("ex_c_q_plus")), key="exc_q_plus",
                  type="tertiary"):
         st.session_state["exc_qs"].append(None)
         st.rerun()
@@ -2899,7 +2904,7 @@ def render_comparaison(cat):
     with st.container(key="ex_brut_c"):
         _h1, h2 = st.columns([4, 1], vertical_alignment="center")
         with h2:
-            if st.button(T("ex_b_raz"), key="exc_raz", type="tertiary"):
+            if st.button(_locale_text(T("ex_b_raz")), key="exc_raz", type="tertiary"):
                 raz_comparaison()
                 st.rerun()
 
@@ -2911,10 +2916,10 @@ def render_comparaison(cat):
             opts = _cibles_possibles(cat)
             par_cle = {c: (lib, ind) for c, lib, ind in opts}
             choix = st.multiselect(
-                T("ex_c_branches"), [c for c, _l, _i in opts],
+                _locale_text(T("ex_c_branches")), [c for c, _l, _i in opts],
                 key="exc_cibles", max_selections=12,
                 placeholder=T("ex_c_branches_ph"),
-                format_func=lambda c: par_cle[c][0])
+                format_func=_locale_formatter(lambda c: par_cle[c][0]))
             branches = [(par_cle[c][0], ("s", c), par_cle[c][1])
                         for c in choix]
 
@@ -2925,7 +2930,7 @@ def render_comparaison(cat):
             # ligne de question ajoutée puis repliée hors de vue serait un
             # réglage actif que rien ne signale.
             _q_pose = len(st.session_state.get("exc_qs") or []) > 1
-            with st.expander(T("ex_c_ajouter_q"), expanded=_q_pose):
+            with st.expander(_locale_text(T("ex_c_ajouter_q")), expanded=_q_pose):
                 branches += _branches_questions(cat)
 
             if not branches:
@@ -2976,13 +2981,13 @@ def render_comparaison(cat):
         formes = ["barres"] + (["radar"] if len(branches) >= 3 else [])
         with r3:
             with st.container(key="exb_vue_c"):
-                forme = st.selectbox(T('ex_format'), formes, key='exc_forme', label_visibility='visible', format_func=lambda f: T('ex_' + f), index=formes.index('barres')) or "barres"
+                forme = st.selectbox(_locale_text(T('ex_format')), formes, key='exc_forme', label_visibility='visible', format_func=_locale_formatter(lambda f: T('ex_' + f)), index=formes.index('barres')) or "barres"
         if len(branches) < 3:
             st.markdown(f'<p class="ex-note" style="margin:2px 0 6px">'
                         f'{_e(T("ex_c_radar_3"))}</p>',
                         unsafe_allow_html=True)
         if not lignes:
-            st.info(T("ex_s_rien"))
+            st.info(_locale_text(T("ex_s_rien")))
             return
 
         if forme == "radar":

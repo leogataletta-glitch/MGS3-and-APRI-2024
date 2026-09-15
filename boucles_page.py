@@ -29,6 +29,12 @@ sur mesure : chaque nœud est un lien `?levier=…` que Streamlit relit au
 rechargement. C'est natif, court, et cela survit aux versions.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import json
 import math
 import os
@@ -298,6 +304,7 @@ for _c, _v in TEXTES.items():
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -550,12 +557,12 @@ def render(entete=True):
 
     # L'avertissement est en tête, pas en pied : il conditionne la lecture de
     # tout ce qui suit.
-    st.info(T("bcl_avertissement"))
+    st.info(_locale_text(T("bcl_avertissement")))
     if not diag["converge"]:
         # UN AVERTISSEMENT, PAS UNE ERREUR. Le graphe brut dépasse 1 depuis que
         # les forces sont sourcées, et la mise à l'échelle le ramène à 0,60 :
         # les chiffres affichés restent ceux du système amorti, donc lisibles.
-        st.warning(T("bcl_diverge"))
+        st.warning(_locale_text(T("bcl_diverge")))
 
     # ---- le clic sur un nœud arrive par l'URL
     ids = [n["id"] for n in graphe["noeuds"]]
@@ -575,7 +582,7 @@ def render(entete=True):
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc">{T("bcl_alarme")}</div>',
                     unsafe_allow_html=True)
-        st.caption(T("bcl_alarme_note"))
+        st.caption(_locale_text(T("bcl_alarme_note")))
         cols = st.columns(4)
         for i, x in enumerate(dedans):
             with cols[i % 4]:
@@ -589,7 +596,7 @@ def render(entete=True):
                     f'{x["ligne"]} · {_e(T("bcl_poids_court"))} '
                     f'{_fmt(x["poids"], 2)}</span></div>',
                     unsafe_allow_html=True)
-                if st.button(_nom_indic(x["r"]), key=f"alarme_{x['ligne']}",
+                if st.button(_locale_text(_nom_indic(x["r"])), key=f"alarme_{x['ligne']}",
                              use_container_width=True,
                              type="primary" if actif else "secondary"):
                     st.session_state["bcl_levier"] = x["noeud"]["id"]
@@ -603,11 +610,11 @@ def render(entete=True):
     mesures = [n for n in graphe["noeuds"] if n.get("ligne") is not None]
     c1, c2, c3 = st.columns([2.2, 2.2, 2])
     with c1:
-        st.selectbox(T("bcl_levier"), [n["id"] for n in mesures],
-                     format_func=lambda i: _libelle(par_id[i]),
+        st.selectbox(_locale_text(T("bcl_levier")), [n["id"] for n in mesures],
+                     format_func=_locale_formatter(lambda i: _libelle(par_id[i])),
                      key="bcl_levier")
     with c2:
-        delta = st.slider(T("bcl_variation"), -3.0, 3.0, 1.0, 0.5,
+        delta = st.slider(_locale_text(T("bcl_variation")), -3.0, 3.0, 1.0, 0.5,
                           key="bcl_delta")
     # Trente-huit boucles dans un menu déroulant seraient illisibles. On
     # propose les douze plus fortes — la force étant le produit des forces de
@@ -617,12 +624,12 @@ def render(entete=True):
     lst_boucles = sorted(toutes_boucles, key=lambda b: -b["force"])[:12]
     with c3:
         choix = st.selectbox(
-            T("bcl_isoler"), [-1] + list(range(len(lst_boucles))),
-            format_func=lambda k: (
+            _locale_text(T("bcl_isoler")), [-1] + list(range(len(lst_boucles))),
+            format_func=_locale_formatter(lambda k: (
                 T("bcl_aucune") if k < 0 else
                 f'{T("bcl_" + lst_boucles[k]["type"])} · '
                 + " → ".join(_libelle(par_id[x])
-                             for x in lst_boucles[k]["noeuds"][:3]) + "…"),
+                             for x in lst_boucles[k]["noeuds"][:3]) + "…")),
             key="bcl_boucle")
 
     levier = st.session_state["bcl_levier"]
@@ -641,15 +648,15 @@ def render(entete=True):
     # cette question-là, variable par variable. Le schéma reste pour qui veut
     # voir le câblage — replié, parce qu'il n'est plus la première chose à
     # regarder.
-    with st.expander(T("bcl_reseau")):
-        st.caption(T("bcl_reseau_note"))
+    with st.expander(_locale_text(T("bcl_reseau"))):
+        st.caption(_locale_text(T("bcl_reseau_note")))
         st.markdown(T("bcl_polarite"))
         pos = _positions(graphe)
         components.html(
-            '<div style="font-family:Inter,system-ui,sans-serif">'
+            _locale_html('<div style="font-family:Inter,system-ui,sans-serif">'
             + _legende()
             + _svg(graphe, pos, effets, variations, levier, isolees)
-            + '</div>', height=HAUTEUR + 66, scrolling=False)
+            + '</div>'), height=HAUTEUR + 66, scrolling=False)
 
     # ------------------------------------------------- effets et comparaison
     with st.container(border=True):
@@ -661,7 +668,7 @@ def render(entete=True):
              if abs(effets.get(k, 0.0) + variations.get(k, 0.0)) > M.SEUIL_NUL),
             key=lambda x: -abs(x[1]))
         if not touches:
-            st.caption(T("bcl_effets_vide"))
+            st.caption(_locale_text(T("bcl_effets_vide")))
         else:
             lignes = [
                 f'<div style="display:grid;grid-template-columns:'
@@ -716,17 +723,17 @@ def render(entete=True):
             f'{_fmt(ei["delta"], 3, True)}</div>'
             f'<div style="font-size:12px;color:{ENCRE3}">/ 10</div></div>',
             unsafe_allow_html=True)
-        st.caption(T("bcl_indice_note",
-                     part=f'{100 * ei["part_couverte"]:.0f}'))
-        st.caption(T("bcl_echelle", facteur=_fmt(diag["facteur"], 2)))
+        st.caption(_locale_text(T("bcl_indice_note",
+                     part=f'{100 * ei["part_couverte"]:.0f}')))
+        st.caption(_locale_text(T("bcl_echelle", facteur=_fmt(diag["facteur"], 2))))
 
     # ------------------------------------------------------------ les boucles
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc">{T("bcl_boucles")}</div>',
                     unsafe_allow_html=True)
-        st.caption(T("bcl_boucles_note"))
-        st.caption(T("bcl_boucles_top", n=len(lst_boucles),
-                     tot=len(toutes_boucles)))
+        st.caption(_locale_text(T("bcl_boucles_note")))
+        st.caption(_locale_text(T("bcl_boucles_top", n=len(lst_boucles),
+                     tot=len(toutes_boucles))))
         st.markdown(T("bcl_sens_note"))
         cartes = []
         for k, b in enumerate(lst_boucles):
@@ -759,7 +766,7 @@ def render(entete=True):
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc">{T("bcl_leviers")}</div>',
                     unsafe_allow_html=True)
-        st.caption(T("bcl_leviers_note"))
+        st.caption(_locale_text(T("bcl_leviers_note")))
         lv = [x for x in M.leviers(graphe, toutes_boucles)
               if x["boucles"] > 0][:8]
         lignes = [
@@ -796,7 +803,7 @@ def render(entete=True):
         st.markdown(
             f'<div class="titre-bloc" style="margin-top:18px">'
             f'{T("bcl_dominantes")}</div>', unsafe_allow_html=True)
-        st.caption(T("bcl_dominantes_note"))
+        st.caption(_locale_text(T("bcl_dominantes_note")))
         dom = "".join(
             f'<div style="display:flex;gap:12px;align-items:baseline;'
             f'padding:7px 0;border-bottom:1px solid #eef2f7">'
@@ -840,8 +847,8 @@ def render(entete=True):
 
         desac = M.desaccords(graphe)
         if desac:
-            st.warning(T("bcl_desaccords_t", n=len(desac)))
-        st.caption(T("bcl_obs_note"))
+            st.warning(_locale_text(T("bcl_desaccords_t", n=len(desac))))
+        st.caption(_locale_text(T("bcl_obs_note")))
 
         lignes = []
         for e in sorted(graphe["aretes"],
@@ -895,6 +902,6 @@ def render(entete=True):
             f'<div style="text-align:right">{_e(T("bcl_obs"))}</div></div>'
             + "".join(lignes), unsafe_allow_html=True)
 
-    st.caption(T("bcl_diag", noeuds=diag["noeuds"], aretes=diag["aretes"],
+    st.caption(_locale_text(T("bcl_diag", noeuds=diag["noeuds"], aretes=diag["aretes"],
                  rayon=_fmt(diag["rayon"], 2),
-                 cible=_fmt(diag["cible"], 2)))
+                 cible=_fmt(diag["cible"], 2))))

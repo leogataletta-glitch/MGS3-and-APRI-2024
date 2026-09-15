@@ -31,6 +31,10 @@ RÈGLES DE DESSIN, TENUES VOLONTAIREMENT COURTES
   · chaque marque porte son année et sa valeur en infobulle native.
 """
 
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -165,6 +169,7 @@ STYLE = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -516,19 +521,19 @@ def render(entete=True):
             f'{_e(T("tj_sous"))}</p>', unsafe_allow_html=True)
 
     if not _lire("foret.json") and not _lire("pluie.json"):
-        st.info(T("tj_absent"))
+        st.info(_locale_text(T("tj_absent")))
         return
 
-    st.info(T("tj_intro"))
+    st.info(_locale_text(T("tj_intro")))
 
     # UN SEUL SÉLECTEUR POUR LES QUATRE SÉRIES. Elles décrivent le même
     # territoire ; les filtrer séparément inviterait à comparer une section
     # avec une autre sans le savoir.
-    choix = st.selectbox(T("tj_perimetre"),
+    choix = st.selectbox(_locale_text(T("tj_perimetre")),
                          ["__toutes__"] + SECTIONS,
-                         format_func=lambda s: T("tj_toutes") if s == "__toutes__"
-                         else s, key="tj_section")
-    st.caption(T("tj_lire"))
+                         format_func=_locale_formatter(lambda s: T("tj_toutes") if s == "__toutes__"
+                         else s), key="tj_section")
+    st.caption(_locale_text(T("tj_lire")))
 
     _bloc_foret(choix)
     _bloc_pluie(choix)

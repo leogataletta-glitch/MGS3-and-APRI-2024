@@ -25,6 +25,9 @@ rien à ces lignes-là, et le module le signale plutôt que d'afficher un chiffr
 identique en laissant croire à une égalité mesurée.
 """
 
+from traductions import text as _locale_text
+from traductions import formatter as _locale_formatter
+
 import streamlit as st
 
 import icones
@@ -284,7 +287,7 @@ def _select(cle, options, libelle, etiquette):
     def _repercuter():
         st.session_state[cle] = st.session_state[w]
 
-    st.selectbox(etiquette, options, format_func=libelle,
+    st.selectbox(_locale_text(etiquette), options, format_func=_locale_formatter(libelle),
                  index=options.index(courant) if courant in options else 0,
                  key=w, on_change=_repercuter)
 
@@ -318,7 +321,7 @@ def barre(cle="p"):
         _select("f_groupe", [TOUS] + GROUPES, libelle_groupe,
                 T("f_groupe_long"))
     with c4:
-        st.button(T("f_reinitialiser"), key=f"f_reset_{cle}",
+        st.button(_locale_text(T("f_reinitialiser")), key=f"f_reset_{cle}",
                   on_click=reinitialiser, use_container_width=True,
                   disabled=not actif())
 
@@ -331,7 +334,7 @@ def barre(cle="p"):
 
     av = avertissement()
     if av:
-        st.warning(av, icon="⚠")
+        st.warning(_locale_text(av), icon="⚠")
     return resume()
 
 
@@ -346,18 +349,18 @@ def rendre_panneau():
         st.markdown(f'<div class="nav-groupe" style="margin-top:2px">'
                     f'{T("f_titre")}</div>', unsafe_allow_html=True)
     with entete[1]:
-        st.button(T("f_reinitialiser"), key="f_reset", on_click=reinitialiser,
+        st.button(_locale_text(T("f_reinitialiser")), key="f_reset", on_click=reinitialiser,
                   type="secondary", use_container_width=True,
                   disabled=not actif())
 
     st.selectbox(
-        T("f_section"), [TOUTES] + SECTIONS, format_func=libelle_section,
+        _locale_text(T("f_section")), [TOUTES] + SECTIONS, format_func=_locale_formatter(libelle_section),
         key="f_section", label_visibility="visible")
     st.selectbox(
-        T("f_paysage"), [TOUS_P] + PAYSAGES, format_func=libelle_paysage,
+        _locale_text(T("f_paysage")), [TOUS_P] + PAYSAGES, format_func=_locale_formatter(libelle_paysage),
         key="f_paysage", label_visibility="visible")
     st.selectbox(
-        T("f_groupe"), [TOUS] + GROUPES, format_func=libelle_groupe,
+        _locale_text(T("f_groupe")), [TOUS] + GROUPES, format_func=_locale_formatter(libelle_groupe),
         key="f_groupe", label_visibility="visible")
 
     # Les pastilles ne sont pas décoratives : elles répètent l'état du filtre
@@ -382,4 +385,4 @@ def rendre_panneau():
 
     av = avertissement()
     if av:
-        st.warning(av, icon="⚠")
+        st.warning(_locale_text(av), icon="⚠")

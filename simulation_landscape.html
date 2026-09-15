@@ -17,7 +17,7 @@ body{padding:18px;background:#f7f8f2;color:#234a40;font-size:14px}header{padding
 <div id="outcome" role="status"></div><details open><summary id="journalTitle"></summary><ul class="journal" id="journal"></ul></details><details><summary id="rulesTitle"></summary><p id="rules"></p></details><p class="muted" id="fiction"></p>
 <script>
 'use strict';
-const fr=document.documentElement.lang!=='en',T=(a,b)=>fr?a:b,$=id=>document.getElementById(id),canvas=$('world'),ctx=canvas.getContext('2d');
+const fr=document.documentElement.lang==='fr',T=(a,b)=>fr?a:(window.__apriText?window.__apriText(b):b),$=id=>document.getElementById(id),canvas=$('world'),ctx=canvas.getContext('2d');
 const places=[
  {id:'school',x:380,y:195,label:T('ÉCOLE','SCHOOL'),desc:T('Rose, votre fille de 8 ans, peut aller à l’école. Un parent l’accompagne : 2 pièces et 12 énergie. L’école ferme pendant les ouragans.','Rose, your eight-year-old daughter, can attend school. One parent accompanies her: 2 coins and 12 energy. School closes during hurricanes.')},
  {id:'church',x:560,y:170,label:T('ÉGLISE','CHURCH'),desc:T('L’église accueille une cuisine solidaire ouverte à tous. Une aide alimentaire est disponible une fois tous les trois jours. Vous pouvez aussi y organiser l’entraide.','The church hosts a community kitchen open to everyone. Food support is available once every three days. You can also organise mutual aid here.')},

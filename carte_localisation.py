@@ -35,6 +35,10 @@ paysage : ni nom, ni téléphone, ni enquêteur — ces colonnes n'existent pas 
 les fichiers d'échantillon, et rien de tel n'est embarqué dans la page.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -148,6 +152,7 @@ COULEURS = {
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -678,14 +683,14 @@ def html(d):
         "paysage": T("cl_paysage"), "paysage_sud": T("cl_paysage_sud"),
         "paysage_t": T("cl_g_etude"),
         "all": T("cl_tout"), "none": T("cl_rien"),
-        "legend": "Légende" if i18n.get_lang()=="fr" else "Legend",
-        "export_wait": "Préparation…" if i18n.get_lang()=="fr" else "Preparing…",
-        "export_fail": "Export impossible : attendez le chargement des tuiles ou choisissez le fond sobre." if i18n.get_lang()=="fr" else "Export unavailable: wait for tiles to load or choose the plain base map.",
+        "legend": _locale_text("Légende" if i18n.get_lang()=="fr" else "Legend"),
+        "export_wait": _locale_text("Préparation…" if i18n.get_lang()=="fr" else "Preparing…"),
+        "export_fail": _locale_text("Export impossible : attendez le chargement des tuiles ou choisissez le fond sobre." if i18n.get_lang()=="fr" else "Export unavailable: wait for tiles to load or choose the plain base map."),
     }
     return (GABARIT
-            .replace("JPEG ↓", ("Télécharger JPEG ↓" if i18n.get_lang()=="fr" else "Download JPEG ↓"))
-            .replace("PDF ↓", ("Télécharger PDF ↓" if i18n.get_lang()=="fr" else "Download PDF ↓"))
-            .replace("__T_LOADING_MAP__", "Chargement de la carte…" if i18n.get_lang()=="fr" else "Loading map…")
+            .replace("JPEG ↓", (_locale_text("Télécharger JPEG ↓" if i18n.get_lang()=="fr" else "Download JPEG ↓")))
+            .replace("PDF ↓", (_locale_text("Télécharger PDF ↓" if i18n.get_lang()=="fr" else "Download PDF ↓")))
+            .replace("__T_LOADING_MAP__", _locale_text("Chargement de la carte…" if i18n.get_lang()=="fr" else "Loading map…"))
             .replace("__LEAFLET__", _leaflet())
             .replace("__HD_JS__", open(os.path.join(APP_DIR, "carte_haiti_hd.js"), encoding="utf-8").read().replace("__HD_INDEX__", open(os.path.join(APP_DIR, "haiti_hd_index.json"), encoding="utf-8").read()))
             .replace("__TERRAIN_JS__", open(os.path.join(APP_DIR, "carte_terrain.js"), encoding="utf-8").read())
@@ -705,7 +710,7 @@ def html(d):
 def render(hauteur=660):
     d = _couches()
     if not d:
-        st.info(T("cl_absent"))
+        st.info(_locale_text(T("cl_absent")))
         return
     # NI TITRE NI NOTE : LA CARTE EST TOUTE LA PAGE. « Le territoire » ne
     # contient qu'elle, et l'onglet du haut porte déjà son nom — le répéter
@@ -713,4 +718,4 @@ def render(hauteur=660):
     # plus : une carte se manipule d'instinct, on ne lit pas qu'on peut
     # zoomer avant d'essayer. Les deux textes restent dans les traductions,
     # à disposition de qui voudrait les remettre.
-    components.html(html(d), height=hauteur, scrolling=False)
+    components.html(_locale_html(html(d)), height=hauteur, scrolling=False)

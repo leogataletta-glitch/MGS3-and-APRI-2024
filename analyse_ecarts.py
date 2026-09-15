@@ -25,6 +25,10 @@ le groupe ; le traiter comme un score nul en ferait la première vulnérabilité
 du classement, qui serait un artefact.
 """
 
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import html
 
 
@@ -374,6 +378,7 @@ STYLE = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -719,7 +724,7 @@ def _combiner(cat, base, cle, avec_paysage=False):
     _pose = any(st.session_state.get(k) is not None for k in _cles)
     _lib_v = T("ec_combiner") + (" · " + T("ec_comb_n") if _pose else "")
     masque, bouts = base.copy(), []
-    with st.expander(_lib_v, expanded=_pose):
+    with st.expander(_locale_text(_lib_v), expanded=_pose):
         cols = st.columns(3 if avec_paysage else 2)
 
         soc = []
@@ -728,19 +733,19 @@ def _combiner(cat, base, cle, avec_paysage=False):
                 soc.append((val, f'{T(dict(AXES)[axe])} · {lib}', lib))
         with cols[0]:
             k = st.selectbox(
-                T("ec_c_groupe"), [None] + list(range(len(soc))),
+                _locale_text(T("ec_c_groupe")), [None] + list(range(len(soc))),
                 key=f"ec_cg_{cle}",
-                format_func=lambda i: T("ec_c_tous") if i is None else soc[i][1])
+                format_func=_locale_formatter(lambda i: T("ec_c_tous") if i is None else soc[i][1]))
         if k is not None:
             masque = masque & cat["groupes"][soc[k][0]]
             bouts.append(soc[k][2])
 
         with cols[1]:
             sec = st.selectbox(
-                T("ec_c_section"),
+                _locale_text(T("ec_c_section")),
                 [None] + [v for v, _l in _cases(cat, "section")],
                 key=f"ec_cs_{cle}",
-                format_func=lambda v: T("ec_c_tous") if v is None else v)
+                format_func=_locale_formatter(lambda v: T("ec_c_tous") if v is None else v))
         if sec is not None:
             masque = masque & cat["groupes"][sec]
             bouts.append(sec)
@@ -748,11 +753,11 @@ def _combiner(cat, base, cle, avec_paysage=False):
         if avec_paysage:
             with cols[2]:
                 pay = st.selectbox(
-                    T("ec_c_paysage"),
+                    _locale_text(T("ec_c_paysage")),
                     [None] + [v for v, _l in _cases(cat, "paysage")],
                     key=f"ec_cp_{cle}",
-                    format_func=lambda v: T("ec_c_tous") if v is None
-                    else _lib(v))
+                    format_func=_locale_formatter(lambda v: T("ec_c_tous") if v is None
+                    else _lib(v)))
             if pay is not None:
                 masque = masque & cat["groupes"][pay]
                 bouts.append(_lib(pay))
@@ -766,8 +771,8 @@ def _terme(cat, cle):
         for val, lib in _cases(cat, axe):
             opts.append((val, f'{T(dict(AXES)[axe])} · {lib}'))
     libs = dict(opts)
-    v = st.selectbox(T("ec_contre"), [k for k, _l in opts],
-                     key=f"ec_ref_{cle}", format_func=lambda k: libs[k])
+    v = st.selectbox(_locale_text(T("ec_contre")), [k for k, _l in opts],
+                     key=f"ec_ref_{cle}", format_func=_locale_formatter(lambda k: libs[k]))
     if v is None:
         return None, T("ec_col_reste")
     return cat["groupes"][v], libs[v]
@@ -836,7 +841,7 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False,
     lui-même n'a rien à montrer.
     """
     if base is None:
-        st.info(T("ec_rien"))
+        st.info(_locale_text(T("ec_rien")))
         return False
     # LES DEUX DÉCISIONS PRINCIPALES SE SUIVENT : quel groupe, et par rapport
     # à qui. Le croisement facultatif vient après, replié — placé entre les
@@ -851,12 +856,12 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False,
         lib = " · ".join([lib] + bouts)
     n_g = int(masque.sum())
     if n_g == 0:
-        st.info(T("ec_c_vide"))
+        st.info(_locale_text(T("ec_c_vide")))
         return False
     if ref is not None:
         ref = ref & ~masque
         if int(ref.sum()) == 0:
-            st.info(T("ec_c_vide"))
+            st.info(_locale_text(T("ec_c_vide")))
             return False
     n_a = int((~masque if ref is None else ref).sum())
 
@@ -871,7 +876,7 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False,
                     f'{_e(T("ec_sec_res"))}</div>', unsafe_allow_html=True)
     with r2:
         with st.container(key=f"ec_vue_{titre}"):
-            quoi = st.selectbox(T('ec_quoi'), ['profil', 'indic', 'tout'], key=f'ec_quoi_{titre}', label_visibility='visible', format_func=lambda c: T('ec_quoi_' + c), index=None)
+            quoi = st.selectbox(_locale_text(T('ec_quoi')), ['profil', 'indic', 'tout'], key=f'ec_quoi_{titre}', label_visibility='visible', format_func=_locale_formatter(lambda c: T('ec_quoi_' + c)), index=None)
     if quoi is None:
         st.markdown(f'<p class="ec-note" style="margin:8px 0 0">'
                     f'{_e(T("ec_rien_encore"))}</p>', unsafe_allow_html=True)
@@ -895,9 +900,9 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False,
         st.markdown(f'<div class="titre-bloc">{_e(T("ec_profil"))}</div>',
                     unsafe_allow_html=True)
         with st.container(key=f"ec_vue_f_{titre}"):
-            forme = st.selectbox(T('ec_format'), ['radar', 'barres', 'tableau', 'carte'], key=f'ec_forme_{titre}', label_visibility='visible', format_func=lambda f: T('ec_' + f), index=['radar', 'barres', 'tableau', 'carte'].index('radar')) or "radar"
+            forme = st.selectbox(_locale_text(T('ec_format')), ['radar', 'barres', 'tableau', 'carte'], key=f'ec_forme_{titre}', label_visibility='visible', format_func=_locale_formatter(lambda f: T('ec_' + f)), index=['radar', 'barres', 'tableau', 'carte'].index('radar')) or "radar"
         if forme == "radar" and sum(1 for v in s_g if v is not None) < 3:
-            st.info(T("ec_radar_court"))
+            st.info(_locale_text(T("ec_radar_court")))
             forme = "barres"
 
         if forme == "radar":
@@ -920,7 +925,7 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False,
         elif forme == "carte":
             svg = _profil_carte(cat, masque)
             if svg is None:
-                st.info(T("ec_carte_vide"))
+                st.info(_locale_text(T("ec_carte_vide")))
             else:
                 st.markdown(f'<div style="font-family:Inter,system-ui,sans-serif">'
                             f'{svg}</div>'
@@ -933,18 +938,18 @@ def _rendre_profil(cat, base, lib, titre, avec_paysage=False,
         # ---- les indicateurs, dans l'ordre demandé ---------------------------
         st.markdown(f'<div class="titre-bloc" style="margin-top:22px">'
                     f'{_e(T("ec_ecarts"))}</div>', unsafe_allow_html=True)
-        tri = st.selectbox(T("ec_tri"), ["ecart", "haut", "bas"],
+        tri = st.selectbox(_locale_text(T("ec_tri")), ["ecart", "haut", "bas"],
                            key=f"ec_tri_{titre}",
-                           format_func=lambda c: T("ec_tri_" + c))
+                           format_func=_locale_formatter(lambda c: T("ec_tri_" + c)))
         _x = {"ecart": "ec_ecarts_x", "haut": "ec_tri_haut_x",
               "bas": "ec_tri_bas_x"}[tri]
         st.markdown(f'<p class="ec-note" style="margin:0">{_e(T(_x))}</p>',
                     unsafe_allow_html=True)
         classes = _classer(ecarts, tri)
         if not classes:
-            st.info(T("ec_rien"))
+            st.info(_locale_text(T("ec_rien")))
             return True
-        combien = st.slider(T("ec_combien"), 5, min(40, len(classes)),
+        combien = st.slider(_locale_text(T("ec_combien")), 5, min(40, len(classes)),
                             min(12, len(classes)), key=f"ec_n_{titre}")
         st.markdown(_table_ecarts(classes[:combien], lib, lib_ref),
                     unsafe_allow_html=True)
@@ -960,18 +965,18 @@ def render_paysage(cat):
     st.markdown(STYLE, unsafe_allow_html=True)
     vals = [v for v in _VALEURS["paysage"] if cat["groupes"].get(v) is not None]
     if not vals:
-        st.info(T("ec_rien"))
+        st.info(_locale_text(T("ec_rien")))
         return False
     with st.container(key="ec_ecran_p"):
         _h1, h2 = st.columns([4, 1], vertical_alignment="center")
         with h2:
-            if st.button(T("ec_raz"), key="ec_p_raz", type="tertiary"):
+            if st.button(_locale_text(T("ec_raz")), key="ec_p_raz", type="tertiary"):
                 _raz_profil("pay")
                 st.rerun()
         c1, c2 = st.columns([2.2, 1.6])
         with c1:
-            v = st.selectbox(T("ec_p_choix"), vals, key="ec_p_sel",
-                             format_func=_lib)
+            v = st.selectbox(_locale_text(T("ec_p_choix")), vals, key="ec_p_sel",
+                             format_func=_locale_formatter(_lib))
         return _rendre_profil(cat, cat["groupes"].get(v), _lib(v), "pay",
                               col_terme=c2)
 
@@ -988,18 +993,18 @@ def render_groupe(cat):
         for val, lib in _cases(cat, axe):
             opts.append((val, f'{T(dict(AXES)[axe])} · {lib}', lib))
     if not opts:
-        st.info(T("ec_rien"))
+        st.info(_locale_text(T("ec_rien")))
         return False
     with st.container(key="ec_ecran_g"):
         _h1, h2 = st.columns([4, 1], vertical_alignment="center")
         with h2:
-            if st.button(T("ec_raz"), key="ec_g_raz", type="tertiary"):
+            if st.button(_locale_text(T("ec_raz")), key="ec_g_raz", type="tertiary"):
                 _raz_profil("grp")
                 st.rerun()
         c1, c2 = st.columns([2.2, 1.6])
         with c1:
-            k = st.selectbox(T("ec_g_choix"), list(range(len(opts))),
-                             key="ec_g_sel", format_func=lambda i: opts[i][1])
+            k = st.selectbox(_locale_text(T("ec_g_choix")), list(range(len(opts))),
+                             key="ec_g_sel", format_func=_locale_formatter(lambda i: opts[i][1]))
         # LE PAYSAGE EST OFFERT EN PLUS SUR CETTE PAGE, et pas sur la
         # précédente : « les femmes de la montagne » se pose ici, « la
         # montagne des femmes » se pose là-bas, et proposer deux fois le même
@@ -1083,10 +1088,10 @@ def _profil_alarmes(cat):
         cases = _cases(cat, axe)
         with col:
             v = st.selectbox(
-                T(lab), [None] + [c[0] for c in cases],
+                _locale_text(T(lab)), [None] + [c[0] for c in cases],
                 key=f"al_g_{axe}", index=0,
-                format_func=lambda x: (T("al_tous") if x is None
-                                       else _lib(x)))
+                format_func=_locale_formatter(lambda x: (T("al_tous") if x is None
+                                       else _lib(x))))
         if v is not None and cat["groupes"].get(v) is not None:
             masque &= cat["groupes"][v]
             nom.append(_lib(v))
@@ -1140,11 +1145,11 @@ def render_alarmes(cat):
     lib_g = nom or T("al_tout_ech")
     n_g = int(masque.sum())
     if n_g == 0:
-        st.info(T("ec_rien"))
+        st.info(_locale_text(T("ec_rien")))
         return
     reste = (~masque) if nom else None
 
-    combien = st.selectbox(T("al_combien"), [5, 10, 20], key="al_k1")
+    combien = st.selectbox(_locale_text(T("al_combien")), [5, 10, 20], key="al_k1", format_func=_locale_formatter(str))
 
     lignes = []
     for ind in cat["indicateurs"]:
@@ -1159,7 +1164,7 @@ def render_alarmes(cat):
                       else round(m["score"] - a["score"], 2))
         lignes.append(x)
     if not lignes:
-        st.info(T("ec_rien"))
+        st.info(_locale_text(T("ec_rien")))
         return
 
     st.markdown(f'<p class="ec-note" style="margin:8px 0 2px">'

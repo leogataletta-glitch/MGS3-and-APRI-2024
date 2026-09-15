@@ -36,6 +36,8 @@ recalcul. Le cas croisé — une section ET un groupe — n'existe pas dans ce
 fichier : on retombe sur la section, et on le dit.
 """
 
+from traductions import text as _locale_text
+
 import os
 import pickle
 
@@ -354,6 +356,7 @@ DIM_CLE = {
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -496,7 +499,7 @@ def _carte_question(t, lignes, base, teinte):
 def rendre(cle_dim):
     d = _charger()
     if not d:
-        st.info(T("q_absent"))
+        st.info(_locale_text(T("q_absent")))
         return
 
     groupes = questions_de(cle_dim)
@@ -506,7 +509,7 @@ def rendre(cle_dim):
     if not groupes:
         # Le cas de la dimension environnementale si elle perdait ses
         # questions : le dire vaut mieux qu'afficher une page blanche.
-        st.info(T("q_aucune_dim"))
+        st.info(_locale_text(T("q_aucune_dim")))
         return
 
     # Quelle colonne du cache lire — exactement la même règle que pour les
@@ -525,20 +528,20 @@ def rendre(cle_dim):
     # LE NIVEAU EST DIT AVANT TOUT LE RESTE. Un module de questionnaire n'est
     # pas un indicateur de résilience, et une page qui les empile sans le dire
     # laisse croire que si.
-    st.warning(T("q_avert_niveau"))
+    st.warning(_locale_text(T("q_avert_niveau")))
     st.markdown(
         f'<p style="font-size:14px;color:#3c4761;line-height:1.6;'
         f'max-width:92ch;margin:2px 0 4px">'
         f'{_e(T("q_intro", n=n_q, lien=n_lien))}</p>',
         unsafe_allow_html=True)
-    st.caption(T("q_base",
+    st.caption(_locale_text(T("q_base",
                  cible=(_CLE[0] if _CLE[0] != "Total"
                         else T("f_toutes_sections")),
-                 n=_fmt(base, 0)))
+                 n=_fmt(base, 0))))
     if croise:
-        st.caption(T("q_croise"))
+        st.caption(_locale_text(T("q_croise")))
 
-    cherche = (st.text_input(T("q_chercher"), key=f"q_rech_{cle_dim}",
+    cherche = (st.text_input(_locale_text(T("q_chercher")), key=f"q_rech_{cle_dim}",
                              placeholder="…") or "").strip().lower()
     if cherche:
         filtres_g = []
@@ -550,7 +553,7 @@ def rendre(cle_dim):
                 filtres_g.append((module, gardees))
         groupes = filtres_g
         if not groupes:
-            st.info(T("q_rien"))
+            st.info(_locale_text(T("q_rien")))
             return
 
     # UN MODULE = UN VOLET REPLIABLE, ET TOUS SONT FERMÉS.
@@ -570,13 +573,13 @@ def rendre(cle_dim):
                    else T("q_n_questions", n=len(questions)))
         titre = (f'{libelle_module(module)}  ·  {combien}'
                  + (f'  ·  {n_l} ↗' if n_l else ''))
-        with st.expander(titre, expanded=bool(cherche)):
+        with st.expander(_locale_text(titre), expanded=bool(cherche)):
             st.markdown(
                 "".join(_carte_question(t, lg, base, teinte)
                         for t, lg in questions),
                 unsafe_allow_html=True)
 
-    st.caption(T("q_note_rattachement"))
+    st.caption(_locale_text(T("q_note_rattachement")))
 
 
 # ---------------------------------------------------------------------------

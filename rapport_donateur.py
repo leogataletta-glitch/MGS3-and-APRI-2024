@@ -47,6 +47,10 @@ collectée ici. Elle est encadrée et étiquetée comme illustration, parce qu'u
 exemple qu'on laisse passer pour un résultat est un mensonge par mise en page.
 """
 
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -1285,6 +1289,7 @@ for _c, _v in TEXTES.items():
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -1912,7 +1917,7 @@ def _blocages(m):
                 unsafe_allow_html=True)
 
     if not m["blocages"] or not m["portes"]:
-        st.info(T("rap_absent"))
+        st.info(_locale_text(T("rap_absent")))
         return
 
     # ---- OÙ EST-CE QUE ÇA BLOQUE, ET POUR QUI ?
@@ -1922,7 +1927,7 @@ def _blocages(m):
     # les scores de cette population-là. Rien n'est réestimé : seule la
     # distance au haut de l'échelle change.
     choix = ["Total"] + PAYSAGES + SECTIONS + GROUPES_SOC
-    cible = st.selectbox(T("rap_5_pour"), choix, index=0, format_func=_lib,
+    cible = st.selectbox(_locale_text(T("rap_5_pour")), choix, index=0, format_func=_locale_formatter(_lib),
                          key=f"rap_5_cible_{i18n.get_lang()}")
 
     rangs = []
@@ -1933,17 +1938,17 @@ def _blocages(m):
         rangs.append({**x, "score": float(sc),
                       "force": round(x["porte"] * (10.0 - float(sc)) / 10.0, 2)})
     if not rangs:
-        st.info(T("rap_absent"))
+        st.info(_locale_text(T("rap_absent")))
         return
     hauts = sorted([x for x in rangs if x["score"] >= 7],
                    key=lambda x: -x["porte"])
     rangs = sorted([x for x in rangs if x["score"] < 7],
                    key=lambda x: -x["force"])
     if not rangs:
-        st.info(T("rap_absent"))
+        st.info(_locale_text(T("rap_absent")))
         return
     if cible != "Total":
-        st.caption(T("rap_5_cible_x", c=_lib(cible)))
+        st.caption(_locale_text(T("rap_5_cible_x", c=_lib(cible))))
 
     st.markdown(
         f'<div class="rd-b" style="border:none;padding-bottom:4px">'
@@ -1974,7 +1979,7 @@ def _blocages(m):
             f'<b style="font-variant-numeric:tabular-nums;font-size:12px;'
             f'color:{ROUGE};min-width:34px;text-align:right">'
             f'{_f(b["force"], 2)}</b></span></div>', unsafe_allow_html=True)
-    st.caption(T("rap_5_leg"))
+    st.caption(_locale_text(T("rap_5_leg")))
 
     # LE CONSTAT BRUT EST DÉJÀ DANS LE TABLEAU, juste au-dessus, avec ses
     # trois colonnes. Le répéter en prose sous forme d'encadré n'ajoutait
@@ -2390,7 +2395,7 @@ def _acte2(m):
     st.markdown('<div class="rd-eff">' + "".join(
         f'<b>{_e(s)}<em>{v}</em></b>' for s, v in eff.items())
         + '</div>', unsafe_allow_html=True)
-    st.caption(T("rap_2_couv_x", mn=min(eff.values()), mx=max(eff.values())))
+    st.caption(_locale_text(T("rap_2_couv_x", mn=min(eff.values()), mx=max(eff.values()))))
 
 
 # --------------------------------------------------------------- troisième acte
@@ -2539,11 +2544,11 @@ def _acte3(m):
     choix = (["Total"] + PAYSAGES + SECTIONS + GROUPES_SOC)
     ga, gb = st.columns(2)
     with ga:
-        a = st.selectbox(T("rap_4_a"), choix, index=choix.index("Littoral"),
-                         format_func=_lib, key=f"rap_a_{i18n.get_lang()}")
+        a = st.selectbox(_locale_text(T("rap_4_a")), choix, index=choix.index("Littoral"),
+                         format_func=_locale_formatter(_lib), key=f"rap_a_{i18n.get_lang()}")
     with gb:
-        b = st.selectbox(T("rap_4_b"), choix, index=choix.index("Montagne"),
-                         format_func=_lib, key=f"rap_b_{i18n.get_lang()}")
+        b = st.selectbox(_locale_text(T("rap_4_b")), choix, index=choix.index("Montagne"),
+                         format_func=_locale_formatter(_lib), key=f"rap_b_{i18n.get_lang()}")
 
     gauche, droite = st.columns([1.15, 1], gap="large")
     with gauche:
@@ -2582,7 +2587,7 @@ def _acte3(m):
                         f'margin-top:10px">'
                         f'{_gras(T("rap_4_ecart_x", d=T(cle), v=_f(abs(d), 2), a=_lib(a) if d < 0 else _lib(b)))}'
                         f'</p>', unsafe_allow_html=True)
-    st.caption(T("rap_4_dim7"))
+    st.caption(_locale_text(T("rap_4_dim7")))
 
     # ---- l'outil : où est-ce que ça bloque, et pour qui
     _blocages(m)
@@ -2611,7 +2616,7 @@ def render(entete=True):
     st.markdown(STYLE, unsafe_allow_html=True)
     m = _mesures(i18n.get_lang())
     if not m:
-        st.info(T("rap_absent_page"))
+        st.info(_locale_text(T("rap_absent_page")))
         return
 
     if entete:
@@ -2631,7 +2636,7 @@ def render(entete=True):
     cols = st.columns(len(CHAPITRES))
     for i, (col, cle) in enumerate(zip(cols, CHAPITRES), 1):
         with col:
-            st.button(f"{i} · {T(cle)}", key=f"rap_pas_{i}",
+            st.button(_locale_text(f"{i} · {T(cle)}"), key=f"rap_pas_{i}",
                       on_click=_poser, args=(i,), use_container_width=True,
                       type="primary" if i == n else "secondary")
 
@@ -2641,11 +2646,11 @@ def render(entete=True):
     g, _mid, d = st.columns([1.6, 4, 1.6])
     with g:
         if n > 1:
-            st.button("← " + T("po_precedent"), key="rap_prec",
+            st.button(_locale_text("← " + T("po_precedent")), key="rap_prec",
                       on_click=_poser, args=(n - 1,),
                       use_container_width=True)
     with d:
         if n < len(CHAPITRES):
-            st.button(T("po_suivant") + " →", key="rap_suiv",
+            st.button(_locale_text(T("po_suivant") + " →"), key="rap_suiv",
                       on_click=_poser, args=(n + 1,),
                       use_container_width=True, type="primary")

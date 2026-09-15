@@ -34,6 +34,8 @@ vit donc dans son cadre, et tout ce qu'il lui faut — géométries, libellés,
 styles — y est écrit avec lui : il ne fait aucun appel au réseau.
 """
 
+from traductions import component_html as _locale_html
+
 import json
 import math
 import os
@@ -628,5 +630,5 @@ def render(hauteur=560):
     html = _composer(i18n.get_lang())
     if not html:
         return False
-    components.html(html, height=hauteur, scrolling=False)
+    components.html(_locale_html(html), height=hauteur, scrolling=False)
     return True

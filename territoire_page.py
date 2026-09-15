@@ -34,6 +34,8 @@ cette latitude, la déformation est invisible, et cela évite d'embarquer une
 bibliothèque cartographique pour dessiner deux contours.
 """
 
+from traductions import text as _locale_text
+
 import json
 import math
 import os
@@ -123,6 +125,7 @@ for _c, _v in TEXTES.items():
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -437,7 +440,7 @@ def cartes(geo=None):
     v = _vignette(geo)
     s = _situation(geo)
     if not v and not s:
-        st.info(T("tr_absent"))
+        st.info(_locale_text(T("tr_absent")))
         return
     g, d = st.columns([1, 2.6])
     with g:
@@ -445,13 +448,13 @@ def cartes(geo=None):
                     unsafe_allow_html=True)
         if v:
             st.markdown(v, unsafe_allow_html=True)
-        st.caption(T("tr_vignette_note"))
+        st.caption(_locale_text(T("tr_vignette_note")))
     with d:
         st.markdown(f'<div class="titre-bloc vert">{T("tr_situation")}</div>',
                     unsafe_allow_html=True)
         if s:
             st.markdown(s, unsafe_allow_html=True)
-        st.caption(T("tr_situation_note"))
+        st.caption(_locale_text(T("tr_situation_note")))
 
 
 def tableau(geo, effectifs, paysages):
@@ -556,7 +559,7 @@ def _ligne_sym(figure, couleur, texte, tirets=False):
 def _image(nom):
     p = _trouver(nom)
     if not p:
-        st.caption(T("tr_absent2"))
+        st.caption(_locale_text(T("tr_absent2")))
         return False
     st.image(p, use_container_width=True)
     return True
@@ -567,7 +570,7 @@ def carte_entretiens():
                 unsafe_allow_html=True)
     if not _image("carte_entretiens.jpg"):
         return
-    st.caption(T("tr_qgis2_note"))
+    st.caption(_locale_text(T("tr_qgis2_note")))
     g, d = st.columns([1.35, 1], gap="medium")
     with g:
         st.markdown(
@@ -591,7 +594,7 @@ def carte_entretiens():
                 f'box-shadow:0 0 0 1px #dbe3ec;border-radius:2px"></i>'
                 f'<span>{_e(t)}</span></div>' for c, t in RELIEF6),
             unsafe_allow_html=True)
-    st.caption(T("tr_qgis2_meta"))
+    st.caption(_locale_text(T("tr_qgis2_meta")))
 
 
 def render():

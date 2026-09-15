@@ -6,6 +6,12 @@ L'unité d'analyse est l'organisation, jamais le foyer — c'est rappelé partou
 parce qu'un pourcentage lu sur la mauvaise unité ne veut rien dire.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -72,14 +78,14 @@ def render(entete=True):
     st.markdown(_styles(), unsafe_allow_html=True)
 
     if entete:
-        st.title(T("o_titre"))
+        st.title(_locale_text(T("o_titre")))
         st.markdown(
             '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
             'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
             + T("o_sous_titre") + "</p>", unsafe_allow_html=True)
 
     if doc is None:
-        st.error("ocb.json")
+        st.error(_locale_text("ocb.json"))
         st.stop()
 
     d = doc["descriptif"]
@@ -138,15 +144,15 @@ def render(entete=True):
                     unsafe_allow_html=True)
         densite = next(i for i in indicateurs if i["cle"] == "densite")
         choix = st.selectbox(
-            T("o_quoi_carto"),
+            _locale_text(T("o_quoi_carto")),
             [densite["ligne"]] + [i["ligne"] for i in indicateurs
                                   if i["cle"] != "densite"],
-            format_func=lambda lg: _nom(
-                next(i for i in indicateurs if i["ligne"] == lg)),
+            format_func=_locale_formatter(lambda lg: _nom(
+                next(i for i in indicateurs if i["ligne"] == lg))),
             key=f"ocb_carte_{i18n.get_lang()}")
         ind = next(i for i in indicateurs if i["ligne"] == choix)
 
-        st.caption(_metrique(ind))
+        st.caption(_locale_text(_metrique(ind)))
         valeurs = {s: ind["valeurs"].get(s) for s in SECTIONS}
         unite = "" if ind["cle"] == "densite" else "%"
         # Un effectif d'organisations se lit en entiers : des seuils à 2,5 ou
@@ -167,18 +173,18 @@ def render(entete=True):
             f'{lab}</span></span>'
             for c, lab in map_render.legend_items(seuils_ret, "eleve_bon", unite))
         components.html(
-            '<div style="font-family:system-ui,-apple-system,\'Segoe UI\','
+            _locale_html('<div style="font-family:system-ui,-apple-system,\'Segoe UI\','
             'sans-serif;background:#ffffff"><div style="margin:0 0 8px">'
             f'<span style="font-size:11.5px;color:#898781;letter-spacing:.05em;'
             f'margin-right:14px">{T("legende_seuils")}</span>{legende}</div>'
-            f'{svg}</div>', height=hauteur + 46, scrolling=False)
-        st.caption(T("o_carte_note"))
+            f'{svg}</div>'), height=hauteur + 46, scrolling=False)
+        st.caption(_locale_text(T("o_carte_note")))
 
     # -------------------------------------------------- tous les indicateurs
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc vert">{T("o_bloc3")}</div>',
                     unsafe_allow_html=True)
-        st.caption(T("o_bloc3_note"))
+        st.caption(_locale_text(T("o_bloc3_note")))
         # Libellé court : le graphique en barres réserve une largeur fixe au
         # texte, et un nom d'indicateur complet y serait coupé au milieu.
         courts = [(T("o_court_" + i["cle"]), i["valeurs"]["Total"],
@@ -190,16 +196,16 @@ def render(entete=True):
         svg = map_render.render_score_bars_svg(
             rows, vmax=100, width=1040, unite="%", annotations=annot)
         components.html(
-            '<div style="background:#ffffff;font-family:system-ui,'
-            '-apple-system,\'Segoe UI\',sans-serif">' + svg + "</div>",
+            _locale_html('<div style="background:#ffffff;font-family:system-ui,'
+            '-apple-system,\'Segoe UI\',sans-serif">' + svg + "</div>"),
             height=len(rows) * 28 + 34, scrolling=False)
 
     # ---------------------------------------------------- les organisations
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc">{T("o_bloc4")}</div>',
                     unsafe_allow_html=True)
-        sec_choix = st.multiselect(T("section_communale"), SECTIONS,
-                                   key=f"ocb_sec_{i18n.get_lang()}")
+        sec_choix = st.multiselect(_locale_text(T("section_communale")), SECTIONS,
+                                   key=f"ocb_sec_{i18n.get_lang()}", format_func=_locale_formatter(str))
         fiches = [f for f in doc["fiches"]
                   if not sec_choix or f["section"] in sec_choix]
         OUI, NON, RIEN = T("oui"), T("non"), "—"
@@ -221,24 +227,24 @@ def render(entete=True):
             T("o_col_jeune"): trois(f["jeune_direction"]),
         } for f in fiches])
         st.dataframe(df, use_container_width=True, hide_index=True)
-        st.caption(T("o_table_note", n=len(fiches)))
+        st.caption(_locale_text(T("o_table_note", n=len(fiches))))
 
     # ------------------------------------------------------------ la fiche
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc vert">{T("o_bloc5")}</div>',
                     unsafe_allow_html=True)
-        st.caption(T("o_bloc5_note"))
+        st.caption(_locale_text(T("o_bloc5_note")))
         if not fiches:
-            st.info(T("o_fiche_vide"))
+            st.info(_locale_text(T("o_fiche_vide")))
         else:
             index = st.selectbox(
-                T("o_choisir_organisation"), list(range(len(fiches))),
-                format_func=lambda i: f"{fiches[i]['nom']}  ·  {fiches[i]['section']}",
+                _locale_text(T("o_choisir_organisation")), list(range(len(fiches))),
+                format_func=_locale_formatter(lambda i: f"{fiches[i]['nom']}  ·  {fiches[i]['section']}"),
                 key=f"ocb_fiche_{i18n.get_lang()}_{len(fiches)}")
             st.markdown(_fiche_html(fiches[index]), unsafe_allow_html=True)
 
-    st.caption(T("o_source"))
-    st.caption(T("credit"))
+    st.caption(_locale_text(T("o_source")))
+    st.caption(_locale_text(T("credit")))
 
 
 # ----------------------------------------------------------------------
@@ -246,6 +252,7 @@ def render(entete=True):
 # ----------------------------------------------------------------------
 def _e(t):
     """Échappe le texte saisi sur le terrain avant de l'injecter dans le HTML."""
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 

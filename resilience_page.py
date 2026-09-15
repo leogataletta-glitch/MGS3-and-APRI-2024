@@ -6,6 +6,11 @@ national et la comparaison entre sections, ventilation.json pour le croisement
 section × sous-population). L'app ne fait que lire, agréger et dessiner.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import text as _locale_text
+from traductions import formatter as _locale_formatter
+
 import json
 import os
 
@@ -163,7 +168,7 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
     """Deux niveaux de radar : le profil des dimensions, puis le détail des
     indicateurs à l'intérieur d'une dimension — la même logique de zoom que
     dans le cadre théorique APRI."""
-    niveau = st.selectbox(T('r_niveau'), ['dimensions', 'indicateurs'], format_func=lambda k: {'dimensions': T('r_niveau1'), 'indicateurs': T('r_niveau2')}[k], key=f'radar_niveau_{i18n.get_lang()}')
+    niveau = st.selectbox(_locale_text(T('r_niveau')), ['dimensions', 'indicateurs'], format_func=_locale_formatter(lambda k: {'dimensions': T('r_niveau1'), 'indicateurs': T('r_niveau2')}[k]), key=f'radar_niveau_{i18n.get_lang()}')
 
     NOTION_DIM = {"dim1": "dim_physique", "dim2": "dim_institutionnelle",
                   "dim3": "dim_environnementale", "dim4": "dim_economique",
@@ -177,11 +182,11 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
                                   if r["dimension"] == d] for d in axes_dim}
     else:
         dim = st.selectbox(
-            T("r_dim_detail"), dims_scorees,
-            format_func=lambda d: DIM_COURT[d], key=f"radar_dim_{i18n.get_lang()}")
+            _locale_text(T("r_dim_detail")), dims_scorees,
+            format_func=_locale_formatter(lambda d: DIM_COURT[d]), key=f"radar_dim_{i18n.get_lang()}")
         dedans = [r for r in scorables if r["dimension"] == dim]
         if len(dedans) < 3:
-            st.info(T("r_trop_peu", n=len(dedans)))
+            st.info(_locale_text(T("r_trop_peu", n=len(dedans))))
             return
         axes = [nom_indic(r) for r in dedans]
         groupes = {nom_indic(r): [r["ligne"]] for r in dedans}
@@ -195,11 +200,11 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
     # changement de langue laisserait une sélection orpheline.
     a_comparer = ["__toutes__"] + list(sections)
     choisies = st.multiselect(
-        T("r_comparer"), a_comparer,
-        format_func=lambda c: T("r_ensemble") if c == "__toutes__" else c,
+        _locale_text(T("r_comparer")), a_comparer,
+        format_func=_locale_formatter(lambda c: T("r_ensemble") if c == "__toutes__" else c),
         default=["__toutes__"], max_selections=3, key=f"radar_cmp_{niveau}_{i18n.get_lang()}")
     if not choisies:
-        st.info(T("r_choisir_section"))
+        st.info(_locale_text(T("r_choisir_section")))
         return
 
     def valeurs_pour(nom):
@@ -221,9 +226,9 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
 
     series = [(_nom(nom), valeurs_pour(nom), None) for nom in choisies]
     svg = radar.render_radar_svg(axes, series, taille=620)
-    components.html(_radar_html(svg, series, 640), height=690, scrolling=False)
+    components.html(_locale_html(_radar_html(svg, series, 640)), height=690, scrolling=False)
 
-    st.caption(T("r_radar_dim") if niveau == "dimensions" else T("r_radar_ind"))
+    st.caption(_locale_text(T("r_radar_dim") if niveau == "dimensions" else T("r_radar_ind")))
 
     # Au niveau des indicateurs, la mesure brute accompagne chaque score.
     mesures = {}
@@ -258,7 +263,7 @@ def _section_radars(res, vent, scorables, poids, sections, pop, dims_scorees):
         tab.append(rec)
     st.dataframe(pd.DataFrame(tab), use_container_width=True, hide_index=True)
     if niveau == "indicateurs":
-        st.caption(T("r_lecture_cellule"))
+        st.caption(_locale_text(T("r_lecture_cellule")))
 
 
 def _scorables(res):
@@ -281,22 +286,22 @@ def _score_pondere(lignes, bloc, sec, pop, poids):
 def render():
     res, vent = _charger()
     if res is None:
-        st.title(T("r_titre"))
-        st.error(T("r_fichiers_absents", f="**, **".join(vent)))
-        st.info(T("r_autre_onglet"))
+        st.title(_locale_text(T("r_titre")))
+        st.error(_locale_text(T("r_fichiers_absents", f="**, **".join(vent))))
+        st.info(_locale_text(T("r_autre_onglet")))
         st.stop()
     scorables = _scorables(res)
     poids = {r["ligne"]: (r["ponderation"] or 0.0) for r in res}
     par_ligne = {r["ligne"]: r for r in res}
     sections = list(vent["sections"].keys())
 
-    st.title(T("r_titre"))
+    st.title(_locale_text(T("r_titre")))
     st.markdown(
         '<p style="font-size:11.5px;color:#6b7590;letter-spacing:.06em;'
         'text-transform:uppercase;margin:-8px 0 0 2px;font-weight:600">'
         + T("r_sous_titre") + "</p>", unsafe_allow_html=True)
     st.markdown(map_render.styles_bulle(), unsafe_allow_html=True)
-    st.caption(T("r_intro", n=len(scorables), t=len(res)))
+    st.caption(_locale_text(T("r_intro", n=len(scorables), t=len(res))))
     st.markdown(
         '<p style="font-size:14px;color:#3c4761;margin:2px 0 0">'
         + map_render.bulle_notion("resilience") + " &nbsp;·&nbsp; "
@@ -308,10 +313,10 @@ def render():
 
     # ---------------------------------------------------------- sélecteurs
     with st.sidebar:
-        st.header(T("r_titre_court"))
+        st.header(_locale_text(T("r_titre_court")))
         pop = st.selectbox(
-            T("r_sous_pop"), SOUS_POP,
-            format_func=lambda k: libelle_pop(k),
+            _locale_text(T("r_sous_pop")), SOUS_POP,
+            format_func=_locale_formatter(lambda k: libelle_pop(k)),
             help=T("r_sous_pop_aide"))
 
     OPT_FINAL = T("r_score_final")
@@ -319,7 +324,7 @@ def render():
                     if any(r["dimension"] == d for r in scorables)]
     opt_dims = [T("r_dimension_prefix") + DIM_COURT[d] for d in dims_scorees]
     opt_ind = [f"{DIM_COURT[r['dimension']]} · {nom_indic(r)}" for r in scorables]
-    choix = st.selectbox(T("r_quoi_carto"), [OPT_FINAL] + opt_dims + opt_ind)
+    choix = st.selectbox(_locale_text(T("r_quoi_carto")), [OPT_FINAL] + opt_dims + opt_ind, format_func=_locale_formatter(str))
 
     if choix == OPT_FINAL:
         lignes = [r["ligne"] for r in scorables]
@@ -348,7 +353,7 @@ def render():
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc">{T("r_bloc1")}</div>',
                     unsafe_allow_html=True)
-        st.subheader(f"{titre} — {libelle_pop(pop)}")
+        st.subheader(_locale_text(f"{titre} — {libelle_pop(pop)}"))
         if indic is not None:
             _def = []
             if indic.get("metrique"):
@@ -375,7 +380,7 @@ def render():
                 + " &nbsp;·&nbsp; " + T("r_question_enquete", q=indic["question"])
                 + '</p>', unsafe_allow_html=True)
             if indic["modalites"]:
-                st.caption(T("r_reponses_comptees", m=indic["modalites"]))
+                st.caption(_locale_text(T("r_reponses_comptees", m=indic["modalites"])))
 
         # ---- le chiffre en tête : score sur 10 ET en pourcentage de l'échelle --
         dispo = [v for v in scores.values() if v is not None]
@@ -409,17 +414,17 @@ def render():
                     + map_render.bulle("score APRI")
                     + T("r_deux_lectures_suite") + "</p>", unsafe_allow_html=True)
             else:
-                st.caption(T("r_agregat"))
+                st.caption(_locale_text(T("r_agregat")))
 
         petits = [s for s in sections if effectifs[s] < N_FRAGILE]
         if petits:
-            st.warning(T("r_petits", n=N_FRAGILE, liste=", ".join(petits)))
+            st.warning(_locale_text(T("r_petits", n=N_FRAGILE, liste=", ".join(petits))))
 
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc ambre">{T("r_bloc2")}</div>',
                     unsafe_allow_html=True)
         # ---------------------------------------------------------- carte
-        afficher = st.selectbox(T('r_colorier'), ['score', 'pourcentage'] if indic is not None else ['score'], format_func=lambda k: {'score': T('r_par_score'), 'pourcentage': T('r_par_brut')}[k], key=f'aff_{choix}_{pop}_{i18n.get_lang()}')
+        afficher = st.selectbox(_locale_text(T('r_colorier')), ['score', 'pourcentage'] if indic is not None else ['score'], format_func=_locale_formatter(lambda k: {'score': T('r_par_score'), 'pourcentage': T('r_par_brut')}[k]), key=f'aff_{choix}_{pop}_{i18n.get_lang()}')
 
         if afficher == "score":
             valeurs = scores
@@ -485,18 +490,18 @@ def render():
                 for c, lab in map_render.legend_items(seuils_ret, polarite, unite))
 
         components.html(
-            f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+            _locale_html(f"""<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
                             background:#ffffff">
               <div style="margin:0 0 8px"><span style="font-size:11.5px;color:#898781;
                 letter-spacing:.05em;margin-right:14px">{"SCORE APRI" if rampe else "SEUILS"}</span>{legende}</div>
               {svg}
-            </div>""",
+            </div>"""),
             height=hauteur + 46, scrolling=False)
 
         if afficher == "score":
-            st.caption(T("r_legende_apri"))
+            st.caption(_locale_text(T("r_legende_apri")))
         else:
-            st.caption(map_render.polarity_caption(polarite))
+            st.caption(_locale_text(map_render.polarity_caption(polarite)))
 
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc vert">{T("r_bloc3")}</div>',
@@ -520,12 +525,12 @@ def render():
             [(s, valeurs[s]) for s in ordre], vmax=vmax, unite=unite, colors=couleurs,
             annotations=annot)
         components.html(
-            f'<div style="background:#ffffff;font-family:system-ui,-apple-system,'
-            f"'Segoe UI',sans-serif\">{bars}</div>",
+            _locale_html(f'<div style="background:#ffffff;font-family:system-ui,-apple-system,'
+            f"'Segoe UI',sans-serif\">{bars}</div>"),
             height=len(ordre) * 28 + 26, scrolling=False)
 
         if afficher == "score":
-            st.caption(T("r_rappel_echelle"))
+            st.caption(_locale_text(T("r_rappel_echelle")))
 
     # ---------------------------------------------------------- radars
     with st.container(border=True):
@@ -537,7 +542,7 @@ def render():
         st.markdown(f'<div class="titre-bloc">{T("r_bloc5")}</div>',
                     unsafe_allow_html=True)
         # ---------------------------------------------------------- comparaison
-        st.caption(T("r_comparaison"))
+        st.caption(_locale_text(T("r_comparaison")))
         lignes_tab = []
         for sec in sections:
             bloc = vent["sections"][sec]
@@ -563,17 +568,17 @@ def render():
         st.dataframe(df, use_container_width=True, hide_index=True)
 
         st.download_button(
-            T("r_telecharger_csv"),
+            _locale_text(T("r_telecharger_csv")),
             data=df.to_csv(index=False).encode("utf-8-sig"),
             file_name=f"resilience_{titre[:30].replace(' ', '_')}.csv",
             mime="text/csv")
 
     # ---------------------------------------------------------- réserves
-    with st.expander(T("r_reserves_titre")):
+    with st.expander(_locale_text(T("r_reserves_titre"))):
         non_calc = [r for r in res if r["calculable"] == "non"]
         st.markdown(T("r_reserves_texte", n_score=len(scorables), n_non=len(non_calc)))
         if indic is not None:
             st.markdown(T("r_reserve_indic") + indic["note"])
 
-    st.caption(T("r_source"))
-    st.caption(T("credit"))
+    st.caption(_locale_text(T("r_source")))
+    st.caption(_locale_text(T("credit")))

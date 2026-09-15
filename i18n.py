@@ -8,13 +8,14 @@ d'une langue à l'autre.
 """
 
 import streamlit as st
+from traductions import text as _locale_text
 
 # Marqueur de version du dictionnaire. app.py le compare à ce qu'il attend :
 # sans cela, un i18n.py resté sur une version antérieure ne se voit pas, il
 # affiche simplement le nom des clés manquantes au milieu de la page.
 VERSION = "2026-08-18-cadre"
 
-LANGUES = {"en": "English", "fr": "Français"}
+LANGUES = {"en": "English", "fr": "Français", "es": "Español", "ht": "Kreyòl ayisyen"}
 DEFAUT = "en"
 
 
@@ -31,7 +32,7 @@ def T(cle, **kw):
     entree = DICO.get(cle)
     if entree is None:
         return cle
-    texte = entree.get(get_lang()) or entree.get(DEFAUT) or cle
+    texte = _locale_text(entree.get(get_lang()) or entree.get(DEFAUT) or cle)
     return texte.format(**kw) if kw else texte
 
 
@@ -2945,12 +2946,12 @@ TERMES = {
 def terme(cle):
     """Le mot lui-même, dans la langue courante."""
     e = TERMES.get(cle)
-    return (e.get(get_lang()) or e.get(DEFAUT)) if e else cle
+    return _locale_text(e.get(get_lang()) or e.get(DEFAUT)) if e else cle
 
 
 def definition(cle):
     e = GLOSSAIRE.get(cle)
-    return (e.get(get_lang()) or e.get(DEFAUT)) if e else ""
+    return _locale_text(e.get(get_lang()) or e.get(DEFAUT)) if e else ""
 
 
 # ---------------------------------------------------------------------------
@@ -3163,8 +3164,8 @@ def notion(cle):
     if not e:
         return None, None
     lg = get_lang()
-    return (e.get(f"terme_{lg}") or e.get("terme_en"),
-            e.get(lg) or e.get("en"))
+    return (_locale_text(e.get(f"terme_{lg}") or e.get("terme_en")),
+            _locale_text(e.get(lg) or e.get("en")))
 
 
 # ----------------------------------------------------------------------
@@ -3221,10 +3222,10 @@ _REPONSES_ORDRE = sorted(REPONSES_EN, key=len, reverse=True)
 
 def reponse(texte):
     """Traduit les options fermées d'une réponse d'enquête, en anglais seulement."""
-    if texte is None or get_lang() != "en":
+    if texte is None or get_lang() == "fr":
         return texte
     out = str(texte)
     for fr in _REPONSES_ORDRE:
         if fr in out:
-            out = out.replace(fr, REPONSES_EN[fr])
+            out = out.replace(fr, _locale_text(REPONSES_EN[fr]))
     return out

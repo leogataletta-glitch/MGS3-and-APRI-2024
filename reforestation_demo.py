@@ -1,18 +1,20 @@
 """Illustrative feedback system; no fitted coefficients or survey scores."""
+
+from traductions import text as _locale_text
 import json
 
 
 def document(fr=True):
     words = {
-        "title": "Reboiser : agir sur tout le système" if fr else "Reforestation: act on the whole system",
-        "intro": "Réglez les leviers, puis lancez les vagues. Les effets sur la forêt arrivent avec retard." if fr else "Adjust the levers, then start the waves. Forest recovery takes time.",
-        "note": "Simulation pédagogique : niveaux relatifs, sans prévision locale ni lien avec les scores IRLA. Chaque vague représente une étape, pas une année." if fr else "Educational simulation: relative levels, not a local forecast or IRLA scores. Each wave is a step, not a year.",
+        "title": _locale_text("Reboiser : agir sur tout le système" if fr else "Reforestation: act on the whole system"),
+        "intro": _locale_text("Réglez les leviers, puis lancez les vagues. Les effets sur la forêt arrivent avec retard." if fr else "Adjust the levers, then start the waves. Forest recovery takes time."),
+        "note": _locale_text("Simulation pédagogique : niveaux relatifs, sans prévision locale ni lien avec les scores IRLA. Chaque vague représente une étape, pas une année." if fr else "Educational simulation: relative levels, not a local forecast or IRLA scores. Each wave is a step, not a year."),
         "controls": ["Plantation", "Revenus alternatifs", "Alternatives au bois-énergie", "Gestion des animaux en divagation"] if fr else ["Tree planting", "Alternative livelihoods", "Alternatives to fuelwood", "Management of roaming livestock"],
         "nodes": ["Revenus des ménages", "Prélèvements de bois", "Pression des animaux", "Survie des jeunes arbres", "Couvert forestier", "Sols et ressources"] if fr else ["Household income", "Wood harvesting", "Livestock pressure", "Young tree survival", "Forest cover", "Soils and resources"],
-        "alone": "Planter seul" if fr else "Planting alone", "together": "Agir ensemble" if fr else "Combined action",
-        "play": "Lancer les vagues" if fr else "Start waves", "pause": "Pause", "step": "Une vague" if fr else "One wave", "reset": "Recommencer" if fr else "Reset",
-        "wave": "Vague" if fr else "Wave", "chart": "Évolution du couvert forestier · niveau relatif / 100" if fr else "Forest cover over time · relative level / 100",
-        "legend": "+ : évolue dans le même sens · − : évolue en sens inverse · pointillés : effet retardé" if fr else "+: moves in the same direction · −: moves in the opposite direction · dashed: delayed effect",
+        "alone": _locale_text("Planter seul" if fr else "Planting alone"), "together": _locale_text("Agir ensemble" if fr else "Combined action"),
+        "play": _locale_text("Lancer les vagues" if fr else "Start waves"), "pause": "Pause", "step": _locale_text("Une vague" if fr else "One wave"), "reset": _locale_text("Recommencer" if fr else "Reset"),
+        "wave": _locale_text("Vague" if fr else "Wave"), "chart": _locale_text("Évolution du couvert forestier · niveau relatif / 100" if fr else "Forest cover over time · relative level / 100"),
+        "legend": _locale_text("+ : évolue dans le même sens · − : évolue en sens inverse · pointillés : effet retardé" if fr else "+: moves in the same direction · −: moves in the opposite direction · dashed: delayed effect"),
         "loops": ["Revenus → moins de prélèvements → arbres → sols → revenus : une boucle qui peut renforcer la restauration.", "La plantation augmente les jeunes arbres ; le bois-énergie et les animaux peuvent annuler ce gain.", "À mesure que la forêt se reconstitue, le bois disponible peut relancer les prélèvements : un frein à surveiller."] if fr else ["Income → less harvesting → trees → soils → income: a loop that can reinforce recovery.", "Planting adds young trees; fuelwood harvesting and livestock can cancel that gain.", "As forests recover, available wood can encourage harvesting again: a balancing pressure to watch."],
     }
     return HTML.replace("__WORDS__", json.dumps(words, ensure_ascii=False)).replace("__LANG__", "fr" if fr else "en")

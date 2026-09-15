@@ -27,6 +27,8 @@ calcule dix-sept à ce jour, tous satellitaires. L'écart est affiché, calculé
 depuis `resultats.json`, et non commenté à l'avantage du dispositif.
 """
 
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -178,6 +180,7 @@ STYLE = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -207,12 +210,13 @@ def _contenu(lang="fr"):
     une traduction absente laisse voir le texte d'origine, ce qui est
     corrigible, plutôt qu'un écran vide.
     """
-    if lang == "en":
+    if lang in ("en", "es", "ht"):
         p = _trouver("cadre_environnement_en.json")
         if p:
             try:
                 with open(p, encoding="utf-8") as f:
-                    return json.load(f)
+                    from traductions import display_tree
+                    return display_tree(json.load(f), lang)
             except Exception:
                 pass
     p = _trouver("cadre_environnement.json")
@@ -339,7 +343,7 @@ def render(complement=None):
     # data », et la colonne de menu la rubrique.
 
     if not c:
-        st.info(T("env_absent"))
+        st.info(_locale_text(T("env_absent")))
         return
 
     # L'ENTREE EN MATIERE A ETE RETIREE. Elle occupait le haut de l'onglet
@@ -444,7 +448,7 @@ def render_enquete():
         + "".join(f'<li>{_e(p)}</li>' for p in c["menages"]) + '</ul>',
         unsafe_allow_html=True)
 
-    with st.expander(T("env_v_terrain")):
+    with st.expander(_locale_text(T("env_v_terrain"))):
         st.markdown(f'<p class="ev-x">{_e(c["intro"]["bareme"])}</p>',
                     unsafe_allow_html=True)
         _bloc_terrain(c)
@@ -465,23 +469,23 @@ def render_satellite():
     st.markdown(f'<div class="ev-etage">{_e(T("env_s3"))}</div>',
                 unsafe_allow_html=True)
 
-    with st.expander(T("env_v_veg")):
+    with st.expander(_locale_text(T("env_v_veg"))):
         st.markdown(_tableau(c["vegetation"]), unsafe_allow_html=True)
 
-    with st.expander(T("env_v_frag")):
+    with st.expander(_locale_text(T("env_v_frag"))):
         st.markdown(f'<p class="ev-x">{_e(c["intro"]["fragmentation"])}</p>',
                     unsafe_allow_html=True)
         st.markdown(_tableau(c["fragmentation"]), unsafe_allow_html=True)
 
-    with st.expander(T("env_v_conn")):
+    with st.expander(_locale_text(T("env_v_conn"))):
         st.markdown(f'<p class="ev-x">{_e(c["intro"]["connectivite"])}</p>',
                     unsafe_allow_html=True)
         st.markdown(_tableau(c["connectivite"]), unsafe_allow_html=True)
 
-    with st.expander(T("env_v_cot")):
+    with st.expander(_locale_text(T("env_v_cot"))):
         _bloc_cotier(c)
 
-    with st.expander(T("env_v_hydro")):
+    with st.expander(_locale_text(T("env_v_hydro"))):
         st.markdown(f'<p class="ev-x">'
                     f'{_e(c["intro"]["pression"])}</p>'
                     '<ul class="ev-puce" style="margin-top:8px">'

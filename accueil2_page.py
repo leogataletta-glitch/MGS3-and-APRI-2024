@@ -21,6 +21,8 @@ rubriques réelles du menu. Une page d'essai qui afficherait des chiffres
 d'illustration ne permettrait de juger que du décor.
 """
 
+from traductions import text as _locale_text
+
 import base64
 import json
 import os
@@ -383,6 +385,7 @@ STYLE = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -551,7 +554,7 @@ def render():
     # sur trois lignes, l'anglais sur deux — et une position comptée depuis le
     # haut aurait glissé de l'une à l'autre.
     with st.container(key="a2_cta"):
-        if st.button(T("a2_cta") + " ↗", key="a2_cta_b"):
+        if st.button(_locale_text(T("a2_cta") + " ↗"), key="a2_cta_b"):
             st.session_state["app_mode"] = "dimensions"
             st.rerun()
 
@@ -575,14 +578,14 @@ def render():
     fr = i18n.get_lang() == 'fr'
     watercolor = _photo_b64(prefere='aquarelles_apri_cimes.png')
     entries = [
-        ('methodologie', 'Cadre de résilience' if fr else 'Resilience framework',
-         'Comprendre l’approche APRI' if fr else 'Understand the APRI approach',
+        ('methodologie', _locale_text('Cadre de résilience' if fr else 'Resilience framework'),
+         _locale_text('Comprendre l’approche APRI' if fr else 'Understand the APRI approach'),
          watercolor, '0% 0%', 'Aquarelle du paysage agricole'),
-        ('dimensions', 'Résultats' if fr else 'Results', T('a2_p1_x'),
+        ('dimensions', _locale_text('Résultats' if fr else 'Results'), T('a2_p1_x'),
          watercolor, '100% 0%', 'Aquarelle de la vallée de la Voldrogue'),
-        ('boucles', 'Boucles de rétroaction' if fr else 'Feedback loops', T('a2_p3_x'),
+        ('boucles', _locale_text('Boucles de rétroaction' if fr else 'Feedback loops'), T('a2_p3_x'),
          watercolor, '0% 100%', 'Aquarelle de la baie de Corail'),
-        ('actions', 'Fiches d’intervention' if fr else 'Intervention profiles', T('a2_p4_x'),
+        ('actions', _locale_text('Fiches d’intervention' if fr else 'Intervention profiles'), T('a2_p4_x'),
          watercolor, '100% 100%', 'Aquarelle du canal d’irrigation'),
     ]
     st.markdown("""<style>
@@ -655,6 +658,6 @@ def render():
                                     f'<image href="data:image/png;base64,{photo}" width="1536" height="1024"/>'
                                     '</svg></svg></div>', unsafe_allow_html=True)
                                 action = '↗'
-                                if st.button(f'{title}  \n*{detail}*  \n**{action}**',key=f'a2_b_{code}',use_container_width=True):
+                                if st.button(_locale_text(f'{title}  \n*{detail}*  \n**{action}**'),key=f'a2_b_{code}',use_container_width=True):
                                     st.session_state['app_mode']=code
                                     st.rerun()

@@ -32,6 +32,12 @@ exactement à partir des réponses individuelles (voir `croisement_moteur`). Il
 se compare d'un groupe à l'autre ; il ne se compare pas au score APRI publié.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import numpy as np
 import streamlit as st
 import streamlit.components.v1 as components
@@ -291,6 +297,7 @@ STYLE = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -355,7 +362,7 @@ def _constructeur(cat, cle, couleur, titre):
         f'<div style="font-size:14px;font-weight:700;color:{couleur};'
         f'margin:2px 0 6px">{_e(titre)}</div>', unsafe_allow_html=True)
 
-    liaison = st.selectbox(T('cx_liaison'), ['ET', 'OU'], format_func=lambda k: T('cx_et') if k == 'ET' else T('cx_ou'), key=f'cx_li_{cle}_{i18n.get_lang()}')
+    liaison = st.selectbox(_locale_text(T('cx_liaison')), ['ET', 'OU'], format_func=_locale_formatter(lambda k: T('cx_et') if k == 'ET' else T('cx_ou')), key=f'cx_li_{cle}_{i18n.get_lang()}')
 
     a_retirer = None
     for k, cl in enumerate(clauses):
@@ -365,8 +372,8 @@ def _constructeur(cat, cle, couleur, titre):
             with c1:
                 courant = cl.get("libelle")
                 idx = opts.index(courant) if courant in opts else 0
-                choix = st.selectbox(T("cx_variable"), opts, index=idx,
-                                     key=f"cx_v_{cle}_{k}_{i18n.get_lang()}")
+                choix = st.selectbox(_locale_text(T("cx_variable")), opts, index=idx,
+                                     key=f"cx_v_{cle}_{k}_{i18n.get_lang()}", format_func=_locale_formatter(str))
             typ, ref = meta[choix]
             # Changer de variable vide les valeurs cochées : elles
             # appartenaient à l'ancienne, et les garder ferait disparaître la
@@ -378,29 +385,29 @@ def _constructeur(cat, cle, couleur, titre):
                            "modalites": [], "valeurs": []})
             with c2:
                 cl["non"] = st.selectbox(
-                    T("cx_sens"), [False, True],
+                    _locale_text(T("cx_sens")), [False, True],
                     index=1 if cl.get("non") else 0,
-                    format_func=lambda b: T("cx_nest_pas") if b
-                    else T("cx_est"),
+                    format_func=_locale_formatter(lambda b: T("cx_nest_pas") if b
+                    else T("cx_est")),
                     key=f"cx_n_{cle}_{k}_{i18n.get_lang()}")
             with c3:
-                if st.button(T("cx_supprimer"), key=f"cx_del_{cle}_{k}",
+                if st.button(_locale_text(T("cx_supprimer")), key=f"cx_del_{cle}_{k}",
                              use_container_width=True):
                     a_retirer = k
 
             if typ == "groupe":
                 vals = dict(M.REGISTRES)[ref]
                 cl["valeurs"] = st.multiselect(
-                    T("cx_valeurs"), vals, default=[v for v in cl.get("valeurs", [])
+                    _locale_text(T("cx_valeurs")), vals, default=[v for v in cl.get("valeurs", [])
                                                     if v in vals],
-                    format_func=_lib_valeur,
+                    format_func=_locale_formatter(_lib_valeur),
                     key=f"cx_m_{cle}_{k}_{ref}_{i18n.get_lang()}",
                     placeholder=T("cx_choisir"), help=T("cx_valeurs_aide"))
             else:
                 q = next(x for x in cat["questions"] if x["i"] == ref)
                 cl["modalites"] = st.multiselect(
-                    T("cx_valeurs"), q["modalites"],
-                    format_func=libelles_enquete.modalite,
+                    _locale_text(T("cx_valeurs")), q["modalites"],
+                    format_func=_locale_formatter(libelles_enquete.modalite),
                     default=[m for m in cl.get("modalites", [])
                              if m in q["modalites"]],
                     key=f"cx_m_{cle}_{k}_{ref}_{i18n.get_lang()}",
@@ -409,7 +416,7 @@ def _constructeur(cat, cle, couleur, titre):
             seule, _ = M.evaluer(cat, [cl], "ET")
             if (cl.get("modalites") or cl.get("valeurs")):
                 nb = int(seule.sum())
-                st.caption(T("cx_seule", n=nb, p=_f(100 * nb / cat["n"])))
+                st.caption(_locale_text(T("cx_seule", n=nb, p=_f(100 * nb / cat["n"]))))
 
     if a_retirer is not None:
         clauses.pop(a_retirer)
@@ -417,21 +424,21 @@ def _constructeur(cat, cle, couleur, titre):
 
     c1, c2, _ = st.columns([1.3, 1, 3])
     with c1:
-        if st.button(T("cx_ajouter"), key=f"cx_add_{cle}",
+        if st.button(_locale_text(T("cx_ajouter")), key=f"cx_add_{cle}",
                      use_container_width=True,
                      disabled=len(clauses) >= MAX_CLAUSES):
             clauses.append({"libelle": None, "type": None, "modalites": [],
                             "valeurs": [], "non": False})
             st.rerun()
     with c2:
-        if st.button(T("cx_vider"), key=f"cx_clr_{cle}",
+        if st.button(_locale_text(T("cx_vider")), key=f"cx_clr_{cle}",
                      use_container_width=True, disabled=not clauses):
             st.session_state[f"cx_cl_{cle}"] = []
             st.rerun()
 
     actives = [c for c in clauses if c.get("modalites") or c.get("valeurs")]
     if not actives:
-        st.caption(T("cx_vide"))
+        st.caption(_locale_text(T("cx_vide")))
     masque, _ = M.evaluer(cat, actives, liaison)
     return masque, actives, liaison
 
@@ -549,7 +556,7 @@ def render():
         f'text-transform:uppercase;margin:2px 0 0;font-weight:600">'
         f'{T("cx_sous_titre")}</p>', unsafe_allow_html=True)
     if not cat:
-        st.error(T("cx_absent"))
+        st.error(_locale_text(T("cx_absent")))
         return
 
     # ---- l'explorateur : question, réponse, ventilation, format --------
@@ -557,12 +564,12 @@ def render():
     st.markdown('<div style="height:26px"></div>', unsafe_allow_html=True)
 
     couv = M.couverture(cat)
-    st.info(T("cx_intro", n=len(cat["questions"])))
+    st.info(_locale_text(T("cx_intro", n=len(cat["questions"]))))
     _terr = cat.get("territoriaux") or []
-    st.warning(T("cx_avert_indice",
+    st.warning(_locale_text(T("cx_avert_indice",
                  k=len(cat["indicateurs"]) + len(_terr),
                  t=cat["n_scores"], r=len(_terr),
-                 p=_f(100 * couv["global"], 0)))
+                 p=_f(100 * couv["global"], 0))))
 
     tout = np.ones(cat["n"], dtype=bool)
     lignes_e = M.profil(cat, tout)
@@ -572,7 +579,7 @@ def render():
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc">{T("cx_zone1")}</div>',
                     unsafe_allow_html=True)
-        duo = st.toggle(T("cx_comparer"), key="cx_duo")
+        duo = st.toggle(_locale_text(T("cx_comparer")), key="cx_duo")
         if duo:
             ca, cb = st.columns(2)
             with ca:
@@ -587,7 +594,7 @@ def render():
 
     n_a = int(m_a.sum())
     if n_a == 0:
-        st.error(T("cx_aucun"))
+        st.error(_locale_text(T("cx_aucun")))
         return
 
     lignes_a = M.profil(cat, m_a)
@@ -627,7 +634,7 @@ def render():
             unsafe_allow_html=True)
 
         if n_a < M.N_FRAGILE:
-            st.warning(T("cx_fragile", n=M.N_FRAGILE))
+            st.warning(_locale_text(T("cx_fragile", n=M.N_FRAGILE)))
 
         # L'écart au produit des taux : ce qui distingue un profil cumulé
         # d'une addition de problèmes indépendants.
@@ -638,9 +645,9 @@ def render():
                 parts.append(m.mean())
             attendu = 100 * float(np.prod(parts))
             obs = 100 * n_a / cat["n"]
-            st.caption(T("cx_attendu", p=_f(attendu), o=_f(obs),
+            st.caption(_locale_text(T("cx_attendu", p=_f(attendu), o=_f(obs),
                          mot=T("cx_davantage") if obs > attendu
-                         else T("cx_moins")))
+                         else T("cx_moins"))))
 
     # -------------------------------------------------------- les barres
     with st.container(border=True):
@@ -654,18 +661,18 @@ def render():
             f'{_e(T("cx_groupe_b") if ag_b else T("cx_ensemble"))}</span>'
             f'</div>' + _barres_dimensions(ag_a, ag_ens, ag_b),
             unsafe_allow_html=True)
-        st.caption(T("cx_barres_note"))
+        st.caption(_locale_text(T("cx_barres_note")))
 
     # ---------------------------------------------------------- la carte
     sections = M.par_section(cat, m_a)
     with st.container(border=True):
         st.markdown(f'<div class="titre-bloc vert">{T("cx_carte")}</div>',
                     unsafe_allow_html=True)
-        mesure = st.selectbox(T('cx_carte_mesure'), ['section', 'n', 'groupe', 'score'], format_func=lambda k: {'n': T('cx_m_n'), 'groupe': T('cx_m_groupe'), 'section': T('cx_m_section'), 'score': T('cx_m_score')}[k], key=f'cx_carte_{i18n.get_lang()}')
+        mesure = st.selectbox(_locale_text(T('cx_carte_mesure')), ['section', 'n', 'groupe', 'score'], format_func=_locale_formatter(lambda k: {'n': T('cx_m_n'), 'groupe': T('cx_m_groupe'), 'section': T('cx_m_section'), 'score': T('cx_m_score')}[k]), key=f'cx_carte_{i18n.get_lang()}')
         html, h = _carte(cat, sections, mesure)
         if html:
-            components.html(html, height=h + 46, scrolling=False)
-        st.caption(T("cx_carte_note"))
+            components.html(_locale_html(html), height=h + 46, scrolling=False)
+        st.caption(_locale_text(T("cx_carte_note")))
         st.markdown(f'<div class="cx-lab">{_e(T("cx_tableau"))}</div>'
                     + _tableau_sections(sections), unsafe_allow_html=True)
 
@@ -693,11 +700,11 @@ def render():
                     f'{VERT if (d or 0) > 0 else ROUGE if (d or 0) < 0 else ENCRE3}">'
                     f'{_f(d, 2, True)}</td></tr>')
             st.markdown("".join(li) + "</table>", unsafe_allow_html=True)
-            st.caption(T("cx_comp_note") + f'  ·  A : {n_a} · B : {n_b} '
-                       + T("cx_repondants"))
+            st.caption(_locale_text(T("cx_comp_note") + f'  ·  A : {n_a} · B : {n_b} '
+                       + T("cx_repondants")))
 
     # ------------------------------------------------ indicateur par indicateur
-    with st.expander(T("cx_indicateurs")):
+    with st.expander(_locale_text(T("cx_indicateurs"))):
         st.markdown(_tableau_indicateurs(lignes_a, lignes_e),
                     unsafe_allow_html=True)
 
@@ -707,11 +714,11 @@ def render():
         with st.container(border=True):
             st.markdown(f'<div class="titre-bloc">{T("cx_sugg")}</div>',
                         unsafe_allow_html=True)
-            st.caption(T("cx_sugg_note"))
+            st.caption(_locale_text(T("cx_sugg_note")))
             cols = st.columns(min(len(manquants), 5))
             for col, nom in zip(cols, manquants[:5]):
                 with col:
-                    if st.button(T("cx_sugg_ajouter", v=T("cx_r_" + nom)),
+                    if st.button(_locale_text(T("cx_sugg_ajouter", v=T("cx_r_" + nom))),
                                  key=f"cx_sg_{nom}", use_container_width=True):
                         vals = dict(M.REGISTRES)[nom]
                         # La valeur la plus fréquente d'abord : elle donne un

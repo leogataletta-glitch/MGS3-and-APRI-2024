@@ -57,6 +57,8 @@ occupent un écran à eux seuls, et cet écran-là défile. C'est la seule
 exception, et elle est visible : la barre du bas le signale.
 """
 
+from traductions import component_html as _locale_html
+
 import streamlit as st
 import streamlit.components.v1 as components
 
@@ -733,4 +735,4 @@ def activer(cle):
             .replace("@@MOTS@@", json.dumps(mots, ensure_ascii=False))
             .replace("@@COUSSIN@@", str(COUSSIN))
             + f"\n<!-- {n} -->")
-    components.html(html, height=0, width=0)
+    components.html(_locale_html(html), height=0, width=0)

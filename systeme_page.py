@@ -47,6 +47,10 @@ revenu se voit en semaines — et il serait malhonnête de faire croire le
 contraire en mettant des dates sous les pas.
 """
 
+from traductions import component_html as _locale_html
+
+from traductions import text as _locale_text
+
 import json
 import os
 
@@ -163,6 +167,7 @@ for _c, _v in TEXTES.items():
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -528,7 +533,7 @@ def render(entete=True):
     lang = i18n.get_lang()
     d = _systeme(lang)
     if not d:
-        st.info(T("sy_absent"))
+        st.info(_locale_text(T("sy_absent")))
         return
 
     if entete:
@@ -545,5 +550,5 @@ def render(entete=True):
         f'color:{ENCRE2};line-height:1.6;margin:10px 0 8px;max-width:96ch;'
         f'text-align:left">{T("sy_intro")}</div>', unsafe_allow_html=True)
 
-    components.html(_html(d, lang), height=880, scrolling=False)
-    st.caption(T("sy_avert"))
+    components.html(_locale_html(_html(d, lang)), height=880, scrolling=False)
+    st.caption(_locale_text(T("sy_avert")))

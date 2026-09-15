@@ -39,6 +39,10 @@ découpages. Rien n'est recalculé ici, sauf le cas explicitement signalé de la
 combinaison de plusieurs filtres, qui n'existe dans aucun fichier.
 """
 
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
+
 import json
 import os
 import re
@@ -260,6 +264,7 @@ STYLE = """
 
 
 def _e(t):
+    t = _locale_text(t)
     return (str(t).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;"))
 
@@ -412,11 +417,11 @@ def _selecteur_population(cle):
     c1, c2 = st.columns([1.6, 1.6])
     with c1:
         reg = st.selectbox(
-            T("qr_pop"), [r for r, _v in REGISTRES],
-            format_func=lambda r: T("qr_r_" + r), key=f"qr_reg_{cle}")
+            _locale_text(T("qr_pop")), [r for r, _v in REGISTRES],
+            format_func=_locale_formatter(lambda r: T("qr_r_" + r)), key=f"qr_reg_{cle}")
     vals = dict(REGISTRES)[reg]
     with c2:
-        val = st.selectbox(T("qr_valeur"), vals, format_func=_lib,
+        val = st.selectbox(_locale_text(T("qr_valeur")), vals, format_func=_locale_formatter(_lib),
                            key=f"qr_val_{cle}_{reg}") if vals else None
     return val or "Total", reg
 
@@ -521,8 +526,8 @@ def _bloc_comparaison_question(groupes):
                 unsafe_allow_html=True)
     c1, c2, c3 = st.columns([3, 2, 1.6])
     with c1:
-        choix = st.selectbox(T("qr_quelle_q"), range(len(libs)),
-                             format_func=lambda i: libs[i], key="qr_bq")
+        choix = st.selectbox(_locale_text(T("qr_quelle_q")), range(len(libs)),
+                             format_func=_locale_formatter(lambda i: libs[i]), key="qr_bq")
     t, module = paires[choix]
     rows = t["rows"]
     ind = _par_question().get(_norm(t.get("question")))
@@ -535,10 +540,10 @@ def _bloc_comparaison_question(groupes):
                    if m.strip()}
     defaut = [r[0] for r in rows if _norm(r[0]) in voulues] or [rows[0][0]]
     with c2:
-        mods = st.multiselect(T("qr_quelle_m"), [r[0] for r in rows],
-                              default=defaut, key=f"qr_bm_{choix}")
+        mods = st.multiselect(_locale_text(T("qr_quelle_m")), [r[0] for r in rows],
+                              default=defaut, key=f"qr_bm_{choix}", format_func=_locale_formatter(str))
     with c3:
-        par = st.selectbox(T('qr_comparer'), ['groupe', 'localite'], format_func=lambda k: T('qr_par_' + k), key='qr_bpar')
+        par = st.selectbox(_locale_text(T('qr_comparer')), ['groupe', 'localite'], format_func=_locale_formatter(lambda k: T('qr_par_' + k)), key='qr_bpar')
     if not mods:
         return
     retenues = [r for r in rows if r[0] in mods]
@@ -551,7 +556,7 @@ def _bloc_comparaison_question(groupes):
 
     st.markdown(_barres({k: part(k) for k in cles}, part("Total"),
                         _polarite(ind)), unsafe_allow_html=True)
-    st.caption(T("qr_bar_note"))
+    st.caption(_locale_text(T("qr_bar_note")))
 
 
 # ---------------------------------------------------------------- section 2
@@ -638,22 +643,22 @@ def render(cle_dim, dimension):
         st.markdown(f'<div class="titre-bloc">{T("qr_s1")}</div>',
                     unsafe_allow_html=True)
         st.markdown(T("qr_s1_note"))
-        st.caption(T("qr_sens_note"))
+        st.caption(_locale_text(T("qr_sens_note")))
         if not groupes:
-            st.info(T("qr_aucune_q"))
+            st.info(_locale_text(T("qr_aucune_q")))
         else:
             cible, _reg = _selecteur_population("q")
             d = QD._charger()
-            st.caption(T("qr_base", n=(d["base_n"].get(cible) or 0),
+            st.caption(_locale_text(T("qr_base", n=(d["base_n"].get(cible) or 0),
                          c=_lib(cible) if cible != "Total"
-                         else T("qr_r_tous")))
-            cherche = (st.text_input(T("qr_chercher"), key=f"qr_ch_{cle_dim}",
+                         else T("qr_r_tous"))))
+            cherche = (st.text_input(_locale_text(T("qr_chercher")), key=f"qr_ch_{cle_dim}",
                                      placeholder="…") or "").strip().lower()
             html = _tableau_questions(groupes, cible, cherche)
             if html:
                 st.markdown(html, unsafe_allow_html=True)
             else:
-                st.info(T("qr_rien"))
+                st.info(_locale_text(T("qr_rien")))
 
     # -------------------------------------------- 1b · comparaison visuelle
     if groupes:
@@ -666,10 +671,10 @@ def render(cle_dim, dimension):
                     unsafe_allow_html=True)
         st.markdown(T("qr_s2_note"))
         if not lignes:
-            st.info(T("qr_aucun_ind"))
+            st.info(_locale_text(T("qr_aucun_ind")))
             return
 
-        combine = st.toggle(T("qr_combine"), key=f"qr_comb_{cle_dim}")
+        combine = st.toggle(_locale_text(T("qr_combine")), key=f"qr_comb_{cle_dim}")
         recalcules = None
         if combine:
             # Plusieurs registres à la fois : une valeur par registre au plus,
@@ -679,7 +684,7 @@ def render(cle_dim, dimension):
             for col, (reg, vals) in zip(cols, REGISTRES[1:]):
                 with col:
                     v = st.selectbox(
-                        T("qr_r_" + reg), ["—"] + vals, format_func=_lib,
+                        _locale_text(T("qr_r_" + reg)), ["—"] + vals, format_func=_locale_formatter(_lib),
                         key=f"qr_cb_{cle_dim}_{reg}")
                     if v != "—":
                         choisies.append(v)
@@ -687,12 +692,12 @@ def render(cle_dim, dimension):
                 recalcules, n_sg, cat = _scores_combines(lignes, choisies)
                 if cat:
                     c = __import__("croisement_moteur").couverture(cat)
-                    st.warning(T("qr_combine_note",
+                    st.warning(_locale_text(T("qr_combine_note",
                                  k=(len(cat["indicateurs"])
                                     + len(cat.get("territoriaux") or [])),
-                                 p=_f(100 * c["global"], 0)))
-                    st.caption(T("qr_combine_n", n=n_sg,
-                                 p=_f(100 * n_sg / cat["n"])))
+                                 p=_f(100 * c["global"], 0))))
+                    st.caption(_locale_text(T("qr_combine_n", n=n_sg,
+                                 p=_f(100 * n_sg / cat["n"]))))
             cible = "Total"
         else:
             cible, _r = _selecteur_population("i")
@@ -706,14 +711,14 @@ def render(cle_dim, dimension):
                     unsafe_allow_html=True)
         c1, c2 = st.columns([3, 1.6])
         with c1:
-            k = st.selectbox(T("qr_quel_i"), range(len(lignes)),
-                             format_func=lambda i: f'L{lignes[i]["ligne"]} · '
-                             f'{_nom_indic(lignes[i])}',
+            k = st.selectbox(_locale_text(T("qr_quel_i")), range(len(lignes)),
+                             format_func=_locale_formatter(lambda i: f'L{lignes[i]["ligne"]} · '
+                             f'{_nom_indic(lignes[i])}'),
                              key=f"qr_bi_{cle_dim}")
         with c2:
-            par = st.selectbox(T('qr_comparer'), ['groupe', 'localite'], format_func=lambda x: T('qr_par_' + x), key=f'qr_bp_{cle_dim}')
+            par = st.selectbox(_locale_text(T('qr_comparer')), ['groupe', 'localite'], format_func=_locale_formatter(lambda x: T('qr_par_' + x)), key=f'qr_bp_{cle_dim}')
         sc = lignes[k].get("scores_corriges") or {}
         cles = GROUPES if par == "groupe" else SECTIONS
         st.markdown(_barres({c: sc.get(c) for c in cles}, sc.get("Total"), 1,
                             unite="", dec=1), unsafe_allow_html=True)
-        st.caption(T("qr_bar_note2"))
+        st.caption(_locale_text(T("qr_bar_note2")))

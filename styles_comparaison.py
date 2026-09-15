@@ -1,4 +1,8 @@
 """Styles facultatifs : le rendu historique reste le choix par défaut."""
+
+from traductions import formatter as _locale_formatter
+
+from traductions import text as _locale_text
 import html
 import streamlit as st
 import i18n
@@ -31,9 +35,9 @@ def selecteur(prefix):
         .st-key-zone_nav [data-testid="stExpander"] summary p {
             background:#fff!important;color:#123d2c!important;}
         </style>''', unsafe_allow_html=True)
-    with st.expander("Changer le style" if fr else "Change style"):
+    with st.expander(_locale_text("Changer le style" if fr else "Change style")):
         st.session_state[cle] = choix()
-        st.selectbox('Style visuel' if fr else 'Visual style', [1, 3], format_func=labels.get, key=cle, on_change=_changer, args=(cle,))
+        st.selectbox(_locale_text('Style visuel' if fr else 'Visual style'), [1, 3], format_func=_locale_formatter(labels.get), key=cle, on_change=_changer, args=(cle,))
 
 
 def appliquer():
@@ -110,35 +114,35 @@ def accueil():
         background-image:linear-gradient(90deg,{dark}ee,{dark}99),url('data:image/jpeg;base64,{sea}');
         background-size:cover;background-position:center 60%;}}
         </style>""", unsafe_allow_html=True)
-    title = ("Des paysages vivants.<br>Des populations<br>plus résilientes." if fr else
-             "Living landscapes.<br>More resilient<br>communities.")
+    title = (_locale_text("Des paysages vivants.<br>Des populations<br>plus résilientes." if fr else
+             "Living landscapes.<br>More resilient<br>communities."))
     inst = e(T("a2_inst")).replace("|", "<br>")
     st.markdown(f'''<div class="cmp-hero" style="background-color:{dark};
         background-image:linear-gradient(90deg,{dark}e6,{dark}44),url('data:image/jpeg;base64,{river}')">
         <div class="cmp-brand"><img src="data:image/png;base64,{assets.EMBLEME_APRI}" alt="APRI"><span>{inst}</span></div>
         <div class="cmp-title">{title}</div><p class="cmp-intro">{e(T('a2_intro'))}</p>
-        <div class="cmp-credit">{'Vallée de la Voldrogue · Grand’Anse · Haïti, 2024' if fr else 'Voldrogue valley · Grand’Anse · Haiti, 2024'}</div></div>''', unsafe_allow_html=True)
+        <div class="cmp-credit">{_locale_text('Vallée de la Voldrogue · Grand’Anse · Haïti, 2024' if fr else 'Voldrogue valley · Grand’Anse · Haiti, 2024')}</div></div>''', unsafe_allow_html=True)
     with st.container(key="cmp_cta"):
-        st.button(T("a2_cta") + " ↗", key="cmp_results", on_click=_go, args=("dimensions",))
+        st.button(_locale_text(T("a2_cta") + " ↗"), key="cmp_results", on_click=_go, args=("dimensions",))
     with st.container(key="cmp_discover"):
-        st.markdown('<div class="cmp-heading">' + ("Comprendre les liens<br>qui façonnent un territoire." if fr else
-                    "Understand the connections<br>that shape a landscape.") + '</div>', unsafe_allow_html=True)
+        st.markdown('<div class="cmp-heading">' + (_locale_text("Comprendre les liens<br>qui façonnent un territoire." if fr else
+                    "Understand the connections<br>that shape a landscape.")) + '</div>', unsafe_allow_html=True)
         cols = st.columns(3)
-        entries = [(river, "Les paysages" if fr else "Landscapes", "accueil"),
-                   (sea, "Les populations" if fr else "Communities", "dimensions"),
-                   (river, "La résilience" if fr else "Resilience", "boucles")]
+        entries = [(river, _locale_text("Les paysages" if fr else "Landscapes"), "accueil"),
+                   (sea, _locale_text("Les populations" if fr else "Communities"), "dimensions"),
+                   (river, _locale_text("La résilience" if fr else "Resilience"), "boucles")]
         for i, (col, (photo, label, mode)) in enumerate(zip(cols, entries)):
             with col:
                 st.markdown(f'<div class="cmp-photo" style="background-image:url(\'data:image/jpeg;base64,{photo}\');background-position:{20+i*30}% center"></div>', unsafe_allow_html=True)
-                st.button(label + " ↗", key=f"cmp_tile_{i}", on_click=_go, args=(mode,), use_container_width=True)
+                st.button(_locale_text(label + " ↗"), key=f"cmp_tile_{i}", on_click=_go, args=(mode,), use_container_width=True)
     with st.container(key="cmp_actions"):
-        st.markdown('<div class="cmp-heading">' + ("De la connaissance<br>aux possibilités d’action." if fr else
-                    "From understanding<br>to opportunities for action.") + '</div>', unsafe_allow_html=True)
+        st.markdown('<div class="cmp-heading">' + (_locale_text("De la connaissance<br>aux possibilités d’action." if fr else
+                    "From understanding<br>to opportunities for action.")) + '</div>', unsafe_allow_html=True)
         cols = st.columns(3)
         for col, (mode, title_key, text_key) in zip(cols, [("dimensions", "a2_p1_t", "a2_p1_x"),
                   ("boucles", "a2_p3_t", "a2_p3_x"), ("actions", "a2_p4_t", "a2_p4_x")]):
             with col:
-                st.button(f'{T(title_key)}  \n*{T(text_key)}*  \n↗', key=f"cmp_action_{mode}",
+                st.button(_locale_text(f'{T(title_key)}  \n*{T(text_key)}*  \n↗'), key=f"cmp_action_{mode}",
                           on_click=_go, args=(mode,), use_container_width=True)
     menages, sections = home._chiffres()
     stats = [(home._fmt(menages) + "+" if menages else "1 200+", T("a2_c1_x")),
