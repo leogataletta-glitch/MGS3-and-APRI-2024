@@ -36,7 +36,7 @@ def profile_candidates(cat, dims=None, combination='mixed'):
             for labels in itertools.product(*[list(regs[d][0]) for d in ds]):
                 mask=base.copy()
                 for d,label in zip(ds,labels):mask &= regs[d][0][label]
-                yield dict(question='',labels=labels,mask=mask,base=base)
+                yield dict(question='',labels=labels,dims=ds,mask=mask,base=base)
 
 
 def rank_family(cat,y,base,items):
@@ -52,8 +52,16 @@ def rank_family(cat,y,base,items):
         # Exclude tautologies/duplicates of the selected outcome.
         if abs(phi)>=1-1e-12:continue
         stat=I.test(y[common],z[common],sections[common])
-        rows.append(dict(question=item['question'],labels=item['labels'],phi=phi,n=n,yes=both,with_n=b,without_n=n-b,with_pct=100*both/b,without_pct=100*(a-both)/(n-b),p=stat['p'],sections=stat['sections'],reason=stat['reason']))
+        rows.append(dict(question=item['question'],labels=item['labels'],dims=item.get('dims',()),phi=phi,n=n,yes=both,with_n=b,without_n=n-b,with_pct=100*both/b,without_pct=100*(a-both)/(n-b),p=stat['p'],sections=stat['sections'],reason=stat['reason']))
     for r,p in zip(rows,I.holm([r['p'] for r in rows])):r['p_holm']=p
+    return sorted(rows,key=lambda r:-abs(r['phi']))
+
+
+def sort_associations(rows, criterion='strength'):
+    """Keep uncomputable p-values out of p rankings; never treat them as evidence."""
+    if criterion in ('p_low','p_high'):
+        valid=[r for r in rows if np.isfinite(r['p_holm'])]
+        return sorted(valid,key=lambda r:(r['p_holm'] if criterion=='p_low' else -r['p_holm'],-abs(r['phi'])))
     return sorted(rows,key=lambda r:-abs(r['phi']))
 
 
@@ -61,6 +69,11 @@ def render(cat):
     fr=i18n.get_lang()=='fr'
     def t(a,b):return tr(a if fr else b)
     if not cat:st.info(t('Données indisponibles.','Data unavailable.'));return
+    scope=st.selectbox(t('Recherche','Search scope'),['selected','survey'],format_func=lambda v:t('Choisir un cas précis','Choose a specific outcome') if v=='selected' else t('Toutes les questions — classement général','All questions — overall ranking'),key='correlation_scope')
+    if scope=='survey':
+        import correlations_generales
+        correlations_generales.render(cat,t)
+        return
     qs={q['i']:q for q in cat['questions'] if len(LP.answers(cat,q)[0])>1}
     codes=[c for c in [c for c,_,_ in T.THEMES]+[T.CALCULE,T.AUTRES] if any(T.theme_de(q.get('category'))==c for q in qs.values())]
     st.caption(t('Choisissez ce que vous voulez étudier : thème → question → une ou plusieurs réponses.','Choose what to study: theme → question → one or more answers.'))
