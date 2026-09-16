@@ -10,7 +10,7 @@ from traductions import text as tr
 
 
 def rho(x,y):
-    a=pd.Series(x).rank().to_numpy(float);b=pd.Series(y).rank().to_numpy(float)
+    a=pd.Series(x).rank().to_numpy(dtype=float, copy=True);b=pd.Series(y).rank().to_numpy(dtype=float, copy=True)
     a-=a.mean();b-=b.mean();d=np.linalg.norm(a)*np.linalg.norm(b)
     return float(np.clip(a@b/d,-1,1)) if d else np.nan
 
