@@ -26,16 +26,6 @@ def outcome(cat, conditions, mode='all'):
     return y,base
 
 
-def candidates(cat, excluded):
-    names={M._norm(q['question']) for q in cat['questions'] if q['i'] in excluded}
-    for q in cat['questions']:
-        if q['i'] in excluded or M._norm(q['question']) in names:continue
-        masks,base=LP.answers(cat,q)
-        labels=list(masks)
-        if len(labels)==2 and not (masks[labels[0]] & masks[labels[1]]).any():labels=['Oui'] if 'Oui' in masks else labels[:1]
-        for label in labels:yield dict(question=q['question'],labels=(label,),mask=masks[label],base=base)
-
-
 def profile_candidates(cat):
     dims=['sexe','paysage','age','richesse'];regs={d:LP.registry(cat,d) for d in dims}
     for size in range(1,5):
@@ -105,38 +95,30 @@ def render(cat):
     if min(k,n-k)<30:
         st.info(t('Il faut au moins 30 ménages concernés et 30 autres pour établir ces classements. Modifiez la sélection.','At least 30 affected and 30 other households are required for these rankings. Change the selection.'));return
     signature=(tuple((qid,tuple(labels)) for qid,labels in conditions),mode)
-    if st.button(t('Afficher les facteurs et profils associés','Show associated factors and profiles'),key='outcome_compute'):
-        with st.spinner(t('Comparaison des réponses et des profils…','Comparing answers and profiles…')):
-            factors=rank_family(cat,y,base,candidates(cat,{qid for qid,_ in conditions}))
+    if st.button(t('Afficher les profils associés','Show associated profiles'),key='outcome_compute'):
+        with st.spinner(t('Comparaison des profils…','Comparing profiles…')):
             profiles=rank_family(cat,y,base,profile_candidates(cat))
-        st.session_state.outcome_results=(signature,factors,profiles)
-    result=st.session_state.get('outcome_results')
+        st.session_state.outcome_profile_results=(signature,profiles)
+    result=st.session_state.get('outcome_profile_results')
     if not result or result[0]!=signature:return
-    _,factors,profiles=result
+    _,profiles=result
     def name(r):
         label=' · '.join(tr(L.modalite(v)) for v in r['labels'])
         return tr(L.question(r['question']))+' — '+label if r['question'] else label
-    def table(rows,profile=False):
-        data=[]
-        for j,r in enumerate(rows[:10],1):
-            data.append({t('Rang','Rank'):j,t('Profil','Profile') if profile else t('Facteur observé','Observed factor'):name(r),'φ':round(r['phi'],3),t('Cas étudié dans ce groupe','Selected outcome in this group'):f"{r['with_pct']:.1f}% ({r['yes']}/{r['with_n']})",t('Chez les autres','Among others'):f"{r['without_pct']:.1f}% (n={r['without_n']})"})
-        if data:st.dataframe(pd.DataFrame(data),hide_index=True,use_container_width=True)
-        else:st.info(t('Pas assez de liens calculables.','Not enough calculable associations.'))
-    st.markdown('**'+t('Les 10 facteurs les plus associés au cas choisi','The 10 factors most associated with the selected outcome')+'**')
-    st.caption(t('Autres questions et réponses, classées par force du lien |φ|. + : cas plus fréquent ; − : cas moins fréquent. Ce ne sont pas des causes démontrées.','Other questions and answers, ranked by association strength |phi|. +: outcome more common; −: less common. These are not proven causes.'))
-    table(factors)
     st.markdown('**'+t('Les 10 profils les plus associés à une fréquence élevée du cas','The 10 profiles most associated with a higher outcome frequency')+'**')
     positive=sorted([r for r in profiles if r['phi']>0],key=lambda r:-r['phi'])
-    st.caption(t('Sexe, paysage, âge et niveau économique, seuls ou combinés. Classement par φ positif ; la proportion concernée est indiquée pour chaque profil.','Sex, landscape, age and economic level, alone or combined. Ranked by positive phi; the affected share is shown for each profile.'))
-    table(positive,True)
-    with st.expander(t('Tests statistiques : p, correction et effectifs','Statistical tests: p, adjustment and sample sizes')):
-        data=[]
-        for kind,rows in ((t('Facteur','Factor'),factors[:10]),(t('Profil','Profile'),positive[:10])):
-            for r in rows:data.append({t('Type','Type'):kind,t('Lien','Association'):name(r),'φ':r['phi'],'p':r['p'],'p (Holm)':r['p_holm'],t('Sections','Sections'):r['sections'],t('Réponses communes','Shared responses'):r['n'],t('Lecture','Interpretation'):LP.decision(r,t)})
-        st.dataframe(pd.DataFrame(data).round(4),hide_index=True,use_container_width=True)
-        st.caption(t(f'Holm est calculé avant le top 10 sur {len(factors)} facteurs et, séparément, {len(profiles)} profils (y compris négatifs).',f'Holm is applied before the top 10 across {len(factors)} factors and, separately, {len(profiles)} profiles (including negative associations).'))
-    with st.expander(t('Comment lire les résultats, pas à pas','How to read the results, step by step')):
-        st.markdown(t('1. **Définir le cas** avec vos réponses, par exemple la défécation à l’air libre.\n2. **Comparer deux groupes** : ceux qui ont l’autre réponse (ou appartiennent au profil), et les autres, sur les mêmes réponses disponibles.\n3. **Lire φ** : de −1 à +1 ; près de zéro, peu de lien binaire. Ce n’est ni un pourcentage ni une probabilité.\n4. **Lire les proportions et effectifs** pour comprendre concrètement le résultat. Les profils peuvent se chevaucher.\n5. **Ouvrir les tests** : p mesure la compatibilité avec l’hypothèse d’absence de lien, sous les hypothèses du test. Holm corrige la recherche de nombreux liens. Une p corrigée ≤ 0,05 franchit le seuil ; sinon, le lien n’est pas confirmé par ce test. Cela ne prouve ni une cause ni une absence de lien.', '1. **Define the outcome** with your answers, for example open defecation.\n2. **Compare two groups**: those with another answer (or in a profile), and others, using shared available responses.\n3. **Read phi**: −1 to +1; near zero means little binary association. It is neither a percentage nor a probability.\n4. **Read proportions and counts** to understand the result. Profiles may overlap.\n5. **Open the tests**: p measures compatibility with no association under test assumptions. Holm adjusts for searching many associations. Adjusted p ≤ 0.05 meets the threshold; otherwise the test does not confirm the association. Neither result proves causation or absence of an association.'))
-        st.write(t('Minimum 30 observations de chaque côté pour le cas et le facteur. Même question source, doublons exacts et réponses identiques ou inverses du cas sont exclus. Deux réponses complémentaires d’une question binaire représentent un seul lien. Les questions sélectionnées définissent le cas : elles ne sont pas retestées comme facteurs. Les réponses non cochées sont comparées aux autres réponses valides, jamais aux valeurs manquantes. Les cultures sont limitées aux répondants déclarant pratiquer l’agriculture.', 'At least 30 observations at each level of the outcome and factor. Same-source questions, exact duplicates and outcomes identical or inverse to the target are excluded. Complementary answers to a binary question represent one association. Selected questions define the outcome and are not retested as factors. Unselected answers are compared with other valid responses, never missing values. Crops are restricted to respondents reporting farming.'))
-        st.write(t('Tests exploratoires par wild cluster bootstrap-t regroupé par section, avec les conditions d’effectif et de répartition du module statistique. Dix sections restent peu ; p est approximative, suppose des sections indépendantes et peut être indisponible. Holm couvre chaque famille de cette recherche, pas les recherches successives. Les listes sont descriptives, sans pondération de population ni ajustement des facteurs entre eux : elles n’identifient pas des déterminants causaux. Une p corrigée peut être identique sur plusieurs lignes sans que φ le soit.', 'Exploratory wild cluster bootstrap-t tests grouped by section, subject to the statistical module’s sample and support checks. Ten sections remain few; p is approximate, assumes independent sections and may be unavailable. Holm covers each family in this search, not repeated searches. Lists are descriptive, without population weighting or mutual factor adjustment: they do not identify causal determinants. Adjusted p can be identical across rows even when phi differs.'))
+    st.caption(t('Sexe, paysage, âge et niveau économique, seuls ou combinés. Classement par φ positif. p est corrigée par Holm sur tous les profils examinés, avant de retenir les dix premiers.', 'Sex, landscape, age and economic level, alone or combined. Ranked by positive phi. p is Holm-adjusted across all examined profiles before selecting the top ten.'))
+    data=[]
+    for j,r in enumerate(positive[:10],1):
+        reading=t(f"Cas plus fréquent dans ce profil : {r['with_pct']:.1f} % ({r['yes']}/{r['with_n']}), contre {r['without_pct']:.1f} % chez les autres.",f"Outcome more common in this profile: {r['with_pct']:.1f}% ({r['yes']}/{r['with_n']}), versus {r['without_pct']:.1f}% among others.")
+        data.append({t('Rang','Rank'):j,t('Profil','Profile'):name(r),'φ':round(r['phi'],3),t('Interprétation de φ','Interpretation of phi'):reading,t('p corrigée (Holm)','Adjusted p (Holm)'):r['p_holm'],t('Interprétation de p','Interpretation of p'):LP.decision(r,t)})
+    if data:st.dataframe(pd.DataFrame(data).round(4),hide_index=True,use_container_width=True)
+    else:st.info(t('Pas assez de profils avec un lien positif calculable.','Not enough profiles with a calculable positive association.'))
+    st.markdown(t('**φ = force et sens du lien.** Ici, positif signifie que le cas choisi est plus fréquent dans le profil que chez les autres. Plus φ est proche de 1, plus le lien binaire est fort ; près de 0, il est faible. φ = 0,3 ne signifie pas 30 % de risque.', '**Phi = strength and direction of the association.** Here, positive means the chosen outcome is more common in the profile than among others. Closer to 1 means a stronger binary association; near 0 means a weak one. Phi = 0.3 does not mean 30% risk.'))
+    st.markdown(t('**p corrigée = lecture statistique après recherche de nombreux profils.** À 0,05 ou moins, le lien franchit le seuil sous les hypothèses du test. Au-delà, les données ne suffisent pas à le confirmer : cela ne prouve pas son absence. Une petite p ne mesure pas la force du lien et ne prouve pas une cause.', '**Adjusted p = statistical evidence after searching many profiles.** At 0.05 or below, the association meets the threshold under the test assumptions. Above it, the data do not suffice to confirm it: this does not prove its absence. A small p measures neither association strength nor causation.'))
+    with st.expander(t('Méthode et limites','Method and limitations')):
+        st.write(t(f'{len(profiles)} profils examinés, y compris les liens négatifs, dans la correction de Holm. Les profils se chevauchent. La correction couvre cette recherche, pas vos recherches successives. Des p corrigées identiques sur plusieurs lignes sont possibles, même si les φ diffèrent.', f'{len(profiles)} profiles, including negative associations, enter the Holm adjustment. Profiles overlap. Adjustment covers this search, not repeated searches. Adjusted p-values can be identical across rows even when phi differs.'))
+        st.write(t('Au moins 30 observations pour chaque niveau du cas et du profil. Les doublons exacts et les profils identiques ou inverses du cas sont exclus. Les réponses manquantes ne sont jamais comptées comme non. Les cultures sont limitées aux répondants déclarant pratiquer l’agriculture. Les effectifs peuvent varier selon les caractéristiques disponibles.', 'At least 30 observations at each level of the outcome and profile. Exact duplicates and profiles identical or inverse to the outcome are excluded. Missing responses never count as no. Crops are restricted to respondents reporting farming. Sample sizes may vary with available characteristics.'))
+        st.write(t('La p-value teste l’absence d’écart de proportion : sous cette hypothèse et celles du modèle, elle mesure la fréquence de résultats au moins aussi extrêmes. Ce n’est pas la probabilité que le lien soit faux. Test bilatéral wild cluster bootstrap-t, regroupé par section, puis correction de Holm. Les tests non calculables comptent comme p = 1 dans la correction mais restent affichés comme indisponibles.', 'The p-value tests no difference in proportions: under that hypothesis and model assumptions, it measures the frequency of results at least as extreme. It is not the probability that the association is false. Two-sided wild cluster bootstrap-t grouped by section, then Holm adjustment. Uncomputable tests enter adjustment as p = 1 but remain displayed as unavailable.'))
+        st.write(t('Dix sections restent peu : ces tests sont approximatifs et supposent des sections indépendantes. Pas de pondération de population ni d’ajustement des profils entre eux. Les résultats restent exploratoires et ne démontrent pas des causes.', 'Ten sections remain few: these tests are approximate and assume independent sections. No population weighting or adjustment between profiles. Results remain exploratory and do not demonstrate causes.'))
         st.markdown('[Wild cluster bootstrap — Stata](https://www.stata.com/manuals/rwildbootstrap.pdf)')
