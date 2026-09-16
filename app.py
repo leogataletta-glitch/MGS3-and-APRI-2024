@@ -2675,8 +2675,8 @@ with _c_contenu:
         # onglets contiennent, et un lecteur qui passait de la page des
         # boucles à celle-ci changeait d'outil sans changer de site.
         _ra = onglets.barre("ra_vue", _CODES_RA,
-                            titre=lambda c: ({"fr":"Liens et profils","en":"Links and profiles","es":"Relaciones y perfiles","ht":"Lyen ak pwofil"}.get(i18n.get_lang(),"Links and profiles")) if c == "liens" else T("ra_o_" + c),
-                            description=lambda c: ({"fr":"Comparer, repérer les profils et les liens","en":"Compare groups, profiles and related answers","es":"Comparar grupos, perfiles y respuestas","ht":"Konpare gwoup, pwofil ak repons"}.get(i18n.get_lang(),"Compare groups, profiles and related answers")) if c == "liens" else T("ra_d_" + c),
+                            titre=lambda c: ({"fr":"Corrélations","en":"Correlations","es":"Correlaciones","ht":"Korelasyon"}.get(i18n.get_lang(),"Links and profiles")) if c == "liens" else T("ra_o_" + c),
+                            description=lambda c: ({"fr":"Un indicateur, deux listes de liens","en":"One indicator, two lists of relationships","es":"Comparar grupos, perfiles y respuestas","ht":"Konpare gwoup, pwofil ak repons"}.get(i18n.get_lang(),"One indicator, two lists of relationships")) if c == "liens" else T("ra_d_" + c),
                             defaut="brut")
         resultats_design.render(_CODES_RA.index(_ra) + 1, i18n.get_lang() == 'fr')
 
@@ -2769,8 +2769,8 @@ with _c_contenu:
             explorateur.render_scores(_cat)
 
         elif _ra == "liens":
-            import liens_profils
-            liens_profils.render(_cat)
+            import correlations_simples
+            correlations_simples.render(_cat)
 
         elif _ra == "comparer":
             explorateur.render_comparaison(_cat)
