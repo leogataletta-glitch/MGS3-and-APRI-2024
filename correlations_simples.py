@@ -75,6 +75,21 @@ def rankings(selected,indicators,cat):
     return other,profiles
 
 
+def themes_for(entries,cat):
+    import themes_enquete as T
+    mapping={}
+    for q in cat['questions']:
+        mapping.setdefault(M._norm(q['question']),set()).add(T.theme_de(q.get('category')))
+    assigned={}
+    for e in entries:
+        r=e['record'];themes=mapping.get(M._norm(r.get('question') or ''),set())
+        # Keep the same questionnaire themes; never guess a thematic match.
+        assigned[r['ligne']]=themes or {'dimension:'+r.get('dimension','Autres')}
+    order=[c for c,_,_ in T.THEMES]+[T.CALCULE,T.AUTRES]
+    present=set().union(*assigned.values())
+    return assigned,[c for c in order if c in present]+sorted(c for c in present if c.startswith('dimension:'))
+
+
 def render(cat):
     fr=i18n.get_lang()=='fr'
     def t(a,b):return tr(a if fr else b)
@@ -82,7 +97,21 @@ def render(cat):
     if not entries or not cat:st.info(t('Données insuffisantes.','Insufficient data.'));return
     byid={e['record']['ligne']:e for e in entries}
     st.caption(t('Choisissez un indicateur : deux listes de 10 corrélations, calculées entre les sections communales.','Choose an indicator: two top-10 correlation lists, calculated across communal sections.'))
-    selected=st.selectbox(t('Indicateur à explorer','Indicator to explore'),list(byid),index=None,format_func=lambda k:tr(byid[k]['record']['indicateur']),placeholder=t('Rechercher un indicateur…','Search for an indicator…'),key='simple_correlation_indicator')
+    import themes_enquete as T
+    assigned,codes=themes_for(entries,cat)
+    def theme_label(code):
+        if code=='__all__':return t('Tous les thèmes','All themes')
+        if code.startswith('dimension:'):return t('Autres indicateurs — ','Other indicators — ')+tr(code.split(':',1)[1])
+        return tr(i18n.T(T.libelle(code)))
+    theme_col,indicator_col=st.columns([1,2])
+    with theme_col:
+        theme=st.selectbox(t('Thème','Theme'),['__all__']+codes,format_func=theme_label,key='simple_correlation_theme')
+    visible=list(byid) if theme=='__all__' else [k for k in byid if theme in assigned[k]]
+    if st.session_state.get('simple_correlation_indicator') not in visible:
+        st.session_state['simple_correlation_indicator']=None
+    with indicator_col:
+        selected=st.selectbox(t('Indicateur à explorer','Indicator to explore'),visible,index=None,format_func=lambda k:tr(byid[k]['record']['indicateur']),placeholder=t('Rechercher dans ce thème…','Search within this theme…'),key='simple_correlation_indicator')
+    st.caption(t(f'{len(visible)} indicateurs dans cette sélection. Le thème facilite la recherche ; les deux classements comparent toujours tous les indicateurs et profils disponibles.',f'{len(visible)} indicators in this selection. The theme narrows the search; both rankings still compare all available indicators and profiles.'))
     if selected is None:return
     entry=byid[selected]
     st.caption(t('Valeurs brutes des indicateurs, pas scores sur 10. + : les deux mesures augmentent ensemble ; − : elles évoluent en sens inverse. Plus |ρ| est proche de 1, plus le lien de rang est fort.','Raw indicator values, not 0–10 scores. +: both measures rise together; −: opposite directions. The closer |rho| is to 1, the stronger the rank relationship.'))
