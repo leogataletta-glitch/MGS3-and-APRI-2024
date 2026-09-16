@@ -26,9 +26,11 @@ def outcome(cat, conditions, mode='all'):
     return y,base
 
 
-def profile_candidates(cat):
-    dims=['sexe','paysage','age','richesse'];regs={d:LP.registry(cat,d) for d in dims}
-    for size in range(1,5):
+def profile_candidates(cat, dims=None, combination='mixed'):
+    dims=list(['sexe','paysage','age','richesse'] if dims is None else dims)
+    if not dims:return
+    regs={d:LP.registry(cat,d) for d in dims}
+    for size in (range(1,len(dims)+1) if combination=='mixed' else [len(dims)]):
         for ds in itertools.combinations(dims,size):
             base=np.logical_and.reduce([regs[d][1] for d in ds])
             for labels in itertools.product(*[list(regs[d][0]) for d in ds]):
@@ -94,10 +96,18 @@ def render(cat):
     st.caption(t('Les réponses manquantes à une question sélectionnée sont exclues, même en mode OU. Sexe et âge décrivent le répondant, pas chaque membre du ménage.','Missing responses to any selected question are excluded, including in OR mode. Sex and age describe the respondent, not every household member.'))
     if min(k,n-k)<30:
         st.info(t('Il faut au moins 30 ménages concernés et 30 autres pour établir ces classements. Modifiez la sélection.','At least 30 affected and 30 other households are required for these rankings. Change the selection.'));return
-    signature=(tuple((qid,tuple(labels)) for qid,labels in conditions),mode)
+    names={'sexe':t('Sexe','Sex'),'paysage':t('Paysage','Landscape'),'age':t('Âge','Age'),'richesse':t('Niveau économique','Economic level')}
+    filters=st.columns([2,1,1])
+    with filters[0]:dims=st.multiselect(t('Variables de profil','Profile variables'),list(names),default=list(names),format_func=lambda d:names[d],key='profile_dimensions')
+    with filters[1]:combination=st.selectbox(t('Combiner les variables','Combine variables'),['mixed','combined'],format_func=lambda v:t('Mixte : seules et combinées','Mixed: individual and combined') if v=='mixed' else t('Toutes ensemble uniquement','All together only'),key='profile_combination')
+    with filters[2]:direction=st.selectbox(t('Classement de φ','Phi ranking'),['mixed','positive','negative'],format_func=lambda v:{'mixed':t('Mixte : 10 hauts + 10 bas','Mixed: 10 highest + 10 lowest'),'positive':t('10 φ les plus positifs','10 most positive phi'),'negative':t('10 φ les plus négatifs','10 most negative phi')}[v],key='profile_direction')
+    st.caption(t('Exemple : sexe + paysage → « toutes ensemble » compare les profils comme femme · montagne ; « mixte » inclut aussi sexe seul et paysage seul. Haut/bas décrit la fréquence du cas choisi, pas une valeur bonne ou mauvaise.', 'Example: sex + landscape → “all together” compares profiles such as woman · mountain; “mixed” also includes sex alone and landscape alone. High/low describes the selected outcome frequency, not a good or bad value.'))
+    if not dims:
+        st.info(t('Choisissez au moins une variable de profil.','Choose at least one profile variable.'));return
+    signature=(tuple((qid,tuple(labels)) for qid,labels in conditions),mode,tuple(sorted(dims)),combination)
     if st.button(t('Afficher les profils associés','Show associated profiles'),key='outcome_compute'):
         with st.spinner(t('Comparaison des profils…','Comparing profiles…')):
-            profiles=rank_family(cat,y,base,profile_candidates(cat))
+            profiles=rank_family(cat,y,base,profile_candidates(cat,dims,combination))
         st.session_state.outcome_profile_results=(signature,profiles)
     result=st.session_state.get('outcome_profile_results')
     if not result or result[0]!=signature:return
@@ -105,16 +115,22 @@ def render(cat):
     def name(r):
         label=' · '.join(tr(L.modalite(v)) for v in r['labels'])
         return tr(L.question(r['question']))+' — '+label if r['question'] else label
-    st.markdown('**'+t('Les 10 profils les plus associés à une fréquence élevée du cas','The 10 profiles most associated with a higher outcome frequency')+'**')
-    positive=sorted([r for r in profiles if r['phi']>0],key=lambda r:-r['phi'])
-    st.caption(t('Sexe, paysage, âge et niveau économique, seuls ou combinés. Classement par φ positif. p est corrigée par Holm sur tous les profils examinés, avant de retenir les dix premiers.', 'Sex, landscape, age and economic level, alone or combined. Ranked by positive phi. p is Holm-adjusted across all examined profiles before selecting the top ten.'))
-    data=[]
-    for j,r in enumerate(positive[:10],1):
-        reading=t(f"Cas plus fréquent dans ce profil : {r['with_pct']:.1f} % ({r['yes']}/{r['with_n']}), contre {r['without_pct']:.1f} % chez les autres.",f"Outcome more common in this profile: {r['with_pct']:.1f}% ({r['yes']}/{r['with_n']}), versus {r['without_pct']:.1f}% among others.")
-        data.append({t('Rang','Rank'):j,t('Profil','Profile'):name(r),'φ':round(r['phi'],3),t('Interprétation de φ','Interpretation of phi'):reading,t('p corrigée (Holm)','Adjusted p (Holm)'):r['p_holm'],t('Interprétation de p','Interpretation of p'):LP.decision(r,t)})
-    if data:st.dataframe(pd.DataFrame(data).round(4),hide_index=True,use_container_width=True)
-    else:st.info(t('Pas assez de profils avec un lien positif calculable.','Not enough profiles with a calculable positive association.'))
-    st.markdown(t('**φ = force et sens du lien.** Ici, positif signifie que le cas choisi est plus fréquent dans le profil que chez les autres. Plus φ est proche de 1, plus le lien binaire est fort ; près de 0, il est faible. φ = 0,3 ne signifie pas 30 % de risque.', '**Phi = strength and direction of the association.** Here, positive means the chosen outcome is more common in the profile than among others. Closer to 1 means a stronger binary association; near 0 means a weak one. Phi = 0.3 does not mean 30% risk.'))
+    st.caption(t('p est corrigée par Holm sur tous les profils admissibles de votre sélection, positifs et négatifs, avant le top 10. Changer seulement le sens du classement ne change pas cette correction.', 'p is Holm-adjusted across all eligible profiles in your selection, positive and negative, before the top ten. Changing only the ranking direction does not change this adjustment.'))
+    def show_side(positive):
+        rows=sorted([r for r in profiles if r['phi']>0] if positive else [r for r in profiles if r['phi']<0],key=lambda r:-r['phi'] if positive else r['phi'])
+        title=t('Les 10 profils les plus associés à une fréquence élevée du cas','The 10 profiles most associated with a higher outcome frequency') if positive else t('Les 10 profils les plus associés à une fréquence faible du cas','The 10 profiles most associated with a lower outcome frequency')
+        st.markdown('**'+title+'**')
+        data=[]
+        for j,r in enumerate(rows[:10],1):
+            prefix=t('Cas plus fréquent','Outcome more common') if positive else t('Cas moins fréquent','Outcome less common')
+            reading=t(f"{prefix} : {r['with_pct']:.1f} % ({r['yes']}/{r['with_n']}), contre {r['without_pct']:.1f} % chez les autres.",f"{prefix}: {r['with_pct']:.1f}% ({r['yes']}/{r['with_n']}), versus {r['without_pct']:.1f}% among others.")
+            data.append({t('Rang','Rank'):j,t('Profil','Profile'):name(r),'φ':round(r['phi'],3),t('Interprétation de φ','Interpretation of phi'):reading,t('p corrigée (Holm)','Adjusted p (Holm)'):r['p_holm'],t('Interprétation de p','Interpretation of p'):LP.decision(r,t)})
+        if data:st.dataframe(pd.DataFrame(data).round(4),hide_index=True,use_container_width=True)
+        else:st.info(t('Aucun profil calculable dans ce sens.','No calculable profile in this direction.'))
+        if len(rows)<10:st.caption(t(f'{len(rows)} profils admissibles dans ce sens : la liste contient moins de dix lignes.',f'{len(rows)} eligible profiles in this direction: fewer than ten rows are available.'))
+    if direction in ('mixed','positive'):show_side(True)
+    if direction in ('mixed','negative'):show_side(False)
+    st.markdown(t('**φ = force et sens du lien.** Positif : cas plus fréquent dans le profil ; négatif : moins fréquent. Plus |φ| est proche de 1, plus le lien binaire est fort ; près de 0, il est faible. φ = 0,3 ne signifie pas 30 % de risque.', '**Phi = strength and direction of the association.** Positive: outcome more common in the profile; negative: less common. The closer |phi| is to 1, the stronger the binary association; near 0 means a weak one. Phi = 0.3 does not mean 30% risk.'))
     st.markdown(t('**p corrigée = lecture statistique après recherche de nombreux profils.** À 0,05 ou moins, le lien franchit le seuil sous les hypothèses du test. Au-delà, les données ne suffisent pas à le confirmer : cela ne prouve pas son absence. Une petite p ne mesure pas la force du lien et ne prouve pas une cause.', '**Adjusted p = statistical evidence after searching many profiles.** At 0.05 or below, the association meets the threshold under the test assumptions. Above it, the data do not suffice to confirm it: this does not prove its absence. A small p measures neither association strength nor causation.'))
     with st.expander(t('Méthode et limites','Method and limitations')):
         st.write(t(f'{len(profiles)} profils examinés, y compris les liens négatifs, dans la correction de Holm. Les profils se chevauchent. La correction couvre cette recherche, pas vos recherches successives. Des p corrigées identiques sur plusieurs lignes sont possibles, même si les φ diffèrent.', f'{len(profiles)} profiles, including negative associations, enter the Holm adjustment. Profiles overlap. Adjustment covers this search, not repeated searches. Adjusted p-values can be identical across rows even when phi differs.'))
