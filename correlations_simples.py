@@ -1,146 +1,142 @@
-"""A single indicator and two transparent section-level Spearman rankings."""
+"""Explore household outcomes defined by one or more question/answer conditions."""
 import itertools
-import json
 import numpy as np
 import pandas as pd
 import streamlit as st
-import croisement_moteur as M
 import i18n
+import croisement_moteur as M
+import liens_profils as LP
+import liens_inference as I
+import themes_enquete as T
+import libelles_enquete as L
 from traductions import text as tr
 
 
-def rho(x,y):
-    a=pd.Series(x).rank().to_numpy(dtype=float, copy=True);b=pd.Series(y).rank().to_numpy(dtype=float, copy=True)
-    a-=a.mean();b-=b.mean();d=np.linalg.norm(a)*np.linalg.norm(b)
-    return float(np.clip(a@b/d,-1,1)) if d else np.nan
+def outcome(cat, conditions, mode='all'):
+    masks=[];bases=[]
+    byid={q['i']:q for q in cat['questions']}
+    for qid,labels in conditions:
+        answers,base=LP.answers(cat,byid[qid])
+        if not labels or any(label not in answers for label in labels):raise ValueError('Choose valid answers')
+        masks.append(np.logical_or.reduce([answers[label] for label in labels]));bases.append(base)
+    if not masks:raise ValueError('Choose a question')
+    # Complete cases for every selected question, for both AND and OR.
+    base=np.logical_and.reduce(bases)
+    y=(np.logical_and.reduce(masks) if mode=='all' else np.logical_or.reduce(masks)) & base
+    return y,base
 
 
-def compare(x,y):
-    valid=np.isfinite(x)&np.isfinite(y);a=x[valid];b=y[valid]
-    if len(a)<8:return None
-    r=rho(a,b)
-    if not np.isfinite(r):return None
-    loo=[rho(np.delete(a,j),np.delete(b,j)) for j in range(len(a))]
-    finite=[v for v in loo if np.isfinite(v)]
-    return dict(rho=r,n=len(a),low=min(finite) if finite else np.nan,high=max(finite) if finite else np.nan,stable=len(finite)==len(a) and all(np.sign(v)==np.sign(r) for v in finite))
-
-
-def load():
-    path=M._trouver('resultats.json')
-    if not path:return []
-    with open(path,encoding='utf-8') as f:data=json.load(f)
-    if isinstance(data,dict):data=data['indicateurs']
-    rows=[]
-    for r in data:
-        v=pd.to_numeric(pd.Series([(r.get('valeurs') or {}).get(s) for s in M.SECTIONS]),errors='coerce').to_numpy(float)
-        if np.isfinite(v).sum()>=8 and len(np.unique(v[np.isfinite(v)]))>=2:rows.append(dict(record=r,values=v))
-    return rows
-
-
-def profile_vectors(cat):
-    from liens_profils import registry
-    dimensions=['sexe','paysage','age','richesse'];regs={k:registry(cat,k) for k in dimensions}
-    result=[];seen=set()
-    for size in (1,2,3):
-        for dims in itertools.combinations(dimensions,size):
-            base=np.ones(cat['n'],bool)
-            for d in dims:base &= regs[d][1]
-            for labels in itertools.product(*[list(regs[d][0]) for d in dims]):
-                mask=base.copy()
-                for d,l in zip(dims,labels):mask &= regs[d][0][l]
-                if min(int(mask.sum()),int((base & ~mask).sum()))<30:continue
-                signature=mask.tobytes()+base.tobytes();inverse=(base & ~mask).tobytes()+base.tobytes()
-                if signature in seen or inverse in seen:continue
-                seen.add(signature)
-                values=[];counts=[]
-                for section in M.SECTIONS:
-                    eligible=base & cat['groupes'].get(section,np.zeros(cat['n'],bool));n=int(eligible.sum());k=int((eligible & mask).sum())
-                    values.append(100*k/n if n>=30 else np.nan);counts.append((k,n))
-                result.append(dict(labels=labels,dims=dims,values=np.array(values),counts=counts,total=int(mask.sum())))
-    return result
-
-
-def rankings(selected,indicators,cat):
-    target=selected['record'];x=selected['values'];other=[];profiles=[]
-    for entry in indicators:
-        r=entry['record']
-        if r['ligne']==target['ligne']:continue
-        if target.get('question') and M._norm(target['question'])==M._norm(r.get('question') or ''):continue
-        stat=compare(x,entry['values'])
-        if stat:other.append(dict(**stat,label=r['indicateur'],values=entry['values'],record=r))
-    for profile in profile_vectors(cat):
-        stat=compare(x,profile['values'])
-        if stat:profiles.append(dict(**stat,**profile))
-    for rows in (other,profiles):rows.sort(key=lambda r:-abs(r['rho']))
-    return other,profiles
-
-
-def themes_for(entries,cat):
-    import themes_enquete as T
-    mapping={}
+def candidates(cat, excluded):
+    names={M._norm(q['question']) for q in cat['questions'] if q['i'] in excluded}
     for q in cat['questions']:
-        mapping.setdefault(M._norm(q['question']),set()).add(T.theme_de(q.get('category')))
-    assigned={}
-    for e in entries:
-        r=e['record'];themes=mapping.get(M._norm(r.get('question') or ''),set())
-        # Keep the same questionnaire themes; never guess a thematic match.
-        assigned[r['ligne']]=themes or {'dimension:'+r.get('dimension','Autres')}
-    order=[c for c,_,_ in T.THEMES]+[T.CALCULE,T.AUTRES]
-    present=set().union(*assigned.values())
-    return assigned,[c for c in order if c in present]+sorted(c for c in present if c.startswith('dimension:'))
+        if q['i'] in excluded or M._norm(q['question']) in names:continue
+        masks,base=LP.answers(cat,q)
+        labels=list(masks)
+        if len(labels)==2 and not (masks[labels[0]] & masks[labels[1]]).any():labels=['Oui'] if 'Oui' in masks else labels[:1]
+        for label in labels:yield dict(question=q['question'],labels=(label,),mask=masks[label],base=base)
+
+
+def profile_candidates(cat):
+    dims=['sexe','paysage','age','richesse'];regs={d:LP.registry(cat,d) for d in dims}
+    for size in range(1,5):
+        for ds in itertools.combinations(dims,size):
+            base=np.logical_and.reduce([regs[d][1] for d in ds])
+            for labels in itertools.product(*[list(regs[d][0]) for d in ds]):
+                mask=base.copy()
+                for d,label in zip(ds,labels):mask &= regs[d][0][label]
+                yield dict(question='',labels=labels,mask=mask,base=base)
+
+
+def rank_family(cat,y,base,items):
+    rows=[];seen=set();sections=I.section_ids(cat)
+    for item in items:
+        common=base & item['base'];z=item['mask'] & common
+        n=int(common.sum());a=int((y & common).sum());b=int(z.sum());both=int((y & z).sum())
+        if min(a,n-a,b,n-b)<30:continue
+        signature=common.tobytes()+z.tobytes()
+        if signature in seen:continue
+        seen.add(signature)
+        phi=(n*both-a*b)/np.sqrt(float(a*(n-a)*b*(n-b)))
+        # Exclude tautologies/duplicates of the selected outcome.
+        if abs(phi)>=1-1e-12:continue
+        stat=I.test(y[common],z[common],sections[common])
+        rows.append(dict(question=item['question'],labels=item['labels'],phi=phi,n=n,yes=both,with_n=b,without_n=n-b,with_pct=100*both/b,without_pct=100*(a-both)/(n-b),p=stat['p'],sections=stat['sections'],reason=stat['reason']))
+    for r,p in zip(rows,I.holm([r['p'] for r in rows])):r['p_holm']=p
+    return sorted(rows,key=lambda r:-abs(r['phi']))
 
 
 def render(cat):
     fr=i18n.get_lang()=='fr'
     def t(a,b):return tr(a if fr else b)
-    entries=load()
-    if not entries or not cat:st.info(t('Données insuffisantes.','Insufficient data.'));return
-    byid={e['record']['ligne']:e for e in entries}
-    st.caption(t('Choisissez un indicateur : deux listes de 10 corrélations, calculées entre les sections communales.','Choose an indicator: two top-10 correlation lists, calculated across communal sections.'))
-    import themes_enquete as T
-    assigned,codes=themes_for(entries,cat)
-    def theme_label(code):
-        if code=='__all__':return t('Tous les thèmes','All themes')
-        if code.startswith('dimension:'):return t('Autres indicateurs — ','Other indicators — ')+tr(code.split(':',1)[1])
-        return tr(i18n.T(T.libelle(code)))
-    theme_col,indicator_col=st.columns([1,2])
-    with theme_col:
-        theme=st.selectbox(t('Thème','Theme'),['__all__']+codes,format_func=theme_label,key='simple_correlation_theme')
-    visible=list(byid) if theme=='__all__' else [k for k in byid if theme in assigned[k]]
-    if st.session_state.get('simple_correlation_indicator') not in visible:
-        st.session_state['simple_correlation_indicator']=None
-    with indicator_col:
-        selected=st.selectbox(t('Indicateur à explorer','Indicator to explore'),visible,index=None,format_func=lambda k:tr(byid[k]['record']['indicateur']),placeholder=t('Rechercher dans ce thème…','Search within this theme…'),key='simple_correlation_indicator')
-    st.caption(t(f'{len(visible)} indicateurs dans cette sélection. Le thème facilite la recherche ; les deux classements comparent toujours tous les indicateurs et profils disponibles.',f'{len(visible)} indicators in this selection. The theme narrows the search; both rankings still compare all available indicators and profiles.'))
-    if selected is None:return
-    entry=byid[selected]
-    st.caption(t('Valeurs brutes des indicateurs, pas scores sur 10. + : les deux mesures augmentent ensemble ; − : elles évoluent en sens inverse. Plus |ρ| est proche de 1, plus le lien de rang est fort.','Raw indicator values, not 0–10 scores. +: both measures rise together; −: opposite directions. The closer |rho| is to 1, the stronger the rank relationship.'))
-    with st.spinner(t('Calcul des deux listes…','Calculating both lists…')):indicators,profiles=rankings(entry,entries,cat)
-    def profile_name(r):return ' · '.join(tr({'Homme':t('Homme','Man'),'Femme':t('Femme','Woman'),'Montagne':t('Montagne','Mountain'),'Littoral':t('Littoral','Coastal')}.get(v,v)) for v in r['labels'])
+    if not cat:st.info(t('Données indisponibles.','Data unavailable.'));return
+    qs={q['i']:q for q in cat['questions'] if len(LP.answers(cat,q)[0])>1}
+    codes=[c for c in [c for c,_,_ in T.THEMES]+[T.CALCULE,T.AUTRES] if any(T.theme_de(q.get('category'))==c for q in qs.values())]
+    st.caption(t('Choisissez ce que vous voulez étudier : thème → question → une ou plusieurs réponses.','Choose what to study: theme → question → one or more answers.'))
+    count=st.session_state.get('outcome_count',1)
+    conditions=[];descriptions=[]
+    for j in range(count):
+        cols=st.columns([1,2,2]);prefix=f'outcome_{j}'
+        with cols[0]:theme=st.selectbox(t('Thème','Theme'),['__all__']+codes,format_func=lambda c:t('Tous les thèmes','All themes') if c=='__all__' else tr(i18n.T(T.libelle(c))),key=prefix+'_theme')
+        visible=[k for k,q in qs.items() if theme=='__all__' or T.theme_de(q.get('category'))==theme]
+        used={k for k,_ in conditions};visible=[k for k in visible if k not in used]
+        if st.session_state.get(prefix+'_question') not in visible:st.session_state[prefix+'_question']=None
+        with cols[1]:qid=st.selectbox(t('Question','Question'),visible,index=None,format_func=lambda k:tr(L.question(qs[k]['question'])),placeholder=t('Tapez un mot-clé…','Type a keyword…'),key=prefix+'_question')
+        with cols[2]:
+            options=list(LP.answers(cat,qs[qid])[0]) if qid is not None else []
+            labels=st.multiselect(t('Réponse(s) étudiée(s)','Answer(s) of interest'),options,format_func=lambda v:tr(L.modalite(v)),key=prefix+f'_answers_{qid}',placeholder=t('Choisir une ou plusieurs réponses','Choose one or more answers'),disabled=qid is None)
+        if qid is not None and labels:
+            conditions.append((qid,labels));descriptions.append(tr(L.question(qs[qid]['question']))+' : '+(' '+t('OU','OR')+' ').join(tr(L.modalite(v)) for v in labels))
+    controls=st.columns([1,1,2])
+    with controls[0]:
+        if st.button(t('+ Ajouter une question','+ Add a question'),key='outcome_add'):
+            st.session_state.outcome_count=count+1;st.rerun()
+    with controls[1]:
+        if count>1 and st.button(t('Retirer la dernière question','Remove last question'),key='outcome_remove'):
+            st.session_state.outcome_count=count-1;st.rerun()
+    mode='all'
+    with controls[2]:
+        if count>1:mode=st.selectbox(t('Combiner les questions','Combine questions'),['all','any'],format_func=lambda v:t('Toutes les conditions (ET)','All conditions (AND)') if v=='all' else t('Au moins une condition (OU)','At least one condition (OR)'),key='outcome_mode')
+    st.caption(t('Plusieurs réponses d’une question = l’une OU l’autre. Plusieurs questions = ET ou OU, au choix.','Several answers to one question = any selected answer. Several questions = AND or OR, your choice.'))
+    if len(conditions)!=count:return
+    y,base=outcome(cat,conditions,mode);n=int(base.sum());k=int(y.sum())
+    st.write((' **'+t('ET','AND')+'** ' if mode=='all' else ' **'+t('OU','OR')+'** ').join(descriptions))
+    st.write(t(f'{k} ménages sur {n} réponses complètes ({100*k/n:.1f} %).' if n else 'Aucune réponse complète.',f'{k} households out of {n} complete responses ({100*k/n:.1f}%).' if n else 'No complete responses.'))
+    st.caption(t('Les réponses manquantes à une question sélectionnée sont exclues, même en mode OU. Sexe et âge décrivent le répondant, pas chaque membre du ménage.','Missing responses to any selected question are excluded, including in OR mode. Sex and age describe the respondent, not every household member.'))
+    if min(k,n-k)<30:
+        st.info(t('Il faut au moins 30 ménages concernés et 30 autres pour établir ces classements. Modifiez la sélection.','At least 30 affected and 30 other households are required for these rankings. Change the selection.'));return
+    signature=(tuple((qid,tuple(labels)) for qid,labels in conditions),mode)
+    if st.button(t('Afficher les facteurs et profils associés','Show associated factors and profiles'),key='outcome_compute'):
+        with st.spinner(t('Comparaison des réponses et des profils…','Comparing answers and profiles…')):
+            factors=rank_family(cat,y,base,candidates(cat,{qid for qid,_ in conditions}))
+            profiles=rank_family(cat,y,base,profile_candidates(cat))
+        st.session_state.outcome_results=(signature,factors,profiles)
+    result=st.session_state.get('outcome_results')
+    if not result or result[0]!=signature:return
+    _,factors,profiles=result
+    def name(r):
+        label=' · '.join(tr(L.modalite(v)) for v in r['labels'])
+        return tr(L.question(r['question']))+' — '+label if r['question'] else label
     def table(rows,profile=False):
-        records=[]
+        data=[]
         for j,r in enumerate(rows[:10],1):
-            records.append({t('Rang','Rank'):j,t('Profil' if profile else 'Indicateur','Profile' if profile else 'Indicator'):profile_name(r) if profile else tr(r['label']),t('Corrélation ρ','Correlation ρ'):round(r['rho'],2),t('Sens du lien','Direction'):t('Même sens','Same direction') if r['rho']>0 else t('Sens inverse','Opposite direction') if r['rho']<0 else t('Pas de lien de rang','No rank relationship'),t('Sections','Sections'):r['n'],t('Au retrait d’une section','Omitting one section'):t('Sens conservé','Direction retained') if r['stable'] else t('Sens fragile','Fragile direction')})
-        if records:st.dataframe(pd.DataFrame(records),hide_index=True,use_container_width=True)
-        else:st.info(t('Pas assez de données comparables pour cette liste.','Not enough comparable data for this list.'))
-    st.markdown('**'+t('Les 10 indicateurs les plus corrélés','The 10 most correlated indicators')+'**');table(indicators)
-    st.markdown('**'+t('Les 10 profils ou combinaisons les plus corrélés','The 10 most correlated profiles or combinations')+'**')
-    st.caption(t('Sexe, paysage, âge, catégorie économique — seuls ou combinés jusqu’à trois caractéristiques. On corrèle l’indicateur avec la part de ce profil dans chaque section. Ce n’est pas le taux du phénomène chez ce profil.','Sex, landscape, age and economic category — alone or combined up to three characteristics. The indicator is correlated with each profile’s share within each section. This is not the outcome rate within that profile.'))
-    table(profiles,True)
-    with st.expander(t('Lire un lien et voir les chiffres utilisés','Read a relationship and see the underlying values')):
-        options=[('i',j) for j in range(min(10,len(indicators)))]+[('p',j) for j in range(min(10,len(profiles)))]
-        if options:
-            choice=st.selectbox(t('Lien à examiner','Relationship to inspect'),options,format_func=lambda k:tr(indicators[k[1]]['label']) if k[0]=='i' else profile_name(profiles[k[1]]))
-            r=(indicators if choice[0]=='i' else profiles)[choice[1]]
-            label=tr(r['label']) if choice[0]=='i' else t('Part du profil (%)','Profile share (%)')
-            frame=pd.DataFrame({t('Section','Section'):M.SECTIONS,t('Indicateur choisi — valeur brute','Selected indicator — raw value'):entry['values'],label:r['values']})
-            if choice[0]=='p':frame[t('Répondants du profil / base valide','Profile respondents / valid base')]=[f'{k}/{n}' for k,n in r['counts']]
-            st.dataframe(frame,hide_index=True,use_container_width=True)
-            st.write(t(f"ρ = {r['rho']:+.2f} sur {r['n']} sections ; de {r['low']:+.2f} à {r['high']:+.2f} quand on retire une section. Cette plage mesure la sensibilité, pas un intervalle de confiance.",f"rho = {r['rho']:+.2f} across {r['n']} sections; {r['low']:+.2f} to {r['high']:+.2f} when omitting one section. This range measures sensitivity, not a confidence interval."))
-            if choice[0]=='p':st.write(t('Lecture : dans les sections où ce profil est plus représenté dans l’enquête, la valeur de l’indicateur tend à être plus élevée (ρ positif) ou plus basse (ρ négatif). Cela ne dit pas que les personnes de ce profil sont les plus touchées.','Reading: sections where this profile is more represented in the survey tend to have higher (positive rho) or lower (negative rho) indicator values. This does not mean individuals in that profile are most affected.'))
-    with st.expander(t('Méthode et limites','Method and limitations')):
-        st.write(t(f'{len(indicators)} autres indicateurs et {len(profiles)} profils comparables examinés. Les listes retiennent les dix premiers par |ρ de Spearman|, avec au moins huit sections communes. Les égalités sont traitées par rang moyen. S’il reste moins de dix liens calculables, la liste est plus courte.',f'{len(indicators)} other indicators and {len(profiles)} comparable profiles examined. Lists show the top ten by absolute Spearman rho, with at least eight shared sections. Ties use average ranks. Fewer than ten calculable links yield a shorter list.'))
-        st.write(t('Chaque section compte une fois. Les indicateurs issus de la même question que l’indicateur choisi sont exclus. Les profils identiques ou strictement complémentaires sont dédoublonnés. Minimum 30 répondants dans le profil et hors profil, et 30 réponses valides par section pour sa proportion. Les profils constants entre sections ne sont pas corrélables. Les proportions décrivent l’échantillon, pas nécessairement la population : le plan de sondage peut limiter leur variation.', 'Each section counts once. Indicators sharing the selected indicator’s source question are excluded. Identical or exactly complementary profiles are deduplicated. At least 30 respondents in and outside a profile, and 30 valid answers per section for its share. Profiles constant across sections cannot be correlated. Shares describe the sample, not necessarily the population; sampling design can constrain variation.'))
-        st.write(t('Ici ρ de Spearman remplace φ, réservé aux deux réponses binaires de l’ancien écran. Holm était une correction de p-value, pas un coefficient de corrélation. Ces nouveaux classements territoriaux restent exploratoires : dix sections, recherche de nombreux liens et proximité géographique ne permettent pas de présenter ces listes comme des découvertes confirmées. Aucune p-value de l’ancien test ménage n’est réutilisée. Une corrélation parfaite peut venir de définitions proches ; corrélation ne signifie pas cause.', 'Here Spearman rho replaces phi, which described two binary answers in the old screen. Holm corrected p-values; it was not a correlation coefficient. These territorial rankings remain exploratory: ten sections, many searched relationships and geographic proximity prevent treating them as confirmed discoveries. No p-value from the old household test is reused. Perfect correlations can result from related definitions; correlation does not imply causation.'))
-        st.write(tr(entry['record'].get('metrique') or ''))
-        if entry['record'].get('note'):st.caption(tr(entry['record']['note']))
+            data.append({t('Rang','Rank'):j,t('Profil','Profile') if profile else t('Facteur observé','Observed factor'):name(r),'φ':round(r['phi'],3),t('Cas étudié dans ce groupe','Selected outcome in this group'):f"{r['with_pct']:.1f}% ({r['yes']}/{r['with_n']})",t('Chez les autres','Among others'):f"{r['without_pct']:.1f}% (n={r['without_n']})"})
+        if data:st.dataframe(pd.DataFrame(data),hide_index=True,use_container_width=True)
+        else:st.info(t('Pas assez de liens calculables.','Not enough calculable associations.'))
+    st.markdown('**'+t('Les 10 facteurs les plus associés au cas choisi','The 10 factors most associated with the selected outcome')+'**')
+    st.caption(t('Autres questions et réponses, classées par force du lien |φ|. + : cas plus fréquent ; − : cas moins fréquent. Ce ne sont pas des causes démontrées.','Other questions and answers, ranked by association strength |phi|. +: outcome more common; −: less common. These are not proven causes.'))
+    table(factors)
+    st.markdown('**'+t('Les 10 profils les plus associés à une fréquence élevée du cas','The 10 profiles most associated with a higher outcome frequency')+'**')
+    positive=sorted([r for r in profiles if r['phi']>0],key=lambda r:-r['phi'])
+    st.caption(t('Sexe, paysage, âge et niveau économique, seuls ou combinés. Classement par φ positif ; la proportion concernée est indiquée pour chaque profil.','Sex, landscape, age and economic level, alone or combined. Ranked by positive phi; the affected share is shown for each profile.'))
+    table(positive,True)
+    with st.expander(t('Tests statistiques : p, correction et effectifs','Statistical tests: p, adjustment and sample sizes')):
+        data=[]
+        for kind,rows in ((t('Facteur','Factor'),factors[:10]),(t('Profil','Profile'),positive[:10])):
+            for r in rows:data.append({t('Type','Type'):kind,t('Lien','Association'):name(r),'φ':r['phi'],'p':r['p'],'p (Holm)':r['p_holm'],t('Sections','Sections'):r['sections'],t('Réponses communes','Shared responses'):r['n'],t('Lecture','Interpretation'):LP.decision(r,t)})
+        st.dataframe(pd.DataFrame(data).round(4),hide_index=True,use_container_width=True)
+        st.caption(t(f'Holm est calculé avant le top 10 sur {len(factors)} facteurs et, séparément, {len(profiles)} profils (y compris négatifs).',f'Holm is applied before the top 10 across {len(factors)} factors and, separately, {len(profiles)} profiles (including negative associations).'))
+    with st.expander(t('Comment lire les résultats, pas à pas','How to read the results, step by step')):
+        st.markdown(t('1. **Définir le cas** avec vos réponses, par exemple la défécation à l’air libre.\n2. **Comparer deux groupes** : ceux qui ont l’autre réponse (ou appartiennent au profil), et les autres, sur les mêmes réponses disponibles.\n3. **Lire φ** : de −1 à +1 ; près de zéro, peu de lien binaire. Ce n’est ni un pourcentage ni une probabilité.\n4. **Lire les proportions et effectifs** pour comprendre concrètement le résultat. Les profils peuvent se chevaucher.\n5. **Ouvrir les tests** : p mesure la compatibilité avec l’hypothèse d’absence de lien, sous les hypothèses du test. Holm corrige la recherche de nombreux liens. Une p corrigée ≤ 0,05 franchit le seuil ; sinon, le lien n’est pas confirmé par ce test. Cela ne prouve ni une cause ni une absence de lien.', '1. **Define the outcome** with your answers, for example open defecation.\n2. **Compare two groups**: those with another answer (or in a profile), and others, using shared available responses.\n3. **Read phi**: −1 to +1; near zero means little binary association. It is neither a percentage nor a probability.\n4. **Read proportions and counts** to understand the result. Profiles may overlap.\n5. **Open the tests**: p measures compatibility with no association under test assumptions. Holm adjusts for searching many associations. Adjusted p ≤ 0.05 meets the threshold; otherwise the test does not confirm the association. Neither result proves causation or absence of an association.'))
+        st.write(t('Minimum 30 observations de chaque côté pour le cas et le facteur. Même question source, doublons exacts et réponses identiques ou inverses du cas sont exclus. Deux réponses complémentaires d’une question binaire représentent un seul lien. Les questions sélectionnées définissent le cas : elles ne sont pas retestées comme facteurs. Les réponses non cochées sont comparées aux autres réponses valides, jamais aux valeurs manquantes. Les cultures sont limitées aux répondants déclarant pratiquer l’agriculture.', 'At least 30 observations at each level of the outcome and factor. Same-source questions, exact duplicates and outcomes identical or inverse to the target are excluded. Complementary answers to a binary question represent one association. Selected questions define the outcome and are not retested as factors. Unselected answers are compared with other valid responses, never missing values. Crops are restricted to respondents reporting farming.'))
+        st.write(t('Tests exploratoires par wild cluster bootstrap-t regroupé par section, avec les conditions d’effectif et de répartition du module statistique. Dix sections restent peu ; p est approximative, suppose des sections indépendantes et peut être indisponible. Holm couvre chaque famille de cette recherche, pas les recherches successives. Les listes sont descriptives, sans pondération de population ni ajustement des facteurs entre eux : elles n’identifient pas des déterminants causaux. Une p corrigée peut être identique sur plusieurs lignes sans que φ le soit.', 'Exploratory wild cluster bootstrap-t tests grouped by section, subject to the statistical module’s sample and support checks. Ten sections remain few; p is approximate, assumes independent sections and may be unavailable. Holm covers each family in this search, not repeated searches. Lists are descriptive, without population weighting or mutual factor adjustment: they do not identify causal determinants. Adjusted p can be identical across rows even when phi differs.'))
+        st.markdown('[Wild cluster bootstrap — Stata](https://www.stata.com/manuals/rwildbootstrap.pdf)')

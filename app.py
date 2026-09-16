@@ -2676,7 +2676,7 @@ with _c_contenu:
         # boucles à celle-ci changeait d'outil sans changer de site.
         _ra = onglets.barre("ra_vue", _CODES_RA,
                             titre=lambda c: ({"fr":"Corrélations","en":"Correlations","es":"Correlaciones","ht":"Korelasyon"}.get(i18n.get_lang(),"Links and profiles")) if c == "liens" else T("ra_o_" + c),
-                            description=lambda c: ({"fr":"Un indicateur, deux listes de liens","en":"One indicator, two lists of relationships","es":"Comparar grupos, perfiles y respuestas","ht":"Konpare gwoup, pwofil ak repons"}.get(i18n.get_lang(),"One indicator, two lists of relationships")) if c == "liens" else T("ra_d_" + c),
+                            description=lambda c: ({"fr":"Questions, réponses et profils associés","en":"Questions, answers and associated profiles","es":"Comparar grupos, perfiles y respuestas","ht":"Konpare gwoup, pwofil ak repons"}.get(i18n.get_lang(),"Questions, answers and associated profiles")) if c == "liens" else T("ra_d_" + c),
                             defaut="brut")
         resultats_design.render(_CODES_RA.index(_ra) + 1, i18n.get_lang() == 'fr')
 
