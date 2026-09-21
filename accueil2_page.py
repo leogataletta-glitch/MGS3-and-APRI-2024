@@ -524,7 +524,7 @@ def render():
             if photo else "background:#eef3f0;")
     if photo and cadrage:
         fond += f"background-position:{cadrage};"
-    aquarelle = _photo_b64(prefere='accueil_aquarelle_haiti.png')
+    aquarelle = 'app/static/accueil_aquarelle_haiti.webp'
     if aquarelle:
         # Reserve white space above the illustration for the UNEP logo.
         fond = ""
@@ -532,7 +532,7 @@ def render():
     credit = '' if aquarelle else f'<div class="a2-credit">{_e(T("a2_credit"))}</div>'
     st.markdown(
         f'<div class="a2-hero a2-hero-aquarelle" style="{fond}">'
-        + (f'<div class="a2-hero-art" aria-hidden="true" style="background-image:url(data:image/png;base64,{aquarelle})"></div>' if aquarelle else '')
+        + (f'<div class="a2-hero-art" aria-hidden="true" style="background-image:url({aquarelle})"></div>' if aquarelle else '')
         + f'<div class="a2-hero-c{" a2-hero-fr" if i18n.get_lang() == "fr" else ""}">'
         f'{marque}'
         f'<div class="a2-kick">{_e(T("a2_kicker"))}</div>'
@@ -576,7 +576,7 @@ def render():
 
     # Four photo destinations, followed by the full-width territory map.
     fr = i18n.get_lang() == 'fr'
-    watercolor = _photo_b64(prefere='aquarelles_apri_cimes.png')
+    watercolor = 'app/static/aquarelles_apri_cimes.webp'
     entries = [
         ('methodologie', _locale_text('Cadre de résilience' if fr else 'Resilience framework'),
          _locale_text('Comprendre l’approche APRI' if fr else 'Understand the APRI approach'),
@@ -658,7 +658,7 @@ def render():
                                     f'<svg viewBox="0 0 768 {sh}" aria-hidden="true">'
                                     f'<svg x="0" y="0" width="768" height="{sh}" '
                                     f'viewBox="{sx} {sy} 768 {sh}" overflow="hidden">'
-                                    f'<image href="data:image/png;base64,{photo}" width="1536" height="1024"/>'
+                                    f'<image href="{photo}" width="1536" height="1024"/>'
                                     '</svg></svg></div>', unsafe_allow_html=True)
                                 action = '↗'
                                 if st.button(_locale_text(f'{title}  \n*{detail}*  \n**{action}**'),key=f'a2_b_{code}',use_container_width=True):

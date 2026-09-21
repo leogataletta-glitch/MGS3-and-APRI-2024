@@ -98,20 +98,26 @@ PAYSAGE_RAW = {"Littoral": "Littoral (ou plaene cotiere)", "Montagne": "Montagne
 def check_password():
     try:
         expected = st.secrets.get("APP_PASSWORD", None)
+    except st.errors.StreamlitSecretNotFoundError:
+        expected = None  # Public application when no secret file is configured.
     except Exception:
-        expected = None  # aucun fichier de secrets configuré -> accès libre (usage local)
+        st.error(_locale_text("Configuration d’accès indisponible. Contactez l’équipe APRI."))
+        return False
     if not expected:
         return True  # pas de mot de passe configuré -> accès libre (usage local)
     if st.session_state.get("authed"):
         return True
     st.title(_locale_text("Household resilience survey 2024 — Haiti"))
-    pw = st.text_input(_locale_text("Mot de passe"), type="password")
-    if st.button(_locale_text("Entrer")) or pw:
-        if pw == expected:
-            st.session_state["authed"] = True
-            st.rerun()
-        elif pw:
-            st.error(_locale_text("Mot de passe incorrect."))
+    import time
+    import securite_acces
+    with st.form('apri_access'):
+        pw = st.text_input(_locale_text("Mot de passe"), type="password")
+        submitted = st.form_submit_button(_locale_text("Entrer"))
+    if submitted:
+        result = securite_acces.verify(st.session_state,pw,expected,time.time())
+        if result == 'ok':st.rerun()
+        elif result == 'locked':st.error(_locale_text("Trop de tentatives. Réessayez dans une minute."))
+        else:st.error(_locale_text("Mot de passe incorrect."))
     return False
 
 
@@ -186,7 +192,8 @@ def export_excel(theme, base_n):
 # passée. Ici la colonne n'est pas un panneau d'options, c'est le seul chemin
 # vers les onze rubriques. On l'ouvre au démarrage, et la feuille de style
 # retire le bouton qui permettait de la fermer.
-st.set_page_config(page_title="Household resilience survey — Sud & Grand'Anse, Haiti",
+st.set_page_config(page_title="APRI — Observatoire de la résilience | Haïti",
+                   page_icon=os.path.join(APP_DIR, "static", "apri-logo.png"),
                    layout="wide", initial_sidebar_state="expanded")
 
 if not check_password():
@@ -2901,3 +2908,10 @@ with _c_contenu:
 # Download the visible result, without an extra result table.
 import result_export
 result_export.activer(enabled=app_mode != MODE_PORTAIL)
+
+
+# Shared accessibility and factual data-use information.
+import qualite_web
+qualite_web.appliquer()
+with _c_contenu:
+    qualite_web.informations()

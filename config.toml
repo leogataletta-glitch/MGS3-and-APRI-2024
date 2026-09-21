@@ -30,4 +30,21 @@ primaryColor = "#1f7a5a"
 [server]
 # Le bandeau « Made with Streamlit » et la collecte d'usage n'ont pas leur
 # place sur un site du PNUE.
-enableStaticServing = false
+# LE SERVICE DE FICHIERS STATIQUES EST OUVERT, POUR LA VIDÉO DU BANDEAU.
+# Une vidéo de trois cent soixante kilo-octets ne peut pas être encodée dans
+# la page comme les photographies : le HTML est renvoyé à chaque réexécution,
+# et une demi-mégaoctet repasserait le fil à chaque clic. Servie depuis
+# `static/`, elle est téléchargée une fois puis gardée par le navigateur.
+#
+# CE DOSSIER EST PUBLIC, SANS MOT DE PASSE. Streamlit sert `static/` avant
+# d'exécuter le script, donc avant la porte de `APP_PASSWORD` : n'y mettre
+# QUE des fichiers d'habillage. Aucune donnée d'enquête, aucun export,
+# aucune image portant un nom de localité ou un identifiant de ménage.
+enableStaticServing = true
+
+# Keep server-side browser protections explicitly enabled.
+enableCORS = true
+enableXsrfProtection = true
+
+[browser]
+gatherUsageStats = false

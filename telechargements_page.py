@@ -330,12 +330,6 @@ def _fichier_composite(lang):
 # 5 · base individuelle anonymisée  /  6 · dictionnaire du questionnaire
 # ----------------------------------------------------------------------
 @st.cache_data(show_spinner=False)
-def _fichier_brut():
-    with open(_chemin("donnees_anonymisees.csv"), "rb") as f:
-        return f.read()
-
-
-@st.cache_data(show_spinner=False)
 def _fichier_dictionnaire(lang):
     index = _lire_json("questions_index.json")
     with open(_chemin("cache_national.pkl"), "rb") as f:
@@ -598,8 +592,6 @@ def render():
         ("d4_titre", "04_scores_composites.xlsx", XLSX, "XLSX",
          T("d_v_dimensions", n=_nb(v["dim"])),
          lambda: _fichier_composite(lang)),
-        ("d5_titre", "05_base_individuelle_anonymisee.csv", "text/csv",
-         "CSV", T("d_v_menages", n=_nb(v["men"])), _fichier_brut),
         ("d6_titre", "06_dictionnaire_questionnaire.xlsx", XLSX, "XLSX",
          T("d_v_items", n=_nb(v["q"])),
          lambda: _fichier_dictionnaire(lang)),
@@ -616,3 +608,5 @@ def render():
         with col:
             for j in lot:
                 _bloc(*j)
+    from qualite_web import demande_donnees
+    demande_donnees()

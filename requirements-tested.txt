@@ -1,0 +1,6 @@
+# Direct dependencies used by the acceptance tests on 2026-09-21.
+# This is not a full transitive lock or a vulnerability assessment.
+streamlit==1.55.0
+pandas==2.3.3
+numpy==2.3.5
+openpyxl==3.1.5
