@@ -1,10 +1,20 @@
+# APRI — Résilience des paysages en Haïti
+
+Explorez les paysages, les résultats d’enquête et les indicateurs de résilience en Haïti.
+
+[Ouvrir APRI](https://enquete-menage-2024-4a9hs29btbw94pnrtxbe7a.streamlit.app/)
+
+Plateforme portée par le Programme des Nations Unies pour l’environnement (PNUE/UNEP). Les données individuelles sont accessibles sur demande après validation. Les résultats publics décrivent des associations, pas des preuves de causalité.
+
+## Déploiement
+
 # Enquête ménage 2024 — mettre l'explorateur en ligne
 
 Ce dossier contient une petite application web qui permet d'explorer les résultats de l'enquête avec des filtres combinables (sexe, catégorie économique, groupe d'âge, paysage, section communale) et d'obtenir, pour n'importe laquelle des 503 questions, un tableau (n et %) et un graphique calculés en direct sur la population filtrée, avec un bouton pour télécharger le résultat en Excel.
 
 Vous n'avez aucune ligne de code à écrire. Tout est déjà prêt dans ce dossier ; il ne reste qu'à le mettre en ligne, ce qui se fait entièrement par des clics. Comptez 15-20 minutes la première fois.
 
-Les données utilisées ici sont une copie **anonymisée** (nom, téléphone, coordonnées GPS et nom de l'enquêteur retirés) — c'est le fichier `data/donnees_anonymisees.csv`, déjà généré, vous n'avez rien à faire dessus.
+La base individuelle conserve des caractéristiques de ménages après retrait des identifiants directs. Ce retrait ne garantit pas à lui seul une anonymisation complète. L’accès à la base est soumis à une demande et à une validation ; le dépôt qui la contient doit lui aussi avoir des accès restreints.
 
 ## Étape 1 — Créer un compte GitHub (gratuit)
 
@@ -35,7 +45,7 @@ Si vous avez déjà un compte GitHub, passez directement à l'étape 2.
 ## Étape 4 — Déployer l'application
 
 1. Sur Streamlit Cloud, cliquez sur **Create app** (ou **New app**).
-2. Choisissez **Deploy a public app from GitHub** (l'app elle-même peut ensuite être protégée par mot de passe, voir étape 5 — "public" ici veut juste dire "accessible par un lien", pas listée nulle part).
+2. Choisissez **Deploy a public app from GitHub** (l'app elle-même peut ensuite être protégée par mot de passe, voir étape 5 — une application publique peut être trouvée et indexée par les moteurs de recherche).
 3. Sélectionnez le dépôt que vous venez de créer (`enquete-menage-2024`), la branche `main`, et dans **Main file path** indiquez `app.py`.
 4. Cliquez sur **Deploy**.
 5. La première mise en ligne prend 2-5 minutes (installation des outils nécessaires). Une page avec une URL du type `https://xxxxx.streamlit.app` apparaît ensuite — c'est le lien de votre application.

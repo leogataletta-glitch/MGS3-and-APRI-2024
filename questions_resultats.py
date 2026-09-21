@@ -652,7 +652,7 @@ def render(cle_dim, dimension):
             st.caption(_locale_text(T("qr_base", n=(d["base_n"].get(cible) or 0),
                          c=_lib(cible) if cible != "Total"
                          else T("qr_r_tous"))))
-            cherche = (st.text_input(_locale_text(T("qr_chercher")), key=f"qr_ch_{cle_dim}",
+            cherche = (st.text_input(_locale_text(T("qr_chercher")), key=f"qr_ch_{cle_dim}", max_chars=200,
                                      placeholder="…") or "").strip().lower()
             html = _tableau_questions(groupes, cible, cherche)
             if html:

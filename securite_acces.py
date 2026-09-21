@@ -7,6 +7,8 @@ LOCK_SECONDS=60
 
 def verify(state,submitted,expected,now):
     if now<float(state.get('auth_retry_at',0)):return 'locked'
+    if not isinstance(submitted,str) or not submitted or len(submitted)>256:
+        return 'invalid'
     if hmac.compare_digest(str(submitted).encode('utf-8'),str(expected).encode('utf-8')):
         state['authed']=True;state['auth_failures']=0;state.pop('auth_retry_at',None)
         return 'ok'

@@ -471,7 +471,7 @@ def _accordeon_indicateurs(lignes, vent, teinte, cle_dim):
 
     ordre = sorted(lignes, key=lambda r: (_sc(r) is None, _sc(r) or 0,
                                           r["ligne"]))
-    cherche = (st.text_input(_locale_text(T("d_chercher")), key=f"d_rech_{cle_dim}",
+    cherche = (st.text_input(_locale_text(T("d_chercher")), key=f"d_rech_{cle_dim}", max_chars=200,
                              placeholder="…") or "").strip().lower()
     if cherche:
         ordre = [r for r in ordre if cherche in nom_indic(r).lower()

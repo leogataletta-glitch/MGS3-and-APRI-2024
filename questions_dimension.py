@@ -541,7 +541,7 @@ def rendre(cle_dim):
     if croise:
         st.caption(_locale_text(T("q_croise")))
 
-    cherche = (st.text_input(_locale_text(T("q_chercher")), key=f"q_rech_{cle_dim}",
+    cherche = (st.text_input(_locale_text(T("q_chercher")), key=f"q_rech_{cle_dim}", max_chars=200,
                              placeholder="…") or "").strip().lower()
     if cherche:
         filtres_g = []

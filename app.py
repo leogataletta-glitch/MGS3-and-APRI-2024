@@ -111,7 +111,7 @@ def check_password():
     import time
     import securite_acces
     with st.form('apri_access'):
-        pw = st.text_input(_locale_text("Mot de passe"), type="password")
+        pw = st.text_input(_locale_text("Mot de passe"), type="password", max_chars=256)
         submitted = st.form_submit_button(_locale_text("Entrer"))
     if submitted:
         result = securite_acces.verify(st.session_state,pw,expected,time.time())
@@ -2245,10 +2245,12 @@ LIBELLE_MODE.update({MODE_ACCUEIL: T("mode_accueil"),
 # absente — et Streamlit lève alors une erreur qui masque toute la page.
 if "app_mode" not in st.session_state:
     st.session_state["app_mode"] = MODE_PORTAIL
+import publication_web
+publication_web.initialise()
 
 
 def _bascule(mode):
-    st.session_state["app_mode"] = mode
+    publication_web.go(mode)
 
 
 # L'identité APRI vit maintenant dans la barre latérale : la répéter en haut
@@ -2609,6 +2611,11 @@ app_mode = st.session_state["app_mode"]
 with _c_contenu:
     import typographie
     typographie.appliquer(app_mode)
+    if app_mode == 'introuvable':
+        publication_web.not_found()
+    if app_mode == 'cgu':
+        st.subheader(publication_web.tr(publication_web.PAGES['cgu']))
+        publication_web.terms()
     import design_commun
     if app_mode != MODE_PORTAIL:
         design_commun.appliquer()
@@ -2907,7 +2914,7 @@ with _c_contenu:
 
 # Download the visible result, without an extra result table.
 import result_export
-result_export.activer(enabled=app_mode != MODE_PORTAIL)
+result_export.activer(enabled=app_mode not in (MODE_PORTAIL, 'cgu', 'introuvable'))
 
 
 # Shared accessibility and factual data-use information.
@@ -2915,3 +2922,6 @@ import qualite_web
 qualite_web.appliquer()
 with _c_contenu:
     qualite_web.informations()
+    if app_mode != 'cgu':
+        publication_web.footer()
+publication_web.sync()

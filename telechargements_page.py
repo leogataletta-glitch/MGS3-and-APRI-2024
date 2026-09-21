@@ -439,10 +439,10 @@ _STYLE = """
      qu'il accompagnait ; le disque dit la même chose et laisse la page aux
      noms des jeux. */
   div[class*="st-key-dl_"] button[data-testid="stBaseButton-secondary"] {
-      width:34px !important; min-width:34px !important; height:34px !important;
+      width:76px !important; min-width:76px !important; height:34px !important;
       min-height:34px !important; padding:0 !important;
-      border-radius:999px !important; background:#fff !important;
-      aspect-ratio:1 / 1 !important; overflow:hidden !important;
+      border-radius:10px !important; background:#fff !important;
+       overflow:hidden !important;
       border:1px solid #b9cdc0 !important; color:#1f5b46 !important;
       display:flex !important; align-items:center !important;
       justify-content:center !important; margin-left:auto !important;
@@ -461,7 +461,7 @@ _STYLE = """
       > button:hover p { color:#fff !important; }
   div[class*="st-key-dl_"] div[data-testid="stDownloadButton"],
   div[class*="st-key-dl_"] button[data-testid="stBaseButton-secondary"] {
-      width:34px !important;
+      width:76px !important;
   }
   /* LA LIGNE DE SÉPARATION, ET RIEN D'AUTRE : elle sépare deux jeux sans les
      enfermer chacun dans une boîte. */
@@ -566,7 +566,7 @@ def _bloc(cle_titre, nom_fichier, mime, format_txt, volume, fabrique):
                   f'<b>{_e(format_txt)}</b></div>', unsafe_allow_html=True)
         with d:
             st.download_button(
-                _locale_text("\u2193"), data=data, help=T("d_bouton"),
+                f"{format_txt} ↓", data=data, help=f"{T('d_bouton')} — {titre}",
                 file_name=nom_fichier, mime=mime,
                 key=f"dl_{nom_fichier}_{i18n.get_lang()}")
 

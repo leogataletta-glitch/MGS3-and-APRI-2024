@@ -27,6 +27,12 @@ def informations():
             for j in (1,3,5,7):
                 st.markdown('**'+txt[j]+'**');st.write(txt[j+1])
             st.markdown(f'[Contact APRI](mailto:{COURRIEL})')
+            st.write({
+                'fr': 'Audience : les statistiques natives de Streamlit Community Cloud sont utilisées pour consulter la fréquentation. Elles sont distinctes de la télémétrie facultative désactivée dans l’application. Aucun traceur publicitaire supplémentaire n’a été ajouté.',
+                'en': 'Audience: native Streamlit Community Cloud analytics are used to review visits. They are separate from optional application telemetry, which is disabled. No additional advertising tracker has been added.',
+                'es': 'Audiencia: se utilizan las estadísticas nativas de Streamlit Community Cloud para consultar las visitas. Son distintas de la telemetría opcional desactivada en la aplicación. No se ha añadido ningún rastreador publicitario adicional.',
+                'ht': 'Odyans: estatistik Streamlit Community Cloud yo sèvi pou gade kantite vizit. Yo diferan ak swivi opsyonèl aplikasyon an ki dezaktive. Pa gen lòt zouti swivi piblisite ki ajoute.',
+            }.get(i18n.get_lang(), 'Native analytics: Streamlit Community Cloud.'))
 
 
 ACCESS = {
