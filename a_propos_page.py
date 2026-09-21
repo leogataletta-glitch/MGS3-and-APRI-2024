@@ -440,28 +440,25 @@ def render():
     est le bras de mesure.
     """
     st.markdown(_STYLE, unsafe_allow_html=True)
-    _section("ap_q_t", "ap_q_x")
-    st.markdown(f'<div class="ap-h">{_e(T("ap_d_t"))}<span></span></div>',
-                unsafe_allow_html=True)
-    st.markdown(_definitions(), unsafe_allow_html=True)
-    _section("ap_p_t", "ap_p_x")
-    _section("ap_y_t", "ap_y_x")
-    st.markdown(_paysages(), unsafe_allow_html=True)
-    _section("ap_k_t", "ap_k_x")
-    _section("ap_pi_t", "ap_pi_x")
-    st.markdown(f'<div class="ap-todo">{_e(T("ap_pi_todo"))}</div>',
-                unsafe_allow_html=True)
-    _section("ap_r_t", "ap_r_x")
-    st.markdown(_liste("ap_r_l"), unsafe_allow_html=True)
-    st.markdown(f'<div class="ap-h">{_e(T("ap_o_t"))}<span></span></div>',
-                unsafe_allow_html=True)
-    st.markdown(_liste("ap_o_l"), unsafe_allow_html=True)
-    # LES CINQ SECTIONS SUR L'INDICE ONT ÉTÉ RETIRÉES. Ce qu'est le score,
-    # d'où vient le cadre, ce que l'enquête a couvert et ce que l'indice ne
-    # prétend pas : tout cela est exposé en entier dans « Cadre de
-    # résilience », onglet par onglet, avec les barèmes et les pondérations.
-    # Le redire ici en cinq paragraphes faisait de la page « À propos » un
-    # résumé de méthode plutôt que la présentation de l'initiative.
+    with st.container(key="about_intro"):
+        _section("ap_q_t", "ap_q_x")
+        _section("ap_k_t", "ap_k_x")
+    context, action = st.columns(2, gap="medium")
+    with context:
+        with st.container(key="about_context"):
+            _section("ap_p_t", "ap_p_x")
+            _section("ap_y_t", "ap_y_x")
+            st.markdown(_paysages(), unsafe_allow_html=True)
+    with action:
+        with st.container(key="about_action"):
+            _section("ap_pi_t", "ap_pi_x")
+            st.markdown(f'<div class="ap-todo">{_e(T("ap_pi_todo"))}</div>', unsafe_allow_html=True)
+            _section("ap_r_t", "ap_r_x")
+            st.markdown(_liste("ap_r_l"), unsafe_allow_html=True)
+    with st.expander(_locale_text(T("ap_d_t"))):
+        st.markdown(_definitions(), unsafe_allow_html=True)
+    with st.expander(_locale_text(T("ap_o_t"))):
+        st.markdown(_liste("ap_o_l"), unsafe_allow_html=True)
 
 
 def render_contact():

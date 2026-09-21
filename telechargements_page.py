@@ -599,14 +599,11 @@ def render():
          T("d_v_organisations", n=_nb(v["ocb"])),
          lambda: _fichier_ocb(lang)),
     ]
-    # DEUX COLONNES, ET LA PREMIÈRE PORTE LE JEU EN TROP. Sept ne se partage
-    # pas en deux ; quatre à gauche et trois à droite garde la lecture de haut
-    # en bas dans chaque colonne, ce qu'un rangement en serpentin perdrait.
-    moitie = (len(jeux) + 1) // 2
-    g, d = st.columns(2, gap="large")
-    for col, lot in ((g, jeux[:moitie]), (d, jeux[moitie:])):
-        with col:
-            for j in lot:
-                _bloc(*j)
+    # Each pair shares a row so the next pair starts on the same baseline.
+    for start in range(0, len(jeux), 2):
+        cols = st.columns(2, gap="medium")
+        for col, jeu in zip(cols, jeux[start:start + 2]):
+            with col:
+                _bloc(*jeu)
     from qualite_web import demande_donnees
     demande_donnees()
