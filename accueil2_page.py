@@ -148,13 +148,13 @@ STYLE = """
      n'ayant pas de rembourrage haut. Les valeurs sont dites dans l'unité de
      la mise en page, pas en pixels : elles suivent le facteur de zoom. */
   .a2-hero { position:relative; border-radius:0; overflow:hidden;
-        min-height:420px; display:flex; align-items:center;
+        min-height:320px; display:flex; align-items:center;
         margin:0 -2.6rem 0 -2rem;
         background-color:#fff;
         background-size:cover; background-position:62% 40%;
         background-repeat:no-repeat; }
   .a2-hero-aquarelle .a2-unep { filter:brightness(0) saturate(100%) invert(22%) sepia(21%) saturate(1030%) hue-rotate(101deg) brightness(85%); }
-  .a2-hero-art { position:absolute; inset:90px 0 0;
+  .a2-hero-art { position:absolute; inset:60px 0 0;
         z-index:0; pointer-events:none; 
         background-size:contain; background-position:right bottom;
         background-repeat:no-repeat; }
@@ -168,14 +168,14 @@ STYLE = """
   /* LE REMBOURRAGE BAS EST UNE BANDE RÉSERVÉE, PAS UNE RESPIRATION. C'est là
      que le bouton d'appel vient se poser, remonté depuis le flux : sans elle,
      il se serait couché sur la dernière ligne du paragraphe. */
-  .a2-hero-c { position:relative; z-index:2; padding:40px 40px 80px calc(2rem + 30px);
+  .a2-hero-c { position:relative; z-index:2; padding:20px 40px 28px calc(2rem + 30px);
         max-width:680px; }
   /* LE BLOC DE MARQUE : l'emblème, un filet, la ligne institutionnelle. Les
      trois sont alignés sur leur milieu, comme dans le fichier de la charte,
      et le filet monte et descend avec le texte plutôt qu'avec l'image — c'est
      lui qui sépare la marque de ce qu'elle nomme. */
-  .a2-marque { display:flex; align-items:center; gap:20px; margin:0 0 26px; }
-  .a2-marque img { height:78px; width:auto; display:block; flex:0 0 auto; }
+  .a2-marque { display:flex; align-items:center; gap:16px; margin:0 0 16px; }
+  .a2-marque img { height:58px; width:auto; display:block; flex:0 0 auto; }
   .a2-filet { width:1px; align-self:stretch; margin:4px 0;
         background:#a9bcc6; flex:0 0 1px; }
   /* LE TITRE INSTITUTIONNEL : le même romain à empattements que le grand
@@ -185,26 +185,26 @@ STYLE = """
      quoi il porte et passe au bleu ardoise. */
   .a2-inst { font-family:Georgia,"Times New Roman",serif; margin:0;
         text-align:left !important; }
-  .a2-inst b { display:block; font-weight:400; font-size:22px;
+  .a2-inst b { display:block; font-weight:400; font-size:18px;
         line-height:1.24; color:#17563f; }
-  .a2-inst span { display:block; font-size:19px; line-height:1.3;
+  .a2-inst span { display:block; font-size:16px; line-height:1.3;
         color:#3d5c74; }
   .a2-kick { font-size:11.5px; font-weight:700; letter-spacing:.19em;
-        text-transform:uppercase; color:#3f8f66; margin:0 0 16px; }
+        text-transform:uppercase; color:#3f8f66; margin:0 0 10px; }
   /* AU FIL DE L'EAU, ET NON JUSTIFIÉ. La feuille de l'application justifie
      les blocs de texte ; sur un titre de quatre mots en corps cinquante-deux,
      la justification écarte les mots jusqu'aux bords du cadre. */
   /* La coupure éditoriale reste, mais chaque ligne peut se replier sur mobile. */
   .a2-titre { font-family:Georgia,"Times New Roman",serif;
-        font-size:clamp(29px, 3.1vw, 46px);
+        font-size:clamp(26px, 2.5vw, 36px);
         line-height:1.08; letter-spacing:-.02em; color:#153b2c;
         margin:0 0 18px; font-weight:400; text-align:left !important;
         max-width:none; }
   .a2-titre span { display:block; white-space:normal; text-wrap:balance; hyphens:none!important; overflow-wrap:normal!important; word-break:normal!important; }
   @media(min-width:1100px){.a2-hero-c.a2-hero-fr{max-width:760px;}}
   /* Un chapeau court, aligné à gauche et sans coupures automatiques des mots. */
-  p.a2-intro { font-size:17px !important; color:#33443e !important;
-        line-height:1.6 !important; margin:0 0 18px !important;
+  p.a2-intro { font-size:15px !important; color:#33443e !important;
+        line-height:1.5 !important; margin:0 0 12px !important;
         max-width:52ch; text-align:left !important; hyphens:none !important; }
   /* LE CRÉDIT EST BLANC, SUR LA PHOTOGRAPHIE. Une ombre portée le détache
      là où le cliché passe clair — une plaque translucide, elle, découperait
@@ -362,18 +362,18 @@ STYLE = """
   /* Le texte et les marques gardent leur place sur téléphone. */
   @media (max-width: 1000px) {
     .a2-hero { margin-left:-2.6rem; }
-    .a2-hero-c { padding:100px 24px 140px; max-width:680px; }
+    .a2-hero-c { padding:68px 24px 100px; max-width:680px; }
     .a2-marque { gap:12px; }
-    .a2-marque img { height:60px; }
-    .a2-inst b { font-size:19px; }
-    .a2-inst span { font-size:16px; }
-    .a2-titre { font-size:clamp(28px, 5vw, 40px); }
+    .a2-marque img { height:46px; }
+    .a2-inst b { font-size:16px; }
+    .a2-inst span { font-size:14px; }
+    .a2-titre { font-size:clamp(24px, 4vw, 32px); }
     div[class*="st-key-a2_cta"] { margin:0 !important; }
     .st-key-a2_cta { margin:12px 0 20px !important; }
-    .a2-hero-aquarelle { background-size:auto 230px; background-position:right bottom!important; }
-    .a2-hero-art { inset:auto 0 0; height:230px; }
+    .a2-hero-aquarelle { background-size:auto 150px; background-position:right bottom!important; }
+    .a2-hero-art { inset:auto 0 0; height:150px; }
     .a2-hero-aquarelle::before { background:linear-gradient(180deg,#fff 0%,#fff 60%,rgba(255,255,255,0) 90%); }
-    .a2-hero-aquarelle .a2-hero-c { padding-bottom:165px; }
+    .a2-hero-aquarelle .a2-hero-c { padding-bottom:100px; }
     .a2-credit { max-width:calc(100% - 48px); }
   }
 </style>
