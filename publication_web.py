@@ -1,4 +1,4 @@
-"""Public navigation and usage information; no tracking or submission endpoint."""
+"""Public navigation, usage information and optional public session counter."""
 import streamlit as st
 import i18n
 from pathlib import Path
@@ -104,6 +104,8 @@ def footer():
             st.image(str(asset), caption=tr(('Visuel pour accompagner votre publication', 'Image to accompany your post', 'Imagen para acompañar su publicación', 'Imaj pou akonpaye piblikasyon ou')), width=600)
             st.download_button('PNG ↓', asset.read_bytes(), file_name=asset.name, mime='image/png', key='share_image')
         st.markdown(f'[APRI]({BASE_URL})')
+    import compteur_visites
+    compteur_visites.render()
 
 def not_found():
     st.subheader(tr(('Page introuvable', 'Page not found', 'Página no encontrada', 'Paj la pa jwenn')))

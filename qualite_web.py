@@ -33,6 +33,14 @@ def informations():
                 'es': 'Audiencia: se utilizan las estadísticas nativas de Streamlit Community Cloud para consultar las visitas. Son distintas de la telemetría opcional desactivada en la aplicación. No se ha añadido ningún rastreador publicitario adicional.',
                 'ht': 'Odyans: estatistik Streamlit Community Cloud yo sèvi pou gade kantite vizit. Yo diferan ak swivi opsyonèl aplikasyon an ki dezaktive. Pa gen lòt zouti swivi piblisite ki ajoute.',
             }.get(i18n.get_lang(), 'Native analytics: Streamlit Community Cloud.'))
+            import compteur_visites
+            if compteur_visites.configuration() is not None:
+                st.write({
+                    'fr': 'Le compteur public compte les sessions depuis son activation, pas les personnes uniques. Le serveur transmet une opération de comptage à CounterAPI, sans transmettre vos réponses, votre adresse IP ou votre identité. Aucun cookie ni script de ce service n’est ajouté à votre navigateur. Le total peut être retardé ou incomplet en cas de panne.',
+                    'en': 'The public counter counts sessions since activation, not unique people. The server sends a count operation to CounterAPI without forwarding your answers, IP address or identity. No cookie or script from this service is added to your browser. The total may be delayed or incomplete during outages.',
+                    'es': 'El contador público cuenta sesiones desde su activación, no personas únicas. El servidor envía una operación a CounterAPI sin transmitir sus respuestas, dirección IP o identidad. No se añade ninguna cookie ni script del servicio al navegador. El total puede retrasarse o quedar incompleto durante una interrupción.',
+                    'ht': 'Kontè piblik la konte sesyon depi aktivasyon li, pa moun inik. Sèvè a voye yon operasyon kontaj bay CounterAPI san li pa voye repons ou, adrès IP ou oswa idantite ou. Pa gen bonbon ni script sèvis sa a ki ajoute nan navigatè ou. Total la ka anreta oswa enkonplè lè gen yon pann.',
+                }.get(i18n.get_lang(), compteur_visites.LABELS['en'][3]))
 
 
 ACCESS = {
