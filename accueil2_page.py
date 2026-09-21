@@ -168,7 +168,7 @@ STYLE = """
   /* LE REMBOURRAGE BAS EST UNE BANDE RÉSERVÉE, PAS UNE RESPIRATION. C'est là
      que le bouton d'appel vient se poser, remonté depuis le flux : sans elle,
      il se serait couché sur la dernière ligne du paragraphe. */
-  .a2-hero-c { position:relative; z-index:2; padding:20px 40px 28px calc(2rem + 30px);
+  .a2-hero-c { position:relative; z-index:2; padding:20px 40px 60px calc(2rem + 30px);
         max-width:680px; }
   /* LE BLOC DE MARQUE : l'emblème, un filet, la ligne institutionnelle. Les
      trois sont alignés sur leur milieu, comme dans le fichier de la charte,
@@ -664,3 +664,4 @@ def render():
                                 if st.button(_locale_text(f'{title}  \n*{detail}*  \n**{action}**'),key=f'a2_b_{code}',use_container_width=True):
                                     st.session_state['app_mode']=code
                                     st.rerun()
+
