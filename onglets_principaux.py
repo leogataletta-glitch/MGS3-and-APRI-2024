@@ -34,3 +34,5 @@ def render(key, codes, selected, description=None):
     {root} [role="radiogroup"] label:has(input:checked):hover{{background:#e8f1eb!important;}}
     {root} [role="radiogroup"] label:last-child{{border-right:0!important;}}
     </style>''', unsafe_allow_html=True)
+    import proposition_visuelle
+    proposition_visuelle.navigation(root)

@@ -2611,6 +2611,8 @@ app_mode = st.session_state["app_mode"]
 with _c_contenu:
     import typographie
     typographie.appliquer(app_mode)
+    import proposition_visuelle
+    proposition_visuelle.selector()
     if app_mode == 'introuvable':
         publication_web.not_found()
     if app_mode == 'cgu':
@@ -2921,7 +2923,11 @@ result_export.activer(enabled=app_mode not in (MODE_PORTAIL, 'cgu', 'introuvable
 import qualite_web
 qualite_web.appliquer()
 with _c_contenu:
-    qualite_web.informations()
-    if app_mode != 'cgu':
+    if app_mode == MODE_APROPOS:
+        qualite_web.informations()
         publication_web.footer()
+    if app_mode != 'cgu':
+        import compteur_visites
+        compteur_visites.render()
 publication_web.sync()
+proposition_visuelle.apply()
