@@ -82,11 +82,11 @@ TEXTES = {
     "a2_titre": {"en": "Understanding landscapes@@to strengthen resilience",
                  "fr": "Comprendre les territoires@@pour renforcer leur résilience"},
     "a2_intro": {
-        "en": "APRI reads a territory as a system: its capacity to anticipate, absorb and adapt, measured before a shock rather than after it. It is not a damage report and not a forecast.",
-        "fr": "APRI lit un territoire comme un système : sa capacité à anticiper, absorber et s'adapter, mesurée avant le choc et non après. Ce n'est ni un relevé de dégâts ni une prévision.",
-        "es": "APRI interpreta un territorio como un sistema: su capacidad para anticipar, absorber y adaptarse, medida antes de una perturbación y no después. No es un informe de daños ni una predicción.",
-        "ht": "APRI konsidere yon teritwa kòm yon sistèm: kapasite li pou antisipe, absòbe chòk epi adapte li, mezire anvan chòk la olye de apre. Se pa yon rapò sou domaj ni yon prediksyon."
-},
+        "fr": "Portée par le PNUE, l’Approche Paysages Résilients Intégrée (APRI) relie les dynamiques écologiques, humaines et productives pour renforcer la résilience des ménages et des territoires. En Haïti, elle accompagne les acteurs locaux dans deux paysages pilotes du Grand Sud.",
+        "en": "Led by UNEP, the Integrated Resilient Landscape Approach (APRI) connects ecological, human and productive dynamics to strengthen the resilience of households and territories. In Haiti, it works alongside local actors in two pilot landscapes in the Grand Sud.",
+        "es": "Impulsado por el PNUMA, el Enfoque Integrado de Paisajes Resilientes (APRI) conecta las dinámicas ecológicas, humanas y productivas para fortalecer la resiliencia de los hogares y los territorios. En Haití, acompaña a los actores locales en dos paisajes piloto del Gran Sur.",
+        "ht": "Sou direksyon PNUE, Apwòch Entegre pou Peyizaj Rezilyan (APRI) konekte dinamik ekolojik, imen ak pwodiktif pou ranfòse rezilyans kay yo ak teritwa yo. Ann Ayiti, li akonpaye aktè lokal yo nan de peyizaj pilòt nan Gran Sid la."
+    },
     "a2_cta": {"en": "Explore the results", "fr": "Explorer les résultats"},
     # LA LÉGENDE SUIT LA PHOTOGRAPHIE, ET LES DEUX PHOTOGRAPHIES DIFFÈRENT :
     # la vallée de la Voldrogue côté anglais, le port côté français. Chaque
@@ -530,33 +530,25 @@ def render():
         fond = ""
     # This illustration is not a documentary photograph of a named location.
     credit = '' if aquarelle else f'<div class="a2-credit">{_e(T("a2_credit"))}</div>'
-    st.markdown(
-        f'<div class="a2-hero a2-hero-aquarelle" style="{fond}">'
-        + (f'<div class="a2-hero-art" aria-hidden="true" style="background-image:url({aquarelle})"></div>' if aquarelle else '')
-        + f'<div class="a2-hero-c{" a2-hero-fr" if i18n.get_lang() == "fr" else ""}">'
-        f'{marque}'
-        f'<div class="a2-kick">{_e(T("a2_kicker"))}</div>'
-        f'<div class="a2-titre">'
-        f'{"".join("<span>" + _e(x) + "</span>" for x in T("a2_titre").split("@@"))}'
-        f'</div>'
-        f'<p class="a2-intro">{_e(T("a2_intro"))}</p>'
-        f'</div>'
-        f'<img class="a2-unep" alt="UNEP" '
-        f'src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}">'
-        f'{credit}</div>',
+    # Native Streamlit navigation preserves the selected language and filters.
+    st.markdown('<header class="a2-brand-row">' + marque
+        + f'<img class="a2-partner" alt="UNEP" src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}"></header>',
         unsafe_allow_html=True)
-    # LE BOUTON EST DANS LA PHOTOGRAPHIE, ET IL Y ENTRE PAR LE HAUT. Streamlit
-    # ne sait pas poser un widget à l'intérieur d'un bloc HTML qu'on a écrit
-    # soi-même, et un faux bouton dessiné dans le HTML serait un lien qui ne
-    # mène nulle part. Il est donc écrit juste après l'image, puis remonté
-    # dedans par une marge négative. Une marge, et non un placement absolu :
-    # la hauteur du bandeau change avec la langue — le titre français tient
-    # sur trois lignes, l'anglais sur deux — et une position comptée depuis le
-    # haut aurait glissé de l'une à l'autre.
-    with st.container(key="a2_cta"):
-        if st.button(_locale_text(T("a2_cta")), key="a2_cta_b"):
-            st.session_state["app_mode"] = "dimensions"
-            st.rerun()
+    with st.container(key="a2_welcome"):
+        copy, art = st.columns([1.05, 1], gap="large", vertical_alignment="center")
+        with copy:
+            st.markdown('<div class="a2-welcome-copy">'
+                + f'<div class="a2-kick">{_e(T("a2_kicker"))}</div>'
+                + '<h1 class="a2-welcome-title">' + _e(T("a2_titre").replace("@@", " ")) + '</h1>'
+                + f'<p class="a2-intro">{_e(T("a2_intro"))}</p></div>',
+                unsafe_allow_html=True)
+            with st.container(key="a2_main_action"):
+                if st.button(_locale_text(T("a2_cta")), key="a2_cta_b"):
+                    st.session_state["app_mode"] = "dimensions"
+                    st.rerun()
+        with art:
+            st.markdown(f'<div class="a2-welcome-art"><img src="{aquarelle}" alt=""></div>',unsafe_allow_html=True)
+    st.markdown(_WELCOME_STYLE.replace('__ROOT__', '.stApp' * 40), unsafe_allow_html=True)
 
     # ---- 2 · les quatre nombres ----------------------------------------
     menages, sections = _chiffres()
@@ -665,3 +657,66 @@ def render():
                                     st.session_state['app_mode']=code
                                     st.rerun()
 
+
+
+# Editorial home: a bounded identity row, a balanced introduction and a compact
+# evidence strip. The illustration is decorative, separate from readable text.
+_WELCOME_STYLE = """<style>
+__ROOT__ .st-key-zone_page{padding:12px 28px 32px!important;max-width:1440px!important;margin-inline:auto!important;}
+__ROOT__ .a2-brand-row{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:8px 0 20px;border-bottom:1px solid #dde3df;margin-bottom:24px;}
+__ROOT__ .a2-marque{margin:0!important;gap:16px!important;}
+__ROOT__ .a2-marque img{height:50px!important;}
+__ROOT__ .a2-inst b{font:400 17px/1.35 Georgia,serif!important;color:#104b3b!important;}
+__ROOT__ .a2-inst span{font:400 14px/1.45 Georgia,serif!important;color:#4b5550!important;}
+__ROOT__ .a2-partner{width:70px;height:auto;flex-shrink:0;filter:brightness(0) saturate(100%) invert(22%) sepia(21%) saturate(1030%) hue-rotate(101deg) brightness(85%);}
+__ROOT__ .st-key-a2_welcome{margin:0 0 24px!important;}
+__ROOT__ .st-key-a2_welcome [data-testid="stHorizontalBlock"]{gap:28px!important;align-items:center!important;}
+__ROOT__ .a2-welcome-copy{min-width:0;padding:8px 0;}
+__ROOT__ .a2-kick{font:700 10px/1.5 Georgia,serif!important;letter-spacing:.12em!important;color:#4b5550!important;margin:0 0 12px!important;text-align:left!important;}
+__ROOT__ h1.a2-welcome-title{font:400 clamp(26px,2.3vw,36px)/1.15 Georgia,serif!important;color:#104b3b!important;margin:0 0 16px!important;padding:0!important;text-align:left!important;letter-spacing:-.02em!important;text-wrap:balance;max-width:24ch;}
+__ROOT__ p.a2-intro{font:400 14px/1.7 Georgia,serif!important;color:#4b5550!important;text-align:left!important;max-width:58ch!important;margin:0!important;}
+__ROOT__ .st-key-a2_main_action button{display:inline-flex;align-items:center;gap:16px;background:#104b3b!important;color:white!important;text-decoration:none!important;font:700 13px/1.5 Georgia,serif!important;padding:11px 18px!important;border-radius:8px!important;min-height:42px!important;height:auto!important;border:0!important;transition:background .15s;}
+__ROOT__ .st-key-a2_main_action button:hover{background:#276448!important;}
+__ROOT__ .st-key-a2_main_action button:focus-visible{outline:2px solid #104b3b;outline-offset:4px;}
+__ROOT__ .st-key-a2_main_action button p{color:white!important;font:700 13px/1.5 Georgia,serif!important;}
+__ROOT__ .st-key-a2_main_action button::after{filter:brightness(0) invert(1);}
+__ROOT__ .a2-welcome-art{min-width:0;}
+__ROOT__ .a2-welcome-art img{display:block;width:100%;height:260px;object-fit:cover;object-position:right center;border-radius:16px;}
+__ROOT__ .a2-chif{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:0!important;background:#f1f5f3;border:1px solid #dde3df;border-radius:12px;padding:18px 0;margin:0 0 22px!important;}
+__ROOT__ .a2-chif>div{padding:0 16px!important;text-align:center!important;}
+__ROOT__ .a2-n{font:400 28px/1.2 Georgia,serif!important;color:#104b3b!important;}
+__ROOT__ .a2-l{font:700 11px/1.5 Georgia,serif!important;color:#4b5550!important;letter-spacing:.04em!important;margin-top:6px!important;}
+__ROOT__ .a2-s{font:400 11px/1.5 Georgia,serif!important;color:#4b5550!important;}
+__ROOT__ .a2-portes-t{font:700 18px/1.4 Georgia,serif!important;text-transform:none!important;letter-spacing:0!important;margin:0 0 10px!important;}
+__ROOT__ .a2-portes-f{display:none!important;}
+__ROOT__ .st-key-a2_map_links [data-testid="stHorizontalBlock"]{gap:24px!important;}
+__ROOT__ .a2-link-photo{margin-top:0!important;aspect-ratio:auto!important;height:98px!important;overflow:hidden!important;}
+__ROOT__ .a2-link-photo>svg{height:100%!important;position:static!important;}
+__ROOT__ .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{padding:12px!important;border:1px solid #dde3df!important;border-radius:12px!important;background:#fff!important;}
+__ROOT__ .st-key-a2_photo_links div[data-testid="stButton"]>button{min-height:74px!important;padding:8px 0!important;}
+__ROOT__ .st-key-a2_photo_links div[data-testid="stButton"]>button p{font:700 14px/1.4 Georgia,serif!important;}
+__ROOT__ .st-key-a2_photo_links button p em{font:400 12px/1.5 Georgia,serif!important;}
+__ROOT__ .st-key-a2_photo_links button p strong{display:none!important;}
+@media(max-width:1000px){
+__ROOT__ .st-key-zone_page{padding:8px 16px 24px!important;}
+__ROOT__ .a2-welcome{gap:16px;grid-template-columns:1.2fr 1fr;}
+__ROOT__ .a2-welcome-art img{height:220px;}
+}
+@media(max-width:650px){
+__ROOT__ .a2-brand-row{gap:12px;margin-bottom:16px;padding-bottom:16px;}
+__ROOT__ .a2-marque img{height:38px!important;}
+__ROOT__ .a2-inst b{font-size:13px!important;}
+__ROOT__ .a2-inst span{font-size:11px!important;}
+__ROOT__ .a2-partner{width:48px;}
+__ROOT__ .a2-filet{display:none!important;}
+__ROOT__ .a2-marque{gap:8px!important;}
+__ROOT__ .st-key-a2_welcome [data-testid="stHorizontalBlock"]{flex-direction:column!important;gap:12px!important;}
+__ROOT__ .st-key-a2_welcome [data-testid="stColumn"]{width:100%!important;flex:1 1 100%!important;}
+__ROOT__ h1.a2-welcome-title{font-size:27px!important;max-width:25ch;}
+__ROOT__ .a2-welcome-art img{height:130px;}
+__ROOT__ .a2-chif{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px 0!important;}
+__ROOT__ .a2-chif>div:nth-child(3){border-left:0!important;}
+__ROOT__ .a2-n{font-size:24px!important;}
+__ROOT__ .a2-link-photo{height:80px!important;}
+}
+</style>"""
