@@ -1171,21 +1171,24 @@ def render_alarmes(cat):
                 f'{_e(T("al_n", g=lib_g, n=_f(n_g, 0)))}</p>',
                 unsafe_allow_html=True)
 
-    # ---- 1 · les plus basses ---------------------------------------------
-    bas = sorted(lignes, key=lambda x: (x["score"], x["valeur"]))[:combien]
-    for x in bas:
-        x["coul"], x["alerte"] = ROUGE, _alerte(x["score"], None)
-    st.markdown(f'<div class="ec-sec" style="margin-top:18px">'
-                f'{_e(T("al_bas"))}</div>' + _table_alarmes(bas),
-                unsafe_allow_html=True)
+    low_column, high_column = st.columns(2)
+    with low_column:
+        # ---- 1 · les plus basses ---------------------------------------------
+        bas = sorted(lignes, key=lambda x: (x["score"], x["valeur"]))[:combien]
+        for x in bas:
+            x["coul"], x["alerte"] = ROUGE, _alerte(x["score"], None)
+        st.markdown(f'<div class="ec-sec" style="margin-top:18px">'
+                    f'{_e(T("al_bas"))}</div>' + _table_alarmes(bas),
+                    unsafe_allow_html=True)
 
-    # ---- 2 · les plus hautes ---------------------------------------------
-    haut = sorted(lignes, key=lambda x: (-x["score"], -x["valeur"]))[:combien]
-    for x in haut:
-        x["coul"], x["alerte"] = "#1a6b52", _alerte(x["score"], None)
-    st.markdown(f'<div class="ec-sec" style="margin-top:24px">'
-                f'{_e(T("al_haut"))}</div>' + _table_alarmes(haut),
-                unsafe_allow_html=True)
+    with high_column:
+        # ---- 2 · les plus hautes ---------------------------------------------
+        haut = sorted(lignes, key=lambda x: (-x["score"], -x["valeur"]))[:combien]
+        for x in haut:
+            x["coul"], x["alerte"] = "#1a6b52", _alerte(x["score"], None)
+        st.markdown(f'<div class="ec-sec" style="margin-top:24px">'
+                    f'{_e(T("al_haut"))}</div>' + _table_alarmes(haut),
+                    unsafe_allow_html=True)
 
     # ---- 3 · le décrochage par rapport au reste de la cohorte ------------
     st.markdown(f'<div class="ec-sec" style="margin-top:24px">'

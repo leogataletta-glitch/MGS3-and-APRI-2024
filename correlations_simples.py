@@ -1,5 +1,6 @@
 """Explore household outcomes defined by one or more question/answer conditions."""
 import itertools
+from html import escape
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -76,45 +77,52 @@ def render(cat):
         return
     qs={q['i']:q for q in cat['questions'] if len(LP.answers(cat,q)[0])>1}
     codes=[c for c in [c for c,_,_ in T.THEMES]+[T.CALCULE,T.AUTRES] if any(T.theme_de(q.get('category'))==c for q in qs.values())]
-    st.caption(t('Choisissez ce que vous voulez étudier : thème → question → une ou plusieurs réponses.','Choose what to study: theme → question → one or more answers.'))
-    count=st.session_state.get('outcome_count',1)
-    conditions=[];descriptions=[]
-    for j in range(count):
-        cols=st.columns([1,2,2]);prefix=f'outcome_{j}'
-        with cols[0]:theme=st.selectbox(t('Thème','Theme'),['__all__']+codes,format_func=lambda c:t('Tous les thèmes','All themes') if c=='__all__' else tr(i18n.T(T.libelle(c))),key=prefix+'_theme')
-        visible=[k for k,q in qs.items() if theme=='__all__' or T.theme_de(q.get('category'))==theme]
-        used={k for k,_ in conditions};visible=[k for k in visible if k not in used]
-        if st.session_state.get(prefix+'_question') not in visible:st.session_state[prefix+'_question']=None
-        with cols[1]:qid=st.selectbox(t('Question','Question'),visible,index=None,format_func=lambda k:tr(L.question(qs[k]['question'])),placeholder=t('Tapez un mot-clé…','Type a keyword…'),key=prefix+'_question')
-        with cols[2]:
-            options=list(LP.answers(cat,qs[qid])[0]) if qid is not None else []
-            labels=st.multiselect(t('Réponse(s) étudiée(s)','Answer(s) of interest'),options,format_func=lambda v:tr(L.modalite(v)),key=prefix+f'_answers_{qid}',placeholder=t('Choisir une ou plusieurs réponses','Choose one or more answers'),disabled=qid is None)
-        if qid is not None and labels:
-            conditions.append((qid,labels));descriptions.append(tr(L.question(qs[qid]['question']))+' : '+(' '+t('OU','OR')+' ').join(tr(L.modalite(v)) for v in labels))
-    controls=st.columns([1,1,2])
-    with controls[0]:
-        if st.button(t('+ Ajouter une question','+ Add a question'),key='outcome_add'):
-            st.session_state.outcome_count=count+1;st.rerun()
-    with controls[1]:
-        if count>1 and st.button(t('Retirer la dernière question','Remove last question'),key='outcome_remove'):
-            st.session_state.outcome_count=count-1;st.rerun()
-    mode='all'
-    with controls[2]:
-        if count>1:mode=st.selectbox(t('Combiner les questions','Combine questions'),['all','any'],format_func=lambda v:t('Toutes les conditions (ET)','All conditions (AND)') if v=='all' else t('Au moins une condition (OU)','At least one condition (OR)'),key='outcome_mode')
-    st.caption(t('Plusieurs réponses d’une question = l’une OU l’autre. Plusieurs questions = ET ou OU, au choix.','Several answers to one question = any selected answer. Several questions = AND or OR, your choice.'))
+    st.markdown('<div class="apri-step"><span>01</span>'+escape(t('Définir le cas étudié','Define the outcome'))+'</div>',unsafe_allow_html=True)
+    with st.container(key='correlation_definition'):
+        st.caption(t('Choisissez ce que vous voulez étudier : thème → question → une ou plusieurs réponses.','Choose what to study: theme → question → one or more answers.'))
+        count=st.session_state.get('outcome_count',1)
+        conditions=[];descriptions=[]
+        for j in range(count):
+            cols=st.columns([1,2,2]);prefix=f'outcome_{j}'
+            with cols[0]:theme=st.selectbox(t('Thème','Theme'),['__all__']+codes,format_func=lambda c:t('Tous les thèmes','All themes') if c=='__all__' else tr(i18n.T(T.libelle(c))),key=prefix+'_theme')
+            visible=[k for k,q in qs.items() if theme=='__all__' or T.theme_de(q.get('category'))==theme]
+            used={k for k,_ in conditions};visible=[k for k in visible if k not in used]
+            if st.session_state.get(prefix+'_question') not in visible:st.session_state[prefix+'_question']=None
+            with cols[1]:qid=st.selectbox(t('Question','Question'),visible,index=None,format_func=lambda k:tr(L.question(qs[k]['question'])),placeholder=t('Tapez un mot-clé…','Type a keyword…'),key=prefix+'_question')
+            with cols[2]:
+                options=list(LP.answers(cat,qs[qid])[0]) if qid is not None else []
+                labels=st.multiselect(t('Réponse(s) étudiée(s)','Answer(s) of interest'),options,format_func=lambda v:tr(L.modalite(v)),key=prefix+f'_answers_{qid}',placeholder=t('Choisir une ou plusieurs réponses','Choose one or more answers'),disabled=qid is None)
+            if qid is not None and labels:
+                conditions.append((qid,labels));descriptions.append(tr(L.question(qs[qid]['question']))+' : '+(' '+t('OU','OR')+' ').join(tr(L.modalite(v)) for v in labels))
+        controls=st.columns([1,1,2])
+        with controls[0]:
+            if st.button(t('+ Ajouter une question','+ Add a question'),key='outcome_add'):
+                st.session_state.outcome_count=count+1;st.rerun()
+        with controls[1]:
+            if count>1 and st.button(t('Retirer la dernière question','Remove last question'),key='outcome_remove'):
+                st.session_state.outcome_count=count-1;st.rerun()
+        mode='all'
+        with controls[2]:
+            if count>1:mode=st.selectbox(t('Combiner les questions','Combine questions'),['all','any'],format_func=lambda v:t('Toutes les conditions (ET)','All conditions (AND)') if v=='all' else t('Au moins une condition (OU)','At least one condition (OR)'),key='outcome_mode')
+        st.caption(t('Plusieurs réponses d’une question = l’une OU l’autre. Plusieurs questions = ET ou OU, au choix.','Several answers to one question = any selected answer. Several questions = AND or OR, your choice.'))
     if len(conditions)!=count:return
     y,base=outcome(cat,conditions,mode);n=int(base.sum());k=int(y.sum())
     st.write((' **'+t('ET','AND')+'** ' if mode=='all' else ' **'+t('OU','OR')+'** ').join(descriptions))
-    st.write(t(f'{k} ménages sur {n} réponses complètes ({100*k/n:.1f} %).' if n else 'Aucune réponse complète.',f'{k} households out of {n} complete responses ({100*k/n:.1f}%).' if n else 'No complete responses.'))
+    totals=st.columns(3)
+    totals[0].metric(t('Ménages concernés','Affected households'),str(k))
+    totals[1].metric(t('Réponses complètes','Complete responses'),str(n))
+    totals[2].metric(t('Fréquence du cas','Outcome frequency'),f'{100*k/n:.1f} %' if n else '—')
     st.caption(t('Les réponses manquantes à une question sélectionnée sont exclues, même en mode OU. Sexe et âge décrivent le répondant, pas chaque membre du ménage.','Missing responses to any selected question are excluded, including in OR mode. Sex and age describe the respondent, not every household member.'))
     if min(k,n-k)<30:
         st.info(t('Il faut au moins 30 ménages concernés et 30 autres pour établir ces classements. Modifiez la sélection.','At least 30 affected and 30 other households are required for these rankings. Change the selection.'));return
     names={'sexe':t('Sexe','Sex'),'paysage':t('Paysage','Landscape'),'age':t('Âge','Age'),'richesse':t('Niveau économique','Economic level')}
-    filters=st.columns([2,1,1])
-    with filters[0]:dims=st.multiselect(t('Variables de profil','Profile variables'),list(names),default=list(names),format_func=lambda d:names[d],key='profile_dimensions')
-    with filters[1]:combination=st.selectbox(t('Combiner les variables','Combine variables'),['mixed','combined'],format_func=lambda v:t('Mixte : seules et combinées','Mixed: individual and combined') if v=='mixed' else t('Toutes ensemble uniquement','All together only'),key='profile_combination')
-    with filters[2]:direction=st.selectbox(t('Classement de φ','Phi ranking'),['mixed','positive','negative'],format_func=lambda v:{'mixed':t('Mixte : 10 hauts + 10 bas','Mixed: 10 highest + 10 lowest'),'positive':t('10 φ les plus positifs','10 most positive phi'),'negative':t('10 φ les plus négatifs','10 most negative phi')}[v],key='profile_direction')
-    st.caption(t('Exemple : sexe + paysage → « toutes ensemble » compare les profils comme femme · montagne ; « mixte » inclut aussi sexe seul et paysage seul. Haut/bas décrit la fréquence du cas choisi, pas une valeur bonne ou mauvaise.', 'Example: sex + landscape → “all together” compares profiles such as woman · mountain; “mixed” also includes sex alone and landscape alone. High/low describes the selected outcome frequency, not a good or bad value.'))
+    st.markdown('<div class="apri-step"><span>02</span>'+escape(t('Choisir les profils à comparer','Choose the profiles to compare'))+'</div>',unsafe_allow_html=True)
+    with st.container(key='correlation_profiles'):
+        filters=st.columns([2,1,1])
+        with filters[0]:dims=st.multiselect(t('Variables de profil','Profile variables'),list(names),default=list(names),format_func=lambda d:names[d],key='profile_dimensions')
+        with filters[1]:combination=st.selectbox(t('Combiner les variables','Combine variables'),['mixed','combined'],format_func=lambda v:t('Mixte : seules et combinées','Mixed: individual and combined') if v=='mixed' else t('Toutes ensemble uniquement','All together only'),key='profile_combination')
+        with filters[2]:direction=st.selectbox(t('Classement de φ','Phi ranking'),['mixed','positive','negative'],format_func=lambda v:{'mixed':t('Mixte : 10 hauts + 10 bas','Mixed: 10 highest + 10 lowest'),'positive':t('10 φ les plus positifs','10 most positive phi'),'negative':t('10 φ les plus négatifs','10 most negative phi')}[v],key='profile_direction')
+        st.caption(t('Exemple : sexe + paysage → « toutes ensemble » compare les profils comme femme · montagne ; « mixte » inclut aussi sexe seul et paysage seul. Haut/bas décrit la fréquence du cas choisi, pas une valeur bonne ou mauvaise.', 'Example: sex + landscape → “all together” compares profiles such as woman · mountain; “mixed” also includes sex alone and landscape alone. High/low describes the selected outcome frequency, not a good or bad value.'))
     if not dims:
         st.info(t('Choisissez au moins une variable de profil.','Choose at least one profile variable.'));return
     signature=(tuple((qid,tuple(labels)) for qid,labels in conditions),mode,tuple(sorted(dims)),combination)
@@ -125,6 +133,7 @@ def render(cat):
     result=st.session_state.get('outcome_profile_results')
     if not result or result[0]!=signature:return
     _,profiles=result
+    st.markdown('<div class="apri-step"><span>03</span>'+escape(t('Lire les associations','Read the associations'))+'</div>',unsafe_allow_html=True)
     def name(r):
         label=' · '.join(tr(L.modalite(v)) for v in r['labels'])
         return tr(L.question(r['question']))+' — '+label if r['question'] else label

@@ -26,6 +26,12 @@ def navigation(root):
     {root} [role="radiogroup"] label div:not(:has([data-testid="stMarkdownContainer"])):not([data-testid="stMarkdownContainer"]){{display:none!important;}}
     {root} [role="radiogroup"] label div:has([data-testid="stMarkdownContainer"]){{flex:1 1 0!important;width:100%!important;min-width:0!important;padding:0!important;}}
     {root} [role="radiogroup"] label [data-testid="stMarkdownContainer"]{{display:block!important;width:100%!important;min-width:0!important;}}
+    @media(max-width:700px){{
+      {root} [role="radiogroup"]{{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:4px!important;}}
+      {root} [role="radiogroup"] label{{width:100%!important;min-width:0!important;min-height:64px!important;padding:8px!important;}}
+      {root} [role="radiogroup"] label p:first-child,{root} [role="radiogroup"] label strong{{font-size:13px!important;}}
+      {root} [role="radiogroup"] label p:not(:first-child){{font-size:11px!important;line-height:1.4!important;}}
+    }}
 
     </style>''', unsafe_allow_html=True)
 
@@ -65,6 +71,7 @@ def composition():
     if page in ('portail', 'accueil'):
         return
     st.markdown(COMPOSITION.replace('__ZONE__', zone), unsafe_allow_html=True)
+    st.markdown(CONTENT_LAYOUT.replace('__ZONE__', zone), unsafe_allow_html=True)
 
 
 COMPOSITION = """<style>
@@ -105,5 +112,72 @@ __ZONE__ [data-testid="stHorizontalBlock"]{flex-wrap:wrap!important;gap:16px!imp
 __ZONE__ [data-testid="stHorizontalBlock"]>[data-testid="stColumn"]{flex:1 1 100%!important;width:100%!important;}
 __ZONE__ :is(.cad-so,.ap-def,.ap-pay,.ap-b){grid-template-columns:1fr!important;gap:16px!important;}
 __ZONE__ :is(.cad-so-b,.ap-def>div,.ap-pay>div,.ap-c,.int-box,.int-paq,.int-perf){padding:16px!important;}
+}
+</style>"""
+
+
+# Content geometry is shared across the framework, results and action pages.
+# Semantic chart colours and data values are deliberately left to their renderers.
+CONTENT_LAYOUT = """<style>
+__ZONE__ :is(.stButton,.stDownloadButton) button{min-height:38px!important;height:auto!important;padding:8px 14px!important;font:400 13px/1.5 Georgia,serif!important;}
+__ZONE__ :is(.stButton,.stDownloadButton) button p{font:inherit!important;margin:0!important;}
+__ZONE__ .model-dimensions li span{text-align:left!important;}
+__ZONE__ .cad-ch{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important;margin:16px 0 24px!important;}
+__ZONE__ .cad-ch-fl{display:none!important;}
+__ZONE__ .cad-ch-e{padding:18px!important;background:#f1f5f3!important;border:1px solid #dde3df!important;border-radius:12px!important;min-width:0!important;}
+__ZONE__ .cad-ch-h{border:0!important;margin-bottom:14px!important;}
+__ZONE__ .cad-ch-n{color:#104b3b!important;border:1px solid #dde3df!important;border-radius:6px!important;padding:3px 7px!important;background:white!important;}
+__ZONE__ .cad-ch-t{font:700 14px/1.5 Georgia,serif!important;}
+__ZONE__ .cad-ch-v{font:700 24px/1.4 Georgia,serif!important;color:#104b3b!important;}
+__ZONE__ :is(.cad-ch-x,.cad-ch-s){font:400 12px/1.6 Georgia,serif!important;text-align:left!important;}
+__ZONE__ :is(.ex-kpi,.cx-kpi){display:flex!important;flex-wrap:wrap!important;gap:16px!important;margin:20px 0!important;}
+__ZONE__ :is(.ex-k,.cx-k){flex:1 1 180px!important;padding:18px!important;background:#f1f5f3!important;border:1px solid #dde3df!important;border-radius:12px!important;}
+__ZONE__ :is(.ex-k-v,.cx-k-v){font:700 26px/1.4 Georgia,serif!important;color:#104b3b!important;}
+__ZONE__ :is(.ex-k-l,.cx-k-l,.ev-lab,.ev-t){font:700 14px/1.5 Georgia,serif!important;color:#104b3b!important;letter-spacing:0!important;text-transform:none!important;}
+__ZONE__ :is(.ev-x,.ev-puce li){font:400 14px/1.65 Georgia,serif!important;max-width:76ch!important;text-align:left!important;}
+__ZONE__ :is(.ev-n,.ev-verdict){padding:16px!important;background:#f1f5f3!important;border-radius:10px!important;}
+__ZONE__ :is(.st-key-ex_brut,.st-key-ex_brut_s,.st-key-ex_brut_c){padding:20px!important;border:1px solid #dde3df!important;border-radius:14px!important;}
+__ZONE__ [data-testid="stMarkdownContainer"]:has(>svg){padding:16px!important;border:1px solid #dde3df!important;border-radius:12px!important;overflow-x:auto!important;}
+__ZONE__ .model-layout{display:block!important;margin:8px 0 24px!important;}
+__ZONE__ .model-attributes{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important;padding:0!important;margin-bottom:28px!important;}
+__ZONE__ .model-attribute{display:block!important;padding:20px!important;border-radius:14px!important;background:#f1f5f3!important;border:1px solid #dde3df!important;}
+__ZONE__ .model-dot{display:none!important;}
+__ZONE__ .model-dimensions::before{display:none!important;}
+__ZONE__ .model-dimensions ul{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;}
+__ZONE__ .model-dimensions li{padding:14px 16px!important;border:1px solid #dde3df!important;border-radius:10px!important;align-items:center!important;}
+__ZONE__ .model-dimensions small{background:#f1f5f3!important;padding:4px 8px!important;border-radius:6px!important;color:#104b3b!important;}
+__ZONE__ :is(.cad-so-b,.ap-c,.int-paq){border-top:3px solid #104b3b!important;}
+__ZONE__ :is(.cad-flo,.ec-kpi,.sx-kpi){display:flex!important;gap:16px!important;align-items:stretch!important;margin:20px 0!important;}
+__ZONE__ :is(.cad-flo-e,.ec-k,.sx-k){flex:1 1 0!important;min-width:0!important;padding:18px!important;background:#f1f5f3!important;border:1px solid #dde3df!important;border-radius:12px!important;text-align:left!important;}
+__ZONE__ .cad-flo-f{align-self:center!important;flex:0 0 12px!important;}
+__ZONE__ :is(.cad-flo-t,.ec-k-l,.sx-k-l,.int-lab,.sx-leg-h,.ec-sec){font:700 14px/1.5 Georgia,serif!important;color:#104b3b!important;letter-spacing:0!important;text-transform:none!important;}
+__ZONE__ :is(.cad-flo-v,.ec-k-v,.sx-k-v){font:700 26px/1.4 Georgia,serif!important;margin:8px 0!important;}
+__ZONE__ :is(.cad-flo-x,.ec-k-s,.sx-k-s,.sx-th-x){font:400 12px/1.6 Georgia,serif!important;color:#4b5550!important;}
+__ZONE__ .cad-nrm{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:20px!important;}
+__ZONE__ .cad-nrm>div{padding:20px!important;border:1px solid #dde3df!important;border-radius:12px!important;min-width:0!important;}
+__ZONE__ :is(.ex-etape,.cad-ex-t){margin:24px 0 12px!important;padding:0 0 10px!important;border-bottom:1px solid #dde3df!important;}
+__ZONE__ .ex-etape .l{display:none!important;}
+__ZONE__ .ex-etape .n{background:#f1f5f3!important;color:#104b3b!important;border-radius:8px!important;}
+__ZONE__ :is(.ex-tab,.ec-tab,.sx-tab,.cad-it){border:1px solid #dde3df!important;border-radius:10px!important;overflow:hidden!important;}
+__ZONE__ :is(.ex-tab,.ec-tab,.sx-tab,.cad-it) tbody tr:nth-child(even){background:#f7f9f8!important;}
+__ZONE__ :is(.ex-tab,.ec-tab,.sx-tab) td.n{text-align:right!important;font-variant-numeric:tabular-nums!important;}
+__ZONE__ :is(.ex-note,.ec-note,.ex-pan-x,.ex-etape-x,.sx-leg-x){font:400 13px/1.65 Georgia,serif!important;color:#4b5550!important;max-width:80ch!important;}
+__ZONE__ :is(.sx-leg,.int-perf){padding:20px!important;border:1px solid #dde3df!important;border-radius:12px!important;background:#f1f5f3!important;}
+__ZONE__ .apri-step{display:flex;align-items:center;gap:10px;font:700 18px/1.5 Georgia,serif;color:#104b3b;margin:20px 0 12px;}
+__ZONE__ .apri-step span{font-size:12px;background:#f1f5f3;border:1px solid #dde3df;border-radius:8px;padding:6px 10px;}
+__ZONE__ :is(.st-key-correlation_definition,.st-key-correlation_profiles){padding:20px!important;border:1px solid #dde3df!important;border-radius:14px!important;}
+__ZONE__ [data-testid="stDataFrame"]{border:1px solid #dde3df;border-radius:10px;overflow:hidden;}
+@media(max-width:1000px){
+__ZONE__ .cad-ch{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+__ZONE__ .model-attributes{grid-template-columns:1fr!important;}
+__ZONE__ .cad-flo{flex-wrap:wrap!important;}
+__ZONE__ .cad-flo-e{flex-basis:40%!important;}
+__ZONE__ .cad-flo-f{display:none!important;}
+}
+@media(max-width:700px){
+__ZONE__ .cad-ch{grid-template-columns:1fr!important;}
+__ZONE__ :is(.model-dimensions ul,.cad-nrm){grid-template-columns:1fr!important;}
+__ZONE__ :is(.ec-kpi,.sx-kpi){flex-direction:column!important;}
+__ZONE__ .cad-flo-e{flex-basis:100%!important;}
 }
 </style>"""
