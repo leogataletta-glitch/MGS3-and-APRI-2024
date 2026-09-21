@@ -96,7 +96,7 @@ def footer():
     with st.expander(tr(('Plan du site', 'Site map', 'Mapa del sitio', 'Plan sit la'))):
         for page, titles in PAGES.items():
             st.button(tr(titles), key='sitemap_' + page, on_click=go, args=(page,))
-        st.link_button('Sitemap XML', BASE_URL + 'app/static/sitemap.xml')
+        st.link_button('Sitemap XML', BASE_URL + '~/+/app/static/sitemap.xml')
     with st.expander(tr(('Partager APRI', 'Share APRI', 'Compartir APRI', 'Pataje APRI'))):
         lang = i18n.get_lang() if i18n.get_lang() in TERMS else 'en'
         asset = Path(__file__).parent / 'static' / f'apri-partage-{lang}.png'
