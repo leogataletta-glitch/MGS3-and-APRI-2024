@@ -41,3 +41,10 @@ primaryColor = "#1f7a5a"
 # QUE des fichiers d'habillage. Aucune donnée d'enquête, aucun export,
 # aucune image portant un nom de localité ou un identifiant de ménage.
 enableStaticServing = true
+
+# Keep server-side browser protections explicitly enabled.
+enableCORS = true
+enableXsrfProtection = true
+
+[browser]
+gatherUsageStats = false
