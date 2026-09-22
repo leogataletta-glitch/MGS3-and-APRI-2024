@@ -649,7 +649,9 @@ def render():
                 if not carte_zoom.render():
                     st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',unsafe_allow_html=True)
             with links_col:
-                # Titre « Explorer APRI » retiré à la demande de Léo.
+                # Titre « Explorer APRI » retiré à la demande de Léo ; un espace
+                # le remplace pour abaisser un peu les quatre images.
+                st.markdown('<div style="height:36px"></div>',unsafe_allow_html=True)
                 with st.container(key='a2_photo_links'):
                     for start in (0,2):
                         for col, (code,title,detail,photo,position,alt) in zip(st.columns(2),entries[start:start+2]):
