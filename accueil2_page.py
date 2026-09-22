@@ -698,7 +698,7 @@ __ROOT__ .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{padding:12px!impo
 __ROOT__ .st-key-a2_photo_links div[data-testid="stButton"]>button{min-height:74px!important;padding:8px 0!important;}
 __ROOT__ .st-key-a2_photo_links div[data-testid="stButton"]>button p{font:700 14px/1.4 Georgia,serif!important;}
 __ROOT__ .st-key-a2_photo_links button p em{font:400 12px/1.5 Georgia,serif!important;}
-__ROOT__ .st-key-a2_photo_links button p strong{display:none!important;}
+__ROOT__ .st-key-a2_photo_links button p strong{display:flex!important;align-items:center!important;justify-content:center!important;margin-top:6px!important;}
 @media(max-width:1000px){
 __ROOT__ .st-key-zone_page{padding:8px 16px 24px!important;}
 __ROOT__ .a2-welcome{gap:16px;grid-template-columns:1.2fr 1fr;}
