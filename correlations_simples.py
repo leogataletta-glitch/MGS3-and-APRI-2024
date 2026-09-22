@@ -113,10 +113,16 @@ def render(cat):
     totals[1].metric(t('Réponses complètes','Complete responses'),str(n))
     totals[2].metric(t('Fréquence du cas','Outcome frequency'),f'{100*k/n:.1f} %' if n else '—')
     st.caption(t('Les réponses manquantes à une question sélectionnée sont exclues, même en mode OU. Sexe et âge décrivent le répondant, pas chaque membre du ménage.','Missing responses to any selected question are excluded, including in OR mode. Sex and age describe the respondent, not every household member.'))
+    # ---- 02 · croiser avec UNE variable choisie (profil ou autre question)
+    st.markdown('<div class="apri-step"><span>02</span>'+escape(t('Croiser avec une variable choisie','Cross with a chosen variable'))+'</div>',unsafe_allow_html=True)
+    with st.container(key='correlation_crosstab'):
+        st.caption(t('Le cas ci-dessus, ventilé selon une variable que vous choisissez : sexe, paysage, âge, niveau économique, section, ou n’importe quelle autre question.','The outcome above, broken down by a variable you choose: sex, landscape, age, economic level, section, or any other question.'))
+        import croisement_variable
+        croisement_variable.render(cat,y,base,conditions,t)
     if min(k,n-k)<30:
-        st.info(t('Il faut au moins 30 ménages concernés et 30 autres pour établir ces classements. Modifiez la sélection.','At least 30 affected and 30 other households are required for these rankings. Change the selection.'));return
+        st.info(t('Il faut au moins 30 ménages concernés et 30 autres pour établir les classements automatiques ci-dessous. Modifiez la sélection.','At least 30 affected and 30 other households are required for the automatic rankings below. Change the selection.'));return
     names={'sexe':t('Sexe','Sex'),'paysage':t('Paysage','Landscape'),'age':t('Âge','Age'),'richesse':t('Niveau économique','Economic level')}
-    st.markdown('<div class="apri-step"><span>02</span>'+escape(t('Choisir les profils à comparer','Choose the profiles to compare'))+'</div>',unsafe_allow_html=True)
+    st.markdown('<div class="apri-step"><span>03</span>'+escape(t('Choisir les profils à comparer','Choose the profiles to compare'))+'</div>',unsafe_allow_html=True)
     with st.container(key='correlation_profiles'):
         filters=st.columns([2,1,1])
         with filters[0]:dims=st.multiselect(t('Variables de profil','Profile variables'),list(names),default=list(names),format_func=lambda d:names[d],key='profile_dimensions')
@@ -133,7 +139,7 @@ def render(cat):
     result=st.session_state.get('outcome_profile_results')
     if not result or result[0]!=signature:return
     _,profiles=result
-    st.markdown('<div class="apri-step"><span>03</span>'+escape(t('Lire les associations','Read the associations'))+'</div>',unsafe_allow_html=True)
+    st.markdown('<div class="apri-step"><span>04</span>'+escape(t('Lire les associations','Read the associations'))+'</div>',unsafe_allow_html=True)
     def name(r):
         label=' · '.join(tr(L.modalite(v)) for v in r['labels'])
         return tr(L.question(r['question']))+' — '+label if r['question'] else label
