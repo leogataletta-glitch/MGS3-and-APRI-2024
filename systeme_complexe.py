@@ -665,20 +665,20 @@ def _positions(rang, centre):
     """
     LARG, HAUT = 1120, 700
     cx, cy = LARG / 2, HAUT / 2
-    rayons = {0: 0, 1: 150, 2: 268, 3: 340}
+    rayons = {0: 0, 1: 190, 2: 340, 3: 430}
     pos = {centre: (cx, cy)}
     prec = 0
     for r in sorted({v for v in rang.values() if v > 0}):
         cases = sorted([n for n, v in rang.items() if v == r])
-        R = max(rayons.get(r, 340 + 40 * (r - 3)),
-                26 * len(cases), prec + 88)
+        R = max(rayons.get(r, 430 + 50 * (r - 3)),
+                40 * len(cases), prec + 200)
         prec = R
         # Un décalage d'un demi-pas par couronne évite que les nœuds du rang 2
         # se cachent derrière ceux du rang 1 sur le même rayon.
         d = math.pi / max(len(cases), 1) if r % 2 == 0 else 0
         for i, n in enumerate(cases):
             a = 2 * math.pi * i / max(len(cases), 1) - math.pi / 2 + d
-            pos[n] = (cx + R * math.cos(a) * 1.42, cy + R * math.sin(a))
+            pos[n] = (cx + R * math.cos(a) * 1.18, cy + R * math.sin(a))
     return pos, LARG, HAUT
 
 
@@ -699,7 +699,7 @@ def _svg_cld(m, rang, aretes, centre, boucle=None):
         dx, dy = x2 - x1, y2 - y1
         d = math.hypot(dx, dy) or 1
         # On s'arrête au bord de la pastille, sinon la flèche se perd dessous.
-        rx, ry = 40 / d, 22 / d
+        rx, ry = 56 / d, 32 / d
         x1b, y1b = x1 + dx * rx, y1 + dy * ry
         x2b, y2b = x2 - dx * rx, y2 - dy * ry
         mx, my = (x1b + x2b) / 2 - dy * 0.09, (y1b + y2b) / 2 + dx * 0.09
@@ -712,7 +712,7 @@ def _svg_cld(m, rang, aretes, centre, boucle=None):
             f'{x2b:.0f},{y2b:.0f}" fill="none" stroke="{coul}" '
             f'stroke-width="{ep:.1f}" opacity="{op}" '
             f'marker-end="url(#f{"v" if a["signe"] > 0 else "r"})"/>'
-            f'<text x="{mx:.0f}" y="{my:.0f}" font-size="13" '
+            f'<text x="{mx:.0f}" y="{my:.0f}" font-size="16" '
             f'font-weight="700" fill="{coul}" opacity="{op}" '
             f'text-anchor="middle">{"+" if a["signe"] > 0 else "−"}</text>')
     for n, (x, y) in pos.items():
@@ -725,22 +725,22 @@ def _svg_cld(m, rang, aretes, centre, boucle=None):
         lib = m["noms"].get(n, n)
         mots, ligne, lignes = lib.split(), "", []
         for w in mots:
-            if len(ligne + " " + w) > 17 and ligne:
+            if len(ligne + " " + w) > 18 and ligne:
                 lignes.append(ligne)
                 ligne = w
             else:
                 ligne = (ligne + " " + w).strip()
         lignes.append(ligne)
         lignes = lignes[:3]
-        h = 15 + 13 * len(lignes)
+        h = 22 + 19 * len(lignes)
         parts.append(
-            f'<rect x="{x - 76:.0f}" y="{y - h / 2:.0f}" width="152" '
+            f'<rect x="{x - 108:.0f}" y="{y - h / 2:.0f}" width="216" '
             f'height="{h}" rx="9" fill="{fond}" stroke="'
             f'{VERT_APRI if est_c else "#dbe3ec"}" opacity="{op}"/>')
-        y0 = y - h / 2 + 15
+        y0 = y - h / 2 + 20
         for i, l in enumerate(lignes):
             parts.append(
-                f'<text x="{x:.0f}" y="{y0 + i * 13:.0f}" font-size="10.5" '
+                f'<text x="{x:.0f}" y="{y0 + i * 19:.0f}" font-size="16" '
                 f'text-anchor="middle" fill="{encre}" opacity="{op}" '
                 f'font-weight="{700 if est_c else 400}">{_e(l)}</text>')
     # LA LETTRE AU CENTRE DE LA BOUCLE ISOLÉE : R ou B, dans un disque blanc.
@@ -777,11 +777,12 @@ def _svg_cld(m, rang, aretes, centre, boucle=None):
     # défiler pour trouver la suite de la page.
     xs = [x for x, _y in pos.values()]
     ys = [y for _x, y in pos.values()]
-    x0, x1 = min(xs) - 96, max(xs) + 96
-    y0, y1 = min(ys) - 42, max(ys) + 42
+    x0, x1 = min(xs) - 122, max(xs) + 122
+    y0, y1 = min(ys) - 56, max(ys) + 56
     larg, haut = max(x1 - x0, 320), max(y1 - y0, 200)
     return (f'<svg viewBox="{x0:.0f} {y0:.0f} {larg:.0f} {haut:.0f}" '
-            f'width="100%" style="max-width:{min(larg, LARG):.0f}px;'
+            # Un petit système n'a pas besoin de toute la page ; un grand la prend.
+            f'width="100%" style="max-width:{max(900, larg * 0.8):.0f}px;'
             f'display:block;margin:4px auto" '
             f'role="img" font-family="Inter,system-ui,sans-serif">'
             + fleches + "".join(parts) + '</svg>')
