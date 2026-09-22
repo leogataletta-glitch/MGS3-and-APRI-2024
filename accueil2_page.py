@@ -682,9 +682,10 @@ __ROOT__ .st-key-a2_main_action button:hover{background:#f1f5f3!important;}
 __ROOT__ .st-key-a2_main_action button:focus-visible{outline:2px solid #104b3b;outline-offset:4px;}
 __ROOT__ .st-key-a2_main_action button p{color:#104b3b!important;font:700 13px/1.5 Georgia,serif!important;}
 __ROOT__ .st-key-a2_main_action button::after{filter:none;}
-__ROOT__ .a2-welcome-art{min-width:0;position:relative;}
+__ROOT__ [data-testid="stColumn"]:has(.st-key-zone_page){container-type:inline-size;}
+__ROOT__ .a2-welcome-art{min-width:0;position:relative;width:calc(100% + 28px + max(0px,(100cqw - 1440px)/2));}
 __ROOT__ .a2-welcome-art::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,#fff 0%,transparent 14%,transparent 84%,#fff 100%);}
-__ROOT__ .a2-welcome-art img{display:block;width:100%;height:260px;object-fit:cover;object-position:right center;border-radius:0;-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 14%,#000 88%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,#000 14%,#000 88%,transparent 100%);}
+__ROOT__ .a2-welcome-art img{display:block;width:100%;height:260px;object-fit:cover;object-position:right center;border-radius:0;-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 14%,#000 100%);mask-image:linear-gradient(to right,transparent 0%,#000 14%,#000 100%);}
 __ROOT__ .a2-chif{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:0!important;background:#f1f5f3;border:1px solid #dde3df;border-radius:12px;padding:18px 0;margin:0 0 22px!important;}
 __ROOT__ .a2-chif>div{padding:0 16px!important;text-align:center!important;}
 __ROOT__ .a2-n{font:400 28px/1.2 Georgia,serif!important;color:#104b3b!important;}
@@ -703,6 +704,7 @@ __ROOT__ .st-key-a2_photo_links button p strong{display:flex!important;align-ite
 @media(max-width:1000px){
 __ROOT__ .st-key-zone_page{padding:8px 16px 24px!important;}
 __ROOT__ .a2-welcome{gap:16px;grid-template-columns:1.2fr 1fr;}
+__ROOT__ .a2-welcome-art{width:calc(100% + 16px);}
 __ROOT__ .a2-welcome-art img{height:220px;}
 }
 @media(max-width:650px){
