@@ -2143,7 +2143,7 @@ def _tableau_echelle(bandes, score=None):
     lignes = []
     for rang, borne in sorted(bandes.items()):
         couleur = _teinte(rang / (maximum or 10))
-        actif = score is not None and float(score) == rang
+        actif = score is not None and rang == min(bandes, key=lambda r: abs(r - float(score)))
         lignes.append(
             f'<div class="irla-step{" irla-current" if actif else ""}" '
             f'style="--rank:{couleur};--ink:{_encre(couleur)}">'
@@ -3045,7 +3045,7 @@ def _v_metadonnees(tous):
         if bands:
             ranks = []
             for k, v in bands.items():
-                active = x.get("score") is not None and float(x["score"]) == float(k)
+                active = x.get("score") is not None and k == min(bands, key=lambda r: abs(r - float(x["score"])))
                 ranks.append(f'<div class="md-rank{" md-rank-active" if active else ""}">'
                              f'<span class="md-rank-number">{_e(str(k))}</span>'
                              f'<span>{_e(str(v))}</span></div>')
@@ -3092,6 +3092,7 @@ def _v_metadonnees(tous):
 @media(max-width:760px){.stApp .pdf-record .pdf-section p{text-align:left!important;}.pdf-columns{gap:12px;}}
 .pdf-record ul{padding-left:18px;}.pdf-record li{margin-bottom:8px;}.pdf-record .md-dot{display:none;}
 .pdf-record aside{background:#fff9e9;padding:12px 16px;border-left:2px solid #d8b86a;margin-top:18px;}
+.pdf-record .irla-scale{width:68%;gap:5px;}.pdf-record .irla-step{background:color-mix(in srgb,var(--rank) 38%,white);min-height:32px;}.stApp .pdf-record .irla-step>span{color:#25384b!important;font-size:14px;}.pdf-record .irla-current{outline:3px solid #1f6fd1;outline-offset:2px;background:color-mix(in srgb,var(--rank) 55%,white);}.pdf-record .irla-step>em{color:#1f6fd1;}
 .pdf-comparison{display:flex;justify-content:space-between;gap:20px;padding:15px 5px;color:#35597a;font-size:14px;}
 .stApp .pdf-record .pdf-note{font-size:12px!important;color:#71808d!important;}
 .pdf-observed{display:grid;grid-template-columns:1fr auto;gap:10px;padding:16px 0;color:#35597a;}.pdf-observed strong{font-size:25px;}
@@ -3232,7 +3233,8 @@ def _v_boucles():
     # Illustrative dynamics are isolated from the calibrated indicator scores.
     import streamlit.components.v1 as components
     from reforestation_demo import document
-    components.html(_locale_html(document(fr)), height=650, scrolling=True)
+    # Pleine hauteur, sans barre de défilement interne : rien n'est caché.
+    components.html(_locale_html(document(fr)), height=980, scrolling=False)
 
     # ---- comment lire une boucle -----------------------------------------
     signes = "".join(
