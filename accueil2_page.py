@@ -552,7 +552,7 @@ def render():
 
     # ---- 2 · les quatre nombres (DÉSACTIVÉS pour comparaison) --------
     # Mettre AFFICHER_CHIFFRES à True pour rétablir le bandeau.
-    AFFICHER_CHIFFRES = False
+    AFFICHER_CHIFFRES = True
     if AFFICHER_CHIFFRES:
         menages, sections = _chiffres()
         cases = [
