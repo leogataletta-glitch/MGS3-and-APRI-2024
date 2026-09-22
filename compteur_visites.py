@@ -98,6 +98,11 @@ def render():
     if config is None:
         return  # Never show a fictional zero or count only this server's uptime.
     register_once(st.session_state, config)
+    # Léo a demandé de masquer le compteur à l'écran (22 sept. 2026). Les
+    # visites restent comptées ; seule l'affichage est désactivé.
+    AFFICHER_COMPTEUR = False
+    if not AFFICHER_COMPTEUR:
+        return
     total = read_total(*config[:3])
     root = '.stApp' * 25
     st.markdown(f'<style>{root} .apri-public-counter{{font-family:Georgia,serif!important;'
