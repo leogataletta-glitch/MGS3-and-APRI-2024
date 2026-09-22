@@ -814,7 +814,7 @@ def _pole_of_inaccessibility(rings):
 
 
 # --------------------------------------------------------------------------
-def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
+def render_map_svg(values, base_n, thresholds=None, width=1400, height=660,
                    polarity='neutre', unite='%', ramp=None, infos=None,
                    points=None):
     """values : {section: valeur}. `unite` est le suffixe écrit sur la carte
@@ -839,7 +839,9 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
     else:
         pts = list(cent.values())
 
-    PAD, R, GAP = 86, 31, 16
+    # Marge réduite et largeur portée à 1400 : la carte occupe toute la largeur
+    # disponible au lieu d'un carton de 920 px centré (demande de Léo).
+    PAD, R, GAP = 44, 31, 16
     x0 = min(p[0] for p in pts); x1 = max(p[0] for p in pts)
     y0 = min(p[1] for p in pts); y1 = max(p[1] for p in pts)
 
@@ -848,14 +850,15 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
     land = _land_rings()
     deps, villes = _context_layers()
     if land:
-        m = 0.07 * max(x1 - x0, y1 - y0)
+        m = 0.04 * max(x1 - x0, y1 - y0)
         x0 -= m; x1 += m; y0 -= m; y1 += m
     # Les villes repères doivent entrer dans le cadre : elles élargissent la vue
     # (les limites départementales, elles, sont simplement rognées par le cadre).
+    # Les villes n'élargissent la vue qu'en largeur : en hauteur, c'est le
+    # cadre qui limite, et remonter jusqu'à Jérémie rapetissait les sections.
     if villes:
         for _, (vlon, vlat) in villes:
             x0 = min(x0, vlon * kx - 0.012); x1 = max(x1, vlon * kx + 0.012)
-            y0 = min(y0, vlat - 0.012); y1 = max(y1, vlat + 0.012)
 
     sc = min((width - 2 * PAD) / max(x1 - x0, 1e-9),
              (height - 2 * PAD) / max(y1 - y0, 1e-9))
@@ -1175,7 +1178,7 @@ def render_map_svg(values, base_n, thresholds=None, width=920, height=660,
               + _t('km', n=ECHELLE_KM) + '</text>')
 
     svg = f"""<svg viewBox="0 0 {width} {height}" width="100%"
-     style="max-width:{width}px;display:block;margin:0 auto" role="img"
+     style="display:block;margin:0 auto" role="img"
      aria-label="Carte des sections communales colorées par seuil">
   <style>
     .sea{{fill:#dde6ee}}
