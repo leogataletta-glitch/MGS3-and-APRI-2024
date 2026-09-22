@@ -138,14 +138,6 @@ __ZONE__ :is(.ev-x,.ev-puce li){font:400 14px/1.65 Georgia,serif!important;max-w
 __ZONE__ :is(.ev-n,.ev-verdict){padding:16px!important;background:#f1f5f3!important;border-radius:10px!important;}
 __ZONE__ :is(.st-key-ex_brut,.st-key-ex_brut_s,.st-key-ex_brut_c){padding:20px!important;border:1px solid #dde3df!important;border-radius:14px!important;}
 __ZONE__ [data-testid="stMarkdownContainer"]:has(>svg){padding:16px!important;border:1px solid #dde3df!important;border-radius:12px!important;overflow-x:auto!important;}
-__ZONE__ .model-layout{display:block!important;margin:8px 0 24px!important;}
-__ZONE__ .model-attributes{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important;padding:0!important;margin-bottom:28px!important;}
-__ZONE__ .model-attribute{display:block!important;padding:20px!important;border-radius:14px!important;background:#f1f5f3!important;border:1px solid #dde3df!important;}
-__ZONE__ .model-dot{display:none!important;}
-__ZONE__ .model-dimensions::before{display:none!important;}
-__ZONE__ .model-dimensions ul{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;}
-__ZONE__ .model-dimensions li{padding:14px 16px!important;border:1px solid #dde3df!important;border-radius:10px!important;align-items:center!important;}
-__ZONE__ .model-dimensions small{background:#f1f5f3!important;padding:4px 8px!important;border-radius:6px!important;color:#104b3b!important;}
 __ZONE__ :is(.cad-so-b,.ap-c,.int-paq){border-top:3px solid #104b3b!important;}
 __ZONE__ :is(.cad-flo,.ec-kpi,.sx-kpi){display:flex!important;gap:16px!important;align-items:stretch!important;margin:20px 0!important;}
 __ZONE__ :is(.cad-flo-e,.ec-k,.sx-k){flex:1 1 0!important;min-width:0!important;padding:18px!important;background:#f1f5f3!important;border:1px solid #dde3df!important;border-radius:12px!important;text-align:left!important;}
@@ -169,14 +161,13 @@ __ZONE__ :is(.st-key-correlation_definition,.st-key-correlation_profiles){paddin
 __ZONE__ [data-testid="stDataFrame"]{border:1px solid #dde3df;border-radius:10px;overflow:hidden;}
 @media(max-width:1000px){
 __ZONE__ .cad-ch{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
-__ZONE__ .model-attributes{grid-template-columns:1fr!important;}
 __ZONE__ .cad-flo{flex-wrap:wrap!important;}
 __ZONE__ .cad-flo-e{flex-basis:40%!important;}
 __ZONE__ .cad-flo-f{display:none!important;}
 }
 @media(max-width:700px){
 __ZONE__ .cad-ch{grid-template-columns:1fr!important;}
-__ZONE__ :is(.model-dimensions ul,.cad-nrm){grid-template-columns:1fr!important;}
+__ZONE__ .cad-nrm{grid-template-columns:1fr!important;}
 __ZONE__ :is(.ec-kpi,.sx-kpi){flex-direction:column!important;}
 __ZONE__ .cad-flo-e{flex-basis:100%!important;}
 }
