@@ -550,21 +550,27 @@ def render():
             st.markdown(f'<div class="a2-welcome-art"><img src="{aquarelle}" alt=""></div>',unsafe_allow_html=True)
     st.markdown(_WELCOME_STYLE.replace('__ROOT__', '.stApp' * 40), unsafe_allow_html=True)
 
-    # ---- 2 · les quatre nombres ----------------------------------------
-    menages, sections = _chiffres()
-    cases = [
-        (f'{_fmt(menages)}+' if menages else "1 200+", T("a2_c1_x"), None),
-        (str(sections or len(SECTIONS)), T("a2_c2_x"), None),
-        (T("a2_c3_n"), T("a2_c3_x"), T("a2_c3_s")),
-        (T("a2_c4_n"), T("a2_c4_x"), T("a2_c4_s")),
-    ]
-    st.markdown(
-        '<div class="a2-chif">' + "".join(
-            f'<div><div class="a2-n">{_e(n)}</div>'
-            f'<div class="a2-l">{_e(lab)}</div>'
-            + (f'<div class="a2-s">{_e(sous)}</div>' if sous else "")
-            + '</div>'
-            for n, lab, sous in cases) + '</div>', unsafe_allow_html=True)
+    # ---- 2 · les quatre nombres (DÉSACTIVÉS pour comparaison) --------
+    # Mettre AFFICHER_CHIFFRES à True pour rétablir le bandeau.
+    AFFICHER_CHIFFRES = False
+    if AFFICHER_CHIFFRES:
+        menages, sections = _chiffres()
+        cases = [
+            (f'{_fmt(menages)}+' if menages else "1 200+", T("a2_c1_x"), None),
+            (str(sections or len(SECTIONS)), T("a2_c2_x"), None),
+            (T("a2_c3_n"), T("a2_c3_x"), T("a2_c3_s")),
+            (T("a2_c4_n"), T("a2_c4_x"), T("a2_c4_s")),
+        ]
+        st.markdown(
+            '<div class="a2-chif">' + "".join(
+                f'<div><div class="a2-n">{_e(n)}</div>'
+                f'<div class="a2-l">{_e(lab)}</div>'
+                + (f'<div class="a2-s">{_e(sous)}</div>' if sous else "")
+                + '</div>'
+                for n, lab, sous in cases) + '</div>', unsafe_allow_html=True)
+    else:
+        # Sans le bandeau, on rend à la page l'espace qu'il occupait sous la photo.
+        st.markdown('<div style="height:28px"></div>', unsafe_allow_html=True)
 
     # Four photo destinations, followed by the full-width territory map.
     fr = i18n.get_lang() == 'fr'
