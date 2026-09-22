@@ -572,96 +572,102 @@ def render():
         # Sans le bandeau, on rend à la page l'espace qu'il occupait sous la photo.
         st.markdown('<div style="height:28px"></div>', unsafe_allow_html=True)
 
-    # Four photo destinations, followed by the full-width territory map.
-    fr = i18n.get_lang() == 'fr'
-    watercolor = 'app/static/aquarelles_apri_cimes.webp'
-    entries = [
-        ('methodologie', _locale_text('Cadre de résilience' if fr else 'Resilience framework'),
-         _locale_text('Comprendre l’approche APRI' if fr else 'Understand the APRI approach'),
-         watercolor, '0% 0%', 'Aquarelle du paysage agricole'),
-        ('dimensions', _locale_text('Résultats' if fr else 'Results'), T('a2_p1_x'),
-         watercolor, '100% 0%', 'Aquarelle de la vallée de la Voldrogue'),
-        ('boucles', _locale_text('Boucles de rétroaction' if fr else 'Feedback loops'), T('a2_p3_x'),
-         watercolor, '0% 100%', 'Aquarelle de la baie de Corail'),
-        ('actions', _locale_text('Fiches d’intervention' if fr else 'Intervention profiles'), T('a2_p4_x'),
-         watercolor, '100% 100%', 'Aquarelle du canal d’irrigation'),
-    ]
-    st.markdown("""<style>
-    .st-key-a2_photo_links{gap:12px!important;}
-    .st-key-a2_photo_links [data-testid="stHorizontalBlock"]{gap:18px!important;}
-    .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{gap:0!important;}
-    .a2-link-photo{position:relative;aspect-ratio:2 / 1;margin-top:20.3125%;overflow:visible;background:transparent;}
-    .a2-link-photo-bottom{margin-top:13.0208%;}
-    .a2-link-photo > svg{position:absolute;bottom:0;left:0;width:100%;height:auto;overflow:visible;display:block;}
-    .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{overflow:visible!important;}
-    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button{
-        background:transparent!important;border:0!important;box-shadow:none!important;
-        border-radius:0!important;min-height:96px!important;height:auto!important;
-        padding:8px 6px 0!important;}
-    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button:hover{
-        background:transparent!important;box-shadow:none!important;}
-    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button:focus-visible{
-        outline:2px solid #276448!important;outline-offset:3px;}
-    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p{
-        font-size:15px!important;color:#123d2c!important;}
-    /* Explicit spacing avoids inherited reserved lines and doubled Markdown breaks. */
-    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p{
-        display:flex!important;flex-direction:column;align-items:center;}
-    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p br{
-        display:none!important;}
-    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p em{
-        min-height:0!important;margin-top:4px!important;}
-    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p strong{
-        display:flex!important;align-items:center;justify-content:center;
-        min-height:28px!important;min-width:24px;box-sizing:border-box;
-        margin-top:0!important;padding:0 12px;border:0;border-radius:0;
-        font-size:0!important;font-weight:400;line-height:1.2!important;color:#123d2c;
-        background:transparent;}
-    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p strong::after{content:"";display:block;width:24px;height:24px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M4%2012h15m-6-6%206%206-6%206%22%20fill%3D%22none%22%20stroke%3D%22%23123d2c%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat;}
-    .stApp .st-key-a2_open_results button::after{content:"";display:block;flex:0 0 22px;width:22px;height:22px;margin-left:10px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M4%2012h15m-6-6%206%206-6%206%22%20fill%3D%22none%22%20stroke%3D%22%23123d2c%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat;transition:transform .15s ease;}
-    .stApp .st-key-a2_open_results button:hover::after{transform:translateX(3px);}
+    # ---- 3 · la carte et les quatre destinations (DÉSACTIVÉES) ---------
+    # Léo a demandé de retirer « Notre zone d'étude » et « Explorer APRI »
+    # de la page d'accueil. Mettre AFFICHER_CARTE_ET_PORTES à True pour
+    # les rétablir ; le code est conservé tel quel dessous.
+    AFFICHER_CARTE_ET_PORTES = False
+    if AFFICHER_CARTE_ET_PORTES:
+        # Four photo destinations, followed by the full-width territory map.
+        fr = i18n.get_lang() == 'fr'
+        watercolor = 'app/static/aquarelles_apri_cimes.webp'
+        entries = [
+            ('methodologie', _locale_text('Cadre de résilience' if fr else 'Resilience framework'),
+             _locale_text('Comprendre l’approche APRI' if fr else 'Understand the APRI approach'),
+             watercolor, '0% 0%', 'Aquarelle du paysage agricole'),
+            ('dimensions', _locale_text('Résultats' if fr else 'Results'), T('a2_p1_x'),
+             watercolor, '100% 0%', 'Aquarelle de la vallée de la Voldrogue'),
+            ('boucles', _locale_text('Boucles de rétroaction' if fr else 'Feedback loops'), T('a2_p3_x'),
+             watercolor, '0% 100%', 'Aquarelle de la baie de Corail'),
+            ('actions', _locale_text('Fiches d’intervention' if fr else 'Intervention profiles'), T('a2_p4_x'),
+             watercolor, '100% 100%', 'Aquarelle du canal d’irrigation'),
+        ]
+        st.markdown("""<style>
+        .st-key-a2_photo_links{gap:12px!important;}
+        .st-key-a2_photo_links [data-testid="stHorizontalBlock"]{gap:18px!important;}
+        .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{gap:0!important;}
+        .a2-link-photo{position:relative;aspect-ratio:2 / 1;margin-top:20.3125%;overflow:visible;background:transparent;}
+        .a2-link-photo-bottom{margin-top:13.0208%;}
+        .a2-link-photo > svg{position:absolute;bottom:0;left:0;width:100%;height:auto;overflow:visible;display:block;}
+        .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{overflow:visible!important;}
+        .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button{
+            background:transparent!important;border:0!important;box-shadow:none!important;
+            border-radius:0!important;min-height:96px!important;height:auto!important;
+            padding:8px 6px 0!important;}
+        .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button:hover{
+            background:transparent!important;box-shadow:none!important;}
+        .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button:focus-visible{
+            outline:2px solid #276448!important;outline-offset:3px;}
+        .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p{
+            font-size:15px!important;color:#123d2c!important;}
+        /* Explicit spacing avoids inherited reserved lines and doubled Markdown breaks. */
+        .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p{
+            display:flex!important;flex-direction:column;align-items:center;}
+        .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p br{
+            display:none!important;}
+        .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p em{
+            min-height:0!important;margin-top:4px!important;}
+        .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p strong{
+            display:flex!important;align-items:center;justify-content:center;
+            min-height:28px!important;min-width:24px;box-sizing:border-box;
+            margin-top:0!important;padding:0 12px;border:0;border-radius:0;
+            font-size:0!important;font-weight:400;line-height:1.2!important;color:#123d2c;
+            background:transparent;}
+        .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p strong::after{content:"";display:block;width:24px;height:24px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M4%2012h15m-6-6%206%206-6%206%22%20fill%3D%22none%22%20stroke%3D%22%23123d2c%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat;}
+        .stApp .st-key-a2_open_results button::after{content:"";display:block;flex:0 0 22px;width:22px;height:22px;margin-left:10px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M4%2012h15m-6-6%206%206-6%206%22%20fill%3D%22none%22%20stroke%3D%22%23123d2c%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat;transition:transform .15s ease;}
+        .stApp .st-key-a2_open_results button:hover::after{transform:translateX(3px);}
 
-    .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button:hover p strong{
-        background:transparent;transform:translateX(3px);}
-    .st-key-a2_photo_links div[data-testid="stMarkdownContainer"],
-    .st-key-a2_photo_links div[data-testid="stMarkdown"]{margin:0!important;}
-    @media(max-width:1000px){
-        .st-key-a2_map_links>[data-testid="stHorizontalBlock"]{flex-direction:column!important;}
-        .st-key-a2_map_links>[data-testid="stHorizontalBlock"]>[data-testid="stColumn"]{width:100%!important;flex:1 1 auto!important;}}
-    @media(max-width:650px){
-        .st-key-a2_photo_links [data-testid="stHorizontalBlock"]{flex-direction:row!important;flex-wrap:nowrap!important;gap:12px!important;}
-        .st-key-a2_photo_links [data-testid="stColumn"]{width:calc(50% - 6px)!important;min-width:0!important;flex:1 1 0!important;}
-        .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p{font-size:14px!important;}
-        .st-key-a2_photo_links button p em{font-size:11px!important;}}
-    </style>""",unsafe_allow_html=True)
-    with st.container(key='a2_map_links'):
-        map_col, links_col = st.columns([1.32,1],gap='large')
-        with map_col:
-            st.markdown(accueil_apri.STYLE + f'<div class="a2-portes-t">{_e(T("a2_carte_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
-            if not carte_zoom.render():
-                st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',unsafe_allow_html=True)
-        with links_col:
-            st.markdown(f'<div class="a2-portes-t">{_e(T("a2_portes_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
-            with st.container(key='a2_photo_links'):
-                for start in (0,2):
-                    for col, (code,title,detail,photo,position,alt) in zip(st.columns(2),entries[start:start+2]):
-                        with col:
-                            with st.container(key=f'a2_porte_{code}'):
-                                # Each complete landscape keeps its natural proportions.
-                                # The taller illustration rises above the nominal card image area.
-                                sx = 768 if position.startswith('100%') else 0
-                                sy, sh = (540, 484) if position.endswith('100%') else (0, 540)
-                                st.markdown(
-                                    f'<div class="a2-link-photo{" a2-link-photo-bottom" if sy else ""}" role="img" aria-label="{_e(alt)}">'
-                                    f'<svg viewBox="0 0 768 {sh}" aria-hidden="true">'
-                                    f'<svg x="0" y="0" width="768" height="{sh}" '
-                                    f'viewBox="{sx} {sy} 768 {sh}" overflow="hidden">'
-                                    f'<image href="{photo}" width="1536" height="1024"/>'
-                                    '</svg></svg></div>', unsafe_allow_html=True)
-                                action = '↗'
-                                if st.button(_locale_text(f'{title}  \n*{detail}*  \n**{action}**'),key=f'a2_b_{code}',use_container_width=True):
-                                    st.session_state['app_mode']=code
-                                    st.rerun()
+        .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button:hover p strong{
+            background:transparent;transform:translateX(3px);}
+        .st-key-a2_photo_links div[data-testid="stMarkdownContainer"],
+        .st-key-a2_photo_links div[data-testid="stMarkdown"]{margin:0!important;}
+        @media(max-width:1000px){
+            .st-key-a2_map_links>[data-testid="stHorizontalBlock"]{flex-direction:column!important;}
+            .st-key-a2_map_links>[data-testid="stHorizontalBlock"]>[data-testid="stColumn"]{width:100%!important;flex:1 1 auto!important;}}
+        @media(max-width:650px){
+            .st-key-a2_photo_links [data-testid="stHorizontalBlock"]{flex-direction:row!important;flex-wrap:nowrap!important;gap:12px!important;}
+            .st-key-a2_photo_links [data-testid="stColumn"]{width:calc(50% - 6px)!important;min-width:0!important;flex:1 1 0!important;}
+            .st-key-zone_page .st-key-a2_photo_links div[data-testid="stButton"] > button p{font-size:14px!important;}
+            .st-key-a2_photo_links button p em{font-size:11px!important;}}
+        </style>""",unsafe_allow_html=True)
+        with st.container(key='a2_map_links'):
+            map_col, links_col = st.columns([1.32,1],gap='large')
+            with map_col:
+                st.markdown(accueil_apri.STYLE + f'<div class="a2-portes-t">{_e(T("a2_carte_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
+                if not carte_zoom.render():
+                    st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',unsafe_allow_html=True)
+            with links_col:
+                st.markdown(f'<div class="a2-portes-t">{_e(T("a2_portes_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
+                with st.container(key='a2_photo_links'):
+                    for start in (0,2):
+                        for col, (code,title,detail,photo,position,alt) in zip(st.columns(2),entries[start:start+2]):
+                            with col:
+                                with st.container(key=f'a2_porte_{code}'):
+                                    # Each complete landscape keeps its natural proportions.
+                                    # The taller illustration rises above the nominal card image area.
+                                    sx = 768 if position.startswith('100%') else 0
+                                    sy, sh = (540, 484) if position.endswith('100%') else (0, 540)
+                                    st.markdown(
+                                        f'<div class="a2-link-photo{" a2-link-photo-bottom" if sy else ""}" role="img" aria-label="{_e(alt)}">'
+                                        f'<svg viewBox="0 0 768 {sh}" aria-hidden="true">'
+                                        f'<svg x="0" y="0" width="768" height="{sh}" '
+                                        f'viewBox="{sx} {sy} 768 {sh}" overflow="hidden">'
+                                        f'<image href="{photo}" width="1536" height="1024"/>'
+                                        '</svg></svg></div>', unsafe_allow_html=True)
+                                    action = '↗'
+                                    if st.button(_locale_text(f'{title}  \n*{detail}*  \n**{action}**'),key=f'a2_b_{code}',use_container_width=True):
+                                        st.session_state['app_mode']=code
+                                        st.rerun()
 
 
 
@@ -692,7 +698,7 @@ __ROOT__ [data-testid="stColumn"]:has(.st-key-zone_page){container-type:inline-s
 __ROOT__ .a2-welcome-art{min-width:0;position:relative;width:calc(100% + 28px + max(0px,(100cqw - 1440px)/2));}
 __ROOT__ .a2-welcome-art::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,#fff 0%,transparent 14%,transparent 84%,#fff 100%);}
 __ROOT__ .a2-welcome-art img{display:block;width:100%;height:260px;object-fit:cover;object-position:right center;border-radius:0;-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 14%,#000 100%);mask-image:linear-gradient(to right,transparent 0%,#000 14%,#000 100%);}
-__ROOT__ .a2-chif{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:0!important;background:#f1f5f3;border:1px solid #dde3df;border-radius:12px;padding:18px 0;margin:0 0 22px!important;}
+__ROOT__ .a2-chif{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:0!important;background:transparent;border:0;border-radius:0;padding:10px 0;margin:0 0 22px!important;}
 __ROOT__ .a2-chif>div{padding:0 16px!important;text-align:center!important;}
 __ROOT__ .a2-n{font:400 28px/1.2 Georgia,serif!important;color:#104b3b!important;}
 __ROOT__ .a2-l{font:700 11px/1.5 Georgia,serif!important;color:#4b5550!important;letter-spacing:.04em!important;margin-top:6px!important;}
