@@ -82,10 +82,10 @@ TEXTES = {
     "a2_titre": {"en": "Understanding landscapes@@to strengthen resilience",
                  "fr": "Comprendre les territoires@@pour renforcer leur résilience"},
     "a2_intro": {
-        "fr": "Portée par le PNUE, l’Approche Paysages Résilients Intégrée (APRI) relie les dynamiques écologiques, humaines et productives pour renforcer la résilience des ménages et des territoires. En Haïti, elle accompagne les acteurs locaux dans deux paysages pilotes du Grand Sud.",
-        "en": "Led by UNEP, the Integrated Resilient Landscape Approach (APRI) connects ecological, human and productive dynamics to strengthen the resilience of households and territories. In Haiti, it works alongside local actors in two pilot landscapes in the Grand Sud.",
-        "es": "Impulsado por el PNUMA, el Enfoque Integrado de Paisajes Resilientes (APRI) conecta las dinámicas ecológicas, humanas y productivas para fortalecer la resiliencia de los hogares y los territorios. En Haití, acompaña a los actores locales en dos paisajes piloto del Gran Sur.",
-        "ht": "Sou direksyon PNUE, Apwòch Entegre pou Peyizaj Rezilyan (APRI) konekte dinamik ekolojik, imen ak pwodiktif pou ranfòse rezilyans kay yo ak teritwa yo. Ann Ayiti, li akonpaye aktè lokal yo nan de peyizaj pilòt nan Gran Sid la."
+        "fr": "APRI est un cadre d’analyse et de gouvernance à l’échelle des paysages. Cet Observatoire de la résilience en constitue le système d’information : il présente la méthode de mesure, les résultats et les outils d’aide à la décision pour orienter l’action dans les territoires.",
+        "en": "APRI is a framework for landscape-scale analysis and governance. This Resilience Observatory is its information system: it presents the measurement method, findings and decision-support tools to guide action across territories.",
+        "es": "APRI es un marco de análisis y gobernanza a escala de los paisajes. Este Observatorio de la Resiliencia constituye su sistema de información: presenta el método de medición, los resultados y las herramientas de apoyo a la toma de decisiones para orientar la acción en los territorios.",
+        "ht": "APRI se yon kad analiz ak gouvènans nan nivo peyizaj yo. Obsèvatwa Rezilyans sa a se sistèm enfòmasyon li: li prezante metòd mezi a, rezilta yo ak zouti pou ede pran desizyon pou oryante aksyon nan teritwa yo."
     },
     "a2_cta": {"en": "Explore the results", "fr": "Explorer les résultats"},
     # LA LÉGENDE SUIT LA PHOTOGRAPHIE, ET LES DEUX PHOTOGRAPHIES DIFFÈRENT :
@@ -675,11 +675,13 @@ __ROOT__ .a2-welcome-copy{min-width:0;padding:8px 0;}
 __ROOT__ .a2-kick{font:700 10px/1.5 Georgia,serif!important;letter-spacing:.12em!important;color:#4b5550!important;margin:0 0 12px!important;text-align:left!important;}
 __ROOT__ h1.a2-welcome-title{font:400 clamp(26px,2.3vw,36px)/1.15 Georgia,serif!important;color:#104b3b!important;margin:0 0 16px!important;padding:0!important;text-align:left!important;letter-spacing:-.02em!important;text-wrap:balance;max-width:24ch;}
 __ROOT__ p.a2-intro{font:400 14px/1.7 Georgia,serif!important;color:#4b5550!important;text-align:left!important;max-width:58ch!important;margin:0!important;}
-__ROOT__ .st-key-a2_main_action button{display:inline-flex;align-items:center;gap:16px;background:#104b3b!important;color:white!important;text-decoration:none!important;font:700 13px/1.5 Georgia,serif!important;padding:11px 18px!important;border-radius:8px!important;min-height:42px!important;height:auto!important;border:0!important;transition:background .15s;}
-__ROOT__ .st-key-a2_main_action button:hover{background:#276448!important;}
+__ROOT__ .st-key-a2_main_action{margin:14px 0 0!important;position:static!important;}
+__ROOT__ .st-key-a2_open_results{margin:0!important;position:static!important;}
+__ROOT__ .st-key-a2_main_action button{display:inline-flex;align-items:center;gap:16px;background:white!important;color:#104b3b!important;text-decoration:none!important;font:700 13px/1.5 Georgia,serif!important;padding:10px 22px!important;border-radius:30px!important;min-height:44px!important;height:auto!important;border:1px solid #104b3b!important;box-shadow:none!important;transition:background .15s;}
+__ROOT__ .st-key-a2_main_action button:hover{background:#f1f5f3!important;}
 __ROOT__ .st-key-a2_main_action button:focus-visible{outline:2px solid #104b3b;outline-offset:4px;}
-__ROOT__ .st-key-a2_main_action button p{color:white!important;font:700 13px/1.5 Georgia,serif!important;}
-__ROOT__ .st-key-a2_main_action button::after{filter:brightness(0) invert(1);}
+__ROOT__ .st-key-a2_main_action button p{color:#104b3b!important;font:700 13px/1.5 Georgia,serif!important;}
+__ROOT__ .st-key-a2_main_action button::after{filter:none;}
 __ROOT__ .a2-welcome-art{min-width:0;}
 __ROOT__ .a2-welcome-art img{display:block;width:100%;height:260px;object-fit:cover;object-position:right center;border-radius:16px;}
 __ROOT__ .a2-chif{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:0!important;background:#f1f5f3;border:1px solid #dde3df;border-radius:12px;padding:18px 0;margin:0 0 22px!important;}
