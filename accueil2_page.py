@@ -576,7 +576,7 @@ def render():
     # Léo a demandé de retirer « Notre zone d'étude » et « Explorer APRI »
     # de la page d'accueil. Mettre AFFICHER_CARTE_ET_PORTES à True pour
     # les rétablir ; le code est conservé tel quel dessous.
-    AFFICHER_CARTE_ET_PORTES = False
+    AFFICHER_CARTE_ET_PORTES = True
     if AFFICHER_CARTE_ET_PORTES:
         # Four photo destinations, followed by the full-width territory map.
         fr = i18n.get_lang() == 'fr'
@@ -643,11 +643,13 @@ def render():
         with st.container(key='a2_map_links'):
             map_col, links_col = st.columns([1.32,1],gap='large')
             with map_col:
-                st.markdown(accueil_apri.STYLE + f'<div class="a2-portes-t">{_e(T("a2_carte_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
+                # Titre « Notre zone d'étude » retiré à la demande de Léo ; le style
+                # d'accueil_apri reste chargé pour la carte.
+                st.markdown(accueil_apri.STYLE,unsafe_allow_html=True)
                 if not carte_zoom.render():
                     st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',unsafe_allow_html=True)
             with links_col:
-                st.markdown(f'<div class="a2-portes-t">{_e(T("a2_portes_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
+                # Titre « Explorer APRI » retiré à la demande de Léo.
                 with st.container(key='a2_photo_links'):
                     for start in (0,2):
                         for col, (code,title,detail,photo,position,alt) in zip(st.columns(2),entries[start:start+2]):
