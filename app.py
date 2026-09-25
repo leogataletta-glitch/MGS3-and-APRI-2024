@@ -2738,7 +2738,10 @@ with _c_contenu:
             if _src == "satellite":
                 environnement_cadre.render_satellite()
                 satellite_page.render()
-            elif _src in ("institutions", "biodiversite"):
+            elif _src == "institutions":
+                import institutions_page
+                institutions_page.render((_theme_col, _question_col))
+            elif _src == "biodiversite":
                 _msg = T("ra_attente_inst" if _src == "institutions"
                          else "ra_attente_bio")
                 st.markdown(
