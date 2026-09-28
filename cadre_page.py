@@ -2306,7 +2306,7 @@ MIN_SECTION = 119
 # barèmes réels sans dire ce qu'ils produisent. Les deux se lisent maintenant
 # au même endroit, et la chaîne tourne sur l'indicateur qu'on a ouvert.
 VUES = ("mesure", "sources", "indicateurs", "boucles",
-        "acquisition", "document")
+        "document")
 # `_LIB` porte les intitulés longs ; ils ne sont plus rendus depuis que la
 # barre a pris les titres courts, mais la table reste la carte des sept vues.
 _LIB = {"mesure": "cad_o1", "sources": "cad_o2",
@@ -2354,7 +2354,7 @@ def render(doc_complet=None):
     .cad-weight{flex-direction:column-reverse;gap:7px;align-items:flex-end;}.cad-weight-track{width:65px;}
     .st-key-cad_model .cad-dl-n{font-size:14px;}.st-key-cad_model .cad-dh{letter-spacing:0;font-size:9px;word-break:normal!important;overflow-wrap:normal!important;text-align:left!important;}.cad-page-title{font-size:29px;}}
     </style>""",unsafe_allow_html=True)
-    names = dict(zip(VUES, ('Modèle','Sources','Calcul des scores','Boucles','À compléter','Document complet') if fr else ('Model','Sources','Score calculation','Feedback loops','To complete','Full document')))
+    names = dict(zip(VUES, ('Modèle','Sources','Calcul des scores','Boucles','Document complet') if fr else ('Model','Sources','Score calculation','Feedback loops','Full document')))
 
     if not stats:
         st.info(_locale_text(T("e_absent")))
@@ -2453,10 +2453,6 @@ def render(doc_complet=None):
             _v_boucles()
     elif vue == "environnement":
         _v_environnement()
-    elif vue == "acquisition":
-        # L'ÉCART SUIT LE CADRE, IL NE LE PRÉCÈDE PAS : on lit d'abord ce que
-        # le protocole demande, on voit ensuite ce qui en est acquis.
-        acquisition_env.render()
     elif vue == "document":
         _v_document(doc_complet)
     else:
