@@ -2532,9 +2532,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 import langue_nav
+import navigation_claire
+navigation_claire.reset_destination()
 
 with _menu_mobile:
-    with st.popover(_locale_text("☰ Menu"), use_container_width=True,
+    with st.popover(navigation_claire.mobile_label(_locale_text(LIBELLE_MODE.get(st.session_state['app_mode'], 'APRI'))), use_container_width=True,
                     key=f"mobile_menu_{st.session_state.get('mobile_menu_generation', 0)}_{st.session_state['choix_langue']}"):
         langue_nav.render(_changer_langue, mobile=True)
         for _fam, _entrees in _NAV_FAMILLES:
@@ -2600,6 +2602,9 @@ st.markdown("""<style>
 _rendre_ruban(st.session_state["app_mode"] != MODE_PORTAIL)
 
 app_mode = st.session_state["app_mode"]
+
+with _c_contenu:
+    navigation_claire.render(app_mode, {k: _locale_text(v) for k, v in LIBELLE_MODE.items()}, _NAV, _bascule)
 
 # Les six onglets de dimension passent tous par le même module ; deux d'entre
 # eux prolongent leur page avec un détail qui existait déjà, plutôt que d'en
