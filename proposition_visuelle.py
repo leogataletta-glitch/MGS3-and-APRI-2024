@@ -38,6 +38,7 @@ def navigation(root):
 
 def apply():
     composition()
+    interface_consistante()
     root = '.stApp' * 32
     zone = root + ' .st-key-zone_page'
     if not active():
@@ -61,6 +62,36 @@ def apply():
     {zone} [data-testid="stPlotlyChart"],{zone} [data-testid="stVegaLiteChart"]{{border:1px solid #dde3df!important;border-radius:8px!important;padding:12px!important;}}
     @media(max-width:700px){{{zone} :is(h1,.apri-page-title,.cad-page-title){{font-size:24px!important;}}}}
     </style>''', unsafe_allow_html=True)
+
+
+def interface_consistante():
+    """Consistent controls without changing maps, charts or semantic alerts."""
+    zone = '.stApp' * 40 + ' .st-key-zone_page'
+    css = '''<style>
+    __ZONE__{--apri-space:16px;--apri-radius:8px;--apri-ink:#104b3b;--apri-body:#4b5550;--apri-soft:#f1f5f3;--apri-border:#c4d2ca;}
+    __ZONE__ :is([data-testid="stSelectbox"],[data-testid="stMultiSelect"],[data-testid="stTextInput"],[data-testid="stTextArea"]){padding:8px 12px!important;border-radius:var(--apri-radius)!important;box-sizing:border-box!important;}
+    __ZONE__ :is([data-testid="stSelectbox"],[data-testid="stMultiSelect"],[data-testid="stTextInput"],[data-testid="stTextArea"]) label p{font:400 12px/1.5 Georgia,serif!important;color:var(--apri-body)!important;margin-bottom:4px!important;}
+    __ZONE__ :is(input:not([type="radio"]):not([type="checkbox"]),textarea,[role="combobox"]){font:400 14px/1.5 Georgia,serif!important;color:var(--apri-body)!important;}
+    __ZONE__ :is([data-baseweb="select"]>div,[data-baseweb="input"],[data-rac][role="group"]:has(>[role="combobox"])){min-height:44px!important;border-radius:var(--apri-radius)!important;background:var(--apri-soft)!important;}
+    __ZONE__ :is(.stButton,.stDownloadButton,[data-testid="stFormSubmitButton"],[data-testid="stPopover"])>button{min-height:44px!important;height:auto!important;padding:8px 16px!important;border-radius:var(--apri-radius)!important;font:400 13px/1.5 Georgia,serif!important;transition:background-color .12s ease,border-color .12s ease,box-shadow .12s ease!important;}
+    __ZONE__ :is(.stButton,.stDownloadButton,[data-testid="stFormSubmitButton"],[data-testid="stPopover"])>button p{font:inherit!important;margin:0!important;background:transparent!important;transform:none!important;box-shadow:none!important;}
+    __ZONE__ :is(.stButton,.stDownloadButton,[data-testid="stFormSubmitButton"],[data-testid="stPopover"])>button:not(:disabled):hover{border-color:var(--apri-ink)!important;box-shadow:0 2px 6px #104b3b20!important;}
+    __ZONE__ :is(.stButton,.stDownloadButton,[data-testid="stFormSubmitButton"],[data-testid="stPopover"])>button:not(:disabled):active{box-shadow:inset 0 0 0 2px var(--apri-ink)!important;filter:brightness(.93);}
+    __ZONE__ button:disabled{opacity:.55!important;cursor:not-allowed!important;box-shadow:none!important;}
+    __ZONE__ :is(button,input,textarea,a,[role="combobox"]):focus-visible{outline:2px solid var(--apri-ink)!important;outline-offset:3px!important;}
+    __ZONE__ [role="radiogroup"] label:focus-within{outline:2px solid var(--apri-ink)!important;outline-offset:2px!important;}
+    __ZONE__ [role="radiogroup"] label:active{box-shadow:inset 0 0 0 2px var(--apri-ink)!important;}
+    __ZONE__ [data-testid="stExpander"] summary{min-height:44px!important;padding:12px 16px!important;}
+    __ZONE__ [data-testid="stExpander"] details[open]>summary{background:var(--apri-soft)!important;color:var(--apri-ink)!important;}
+    __ZONE__ [data-testid="stAlert"]{border-radius:var(--apri-radius)!important;padding:12px 16px!important;}
+    __ZONE__ :is(.ex-k,.cx-k,.ec-k,.sx-k,.cad-ch-e){padding:16px!important;border-radius:8px!important;}
+    __ZONE__ :is(.ex-kpi,.cx-kpi,.ec-kpi,.sx-kpi,.cad-ch){gap:16px!important;margin:16px 0 24px!important;}
+    __ZONE__ :is(.cad-so,.ap-def,.ap-pay,.ap-b,.cad-nrm){gap:16px!important;}
+    __ZONE__ :is(.cad-so-b,.ap-def>div,.ap-pay>div,.ap-c,.int-box,.int-paq,.int-perf){padding:16px!important;}
+    __ZONE__ :is(p,li,h1,h2,h3,h4,td,th):hover{transform:none!important;box-shadow:none!important;}
+    @media(prefers-reduced-motion:reduce){__ZONE__ *{transition:none!important;animation:none!important;}}
+    </style>'''
+    st.markdown(css.replace('__ZONE__', zone), unsafe_allow_html=True)
 
 
 def composition():
