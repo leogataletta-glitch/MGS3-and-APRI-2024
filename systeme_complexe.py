@@ -843,8 +843,6 @@ def render_construire():
         st.warning(_locale_text(T("sx_trop", n=len(rang))))
     import schema_exploration
     schema_exploration.render(m, rang, aretes, s["centre"], _positions(rang, s["centre"])[0], isoler)
-    with st.expander(_locale_text("Schéma statique · JPEG / PDF")):
-        st.markdown(_svg_cld(m, rang, aretes, s["centre"], isoler), unsafe_allow_html=True)
     # QUATRE NOTES SOUS LE SCHÉMA, ET PLUS AUCUNE. La lecture des flèches,
     # l'effet du périmètre, le décompte des variables et la différence
     # entre boucle renforçante et boucle équilibrante faisaient un paragraphe
