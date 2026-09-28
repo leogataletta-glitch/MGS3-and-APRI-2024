@@ -816,8 +816,6 @@ def render_construire():
                      format_func=_locale_formatter(lambda i: m["noms"][i]))
     with c3:
         st.selectbox(_locale_text(T("sx_prof")), TAILLES, key="bcl_n", format_func=_locale_formatter(str))
-    st.markdown(f'<p class="sx-note" style="margin:-4px 0 10px">'
-                f'{T("sx_sens")}</p>', unsafe_allow_html=True)
     s = _systeme(m, "c")
 
     etat = M.etat_courant(m["g"], m["par_ligne"], s["pop"])

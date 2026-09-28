@@ -1240,16 +1240,6 @@ def render():
         st.info(_locale_text(T("sd_court")))
         return
 
-    st.markdown(
-        f'<div style="background:#fff;border:1px solid #e3eaf3;border-left:5px '
-        f'solid {VERT_APRI};border-radius:14px;padding:12px 16px;'
-        f'font-size:14px;color:{ENCRE2};line-height:1.6;margin:2px 0 8px;'
-        # LE MODE D'EMPLOI SUFFIT. La définition d'un relais le suivait, dans
-        # le même cadre : dix lignes de théorie devant un dessin qui la montre
-        # en une seconde dès qu'on appuie sur lire.
-        f'max-width:96ch">{T("sd_intro")}'
-        f'</div>', unsafe_allow_html=True)
-
     # LA HAUTEUR SUIT LE DESSIN. Un périmètre de quatre pastilles n'a pas
     # besoin de neuf cents pixels, et un périmètre de vingt-six ne tient pas
     # dans six cents : l'iframe est taillée sur le rapport de la boîte.
