@@ -2305,7 +2305,7 @@ MIN_SECTION = 119
 # marche pour aller chercher l'eau — pendant que l'onglet voisin montrait les
 # barèmes réels sans dire ce qu'ils produisent. Les deux se lisent maintenant
 # au même endroit, et la chaîne tourne sur l'indicateur qu'on a ouvert.
-VUES = ("mesure", "sources", "indicateurs", "boucles",
+VUES = ("mesure", "indicateurs", "boucles",
         "document")
 # `_LIB` porte les intitulés longs ; ils ne sont plus rendus depuis que la
 # barre a pris les titres courts, mais la table reste la carte des sept vues.
@@ -2354,7 +2354,7 @@ def render(doc_complet=None):
     .cad-weight{flex-direction:column-reverse;gap:7px;align-items:flex-end;}.cad-weight-track{width:65px;}
     .st-key-cad_model .cad-dl-n{font-size:14px;}.st-key-cad_model .cad-dh{letter-spacing:0;font-size:9px;word-break:normal!important;overflow-wrap:normal!important;text-align:left!important;}.cad-page-title{font-size:29px;}}
     </style>""",unsafe_allow_html=True)
-    names = dict(zip(VUES, ('Modèle','Sources','Calcul des scores','Boucles','Document complet') if fr else ('Model','Sources','Score calculation','Feedback loops','Full document')))
+    names = dict(zip(VUES, ('Modèle et sources','Calcul des scores','Boucles','Document complet') if fr else ('Model and sources','Score calculation','Feedback loops','Full document')))
 
     if not stats:
         st.info(_locale_text(T("e_absent")))
@@ -2444,9 +2444,7 @@ def render(doc_complet=None):
     </style>""",unsafe_allow_html=True)
 
 
-    if vue == "sources":
-        _v_sources()
-    elif vue == "indicateurs":
+    if vue == "indicateurs":
         _v_indicateurs()
     elif vue == "boucles":
         with st.container(key="cad_feedback"):
@@ -2457,6 +2455,8 @@ def render(doc_complet=None):
         _v_document(doc_complet)
     else:
         _v_mesure(stats)
+        st.markdown("### " + _locale_text("Sources"))
+        _v_sources()
     import cadre_format
     cadre_format.appliquer(active)
 
