@@ -33,6 +33,15 @@ def display_value(row):
 
 
 def render(controls):
+    lot = st.selectbox('Résultats institutionnels', ['Quentin et Beaulieu — DDAS', 'ORE — section à confirmer'], key='inst_lot')
+    if lot.startswith('Quentin'):
+        from institutions_ddas import render as render_ddas
+        render_ddas(controls)
+    else:
+        render_ore(controls)
+
+
+def render_ore(controls):
     data = load_data()
     rows = data['observations']
     themes = list(dict.fromkeys(r['theme'] for r in rows))
