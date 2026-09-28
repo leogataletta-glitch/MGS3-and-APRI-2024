@@ -61,6 +61,9 @@ function scan(doc,root){
  if(!root||!P.__apriExportsEnabled)return;
  if(doc.getElementById('carte')&&doc.getElementById('jpg'))return;
  root.querySelectorAll('svg,canvas,img,table').forEach(el=>{
+   // Plotly owns its layered SVG/WebGL canvas and its image export toolbar.
+   // Inserting controls between those layers breaks the interactive scene.
+   if(el.closest('[data-testid="stPlotlyChart"],.js-plotly-plot'))return;
    if(el.closest('.apri-export-tools,.st-key-zone_nav,.leaflet-container,button,[role="button"]'))return;
    const r=el.getBoundingClientRect();if(r.width<180||r.height<80)return;
    if(el.matches('svg')&&el.parentElement.closest('svg'))return;
