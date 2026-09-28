@@ -18,7 +18,7 @@ def render(current, labels, entries, go):
             text = home if current == 'portail' else f'<a href="?page=portail" target="_self">{home}</a><span aria-hidden="true"> › </span><span aria-current="page">{name}</span>'
             st.markdown(f'<nav class="apri-breadcrumb" aria-label="{escape(tr(("Fil d’Ariane", "Breadcrumb", "Ruta de navegación", "Chemen navigasyon")))}">{text}</nav>', unsafe_allow_html=True)
         with right:
-            with st.popover(tr(('Trouver une page', 'Find a page', 'Buscar una página', 'Jwenn yon paj')), use_container_width=True):
+            with st.popover(tr(('Trouver une page', 'Find a page', 'Buscar una página', 'Jwenn yon paj')), use_container_width=True, key=f'page_finder_{current}'):
                 destination = st.selectbox(tr(('Aller à', 'Go to', 'Ir a', 'Ale nan')), [''] + codes,
                     format_func=lambda code: labels[code] if code else tr(('Saisir un nom de page…', 'Type a page name…', 'Escribe el nombre de una página…', 'Tape non yon paj…')),
                     key='navigation_destination')
