@@ -49,13 +49,16 @@ async function capture(el){
 }
 function toolbar(el,table=false){
  if(seen.has(el)||!el.parentNode||el.nextElementSibling?.classList.contains('apri-export-tools'))return;seen.add(el);
- const doc=el.ownerDocument,bar=doc.createElement('div');bar.className='apri-export-tools';bar.setAttribute('data-html2canvas-ignore','true');bar.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 16px;align-items:center';
+ // Put embedded visual exports outside the fixed-height iframe: otherwise
+ // controls appended below a diagram can be clipped with scrolling disabled.
+ const frame=el.ownerDocument===D?null:el.ownerDocument.defaultView.frameElement;
+ const doc=frame?frame.ownerDocument:el.ownerDocument,bar=doc.createElement('div');bar.className='apri-export-tools';bar.setAttribute('data-html2canvas-ignore','true');bar.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 16px;align-items:center;position:relative;z-index:1;min-height:36px;flex-shrink:0;clear:both';
  const status=doc.createElement('span');status.setAttribute('role','status');status.style.cssText='font:12px Arial;color:#526e60';
  (table?['csv']:['jpeg','pdf']).forEach(fmt=>{const b=doc.createElement('button');b.type='button';b.textContent=fmt.toUpperCase()+' ↓';b.style.cssText='font:13px Arial;color:#245f49;background:#f1f7f3;border:1px solid #b9d0c1;border-radius:6px;padding:8px 12px;cursor:pointer';b.onclick=async()=>{b.disabled=true;status.textContent=fr?'Préparation…':'Preparing…';try{
  if(table){const csv=[...el.querySelectorAll('tr')].map(row=>[...row.querySelectorAll('th,td')].map(c=>'"'+c.innerText.replaceAll('"','""')+'"').join(';')).join('\r\n');download(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),'csv');}
  else{const canvas=await capture(el);const blob=fmt==='pdf'?pdfJpeg(canvas):await new Promise(r=>canvas.toBlob(r,'image/jpeg',.94));if(!blob)throw Error('No image');download(blob,fmt==='jpeg'?'jpg':'pdf');}
  status.textContent='';}catch(e){status.textContent=fr?'Téléchargement indisponible pour ce rendu.':'Download unavailable for this rendering.';}finally{b.disabled=false;}};bar.appendChild(b);});bar.appendChild(status);
- const anchor=el.namespaceURI==='http://www.w3.org/2000/svg'?el.closest('svg'):el;anchor.parentNode.insertBefore(bar,anchor.nextSibling);
+ const anchor=frame||(el.namespaceURI==='http://www.w3.org/2000/svg'?el.closest('svg'):el);anchor.parentNode.insertBefore(bar,anchor.nextSibling);
 }
 function scan(doc,root){
  if(!root||!P.__apriExportsEnabled)return;
@@ -77,3 +80,4 @@ P.__apriExportObserver=new P.MutationObserver(schedule);P.__apriExportObserver.o
 // Embedded result frames finish loading independently of Streamlit's DOM.
 P.setTimeout(schedule,1800);P.setTimeout(schedule,4000);
 })();
+
