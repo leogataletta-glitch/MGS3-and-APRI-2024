@@ -52,7 +52,7 @@ function toolbar(el,table=false){
  // Put embedded visual exports outside the fixed-height iframe: otherwise
  // controls appended below a diagram can be clipped with scrolling disabled.
  const frame=el.ownerDocument===D?null:el.ownerDocument.defaultView.frameElement;
- const doc=frame?frame.ownerDocument:el.ownerDocument,bar=doc.createElement('div');bar.className='apri-export-tools';bar.setAttribute('data-html2canvas-ignore','true');bar.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 16px;align-items:center;position:relative;z-index:1;min-height:36px;flex-shrink:0;clear:both';
+ const doc=frame?frame.ownerDocument:el.ownerDocument,bar=doc.createElement('div');bar.className='apri-export-tools';bar._apriSource=el;bar._apriFrame=frame;bar.setAttribute('data-html2canvas-ignore','true');bar.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 16px;align-items:center;position:relative;z-index:1;min-height:36px;flex-shrink:0;clear:both';
  const status=doc.createElement('span');status.setAttribute('role','status');status.style.cssText='font:12px Arial;color:#526e60';
  (table?['csv']:['jpeg','pdf']).forEach(fmt=>{const b=doc.createElement('button');b.type='button';b.textContent=fmt.toUpperCase()+' ↓';b.style.cssText='font:13px Arial;color:#245f49;background:#f1f7f3;border:1px solid #b9d0c1;border-radius:6px;padding:8px 12px;cursor:pointer';b.onclick=async()=>{b.disabled=true;status.textContent=fr?'Préparation…':'Preparing…';try{
  if(table){const csv=[...el.querySelectorAll('tr')].map(row=>[...row.querySelectorAll('th,td')].map(c=>'"'+c.innerText.replaceAll('"','""')+'"').join(';')).join('\r\n');download(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),'csv');}
@@ -75,7 +75,7 @@ function scan(doc,root){
  });
  root.querySelectorAll('iframe').forEach(f=>{try{if(f.contentDocument?.body)scan(f.contentDocument,f.contentDocument.body);}catch(e){}});
 }
-function schedule(){if(pending)return;pending=true;P.setTimeout(()=>{pending=false;scan(D,D.querySelector('.st-key-zone_page'));},400);}
+function schedule(){D.querySelectorAll('.apri-export-tools').forEach(bar=>{if((bar._apriSource&&!bar._apriSource.isConnected)||(bar._apriFrame&&!bar._apriFrame.isConnected))bar.remove();});if(pending)return;pending=true;P.setTimeout(()=>{pending=false;scan(D,D.querySelector('.st-key-zone_page'));},400);}
 P.__apriExportObserver=new P.MutationObserver(schedule);P.__apriExportObserver.observe(D.body,{childList:true,subtree:true});schedule();
 // Embedded result frames finish loading independently of Streamlit's DOM.
 P.setTimeout(schedule,1800);P.setTimeout(schedule,4000);
