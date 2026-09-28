@@ -850,8 +850,6 @@ def render_construire():
     # occupant l'écran à chaque changement de variable. Les signes sont sur
     # les flèches, le décompte se voit, et le type de chaque boucle est écrit
     # en tête de son libellé dans le menu au-dessus.
-    if not bcls:
-        st.info(_locale_text(T("sx_boucles_0")))
 
 
 # ================================================================= onglet 2

@@ -225,6 +225,14 @@ GRAPHE_DEFAUT = {
 }
 
 
+def _relations_valides(g):
+    # The cited shelter water standard does not establish a relationship
+    # between household drinking-water access and operational shelters.
+    # Preserve the source record, but exclude this mismatched link everywhere.
+    return {**g, "aretes": [e for e in g["aretes"]
+                           if (e["de"], e["vers"]) != ("eau", "abris")]}
+
+
 def charger(chemin=None):
     """Le graphe : celui du fichier s'il existe, celui du module sinon."""
     p = chemin or GRAPHE
@@ -232,10 +240,10 @@ def charger(chemin=None):
         with open(p, encoding="utf-8") as f:
             g = json.load(f)
         if g.get("noeuds") and g.get("aretes"):
-            return g
+            return _relations_valides(g)
     except (OSError, ValueError):
         pass
-    return GRAPHE_DEFAUT
+    return _relations_valides(GRAPHE_DEFAUT)
 
 
 def matrice(graphe, brute=False):
