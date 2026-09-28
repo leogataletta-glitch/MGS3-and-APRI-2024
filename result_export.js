@@ -58,7 +58,7 @@ function toolbar(el,table=false){
  if(table){const csv=[...el.querySelectorAll('tr')].map(row=>[...row.querySelectorAll('th,td')].map(c=>'"'+c.innerText.replaceAll('"','""')+'"').join(';')).join('\r\n');download(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),'csv');}
  else{const canvas=await capture(el);const blob=fmt==='pdf'?pdfJpeg(canvas):await new Promise(r=>canvas.toBlob(r,'image/jpeg',.94));if(!blob)throw Error('No image');download(blob,fmt==='jpeg'?'jpg':'pdf');}
  status.textContent='';}catch(e){status.textContent=fr?'Téléchargement indisponible pour ce rendu.':'Download unavailable for this rendering.';}finally{b.disabled=false;}};bar.appendChild(b);});bar.appendChild(status);
- const anchor=frame||(el.namespaceURI==='http://www.w3.org/2000/svg'?el.closest('svg'):el);anchor.parentNode.insertBefore(bar,anchor.nextSibling);
+ const anchor=(frame?.closest('[data-testid="stElementContainer"]')||frame)||(el.namespaceURI==='http://www.w3.org/2000/svg'?el.closest('svg'):el);anchor.parentNode.insertBefore(bar,anchor.nextSibling);
 }
 function scan(doc,root){
  if(!root||!P.__apriExportsEnabled)return;
@@ -80,4 +80,5 @@ P.__apriExportObserver=new P.MutationObserver(schedule);P.__apriExportObserver.o
 // Embedded result frames finish loading independently of Streamlit's DOM.
 P.setTimeout(schedule,1800);P.setTimeout(schedule,4000);
 })();
+
 
