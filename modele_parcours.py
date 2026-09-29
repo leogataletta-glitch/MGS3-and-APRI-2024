@@ -8,6 +8,7 @@ from traductions import text
 
 def render(attributes, dimensions, sources):
     copy = {
+        'hide_steps': True,
         'steps': [tr(x) for x in [
             ('3 capacités', '3 capacities', '3 capacidades', '3 kapasite'),
             ('7 dimensions', '7 dimensions', '7 dimensiones', '7 dimansyon'),

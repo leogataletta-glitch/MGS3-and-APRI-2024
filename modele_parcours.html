@@ -3,7 +3,7 @@
 </style><main><nav aria-label="Étapes"></nav><section class="stage" aria-live="polite" aria-atomic="true"></section><p class="summary"></p><footer><button id="play"></button></footer></main><script>
 const c=__CONTENT__, nav=document.querySelector('nav'),stage=document.querySelector('.stage');let step=0,timer=null;
 function element(tag,text,parent){const e=document.createElement(tag);e.textContent=text;parent.appendChild(e);return e;}
-const tabs=c.steps.map(s=>element('span',s,nav));
+const tabs=c.hide_steps?[]:c.steps.map(s=>element('span',s,nav));if(c.hide_steps)nav.remove();
 const play=document.querySelector('#play');document.querySelector('.summary').textContent=c.summary;
 function show(i){step=i;tabs.forEach((b,j)=>{if(i===j)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});stage.replaceChildren();stage.classList.remove('animate');element('h2',c.titles[i],stage);element('p',c.intro[i],stage).className='intro';const items=element('div','',stage);items.className='items'+(c.slides?' sources':i===1?' dimensions':i===2?' sources':'');const values=c.slides?c.slides[i]:i===0?c.attributes:i===1?c.dimensions:c.sources;if(c.slides)items.style.gridTemplateColumns='1fr';values.forEach(v=>{const item=element('div','',items);item.className='item';if(!c.slides&&i===0){element('b',v[0],item);element('p',v[1],item);}else element(c.slides||i===2?'b':'span',v,item);});requestAnimationFrame(()=>stage.classList.add('animate'));}
 function stop(){clearInterval(timer);timer=null;play.textContent=c.resume;play.setAttribute('aria-pressed','true');}
