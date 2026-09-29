@@ -7,7 +7,7 @@ import json
 def document(fr=True):
     words = {
         "title": _locale_text("Reboiser : agir sur tout le système" if fr else "Reforestation: act on the whole system"),
-        "intro": _locale_text("Réglez les leviers, puis lancez les vagues. Les effets sur la forêt arrivent avec retard." if fr else "Adjust the levers, then start the waves. Forest recovery takes time."),
+        "intro": _locale_text("Comparez « Planter seul » et « Agir ensemble ». Ajustez les revenus alternatifs, le bois-énergie et la pression des animaux pour comprendre pourquoi reboiser demande une action intégrée sur les causes structurelles." if fr else "Compare “Planting alone” with “Combined action”. Adjust alternative livelihoods, fuelwood alternatives and livestock pressure to explore why reforestation needs integrated action on structural causes."),
         "note": _locale_text("Simulation pédagogique : niveaux relatifs, sans prévision locale ni lien avec les scores IRLA. Chaque vague représente une étape, pas une année." if fr else "Educational simulation: relative levels, not a local forecast or IRLA scores. Each wave is a step, not a year."),
         "controls": ["Plantation", "Revenus alternatifs", "Alternatives au bois-énergie", "Gestion des animaux en divagation"] if fr else ["Tree planting", "Alternative livelihoods", "Alternatives to fuelwood", "Management of roaming livestock"],
         "nodes": ["Revenus des ménages", "Prélèvements de bois", "Pression des animaux", "Survie des jeunes arbres", "Couvert forestier", "Sols et ressources"] if fr else ["Household income", "Wood harvesting", "Livestock pressure", "Young tree survival", "Forest cover", "Soils and resources"],

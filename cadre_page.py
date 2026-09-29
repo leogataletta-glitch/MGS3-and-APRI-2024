@@ -3149,10 +3149,10 @@ def _v_boucles():
 def _v_tester():
     from publication_web import tr
     outil = st.selectbox(tr(("Outil", "Tool", "Herramienta", "Zouti")),
-        ("scores", "boucles"), format_func=lambda v: tr((
+        ("boucles", "scores"), format_func=lambda v: tr((
             "Calculer un score", "Calculate a score", "Calcular una puntuación", "Kalkile yon nòt")) if v == "scores" else tr((
-            "Comprendre un système", "Understand a system", "Comprender un sistema", "Konprann yon sistèm")),
-        key="cad_test_tool")
+            "Reboiser : agir sur les causes structurelles", "Reforestation: act on structural causes", "Reforestar: actuar sobre las causas estructurales", "Rebwaze: aji sou kòz estriktirèl yo")),
+        key="cad_test_tool_forest_first")
     if outil == "scores":
         _v_indicateurs()
     else:
