@@ -1,53 +1,28 @@
-"""Temporary visual comparison of the navigation edge, shared by all pages."""
-from urllib.parse import quote
-
+"""Straight navigation edge and continuous desktop navigation bands."""
 import streamlit as st
-import i18n
 
 
 def render():
-    fr = i18n.get_lang() == "fr"
-    # Shared mosaic edge on every page, without a comparison selector.
-    choice = "mosaic"
-    selector = 'div[data-testid="stColumn"]:has(.st-key-zone_nav)'
-    if choice == "original":
-        effect = "display:none;"
-    elif choice == "fade":
-        effect = "background:linear-gradient(90deg,transparent 0%,#ffffff66 40%,white 100%);"
-    else:
-        if choice == "watercolor":
-            shapes = '''<defs><filter id="soft"><feGaussianBlur stdDeviation="2.5"/></filter></defs>
-            <path d="M48 0H29Q9 16 28 34T21 68T30 103T20 139T29 178T25 214T29 250H48Z" fill="white" opacity=".6" filter="url(#soft)"/>
-            <path d="M48 0H39Q24 20 37 42T32 85T39 127T30 165T39 206T36 250H48Z" fill="white"/>
-            <ellipse cx="24" cy="62" rx="8" ry="16" fill="white" opacity=".25"/>
-            <ellipse cx="25" cy="180" rx="9" ry="20" fill="white" opacity=".3"/>'''
-        else:
-            shapes = '''<path d="M48 0H32V18H21V34H37V52H28V71H15V88H34V107H25V123H38V145H20V164H31V182H18V200H36V223H26V250H48Z" fill="white"/>
-            <g fill="white" opacity=".5"><rect x="19" y="3" width="9" height="10"/><rect x="9" y="37" width="12" height="11"/><rect x="14" y="112" width="7" height="8"/><rect x="9" y="171" width="12" height="9"/><rect x="18" y="230" width="10" height="12"/></g>'''
-        svg = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="250" viewBox="0 0 48 250">' + shapes + '</svg>'
-        effect = 'background:url("data:image/svg+xml,' + quote(svg) + '") right top / 48px 250px repeat-y;'
-    border = "1px solid #d9e1da" if choice == "original" else "0"
-    st.markdown(f'''<style>
-    @media(min-width:1001px){{
-      {selector}{{position:relative;border-right:{border}!important;}}
-      {selector}::after{{content:"";position:absolute;right:0;top:0;bottom:0;width:48px;
-        pointer-events:none;z-index:2;{effect}}}
-      {selector}>div{{position:relative;z-index:1;}}
-      /* On the map page, mosaic gaps reveal the actual map underneath. */
-      .stApp:has(.st-key-territory_map) {selector}{{
-        mask-image:linear-gradient(black,black),url("data:image/svg+xml,{quote(svg)}");
-        mask-size:100% 100%,48px 250px;
-        mask-position:left top,right top;
-        mask-repeat:no-repeat,repeat-y;
-        mask-composite:exclude;
-      }}
-      .stApp:has(.st-key-territory_map) {selector}::after{{display:none;}}
-      /* One shared overlay cuts backgrounds at exactly the sidebar's mosaic edge. */
-      {selector} .st-key-zone_nav div[data-testid="stElementContainer"][class*="st-key-nav_"] div[data-testid="stButton"]>button{{
-        border-top-right-radius:0!important;border-bottom-right-radius:0!important;
-        padding-right:48px!important;
-      }}
-    }}
-    .st-key-nav_edge_choice{{margin-top:16px;margin-right:14px;}}
-    .st-key-nav_edge_choice label p{{font-size:12px!important;color:#526c5f!important;}}
-    </style>''', unsafe_allow_html=True)
+    st.markdown("""<style>
+    @media(min-width:1001px){
+      .stApp.stApp.stApp div[data-testid="stColumn"]:has(.st-key-zone_nav){
+        background:#eef2ed!important;border-right:0!important;
+        mask:none!important;-webkit-mask:none!important;
+      }
+      .stApp.stApp.stApp div[data-testid="stColumn"]:has(.st-key-zone_nav)::after{display:none!important;content:none!important;}
+      .stApp.stApp.stApp .st-key-zone_nav{background:transparent!important;}
+      .stApp.stApp.stApp .st-key-zone_nav div[data-testid="stButton"]>button{padding-right:14px!important;}
+      .stApp.stApp.stApp div[data-testid="stHorizontalBlock"]:has(>div[data-testid="stColumn"] .st-key-zone_nav){gap:0!important;}
+      .stApp.stApp.stApp div[data-testid="stColumn"]:has(.st-key-zone_page){container-type:inline-size;}
+      .stApp.stApp.stApp.stApp .st-key-zone_page:has(:is(.st-key-ong_cad_vue,.st-key-ong_bcl_vue,.st-key-ong_ra_vue,.st-key-ong_int_vue)){padding-top:0!important;}
+      .stApp.stApp.stApp.stApp.stApp :is(.st-key-ong_cad_vue,.st-key-ong_bcl_vue,.st-key-ong_ra_vue,.st-key-ong_int_vue){
+        width:100cqw!important;max-width:none!important;
+        margin-left:calc(50% - 50cqw)!important;margin-right:0!important;
+        background:#eef2ed!important;border-radius:0!important;
+      }
+      .stApp.stApp.stApp.stApp.stApp.stApp :is(.st-key-ong_cad_vue,.st-key-ong_bcl_vue,.st-key-ong_ra_vue,.st-key-ong_int_vue) [role="radiogroup"]{
+        background:#eef2ed!important;border-radius:0!important;border:0!important;margin-top:0!important;
+      }
+      .stApp.stApp.stApp.stApp.stApp.stApp :is(.st-key-ong_cad_vue,.st-key-ong_bcl_vue,.st-key-ong_ra_vue,.st-key-ong_int_vue) [role="radiogroup"]>label{border-radius:0!important;}
+    }
+    </style>""",unsafe_allow_html=True)
