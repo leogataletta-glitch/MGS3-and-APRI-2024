@@ -3205,25 +3205,10 @@ def _v_boucles():
     @media(max-width:600px){.st-key-cad_feedback .cad-bp{grid-template-columns:1fr;gap:12px;}.st-key-cad_feedback .cad-bp-e{padding:18px 0;}.st-key-cad_feedback .cad-step-number{margin-bottom:10px;}.st-key-cad_feedback .cad-bl-g>div{padding:12px 0;}.st-key-cad_feedback .cad-bl-d{gap:10px;}.st-key-cad_feedback .cad-bl-n{font-size:17px;}.st-key-cad_feedback .cad-bl-s{font-size:12px;}}
     </style>""", unsafe_allow_html=True)
     fr = i18n.get_lang() == "fr"
-    st.markdown(f'<div class="cad-feedback-intro">{_e(T("cad_uma"))}</div>', unsafe_allow_html=True)
-    ETAPES = ("cad_b1", "cad_b2", "cad_b3", "cad_b4")
-    VERT = "#1a6b52"
-    cases = []
-    for i, k in enumerate(ETAPES, start=1):
-        coul = VERT
-        if i > 1:
-            cases.append('<div class="cad-bp-fl">'
-                         + icones.svg("chevron", couleur="#c8cfd8", taille=22)
-                         + '</div>')
-        cases.append(
-            '<div class="cad-bp-e">'
-            f'<div class="cad-step-number">{i:02d}</div>'
-            f'<div class="cad-bp-t" style="color:{coul}">'
-            f'{_e(T(k + "_t"))}</div>'
-            f'<div class="cad-bp-x">{_e(T(k + "_x"))}</div>'
-            f'<div class="cad-bp-ex">{_e(T(k + "_e"))}</div></div>')
-    st.markdown(f'<div class="cad-bp">{"".join(cases)}</div>',
-                unsafe_allow_html=True)
+    import modele_parcours
+    modele_parcours.render_feedback([
+        (T(k + "_t"), T(k + "_x"), T(k + "_e"))
+        for k in ("cad_b1", "cad_b2", "cad_b3", "cad_b4")])
 
     # Illustrative dynamics are isolated from the calibrated indicator scores.
     import streamlit.components.v1 as components

@@ -33,13 +33,31 @@ def render(attributes, dimensions, sources):
                        'Data feed the indicators; the indicators describe resilience capacities across the seven dimensions.',
                        'Los datos alimentan los indicadores; los indicadores describen las capacidades de resiliencia en las siete dimensiones.',
                        'Done yo alimante endikatè yo; endikatè yo dekri kapasite rezilyans yo nan sèt dimansyon yo.')),
-        'play': tr(('Lecture', 'Play', 'Reproducir', 'Jwe')),
+        'resume': tr(('Reprendre', 'Resume', 'Reanudar', 'Reprann')),
         'pause': tr(('Pause', 'Pause', 'Pausa', 'Poz')),
         'next': tr(('Suivant', 'Next', 'Siguiente', 'Swivan')),
         'previous': tr(('Précédent', 'Previous', 'Anterior', 'Anvan')),
         'attributes': [[text(a), text(b)] for a, b in attributes],
         'dimensions': [text(d) for d in dimensions],
         'sources': [text(s) for s in sources],
+    }
+    payload = json.dumps(copy, ensure_ascii=False).replace('<', '\\u003c')
+    html = Path(__file__).with_name('modele_parcours.html').read_text(encoding='utf-8')
+    components.html(html.replace('__CONTENT__', payload), height=540, scrolling=True)
+
+
+def render_feedback(stages):
+    copy = {
+        'steps': [str(i + 1) for i in range(len(stages))],
+        'titles': [text(t) for t, x, e in stages],
+        'intro': [text(x) for t, x, e in stages],
+        'slides': [[text(e)] for t, x, e in stages],
+        'summary': tr(('Un indicateur signale un problème ; les boucles aident à comprendre les interactions et à choisir où agir. Les exemples illustrent la démarche.',
+                       'An indicator flags a problem; feedback loops help us understand interactions and choose where to act. The examples illustrate the approach.',
+                       'Un indicador señala un problema; los bucles ayudan a comprender las interacciones y elegir dónde actuar. Los ejemplos ilustran el enfoque.',
+                       'Yon endikatè montre yon pwoblèm; bouk yo ede konprann entèraksyon yo epi chwazi kote pou aji. Egzanp yo montre demach la.')),
+        'pause': tr(('Pause', 'Pause', 'Pausa', 'Poz')),
+        'resume': tr(('Reprendre', 'Resume', 'Reanudar', 'Reprann')),
     }
     payload = json.dumps(copy, ensure_ascii=False).replace('<', '\\u003c')
     html = Path(__file__).with_name('modele_parcours.html').read_text(encoding='utf-8')
