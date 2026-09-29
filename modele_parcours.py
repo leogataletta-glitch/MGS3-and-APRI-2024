@@ -46,7 +46,7 @@ def render(attributes, dimensions, sources):
     components.html(html.replace('__CONTENT__', payload), height=540, scrolling=True)
 
 
-def render_feedback(stages):
+def render_feedback(stages, summary=None):
     copy = {
         'steps': [str(i + 1) for i in range(len(stages))],
         'titles': [text(t) for t, x, e in stages],
@@ -59,6 +59,8 @@ def render_feedback(stages):
         'pause': tr(('Pause', 'Pause', 'Pausa', 'Poz')),
         'resume': tr(('Reprendre', 'Resume', 'Reanudar', 'Reprann')),
     }
+    if summary is not None:
+        copy['summary'] = summary
     payload = json.dumps(copy, ensure_ascii=False).replace('<', '\\u003c')
     html = Path(__file__).with_name('modele_parcours.html').read_text(encoding='utf-8')
     components.html(html.replace('__CONTENT__', payload), height=540, scrolling=True)

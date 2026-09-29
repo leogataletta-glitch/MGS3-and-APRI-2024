@@ -2757,6 +2757,8 @@ def _v_indicateurs():
     les mêmes cinq étapes se lisent sur un exemple, de sorte que l'onglet
     enseigne la méthode même à qui ne cherche rien de précis.
     """
+    import score_parcours
+    score_parcours.render()
     tous = _referentiel()
     if not tous:
         st.info(_locale_text(T("e_absent")))
