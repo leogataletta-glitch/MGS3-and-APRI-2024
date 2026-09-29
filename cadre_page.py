@@ -2305,8 +2305,7 @@ MIN_SECTION = 119
 # marche pour aller chercher l'eau — pendant que l'onglet voisin montrait les
 # barèmes réels sans dire ce qu'ils produisent. Les deux se lisent maintenant
 # au même endroit, et la chaîne tourne sur l'indicateur qu'on a ouvert.
-VUES = ("mesure", "indicateurs", "boucles",
-        "document")
+VUES = ("mesure", "indicateurs", "boucles", "tester", "document")
 # `_LIB` porte les intitulés longs ; ils ne sont plus rendus depuis que la
 # barre a pris les titres courts, mais la table reste la carte des sept vues.
 _LIB = {"mesure": "cad_o1", "sources": "cad_o2",
@@ -2354,7 +2353,7 @@ def render(doc_complet=None):
     .cad-weight{flex-direction:column-reverse;gap:7px;align-items:flex-end;}.cad-weight-track{width:65px;}
     .st-key-cad_model .cad-dl-n{font-size:14px;}.st-key-cad_model .cad-dh{letter-spacing:0;font-size:9px;word-break:normal!important;overflow-wrap:normal!important;text-align:left!important;}.cad-page-title{font-size:29px;}}
     </style>""",unsafe_allow_html=True)
-    names = dict(zip(VUES, ('Modèle et sources','Calcul des scores','Boucles','Document complet') if fr else ('Model and sources','Score calculation','Feedback loops','Full document')))
+    names = dict(zip(VUES, ('Modèle et sources','Calcul des scores','Boucles','Tester le concept','Document complet') if fr else ('Model and sources','Score calculation','Feedback loops','Test the concept','Full document')))
 
     if not stats:
         st.info(_locale_text(T("e_absent")))
@@ -2371,7 +2370,7 @@ def render(doc_complet=None):
     # pondérations ». Le composant accepte de n'en pas avoir.
     game_views = VUES
     vue = onglets.barre("cad_vue", list(game_views),
-                        titre=lambda c: names[c], description=lambda c: T(_DESC[c]),
+                        titre=lambda c: names[c], description=lambda c: (("Expérimenter les scores et les boucles" if fr else "Try scores and feedback loops") if c == "tester" else T(_DESC[c])),
                         compact=False, defaut=VUES[0])
     active = game_views.index(vue) + 1
     st.markdown(f'<style>.stApp .st-key-ong_cad_vue [role="radiogroup"] > label:nth-child({active}) {{box-shadow:inset 0 -2px 0 #1f5b46!important;}} .stApp .st-key-ong_cad_vue [role="radiogroup"] > label:nth-child({active}) p {{color:#1f5b46!important;}}</style>',unsafe_allow_html=True)
@@ -2445,7 +2444,10 @@ def render(doc_complet=None):
 
 
     if vue == "indicateurs":
-        _v_indicateurs()
+        import score_parcours
+        score_parcours.render()
+    elif vue == "tester":
+        _v_tester()
     elif vue == "boucles":
         with st.container(key="cad_feedback"):
             _v_boucles()
@@ -2458,9 +2460,7 @@ def render(doc_complet=None):
         modele_parcours.render(
             [(T(k + "_t"), T(k)) for k in ("cad_a1", "cad_a2", "cad_a3")],
             [T(k) for k in ORDRE],
-            [T("cad_so" + str(i) + "_t") for i in range(1, 5)])
-        st.markdown("### " + _locale_text("Sources"))
-        _v_sources()
+            [(T("cad_so" + str(i) + "_t"), T("cad_so" + str(i) + "_x")) for i in range(1, 5)])
     import cadre_format
     cadre_format.appliquer(active)
 
@@ -2757,8 +2757,6 @@ def _v_indicateurs():
     les mêmes cinq étapes se lisent sur un exemple, de sorte que l'onglet
     enseigne la méthode même à qui ne cherche rien de précis.
     """
-    import score_parcours
-    score_parcours.render()
     tous = _referentiel()
     if not tous:
         st.info(_locale_text(T("e_absent")))
@@ -3142,137 +3140,25 @@ def _boucle_svg(sens):
 
 
 def _v_boucles():
-    """Le parcours en quatre temps, puis la lecture d'une boucle.
-
-    LE PARCOURS EST LE MÊME QUE CELUI DE LA SECTION « FEEDBACK LOOPS », et
-    c'est voulu : cet onglet-ci l'explique, l'autre l'exécute. Symptôme,
-    boucle, levier, action — quatre étapes numérotées, chacune avec son
-    exemple en italique, parce qu'une méthode décrite sans un cas ne se
-    retient pas.
-
-    LA LECTURE D'UNE BOUCLE EST EN DESSOUS, ET SÉPARÉE PAR UN FILET. Elle ne
-    fait pas partie du parcours : c'est la convention de notation, celle qu'il
-    faut connaître avant de regarder le premier schéma. Le piège du « + » lu
-    comme « bon » est dit à part, dans son propre cartouche.
-    """
-    # PAS DE TITRE : l'onglet ouvert dit déjà « Boucles de rétroaction », et
-    # « Diagrammes de boucles causales » juste en dessous nommait la même
-    # chose une seconde fois. La ligne qui suit, elle, apprend quelque chose.
-    # LA DÉFINITION A QUITTÉ LE HAUT DE LA PAGE POUR LA TROISIÈME CASE. Elle
-    # annonce un paysage « compris comme un système complexe adaptatif » ;
-    # posée avant le parcours en quatre temps, elle était une seconde annonce
-    # là où le lecteur cherchait la première chose à regarder. La grille du
-    # bas comptait trois colonnes pour deux contenus, et sa case de droite
-    # restait vide : la définition s'y lit après les signes et les deux
-    # boucles, comme la conclusion de ce qu'ils viennent de montrer.
-
-    # UN SEUL VERT POUR LES QUATRE. Rouge, ambre, bleu, vert : quatre teintes
-    # pour quatre étapes du MÊME parcours laissaient croire à quatre natures
-    # différentes — un danger, un avertissement, une information, une réussite
-    # — là où il n'y a qu'un ordre de lecture. Le numéro le donne déjà. La
-    # couleur, elle, redevient ce qu'elle est ailleurs sur le site : celle du
-    # site, et rien de plus.
-    # LE FILET AU-DESSUS DE CHAQUE TEMPS EST PARTI. Quatre traits verts en
-    # tête de colonne dessinaient quatre en-têtes de tableau au-dessus d'un
-    # parcours qui n'en est pas un : le numéro et le chevron disent déjà
-    # l'ordre, et le titre vert dit déjà où commence chaque temps.
-    st.markdown("""<style>
-    .st-key-cad_feedback{padding-top:20px!important;}
-    .st-key-cad_feedback .cad-bt{font:400 29px/1.3 Georgia,serif;margin:0 0 12px;color:#123d2c;}
-    .st-key-cad_feedback .cad-feedback-intro{font:15px/1.75 Arial,sans-serif;color:#506457;margin-bottom:26px;max-width:85ch;}
-    .st-key-cad_feedback .cad-bp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:32px;margin:8px 0 40px;}
-    .st-key-cad_feedback .cad-bp-fl{display:none;}
-    .st-key-cad_feedback .cad-bp-e{align-items:flex-start;text-align:left;background:transparent;border:0;border-top:1px solid #dfe9e2;border-radius:0;padding:18px 0;}
-    .st-key-cad_feedback .cad-step-number{font:13px Arial,sans-serif;color:#779784;margin-bottom:14px;}
-    .st-key-cad_feedback .cad-bp-t{font:400 21px/1.3 Georgia,serif;letter-spacing:0;margin:0;}
-    .st-key-cad_feedback .cad-bp-x{font-size:14px;line-height:1.7;color:#506457;max-width:none;}
-    .st-key-cad_feedback .cad-bp-ex{font-size:13px;line-height:1.6;color:#597565;max-width:none;margin-top:16px;}
-    .st-key-cad_feedback .cad-bl{border:0;margin:0;padding:0;}
-    .st-key-cad_feedback .cad-bl-h{font:400 27px/1.3 Georgia,serif;color:#123d2c;text-align:left;letter-spacing:0;margin:8px 0 24px;}
-    .st-key-cad_feedback .cad-bl-g{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:24px;align-items:stretch;}
-    .st-key-cad_feedback .cad-bl-g>div{border:0;border-radius:0;padding:12px 0;background:transparent;}
-    .st-key-cad_feedback .cad-bl-g>div:first-child{display:flex;flex-direction:column;justify-content:center;gap:24px;}
-    .st-key-cad_feedback .cad-bs{margin:0;}
-    .st-key-cad_feedback .cad-bs-t{font:400 20px/1.4 Georgia,serif;}
-    .st-key-cad_feedback .cad-bs-x,.st-key-cad_feedback .cad-bs-f{font-size:14px;line-height:1.7;}
-    .st-key-cad_feedback .cad-bl-d{align-items:center;gap:24px;}
-    .st-key-cad_feedback .cad-bl-n{font:400 20px/1.4 Georgia,serif;}
-    .st-key-cad_feedback .cad-bl-s{font-size:14px;line-height:1.6;}
-    .st-key-cad_feedback .cad-loop-note{background:transparent;border:0;border-top:1px solid #dfe9e2;padding:22px 0 0;margin:28px 0 36px;font:14px/1.8 Arial,sans-serif;color:#506457;}
-    .st-key-cad_feedback .cad-bm{border:0;margin:0;padding:0;}
-    .st-key-cad_feedback .cad-bm-h{font:400 23px/1.4 Georgia,serif;letter-spacing:0;text-transform:none;}
-    .stApp .st-key-zone_page .st-key-cad_feedback p.cad-bm-x{font-size:14px;line-height:1.8;max-width:none!important;width:100%!important;hyphens:none;}
-    .st-key-cad_feedback .cad-bm-l{gap:18px 30px;margin-top:20px;}
-    @media(max-width:1100px){.st-key-cad_feedback .cad-bp{grid-template-columns:repeat(2,minmax(0,1fr));}.st-key-cad_feedback .cad-bl-g{grid-template-columns:1fr;}}
-    @media(max-width:600px){.st-key-cad_feedback .cad-bp{grid-template-columns:1fr;gap:12px;}.st-key-cad_feedback .cad-bp-e{padding:18px 0;}.st-key-cad_feedback .cad-step-number{margin-bottom:10px;}.st-key-cad_feedback .cad-bl-g>div{padding:12px 0;}.st-key-cad_feedback .cad-bl-d{gap:10px;}.st-key-cad_feedback .cad-bl-n{font-size:17px;}.st-key-cad_feedback .cad-bl-s{font-size:12px;}}
-    </style>""", unsafe_allow_html=True)
-    fr = i18n.get_lang() == "fr"
     import modele_parcours
     modele_parcours.render_feedback([
         (T(k + "_t"), T(k + "_x"), T(k + "_e"))
         for k in ("cad_b1", "cad_b2", "cad_b3", "cad_b4")])
 
-    # Illustrative dynamics are isolated from the calibrated indicator scores.
-    import streamlit.components.v1 as components
-    from reforestation_demo import document
-    components.html(_locale_html(document(fr)), height=650, scrolling=True)
 
-    # ---- comment lire une boucle -----------------------------------------
-    signes = "".join(
-        f'<div class="cad-bs">'
-        f'<div class="cad-bs-p" style="background:{fond};color:{coul}">'
-        f'{s}</div><div>'
-        f'<div class="cad-bs-t" style="color:{coul}">{s}&nbsp; '
-        f'{_e(T(k + "_t"))}</div>'
-        f'<div class="cad-bs-x">{_e(T(k + "_x"))}</div>'
-        f'<div class="cad-bs-f">A &uarr; &rarr; B {fl}</div></div></div>'
-        for k, s, fl, coul, fond in
-        (("cad_bl_p", "+", "&uarr;", "#1a6b52", "#eef3f0"),
-         ("cad_bl_m", "&minus;", "&darr;", "#d1730c", "#fdf1e3")))
-
-    st.markdown(
-        '<div class="cad-bl">'
-        f'<div class="cad-bl-h">{_e(T("cad_bl_t"))}</div>'
-        '<div class="cad-bl-g">'
-        f'<div>{signes}</div>'
-        '<div class="cad-bl-d">'
-        f'<div>{_boucle_svg("R")}'
-        f'<div class="cad-bl-n" style="color:#1a6b52">'
-        f'{_e(T("cad_bl_r"))}</div>'
-        f'<div class="cad-bl-s">{_e(T("cad_bl_r_x"))}</div></div>'
-        f'<div>{_boucle_svg("B")}'
-        f'<div class="cad-bl-n" style="color:#d1730c">'
-        f'{_e(T("cad_bl_b"))}</div>'
-        f'<div class="cad-bl-s">{_e(T("cad_bl_b_x"))}</div></div></div>'
-        # L'AVERTISSEMENT EST PARTI, LA DÉFINITION PREND SA PLACE. « + ne veut
-        # pas dire bon » posé sous deux pastilles qui portent chacune sa
-        # phrase redisait en négatif ce que les deux disaient déjà en clair.
-        '</div>'
-        # LE SIGNE DE LA SPIRALE, sous les deux pastilles : il concerne les
-        # deux types, il ne peut donc vivre dans aucune des deux.
-        f'<div class="cad-loop-note">'
-        f'{_e(T("cad_bl_pm"))}</div>'
-        '</div>', unsafe_allow_html=True)
-
-    # ---- la méthode, et ses références -----------------------------------
-    refs = []
-    for bloc in T("cad_bm_r").split("@@"):
-        parts = (bloc.split("|") + ["", "", ""])[:3]
-        titre, apport, lien = (p.strip() for p in parts)
-        if not titre:
-            continue
-        # LE LIEN EST POSÉ SUR LE TITRE QUAND IL Y EN A UN. Un ouvrage
-        # imprimé n'a pas d'URL, et une URL inventée pour faire nombre est
-        # pire que pas d'URL du tout.
-        nom = (f'<a href="{_e(lien)}" target="_blank" rel="noopener">'
-               f'{_e(titre)}</a>') if lien else _e(titre)
-        refs.append(f'<div class="cad-bm-e"><b>{nom}</b>{_e(apport)}</div>')
-    st.markdown(
-        '<div class="cad-bm">'
-        f'<div class="cad-bm-h">{_e(T("cad_bm_t"))}</div>'
-        f'<p class="cad-bm-x">{_e(T("cad_bm_x"))}</p>'
-        f'<div class="cad-bm-l">{"".join(refs)}</div></div>',
-        unsafe_allow_html=True)
+def _v_tester():
+    from publication_web import tr
+    outil = st.selectbox(tr(("Outil", "Tool", "Herramienta", "Zouti")),
+        ("scores", "boucles"), format_func=lambda v: tr((
+            "Calculer un score", "Calculate a score", "Calcular una puntuación", "Kalkile yon nòt")) if v == "scores" else tr((
+            "Comprendre un système", "Understand a system", "Comprender un sistema", "Konprann yon sistèm")),
+        key="cad_test_tool")
+    if outil == "scores":
+        _v_indicateurs()
+    else:
+        import streamlit.components.v1 as components
+        from reforestation_demo import document
+        components.html(_locale_html(document(i18n.get_lang() == "fr")), height=650, scrolling=True)
 
 
 # --- 6 · le cas de l'environnement -----------------------------------------

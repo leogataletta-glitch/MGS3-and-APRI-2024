@@ -35,7 +35,10 @@ const connections=[['M195 55H280','−',230,45],['M370 92V155','−',380,126],['
 const ns='http://www.w3.org/2000/svg';
 connections.forEach(([d,s,x,y],i)=>{document.getElementById('edges').insertAdjacentHTML('beforeend',`<path id="e${i}" class="edge ${s==='−'?'minus':''} ${i>=3?'delayed':''}" d="${d}" marker-end="url(#arrow)"/><text class="sign" x="${x}" y="${y}">${s}</text>`);});
 positions.forEach(([x,y],i)=>{document.getElementById('nodes').insertAdjacentHTML('beforeend',`<g class="node" transform="translate(${x} ${y})"><rect width="180" height="74" rx="12"/><text x="90" y="24" text-anchor="middle">${W.nodes[i]}</text><text class="value" id="n${i}" x="90" y="56" text-anchor="middle"></text></g>`);});
-let state,history,wave,timer=null;
+let state,history,wave,timer=null,hovered=false;
+const shell=document.querySelector('.shell');
+shell.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')hovered=true;});
+shell.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')hovered=false;});
 const clamp=x=>Math.max(0,Math.min(100,x));
 function advance(v,u){
  // Relative toy stocks. All updates read the previous state: feedback has delay.
@@ -53,5 +56,5 @@ function stop(){clearInterval(timer);timer=null;document.getElementById('play').
 function tick(){if(wave>=40){stop();return;}state=advance(state,[0,1,2,3].map(i=>+document.getElementById('s'+i).value));wave++;history.push(state[4]);draw();if(!matchMedia('(prefers-reduced-motion: reduce)').matches){connections.forEach((c,i)=>{const circle=document.createElementNS(ns,'circle');circle.setAttribute('r','4');circle.setAttribute('class','pulse '+(c[1]==='−'?'negative':''));const motion=document.createElementNS(ns,'animateMotion');motion.setAttribute('path',c[0]);motion.setAttribute('dur','1.1s');motion.setAttribute('begin','indefinite');circle.appendChild(motion);document.getElementById('edges').appendChild(circle);motion.beginElement();setTimeout(()=>circle.remove(),1150);});}if(wave>=40)stop();}
 function reset(){stop();state=[30,60,75,10,30,30];history=[30];wave=0;draw();}
 function preset(values){values.forEach((v,i)=>{document.getElementById('s'+i).value=v;document.getElementById('o'+i).value=v;});reset();}
-document.getElementById('alone').onclick=()=>preset([85,0,0,0]);document.getElementById('together').onclick=()=>preset([85,80,80,80]);document.getElementById('reset').onclick=reset;document.getElementById('step').onclick=()=>{stop();tick();};document.getElementById('play').onclick=()=>{if(timer){stop();return;}document.getElementById('play').textContent=W.pause;tick();if(wave<40)timer=setInterval(tick,1400);};preset([85,0,0,0]);
+document.getElementById('alone').onclick=()=>preset([85,0,0,0]);document.getElementById('together').onclick=()=>preset([85,80,80,80]);document.getElementById('reset').onclick=reset;document.getElementById('step').onclick=()=>{stop();tick();};document.getElementById('play').onclick=()=>{if(timer){stop();return;}document.getElementById('play').textContent=W.pause;tick();if(wave<40)timer=setInterval(()=>{if(!hovered&&!document.hidden)tick();},1400);};preset([85,0,0,0]);
 </script></html>'''

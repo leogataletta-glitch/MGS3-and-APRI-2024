@@ -45,3 +45,9 @@ def appliquer(active):
     .stApp.stApp .st-key-cad_i_ind [data-baseweb="select"]>div:focus-within{{border-color:#176344!important;box-shadow:0 0 0 1px #176344!important;}}
     @media(max-width:600px){{.stApp.stApp p.cad-explorer-subtitle{{font-size:17px!important;}}}}
     </style>''', unsafe_allow_html=True)
+
+    st.markdown("""<style>
+    .stApp.stApp .st-key-ong_cad_vue [role="radiogroup"]{grid-template-columns:repeat(5,minmax(0,1fr))!important;}
+    .stApp.stApp .st-key-ong_cad_vue [role="radiogroup"]>label:nth-child(n){grid-column:auto!important;}
+    @media(max-width:760px){.stApp.stApp .st-key-ong_cad_vue [role="radiogroup"]{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
+    </style>""",unsafe_allow_html=True)
