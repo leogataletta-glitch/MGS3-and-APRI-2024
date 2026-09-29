@@ -51,6 +51,8 @@ def render_feedback(stages, summary=None):
         'intro': [text(x) for t, x, e in stages],
         'slides': [[text(e)] for t, x, e in stages],
         'summary': '',
+        'previous': tr(('Précédent', 'Previous', 'Anterior', 'Anvan')),
+        'next': tr(('Suivant', 'Next', 'Siguiente', 'Swivan')),
         'pause': tr(('Pause', 'Pause', 'Pausa', 'Poz')),
         'resume': tr(('Reprendre', 'Resume', 'Reanudar', 'Reprann')),
     }
