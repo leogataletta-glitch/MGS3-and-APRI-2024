@@ -3294,39 +3294,13 @@ def _v_environnement():
 
 # --- 7 · le document de référence ------------------------------------------
 def _v_document(doc_complet):
-    """Le cadre complet, en pièce jointe.
-
-    CE N'EST PAS UN VOLET REPLIÉ. Un volet demande un clic pour savoir ce
-    qu'il contient et n'annonce rien de ce qu'on peut en faire. C'est une
-    pièce jointe : elle en a la forme — une carte cliquable, une flèche de
-    téléchargement, le format et le poids annoncés avant le clic. Le rendu à
-    l'écran reste dessous, pour qui préfère lire sans télécharger.
-    """
-    langue = i18n.get_lang()
-    if langue in ("es", "ht"):
-        traduit = os.path.join(DATA, f"irla_reference_{langue}.html")
-        if os.path.exists(traduit):
-            libelle, note = {
-                "es": ("Leer la traducción al español · HTML", "Traducción automática pendiente de revisión científica. Las figuras conservan su idioma original; el documento original sigue disponible debajo."),
-                "ht": ("Li tradiksyon an kreyòl ayisyen · HTML", "Tradiksyon otomatik ki poko resevwa revizyon syantifik. Figi yo rete nan lang orijinal yo; dokiman orijinal la disponib anba a."),
-            }[langue]
-            with open(traduit, "rb") as f:
-                st.download_button(libelle, f.read(), file_name=f"IRLA_{langue}.html",
-                                   mime="text/html", use_container_width=True,
-                                   key=f"cad_doc_traduit_{langue}")
-            st.caption(note)
-    chemin = _document_irla()
-    if chemin:
-        st.markdown(_css_telechargement(_poids(chemin)), unsafe_allow_html=True)
-        with st.container(key="cad_tel"):
-            with open(chemin, "rb") as f:
-                st.download_button(
-                    _locale_text(T("cad_doc")), f.read(),
-                    file_name=os.path.basename(chemin),
-                    mime="application/msword", use_container_width=True)
-    else:
+    """Read and download the current methodology in PDF format."""
+    chemin = os.path.join(APP_DIR, "IRLA_UNEP_V4.pdf")
+    if not os.path.isfile(chemin):
         st.info(_locale_text(T("cad_doc_absent")))
-    # LE VOLET « OU LE LIRE À L'ÉCRAN » A SAUTÉ. Le document se télécharge, et
-    # c'est ce que la carte au-dessus propose ; en proposer en plus une
-    # transcription repliée mettait deux fois le même contenu sur la page,
-    # dont une derrière un clic qui n'annonce rien.
+        return
+    with open(chemin, "rb") as fichier:
+        pdf = fichier.read()
+    st.download_button("PDF ↓", pdf, file_name="IRLA_UNEP_V4.pdf",
+                       mime="application/pdf", key="cad_methodology_pdf")
+    st.pdf(pdf, height=760, key="cad_methodology_reader")
