@@ -2454,7 +2454,11 @@ def render(doc_complet=None):
     elif vue == "document":
         _v_document(doc_complet)
     else:
-        _v_mesure(stats)
+        import modele_parcours
+        modele_parcours.render(
+            [(T(k + "_t"), T(k)) for k in ("cad_a1", "cad_a2", "cad_a3")],
+            [T(k) for k in ORDRE],
+            [T("cad_so" + str(i) + "_t") for i in range(1, 5)])
         st.markdown("### " + _locale_text("Sources"))
         _v_sources()
     import cadre_format
