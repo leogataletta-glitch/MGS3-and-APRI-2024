@@ -11,8 +11,8 @@ def render():
     #root .stApp .st-key-zone_page :is(.stButton,.stDownloadButton)>button{box-shadow:none!important;border-radius:5px!important;}
     #root .stApp .st-key-zone_page :is(.cad-note,.sx-note,.ap-note){background:transparent!important;box-shadow:none!important;border:0!important;}
     #root .stApp .st-key-zone_page :is(.a2-chif,.a2-chif>div){box-shadow:none!important;border-radius:0!important;background:transparent!important;}
-    #root .stApp :is(.st-key-ong_cad_vue,.st-key-ong_bcl_vue,.st-key-ong_ra_vue,.st-key-ong_int_vue) [role="radiogroup"]>label{box-shadow:none!important;padding:12px 14px!important;min-height:76px!important;}
-    #root .stApp :is(.st-key-ong_cad_vue,.st-key-ong_bcl_vue,.st-key-ong_ra_vue,.st-key-ong_int_vue) [role="radiogroup"]>label p:not(:first-child){font-size:12px!important;line-height:1.4!important;margin-top:4px!important;}
+    #root .stApp :is(.st-key-ong_cad_vue,.st-key-ong_bcl_vue,.st-key-ong_ra_vue,.st-key-ong_int_vue) [role="radiogroup"] label{box-shadow:none!important;padding:12px 14px!important;min-height:76px!important;}
+    #root .stApp :is(.st-key-ong_cad_vue,.st-key-ong_bcl_vue,.st-key-ong_ra_vue,.st-key-ong_int_vue) [role="radiogroup"] label p:not(:first-child){font-size:12px!important;line-height:1.4!important;margin-top:4px!important;}
     #root .stApp .st-key-zone_page table{box-shadow:none!important;}
     #root .stApp .st-key-zone_page table :is(th,td){border-left:0!important;border-right:0!important;}
     #root .stApp .st-key-zone_page :is(button,input,[role="combobox"]):focus-visible{outline:2px solid #28745c!important;outline-offset:2px!important;}
@@ -37,6 +37,7 @@ def render():
       #root .stApp :is(.st-key-ong_cad_vue,.st-key-ong_bcl_vue,.st-key-ong_ra_vue,.st-key-ong_int_vue) [role="radiogroup"]{
         background:#eef2ed!important;border-radius:0!important;border:0!important;margin-top:0!important;
       }
-      #root .stApp :is(.st-key-ong_cad_vue,.st-key-ong_bcl_vue,.st-key-ong_ra_vue,.st-key-ong_int_vue) [role="radiogroup"]>label{border-radius:0!important;}
+      #root .stApp :is(.st-key-ong_cad_vue,.st-key-ong_bcl_vue,.st-key-ong_ra_vue,.st-key-ong_int_vue) [role="radiogroup"] label{border-radius:0!important;}
     }
     </style>""",unsafe_allow_html=True)
+
