@@ -17,7 +17,7 @@ def render():
     #root .stApp .st-key-zone_page table :is(th,td){border-left:0!important;border-right:0!important;}
     #root .stApp .st-key-zone_page :is(button,input,[role="combobox"]):focus-visible{outline:2px solid #28745c!important;outline-offset:2px!important;}
     /* Style-only elements must not consume flex gaps above navigation. */
-    #root .stApp .st-key-zone_page > [data-testid="stElementContainer"]:has([data-testid="stMarkdownContainer"] > style):not(:has([data-testid="stMarkdownContainer"] > :not(style))){display:none!important;}
+    #root .stApp .st-key-zone_page > [data-testid="stElementContainer"]:has([data-testid="stMarkdownContainer"] > style):not(:has([data-testid="stMarkdownContainer"] > :not(style,link[rel="stylesheet"]))){display:none!important;}
     @media(min-width:1001px){
       #root .stApp div[data-testid="stColumn"]:has(.st-key-zone_nav){
         background-color:#eef2ed!important;border-right:0!important;
