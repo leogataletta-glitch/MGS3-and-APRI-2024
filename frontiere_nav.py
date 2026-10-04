@@ -5,7 +5,7 @@ import streamlit as st
 def render():
     st.markdown("""<style>
     /* Style-only elements must not consume flex gaps above navigation. */
-    #root .stApp .st-key-zone_page > [data-testid="stElementContainer"]:has([data-testid="stMarkdownContainer"] > style:only-child){display:none!important;}
+    #root .stApp .st-key-zone_page > [data-testid="stElementContainer"]:has([data-testid="stMarkdownContainer"]:has(> style):not(:has(> :not(style)))){display:none!important;}
     @media(min-width:1001px){
       #root .stApp div[data-testid="stColumn"]:has(.st-key-zone_nav){
         background-color:#eef2ed!important;border-right:0!important;
