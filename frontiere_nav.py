@@ -4,9 +4,11 @@ import streamlit as st
 
 def render():
     st.markdown("""<style>
+    /* Style-only elements must not consume flex gaps above navigation. */
+    #root .stApp .st-key-zone_page > [data-testid="stElementContainer"]:has([data-testid="stMarkdownContainer"] > style:only-child){display:none!important;}
     @media(min-width:1001px){
       #root .stApp div[data-testid="stColumn"]:has(.st-key-zone_nav){
-        background:#eef2ed!important;border-right:0!important;
+        background-color:#eef2ed!important;border-right:0!important;
         mask:none!important;-webkit-mask:none!important;
       }
       #root .stApp div[data-testid="stColumn"]:has(.st-key-zone_nav)::after{display:none!important;content:none!important;}

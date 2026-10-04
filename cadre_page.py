@@ -2445,7 +2445,10 @@ def render(doc_complet=None):
 
     if vue == "indicateurs":
         import score_parcours
-        score_parcours.render()
+        from publication_web import tr
+        with st.expander(tr(("Comprendre le calcul des scores", "Understand score calculation", "Entender el cálculo de puntuaciones", "Konprann kalkil nòt yo"))):
+            score_parcours.render()
+        _v_indicateurs()
     elif vue == "tester":
         _v_tester()
     elif vue == "boucles":
@@ -3190,3 +3193,5 @@ def _v_document(doc_complet):
     st.download_button("PDF ↓", pdf, file_name="IRLA_UNEP_V4.pdf",
                        mime="application/pdf", key="cad_methodology_pdf")
     st.pdf(pdf, height=760, key="cad_methodology_reader")
+    import pdf_navigation
+    pdf_navigation.render()
