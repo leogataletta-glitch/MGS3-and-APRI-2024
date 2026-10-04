@@ -1,14 +1,14 @@
-"""Shared Georgia typography across all main pages."""
+"""Shared Source Sans 3 typography across all main pages."""
 import streamlit as st
 
 
 def appliquer(mode=None):
     root = '.stApp' * 12
-    text = ':is(p,span,div,a,label,button,input,textarea,select,li,td,th,dt,dd,h1,h2,h3,h4,h5,h6,strong,em,b,small,summary)'
+    text = ':is(p,span,div,a,label,button,input,textarea,select,li,td,th,dt,dd,h1,h2,h3,h4,h5,h6,strong,em,b,small,summary,text,tspan)'
     exclude = ':not([data-testid="stIconMaterial"]):not([class*="material-icons"]):not([class*="material-symbols"]):not([aria-hidden="true"])'
     content_rule = '' if mode == 'portail' else f'{root} .st-key-zone_page {text}{exclude}{{font-size:var(--apri-content-size)!important;}}'
-    st.markdown(f'''<style>
-    {root}{{ --apri-font:Georgia, serif; --apri-content-size:14px; --apri-tab-size:13px; --apri-nav-size:12px; }}
+    st.markdown(f'''<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap"><style>
+    {root}{{ --apri-font:"Source Sans 3", sans-serif; --apri-content-size:14px; --apri-tab-size:13px; --apri-nav-size:12px; }}
     {root} {text}{exclude}{{font-family:var(--apri-font)!important;}}
     {content_rule}
     {root} .st-key-zone_page :is(.cad-it,.cad-indicator-note){{ --apri-content-size:12px; }}
