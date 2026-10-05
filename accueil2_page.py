@@ -498,7 +498,7 @@ def render():
     if layout == "doors":
         _style += _r + ".a2-welcome-title{font-size:30px!important;}" + _r + ".a2-welcome-art img{height:150px!important;}"
     elif layout in ("landscape", "landscape_bottom"):
-        _style += _r + ".st-key-a2_welcome{background:#f0f5f3 url('app/static/accueil_aquarelle_haiti.webp') right center/60% auto no-repeat!important;padding:28px!important;border-radius:14px!important;min-height:270px!important;}"
+        _style += _r + ".st-key-a2_welcome{background-color:#e8f2ec!important;background-image:linear-gradient(90deg,#e8f2ec 0%,#e8f2ec 38%,transparent 68%),url('/~/+/app/static/accueil_aquarelle_haiti.webp')!important;background-position:center,right center!important;background-size:100% 100%,65% auto!important;background-repeat:no-repeat!important;padding:32px!important;border-radius:18px!important;min-height:290px!important;overflow:hidden!important;}"
         _style += _r + ".a2-welcome-art{visibility:hidden!important;}" + _r + ".a2-welcome-title{font-size:34px!important;}"
     else:
         _style += _r + ".a2-welcome-art img{height:170px!important;}"
@@ -542,7 +542,7 @@ def render():
         with copy:
             st.markdown('<div class="a2-welcome-copy">'
                 + f'<div class="a2-kick">{_e(T("a2_kicker"))}</div>'
-                + '<h1 class="a2-welcome-title">' + _e(T("a2_titre").replace("@@", " ")) + '</h1>'
+                 + '<h1 class="a2-welcome-title">' + _e(({"fr":"Comprendre les paysages. Éclairer les décisions.", "en":"Understand landscapes. Inform decisions.", "es":"Comprender los paisajes. Orientar las decisiones.", "ht":"Konprann peyizaj yo. Eklere desizyon yo."}.get(_lang, "Understand landscapes. Inform decisions.")) if layout in ("landscape", "landscape_bottom") else T("a2_titre").replace("@@", " ")) + '</h1>' 
                 + f'<p class="a2-intro">{_e(T("a2_intro"))}</p></div>',
                 unsafe_allow_html=True)
             with st.container(key="a2_main_action"):
