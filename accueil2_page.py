@@ -505,7 +505,7 @@ def render():
     css += root + " .st-key-zone_nav button{background:transparent!important;}" + root + " .st-key-zone_nav button p{color:#153441!important;}"
     css += root + ".stAppViewContainer," + root + " [data-testid='stAppViewContainer']," + root + " [data-testid='stMain']{background:#173e4c!important;}"
     css += _r + ".apri-partner-footer{display:none!important;}"
-    css += root + " .horizon-identity{gap:20px!important;}" + root + " .horizon-apri{mix-blend-mode:multiply!important;}" + root + " .horizon-unep{height:44px!important;width:auto!important;mix-blend-mode:multiply!important;}"
+    css += root + " .horizon-identity{gap:20px!important;}" + root + " .horizon-apri{mix-blend-mode:multiply!important;}" + root + " .horizon-unep{height:44px!important;width:auto!important;filter:brightness(0) saturate(100%) invert(19%) sepia(18%) saturate(1400%) hue-rotate(145deg)!important;}"
     css += _r + ".st-key-photo_home_hero{min-height:calc(100svh - 220px)!important;}"
     st.markdown("<style>" + css + "</style>",unsafe_allow_html=True)
     with st.container(key="photo_home_hero"):
