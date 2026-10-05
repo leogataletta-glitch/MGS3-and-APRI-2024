@@ -544,6 +544,7 @@ def render():
     css += root + " .horizon-unep{grid-column:2!important;grid-row:1 / 3!important;height:38px!important;}"
     st.markdown('<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="apri-white-lines" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .2126 .7152 .0722 0 0"/><feComponentTransfer><feFuncA type="linear" slope="4" intercept="-2.4"/></feComponentTransfer></filter></svg>',unsafe_allow_html=True)
     css += root + " .apri-symbol{filter:url('#apri-white-lines')!important;overflow:hidden!important;}"
+    css += root + " .apri-symbol{filter:none!important;color:white!important;mix-blend-mode:normal!important;}"
     st.markdown("<style>" + css + "</style>",unsafe_allow_html=True)
     with st.container(key="photo_home_hero"):
         st.markdown('<h1 class="photo-home-title">'+title+'</h1><p class="photo-home-intro">'+intro+'</p>',unsafe_allow_html=True)
