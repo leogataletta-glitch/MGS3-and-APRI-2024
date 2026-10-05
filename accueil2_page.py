@@ -507,6 +507,12 @@ def render():
     css += _r + ".apri-partner-footer{display:none!important;}"
     css += root + " .horizon-identity{gap:20px!important;}" + root + " .horizon-apri{mix-blend-mode:multiply!important;}" + root + " .horizon-unep{height:44px!important;width:auto!important;filter:brightness(0) saturate(100%) invert(19%) sepia(18%) saturate(1400%) hue-rotate(145deg)!important;}"
     css += _r + ".st-key-photo_home_hero{min-height:calc(100svh - 220px)!important;}"
+    css += root + " div[data-testid='stColumn']:has(.st-key-zone_nav){position:absolute!important;top:0!important;left:0!important;right:0!important;z-index:100!important;background:transparent!important;border-bottom:1px solid #ffffff22!important;}"
+    css += root + " .st-key-zone_nav{background:transparent!important;}" + root + " .st-key-zone_nav button p," + root + " .st-key-zone_nav button span{color:white!important;}"
+    css += root + " .horizon-unep{filter:brightness(0) invert(1)!important;}" + root + " .horizon-apri{filter:grayscale(1) invert(1)!important;mix-blend-mode:screen!important;}"
+    css += _r + ".st-key-photo_home_hero{min-height:100svh!important;padding-top:110px!important;padding-bottom:190px!important;}"
+    css += _r + ".st-key-photo_home_cta{margin-top:-155px!important;min-height:155px!important;background:rgba(15,48,63,.76)!important;position:relative!important;z-index:2!important;backdrop-filter:blur(5px)!important;}"
+    css += root + " [data-testid='stMainBlockContainer']{padding-bottom:0!important;}" + _r + "{background:#173e4c!important;}"
     st.markdown("<style>" + css + "</style>",unsafe_allow_html=True)
     with st.container(key="photo_home_hero"):
         st.markdown('<div class="photo-home-kicker">SI APRI</div><h1 class="photo-home-title">'+title+'</h1><p class="photo-home-intro">'+intro+'</p>',unsafe_allow_html=True)
