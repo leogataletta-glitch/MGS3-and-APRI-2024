@@ -3,6 +3,8 @@ import json
 from pathlib import Path
 import streamlit.components.v1 as components
 from publication_web import tr
+import i18n
+from provenance_relations import describe, labels as provenance_labels
 
 
 def causal_layout(ids, edges, centre):
@@ -40,6 +42,8 @@ def causal_layout(ids, edges, centre):
 
 
 def render(m, rang, edges, centre, positions, loop=None):
+    from systeme_complexe import _correlation
+    edges = [dict(e, evidence=describe(e, i18n.get_lang(), _correlation(m, e['de'], e['vers']))) for e in edges]
     data = dict(nodes=[dict(id=n, label=m['noms'].get(n,n), x=x, y=y,
                            rank=rang.get(n,9), central=n==centre)
                        for n,(x,y) in positions.items()], edges=edges, loop=loop)
@@ -52,6 +56,7 @@ def render(m, rang, edges, centre, positions, loop=None):
     for node in data['nodes']:
         node['x'], node['y'] = positions[node['id']]
     data['groups'] = groups
+    labels.update(provenance_labels(i18n.get_lang()))
     payload=json.dumps(dict(data=data,labels=labels),ensure_ascii=False).replace('<','\\u003c')
     html=Path(__file__).with_name('schema_interactif.html').read_text(encoding='utf-8')
-    components.html(html.replace('__PAYLOAD__',payload),height=650,scrolling=False)
+    components.html(html.replace('__PAYLOAD__',payload),height=900,scrolling=True)

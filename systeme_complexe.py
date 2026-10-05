@@ -972,75 +972,25 @@ def _legende_relations(m):
 
 
 def _table_relations(m, aretes, lang):
-    """Une ligne par relation : sa corrélation, sa force, d'où sort le nombre.
-
-    UN TABLEAU PLUTÔT QU'UNE PILE DE FICHES. Chaque relation occupait une
-    carte de six lignes — mécanisme, réserve, citation — et il fallait faire
-    défiler vingt-trois cartes pour comparer deux coefficients. Ce qui se
-    compare se met en colonnes ; le mécanisme et la réserve, eux, ne se
-    comparent pas : ils restent attachés à la ligne, en infobulle, pour qui
-    conteste un chiffre précis.
-    """
-    def _t(cle, sous, droite=False):
-        cls = ' class="n"' if droite else ''
-        return ('<th' + cls + '>' + _e(T(cle))
-                + '<span class="sx-th-x">' + _e(T(sous)) + '</span></th>')
-
-    r = ['<table class="sx-tab"><thead><tr>'
-         + _t("sx_c_rel", "sx_c_rel_x")
-         + _t("sx_correl", "sx_correl_s", True)
-         + _t("sx_c_accord", "sx_c_accord_x")
-         + _t("sx_force", "sx_force_x", True)
-         + _t("sx_preuve", "sx_preuve_x")
-         + _t("sx_c_src", "sx_c_src_x")
-         + '</tr></thead><tbody>']
+    from provenance_relations import describe, labels
+    t = labels(lang)
+    rows = []
     for a in aretes:
-        co = _correlation(m, a["de"], a["vers"])
-        if co is None:
-            rho, n_co, mot, coul = "—", "", T("sx_correl_non"), GRIS
-        else:
-            fort = abs(co["rho"]) >= RHO_CRITIQUE_10
-            meme = (co["rho"] > 0) == (a["signe"] > 0)
-            rho = _f(co["rho"], 2)
-            n_co = f' <span style="color:{GRIS};font-size:11px">'\
-                   f'n&nbsp;=&nbsp;{co["n"]}</span>'
-            mot = (T("sx_accord") if meme else T("sx_desaccord")) if fort \
-                else T("sx_faible")
-            coul = (ENCRE if meme else ROUGE) if fort else GRIS
-        fleche = "→" if a["signe"] > 0 else "⊣"
-        coul_f = VERT if a["signe"] > 0 else ROUGE
-        src = a.get("src") or {}
-        url = src.get("url")
-        cite = a.get(f"cite_{lang}") or a.get("cite_fr") or "—"
-        ref = a.get(f"ref_{lang}") or a.get("ref_fr") or ""
-        res = a.get(f"reserve_{lang}") or a.get("reserve_fr") or ""
-        bulle = " · ".join(x for x in (ref, res) if x)
-        lien = (f' <a href="{_e(url)}" target="_blank" '
-                f'style="color:{BLEU};text-decoration:none">↗</a>'
-                if url else "")
-        alerte = (f' <span style="color:{ROUGE}" title="'
-                  f'{_e(T("sx_conteste"))}">⚠</span>'
-                  if a.get("conteste") else "")
-        r.append(
-            f'<tr title="{_e(bulle)}">'
-            f'<td class="v" style="min-width:230px;text-align:left">'
-            f'{_e(m["noms"].get(a["de"], a["de"]))} '
-            f'<span style="color:{coul_f};font-weight:700">{fleche}</span> '
-            f'{_e(m["noms"].get(a["vers"], a["vers"]))}{alerte}</td>'
-            f'<td class="n" style="color:{coul};font-weight:700;'
-            f'white-space:nowrap">{rho}{n_co}</td>'
-            f'<td style="color:{coul};font-size:11.5px;'
-            f'text-align:left;white-space:nowrap">{_e(mot)}</td>'
-            f'<td class="n v">{_f(a.get("force"), 2)}</td>'
-            f'<td style="font-size:11.5px;text-align:left">'
-            f'{_e(_classe_courte(m, a))}</td>'
-            f'<td style="font-size:11px;color:{GRIS};line-height:1.45;'
-            f'text-align:left;max-width:330px" title="{_e(cite)}">'
-            f'<span style="display:-webkit-box;-webkit-line-clamp:2;'
-            f'-webkit-box-orient:vertical;overflow:hidden">{_e(cite)}</span>'
-            f'{lien}</td></tr>')
-    r.append("</tbody></table>")
-    return "".join(r)
+        d = describe(a, lang, _correlation(m, a["de"], a["vers"]))
+        co = d['association']
+        association = (f"ρ = {co['rho']:.2f} · n = {co['n']}" if co else d['association_label'])
+        title = m['noms'].get(a['de'], a['de']) + ' → ' + m['noms'].get(a['vers'], a['vers'])
+        citation = (f'<a href="{_e(d["url"])}" target="_blank" rel="noopener noreferrer">{_e(d["citation"])}</a>' if d['url'] else _e(d['citation']))
+        rows.append(f'<tr><td>{_e(title)}<br><small>{_e(d["origin"])}</small></td>'
+                    f'<td>{_e(association)}</td><td>{_f(d["strength"], 2)}<br><small>{_e(t["strength"])}</small></td>'
+                    f'<td><details><summary>{_e(t["source"])}</summary>{citation}'
+                    f'<p>{_e(d["geography"] or "")}</p><p>{_e(t["detail"])}: {_e(d["finding"] or "")}</p>'
+                    f'<p>{_e(t["limits"])}: {_e(d["limits"] or t["chosen"])}</p>'
+                    f'<p>{_e(t["chosen"])}</p></details></td></tr>')
+    return ('<div style="overflow-x:auto"><table class="sx-tab"><thead><tr>'
+            f'<th>{_e(T("sx_c_rel"))}</th><th>{_e(t["calculated"])}</th>'
+            f'<th>{_e(t["strength"])}</th><th>{_e(t["source"])}</th>'
+            '</tr></thead><tbody>' + ''.join(rows) + '</tbody></table></div>')
 
 
 def render_relations():
@@ -1048,13 +998,15 @@ def render_relations():
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(f'<div class="titre-bloc">{_e(T("sx_t2"))}</div>',
                 unsafe_allow_html=True)
+    from provenance_relations import labels
+    provenance = labels(i18n.get_lang())
     s = _systeme(m, "r")
     # LE RAPPEL DU PÉRIMÈTRE A DISPARU D'ICI, et c'est voulu : cet écran ne
     # regarde plus le système dessiné mais une variable et toutes ses
     # relations. Rappeler « dix variables en jeu » au-dessus d'un tableau qui
     # n'en tient aucun compte aurait fait croire à un filtre.
     st.markdown(f'<p class="sx-note" style="margin:0 0 8px">'
-                f'{_e(T("sx_x2"))}</p>', unsafe_allow_html=True)
+                f'{_e(provenance["intro"])}</p>', unsafe_allow_html=True)
 
     # UNE VARIABLE, ET TOUTES SES RELATIONS. Le périmètre du système commande
     # les autres écrans ; ici il ne commande rien, parce qu'une relation
@@ -1079,14 +1031,6 @@ def render_relations():
     # et le niveau de chacune est écrit dans sa colonne. Le décompte, lui,
     # reste — il dit d'un coup d'œil sur quoi repose l'ensemble.
     gardees = list(aretes)
-    cpt = {c: sum(1 for a in aretes if (a.get("just") or "hypothese") == c)
-           for c in ("empirique", "documentee", "structurel", "theorique",
-                     "hypothese")}
-    bilan = T("sx_bilan_p", e=cpt["empirique"], d=cpt["documentee"],
-              s=cpt["structurel"], t=cpt["theorique"], h=cpt["hypothese"],
-              c=sum(1 for a in aretes if a.get("conteste")))
-    st.markdown(f'<p class="sx-note" style="margin:2px 0 0">{_e(bilan)}</p>',
-                unsafe_allow_html=True)
     if not gardees:
         st.info(_locale_text(T("sx_rel_0")))
         return
@@ -1107,26 +1051,7 @@ def render_relations():
         st.markdown(f'<div class="sx-leg-h" style="margin:16px 0 -4px">'
                     f'{_e(T(cle)).upper()}</div>', unsafe_allow_html=True)
         st.markdown(_table_relations(m, lot, lang), unsafe_allow_html=True)
-    st.markdown(_legende_relations(m), unsafe_allow_html=True)
-    # L'ÉTAT DES PREUVES DU MODÈLE ENTIER, sous la légende : quatre-vingt-
-    # douze relations, et le compte de celles qui portent une source ouverte
-    # et vérifiée. Le tableau ne montre qu'une variable ; cette ligne dit sur
-    # quoi repose tout le reste.
-    _pv = m["g"].get("preuves") or {}
-    _tot = len(m["aretes"])
-    _sans = int(_pv.get("n_sans_source") or 0)
-    st.markdown(
-        f'<p class="sx-note" style="margin:10px 0 0">'
-        f'{_e(T("sx_rel_etat", t=_tot, v=_tot - _sans, z=_sans))}</p>',
-        unsafe_allow_html=True)
-    # LA NOTE SUR LA CORRÉLATION DIT MAINTENANT AUSSI POURQUOI ELLE MANQUE.
-    # La moitié des lignes portent un tiret : sans explication, on lisait ce
-    # tiret comme un aveu de faiblesse alors qu'il dit seulement que l'une
-    # des deux variables ne se mesure pas section par section.
-    st.markdown(f'<p class="sx-note">'
-                f'{_e(T("sx_correl_x", c=_f(RHO_CRITIQUE_10, 2)))} '
-                f'{_e(T("sx_correl_vide"))}</p>',
-                unsafe_allow_html=True)
+    st.caption(provenance['caution'])
 
 
 # ================================================================= onglet 3
