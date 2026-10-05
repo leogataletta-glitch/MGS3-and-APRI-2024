@@ -52,7 +52,8 @@ def render_preview():
     st.markdown(f'''<style>
     {r} div[data-testid="stColumn"]:has(.st-key-zone_nav){{display:none!important;}}
     {r} div[data-testid="stColumn"]:has(.st-key-zone_page){{width:100%!important;max-width:none!important;flex:1 1 100%!important;margin:0!important;height:auto!important;overflow:visible!important;}}
-    {r} .st-key-zone_page{{max-width:1200px!important;margin:auto!important;padding:20px!important;}}
+    {r} .st-key-zone_page{{width:100%!important;max-width:none!important;margin:0!important;padding:12px 24px!important;}}
+    {r} .block-container{{max-width:none!important;padding:0!important;}}
     {r} section[data-testid="stMain"]{{overflow-y:auto!important;height:auto!important;}}
     {r} div[data-testid="stHorizontalBlock"]:has(.st-key-zone_page){{height:auto!important;}}
     </style>''', unsafe_allow_html=True)

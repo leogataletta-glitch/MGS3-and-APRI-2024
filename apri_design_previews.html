@@ -32,3 +32,45 @@ const lab=root.querySelector('.lab');function update(){const water=lab.querySele
 root.querySelectorAll('.concept').forEach(shell=>{if(globalThis.Tweak){const state={accent:'#236d75'};const tweak=new Tweak({container:shell,onChange:()=>shell.style.setProperty('--accent',state.accent)});tweak.addColorPicker(state,'accent',{label:'Couleur d’accent',reference:'--accent'});}});
 })();
 </script>
+<style>
+/* Spacious desktop compositions; common rhythm, three distinct reading modes. */
+#apri-directions .concept{border:0;border-radius:0;min-height:900px;background:radial-gradient(ellipse at 95% 0%,#e8f3f5 0,transparent 40%),#fff;font-size:16px;--ink:#233a42;--muted:#586e76;--soft:#edf4f5}
+#apri-directions header{padding:24px 3vw;border:0;min-height:84px}
+#apri-directions header b{font-size:25px}#apri-directions header b span,#apri-directions nav{font-size:14px}
+#apri-directions .eyebrow{font-size:12px;letter-spacing:1.4px}
+#apri-directions h1{font-family:'DM Sans',sans-serif;font-weight:500;font-size:clamp(38px,4.1vw,72px);letter-spacing:-2.5px;line-height:1.08}
+#apri-directions h2{font-family:'DM Sans',sans-serif;font-size:clamp(24px,2vw,34px);letter-spacing:-1px}
+#apri-directions button{border-radius:30px;padding:11px 20px;min-height:44px;transition:background .2s,transform .2s,box-shadow .2s}
+#apri-directions button:hover{transform:translateY(-2px);box-shadow:0 6px 18px #193c4914}
+#apri-directions button:focus-visible,#apri-directions select:focus-visible,#apri-directions summary:focus-visible{outline:3px solid #39869c;outline-offset:4px}
+#apri-directions details{border-color:#dce5e580;padding:20px 0}#apri-directions details p{font-size:15px;max-width:75ch}
+#apri-directions footer{border:0;padding:22px 3vw;font-size:12px}
+#apri-directions .editorial-grid{grid-template-columns:150px minmax(0,1fr)}
+#apri-directions .journal aside{background:none;border:0;padding:40px 24px;color:var(--muted)}
+#apri-directions .journal main{padding:40px 4vw 32px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);column-gap:6vw;align-content:start}
+#apri-directions .journal main>.eyebrow,#apri-directions .journal main>h1,#apri-directions .journal main>.intro,#apri-directions .journal main>.reading{grid-column:1}
+#apri-directions .journal .intro{font-size:18px;line-height:1.7;max-width:45ch}
+#apri-directions .journal .reading{border:0;flex-wrap:wrap;font-size:13px}
+#apri-directions .story{grid-column:2;grid-row:1 / span 4;display:flex;flex-direction:column;margin:0;gap:24px;padding:30px;border-radius:28px;background:#ffffffb8}
+#apri-directions .story-chart{min-height:220px;gap:70px}#apri-directions .pole{width:80px;border-radius:15px 15px 0 0;transition:height .65s cubic-bezier(.22,1,.36,1)}
+#apri-directions .column strong{font-size:42px}#apri-directions .story p{font-size:15px}#apri-directions .segments button{font-size:13px}
+#apri-directions .journal main>details{grid-column:1 / -1}#apri-directions .journal main>details:first-of-type{margin-top:44px}
+#apri-directions .portraits main{padding:32px 4vw}#apri-directions .split-title{gap:8vw}#apri-directions .split-title h1{font-size:clamp(38px,4vw,66px)}#apri-directions .split-title p{width:32%;font-size:17px;line-height:1.7}
+#apri-directions .portrait-grid{gap:5vw}#apri-directions .portrait-grid article{display:grid;grid-template-columns:1fr 1fr;gap:25px;align-items:center}
+#apri-directions .terrain{height:280px;border-radius:55% 45% 38% 62% / 45% 38% 62% 55%;padding:55px 30px;background:linear-gradient(140deg,#e7f4f3,#cde3ec)}
+#apri-directions .hills{background:linear-gradient(140deg,#eff0fa,#dbe0f0);border-radius:38% 62% 55% 45% / 55% 48% 52% 45%}
+#apri-directions .terrain h2{font-size:32px}#apri-directions .terrain-lines{width:300px;height:170px;bottom:-20px}
+#apri-directions .big{font-size:64px}#apri-directions .measure,#apri-directions .portrait-body p,#apri-directions .portrait-body details{font-size:14px}
+#apri-directions .comparison{margin-top:25px;gap:40px}#apri-directions .comparison p{font-size:15px;max-width:none}#apri-directions .comparison>span{font-size:12px}
+#apri-directions .lab-grid{grid-template-columns:280px minmax(0,1fr);gap:4vw;padding:30px 3vw}
+#apri-directions .lab aside{border-radius:25px;background:#edf3f5;align-self:start;padding:28px}
+#apri-directions .lab main{padding:5px 2vw}#apri-directions .lab h1{font-size:clamp(32px,3.1vw,54px);font-weight:500;max-width:29ch;line-height:1.15}
+#apri-directions select{border:0;border-radius:12px;font-size:16px;padding:15px 12px}#apri-directions label span,#apri-directions .scope-note p,#apri-directions .result-caption{font-size:14px}
+#apri-directions .h-row{font-size:15px;margin:30px 0;grid-template-columns:100px 1fr 60px}#apri-directions .h-track{height:36px;border-radius:12px;overflow:hidden}#apri-directions .h-track i{border-radius:12px;transition:width .65s cubic-bezier(.22,1,.36,1)}
+#apri-directions .insight p{font-size:15px;max-width:70ch}#apri-directions .insight-number{font-size:54px}#apri-directions .meter i{transition:width .65s cubic-bezier(.22,1,.36,1)}
+@keyframes apri-enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#apri-directions main{animation:apri-enter .55s ease-out}#apri-directions details[open]>p{animation:apri-enter .25s ease-out}
+@media(max-width:1000px){#apri-directions .journal main{display:block}#apri-directions .story{margin:30px 0}#apri-directions .portrait-grid article{display:block}#apri-directions .terrain{height:200px}#apri-directions .lab-grid{gap:20px;grid-template-columns:230px minmax(0,1fr)}}
+@media(max-width:720px){#apri-directions .editorial-grid,#apri-directions .lab-grid{display:block}#apri-directions .lab aside{margin-bottom:30px}#apri-directions .split-title p{width:auto}#apri-directions .concept{min-height:0}#apri-directions h1{letter-spacing:-1px}#apri-directions .portrait-grid{grid-template-columns:1fr}#apri-directions .portrait-grid article{display:grid;grid-template-columns:1fr 1fr}#apri-directions .terrain{padding:35px 18px}#apri-directions .terrain h2{font-size:26px}#apri-directions .comparison{flex-wrap:wrap;gap:18px}#apri-directions .h-row{grid-template-columns:75px 1fr 45px;gap:8px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){#apri-directions *,#apri-directions *::before,#apri-directions *::after{animation:none!important;transition:none!important;transform:none!important}}
+</style>
