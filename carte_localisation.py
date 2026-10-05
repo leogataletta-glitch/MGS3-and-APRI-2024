@@ -512,6 +512,13 @@ COUCHES.ombrage = L.tileLayer(
   'https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
   {crossOrigin:true, maxZoom:16, opacity:.5, attribution:'Esri'});
 
+// One optional group: colored seafloor relief and labelled depth contours.
+const bathyURL='https://tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/';
+COUCHES.bathy=L.layerGroup([
+ L.tileLayer(bathyURL+'GEBCO_basemap_NCEI/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:10,maxZoom:21,crossOrigin:true,attribution:'GEBCO 2024 / NOAA NCEI'}),
+ L.tileLayer(bathyURL+'GEBCO_contours/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:10,maxZoom:21,crossOrigin:true,attribution:'GEBCO 2023 contours / NOAA NCEI'})
+]);
+
 /* ---- le panneau ------------------------------------------------------- */
 const GROUPES = __GROUPES__;
 const ETAT = {};
@@ -574,19 +581,26 @@ function construire(){
     (apFrench?'27 sites WDPA, édition août 2026, récupérés le 14 septembre 2026. La liste ANAP ne concorde pas entièrement : Grande Colline n’a pas de fiche individuelle dans cet extrait ; Port Salut–Aquin est regroupé ; la superficie de Macaya diffère. Les contours WDPA ne constituent pas une validation des limites juridiques.':'27 WDPA sites, August 2026 edition, retrieved 14 September 2026. The ANAP list does not fully match: Grande Colline has no individual record in this extract; Port Salut–Aquin is grouped; Macaya areas differ. WDPA boundaries do not establish legal boundary validation.')+
     '</p><a href="https://www.protectedplanet.net/country/HTI" target="_blank" rel="noopener">Protected Planet</a> · <a href="https://anap.gouv.ht/documents/Liste_des_APs.pdf" target="_blank" rel="noopener">ANAP</a>';
   hote.appendChild(apDetails);
+  const bathyInfo=document.createElement('div');bathyInfo.id='bathy-legend';bathyInfo.hidden=true;
+  bathyInfo.style.cssText='margin:8px 12px;font:11px/1.5 system-ui;color:#315970';
+  bathyInfo.innerHTML=(apFrench?'<b>Profondeurs en mètres</b><p>Courbes principales : 500 m à cette échelle (1 000 ou 2 000 m en dézoomant), avec des courbes complémentaires près des côtes. Le relief est ombré et coloré ; lire la profondeur sur les courbes.</p>':'<b>Depths in metres</b><p>Main contours: 500 m at this scale (1,000 or 2,000 m when zooming out), with additional shallow-water contours. Relief is shaded and coloured; read depth from contour labels.</p>')+
+   '<a href="https://tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/GEBCO_basemap_NCEI/MapServer" target="_blank" rel="noopener">Relief · GEBCO 2024 / NOAA NCEI</a><br><a href="https://tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/GEBCO_contours/MapServer" target="_blank" rel="noopener">Courbes · GEBCO 2023 / NOAA NCEI</a><p>'+
+   (apFrench?'Vue régionale, non destinée à la navigation. Le fond terrestre change également pendant l’activation.':'Regional overview, not for navigation. Land basemap also changes while enabled.')+'</p>';
+  hote.querySelector('input[data-cle="bathy"]').closest('.groupe').appendChild(bathyInfo);
 }
 
 function basculer(cle, on){
   const c = COUCHES[cle];
   if (!c) return;
   ETAT[cle] = on;
+  if(cle==='bathy'&&document.getElementById('bathy-legend'))document.getElementById('bathy-legend').hidden=!on;
   if (on) { carte.addLayer(c); reordonner(); } else { carte.removeLayer(c); }
 }
 
 /* L'ORDRE DE SUPERPOSITION EST REFAIT À CHAQUE ALLUMAGE. Leaflet empile les
    couches dans l'ordre où on les ajoute : sans cela, rallumer les communes
    après les points d'entretien couvrait les points d'un aplat. */
-const ORDRE = ['ombrage','paysage','paysage_sud','ap','sections',
+const ORDRE = ['ombrage','bathy','paysage','paysage_sud','ap','sections',
                'deps','pays','riv','rp','pts_l','pts_m','villes'];
 function reordonner(){
   ORDRE.forEach(function(k){
@@ -663,6 +677,9 @@ def _groupes(d):
         {"titre": T("cl_g_infra"), "ferme": False, "lignes": [
             {"cle": "rp", "titre": T("cl_rp"), "on": True, "nb": n("routes_p"),
              "sym": {"type": "ligne", "c": COULEURS["rp"], "w": 3}},
+        ]},
+        {"titre": _locale_text("Fonds marins" if i18n.get_lang()=="fr" else "Seafloor"), "ferme": False, "lignes": [
+            {"cle": "bathy", "titre": _locale_text("Fonds marins · relief et profondeurs" if i18n.get_lang()=="fr" else "Seafloor · relief and depths"), "on": False, "sym": {"type": "tuile"}},
         ]},
         {"titre": T("cl_g_relief"), "ferme": False, "lignes": [
             {"cle": "ombrage", "titre": T("cl_ombrage"), "on": True,

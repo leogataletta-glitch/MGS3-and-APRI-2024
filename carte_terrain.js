@@ -73,6 +73,11 @@
    if(failed)return;
    add('terre',polygons(D.terre),'fill',{'fill-color':'#dce2df'});
    gl.addLayer({id:'ombrage-hillshade',type:'hillshade',source:'dem',paint:{'hillshade-exaggeration':.15}});ids.ombrage=['ombrage-hillshade'];
+   for(const [id,service] of [['bathy-relief','GEBCO_basemap_NCEI'],['bathy-contours','GEBCO_contours']]){
+    gl.addSource(id,raster('https://tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/'+service+'/MapServer/tile/{z}/{y}/{x}','GEBCO / NOAA NCEI',10));
+    gl.addLayer({id,type:'raster',source:id,layout:{visibility:'none'}});
+   }
+   ids.bathy=['bathy-relief','bathy-contours'];
    // D.terre contains local study contours, not a complete global coastline.
    // Never use it to mask the basemap: that hides entire regions on zoom-out.
    for(const [k,source]of Object.entries({paysage:'paysage_ga',paysage_sud:'paysage_sud',ap:'aires_protegees',sections:'sections',deps:'departements',pays:'pays'})){
