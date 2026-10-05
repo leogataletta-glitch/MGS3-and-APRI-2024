@@ -21,7 +21,10 @@ def navigation(root):
     {root} [role="radiogroup"] label{{min-height:80px!important;padding:12px!important;border-radius:16px!important;background:transparent!important;}}
     {root} [role="radiogroup"] label p:first-child,{root} [role="radiogroup"] label strong{{font:700 14px/1.4 Georgia,serif!important;color:#104b3b!important;}}
     {root} [role="radiogroup"] label p:not(:first-child){{font:400 12px/1.5 Georgia,serif!important;color:#4b5550!important;}}
-    {root} [role="radiogroup"] label:has(input:checked){{background:white!important;border:0!important;box-shadow:none!important;border-radius:16px!important;}}
+    /* Selection follows the checked value, not hover or keyboard focus. */
+    {root} [role="radiogroup"] label:has(input:checked),
+    {root} [role="radiogroup"] label:has([role="radio"][aria-checked="true"]),
+    {root} [role="radiogroup"] label[aria-checked="true"]{{background:#e8f1eb!important;border:0!important;box-shadow:inset 0 0 0 2px #176344!important;border-radius:16px!important;}}
     {root} [role="radiogroup"] label:hover{{background:#e4eee9!important;}}
     {root} [role="radiogroup"] label div:not(:has([data-testid="stMarkdownContainer"])):not([data-testid="stMarkdownContainer"]){{display:none!important;}}
     {root} [role="radiogroup"] label div:has([data-testid="stMarkdownContainer"]){{flex:1 1 0!important;width:100%!important;min-width:0!important;padding:0!important;}}
