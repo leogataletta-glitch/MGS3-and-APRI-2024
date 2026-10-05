@@ -2935,7 +2935,6 @@ with _c_contenu:
     if app_mode == MODE_APROPOS:
         qualite_web.informations()
         publication_web.footer()
-    st.markdown('<div class="apri-partner-footer"><img alt="UNEP" src="data:image/png;base64,' + assets.LOGO_UNEP_BLANC + '"></div>', unsafe_allow_html=True)
     if app_mode != 'cgu':
         import compteur_visites
         compteur_visites.render()
