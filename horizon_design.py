@@ -17,7 +17,7 @@ def apply():
 
 
 CSS = r'''
-__R__ .st-key-zone_nav,__R__ div[data-testid="stColumn"]:has(.st-key-zone_nav){min-height:0!important;}
+__R__ .st-key-zone_nav,__R__ div[data-testid="stColumn"]:has(.st-key-zone_nav){min-height:0!important;margin:0!important;}
 __R__ .st-key-zone_nav>div:has(.st-key-navigation_language_desktop){flex:0 0 144px!important;}
 __R__ .st-key-navigation_language_desktop button{padding:4px!important;width:100%!important;}
 
@@ -25,7 +25,7 @@ __R__{--apri-font:Inter,Arial,sans-serif;--apri-green:#087f6b;--apri-ink:#18333b
 __R__ :is(p,span,div,a,label,button,input,textarea,select,li,td,th,dt,dd,h1,h2,h3,h4,h5,h6,strong,em,b,small,summary,text,tspan):not([data-testid="stIconMaterial"]):not([class*="material"]):not([aria-hidden="true"]){font-family:Inter,Arial,sans-serif!important;}
 __R__ section[data-testid="stMain"]{height:auto!important;overflow-y:auto!important;}
 __R__ .block-container{max-width:none!important;padding:0!important;}
-__R__ div[data-testid="stHorizontalBlock"]:has(>div[data-testid="stColumn"] .st-key-zone_nav){flex-direction:column!important;height:auto!important;gap:0!important;overflow:visible!important;}
+__R__ div[data-testid="stHorizontalBlock"]:has(>div[data-testid="stColumn"] .st-key-zone_nav){flex-direction:column!important;flex-wrap:nowrap!important;height:auto!important;gap:0!important;overflow:visible!important;}
 __R__ div[data-testid="stColumn"]:has(.st-key-zone_nav){width:100%!important;max-width:none!important;min-width:0!important;flex:0 0 auto!important;height:auto!important;max-height:none!important;background:white!important;border:0!important;border-bottom:1px solid #dce7e4!important;padding:12px 3vw!important;}
 __R__ div[data-testid="stColumn"]:has(.st-key-zone_page){width:100%!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important;height:auto!important;margin:0!important;padding:0!important;overflow:visible!important;}
 __R__ .st-key-zone_nav{display:flex!important;flex-direction:row!important;align-items:center!important;flex-wrap:wrap!important;gap:10px!important;position:static!important;height:auto!important;padding:0!important;background:white!important;overflow:visible!important;}
