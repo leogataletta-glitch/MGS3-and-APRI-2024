@@ -128,4 +128,11 @@ __Z__ .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{padding:0 10px!impor
 __Z__ .st-key-a2_photo_links button p{font-size:13px!important;}
 __Z__ .st-key-a2_photo_links button p strong{margin-top:2px!important;}
 @media(max-width:700px){__Z__ .a2-welcome-art img{height:160px!important;}__Z__ .a2-welcome-title{font-size:28px!important;}}
+/* Framework: compact subnavigation and a continuous reading surface. */
+__Z__:has(.st-key-ong_cad_vue){padding-top:12px!important;gap:8px!important;}
+__Z__ .st-key-ong_cad_vue{margin:0 0 12px!important;}
+__Z__ .st-key-ong_cad_vue [role="radiogroup"]{padding:0!important;gap:6px!important;}
+__Z__ .st-key-ong_cad_vue [role="radiogroup"] label{min-height:48px!important;padding:8px 12px!important;border-radius:8px!important;}
+__Z__ .st-key-ong_cad_vue [role="radiogroup"] label p{font-size:12px!important;line-height:1.45!important;margin:2px 0!important;}
+__Z__ .st-key-ong_cad_vue [role="radiogroup"] label strong{font-size:13px!important;}
 '''
