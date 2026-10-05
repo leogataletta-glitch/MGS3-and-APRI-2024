@@ -30,12 +30,43 @@ def selector():
                 'ht': ['Aktyèl', 'Obsèvatwa editoryal', 'Atelye analiz', 'Atlas imèsif'],
             }
             structure_labels = dict(zip(['current', 'editorial', 'studio', 'atlas'], structures.get(lang, structures['en'])))
+            structure_labels.update({'preview_journal': 'Carnet de terrain · maquette', 'preview_portraits': 'Portraits croisés · maquette', 'preview_lab': 'Question → Réponse · maquette'})
             st.selectbox('Structure', list(structure_labels), format_func=structure_labels.get, key='apri_structure_choice')
             st.selectbox(title, list(PALETTES), format_func=labels.get, key='apri_palette_choice')
     st.markdown('''<style>
     .st-key-apri_palette_preview{position:fixed!important;right:18px!important;bottom:45px!important;width:auto!important;z-index:90!important;}
     .st-key-apri_palette_preview button{min-height:32px!important;padding:5px 10px!important;background:white!important;color:#34483e!important;border:1px solid #dfe7e1!important;}
     </style>''', unsafe_allow_html=True)
+    if st.session_state.get('apri_structure_choice', '').startswith('preview_'):
+        render_preview()
+        st.stop()
+
+
+def render_preview():
+    """Design comparison only: sample data cannot enter scientific results."""
+    from pathlib import Path
+    import streamlit.components.v1 as components
+    variant = st.session_state['apri_structure_choice']
+    index = {'preview_journal': 0, 'preview_portraits': 1, 'preview_lab': 2}[variant]
+    r = '#root ' + '.stApp' * 60
+    st.markdown(f'''<style>
+    {r} div[data-testid="stColumn"]:has(.st-key-zone_nav){{display:none!important;}}
+    {r} div[data-testid="stColumn"]:has(.st-key-zone_page){{width:100%!important;max-width:none!important;flex:1 1 100%!important;margin:0!important;height:auto!important;overflow:visible!important;}}
+    {r} .st-key-zone_page{{max-width:1200px!important;margin:auto!important;padding:20px!important;}}
+    {r} section[data-testid="stMain"]{{overflow-y:auto!important;height:auto!important;}}
+    {r} div[data-testid="stHorizontalBlock"]:has(.st-key-zone_page){{height:auto!important;}}
+    </style>''', unsafe_allow_html=True)
+    st.caption('APERÇU DE DESIGN · Données fictives · Changez de maquette dans Apparence, en bas à droite.')
+    fragment = Path(__file__).with_name('apri_design_previews.html').read_text(encoding='utf-8')
+    # Static preview carries its own controls and uses no host-side APIs.
+    start = fragment.find("root.querySelectorAll('.concept').forEach(shell=>")
+    if start != -1:
+        end = fragment.find('\n})();', start)
+        fragment = fragment[:start] + fragment[end:]
+    accent = PALETTES.get(st.session_state.get('apri_palette_choice'), ('#236d75', '#ffffff'))[0]
+    wrapper = '<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html{color-scheme:light}body{margin:0;background:white}#apri-directions>section{display:none}#apri-directions>section:nth-child(' + str(index + 1) + '){display:block!important}#apri-directions .concept{--accent:' + accent + '!important}</style></head><body>'
+    fragment = fragment.replace('data-variant="Portraits croisés" hidden', 'data-variant="Portraits croisés"').replace('data-variant="Question → Réponse" hidden', 'data-variant="Question → Réponse"')
+    components.html(wrapper + fragment + '</body></html>', height=1150, scrolling=True)
 
 
 def apply():
