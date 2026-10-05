@@ -73,17 +73,8 @@
    if(failed)return;
    add('terre',polygons(D.terre),'fill',{'fill-color':'#dce2df'});
    gl.addLayer({id:'ombrage-hillshade',type:'hillshade',source:'dem',paint:{'hillshade-exaggeration':.15}});ids.ombrage=['ombrage-hillshade'];
-   // White outside the same land contours used by the 2D map. This layer
-   // sits above imagery/hillshade but below the study layers, and is also
-   // captured by JPEG/PDF exports directly from the WebGL canvas.
-   const ring=a=>{const r=a.map(p=>p.slice());if(r[0][0]!==r.at(-1)[0]||r[0][1]!==r.at(-1)[1])r.push(r[0].slice());return r;};
-   const coast=(D.terre||[]).flatMap(o=>o.a||[]).filter(a=>a.length>2).map(ring);
-   gl.addSource('white-ocean',{type:'geojson',data:fc([feature({type:'Polygon',coordinates:[[[ -180,-85],[180,-85],[180,85],[-180,85],[-180,-85]],...coast]})])});
-   gl.addLayer({id:'white-ocean',type:'fill',source:'white-ocean',paint:{'fill-color':'#edf4f9','fill-opacity':1,'fill-antialias':false}});
-   // Feather the land into the white page; keep study overlays above the fade.
-   // Render in WebGL so the same soft coastline appears in JPEG/PDF exports.
-   gl.addSource('coast-fade',{type:'geojson',data:fc([feature({type:'MultiLineString',coordinates:coast})])});
-   gl.addLayer({id:'coast-fade',type:'line',source:'coast-fade',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#edf4f9','line-width':12,'line-blur':12,'line-opacity':1}});
+   // D.terre contains local study contours, not a complete global coastline.
+   // Never use it to mask the basemap: that hides entire regions on zoom-out.
    for(const [k,source]of Object.entries({paysage:'paysage_ga',paysage_sud:'paysage_sud',ap:'aires_protegees',sections:'sections',deps:'departements',pays:'pays'})){
     const color=C[k]||C.paysage;
     if(['paysage','paysage_sud','ap','sections'].includes(k))add(k,polygons(D[source]),'fill',{'fill-color':color,'fill-opacity':k==='sections'?.25:.08});
@@ -162,7 +153,7 @@
    if(installerHD)installerHD(gl);
    // The original 2D look: satellite imagery softened by Esri hillshade.
    gl.addSource('atlas-shade',{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:16,attribution:'Esri'});
-   gl.addLayer({id:'atlas-shade',type:'raster',source:'atlas-shade',layout:{visibility:'none'},paint:{'raster-opacity':.5}},'white-ocean');
+   gl.addLayer({id:'atlas-shade',type:'raster',source:'atlas-shade',layout:{visibility:'none'},paint:{'raster-opacity':.5}},'ombrage-hillshade');
    let atlasOn=false;
    const atlasState=on=>{atlasOn=on;atlas.setAttribute('aria-pressed',String(on));gl.setLayoutProperty('atlas-shade','visibility',on&&ETAT.ombrage?'visible':'none');gl.setLayoutProperty('ombrage-hillshade','visibility',!on&&ETAT.ombrage?'visible':'none');};
    atlas.disabled=false;atlasState(false);
