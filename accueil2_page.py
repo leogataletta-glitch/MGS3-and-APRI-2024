@@ -542,7 +542,7 @@ def render():
     css += root + " .apri-symbol{grid-column:1!important;grid-row:1!important;width:28px!important;height:28px!important;justify-self:center!important;filter:grayscale(1)!important;}"
     css += root + " .horizon-identity::after{grid-column:1!important;grid-row:2!important;justify-self:center!important;font:400 10px/1 Arial,sans-serif!important;letter-spacing:1.5px!important;}"
     css += root + " .horizon-unep{grid-column:2!important;grid-row:1 / 3!important;height:38px!important;}"
-    st.markdown('<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="apri-white-lines" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .2126 .7152 .0722 0 0"/><feComponentTransfer><feFuncA type="linear" slope="7" intercept="-5.6"/></feComponentTransfer></filter></svg>',unsafe_allow_html=True)
+    st.markdown('<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="apri-white-lines" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .2126 .7152 .0722 0 0"/><feComponentTransfer><feFuncA type="linear" slope="4" intercept="-2.4"/></feComponentTransfer></filter></svg>',unsafe_allow_html=True)
     css += root + " .apri-symbol{filter:url('#apri-white-lines')!important;overflow:hidden!important;}"
     st.markdown("<style>" + css + "</style>",unsafe_allow_html=True)
     with st.container(key="photo_home_hero"):
@@ -617,3 +617,4 @@ __ROOT__ .a2-n{font-size:24px!important;}
 __ROOT__ .a2-link-photo{height:80px!important;}
 }
 </style>"""
+
