@@ -529,6 +529,8 @@ def render():
     css += root + " .apri-symbol{display:block!important;order:-2!important;}" + root + " .horizon-identity::after{order:-1!important;}"
     css += _r + ".st-key-photo_home_hero{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100dvh!important;z-index:1!important;}"
     css += _r + ".st-key-photo_home_hero [data-testid='stButton']{display:flex!important;justify-content:center!important;}"
+    css += root + " [data-testid='stMain']{zoom:1!important;}"
+    css += _r + ".st-key-photo_home_hero [data-testid='stElementContainer']:has(button){align-self:center!important;width:auto!important;margin-left:auto!important;margin-right:auto!important;}"
     st.markdown("<style>" + css + "</style>",unsafe_allow_html=True)
     with st.container(key="photo_home_hero"):
         st.markdown('<h1 class="photo-home-title">'+title+'</h1><p class="photo-home-intro">'+intro+'</p>',unsafe_allow_html=True)
