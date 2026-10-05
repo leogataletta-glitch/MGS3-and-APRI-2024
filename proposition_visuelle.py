@@ -11,6 +11,8 @@ def active():
 def selector():
     """Keep existing callers compatible without displaying a design switch."""
     st.session_state[KEY] = 2
+    import apparence_apri
+    apparence_apri.selector()
 
 
 def navigation(root):
@@ -65,6 +67,10 @@ def apply():
     {zone} [data-testid="stPlotlyChart"],{zone} [data-testid="stVegaLiteChart"]{{border:1px solid #dde3df!important;border-radius:8px!important;padding:12px!important;}}
     @media(max-width:700px){{{zone} :is(h1,.apri-page-title,.cad-page-title){{font-size:24px!important;}}}}
     </style>''', unsafe_allow_html=True)
+
+
+    import apparence_apri
+    apparence_apri.apply()
 
 
 def interface_consistante():
