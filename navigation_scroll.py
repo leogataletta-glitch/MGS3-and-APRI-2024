@@ -6,14 +6,17 @@ from apri_logo_refined import LOGO
 
 
 def identity(unep):
-    return '<div class="apri-new-identity"><img alt="APRI" src="data:image/png;base64,' + LOGO + '"><img alt="UN Environment Programme" src="data:image/png;base64,' + unep + '"></div>'
+    return '<div class="apri-new-identity"><span class="apri-color-mark"><img alt="APRI" src="data:image/png;base64,' + LOGO + '"><img class="apri-white-word" aria-hidden="true" alt="" src="data:image/png;base64,' + LOGO + '"></span><img alt="UN Environment Programme" src="data:image/png;base64,' + unep + '"></div>'
 
 
 def render(current, order, go):
     root = '#root ' + '.stApp' * 90
     st.markdown('<style>' + root + ''' .apri-new-identity{display:flex;align-items:center;gap:18px;height:52px;}
     ''' + root + ''' .apri-new-identity img{height:52px;width:auto;object-fit:contain;filter:none;background:transparent;}
-    ''' + root + ''' .apri-new-identity img+img{height:38px;}
+    ''' + root + ''' .apri-new-identity>img{height:38px;}
+    ''' + root + ''' .apri-color-mark{position:relative;display:block;width:52px;height:52px;}
+    ''' + root + ''' .apri-color-mark img{position:absolute;inset:0;width:52px;height:52px;}
+    ''' + root + ''' .apri-color-mark .apri-white-word{clip-path:inset(78% 0 0 0);filter:brightness(0) invert(1);}
     ''' + root + ''' .st-key-zone_nav>div:has(.apri-new-identity){margin-right:auto!important;}
     ''' + root + ''' [data-testid="stColumn"]:has(.st-key-zone_nav){position:sticky!important;top:0!important;z-index:999!important;}
     .st-key-wheel_previous,.st-key-wheel_next{display:none!important;}
