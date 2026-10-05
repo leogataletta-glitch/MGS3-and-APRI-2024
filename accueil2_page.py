@@ -536,6 +536,8 @@ def render():
     css += menu + " button," + menu + " [data-testid='stVerticalBlock']{background:transparent!important;}"
     css += menu + " button p," + menu + " button span{color:#fff!important;}"
     css += menu + " button:hover," + menu + " button:focus-visible{background:rgba(255,255,255,.16)!important;}"
+    css += _r + ".st-key-photo_home_hero button{background:transparent!important;color:white!important;border:1px solid #ffffffb3!important;box-shadow:none!important;}" + _r + ".st-key-photo_home_hero button p{color:white!important;}"
+    css += _r + ".st-key-photo_home_hero button:hover{background:#ffffff1a!important;}"
     st.markdown("<style>" + css + "</style>",unsafe_allow_html=True)
     with st.container(key="photo_home_hero"):
         st.markdown('<h1 class="photo-home-title">'+title+'</h1><p class="photo-home-intro">'+intro+'</p>',unsafe_allow_html=True)
