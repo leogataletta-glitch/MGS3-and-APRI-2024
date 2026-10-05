@@ -105,24 +105,6 @@
    gl.on('render',()=>labels.forEach(x=>x.getElement().style.display=ETAT.villes?'':'none'));
    gl.on('click',e=>{if(window.apriMeasure?.active())return;const hits=gl.queryRenderedFeatures(e.point,{layers:['pts_l-circle','pts_m-circle','sections-fill','villes-circle','ap-fill']});if(!hits.length)return;const p=hits[0].properties;if(hits[0].layer.id==='ap-fill'){new m.Popup({maxWidth:'340px'}).setLngLat(e.lngLat).setHTML(protectedPopup(p)).addTo(gl);return;}const body=document.createElement('div');body.textContent=p.numero?('n° '+p.numero+' · '+p.section+' · '+p.paysage):(p.section||p.nom||'');new m.Popup().setLngLat(e.lngLat).setDOMContent(body).addTo(gl);});
    ready=true;clearTimeout(timeout);window.apriTerrain=gl;sync();window.apriMeasure?.install(gl);
-   const positionBox=document.createElement('div');positionBox.setAttribute('role','group');positionBox.setAttribute('aria-label',fr?'Position sur la carte':'Map position');
-   positionBox.style.cssText='margin:8px 10px;padding:11px;background:#edf4f9;border-radius:9px;font:12px/1.6 system-ui;color:#315970;font-variant-numeric:tabular-nums';
-   const place=document.createElement('strong'),altitude=document.createElement('div'),coordinates=document.createElement('div');
-   place.textContent=fr?'Survolez la carte':'Move over the map';altitude.textContent=fr?'Altitude estimée : —':'Estimated elevation: —';coordinates.textContent='WGS84 · —';positionBox.append(place,altitude,coordinates);document.getElementById('liste').prepend(positionBox);
-   const contains=(ring,x,y)=>{let inside=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const a=ring[i],b=ring[j];if((a[1]>y)!==(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])inside=!inside;}return inside;};
-   const within=(item,x,y)=>(item.a||[]).some(ring=>contains(ring,x,y));
-   let pointer=null,pointerFrame;
-   const updatePosition=()=>{if(!pointer||failed)return;const ll=gl.unproject(pointer),x=ll.lng,y=ll.lat;
-    const section=(D.sections||[]).find(item=>within(item,x,y));
-    place.textContent=section?section.p.section:(fr?'Hors des sections étudiées':'Outside surveyed sections');
-    const onLand=(D.terre||[]).some(item=>within(item,x,y));
-    const value=onLand?gl.queryTerrainElevation(ll):null,ratio=gl.getTerrain()?.exaggeration||1;
-    altitude.textContent=(fr?'Altitude estimée : ':'Estimated elevation: ')+(value!=null&&Number.isFinite(value)?'≈ '+Math.round(value/ratio).toLocaleString(fr?'fr-FR':'en-US')+' m':'—');
-    coordinates.textContent='WGS84 · Lat '+y.toFixed(5)+'° · Lon '+x.toFixed(5)+'°';
-   };
-   const track=e=>{pointer=e.point;cancelAnimationFrame(pointerFrame);pointerFrame=requestAnimationFrame(updatePosition);};
-   gl.on('mousemove',track);gl.on('click',track);gl.on('moveend',updatePosition);gl.on('idle',updatePosition);
-   gl.getCanvas().addEventListener('mouseleave',()=>{pointer=null;cancelAnimationFrame(pointerFrame);place.textContent=fr?'Survolez la carte':'Move over the map';altitude.textContent=fr?'Altitude estimée : —':'Estimated elevation: —';coordinates.textContent='WGS84 · —';});
    // Reveal only after the configured camera and layers have rendered.
    gl.once('render',()=>{
     if(failed)return;
@@ -134,14 +116,6 @@
    const state=()=>{top.setAttribute('aria-pressed',String(gl.getPitch()<1));tilt.setAttribute('aria-pressed',String(gl.getPitch()>=1));};gl.on('moveend',state);state();
    top.onclick=()=>gl.easeTo({pitch:0,bearing:0,duration:700});
    tilt.onclick=()=>gl.easeTo({pitch:60,duration:900});
-   // Move to a territory without changing the user's visible layers.
-   const explore=document.createElement('label');explore.className='map-explore';
-   explore.textContent=fr?'Aller à une section':'Go to a section';
-   const destination=document.createElement('select');destination.setAttribute('aria-label',explore.textContent);
-   const placeholder=new Option(fr?'Choisir une section…':'Choose a section…','');destination.add(placeholder);
-   [...new Set((D.sections||[]).map(o=>o.p.section))].sort().forEach(name=>destination.add(new Option(name,name)));
-   destination.onchange=()=>{if(!destination.value)return;const points=(D.sections||[]).filter(o=>o.p.section===destination.value).flatMap(o=>(o.a||[]).flat());if(!points.length)return;const bounds=points.reduce((b,p)=>b.extend(p),new m.LngLatBounds(points[0],points[0]));gl.fitBounds(bounds,{padding:{top:55,bottom:55,left:55,right:window.innerWidth>620?341:55},maxZoom:15,duration:1000});};
-   explore.append(destination);document.getElementById('liste').prepend(explore);
    const detail=document.createElement('details');detail.className='map-camera';
    const summary=document.createElement('summary');summary.textContent=fr?'Réglages du relief':'Terrain settings';detail.append(summary);controls.after(detail);detail.append(note);
    const compass=document.createElement('div');compass.style.cssText='margin-top:10px;font-size:12px;color:#315970';

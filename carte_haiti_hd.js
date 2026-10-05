@@ -3,7 +3,7 @@
    Original imagery: 25 cm. Bare-earth terrain: 1.5 m. Not current imagery. */
 async function preparerHaitiHD(m){
  const index=__HD_INDEX__,fr=L_.legend==='Légende',base='https://opentopography.s3.sdsc.edu/raster/Haiti_16/';
- const box=document.createElement('div');box.style.cssText='padding:8px 10px;font:11px system-ui;color:#365b49;border-bottom:1px solid #edf1ee';document.getElementById('liste').prepend(box);
+ const box=document.createElement('div');box.style.cssText='padding:8px 10px;font:11px system-ui;color:#365b49;border-bottom:1px solid #edf1ee';
  box.textContent=fr?'Chargement des données détaillées…':'Loading detailed data…';
  function script(src){return new Promise((resolve,reject)=>{const e=document.createElement('script');e.src=src;e.onload=resolve;e.onerror=reject;document.head.append(e);});}
  try{
@@ -61,14 +61,10 @@ async function preparerHaitiHD(m){
   return gl=>{
   const credit='HaitiData / CNIGS / World Bank · 2014–2016 · OpenTopography';
   gl.addSource('haiti-aerial',{type:'raster',tiles:['aprihd://op/{z}/{x}/{y}'],tileSize:256,minzoom:15,maxzoom:20,bounds:[-74.55,17.98,-73.2,19.2],attribution:credit});
-  gl.addLayer({id:'haiti-aerial',type:'raster',source:'haiti-aerial',minzoom:15,paint:{'raster-fade-duration':150}},'white-ocean');
-  const label=fr?'Photos aériennes 2014–2016 · 25 cm':'Aerial photos 2014–2016 · 25 cm';
-  GROUPES.push({titre:'HD',lignes:[{cle:'haiti_hd',titre:label,sym:{type:'tuile'}}]});ETAT.haiti_hd=true;
-  box.textContent='';const toggle=document.createElement('input');toggle.type='checkbox';toggle.checked=true;const lab=document.createElement('label');lab.append(toggle,document.createTextNode(' '+label));box.append(lab);
-  const aerialVisibility=()=>{ETAT.haiti_hd=toggle.checked&&fondActif==='sat';gl.setLayoutProperty('haiti-aerial','visibility',ETAT.haiti_hd?'visible':'none');};toggle.onchange=aerialVisibility;const oldFondHD=choisirFond;choisirFond=k=>{oldFondHD(k);aerialVisibility();};aerialVisibility();
-  const hint=document.createElement('div');hint.style.marginTop='5px';hint.textContent=fr?'Zoomez pour voir les photos. Relief détaillé : 1,5 m, selon couverture.':'Zoom in to see photos. Detailed terrain: 1.5 m, where available.';box.append(hint);const hintText=hint.textContent;gl.on('dataloading',e=>{if(e.sourceId==='haiti-aerial'||e.sourceId==='dem')hint.textContent=fr?'Chargement des détails…':'Loading details…';});gl.on('idle',()=>{hint.textContent=readFailures?(fr?'Certains fichiers sont indisponibles ; le fond habituel complète la vue.':'Some files are unavailable; the standard basemap fills the view.'):hintText;});
-  const choice=document.createElement('p');choice.style.cssText='margin:8px 0;line-height:1.5';choice.textContent=fr?'Les images de 2014–2016 ont été retenues pour leur résolution de 25 cm, nettement plus fine que les 10 m des images Sentinel‑2 plus récentes.':'The 2014–2016 images were selected for their 25 cm resolution, much finer than the 10 m resolution of more recent Sentinel‑2 images.';box.append(choice);
-  const link=document.createElement('a');link.textContent=fr?'Source et date des données':'Data source and date';link.href='https://doi.org/10.5069/G9GX48R8';link.target='_blank';link.rel='noopener';box.append(link);
+  gl.addLayer({id:'haiti-aerial',type:'raster',source:'haiti-aerial',minzoom:15,paint:{'raster-fade-duration':150}},'terre-fill');
+  // Detailed imagery remains available without the removed sidebar block.
+  const aerialVisibility=()=>gl.setLayoutProperty('haiti-aerial','visibility',fondActif==='sat'?'visible':'none');
+  const oldFondHD=choisirFond;choisirFond=k=>{oldFondHD(k);aerialVisibility();};aerialVisibility();
   };
  }catch(error){box.textContent=fr?'Données détaillées indisponibles ; fond habituel conservé.':'Detailed data unavailable; standard basemap retained.';console.warn(error);}
 }
