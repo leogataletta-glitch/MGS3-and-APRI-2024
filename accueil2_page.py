@@ -538,6 +538,10 @@ def render():
     css += menu + " button:hover," + menu + " button:focus-visible{background:rgba(255,255,255,.16)!important;}"
     css += _r + ".st-key-photo_home_hero button{background:transparent!important;color:white!important;border:1px solid #ffffffb3!important;box-shadow:none!important;}" + _r + ".st-key-photo_home_hero button p{color:white!important;}"
     css += _r + ".st-key-photo_home_hero button:hover{background:#ffffff1a!important;}"
+    css += root + " .horizon-identity{display:grid!important;grid-template-columns:42px auto!important;grid-template-rows:28px 12px!important;column-gap:18px!important;row-gap:3px!important;align-items:center!important;}"
+    css += root + " .apri-symbol{grid-column:1!important;grid-row:1!important;width:28px!important;height:28px!important;justify-self:center!important;filter:grayscale(1)!important;}"
+    css += root + " .horizon-identity::after{grid-column:1!important;grid-row:2!important;justify-self:center!important;font:400 10px/1 Arial,sans-serif!important;letter-spacing:1.5px!important;}"
+    css += root + " .horizon-unep{grid-column:2!important;grid-row:1 / 3!important;height:38px!important;}"
     st.markdown("<style>" + css + "</style>",unsafe_allow_html=True)
     with st.container(key="photo_home_hero"):
         st.markdown('<h1 class="photo-home-title">'+title+'</h1><p class="photo-home-intro">'+intro+'</p>',unsafe_allow_html=True)
