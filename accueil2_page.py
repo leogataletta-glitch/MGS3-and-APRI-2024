@@ -531,6 +531,11 @@ def render():
     css += _r + ".st-key-photo_home_hero [data-testid='stButton']{display:flex!important;justify-content:center!important;}"
     css += root + " [data-testid='stMain']{zoom:1!important;}"
     css += _r + ".st-key-photo_home_hero [data-testid='stElementContainer']:has(button){align-self:center!important;width:auto!important;margin-left:auto!important;margin-right:auto!important;}"
+    menu = "#stFloatingOverlayPortal" * 20 + " [data-testid='stPopoverBody']"
+    css += menu + "{background:rgba(8,29,41,.48)!important;border:1px solid rgba(255,255,255,.22)!important;box-shadow:0 12px 30px #0002!important;backdrop-filter:blur(3px)!important;}"
+    css += menu + " button," + menu + " [data-testid='stVerticalBlock']{background:transparent!important;}"
+    css += menu + " button p," + menu + " button span{color:#fff!important;}"
+    css += menu + " button:hover," + menu + " button:focus-visible{background:rgba(255,255,255,.16)!important;}"
     st.markdown("<style>" + css + "</style>",unsafe_allow_html=True)
     with st.container(key="photo_home_hero"):
         st.markdown('<h1 class="photo-home-title">'+title+'</h1><p class="photo-home-intro">'+intro+'</p>',unsafe_allow_html=True)
