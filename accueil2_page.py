@@ -491,8 +491,8 @@ def render():
     with st.container(key="home_layout_compare"):
         layout = st.selectbox(
             _locale_text("Comparer les propositions" if i18n.get_lang() == "fr" else "Compare home layouts"),
-            ["landscape", "hero_map", "landscape_bottom", "hero_doors", "map", "doors"], key="home_layout_preview",
-            format_func=lambda v: {"map":"La carte au centre", "doors":"Quatre portes d’entrée", "landscape":"Le paysage comme accueil", "hero_map":"La carte à la place du paysage", "landscape_bottom":"Paysage et quatre accès alignés en bas", "hero_doors":"Les quatre accès à la place du paysage"}[v])
+            ["map_panel", "landscape", "hero_map", "landscape_bottom", "hero_doors", "map", "doors"], key="home_layout_preview",
+            format_func=lambda v: {"map_panel":"Panneau paysage, carte et quatre accès", "map":"La carte au centre", "doors":"Quatre portes d’entrée", "landscape":"Le paysage comme accueil", "hero_map":"La carte à la place du paysage", "landscape_bottom":"Paysage et quatre accès alignés en bas", "hero_doors":"Les quatre accès à la place du paysage"}[v])
     _r = "#root " + ".stApp" * 75 + " .st-key-zone_page "
     _style = _r + ".st-key-home_layout_compare{max-width:340px!important;margin:0 0 16px!important;}"
     if layout == "doors":
@@ -502,6 +502,14 @@ def render():
         _style += _r + ".a2-welcome-art{visibility:hidden!important;}" + _r + ".a2-welcome-title{font-size:34px!important;}"
     else:
         _style += _r + ".a2-welcome-art img{height:170px!important;}"
+    if layout == "map_panel":
+        _style += _r + ".st-key-a2_welcome{padding:0!important;background:none!important;}"
+        _style += _r + ".st-key-a2_welcome [data-testid='stHorizontalBlock']{align-items:stretch!important;}"
+        _style += _r + ".st-key-a2_welcome [data-testid='stColumn']:first-child{background:linear-gradient(#244b43df,#244b43df),url('/~/+/app/static/accueil_aquarelle_haiti.webp') center/cover!important;border-radius:16px!important;padding:28px!important;}"
+        _style += _r + ".a2-welcome-title{color:white!important;font-size:32px!important;line-height:1.16!important;}"
+        _style += _r + ".a2-kick," + _r + ".a2-intro{color:#e1eee8!important;}"
+    if layout not in ("map", "hero_doors"):
+        _style += "@media(min-width:701px){" + _r + ".st-key-a2_photo_links [data-testid='stHorizontalBlock']{display:flex!important;flex-wrap:nowrap!important;gap:20px!important;}" + _r + ".st-key-a2_photo_links [data-testid='stColumn']{width:calc((100% - 60px)/4)!important;min-width:0!important;flex:1 1 0!important;}}"
     st.markdown("<style>" + _style + "</style>", unsafe_allow_html=True)
 
     # ---- 1 · la photographie, le titre, l'appel ------------------------
@@ -538,11 +546,11 @@ def render():
     credit = '' if aquarelle else f'<div class="a2-credit">{_e(T("a2_credit"))}</div>'
     # Native Streamlit navigation preserves the selected language and filters.
     with st.container(key="a2_welcome"):
-        copy, art = st.columns([1.05, 1], gap="large", vertical_alignment="center")
+        copy, art = st.columns([0.75, 1.65] if layout == "map_panel" else [1.05, 1], gap="large", vertical_alignment="center")
         with copy:
             st.markdown('<div class="a2-welcome-copy">'
                 + f'<div class="a2-kick">{_e(T("a2_kicker"))}</div>'
-                 + '<h1 class="a2-welcome-title">' + _e(({"fr":"Comprendre les paysages. Éclairer les décisions.", "en":"Understand landscapes. Inform decisions.", "es":"Comprender los paisajes. Orientar las decisiones.", "ht":"Konprann peyizaj yo. Eklere desizyon yo."}.get(_lang, "Understand landscapes. Inform decisions.")) if layout in ("landscape", "landscape_bottom") else T("a2_titre").replace("@@", " ")) + '</h1>' 
+                 + '<h1 class="a2-welcome-title">' + _e(({"fr":"Comprendre les paysages. Éclairer les décisions.", "en":"Understand landscapes. Inform decisions.", "es":"Comprender los paisajes. Orientar las decisiones.", "ht":"Konprann peyizaj yo. Eklere desizyon yo."}.get(_lang, "Understand landscapes. Inform decisions.")) if layout in ("landscape", "landscape_bottom", "map_panel") else T("a2_titre").replace("@@", " ")) + '</h1>' 
                 + f'<p class="a2-intro">{_e(T("a2_intro"))}</p></div>',
                 unsafe_allow_html=True)
             with st.container(key="a2_main_action"):
@@ -550,8 +558,8 @@ def render():
                     st.session_state["app_mode"] = "dimensions"
                     st.rerun()
         with art:
-            if layout == "hero_map":
-                if not carte_zoom.render(hauteur=340):
+            if layout in ("hero_map", "map_panel"):
+                if not carte_zoom.render(hauteur=440 if layout == "map_panel" else 340):
                     st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',unsafe_allow_html=True)
             elif layout == "hero_doors":
                 hero_links = st.container()
@@ -627,7 +635,7 @@ def render():
         elif layout == "hero_doors":
             links_col = hero_links
             map_col = st.container()
-        elif layout == "hero_map":
+        elif layout in ("hero_map", "map_panel"):
             links_col = st.container()
             map_col = None
         elif layout == "landscape_bottom":
