@@ -527,6 +527,8 @@ def render():
     css += root + " .horizon-identity{background:transparent!important;}"
     css += _r + " [data-testid='stElementContainer']:has(.apri-partner-footer){display:none!important;}"
     css += root + " .apri-symbol{display:block!important;order:-2!important;}" + root + " .horizon-identity::after{order:-1!important;}"
+    css += _r + ".st-key-photo_home_hero{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100dvh!important;z-index:1!important;}"
+    css += _r + ".st-key-photo_home_hero [data-testid='stButton']{display:flex!important;justify-content:center!important;}"
     st.markdown("<style>" + css + "</style>",unsafe_allow_html=True)
     with st.container(key="photo_home_hero"):
         st.markdown('<h1 class="photo-home-title">'+title+'</h1><p class="photo-home-intro">'+intro+'</p>',unsafe_allow_html=True)
