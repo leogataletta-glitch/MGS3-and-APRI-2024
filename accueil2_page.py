@@ -517,7 +517,7 @@ def render():
     css += root + " div[data-testid='stColumn']:has(.st-key-zone_page)," + root + " [data-testid='stMainBlockContainer']{background:#173e4c!important;margin-bottom:0!important;padding-bottom:0!important;}"
     st.markdown('<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="apri-white-mark" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1 -1 -1 0 3"/></filter></svg>',unsafe_allow_html=True)
     css += root + " .horizon-apri{filter:none!important;mix-blend-mode:normal!important;border-radius:4px!important;padding:4px!important;background:white!important;height:48px!important;}"
-    css += _r + ".st-key-photo_home_hero{min-height:0!important;height:calc(100svh - 155px)!important;box-sizing:border-box!important;background-size:cover!important;background-position:center center!important;padding:90px 5% 40px!important;}"
+    css += _r + ".st-key-photo_home_hero{min-height:calc(100svh - 155px)!important;height:calc(100svh - 155px)!important;flex-shrink:0!important;box-sizing:border-box!important;background-size:cover!important;background-position:center center!important;padding:90px 5% 40px!important;}"
     css += _r + ".st-key-photo_home_cta{margin-top:0!important;height:155px!important;box-sizing:border-box!important;}"
     css += _r + "{min-height:0!important;padding-bottom:0!important;}" + root + " [data-testid='stMainBlockContainer']{min-height:0!important;}"
     css += _r + " [data-testid='stElementContainer']:has(.apri-partner-footer){display:none!important;}"
