@@ -2578,7 +2578,7 @@ with _menu_mobile:
                 _entree_nav(_mode, _icone, prefix="mobile_nav")
 
 with _zone_nav:
-    st.markdown('<div class="horizon-identity"><img class="horizon-apri" alt="APRI" src="data:image/png;base64,' + assets.LOGO_APRI + '"><img class="horizon-unep" style="height:44px;width:auto" alt="UN Environment Programme" src="data:image/png;base64,' + assets.LOGO_UNEP_BLANC + '"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="horizon-identity"><svg class="apri-symbol" style="display:none" width="36" height="36" viewBox="70 15 160 160" aria-label="APRI"><defs><clipPath id="apri-symbol-crop"><circle cx="150" cy="95" r="78"/></clipPath></defs><image width="300" height="252" clip-path="url(#apri-symbol-crop)" href="data:image/png;base64,' + assets.LOGO_APRI + '"/></svg><img class="horizon-apri" alt="APRI" src="data:image/png;base64,' + assets.LOGO_APRI + '"><img class="horizon-unep" style="height:44px;width:auto" alt="UN Environment Programme" src="data:image/png;base64,' + assets.LOGO_UNEP_BLANC + '"></div>', unsafe_allow_html=True)
     _entree_nav(MODE_PORTAIL, "maison")
     for _mode in (MODE_METHODO, MODE_ACCUEIL, MODE_DIMENSIONS, MODE_BOUCLES, MODE_ACTIONS):
         _label = publication_web.tr(("Analyser les résultats", "Analyse results", "Analizar resultados", "Analize rezilta yo")) if _mode == MODE_DIMENSIONS else _locale_text(LIBELLE_MODE[_mode])

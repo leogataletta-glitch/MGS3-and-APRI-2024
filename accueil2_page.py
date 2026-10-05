@@ -522,14 +522,18 @@ def render():
     css += _r + "{min-height:0!important;padding-bottom:0!important;}" + root + " [data-testid='stMainBlockContainer']{min-height:0!important;}"
     css += _r + " [data-testid='stElementContainer']:has(.apri-partner-footer){display:none!important;}"
     css += _r + " [data-testid='stElementContainer']:has(.apri-public-counter){position:absolute!important;bottom:0!important;left:0!important;right:0!important;}" + _r + ".apri-public-counter{color:#d9e3e9!important;margin:0!important;}"
+    css += _r + ".st-key-photo_home_hero{min-height:100svh!important;height:auto!important;padding:100px 5% 60px!important;gap:24px!important;}"
+    css += root + " .horizon-apri{display:none!important;}" + root + " .horizon-identity::after{content:'APRI';font:700 25px/1 sans-serif;color:white;letter-spacing:1px;}"
+    css += root + " .horizon-identity{background:transparent!important;}"
+    css += _r + " [data-testid='stElementContainer']:has(.apri-partner-footer){display:none!important;}"
+    css += root + " .apri-symbol{display:block!important;order:-2!important;}" + root + " .horizon-identity::after{order:-1!important;}"
     st.markdown("<style>" + css + "</style>",unsafe_allow_html=True)
     with st.container(key="photo_home_hero"):
         st.markdown('<h1 class="photo-home-title">'+title+'</h1><p class="photo-home-intro">'+intro+'</p>',unsafe_allow_html=True)
-    with st.container(key="photo_home_cta"):
-        st.markdown({"fr":"Découvrez les résultats et explorez la résilience des paysages.","en":"Discover the results and explore landscape resilience.","es":"Descubra los resultados y explore la resiliencia del paisaje.","ht":"Dekouvri rezilta yo epi eksplore rezilyans peyizaj yo."}.get(lang,"Discover the results and explore landscape resilience."))
         if st.button(_locale_text(T("a2_cta")),key="photo_home_results"):
             st.session_state["app_mode"]="dimensions"
             st.rerun()
+
 
 
 _WELCOME_STYLE = """<style>
