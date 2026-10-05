@@ -142,4 +142,10 @@ __R__ .st-key-zone_nav [data-testid="stPopover"]>button[aria-expanded="true"]{ba
 }
 @keyframes apri-menu-open{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){#stFloatingOverlayPortal [data-testid="stPopoverBody"]{animation:none!important;}}
+
+__Z__ .st-key-cad_section_dropdown{max-width:360px!important;}
+__Z__ .st-key-cad_section_dropdown [data-baseweb="select"]>div{background:#e8f4ef!important;border-color:#c9e3d9!important;min-height:40px!important;border-radius:8px!important;}
+__Z__ .st-key-cad_section_dropdown label p{font-size:12px!important;font-weight:500!important;}
+[data-baseweb="popover"]:has([role="listbox"]){animation:apri-menu-open .18s ease-out;transform-origin:top;}
+@media(prefers-reduced-motion:reduce){[data-baseweb="popover"]:has([role="listbox"]){animation:none!important;}}
 '''
