@@ -161,4 +161,13 @@ __R__ .st-key-top_menu_dimensions button p{color:white!important;}
 #stFloatingOverlayPortal [class*="st-key-top_section_"] button{min-height:36px!important;padding:8px 12px!important;border:0!important;box-shadow:none!important;background:white!important;justify-content:flex-start!important;}
 #stFloatingOverlayPortal [class*="st-key-top_section_"] button p{font:500 13px/1.4 Inter,Arial,sans-serif!important;}
 #stFloatingOverlayPortal [data-testid="stPopoverBody"]:has([class*="st-key-top_section_"]){min-width:250px!important;padding:8px!important;animation:apri-menu-open .18s ease-out;}
+
+/* Reset legacy card heights in every top-level navigation popup. */
+#stFloatingOverlayPortal [data-testid="stPopoverBody"]:has([class*="st-key-top_section_"], [class*="st-key-nav_"]){width:270px!important;min-width:240px!important;max-width:calc(100vw - 24px)!important;padding:6px!important;border:1px solid #e2e9e6!important;border-radius:10px!important;box-shadow:0 8px 24px #18333b14!important;}
+#stFloatingOverlayPortal [data-testid="stVerticalBlock"]:has(>[class*="st-key-top_section_"], >[class*="st-key-nav_"]){gap:2px!important;height:auto!important;}
+#stFloatingOverlayPortal :is([class*="st-key-top_section_"],[class*="st-key-nav_"]){height:auto!important;min-height:0!important;margin:0!important;}
+#stFloatingOverlayPortal :is([class*="st-key-top_section_"],[class*="st-key-nav_"]) button{height:36px!important;min-height:36px!important;max-height:none!important;padding:8px 12px!important;display:flex!important;justify-content:flex-start!important;align-items:center!important;border-radius:5px!important;text-align:left!important;}
+#stFloatingOverlayPortal :is([class*="st-key-top_section_"],[class*="st-key-nav_"]) button p{font:400 13px/1.4 Inter,Arial,sans-serif!important;text-align:left!important;margin:0!important;}
+#stFloatingOverlayPortal :is([class*="st-key-top_section_"],[class*="st-key-nav_"]) button:hover{background:#edf5f2!important;color:#087f6b!important;}
+@media(pointer:coarse){#stFloatingOverlayPortal :is([class*="st-key-top_section_"],[class*="st-key-nav_"]) button{height:44px!important;min-height:44px!important;}}
 '''
