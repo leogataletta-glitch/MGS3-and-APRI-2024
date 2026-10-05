@@ -261,7 +261,7 @@ __LEAFLET__
  }
  /* Le fond marin blanc prolonge la page ; la terre reste grise. */
  .leaflet-container{background:#edf4f9;border-radius:12px;font-family:inherit}
- .leaflet-control-scale-line,.maplibregl-ctrl-scale{text-align:center!important}
+ .leaflet-control-scale-line,.maplibregl-ctrl-scale{text-align:center!important;background:transparent!important;}
  /* --- le panneau de couches ------------------------------------------- */
  #panneau{position:absolute;top:0;right:0;bottom:0;width:286px;
    background:#edf4f9;border:0 solid #dbe3ec;border-radius:0;

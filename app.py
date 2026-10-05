@@ -2650,7 +2650,8 @@ with _c_contenu:
     import design_commun
     if app_mode != MODE_PORTAIL:
         design_commun.appliquer()
-        design_commun.entete(app_mode, i18n.get_lang() == "fr")
+        if app_mode != MODE_ACCUEIL:
+            design_commun.entete(app_mode, i18n.get_lang() == "fr")
     if app_mode == MODE_PORTAIL:
         # L'ACCUEIL EST CELUI QUI A ÉTÉ RETENU. Les deux ont vécu côte à côte
         # le temps de trancher ; le premier — l'escalier de quatre nombres et
