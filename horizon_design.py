@@ -12,7 +12,7 @@ def prepare():
 def apply():
     r = '#root ' + '.stApp' * 64
     z = r + ' .st-key-zone_page'
-    css = CSS.replace('__R__', r).replace('__Z__', z)
+    css = CSS.replace('__R__', r).replace('__Z__', z).replace('\n', ' ')
     st.markdown('<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>' + css + '</style>', unsafe_allow_html=True)
 
 
