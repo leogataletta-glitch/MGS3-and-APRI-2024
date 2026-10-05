@@ -31,6 +31,7 @@ def selector():
             }
             structure_labels = dict(zip(['current', 'editorial', 'studio', 'atlas'], structures.get(lang, structures['en'])))
             structure_labels.update({'preview_journal': 'Carnet de terrain · maquette', 'preview_portraits': 'Portraits croisés · maquette', 'preview_lab': 'Question → Réponse · maquette'})
+            structure_labels['preview_horizon'] = 'APRI Horizon · maquette'
             st.selectbox('Structure', list(structure_labels), format_func=structure_labels.get, key='apri_structure_choice')
             st.selectbox(title, list(PALETTES), format_func=labels.get, key='apri_palette_choice')
     st.markdown('''<style>
@@ -47,7 +48,7 @@ def render_preview():
     from pathlib import Path
     import streamlit.components.v1 as components
     variant = st.session_state['apri_structure_choice']
-    index = {'preview_journal': 0, 'preview_portraits': 1, 'preview_lab': 2}[variant]
+    index = {'preview_journal': 0, 'preview_portraits': 1, 'preview_lab': 2}.get(variant, 0)
     r = '#root ' + '.stApp' * 60
     st.markdown(f'''<style>
     {r} div[data-testid="stColumn"]:has(.st-key-zone_nav){{display:none!important;}}
@@ -58,6 +59,11 @@ def render_preview():
     {r} div[data-testid="stHorizontalBlock"]:has(.st-key-zone_page){{height:auto!important;}}
     </style>''', unsafe_allow_html=True)
     st.caption('APERÇU DE DESIGN · Données fictives · Changez de maquette dans Apparence, en bas à droite.')
+    if variant == 'preview_horizon':
+        fragment = Path(__file__).with_name('apri_horizon.html').read_text(encoding='utf-8')
+        wrapper = '<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html{color-scheme:light}body{margin:0;background:white}</style></head><body>'
+        components.html(wrapper + fragment + '</body></html>', height=1150, scrolling=True)
+        return
     fragment = Path(__file__).with_name('apri_design_previews.html').read_text(encoding='utf-8')
     # Static preview carries its own controls and uses no host-side APIs.
     start = fragment.find("root.querySelectorAll('.concept').forEach(shell=>")
