@@ -57,7 +57,7 @@ const handler=e=>{
  if(scroller!==d.scrollingElement&&!scroller.matches('[data-testid="stAppViewContainer"],[data-testid="stMain"]')&&!scroller.querySelector('.st-key-zone_page')){reset();return;}
  const dir=Math.sign(e.deltaY),now=Date.now();
  if(!dir)return;
- const edge=page==='portail'||(dir>0?scroller.scrollTop+scroller.clientHeight>=scroller.scrollHeight-6:scroller.scrollTop<=6);
+ const edge=e.fromMap||page==='portail'||(dir>0?scroller.scrollTop+scroller.clientHeight>=scroller.scrollHeight-6:scroller.scrollTop<=6);
  if(!edge){reset();return;}
  if(dir!==direction||now-last>900){reset();direction=dir;}
  last=now;
@@ -69,5 +69,12 @@ const handler=e=>{
  if(b&&!b.disabled){locked=true;b.click();}else reset();
 };
 d.addEventListener('wheel',handler,{passive:true,capture:true});
-d.__apriWheelCleanup=()=>d.removeEventListener('wheel',handler,true);
+const receive=e=>{
+ if(e.data?.type!=='apri-map-wheel'||page!=='accueil')return;
+ const frame=Array.from(d.querySelectorAll('.st-key-zone_page iframe')).find(f=>f.contentWindow===e.source);
+ if(!frame||!Number.isFinite(e.data.dy)||!Number.isFinite(e.data.dx))return;
+ handler({target:frame.parentElement,deltaY:e.data.dy,deltaX:e.data.dx,deltaMode:e.data.mode,fromMap:true});
+};
+w.addEventListener('message',receive);
+d.__apriWheelCleanup=()=>{d.removeEventListener('wheel',handler,true);w.removeEventListener('message',receive);};
 '''

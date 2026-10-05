@@ -1,5 +1,16 @@
 /* One terrain map with two camera presets; Leaflet remains the fallback. */
 (async function(){
+ // Forward ordinary wheel gestures from the embedded map to its page shell.
+ // Ctrl+wheel retains map zoom; the layer panel keeps its own scrolling.
+ carte.scrollWheelZoom.disable();
+ document.addEventListener('wheel',e=>{
+  if(e.target.closest('#panneau'))return;
+  const zoom=e.ctrlKey||e.metaKey;
+  if(window.apriTerrain){if(zoom)window.apriTerrain.scrollZoom.enable();else window.apriTerrain.scrollZoom.disable();}
+  if(zoom){carte.scrollWheelZoom.enable();return;}
+  carte.scrollWheelZoom.disable();
+  window.parent.postMessage({type:'apri-map-wheel',dy:e.deltaY,dx:e.deltaX,mode:e.deltaMode},'*');
+ },{capture:true,passive:true});
  const fr=L_.legend==='Légende';
  const controls=document.createElement('div');controls.className='boutons';
  const top=document.createElement('button'),tilt=document.createElement('button'),atlas=document.createElement('button');
@@ -57,6 +68,7 @@
     relief:raster('https://a.tile.opentopomap.org/{z}/{x}/{y}.png','© OpenTopoMap, © OpenStreetMap',17),
     dem:{type:'raster-dem',tiles:[installerHD?'aprihd://be/{z}/{x}/{y}':'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],encoding:'terrarium',tileSize:256,maxzoom:installerHD?17:15,attribution:'Terrain © Mapzen / AWS Open Data'}
    },layers:[{id:'background',type:'background',paint:{'background-color':'#edf4f9'}},...['sat','plan','relief'].map(id=>({id,type:'raster',source:id,layout:{visibility:id==='sat'?'visible':'none'}}))],terrain:{source:'dem',exaggeration:1}}});
+  gl.scrollZoom.disable();
   gl.addControl(new m.NavigationControl({visualizePitch:true}),'top-left');gl.addControl(new m.ScaleControl({unit:'metric'}),'bottom-left');
   gl.getCanvas().addEventListener('webglcontextlost',fallback);
   const mapResize=new ResizeObserver(()=>{gl.resize();carte.invalidateSize();});mapResize.observe(host);
