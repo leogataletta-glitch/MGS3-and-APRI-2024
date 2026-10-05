@@ -7,10 +7,10 @@
  atlas.textContent=fr?'Style atlas 2D':'2D atlas style';
  top.disabled=tilt.disabled=atlas.disabled=true;controls.append(top,tilt,atlas);
  document.querySelector('#panneau .tete').append(controls);
- const note=document.createElement('div');note.setAttribute('role','status');note.style.cssText='font-size:11px;color:#587264;padding-top:6px';
+ const note=document.createElement('div');note.setAttribute('role','status');note.style.cssText='font-size:11px;color:#587082;padding-top:6px';
  note.textContent=fr?'Chargement du relief…':'Loading terrain…';controls.after(note);
  const css=document.createElement('link');css.rel='stylesheet';css.href='https://unpkg.com/maplibre-gl@6.9.0/dist/maplibre-gl.css';document.head.append(css);
- const styles=document.createElement('style');styles.textContent='#carte3d{position:absolute;left:0;top:0;bottom:0;right:0;border-radius:0;overflow:hidden;visibility:hidden}.maplibregl-popup-content{font:12px system-ui;color:#234c3e}.maplibregl-ctrl-attrib{font-size:10px}#panneau button[aria-pressed="true"]{background:#dceee3;border-color:#62967c;color:#164a35}@media(max-width:620px){#carte,#carte3d{right:0;bottom:50%}#panneau{height:48%;overflow-y:auto}#panneau .tete{flex-shrink:0}#liste{overflow:visible;flex:none}}';document.head.append(styles);
+ const styles=document.createElement('style');styles.textContent='#carte3d{position:absolute;left:0;top:0;bottom:0;right:0;border-radius:0;overflow:hidden;visibility:hidden}.maplibregl-popup-content{font:12px system-ui;color:#234c3e}.maplibregl-ctrl-attrib{font-size:10px}#panneau button[aria-pressed="true"]{background:#dcebf7;border-color:#6c9fbe;color:#173e59}@media(max-width:620px){#carte,#carte3d{right:0;bottom:50%}#panneau{height:48%;overflow-y:auto}#panneau .tete{flex-shrink:0}#liste{overflow:visible;flex:none}}';document.head.append(styles);
  const host=document.createElement('div');host.id='carte3d';document.getElementById('carte').after(host);
  // Streamlit's initial iframe height is only a fallback: fill the viewport.
  try{
@@ -29,16 +29,16 @@
   }
  }catch(error){/* Cross-origin embedding retains the initial usable height. */}
  const polish=document.createElement('style');polish.textContent=`
- #panneau{font-family:system-ui,sans-serif;color:#294d40}
+ #panneau{font-family:system-ui,sans-serif;color:#294658}
  #panneau .ligne .lib{font-size:13px;line-height:1.4}#panneau .ligne{min-height:30px}
- #panneau button{font-size:12px;min-height:30px}#panneau .titre{color:#345e4d;font-size:12px}
- #panneau input[type=checkbox],#panneau input[type=radio]{accent-color:#27694e;width:15px;height:15px}
- #panneau :focus-visible{outline:2px solid #27694e;outline-offset:3px}
- .map-camera{margin-top:10px;padding:9px 10px;border-radius:9px;background:#f3f7f4}
- .map-camera summary{font-size:12px;font-weight:600;cursor:pointer;color:#2c604b}
- .map-explore{display:block;margin:6px 8px 12px;font-size:12px;font-weight:600;color:#315d4a}
- .map-explore select{display:block;margin-top:7px;padding:9px;width:100%;border:1px solid #d8e5dc;border-radius:8px;background:white;color:#284c3e;font:13px system-ui}
- #liste{scrollbar-width:thin;scrollbar-color:#b5c9bc transparent}
+ #panneau button{font-size:12px;min-height:30px}#panneau .titre{color:#34566e;font-size:12px}
+ #panneau input[type=checkbox],#panneau input[type=radio]{accent-color:#397fa3;width:15px;height:15px}
+ #panneau :focus-visible{outline:2px solid #397fa3;outline-offset:3px}
+ .map-camera{margin-top:10px;padding:9px 10px;border-radius:9px;background:#edf4f9}
+ .map-camera summary{font-size:12px;font-weight:600;cursor:pointer;color:#2c5875}
+ .map-explore{display:block;margin:6px 8px 12px;font-size:12px;font-weight:600;color:#315970}
+ .map-explore select{display:block;margin-top:7px;padding:9px;width:100%;border:1px solid #d1e0ec;border-radius:8px;background:white;color:#28485e;font:13px system-ui}
+ #liste{scrollbar-width:thin;scrollbar-color:#b5c8d8 transparent}
  .maplibregl-popup-content{border-radius:10px;padding:14px;box-shadow:0 4px 18px #234c3e22}
  `;document.head.append(polish);
  let gl,ready=false,failed=false;
@@ -98,7 +98,7 @@
    gl.on('click',e=>{if(window.apriMeasure?.active())return;const hits=gl.queryRenderedFeatures(e.point,{layers:['pts_l-circle','pts_m-circle','sections-fill','villes-circle','ap-fill']});if(!hits.length)return;const p=hits[0].properties;if(hits[0].layer.id==='ap-fill'){new m.Popup({maxWidth:'340px'}).setLngLat(e.lngLat).setHTML(protectedPopup(p)).addTo(gl);return;}const body=document.createElement('div');body.textContent=p.numero?('n° '+p.numero+' · '+p.section+' · '+p.paysage):(p.section||p.nom||'');new m.Popup().setLngLat(e.lngLat).setDOMContent(body).addTo(gl);});
    ready=true;clearTimeout(timeout);window.apriTerrain=gl;sync();window.apriMeasure?.install(gl);
    const positionBox=document.createElement('div');positionBox.setAttribute('role','group');positionBox.setAttribute('aria-label',fr?'Position sur la carte':'Map position');
-   positionBox.style.cssText='margin:8px 10px;padding:11px;background:#f3f7f4;border-radius:9px;font:12px/1.6 system-ui;color:#315d4a;font-variant-numeric:tabular-nums';
+   positionBox.style.cssText='margin:8px 10px;padding:11px;background:#edf4f9;border-radius:9px;font:12px/1.6 system-ui;color:#315970;font-variant-numeric:tabular-nums';
    const place=document.createElement('strong'),altitude=document.createElement('div'),coordinates=document.createElement('div');
    place.textContent=fr?'Survolez la carte':'Move over the map';altitude.textContent=fr?'Altitude estimée : —':'Estimated elevation: —';coordinates.textContent='WGS84 · —';positionBox.append(place,altitude,coordinates);document.getElementById('liste').prepend(positionBox);
    const contains=(ring,x,y)=>{let inside=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const a=ring[i],b=ring[j];if((a[1]>y)!==(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])inside=!inside;}return inside;};
@@ -136,7 +136,7 @@
    explore.append(destination);document.getElementById('liste').prepend(explore);
    const detail=document.createElement('details');detail.className='map-camera';
    const summary=document.createElement('summary');summary.textContent=fr?'Réglages du relief':'Terrain settings';detail.append(summary);controls.after(detail);detail.append(note);
-   const compass=document.createElement('div');compass.style.cssText='margin-top:10px;font-size:12px;color:#315d4a';
+   const compass=document.createElement('div');compass.style.cssText='margin-top:10px;font-size:12px;color:#315970';
    const compassTitle=document.createElement('div');compassTitle.textContent=fr?'Orientation · en haut de la carte':'Orientation · top of the map';
    const compassButtons=document.createElement('div');compassButtons.className='boutons';
    const directions=(fr?['Nord','Est','Sud','Ouest']:['North','East','South','West']).map((name,i)=>{
@@ -146,9 +146,9 @@
    compass.append(compassTitle,compassButtons);controls.after(compass);
    note.textContent=fr?'Maintenez le clic droit et glissez verticalement pour incliner, horizontalement pour tourner.':'Hold the right mouse button: drag vertically to tilt, horizontally to rotate.';
    function slider(label,min,max,step,value,format,change){
-    const box=document.createElement('label');box.style.cssText='display:block;font-size:11px;color:#365b49;margin-top:9px';
+    const box=document.createElement('label');box.style.cssText='display:block;font-size:11px;color:#36566f;margin-top:9px';
     const text=document.createElement('span'),out=document.createElement('output'),input=document.createElement('input');
-    text.textContent=label+' ';out.textContent=format(value);input.type='range';input.min=min;input.max=max;input.step=step;input.value=value;input.setAttribute('aria-label',label);input.style.cssText='display:block;width:100%;accent-color:#27694e;cursor:ew-resize';
+    text.textContent=label+' ';out.textContent=format(value);input.type='range';input.min=min;input.max=max;input.step=step;input.value=value;input.setAttribute('aria-label',label);input.style.cssText='display:block;width:100%;accent-color:#397fa3;cursor:ew-resize';
     input.oninput=()=>{out.textContent=format(+input.value);change(+input.value);};box.append(text,out,input);note.before(box);return {input,out,format};
    }
    const angle=slider(fr?'Inclinaison':'Tilt',0,80,1,0,v=>Math.round(v)+'°',v=>{gl.stop();gl.setPitch(v);});

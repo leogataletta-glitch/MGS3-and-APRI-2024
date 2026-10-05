@@ -27,6 +27,7 @@ def apply():
     css += shared + " .st-key-zone_page :is(h1,h2,h3){color:#123746!important;}"
     css += shared + " .st-key-zone_page button[kind='primary']{background:#397FA3!important;border-color:#397FA3!important;color:white!important;}"
     css += shared + " .st-key-zone_page [data-baseweb='select']>div{background:#E7F0F5!important;border-color:#c8dce7!important;}"
+    css += shared + " .st-key-zone_page," + shared + " div[data-testid='stColumn']:has(.st-key-zone_page){background:#EDF4F9!important;}"
     st.markdown('<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>' + css + '</style>', unsafe_allow_html=True)
 
 
