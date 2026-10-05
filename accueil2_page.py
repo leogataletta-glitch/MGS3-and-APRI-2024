@@ -513,6 +513,9 @@ def render():
     css += _r + ".st-key-photo_home_hero{min-height:100svh!important;padding-top:110px!important;padding-bottom:190px!important;}"
     css += _r + ".st-key-photo_home_cta{margin-top:-155px!important;min-height:155px!important;background:rgba(15,48,63,.76)!important;position:relative!important;z-index:2!important;backdrop-filter:blur(5px)!important;}"
     css += root + " [data-testid='stMainBlockContainer']{padding-bottom:0!important;}" + _r + "{background:#173e4c!important;}"
+    css += root + " .horizon-apri{filter:url('#apri-white-mark')!important;mix-blend-mode:normal!important;}"
+    css += root + " div[data-testid='stColumn']:has(.st-key-zone_page)," + root + " [data-testid='stMainBlockContainer']{background:#173e4c!important;margin-bottom:0!important;padding-bottom:0!important;}"
+    st.markdown('<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="apri-white-mark" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1 -1 -1 0 3"/></filter></svg>',unsafe_allow_html=True)
     st.markdown("<style>" + css + "</style>",unsafe_allow_html=True)
     with st.container(key="photo_home_hero"):
         st.markdown('<div class="photo-home-kicker">SI APRI</div><h1 class="photo-home-title">'+title+'</h1><p class="photo-home-intro">'+intro+'</p>',unsafe_allow_html=True)
