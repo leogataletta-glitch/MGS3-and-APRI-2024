@@ -2578,7 +2578,8 @@ with _menu_mobile:
                 _entree_nav(_mode, _icone, prefix="mobile_nav")
 
 with _zone_nav:
-    st.markdown('<div class="horizon-identity"><svg class="apri-symbol" style="display:none" width="36" height="36" viewBox="0 0 100 100" role="img" aria-label="APRI"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="50" cy="50" r="44"/><path d="M50 50 C24 47 24 8 50 8 C76 8 76 47 50 50 Z M50 50 C65 29 95 49 83 71 C71 94 41 77 50 50 Z M50 50 C59 77 29 94 17 71 C5 49 35 29 50 50 Z"/></g></svg><img class="horizon-apri" alt="APRI" src="data:image/png;base64,' + assets.LOGO_APRI + '"><img class="horizon-unep" style="height:44px;width:auto" alt="UN Environment Programme" src="data:image/png;base64,' + assets.LOGO_UNEP_BLANC + '"></div>', unsafe_allow_html=True)
+    import navigation_scroll
+    st.markdown(navigation_scroll.identity(assets.LOGO_UNEP_BLANC), unsafe_allow_html=True)
     _entree_nav(MODE_PORTAIL, "maison")
     for _mode in (MODE_ACCUEIL, MODE_METHODO, MODE_DIMENSIONS, MODE_BOUCLES, MODE_ACTIONS):
         _label = publication_web.tr(("Analyser les résultats", "Analyse results", "Analizar resultados", "Analize rezilta yo")) if _mode == MODE_DIMENSIONS else _locale_text(LIBELLE_MODE[_mode])
@@ -2594,6 +2595,9 @@ with _zone_nav:
     langue_nav.render(_changer_langue)
 
 
+
+import navigation_scroll
+navigation_scroll.render(st.session_state['app_mode'], [MODE_PORTAIL, MODE_ACCUEIL, MODE_METHODO, MODE_DIMENSIONS, MODE_BOUCLES, MODE_ACTIONS, MODE_DONNEES, MODE_APROPOS, MODE_CONTACT], _bascule)
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
 # l'aiguillage, pour que chaque page se dessine dedans sans avoir à savoir
