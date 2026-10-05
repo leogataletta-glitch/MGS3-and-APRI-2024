@@ -85,4 +85,17 @@ __Z__ .apri-page-heading,__Z__ .st-key-a2_welcome{animation:horizon-arrive .35s 
 @keyframes horizon-arrive{from{opacity:.6;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){__Z__ *{animation:none!important;transition:none!important;}}
 @media(max-width:1000px){__R__ div[data-testid="stColumn"]:has(.st-key-zone_nav){display:none!important;}__Z__{padding:16px 18px 32px!important;}__R__ .st-key-menu_mobile{padding:8px 18px!important;}__Z__ .st-key-a2_welcome{padding:20px!important;}__Z__ .a2-welcome-art img{height:200px!important;}}
+
+/* Compact home: one brand, partner retained, illustration fades into white. */
+__Z__ .a2-brand-row{min-height:40px!important;margin:0 0 10px!important;padding:0!important;justify-content:flex-end!important;}
+__Z__ .a2-brand-row .a2-marque,__Z__ .a2-brand-row>.a2-inst{display:none!important;}
+__Z__ .a2-brand-row .a2-partner{height:40px!important;width:auto!important;margin-left:auto!important;}
+__Z__:has(.st-key-a2_welcome){padding-top:12px!important;}
+__Z__ .st-key-a2_welcome{background:white!important;padding:12px 0 24px!important;border-radius:0!important;margin:0!important;}
+__Z__ .a2-welcome-title{font-size:clamp(28px,2.6vw,38px)!important;max-width:25ch!important;}
+__Z__ .a2-welcome-art{background:white!important;overflow:hidden!important;}
+__Z__ .a2-welcome-art img{height:250px!important;width:100%!important;object-fit:cover!important;border-radius:0!important;mask-image:linear-gradient(to right,transparent,black 14%),linear-gradient(to bottom,transparent,black 12%,black 85%,transparent);mask-composite:intersect;}
+__Z__ .a2-intro{max-width:64ch!important;font-size:14px!important;line-height:1.65!important;}
+__Z__ .a2-chif{padding:16px 0!important;margin:0 0 16px!important;}
+@media(max-width:700px){__Z__ .a2-welcome-art img{height:180px!important;}__Z__ .st-key-a2_welcome{padding:8px 0 16px!important;}}
 '''
