@@ -491,13 +491,13 @@ def render():
     with st.container(key="home_layout_compare"):
         layout = st.selectbox(
             _locale_text("Comparer les propositions" if i18n.get_lang() == "fr" else "Compare home layouts"),
-            ["map", "doors", "landscape"], key="home_layout_preview",
-            format_func=lambda v: {"map":"La carte au centre", "doors":"Quatre portes d’entrée", "landscape":"Le paysage comme accueil"}[v])
+            ["landscape", "hero_map", "landscape_bottom", "hero_doors", "map", "doors"], key="home_layout_preview",
+            format_func=lambda v: {"map":"La carte au centre", "doors":"Quatre portes d’entrée", "landscape":"Le paysage comme accueil", "hero_map":"La carte à la place du paysage", "landscape_bottom":"Paysage et quatre accès alignés en bas", "hero_doors":"Les quatre accès à la place du paysage"}[v])
     _r = "#root " + ".stApp" * 75 + " .st-key-zone_page "
     _style = _r + ".st-key-home_layout_compare{max-width:340px!important;margin:0 0 16px!important;}"
     if layout == "doors":
         _style += _r + ".a2-welcome-title{font-size:30px!important;}" + _r + ".a2-welcome-art img{height:150px!important;}"
-    elif layout == "landscape":
+    elif layout in ("landscape", "landscape_bottom"):
         _style += _r + ".st-key-a2_welcome{background:#f0f5f3 url('app/static/accueil_aquarelle_haiti.webp') right center/60% auto no-repeat!important;padding:28px!important;border-radius:14px!important;min-height:270px!important;}"
         _style += _r + ".a2-welcome-art{visibility:hidden!important;}" + _r + ".a2-welcome-title{font-size:34px!important;}"
     else:
@@ -550,7 +550,13 @@ def render():
                     st.session_state["app_mode"] = "dimensions"
                     st.rerun()
         with art:
-            st.markdown(f'<div class="a2-welcome-art"><img src="{aquarelle}" alt=""></div>',unsafe_allow_html=True)
+            if layout == "hero_map":
+                if not carte_zoom.render(hauteur=340):
+                    st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',unsafe_allow_html=True)
+            elif layout == "hero_doors":
+                hero_links = st.container()
+            else:
+                st.markdown(f'<div class="a2-welcome-art"><img src="{aquarelle}" alt=""></div>',unsafe_allow_html=True)
     st.markdown(_WELCOME_STYLE.replace('__ROOT__', '.stApp' * 40), unsafe_allow_html=True)
 
     # Four photo destinations, followed by the full-width territory map.
@@ -618,17 +624,27 @@ def render():
     with st.container(key='a2_map_links'):
         if layout == "map":
             map_col, links_col = st.columns([1.5,1], gap='large')
+        elif layout == "hero_doors":
+            links_col = hero_links
+            map_col = st.container()
+        elif layout == "hero_map":
+            links_col = st.container()
+            map_col = None
+        elif layout == "landscape_bottom":
+            links_col = st.container()
+            map_col = st.container()
         else:
             links_col = st.container()
             map_col = st.container()
-        with map_col:
-            st.markdown(accueil_apri.STYLE + f'<div class="a2-portes-t">{_e(T("a2_carte_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
-            if not carte_zoom.render(hauteur=480 if layout == "map" else 380):
-                st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',unsafe_allow_html=True)
+        if map_col is not None:
+            with map_col:
+                st.markdown(accueil_apri.STYLE + f'<div class="a2-portes-t">{_e(T("a2_carte_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
+                if not carte_zoom.render(hauteur=480 if layout == "map" else 380):
+                    st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',unsafe_allow_html=True)
         with links_col:
             st.markdown(f'<div class="a2-portes-t">{_e(T("a2_portes_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
             with st.container(key='a2_photo_links'):
-                per_row = 2 if layout == "map" else 4
+                per_row = 2 if layout in ("map", "hero_doors") else 4
                 for start in range(0, 4, per_row):
                     for col, (code,title,detail,photo,position,alt) in zip(st.columns(per_row),entries[start:start+per_row]):
                         with col:
