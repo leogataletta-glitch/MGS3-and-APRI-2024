@@ -23,7 +23,7 @@ def render(current, order, go):
     .st-key-wheel_previous,.st-key-wheel_next{display:none!important;}
     </style>''', unsafe_allow_html=True)
     header = '#root ' + '.stApp' * 95
-    st.markdown('<style>' + header + " [data-testid='stColumn']:has(.st-key-zone_nav){background-image:" + BACKGROUND + "!important;background-size:100vw auto!important;background-position:center top!important;background-repeat:no-repeat!important;border-bottom:1px solid #ffffff22!important;}" + header + " .st-key-zone_nav{background:transparent!important;}" + header + " .st-key-zone_nav button{background:transparent!important;color:white!important;}" + header + " .st-key-zone_nav button[kind='primary']{background:#ffffff18!important;}" + '</style>', unsafe_allow_html=True)
+    st.markdown('<style>' + header + " [data-testid='stColumn']:has(.st-key-zone_nav){background-image:" + BACKGROUND + "!important;background-size:100vw auto!important;background-position:center top!important;background-origin:border-box!important;background-clip:border-box!important;background-repeat:no-repeat!important;border-bottom:1px solid #ffffff22!important;}" + header + " .st-key-zone_nav{background:transparent!important;}" + header + " .st-key-zone_nav button{background:transparent!important;color:white!important;}" + header + " .st-key-zone_nav button[kind='primary']{background:#ffffff18!important;}" + '</style>', unsafe_allow_html=True)
     if current not in order:
         return
     st.markdown('<style>@keyframes apri_reveal_' + current + '{from{opacity:0}to{opacity:1}} .st-key-zone_page{animation:apri_reveal_' + current + ' .45s ease-out;} @media(prefers-reduced-motion:reduce){.st-key-zone_page{animation:none!important}}</style>', unsafe_allow_html=True)
