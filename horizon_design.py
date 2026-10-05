@@ -13,6 +13,20 @@ def apply():
     r = '#root ' + '.stApp' * 64
     z = r + ' .st-key-zone_page'
     css = CSS.replace('__R__', r).replace('__Z__', z).replace('\n', ' ')
+    for old, new in {"#e8f4ef":"#E7F0F5", "#e8f2ec":"#E7F0F5", "#c9e3d9":"#c8dce7", "#087f6b":"#397FA3", "#a63243":"#397FA3", "#f3f7f6":"#F5F8FA"}.items():
+        css = css.replace(old, new)
+    shared = '#root ' + '.stApp' * 70
+    css += shared + " [data-testid='stMain']{background:#F5F8FA!important;}"
+    css += shared + " div[data-testid='stColumn']:has(.st-key-zone_nav)," + shared + " .st-key-zone_nav{background:#123746!important;}"
+    css += shared + " .st-key-zone_nav button{background:transparent!important;}" + shared + " .st-key-zone_nav button p," + shared + " .st-key-zone_nav button span{color:white!important;}"
+    css += shared + " .st-key-zone_nav button[kind='primary']{background:#397FA3!important;}"
+    css += shared + " .horizon-apri{display:none!important;}" + shared + " .horizon-identity{display:grid!important;grid-template-columns:42px auto!important;grid-template-rows:28px 12px!important;column-gap:18px!important;row-gap:3px!important;align-items:center!important;}"
+    css += shared + " .apri-symbol{display:block!important;grid-column:1!important;grid-row:1!important;width:28px!important;height:28px!important;justify-self:center!important;color:white!important;filter:none!important;}"
+    css += shared + " .horizon-identity::after{content:'APRI';grid-column:1!important;grid-row:2!important;justify-self:center!important;font:400 10px/1 Arial,sans-serif!important;letter-spacing:1.5px!important;color:white!important;}"
+    css += shared + " .horizon-unep{grid-column:2!important;grid-row:1 / 3!important;height:38px!important;filter:brightness(0) invert(1)!important;}"
+    css += shared + " .st-key-zone_page :is(h1,h2,h3){color:#123746!important;}"
+    css += shared + " .st-key-zone_page button[kind='primary']{background:#397FA3!important;border-color:#397FA3!important;color:white!important;}"
+    css += shared + " .st-key-zone_page [data-baseweb='select']>div{background:#E7F0F5!important;border-color:#c8dce7!important;}"
     st.markdown('<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>' + css + '</style>', unsafe_allow_html=True)
 
 
