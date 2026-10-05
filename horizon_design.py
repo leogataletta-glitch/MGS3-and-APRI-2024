@@ -98,4 +98,13 @@ __Z__ .a2-welcome-art img{height:250px!important;width:100%!important;object-fit
 __Z__ .a2-intro{max-width:64ch!important;font-size:14px!important;line-height:1.65!important;}
 __Z__ .a2-chif{padding:16px 0!important;margin:0 0 16px!important;}
 @media(max-width:700px){__Z__ .a2-welcome-art img{height:180px!important;}__Z__ .st-key-a2_welcome{padding:8px 0 16px!important;}}
+
+/* Navigation popovers are mounted outside .stApp, in the floating portal. */
+@media(min-width:1001px){
+#stFloatingOverlayPortal [class*="st-key-nav_"] button{min-height:36px!important;height:36px!important;padding:7px 12px!important;border:0!important;border-radius:6px!important;box-shadow:none!important;background:white!important;justify-content:flex-start!important;width:100%!important;}
+#stFloatingOverlayPortal [class*="st-key-nav_"] button p{font:500 13px/1.4 Inter,Arial,sans-serif!important;color:#18333b!important;margin:0!important;}
+#stFloatingOverlayPortal [class*="st-key-nav_"] button[kind="primary"],#stFloatingOverlayPortal [class*="st-key-nav_"] button:hover{background:#e8f4ef!important;}
+#stFloatingOverlayPortal [data-testid="stPopoverBody"]:has([class*="st-key-nav_"]){padding:8px!important;min-width:220px!important;}
+#stFloatingOverlayPortal [data-testid="stVerticalBlock"]:has(>[class*="st-key-nav_"]){gap:4px!important;}
+}
 '''
