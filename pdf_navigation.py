@@ -4,14 +4,14 @@ import streamlit.components.v1 as components
 from publication_web import tr
 
 
-def render():
+def render(reader_key="cad_methodology_reader"):
     labels = [tr(("Monter dans le document", "Scroll document up", "Subir en el documento", "Monte nan dokiman an")),
               tr(("Descendre dans le document", "Scroll document down", "Bajar en el documento", "Desann nan dokiman an"))]
     components.html('''<script>
     const labels = LABELS;
     let attempts = 0;
     function attach() {
-      const host = parent.document.querySelector('.st-key-cad_methodology_reader [data-testid="stBidiComponentIsolated"]');
+      const host = parent.document.querySelector('.st-key-READER_KEY [data-testid="stBidiComponentIsolated"]');
       const root = host && host.shadowRoot;
       const scroller = root && root.querySelector('[data-testid="pdf-content"]');
       if (!scroller) { if (++attempts < 100) setTimeout(attach, 150); return; }
@@ -41,4 +41,4 @@ def render():
       root.querySelector('[data-testid="pdf-container"]').append(bar);
     }
     attach();
-    </script>'''.replace('LABELS', json.dumps(labels, ensure_ascii=False)), height=0)
+    </script>'''.replace('LABELS', json.dumps(labels, ensure_ascii=False)).replace('READER_KEY', reader_key), height=0)

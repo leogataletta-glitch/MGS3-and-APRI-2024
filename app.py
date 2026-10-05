@@ -2747,35 +2747,8 @@ with _c_contenu:
                 import institutions_page
                 institutions_page.render((_theme_col, _question_col))
             elif _src == "biodiversite":
-                _msg = T("ra_attente_inst" if _src == "institutions"
-                         else "ra_attente_bio")
-                st.markdown(
-                    f'<div style="border:1px solid #e4e2de;'
-                    f'background:#faf9f7;border-radius:12px;'
-                    f'padding:20px 22px;margin:6px 0 4px;max-width:96ch">'
-                    f'<div style="font-size:12px;letter-spacing:.09em;'
-                    f'text-transform:uppercase;color:#8a7f6d;'
-                    f'font-weight:600;margin-bottom:7px">'
-                    f'{T("ra_attente_t")}</div>'
-                    f'<p style="margin:0;font-size:14px;line-height:1.6;'
-                    f'color:#3c4761;text-align:justify">{_msg}</p>'
-                    f'</div>', unsafe_allow_html=True)
-                # L'ATTENTE SE CHIFFRE. Dire « pas encore chargé » et
-                # s'arrêter là laisse croire que rien n'est su ; le chantier
-                # de biodiversité de terrain sait exactement quels sept
-                # indicateurs manquent, ce qu'il faut aller mesurer et avec
-                # quoi. C'est la même fonction que la page d'acquisition,
-                # appelée sur ce seul chantier, pour que les deux écrans ne
-                # puissent pas diverger.
-                if _src == "biodiversite":
-                    # LE PROTOCOLE D'ABORD, LE CHANTIER ENSUITE. L'onglet
-                    # n'a pas de chiffre à montrer : la première question
-                    # qu'on s'y pose est ce qu'on va compter et pourquoi ces
-                    # trois taxons-là, et c'est le texte de cadrage qui y
-                    # répond. Le chantier — quels indicateurs, dans quel
-                    # état — vient après.
-                    environnement_cadre.render_terrain()
-                    acquisition_env.render_bloc("terrain")
+                import biodiversite_page
+                biodiversite_page.render((_theme_col, _question_col))
             else:
                 explorateur.render(_cat, mode="brut", controls=(_theme_col, _question_col))
 

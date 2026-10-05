@@ -2803,6 +2803,10 @@ def _v_indicateurs():
                            index=None, placeholder=T("cad_ind_tous"),
                            format_func=_locale_formatter(lambda k: (par_cle[k]["nom"] + " · " + T(par_cle[k]["dim"]))))
 
+    if cle in (47, 48, 49):
+        import biodiversite_page
+        biodiversite_page.indicator_notice(cle)
+
     if vue == "meta":
         _v_metadonnees([par_cle[cle]] if cle is not None else [])
         return
