@@ -181,4 +181,13 @@ __Z__ .st-key-qa_answer{padding:12px 0!important;min-height:400px!important;}
 __Z__ .st-key-qa_answer h2{font-size:clamp(24px,2.2vw,34px)!important;line-height:1.25!important;max-width:40ch!important;margin:0 0 20px!important;}
 __Z__ .st-key-qa_answer [data-testid="stMarkdownContainer"]>p{max-width:75ch;}
 @media(max-width:760px){__Z__ .st-key-qa_workspace>[data-testid="stHorizontalBlock"]{flex-direction:column!important;}__Z__ .st-key-qa_builder{padding:16px!important;}__Z__ .st-key-qa_answer{min-height:0!important;}}
+
+__R__ .horizon-apri{height:42px!important;width:auto!important;}
+__R__ .st-key-zone_nav>div:has(.horizon-identity){margin-right:auto!important;}
+__Z__ .st-key-a2_map_links{margin-top:24px!important;padding-top:20px!important;border-top:1px solid #edf1ef;}
+__Z__ .st-key-a2_map_links>[data-testid="stHorizontalBlock"]{gap:32px!important;align-items:flex-start!important;}
+__Z__ .a2-portes-t{font-size:18px!important;margin-bottom:12px!important;}
+__Z__ .st-key-a2_photo_links{gap:20px!important;}
+__Z__ .apri-partner-footer{display:flex;justify-content:flex-end;margin-top:32px;padding:18px 0;border-top:1px solid #edf1ef;}
+__Z__ .apri-partner-footer img{height:42px;width:auto;filter:brightness(0) saturate(100%) invert(22%) sepia(21%) saturate(1030%) hue-rotate(101deg) brightness(85%);}
 '''

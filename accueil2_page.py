@@ -537,22 +537,6 @@ def render():
             st.markdown(f'<div class="a2-welcome-art"><img src="{aquarelle}" alt=""></div>',unsafe_allow_html=True)
     st.markdown(_WELCOME_STYLE.replace('__ROOT__', '.stApp' * 40), unsafe_allow_html=True)
 
-    # ---- 2 · les quatre nombres ----------------------------------------
-    menages, sections = _chiffres()
-    cases = [
-        (f'{_fmt(menages)}+' if menages else "1 200+", T("a2_c1_x"), None),
-        (str(sections or len(SECTIONS)), T("a2_c2_x"), None),
-        (T("a2_c3_n"), T("a2_c3_x"), T("a2_c3_s")),
-        (T("a2_c4_n"), T("a2_c4_x"), T("a2_c4_s")),
-    ]
-    st.markdown(
-        '<div class="a2-chif">' + "".join(
-            f'<div><div class="a2-n">{_e(n)}</div>'
-            f'<div class="a2-l">{_e(lab)}</div>'
-            + (f'<div class="a2-s">{_e(sous)}</div>' if sous else "")
-            + '</div>'
-            for n, lab, sous in cases) + '</div>', unsafe_allow_html=True)
-
     # Four photo destinations, followed by the full-width territory map.
     fr = i18n.get_lang() == 'fr'
     watercolor = 'app/static/aquarelles_apri_cimes.webp'
@@ -616,7 +600,7 @@ def render():
         .st-key-a2_photo_links button p em{font-size:11px!important;}}
     </style>""",unsafe_allow_html=True)
     with st.container(key='a2_map_links'):
-        map_col, links_col = st.columns([1.32,1],gap='large')
+        map_col, links_col = st.columns([1.15,1],gap='large')
         with map_col:
             st.markdown(accueil_apri.STYLE + f'<div class="a2-portes-t">{_e(T("a2_carte_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
             if not carte_zoom.render():
