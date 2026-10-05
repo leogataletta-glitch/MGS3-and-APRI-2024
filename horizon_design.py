@@ -17,6 +17,10 @@ def apply():
 
 
 CSS = r'''
+__R__ .st-key-zone_nav,__R__ div[data-testid="stColumn"]:has(.st-key-zone_nav){min-height:0!important;}
+__R__ .st-key-zone_nav>div:has(.st-key-navigation_language_desktop){flex:0 0 144px!important;}
+__R__ .st-key-navigation_language_desktop button{padding:4px!important;width:100%!important;}
+
 __R__{--apri-font:Inter,Arial,sans-serif;--apri-green:#087f6b;--apri-ink:#18333b;--apri-text:#18333b;--apri-muted:#586d74;--apri-line:#dce7e4;background:white!important;}
 __R__ :is(p,span,div,a,label,button,input,textarea,select,li,td,th,dt,dd,h1,h2,h3,h4,h5,h6,strong,em,b,small,summary,text,tspan):not([data-testid="stIconMaterial"]):not([class*="material"]):not([aria-hidden="true"]){font-family:Inter,Arial,sans-serif!important;}
 __R__ section[data-testid="stMain"]{height:auto!important;overflow-y:auto!important;}
