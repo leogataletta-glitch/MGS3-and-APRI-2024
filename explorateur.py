@@ -2601,8 +2601,12 @@ def _render_brut(cat, controls=None):
                     placeholder=T("ex_b_choisir_q"), help=T("ex_chercher"),
                     format_func=_locale_formatter(lambda i: libs.get(i, "")))
         if qi is None:
+            st.markdown("## " + _locale_text("Que souhaitez-vous savoir ?" if i18n.get_lang() == "fr" else "What would you like to know?"))
+            st.write(_locale_text("Choisissez une question à gauche pour découvrir les réponses de l’enquête. Vous pourrez ensuite comparer les groupes et affiner votre lecture." if i18n.get_lang() == "fr" else "Choose a question on the left to explore the survey answers. You can then compare groups and refine your analysis."))
             return
         q = next(x for x in vues if x["i"] == qi)
+        st.caption(_locale_text("RÉPONSE À VOTRE QUESTION" if i18n.get_lang() == "fr" else "ANSWER TO YOUR QUESTION"))
+        st.markdown("## " + _locale_text(libs.get(qi, "")))
         answer_col, criterion_col, categories_col, remove_col = st.columns(
             [1.3, 1.3, 2.6, 0.22], vertical_alignment="bottom")
         with answer_col:

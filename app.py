@@ -2755,23 +2755,28 @@ with _c_contenu:
             # lit une fois, sur la page « À propos », pas à chaque ouverture
             # de l'écran d'analyse.
             st.session_state.setdefault("ra_source", "menages")
-            _source_col, _theme_col, _question_col = st.columns([1, 1, 1.5])
-            with _source_col:
-                _src = st.selectbox(
-                    _locale_text(T("ex_b_source")), _srcs, key="ra_source",
-                    format_func=_locale_formatter(lambda c: T("ra_src_" + c))) or "menages"
-
-            if _src == "satellite":
-                environnement_cadre.render_satellite()
-                satellite_page.render()
-            elif _src == "institutions":
-                import institutions_page
-                institutions_page.render((_theme_col, _question_col))
-            elif _src == "biodiversite":
-                import biodiversite_page
-                biodiversite_page.render((_theme_col, _question_col))
-            else:
-                explorateur.render(_cat, mode="brut", controls=(_theme_col, _question_col))
+            with st.container(key="qa_workspace"):
+                _question_panel, _answer_panel = st.columns([0.29, 0.71], gap="large")
+                with _question_panel:
+                    with st.container(key="qa_builder"):
+                        st.markdown("### " + publication_web.tr(("Construire ma question", "Build my question", "Construir mi pregunta", "Bati kesyon mwen")))
+                        st.caption(publication_web.tr(("Choisissez une source, un thème, puis une question.", "Choose a source, a theme, then a question.", "Elija una fuente, un tema y una pregunta.", "Chwazi yon sous, yon tèm ak yon kesyon.")))
+                        _src = st.selectbox(_locale_text(T("ex_b_source")), _srcs, key="ra_source", format_func=_locale_formatter(lambda c: T("ra_src_" + c))) or "menages"
+                        _theme_col = st.container()
+                        _question_col = st.container()
+                with _answer_panel:
+                    with st.container(key="qa_answer"):
+                        if _src == "satellite":
+                            environnement_cadre.render_satellite()
+                            satellite_page.render()
+                        elif _src == "institutions":
+                            import institutions_page
+                            institutions_page.render((_theme_col, _question_col))
+                        elif _src == "biodiversite":
+                            import biodiversite_page
+                            biodiversite_page.render((_theme_col, _question_col))
+                        else:
+                            explorateur.render(_cat, mode="brut", controls=(_theme_col, _question_col))
 
         elif _ra == "scores":
             # LES SCORES SE DEMANDENT, ILS NE SE DÉVERSENT PAS, et le volet

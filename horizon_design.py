@@ -170,4 +170,15 @@ __R__ .st-key-top_menu_dimensions button p{color:white!important;}
 #stFloatingOverlayPortal :is([class*="st-key-top_section_"],[class*="st-key-nav_"]) button p{font:400 13px/1.4 Inter,Arial,sans-serif!important;text-align:left!important;margin:0!important;}
 #stFloatingOverlayPortal :is([class*="st-key-top_section_"],[class*="st-key-nav_"]) button:hover{background:#edf5f2!important;color:#087f6b!important;}
 @media(pointer:coarse){#stFloatingOverlayPortal :is([class*="st-key-top_section_"],[class*="st-key-nav_"]) button{height:44px!important;min-height:44px!important;}}
+
+__Z__ .st-key-qa_workspace>[data-testid="stHorizontalBlock"],__Z__ .st-key-qa_workspace [data-testid="stHorizontalBlock"]:has(>.stColumn .st-key-qa_builder){gap:36px!important;}
+__Z__ [data-testid="stColumn"]:has(>.stVerticalBlock .st-key-qa_builder){min-width:250px!important;}
+__Z__ .st-key-qa_builder{background:#f3f7f6!important;border-radius:12px!important;padding:24px!important;gap:16px!important;}
+__Z__ .st-key-qa_builder h3{font-size:19px!important;font-weight:600!important;line-height:1.3!important;}
+__Z__ .st-key-qa_builder [data-testid="stHorizontalBlock"]{flex-direction:column!important;}
+__Z__ .st-key-qa_builder [data-testid="stColumn"]{width:100%!important;flex:1 1 auto!important;}
+__Z__ .st-key-qa_answer{padding:12px 0!important;min-height:400px!important;}
+__Z__ .st-key-qa_answer h2{font-size:clamp(24px,2.2vw,34px)!important;line-height:1.25!important;max-width:40ch!important;margin:0 0 20px!important;}
+__Z__ .st-key-qa_answer [data-testid="stMarkdownContainer"]>p{max-width:75ch;}
+@media(max-width:760px){__Z__ .st-key-qa_workspace>[data-testid="stHorizontalBlock"]{flex-direction:column!important;}__Z__ .st-key-qa_builder{padding:16px!important;}__Z__ .st-key-qa_answer{min-height:0!important;}}
 '''
