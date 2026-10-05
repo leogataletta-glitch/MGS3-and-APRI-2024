@@ -37,6 +37,8 @@ __R__ .st-key-zone_nav button{width:auto!important;min-height:40px!important;pad
 __R__ .st-key-zone_nav button p{font-size:13px!important;color:#18333b!important;}
 __R__ .st-key-navigation_language_desktop{margin:0 0 0 24px!important;width:144px!important;}
 __R__ .st-key-zone_nav button[kind="primary"]{background:#e8f4ef!important;}
+__R__ .st-key-zone_nav .st-key-navigation_language_desktop button{padding:4px!important;width:100%!important;min-width:0!important;}
+__R__ .st-key-zone_nav .st-key-navigation_language_desktop button p{font-size:10px!important;}
 __R__ .st-key-zone_ruban{display:none!important;}
 __Z__{width:100%!important;max-width:none!important;padding:28px 3vw 48px!important;margin:0!important;background:white!important;}
 __Z__>[data-testid="stVerticalBlock"]{gap:24px!important;}
