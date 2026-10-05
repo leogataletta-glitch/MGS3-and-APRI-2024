@@ -34,7 +34,7 @@ function mesureAire(points){
   if(mode==='area'&&points.length>2)features.push({type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[[...points,points[0]]]}});
   return {type:'FeatureCollection',features};
  }
- function paint(){result.textContent=text();undo.disabled=!points.length;finish.disabled=!drawing||points.length<(mode==='area'?3:2);
+ function paint(){result.textContent=text();undo.disabled=!points.length;finish.disabled=drawing?points.length<(mode==='area'?3:2):!points.length;finish.textContent=drawing?(fr?'Terminer':'Finish'):(fr?'Effacer':'Clear');
   distance.setAttribute('aria-pressed',String(mode==='distance'));area.setAttribute('aria-pressed',String(mode==='area'));
   if(gl)gl.getSource('measurement')?.setData(data());
   leaf.clearLayers();if(!gl){const coords=points.map(p=>[p[1],p[0]]),style={color:'#ba6522',weight:3,renderer};
@@ -48,8 +48,8 @@ function mesureAire(points){
  const distance=button(fr?'Distance':'Distance',()=>start('distance'));
  const area=button(fr?'Surface':'Area',()=>start('area'));
  const undo=button(fr?'Annuler le point':'Undo point',()=>{points.pop();paint();});
- const finish=button(fr?'Terminer':'Finish',()=>{drawing=false;cursor();paint();});
- button(fr?'Effacer':'Clear',()=>{points=[];drawing=false;mode='';cursor();paint();});
+ const finish=button(fr?'Effacer':'Clear',()=>{if(drawing){drawing=false;}else{points=[];mode='';}cursor();paint();});
+ const editActions=document.createElement('span');editActions.style.cssText='display:inline-flex;gap:6px;flex-wrap:nowrap';editActions.append(undo,finish);row.append(editActions);
  function add(p){if(!drawing)return;const last=points.at(-1);if(last&&mesureDistance([last,p])<.01)return;points.push(p);paint();}
  carte.on('click',e=>{if(!gl)add([e.latlng.lng,e.latlng.lat]);});
  carte.on('popupopen',()=>{if(drawing)carte.closePopup();});
