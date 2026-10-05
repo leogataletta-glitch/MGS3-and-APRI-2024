@@ -54,20 +54,20 @@ const handler=e=>{
   node=node.parentElement;
  }
  scroller=scroller||d.scrollingElement;
- if(scroller!==d.scrollingElement&&!scroller.matches('[data-testid="stAppViewContainer"],[data-testid="stMain"]')){reset();return;}
+ if(scroller!==d.scrollingElement&&!scroller.matches('[data-testid="stAppViewContainer"],[data-testid="stMain"]')&&!scroller.querySelector('.st-key-zone_page')){reset();return;}
  const dir=Math.sign(e.deltaY),now=Date.now();
  if(!dir)return;
- const edge=dir>0?scroller.scrollTop+scroller.clientHeight>=scroller.scrollHeight-3:scroller.scrollTop<=3;
+ const edge=page==='portail'||(dir>0?scroller.scrollTop+scroller.clientHeight>=scroller.scrollHeight-6:scroller.scrollTop<=6);
  if(!edge){reset();return;}
- if(dir!==direction||now-last>550){reset();direction=dir;}
+ if(dir!==direction||now-last>900){reset();direction=dir;}
  last=now;
  if(!edgeSince){edgeSince=now;return;}
  // Require sustained intent at an edge; do not cancel ordinary scrolling.
  count++;total+=Math.min(Math.abs(e.deltaY)*(e.deltaMode===1?16:1),120);
- if(now-edgeSince<700||count<7||total<700)return;
+ if(now-edgeSince<250||count<3||total<300)return;
  const b=d.querySelector('.st-key-wheel_'+(dir>0?'next':'previous')+' button');
  if(b&&!b.disabled){locked=true;b.click();}else reset();
 };
-d.addEventListener('wheel',handler,{passive:true});
-d.__apriWheelCleanup=()=>d.removeEventListener('wheel',handler);
+d.addEventListener('wheel',handler,{passive:true,capture:true});
+d.__apriWheelCleanup=()=>d.removeEventListener('wheel',handler,true);
 '''
