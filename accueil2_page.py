@@ -499,6 +499,7 @@ def render():
     css += _r + ".st-key-photo_home_cta{background:#098d69!important;padding:30px 24px!important;align-items:center!important;text-align:center!important;gap:14px!important;}"
     css += _r + ".st-key-photo_home_cta p{color:white!important;}" + _r + ".st-key-photo_home_cta button{background:transparent!important;border:1px solid #ffffffb0!important;border-radius:0!important;padding:10px 24px!important;color:white!important;}"
     css += _r + "{padding:0!important;gap:0!important;}"
+    css += _r + ".st-key-photo_home_hero :is(h1,p,.photo-home-kicker)," + _r + ".st-key-photo_home_cta p{text-align:center!important;}"
     root = "#root " + ".stApp" * 80
     css += root + " div[data-testid='stColumn']:has(.st-key-zone_nav)," + root + " .st-key-zone_nav{background:#081d29!important;border-color:#ffffff22!important;}"
     css += root + " .st-key-zone_nav button{background:transparent!important;}" + root + " .st-key-zone_nav button p{color:white!important;}"
