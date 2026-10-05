@@ -2369,14 +2369,9 @@ def render(doc_complet=None):
     # le reformuler : « Dimensions » suivi de « Les sept dimensions et leurs
     # pondérations ». Le composant accepte de n'en pas avoir.
     game_views = VUES
-    with st.container(key="ong_cad_vue"):
-        vue = st.selectbox(
-            "Cadre de résilience" if fr else "Resilience framework",
-            list(game_views),
-            index=list(game_views).index(st.session_state.get("cad_vue", VUES[0])) if st.session_state.get("cad_vue", VUES[0]) in game_views else 0,
-            format_func=lambda c: _locale_text(names[c]),
-            key="cad_section_dropdown",
-        )
+    vue = st.session_state.get("cad_section_selected", VUES[0])
+    if vue not in game_views:
+        vue = VUES[0]
     active = game_views.index(vue) + 1
     st.markdown(f'<style>.stApp .st-key-ong_cad_vue [role="radiogroup"] > label:nth-child({active}) {{box-shadow:inset 0 -2px 0 #1f5b46!important;}} .stApp .st-key-ong_cad_vue [role="radiogroup"] > label:nth-child({active}) p {{color:#1f5b46!important;}}</style>',unsafe_allow_html=True)
 

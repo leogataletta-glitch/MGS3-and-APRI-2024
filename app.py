@@ -2352,6 +2352,24 @@ _CSS_ICONES_NAV = "<style>" + "".join(
 
 
 def _entree_nav(mode, icone, prefix="nav"):
+    if mode == MODE_METHODO:
+        sections = (
+            ("mesure", ("Modèle et sources", "Model and sources", "Modelo y fuentes", "Modèl ak sous")),
+            ("indicateurs", ("Calcul des scores", "Score calculation", "Cálculo de puntuaciones", "Kalkil nòt yo")),
+            ("boucles", ("Boucles de rétroaction", "Feedback loops", "Bucles de retroalimentación", "Boukl retwoaksyon")),
+            ("tester", ("Tester le concept", "Test the concept", "Probar el concepto", "Teste konsèp la")),
+            ("document", ("Document complet", "Full document", "Documento completo", "Dokiman konplè")),
+        )
+        with st.container(key=f"{prefix}_framework_tree"):
+            with st.expander(_locale_text(LIBELLE_MODE[mode])):
+                for section, labels in sections:
+                    if st.button(publication_web.tr(labels), key=f"{prefix}_framework_{section}", use_container_width=True):
+                        st.session_state["cad_section_selected"] = section
+                        st.session_state["desktop_menu_generation"] = st.session_state.get("desktop_menu_generation", 0) + 1
+                        st.session_state["mobile_menu_generation"] = st.session_state.get("mobile_menu_generation", 0) + 1
+                        _bascule(mode)
+                        st.rerun()
+        return
     actif = st.session_state["app_mode"] == mode
     if st.button(_locale_text(LIBELLE_MODE[mode]), key=f"{prefix}_{mode}",
               type="primary" if actif else "secondary",
@@ -2549,7 +2567,7 @@ with _zone_nav:
     st.markdown('<div class="horizon-identity"><img class="horizon-apri" alt="APRI" src="data:image/png;base64,' + assets.LOGO_APRI + '"><div class="horizon-brand">SI APRI</div><img class="horizon-partner" alt="UNEP" src="data:image/png;base64,' + assets.LOGO_UNEP_BLANC + '"></div>', unsafe_allow_html=True)
     for _fam, _entrees in _NAV_FAMILLES:
         if _fam:
-            with st.popover(_locale_text(T(_fam))):
+            with st.popover(_locale_text(T(_fam)), key=f"desktop_menu_{_fam}_{st.session_state.get('desktop_menu_generation', 0)}"):
                 for _mode, _icone in _entrees:
                     _entree_nav(_mode, _icone)
         else:
@@ -2557,8 +2575,6 @@ with _zone_nav:
                 _entree_nav(_mode, _icone)
     langue_nav.render(_changer_langue)
 
-import navigation_hover
-navigation_hover.render()
 
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant

@@ -148,4 +148,9 @@ __Z__ .st-key-cad_section_dropdown [data-baseweb="select"]>div{background:#e8f4e
 __Z__ .st-key-cad_section_dropdown label p{font-size:12px!important;font-weight:500!important;}
 [data-baseweb="popover"]:has([role="listbox"]){animation:apri-menu-open .18s ease-out;transform-origin:top;}
 @media(prefers-reduced-motion:reduce){[data-baseweb="popover"]:has([role="listbox"]){animation:none!important;}}
+
+#stFloatingOverlayPortal .st-key-nav_framework_tree details{border:0!important;border-radius:6px!important;box-shadow:none!important;}
+#stFloatingOverlayPortal .st-key-nav_framework_tree summary{padding:8px 12px!important;min-height:36px!important;}
+#stFloatingOverlayPortal .st-key-nav_framework_tree summary p{font:500 13px/1.4 Inter,Arial,sans-serif!important;}
+#stFloatingOverlayPortal .st-key-nav_framework_tree details[open]>div{border-left:2px solid #c9e3d9;margin-left:18px;padding:4px 0 4px 8px;animation:apri-menu-open .2s ease-out;}
 '''
