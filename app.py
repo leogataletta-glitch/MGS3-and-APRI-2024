@@ -2546,29 +2546,16 @@ with _menu_mobile:
                 _entree_nav(_mode, _icone, prefix="mobile_nav")
 
 with _zone_nav:
-    langue_nav.render(_changer_langue)
-    # LES ENTRÉES SE LISENT DE HAUT EN BAS, UNE PAR LIGNE.
-    # Rien n'est replié derrière un déroulant et rien ne passe à la ligne :
-    # la colonne se lit comme une table des matières, et la rubrique où l'on
-    # se trouve s'y repère sans la chercher. `position: sticky` la garde à
-    # l'écran quand la page défile — c'est ce qui la rend « toujours
-    # disponible » sans qu'elle ait à flotter par-dessus le contenu.
-    st.markdown(_CSS_ICONES_NAV, unsafe_allow_html=True)
-    # LA MARQUE N'OUVRE PLUS LA COLONNE. Elle a rejoint l'image, en tête de
-    # page, où elle est en entier — l'emblème, le mot et la ligne
-    # institutionnelle — plutôt qu'en réduction dans une colonne de deux cents
-    # pixels. Deux marques à l'écran, l'une sous l'autre, disaient deux fois
-    # la même chose et la colonne était la moins bien placée pour le dire.
+    st.markdown('<div class="horizon-brand">SI APRI<span>Horizon</span></div>', unsafe_allow_html=True)
     for _fam, _entrees in _NAV_FAMILLES:
         if _fam:
-            st.markdown(f'<div class="nav-famille">{T(_fam)}</div>',
-                        unsafe_allow_html=True)
-        for _mode, _icone in _entrees:
-            _entree_nav(_mode, _icone)
-    import frontiere_nav
-    frontiere_nav.render()
-    import navigation_fixe
-    navigation_fixe.appliquer()
+            with st.popover(_locale_text(T(_fam))):
+                for _mode, _icone in _entrees:
+                    _entree_nav(_mode, _icone)
+        else:
+            for _mode, _icone in _entrees:
+                _entree_nav(_mode, _icone)
+    langue_nav.render(_changer_langue)
 
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant

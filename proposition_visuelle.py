@@ -11,8 +11,8 @@ def active():
 def selector():
     """Keep existing callers compatible without displaying a design switch."""
     st.session_state[KEY] = 2
-    import apparence_apri
-    apparence_apri.selector()
+    import horizon_design
+    horizon_design.prepare()
 
 
 def navigation(root):
@@ -69,8 +69,8 @@ def apply():
     </style>''', unsafe_allow_html=True)
 
 
-    import apparence_apri
-    apparence_apri.apply()
+    import horizon_design
+    horizon_design.apply()
 
 
 def interface_consistante():
