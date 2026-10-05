@@ -2557,6 +2557,9 @@ with _zone_nav:
                 _entree_nav(_mode, _icone)
     langue_nav.render(_changer_langue)
 
+import navigation_hover
+navigation_hover.render()
+
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
 # l'aiguillage, pour que chaque page se dessine dedans sans avoir à savoir

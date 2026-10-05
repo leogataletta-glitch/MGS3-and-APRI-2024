@@ -135,4 +135,11 @@ __Z__ .st-key-ong_cad_vue [role="radiogroup"]{padding:0!important;gap:6px!import
 __Z__ .st-key-ong_cad_vue [role="radiogroup"] label{min-height:48px!important;padding:8px 12px!important;border-radius:8px!important;}
 __Z__ .st-key-ong_cad_vue [role="radiogroup"] label p{font-size:12px!important;line-height:1.45!important;margin:2px 0!important;}
 __Z__ .st-key-ong_cad_vue [role="radiogroup"] label strong{font-size:13px!important;}
+
+@media(min-width:1001px){
+#stFloatingOverlayPortal [data-testid="stPopoverBody"]:has([class*="st-key-nav_"]){border-top:2px solid #087f6b!important;transform-origin:top center;animation:apri-menu-open .16s ease-out;box-shadow:0 8px 24px #18333b18!important;}
+__R__ .st-key-zone_nav [data-testid="stPopover"]>button[aria-expanded="true"]{background:#e8f4ef!important;border-radius:8px!important;color:#087f6b!important;}
+}
+@keyframes apri-menu-open{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){#stFloatingOverlayPortal [data-testid="stPopoverBody"]{animation:none!important;}}
 '''
