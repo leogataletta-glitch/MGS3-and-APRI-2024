@@ -2314,8 +2314,8 @@ _NAV_FAMILLES = [
     # ensuite où on l'a mesuré : une carte de dix sections ne dit rien tant
     # qu'on ne sait pas ce qui y est compté, alors que la définition de
     # l'indice se lit sans connaître le terrain.
-    ("nav_g_comprendre", [(MODE_METHODO, "bouclier"),
-                          (MODE_ACCUEIL, "epingle")]),
+    ("nav_g_comprendre", [(MODE_ACCUEIL, "epingle"),
+                          (MODE_METHODO, "bouclier")]),
     ("nav_g_analyser", [(MODE_DIMENSIONS, "barres"),
                         (MODE_BOUCLES, "boucle")]),
     ("nav_g_agir", [(MODE_ACTIONS, "fiche")]),
@@ -2580,7 +2580,7 @@ with _menu_mobile:
 with _zone_nav:
     st.markdown('<div class="horizon-identity"><svg class="apri-symbol" style="display:none" width="36" height="36" viewBox="0 0 100 100" role="img" aria-label="APRI"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="50" cy="50" r="44"/><path d="M50 50 C24 47 24 8 50 8 C76 8 76 47 50 50 Z M50 50 C65 29 95 49 83 71 C71 94 41 77 50 50 Z M50 50 C59 77 29 94 17 71 C5 49 35 29 50 50 Z"/></g></svg><img class="horizon-apri" alt="APRI" src="data:image/png;base64,' + assets.LOGO_APRI + '"><img class="horizon-unep" style="height:44px;width:auto" alt="UN Environment Programme" src="data:image/png;base64,' + assets.LOGO_UNEP_BLANC + '"></div>', unsafe_allow_html=True)
     _entree_nav(MODE_PORTAIL, "maison")
-    for _mode in (MODE_METHODO, MODE_ACCUEIL, MODE_DIMENSIONS, MODE_BOUCLES, MODE_ACTIONS):
+    for _mode in (MODE_ACCUEIL, MODE_METHODO, MODE_DIMENSIONS, MODE_BOUCLES, MODE_ACTIONS):
         _label = publication_web.tr(("Analyser les résultats", "Analyse results", "Analizar resultados", "Analize rezilta yo")) if _mode == MODE_DIMENSIONS else _locale_text(LIBELLE_MODE[_mode])
         if _section_options(_mode)[1]:
             with st.container(key=f"top_menu_{_mode}"):

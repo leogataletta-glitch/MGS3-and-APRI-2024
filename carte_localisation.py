@@ -248,9 +248,9 @@ def _leaflet():
 GABARIT = r"""<!DOCTYPE html><html><head><meta charset="utf-8">
 __LEAFLET__
 <style>
- html,body{margin:0;padding:0;height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+ html,body{margin:0;padding:0;height:100%;background:#edf4f9;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
  #carte{position:absolute;inset:0;visibility:hidden}
- #map-loading{position:absolute;inset:0 286px 0 48px;display:grid;place-items:center;background:white;color:#587264;font-size:13px;pointer-events:none}
+ #map-loading{position:absolute;inset:0 286px 0 48px;display:grid;place-items:center;background:#edf4f9;color:#587082;font-size:13px;pointer-events:none}
  @media(max-width:620px){#map-loading{inset:0 0 50% 0}}
  /* The map continues behind the opaque legend; no viewport-edge dissolve. */
  #carte,#carte3d{border-radius:0!important;}
@@ -260,11 +260,11 @@ __LEAFLET__
    .leaflet-left,.maplibregl-ctrl-top-left,.maplibregl-ctrl-bottom-left{left:48px!important;}
  }
  /* Le fond marin blanc prolonge la page ; la terre reste grise. */
- .leaflet-container{background:#ffffff;border-radius:12px;font-family:inherit}
+ .leaflet-container{background:#edf4f9;border-radius:12px;font-family:inherit}
  .leaflet-control-scale-line,.maplibregl-ctrl-scale{text-align:center!important}
  /* --- le panneau de couches ------------------------------------------- */
  #panneau{position:absolute;top:0;right:0;bottom:0;width:286px;
-   background:#ffffff;border:1px solid #dbe3ec;border-radius:0;
+   background:#edf4f9;border:0 solid #dbe3ec;border-radius:0;
    box-shadow:none;z-index:1000;display:flex;
    flex-direction:column;overflow:hidden}
  #panneau .tete{padding:10px 12px 8px;border-bottom:1px solid #eef2f7}
