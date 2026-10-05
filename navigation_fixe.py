@@ -2,6 +2,59 @@
 import streamlit as st
 
 
+def _toggle_menu():
+    st.session_state['apri_menu_closed'] = not st.session_state.get('apri_menu_closed', False)
+
+
+def _menu_toggle():
+    """Keep a narrow, accessible handle when the desktop navigation is folded."""
+    closed = st.session_state.get('apri_menu_closed', False)
+    lang = st.session_state.get('choix_langue', 'en')
+    labels = {
+        'fr': ('Masquer le menu', 'Afficher le menu'),
+        'en': ('Hide menu', 'Show menu'),
+        'es': ('Ocultar menú', 'Mostrar menú'),
+        'ht': ('Kache meni an', 'Montre meni an'),
+    }
+    label = labels.get(lang, labels['en'])[int(closed)]
+    st.button(label, icon=':material/chevron_right:' if closed else ':material/chevron_left:',
+              key='apri_menu_toggle', help=label, on_click=_toggle_menu)
+    root = '.stApp' * 20
+    folded = """
+      ROOT div[data-testid="stColumn"]:has(.st-key-zone_nav){
+        flex:0 0 52px!important;width:52px!important;min-width:52px!important;
+        max-width:52px!important;padding-left:0!important;background:#f5f8f6!important;
+      }
+      ROOT .st-key-zone_nav > :not(:has(.st-key-apri_menu_toggle)):not(.st-key-apri_menu_toggle){display:none!important;}
+      ROOT .st-key-zone_nav{padding:0!important;overflow:visible!important;}
+      ROOT div[data-testid="stColumn"]:has(.st-key-territory_map){margin-left:0!important;}
+    """ if closed else ''
+    css = """<style>
+    ROOT .st-key-apri_menu_toggle{display:none!important;}
+    @media(min-width:1001px){
+      ROOT .st-key-apri_menu_toggle{
+        display:block!important;position:fixed!important;top:8px!important;left:8px!important;
+        width:36px!important;height:36px!important;z-index:100!important;margin:0!important;
+      }
+      ROOT .st-key-apri_menu_toggle button{
+        display:flex!important;align-items:center!important;justify-content:center!important;
+        width:36px!important;min-width:36px!important;height:36px!important;min-height:36px!important;
+        padding:0!important;border:1px solid #d5dfd9!important;border-radius:50%!important;
+        background:#ffffff!important;color:#174e3e!important;box-shadow:none!important;
+      }
+      ROOT .st-key-apri_menu_toggle button p{
+        position:absolute!important;width:1px!important;height:1px!important;
+        padding:0!important;margin:-1px!important;overflow:hidden!important;
+        clip:rect(0,0,0,0)!important;white-space:nowrap!important;
+      }
+      ROOT .st-key-apri_menu_toggle button:hover{background:#e8f1ec!important;}
+      ROOT .st-key-apri_menu_toggle button:focus-visible{outline:2px solid #174e3e!important;outline-offset:3px!important;}
+      FOLDED
+    }
+    </style>"""
+    st.markdown(css.replace('FOLDED', folded).replace('ROOT', root), unsafe_allow_html=True)
+
+
 def appliquer():
     st.markdown('''<style>
     /* Compensate the left bleed so the hero ends at the same right edge
@@ -83,3 +136,5 @@ def appliquer():
     .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page :is([data-testid="stSelectbox"],[data-testid="stMultiSelect"]) [role="combobox"]{min-height:32px!important;color:#3c4761!important;}
     .stApp.stApp.stApp.stApp.stApp.stApp .st-key-zone_page :is([data-testid="stSelectbox"],[data-testid="stMultiSelect"]) label{margin-bottom:6px!important;}
     </style>''',unsafe_allow_html=True)
+
+    _menu_toggle()
