@@ -2288,10 +2288,7 @@ def _render():
     lst_boucles = M.boucles(graphe)
     fiches = calculer(graphe, par_ligne, lst_boucles)
 
-    _vue = onglets.barre("int_vue", ["fiches", "plans"],
-                         titre=lambda c: T("int_o_" + c),
-                         description=lambda c: T("int_d_" + c),
-                         defaut="fiches")
+    _vue = st.session_state.get("int_section_selected", "fiches")
     if _vue == "plans":
         return _plans()
 

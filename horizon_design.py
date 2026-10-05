@@ -153,4 +153,12 @@ __Z__ .st-key-cad_section_dropdown label p{font-size:12px!important;font-weight:
 #stFloatingOverlayPortal .st-key-nav_framework_tree summary{padding:8px 12px!important;min-height:36px!important;}
 #stFloatingOverlayPortal .st-key-nav_framework_tree summary p{font:500 13px/1.4 Inter,Arial,sans-serif!important;}
 #stFloatingOverlayPortal .st-key-nav_framework_tree details[open]>div{border-left:2px solid #c9e3d9;margin-left:18px;padding:4px 0 4px 8px;animation:apri-menu-open .2s ease-out;}
+
+__R__ .st-key-zone_nav{gap:6px!important;}
+__R__ .st-key-zone_nav button p{font-size:12px!important;white-space:nowrap!important;}
+__R__ .st-key-top_menu_dimensions button{background:#a63243!important;color:white!important;border-color:#a63243!important;border-radius:8px!important;}
+__R__ .st-key-top_menu_dimensions button p{color:white!important;}
+#stFloatingOverlayPortal [class*="st-key-top_section_"] button{min-height:36px!important;padding:8px 12px!important;border:0!important;box-shadow:none!important;background:white!important;justify-content:flex-start!important;}
+#stFloatingOverlayPortal [class*="st-key-top_section_"] button p{font:500 13px/1.4 Inter,Arial,sans-serif!important;}
+#stFloatingOverlayPortal [data-testid="stPopoverBody"]:has([class*="st-key-top_section_"]){min-width:250px!important;padding:8px!important;animation:apri-menu-open .18s ease-out;}
 '''

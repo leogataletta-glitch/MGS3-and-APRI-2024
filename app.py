@@ -2351,24 +2351,38 @@ _CSS_ICONES_NAV = "<style>" + "".join(
     for _m, _ic in _NAV) + "</style>"
 
 
-def _entree_nav(mode, icone, prefix="nav"):
+def _section_options(mode):
     if mode == MODE_METHODO:
-        sections = (
-            ("mesure", ("Modèle et sources", "Model and sources", "Modelo y fuentes", "Modèl ak sous")),
-            ("indicateurs", ("Calcul des scores", "Score calculation", "Cálculo de puntuaciones", "Kalkil nòt yo")),
-            ("boucles", ("Boucles de rétroaction", "Feedback loops", "Bucles de retroalimentación", "Boukl retwoaksyon")),
-            ("tester", ("Tester le concept", "Test the concept", "Probar el concepto", "Teste konsèp la")),
-            ("document", ("Document complet", "Full document", "Documento completo", "Dokiman konplè")),
-        )
-        with st.container(key=f"{prefix}_framework_tree"):
-            with st.expander(_locale_text(LIBELLE_MODE[mode])):
-                for section, labels in sections:
-                    if st.button(publication_web.tr(labels), key=f"{prefix}_framework_{section}", use_container_width=True):
-                        st.session_state["cad_section_selected"] = section
-                        st.session_state["desktop_menu_generation"] = st.session_state.get("desktop_menu_generation", 0) + 1
-                        st.session_state["mobile_menu_generation"] = st.session_state.get("mobile_menu_generation", 0) + 1
-                        _bascule(mode)
-                        st.rerun()
+        return "cad_section_selected", [(c, publication_web.tr(t)) for c,t in [
+            ("mesure", ("Modèle et sources","Model and sources","Modelo y fuentes","Modèl ak sous")),
+            ("indicateurs", ("Calcul des scores","Score calculation","Cálculo de puntuaciones","Kalkil nòt")),
+            ("boucles", ("Boucles de rétroaction","Feedback loops","Bucles de retroalimentación","Boukl retwoaksyon")),
+            ("tester", ("Tester le concept","Test the concept","Probar el concepto","Teste konsèp la")),
+            ("document", ("Document complet","Full document","Documento completo","Dokiman konplè"))]]
+    if mode == MODE_DIMENSIONS:
+        return "ra_section_selected", [(c, publication_web.tr(("Corrélations","Correlations","Correlaciones","Korelasyon")) if c == "liens" else _locale_text(T("ra_o_"+c))) for c in ["brut","scores","comparer","liens","solutions"]]
+    if mode == MODE_BOUCLES:
+        return "bcl_section_selected", [(c,_locale_text(T(k))) for c,k in zip(["construire","direct","regler","relations","leviers","simuler"],["sx_o1","sx_o6","sx_o7","sx_o2","sx_o3","sx_o4"])]
+    if mode == MODE_ACTIONS:
+        return "int_section_selected", [("fiches",publication_web.tr(("Fiches d’intervention","Intervention profiles","Fichas de intervención","Fich entèvansyon"))),("plans",publication_web.tr(("Plans d’action","Action plans","Planes de acción","Plan aksyon")))]
+    return None, []
+
+
+def _section_buttons(mode, prefix="top"):
+    state_key, options = _section_options(mode)
+    for code, label in options:
+        if st.button(label, key=f"{prefix}_section_{mode}_{code}", use_container_width=True):
+            st.session_state[state_key] = code
+            for generation in ("desktop_menu_generation", "mobile_menu_generation"):
+                st.session_state[generation] = st.session_state.get(generation, 0) + 1
+            _bascule(mode)
+            st.rerun()
+
+
+def _entree_nav(mode, icone, prefix="nav"):
+    if _section_options(mode)[1]:
+        with st.expander(_locale_text(LIBELLE_MODE[mode])):
+            _section_buttons(mode, prefix)
         return
     actif = st.session_state["app_mode"] == mode
     if st.button(_locale_text(LIBELLE_MODE[mode]), key=f"{prefix}_{mode}",
@@ -2565,14 +2579,18 @@ with _menu_mobile:
 
 with _zone_nav:
     st.markdown('<div class="horizon-identity"><img class="horizon-apri" alt="APRI" src="data:image/png;base64,' + assets.LOGO_APRI + '"><div class="horizon-brand">SI APRI</div><img class="horizon-partner" alt="UNEP" src="data:image/png;base64,' + assets.LOGO_UNEP_BLANC + '"></div>', unsafe_allow_html=True)
-    for _fam, _entrees in _NAV_FAMILLES:
-        if _fam:
-            with st.popover(_locale_text(T(_fam)), key=f"desktop_menu_{_fam}_{st.session_state.get('desktop_menu_generation', 0)}"):
-                for _mode, _icone in _entrees:
-                    _entree_nav(_mode, _icone)
+    _entree_nav(MODE_PORTAIL, "maison")
+    for _mode in (MODE_METHODO, MODE_ACCUEIL, MODE_DIMENSIONS, MODE_BOUCLES, MODE_ACTIONS):
+        _label = publication_web.tr(("Analyser les résultats", "Analyse results", "Analizar resultados", "Analize rezilta yo")) if _mode == MODE_DIMENSIONS else _locale_text(LIBELLE_MODE[_mode])
+        if _section_options(_mode)[1]:
+            with st.container(key=f"top_menu_{_mode}"):
+                with st.popover(_label, key=f"top_pop_{_mode}_{st.session_state.get('desktop_menu_generation',0)}"):
+                    _section_buttons(_mode)
         else:
-            for _mode, _icone in _entrees:
-                _entree_nav(_mode, _icone)
+            _entree_nav(_mode, "epingle")
+    with st.popover(_locale_text(T("nav_g_ressources")), key=f"top_resources_{st.session_state.get('desktop_menu_generation',0)}"):
+        for _mode, _icone in _NAV_FAMILLES[-1][1]:
+            _entree_nav(_mode, _icone)
     langue_nav.render(_changer_langue)
 
 
@@ -2701,10 +2719,7 @@ with _c_contenu:
         # hauteur ; elle était alors la seule à ne pas dire ce que ses
         # onglets contiennent, et un lecteur qui passait de la page des
         # boucles à celle-ci changeait d'outil sans changer de site.
-        _ra = onglets.barre("ra_vue", _CODES_RA,
-                            titre=lambda c: ({"fr":"Corrélations","en":"Correlations","es":"Correlaciones","ht":"Korelasyon"}.get(i18n.get_lang(),"Links and profiles")) if c == "liens" else T("ra_o_" + c),
-                            description=lambda c: ({"fr":"Questions, réponses et profils associés","en":"Questions, answers and associated profiles","es":"Comparar grupos, perfiles y respuestas","ht":"Konpare gwoup, pwofil ak repons"}.get(i18n.get_lang(),"Questions, answers and associated profiles")) if c == "liens" else T("ra_d_" + c),
-                            defaut="brut")
+        _ra = st.session_state.get("ra_section_selected", "brut")
         resultats_design.render(_CODES_RA.index(_ra) + 1, i18n.get_lang() == 'fr')
 
         # LE CATALOGUE EST CHARGÉ UNE FOIS POUR LES CINQ PREMIERS ONGLETS.
@@ -2836,10 +2851,7 @@ with _c_contenu:
                                      "sx_o3", "sx_o4")))
         _D_SX = dict(zip(_CODES_SX, ("sx_d1", "sx_d6", "sx_d7", "sx_d2",
                                      "sx_d3", "sx_d4")))
-        _vue = onglets.barre("bcl_vue", _CODES_SX,
-                             titre=lambda c: T(_N_SX[c]),
-                             description=lambda c: T(_D_SX[c]),
-                             defaut="construire")
+        _vue = st.session_state.get("bcl_section_selected", "construire")
         if _vue == "construire":
             systeme_complexe.render_construire()
         elif _vue == "regler":
