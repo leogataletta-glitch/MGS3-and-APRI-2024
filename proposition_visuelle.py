@@ -24,7 +24,7 @@ def navigation(root):
     /* Selection follows the checked value, not hover or keyboard focus. */
     {root} [role="radiogroup"] label:has(input:checked),
     {root} [role="radiogroup"] label:has([role="radio"][aria-checked="true"]),
-    {root} [role="radiogroup"] label[aria-checked="true"]{{background:#e8f1eb!important;border:0!important;box-shadow:inset 0 0 0 2px #176344!important;border-radius:16px!important;}}
+    {root} [role="radiogroup"] label[aria-checked="true"]{{background:#e8f1eb!important;border:0!important;box-shadow:none!important;outline:2px solid #176344!important;outline-offset:-2px!important;border-radius:16px!important;}}
     {root} [role="radiogroup"] label:hover{{background:#e4eee9!important;}}
     {root} [role="radiogroup"] label div:not(:has([data-testid="stMarkdownContainer"])):not([data-testid="stMarkdownContainer"]){{display:none!important;}}
     {root} [role="radiogroup"] label div:has([data-testid="stMarkdownContainer"]){{flex:1 1 0!important;width:100%!important;min-width:0!important;padding:0!important;}}
