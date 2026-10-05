@@ -521,9 +521,6 @@ def render():
     # This illustration is not a documentary photograph of a named location.
     credit = '' if aquarelle else f'<div class="a2-credit">{_e(T("a2_credit"))}</div>'
     # Native Streamlit navigation preserves the selected language and filters.
-    st.markdown('<header class="a2-brand-row">' + marque
-        + f'<img class="a2-partner" alt="UNEP" src="data:image/png;base64,{assets.LOGO_UNEP_BLANC}"></header>',
-        unsafe_allow_html=True)
     with st.container(key="a2_welcome"):
         copy, art = st.columns([1.05, 1], gap="large", vertical_alignment="center")
         with copy:

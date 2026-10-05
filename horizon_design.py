@@ -107,4 +107,22 @@ __Z__ .a2-chif{padding:16px 0!important;margin:0 0 16px!important;}
 #stFloatingOverlayPortal [data-testid="stPopoverBody"]:has([class*="st-key-nav_"]){padding:8px!important;min-width:220px!important;}
 #stFloatingOverlayPortal [data-testid="stVerticalBlock"]:has(>[class*="st-key-nav_"]){gap:4px!important;}
 }
+
+__R__ .horizon-identity{display:flex;align-items:center;gap:22px;}
+__R__ .horizon-partner{height:38px;width:auto;border-left:1px solid #dce7e4;padding-left:20px;filter:brightness(0) saturate(100%) invert(22%) sepia(21%) saturate(1030%) hue-rotate(101deg) brightness(85%);}
+__Z__:has(.st-key-a2_welcome){padding-top:20px!important;}
+__Z__ .st-key-a2_welcome{padding:0 0 14px!important;}
+__Z__ .st-key-a2_welcome [data-testid="stHorizontalBlock"]{gap:16px!important;}
+__Z__ .a2-welcome-copy{max-width:680px!important;}
+__Z__ .a2-welcome-title{font-size:clamp(27px,2.1vw,34px)!important;max-width:29ch!important;margin:8px 0 14px!important;}
+__Z__ .a2-intro{max-width:68ch!important;line-height:1.55!important;margin:0 0 12px!important;}
+__Z__ .a2-welcome-art img{height:225px!important;object-fit:cover!important;mask-image:linear-gradient(to right,transparent,black 10%,black 88%,transparent),linear-gradient(to bottom,transparent,black 12%,black 82%,transparent);}
+__Z__ .a2-chif{gap:16px!important;padding:12px 0!important;margin:0 0 12px!important;}
+__Z__ .a2-n{font-size:26px!important;}
+__Z__ .st-key-a2_photo_links div[data-testid="stButton"]>button{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;min-height:60px!important;padding:6px 0!important;}
+__Z__ .st-key-a2_photo_links div[data-testid="stButton"]>button:hover{background:#f0f5f4!important;border:0!important;box-shadow:none!important;}
+__Z__ .st-key-a2_photo_links div[class*="st-key-a2_porte_"]{padding:0 10px!important;}
+__Z__ .st-key-a2_photo_links button p{font-size:13px!important;}
+__Z__ .st-key-a2_photo_links button p strong{margin-top:2px!important;}
+@media(max-width:700px){__Z__ .a2-welcome-art img{height:160px!important;}__Z__ .a2-welcome-title{font-size:28px!important;}}
 '''

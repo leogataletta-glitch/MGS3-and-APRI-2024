@@ -2546,7 +2546,7 @@ with _menu_mobile:
                 _entree_nav(_mode, _icone, prefix="mobile_nav")
 
 with _zone_nav:
-    st.markdown('<div class="horizon-brand">SI APRI<span>Horizon</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="horizon-identity"><div class="horizon-brand">SI APRI<span>Horizon</span></div><img class="horizon-partner" alt="UNEP" src="data:image/png;base64,' + assets.LOGO_UNEP_BLANC + '"></div>', unsafe_allow_html=True)
     for _fam, _entrees in _NAV_FAMILLES:
         if _fam:
             with st.popover(_locale_text(T(_fam))):
