@@ -488,6 +488,22 @@ def render():
     """La page d'entrée : annoncer, chiffrer, orienter."""
     st.markdown(STYLE, unsafe_allow_html=True)
 
+    with st.container(key="home_layout_compare"):
+        layout = st.selectbox(
+            _locale_text("Comparer les propositions" if i18n.get_lang() == "fr" else "Compare home layouts"),
+            ["map", "doors", "landscape"], key="home_layout_preview",
+            format_func=lambda v: {"map":"La carte au centre", "doors":"Quatre portes d’entrée", "landscape":"Le paysage comme accueil"}[v])
+    _r = "#root " + ".stApp" * 75 + " .st-key-zone_page "
+    _style = _r + ".st-key-home_layout_compare{max-width:340px!important;margin:0 0 16px!important;}"
+    if layout == "doors":
+        _style += _r + ".a2-welcome-title{font-size:30px!important;}" + _r + ".a2-welcome-art img{height:150px!important;}"
+    elif layout == "landscape":
+        _style += _r + ".st-key-a2_welcome{background:#f0f5f3 url('app/static/accueil_aquarelle_haiti.webp') right center/60% auto no-repeat!important;padding:28px!important;border-radius:14px!important;min-height:270px!important;}"
+        _style += _r + ".a2-welcome-art{visibility:hidden!important;}" + _r + ".a2-welcome-title{font-size:34px!important;}"
+    else:
+        _style += _r + ".a2-welcome-art img{height:170px!important;}"
+    st.markdown("<style>" + _style + "</style>", unsafe_allow_html=True)
+
     # ---- 1 · la photographie, le titre, l'appel ------------------------
     _lang = i18n.get_lang()
     _nom, cadrage = PHOTOS.get(_lang, PHOTOS["en"])
@@ -600,16 +616,21 @@ def render():
         .st-key-a2_photo_links button p em{font-size:11px!important;}}
     </style>""",unsafe_allow_html=True)
     with st.container(key='a2_map_links'):
-        map_col, links_col = st.columns([1.15,1],gap='large')
+        if layout == "map":
+            map_col, links_col = st.columns([1.5,1], gap='large')
+        else:
+            links_col = st.container()
+            map_col = st.container()
         with map_col:
             st.markdown(accueil_apri.STYLE + f'<div class="a2-portes-t">{_e(T("a2_carte_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
-            if not carte_zoom.render():
+            if not carte_zoom.render(hauteur=480 if layout == "map" else 380):
                 st.markdown(f'<div class="a2-carte">{_carte_svg()}</div>',unsafe_allow_html=True)
         with links_col:
             st.markdown(f'<div class="a2-portes-t">{_e(T("a2_portes_t"))}</div><div class="a2-portes-f"></div>',unsafe_allow_html=True)
             with st.container(key='a2_photo_links'):
-                for start in (0,2):
-                    for col, (code,title,detail,photo,position,alt) in zip(st.columns(2),entries[start:start+2]):
+                per_row = 2 if layout == "map" else 4
+                for start in range(0, 4, per_row):
+                    for col, (code,title,detail,photo,position,alt) in zip(st.columns(per_row),entries[start:start+per_row]):
                         with col:
                             with st.container(key=f'a2_porte_{code}'):
                                 # Each complete landscape keeps its natural proportions.
