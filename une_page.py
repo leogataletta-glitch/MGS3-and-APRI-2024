@@ -87,24 +87,23 @@ d.__apriSpy=new w.IntersectionObserver(es=>{
 },{rootMargin:'-80px 0px -55% 0px'});
 ordre.forEach(m=>{const s=d.querySelector('.st-key-sec_'+m);if(s){s.dataset.m=m;d.__apriSpy.observe(s);}});
 if(cible){
- let n=0;
+ let n=0,attendu=null;
+ const sc=d.querySelector('[data-testid="stAppViewContainer"]');
  const aller=()=>{
   const a=d.querySelector('.st-key-sec_'+cible);
-  const sc=d.querySelector('[data-testid="stAppViewContainer"]');
-  if(a&&sc){
-   // Sous la barre du haut (ou le menu mobile), jamais derrière.
-   let bas=0;
-   d.querySelectorAll('div[data-testid="stColumn"]:has(.st-key-zone_nav),.st-key-menu_mobile').forEach(h=>{const r=h.getBoundingClientRect();if(r.height>0&&r.top<5)bas=Math.max(bas,r.bottom);});
-   const dy=a.getBoundingClientRect().top-bas;
-   if(Math.abs(dy)>2)sc.scrollBy({top:dy,behavior:n>0?'auto':'smooth'});
-  }
-  if(n++<12)w.setTimeout(aller,n<3?400:900);
+  if(!a||!sc)return;
+  // Le lecteur a bougé la page lui-même (molette, tactile, même au-dessus
+  // d'une carte ou d'un schéma) : on le laisse faire.
+  if(attendu!==null&&Math.abs(sc.scrollTop-attendu)>40)return;
+  let bas=0;
+  d.querySelectorAll('div[data-testid="stColumn"]:has(.st-key-zone_nav),.st-key-menu_mobile').forEach(h=>{const r=h.getBoundingClientRect();if(r.height>0&&r.top<5)bas=Math.max(bas,r.bottom);});
+  const dy=a.getBoundingClientRect().top-bas;
+  if(Math.abs(dy)>2)sc.scrollTop=sc.scrollTop+dy;
+  attendu=sc.scrollTop;
+  // Les rubriques du dessus finissent de se dessiner : on recale quelques fois.
+  if(n++<8)w.setTimeout(aller,n<3?400:800);
  };
- // Les rubriques du dessus finissent de se dessiner : on recale quelques fois.
  w.setTimeout(aller,250);
- const stop=()=>{n=99;};
- d.addEventListener('wheel',stop,{once:true,passive:true});
- d.addEventListener('touchstart',stop,{once:true,passive:true});
 }
 """
     js = js.replace("__ORDRE__", json.dumps(ORDRE)).replace("__CIBLE__", json.dumps(cible))
