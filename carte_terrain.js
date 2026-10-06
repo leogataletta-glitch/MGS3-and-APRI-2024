@@ -31,7 +31,10 @@
    let resizeFrame;
    const fitHeight=()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>{
     const rect=frame.getBoundingClientRect(),scale=rect.height/frame.offsetHeight||1;
-    const height=Math.max(480,Math.round((parentWindow.innerHeight-Math.max(0,rect.top))/scale));
+    // On the single scrolling page the map is one screen among others: a fixed
+    // height that leaves room for its title, whatever its current position.
+    const unePage=parentWindow.document.querySelector('.st-key-sec_accueil');
+    const height=unePage?Math.max(420,Math.round((parentWindow.innerHeight-240)/scale)):Math.max(480,Math.round((parentWindow.innerHeight-Math.max(0,rect.top))/scale));
     if(Math.abs(frame.offsetHeight-height)>1)frame.style.setProperty('height',height+'px','important');
    });};
    parentWindow.addEventListener('resize',fitHeight);main?.addEventListener('scroll',fitHeight,{passive:true});fitHeight();
