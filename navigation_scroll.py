@@ -6,7 +6,24 @@ from apri_logo_refined import LOGO
 
 
 def identity(unep):
-    return '<div class="apri-new-identity"><span class="apri-color-mark"><img alt="APRI" src="data:image/png;base64,' + LOGO + '"><img class="apri-white-word" aria-hidden="true" alt="" src="data:image/png;base64,' + LOGO + '"></span><img alt="UN Environment Programme" src="data:image/png;base64,' + unep + '"></div>'
+    """Une seule signature : le symbole APRI, son nom, un filet, puis le PNUE.
+
+    LES DEUX LOGOS NE SE CONCURRENCENT PLUS. Ils étaient posés côte à côte, à
+    des hauteurs et des styles différents. Le symbole APRI (sans le mot, déjà
+    écrit à côté) et le logo du PNUE sont maintenant alignés sur la même
+    hauteur et séparés par un filet fin, comme une signature institutionnelle.
+    """
+    from apri_marque import MARQUE
+    from publication_web import tr
+    sous = tr(("Observatoire de la résilience", "Resilience Observatory",
+               "Observatorio de la resiliencia", "Obsèvatwa rezilyans"))
+    return ('<div class="apri-lockup">'
+            '<img class="apri-lockup-mark" alt="" src="data:image/png;base64,' + MARQUE + '">'
+            '<span class="apri-lockup-txt"><span class="apri-lockup-nom">APRI</span>'
+            '<span class="apri-lockup-sous">' + sous + '</span></span>'
+            '<span class="apri-lockup-filet" aria-hidden="true"></span>'
+            '<img class="apri-lockup-unep" alt="UN Environment Programme" src="data:image/png;base64,' + unep + '">'
+            '</div>')
 
 
 def render(current, order, go):
@@ -20,6 +37,16 @@ def render(current, order, go):
     ''' + root + ''' .st-key-zone_nav>div:has(.apri-new-identity){margin-right:auto!important;}
     ''' + root + ''' [data-testid="stColumn"]:has(.st-key-zone_nav){position:sticky!important;top:0!important;z-index:999!important;}
     .st-key-wheel_previous,.st-key-wheel_next{display:none!important;}
+    ''' + root + ''' .st-key-zone_nav>div:has(.apri-lockup){margin-right:auto!important;}
+    ''' + root + ''' .apri-lockup{display:flex;align-items:center;gap:12px;height:52px;}
+    ''' + root + ''' .apri-lockup img{filter:none!important;background:transparent!important;object-fit:contain;}
+    ''' + root + ''' .apri-lockup .apri-lockup-mark{height:38px!important;width:auto!important;}
+    ''' + root + ''' .apri-lockup-txt{display:flex;flex-direction:column;justify-content:center;line-height:1;}
+    ''' + root + ''' .apri-lockup-nom{font:700 19px/1 Inter,Arial,sans-serif!important;letter-spacing:2.5px;color:#fff!important;}
+    ''' + root + ''' .apri-lockup-sous{font:400 10.5px/1.2 Inter,Arial,sans-serif!important;letter-spacing:.4px;color:rgba(255,255,255,.78)!important;margin-top:4px;white-space:nowrap;}
+    ''' + root + ''' .apri-lockup-filet{width:1px;height:34px;background:rgba(255,255,255,.35);margin:0 6px;}
+    ''' + root + ''' .apri-lockup .apri-lockup-unep{height:36px!important;width:auto!important;opacity:.92;}
+    @media(max-width:1180px){''' + root + ''' .apri-lockup-sous{display:none;}}
     </style>''', unsafe_allow_html=True)
     header = '#root ' + '.stApp' * 95
     st.markdown('<style>' + header + " [data-testid='stColumn']:has(.st-key-zone_nav){background:#123746!important;border-bottom:1px solid #ffffff22!important;}" + header + " .st-key-zone_nav{background:transparent!important;}" + header + " .st-key-zone_nav button{background:transparent!important;color:white!important;}" + header + " .st-key-zone_nav button[kind='primary']{background:#397FA3!important;}" + '</style>', unsafe_allow_html=True)
