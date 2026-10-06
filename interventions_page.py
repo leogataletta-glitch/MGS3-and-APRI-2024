@@ -2266,6 +2266,79 @@ def _bloc_paquets(paquets):
     st.caption(_locale_text(T("int_paq_lineaire")))
 
 
+
+def _choisir_cible(code):
+    st.session_state["int_cible"] = code
+
+
+def chercheur(prefixe="int", graphe=None, par_ligne=None, fiches=None, opts=None):
+    """Écrire ce qu'on veut améliorer, et recevoir les fiches qui y répondent.
+
+    LE LECTEUR NE CONNAÎT PAS LE NOM DES LEVIERS. Il sait ce qu'il veut voir
+    changer : « l'eau des familles », « les pertes après les cyclones »,
+    « l'argent des pêcheurs ». La demande est comparée au contenu de chaque
+    fiche (son levier, ses activités, sa proposition), dans les quatre
+    langues, et les plus proches s'ouvrent ici même. Rien ne part vers un
+    service extérieur.
+    Rend True quand une demande est en cours, pour que la page n'ajoute pas
+    son invite par-dessus.
+    """
+    import recherche_questions
+    fr = i18n.get_lang() == "fr"
+    tx = lambda a, b: _locale_text(a if fr else b)
+    if graphe is None:
+        graphe, par_ligne = _charger()
+        fiches = calculer(graphe, par_ligne, M.boucles(graphe))
+    par_id = {n["id"]: n for n in graphe["noeuds"]}
+    par_levier = {f["levier"]: f for f in (fiches or [])}
+    acts, props = _activites(), _propositions()
+    st.markdown(("""<style>
+    __R__ .st-key-""" + prefixe + """_chercheur h2, __R__ .st-key-""" + prefixe + """_chercheur h2 span{font-size:24px!important;font-weight:650!important;color:#123746!important;}
+    __R__ .st-key-""" + prefixe + """_chercheur input{font-size:17px!important;min-height:50px!important;}
+    __R__ .st-key-""" + prefixe + """_chercheur [class*="st-key-""" + prefixe + """_cb_"] button{border-radius:999px!important;background:#e3eef5!important;border:1px solid #b9d4e3!important;}
+    __R__ .st-key-""" + prefixe + """_chercheur [class*="st-key-""" + prefixe + """_cb_"] button p{color:#123746!important;font-weight:600!important;}
+    </style>""").replace("__R__", "#root " + ".stApp" * 140), unsafe_allow_html=True)
+    with st.container(key=f"{prefixe}_chercheur"):
+        st.markdown("## " + tx("Que voulez-vous améliorer ?", "What do you want to improve?"))
+        demande = st.text_input(
+            tx("Écrivez-le avec vos mots", "Write it in your own words"),
+            key=f"{prefixe}_demande",
+            placeholder=tx("Par exemple : l'accès à l'eau, les pertes de récolte, les revenus des pêcheurs, le reboisement…",
+                           "For example: access to water, crop losses, fishers' income, reforestation…"))
+        if not (demande and demande.strip()):
+            return False
+        docs = {}
+        for nid in set(acts) | set(props):
+            if nid not in par_id:
+                continue
+            a, pr = acts.get(nid) or {}, props.get(nid) or {}
+            morceaux = [_libelle(par_id[nid]), nid.replace("_", " ")]
+            for v in list(a.values()) + list(pr.values()):
+                morceaux.append(" ".join(v) if isinstance(v, list) else str(v))
+            docs[nid] = " ".join(morceaux)
+        trouves = recherche_questions.classer(docs, demande, n=4)
+        if opts:
+            cibles = recherche_questions.classer({c: l for c, l in opts}, demande, n=4)
+            if cibles:
+                st.caption(tx("SUR QUOI AGIR", "WHAT TO ACT ON"))
+                cols = st.columns(2)
+                libs = dict(opts)
+                for k, (c, _s) in enumerate(cibles):
+                    with cols[k % 2]:
+                        st.button(_locale_text(libs[c]), key=f"{prefixe}_cb_{c}", on_click=_choisir_cible,
+                                  args=(c,), use_container_width=True)
+        if not trouves:
+            st.info(tx("Aucune fiche proche. Essayez d'autres mots.", "No close profile. Try other words."))
+            return True
+        st.caption(tx("FICHES PROPOSÉES", "SUGGESTED PROFILES"))
+        for k, (nid, _s) in enumerate(trouves):
+            x = {"id": nid, "noeud": par_id[nid], "effet": 0.0, "fiche": par_levier.get(nid),
+                 "cat": CAT_DE_DIM.get(par_id[nid].get("dim") or "", "structurel")}
+            with st.expander(_locale_text(_libelle(par_id[nid])), expanded=(k == 0)):
+                _proposition(x)
+    return True
+
+
 def _render():
     """Sur quoi intervenir, puis les leviers, puis la fiche de chacun.
 
@@ -2303,6 +2376,10 @@ def _render():
     # repartir sur l'invite.
     if st.session_state.get("int_cible") not in libs:
         st.session_state["int_cible"] = None
+    _demande = False
+    if st.session_state.get("int_cible") is None:
+        _demande = chercheur("int", graphe, par_ligne, fiches, opts)
+        st.caption(_locale_text("Ou choisissez dans la liste :" if i18n.get_lang() == "fr" else "Or pick from the list:"))
     g, _d = st.columns([2.4, 1])
     with g:
         cible = st.selectbox(
@@ -2311,8 +2388,9 @@ def _render():
             format_func=_locale_formatter(lambda c: (T("int_sur_rien") if c is None
                                    else libs.get(c, c))))
     if cible is None:
-        st.markdown(f'<p class="int-x" style="color:{ENCRE3};margin-top:8px">'
-                    f'{_e(T("int_rien_encore"))}</p>', unsafe_allow_html=True)
+        if not _demande:
+            st.markdown(f'<p class="int-x" style="color:{ENCRE3};margin-top:8px">'
+                        f'{_e(T("int_rien_encore"))}</p>', unsafe_allow_html=True)
         return
 
     # ---- l'état de la ligne choisie, avant d'aller chercher des leviers ---

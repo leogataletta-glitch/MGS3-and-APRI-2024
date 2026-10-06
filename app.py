@@ -2808,6 +2808,10 @@ def _rendre_section(app_mode):
             # la seule place qui leur convienne : elles sont le résultat des
             # cinq écrans précédents, et l'entrée des boucles causales.
             analyse_ecarts.render_alarmes(_cat)
+            # Après les variables alarmantes, ce qu'on peut faire : le lecteur
+            # écrit ce qu'il veut améliorer et reçoit les fiches d'intervention.
+            import interventions_page as _fiches
+            _fiches.chercheur("sol")
 
     if app_mode == MODE_METHODO:
         # « Cadre de résilience » a remplacé la page de méthodologie : des schémas

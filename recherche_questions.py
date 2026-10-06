@@ -43,6 +43,12 @@ NOTIONS = [
     "enfant child jeune age personne membre",
     "distance marche marche route temps acces",
     "telephone portable phone mobile reseau",
+    "foret forest arbre tree reboisement reforestation deforestation bois charbon pepiniere agroforesterie bosque",
+    "erosion sol soil terrasse ravine glissement conservation",
+    "biodiversite biodiversity espece species conservation aire protegee mangrove corail recif herbier faune flore",
+    "climat climate changement adaptation resilience",
+    "plastique dechet pollution macroplastique",
+    "gouvernance governance institution autorite mairie casec comite",
 ]
 
 
