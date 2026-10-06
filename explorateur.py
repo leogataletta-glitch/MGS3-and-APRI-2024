@@ -2559,6 +2559,155 @@ def _synthese(lignes, mesure):
         f'<b>{_f(haut[1] - bas[1], dec)}{u}</b></span></div>')
 
 
+
+_ICONES_THEMES = {
+    "foyer": ":material/family_restroom:", "logement": ":material/home:",
+    "revenus": ":material/payments:", "agriculture": ":material/agriculture:",
+    "elevage": ":material/pets:", "peche": ":material/phishing:",
+    "alimentation": ":material/restaurant:", "social": ":material/groups:",
+    "risques": ":material/warning:", "migration": ":material/flight_takeoff:",
+    "calcul": ":material/calculate:", "autres": ":material/more_horiz:",
+}
+
+
+def _sans_accents(t):
+    import unicodedata
+    return "".join(c for c in unicodedata.normalize("NFD", str(t).lower())
+                   if unicodedata.category(c) != "Mn")
+
+
+def _choisir_theme(code):
+    st.session_state["exb_theme_ong"] = code
+
+
+def _choisir_question(theme, i):
+    st.session_state[f"exb_q_{theme or 'tous'}"] = i
+
+
+def _documents_questions(vues):
+    libs = _libelles_liste(vues)
+    out = {}
+    for q in vues:
+        th = themes_enquete.theme_de(q.get("category"))
+        out[q["i"]] = " ".join([libs.get(q["i"], ""), q.get("question") or "", q.get("category") or "",
+                                _module_court(q), _locale_text(T(themes_enquete.libelle(th)))])
+    return out
+
+
+def _navigateur_questions(questions, codes, theme):
+    """Trouver une question sans connaître le questionnaire.
+
+    ON DEMANDE D'ABORD CE QUI INTÉRESSE LE LECTEUR. Il l'écrit avec ses mots ;
+    on lui propose les thèmes et les questions les plus proches. Sinon, il
+    parcourt les thèmes en tuiles, puis les questions rangées par module.
+    """
+    import recherche_questions
+    fr = i18n.get_lang() == "fr"
+    tx = lambda a, b: _locale_text(a if fr else b)
+    st.markdown("""<style>
+    __R__ .st-key-exb_nav [class*="st-key-exb_t_"]{background:#f3f7f9;border:1px solid #dde7ec;border-radius:14px;padding:16px 18px!important;gap:4px!important;transition:background .2s,border-color .2s,transform .2s;}
+    __R__ .st-key-exb_nav [class*="st-key-exb_t_"]:hover{background:#e8f1f6;border-color:#9cc3d7;transform:translateY(-2px);}
+    __R__ .st-key-exb_nav [class*="st-key-exb_t_"] button{justify-content:flex-start!important;border:0!important;background:transparent!important;padding:0!important;min-height:0!important;box-shadow:none!important;}
+    __R__ .st-key-exb_nav [class*="st-key-exb_t_"] button p{font-weight:650!important;font-size:16px!important;color:#123746!important;text-align:left!important;}
+    __R__ .st-key-exb_nav [class*="st-key-exb_t_"] [data-testid="stCaptionContainer"] p{font-size:13px!important;color:#5a6d77!important;margin:0!important;}
+    __R__ .st-key-exb_nav [class*="st-key-exb_q_"] button, __R__ .st-key-exb_nav [class*="st-key-exb_q_"] [data-testid^="stBaseButton"]{justify-content:flex-start!important;text-align:left!important;padding:7px 12px!important;min-height:0!important;width:100%!important;border:0!important;border-radius:8px!important;background:transparent!important;box-shadow:none!important;}
+    __R__ .st-key-exb_nav [class*="st-key-exb_q_"] button:hover{background:#e3eef5!important;}
+    __R__ .st-key-exb_nav [class*="st-key-exb_q_"] button p{text-align:left!important;font-size:14.5px!important;color:#1f3440!important;}
+    __R__ .st-key-exb_nav [class*="st-key-exb_s_"] button{border-radius:999px!important;background:#e3eef5!important;border:1px solid #b9d4e3!important;}
+    __R__ .st-key-exb_nav [class*="st-key-exb_s_"] button p{color:#123746!important;font-weight:600!important;}
+    __R__ .st-key-exb_nav .st-key-exb_demande input{font-size:17px!important;min-height:52px!important;}
+        __R__ .st-key-exb_nav [class*="st-key-exb_q_"] button > div, __R__ .st-key-exb_nav [class*="st-key-exb_t_"] button > div{justify-content:flex-start!important;width:100%!important;}
+    __R__ .st-key-exb_nav [class*="st-key-exb_q_"] button [data-testid="stMarkdownContainer"]{text-align:left!important;}
+    __R__ .st-key-exb_nav h2, __R__ .st-key-exb_nav h2 span{font-size:24px!important;font-weight:650!important;color:#123746!important;}
+    __R__ .st-key-exb_nav h3, __R__ .st-key-exb_nav h3 span{font-size:18px!important;font-weight:600!important;color:#123746!important;}
+    </style>""".replace("__R__", "#root " + ".stApp" * 140), unsafe_allow_html=True)
+    par_theme = {}
+    for q in questions:
+        par_theme.setdefault(themes_enquete.theme_de(q.get("category")), []).append(q)
+    with st.container(key="exb_nav"):
+        if theme in (None, "__all__"):
+            st.markdown("## " + tx("Qu'est-ce qui vous intéresse ?", "What are you interested in?"))
+            with st.container(key="exb_demande"):
+                demande = st.text_input(
+                    tx("Décrivez-le en quelques mots", "Describe it in a few words"),
+                    key="exb_recherche_tous",
+                    placeholder=tx("Par exemple : l'accès à l'eau potable, les bateaux de pêche, l'épargne des familles…",
+                                   "For example: access to drinking water, fishing boats, household savings…"))
+            if demande and demande.strip():
+                docs = _documents_questions(questions)
+                trouves = recherche_questions.classer(docs, demande, n=40)
+                if not trouves:
+                    st.info(tx("Rien de proche. Essayez d'autres mots, ou parcourez les thèmes ci-dessous.",
+                               "Nothing close. Try other words, or browse the themes below."))
+                else:
+                    poids = {}
+                    par_i = {q["i"]: q for q in questions}
+                    for i, sc in trouves:
+                        th = themes_enquete.theme_de(par_i[i].get("category"))
+                        poids[th] = poids.get(th, 0) + sc
+                    st.caption(tx("THÈMES PROPOSÉS", "SUGGESTED THEMES"))
+                    cols = st.columns(3)
+                    for k, (code, _p) in enumerate(sorted(poids.items(), key=lambda x: -x[1])[:3]):
+                        with cols[k]:
+                            st.button(_locale_text(T(themes_enquete.libelle(code))), key=f"exb_s_{code}",
+                                      icon=_ICONES_THEMES.get(code), on_click=_choisir_theme, args=(code,),
+                                      use_container_width=True)
+                    st.caption(tx("QUESTIONS PROPOSÉES", "SUGGESTED QUESTIONS"))
+                    libs = _libelles_liste(questions)
+                    for i, _sc in trouves[:8]:
+                        st.button(libs.get(i, ""), key=f"exb_q_p_{i}", icon=":material/arrow_forward:",
+                                  on_click=_choisir_question, args=("__all__", i),
+                                  help=_module_court(par_i[i]), use_container_width=True)
+                st.markdown("### " + tx("Ou parcourez les thèmes", "Or browse the themes"))
+            colonnes = st.columns(3, gap="small")
+            for k, code in enumerate(codes):
+                n = len(par_theme.get(code, []))
+                with colonnes[k % 3]:
+                    with st.container(key=f"exb_t_{code}"):
+                        st.button(f"{_locale_text(T(themes_enquete.libelle(code)))} · {n}",
+                                  key=f"exb_tb_{code}", icon=_ICONES_THEMES.get(code),
+                                  on_click=_choisir_theme, args=(code,), use_container_width=True)
+                        st.caption(_locale_text(T(themes_enquete.description(code))))
+            return
+        haut, retour = st.columns([5, 1.5], vertical_alignment="bottom")
+        with haut:
+            st.markdown("## " + _locale_text(T(themes_enquete.libelle(theme))))
+        with retour:
+            st.button(tx("Tous les thèmes", "All themes"), key="exb_retour_themes",
+                      icon=":material/arrow_back:", on_click=_choisir_theme,
+                      args=("__all__",), use_container_width=True)
+        recherche = st.text_input(
+            tx("Que cherchez-vous dans ce thème ?", "What are you looking for in this theme?"),
+            key=f"exb_recherche_{theme}",
+            placeholder=tx("Quelques mots suffisent", "A few words are enough"))
+        _liste_questions(par_theme.get(theme, []), theme, recherche)
+
+
+def _liste_questions(vues, theme, recherche=""):
+    """Les questions, groupées par module ; une demande les classe par pertinence."""
+    import recherche_questions
+    fr = i18n.get_lang() == "fr"
+    libs = _libelles_liste(vues)
+    if recherche and recherche.strip():
+        trouves = recherche_questions.classer(_documents_questions(vues), recherche, n=40)
+        par_i = {q["i"]: q for q in vues}
+        st.caption(_locale_text(f"{len(trouves)} question(s) proche(s)" if fr else f"{len(trouves)} close question(s)"))
+        for i, _sc in trouves:
+            st.button(libs.get(i, ""), key=f"exb_q_r_{theme}_{i}", icon=":material/arrow_forward:",
+                      on_click=_choisir_question, args=(theme, i),
+                      help=_module_court(par_i[i]), use_container_width=True)
+        return
+    groupes = {}
+    for q in vues:
+        groupes.setdefault(_module_court(q), []).append(q)
+    seul = len(groupes) == 1
+    for nom, qs in groupes.items():
+        with st.expander(f"{nom} · {len(qs)}", expanded=seul or len(qs) <= 6):
+            for q in qs:
+                st.button(libs.get(q["i"], ""), key=f"exb_q_l_{theme}_{q['i']}",
+                          on_click=_choisir_question, args=(theme, q["i"]),
+                          use_container_width=True)
+
 def _render_brut(cat, controls=None):
     """Question → filtres facultatifs → résultat, sur un seul écran."""
     questions = cat["questions"]
@@ -2601,8 +2750,10 @@ def _render_brut(cat, controls=None):
                     placeholder=T("ex_b_choisir_q"), help=T("ex_chercher"),
                     format_func=_locale_formatter(lambda i: libs.get(i, "")))
         if qi is None:
-            st.markdown("## " + _locale_text("Que souhaitez-vous savoir ?" if i18n.get_lang() == "fr" else "What would you like to know?"))
-            st.write(_locale_text("Choisissez une question à gauche pour découvrir les réponses de l’enquête. Vous pourrez ensuite comparer les groupes et affiner votre lecture." if i18n.get_lang() == "fr" else "Choose a question on the left to explore the survey answers. You can then compare groups and refine your analysis."))
+            # PLUS DE MENU DÉROULANT À DEVINER. Le thème se choisit sur des
+            # tuiles qui disent ce qu'elles contiennent, et la question dans
+            # une liste rangée par module, avec une recherche.
+            _navigateur_questions(questions, codes, theme)
             return
         q = next(x for x in vues if x["i"] == qi)
         st.caption(_locale_text("RÉPONSE À VOTRE QUESTION" if i18n.get_lang() == "fr" else "ANSWER TO YOUR QUESTION"))

@@ -99,9 +99,10 @@ def _styles():
     {r} .apri-sec-titre{{font:650 30px/1.2 Inter,Arial,sans-serif!important;color:#fff!important;letter-spacing:.2px;margin:0 0 6px;text-shadow:0 2px 14px rgba(0,0,0,.35);}}
     {r} .st-key-zone_page [class*='st-key-carte_']{{background:rgba(255,255,255,.93)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:16px!important;padding:24px 28px!important;box-shadow:0 18px 50px rgba(0,0,0,.28)!important;box-sizing:border-box!important;}}
     {r} .st-key-zone_page .st-key-carte_accueil{{padding:10px!important;overflow:hidden!important;}}
+    {r} .st-key-zone_page .st-key-sec_accueil.st-key-sec_accueil{{padding-bottom:24px!important;}}
     {r} .st-key-zone_page .st-key-carte_accueil [data-testid='stElementContainer']:has(iframe){{height:auto!important;min-height:0!important;max-height:none!important;flex:0 0 auto!important;}}
     {r} .st-key-zone_page [class*='st-key-carte_'] [data-testid='stElementContainer']:has(.apri-page-heading){{display:none!important;}}
-    @media(min-width:1001px){{{r} .st-key-zone_page [class*='st-key-sec_']:not(.st-key-sec_portail){{padding-top:104px!important;}}}}
+    @media(min-width:1001px){{{r} .st-key-zone_page [class*='st-key-sec_']:not(.st-key-sec_portail){{padding-top:96px!important;}}}}
     {r} .st-key-zone_page .st-key-pied_page{{background:rgba(255,255,255,.93)!important;border-radius:16px!important;margin:0 56px 48px!important;padding:14px 22px!important;width:auto!important;box-sizing:border-box!important;}}
     {r} .st-key-zone_page .st-key-pied_page [data-testid='stExpander'] details{{background:transparent!important;}}
     /* PAGE PAR PAGE : chaque rubrique occupe au moins un écran sous la barre. */
