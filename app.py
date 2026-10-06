@@ -2949,7 +2949,12 @@ result_export.activer(enabled=app_mode not in ('cgu', 'introuvable') and (une_pa
 import qualite_web
 qualite_web.appliquer()
 with _c_contenu:
-    if app_mode == MODE_APROPOS or une_page.actif(app_mode):
+    if une_page.actif(app_mode):
+        # Le pied de page se pose lui aussi sur une carte, sous la photo.
+        with st.container(key="pied_page"):
+            qualite_web.informations()
+            publication_web.footer()
+    elif app_mode == MODE_APROPOS:
         qualite_web.informations()
         publication_web.footer()
     if app_mode != 'cgu':

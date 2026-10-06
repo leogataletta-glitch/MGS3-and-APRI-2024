@@ -4,7 +4,10 @@ Le menu du haut ne change plus de page ; il fait défiler jusqu'à la rubrique.
 Chaque rubrique est un fragment Streamlit : un réglage fait dans l'une ne
 recalcule qu'elle.
 """
+import base64
+import html
 import json
+from pathlib import Path
 import streamlit as st
 import streamlit.components.v1 as components
 
@@ -27,14 +30,31 @@ def _rubrique(rendre_section, mode):
     rendre_section(mode)
 
 
+@st.cache_data(show_spinner=False)
+def _fond_b64():
+    chemin = Path(__file__).parent / "data" / "fond_apri.jpg"
+    try:
+        return base64.b64encode(chemin.read_bytes()).decode()
+    except OSError:
+        return ""
+
+
 def rendre(rendre_section, libelles=None):
+    libelles = libelles or {}
     for mode in ORDRE:
         with st.container(key=f"sec_{mode}"):
             st.markdown(f'<div id="apri-sec-{mode}" class="apri-ancre"></div>',
                         unsafe_allow_html=True)
-            _rubrique(rendre_section, mode)
+            if mode == "portail":
+                _rubrique(rendre_section, mode)
+                continue
+            # LE TITRE SE POSE SUR LA PHOTO, le contenu sur une carte claire.
+            st.markdown(f'<div class="apri-sec-titre">{html.escape(libelles.get(mode, ""))}</div>',
+                        unsafe_allow_html=True)
+            with st.container(key=f"carte_{mode}"):
+                _rubrique(rendre_section, mode)
     _styles()
-    _script(libelles or {})
+    _script(libelles)
 
 
 def _styles():
@@ -44,7 +64,13 @@ def _styles():
     /* L'ACCUEIL N'EST PLUS UN ÉCRAN FIXE : il devient la première rubrique. */
     {r} .st-key-zone_page .st-key-photo_home_hero{{position:relative!important;inset:auto!important;width:auto!important;height:100svh!important;min-height:100svh!important;z-index:auto!important;}}
     /* LA BARRE DU HAUT RESTE COLLÉE ET SOMBRE PARTOUT. */
-    {r} div[data-testid='stColumn']:has(.st-key-zone_nav){{position:sticky!important;top:0!important;z-index:999!important;background:#123746!important;}}
+    {r} div[data-testid='stColumn']:has(.st-key-zone_nav){{position:sticky!important;top:0!important;z-index:999!important;background:rgba(10,34,46,.28)!important;backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid rgba(255,255,255,.14)!important;}}
+    {r} div[data-testid='stColumn']:has(.st-key-zone_nav) .st-key-zone_nav{{background:transparent!important;}}
+    /* LA BARRE FLOTTE SUR LA PAGE : le contenu passe dessous, la photo aussi. */
+    @media(min-width:1001px){{
+     {r} div[data-testid='stColumn']:has(.st-key-zone_nav){{margin-bottom:-71px!important;}}
+     {r} .st-key-zone_page [class*='st-key-sec_']:not(.st-key-sec_portail){{padding-top:115px!important;}}
+    }}
     {r} .st-key-zone_nav button p,{r} .st-key-zone_nav button span{{color:white!important;}}
     {r} .st-key-zone_nav button[kind='primary']{{background:transparent!important;background-color:transparent!important;box-shadow:none!important;}}
     /* Le titre de chaque rubrique se voit en défilant. */
@@ -52,7 +78,6 @@ def _styles():
     {r} .st-key-zone_page [class*='st-key-sec_'] h1.apri-page-title span{{font-size:26px!important;font-weight:650!important;color:#123746!important;line-height:1.25!important;}}
     {r} .st-key-zone_page [class*='st-key-sec_'] h1.apri-page-title{{margin:4px 0 10px!important;text-align:left!important;}}
     {r} .st-key-zone_page [class*='st-key-sec_'] h1.apri-page-title span{{text-align:left!important;}}
-    {r} .st-key-zone_page [class*='st-key-sec_'] [data-testid='stElementContainer']:has(.apri-page-heading){{display:block!important;}}
     /* La carte ne déborde jamais sur la rubrique suivante. */
     {r} .st-key-zone_page .st-key-sec_accueil{{overflow:hidden!important;}}
     {r} .st-key-zone_nav .apri-actif button{{background:#397FA3!important;}}
@@ -63,13 +88,24 @@ def _styles():
     {r} .st-key-zone_page{{background:#eef3f6!important;}}
     {r} .st-key-zone_page [class*='st-key-sec_']:not(.st-key-sec_portail){{background:#eef3f6!important;padding:28px 36px 40px!important;border-top:1px solid #d5e0e6;box-sizing:border-box!important;}}
     {r} .st-key-zone_page .st-key-sec_portail{{background:#173e4c!important;}}
+    /* LA PHOTO DE L'ACCUEIL RESTE EN FOND, fixe, sous un voile bleu nuit. */
+    {r} [data-testid='stAppViewContainer']{{background:linear-gradient(rgba(10,34,46,.66),rgba(10,34,46,.66)),url('data:image/jpeg;base64,__FOND__') center/cover fixed #173e4c!important;}}
+    {r} [data-testid='stMain'],{r} [data-testid='stMainBlockContainer'],
+    {r} div[data-testid='stColumn']:has(.st-key-zone_page),{r} .st-key-zone_page{{background:transparent!important;}}
+    {r} .st-key-zone_page [class*='st-key-sec_']:not(.st-key-sec_portail){{background:transparent!important;border-top:0!important;padding:44px 56px 56px!important;}}
+    {r} .apri-sec-titre{{font:650 30px/1.2 Inter,Arial,sans-serif!important;color:#fff!important;letter-spacing:.2px;margin:0 0 6px;text-shadow:0 2px 14px rgba(0,0,0,.35);}}
+    {r} .st-key-zone_page [class*='st-key-carte_']{{background:rgba(255,255,255,.93)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:16px!important;padding:24px 28px!important;box-shadow:0 18px 50px rgba(0,0,0,.28)!important;box-sizing:border-box!important;}}
+    {r} .st-key-zone_page .st-key-carte_accueil{{padding:10px!important;overflow:hidden!important;}}
+    {r} .st-key-zone_page [class*='st-key-carte_'] [data-testid='stElementContainer']:has(.apri-page-heading){{display:none!important;}}
+    {r} .st-key-zone_page .st-key-pied_page{{background:rgba(255,255,255,.93)!important;border-radius:16px!important;margin:0 56px 48px!important;padding:14px 22px!important;width:auto!important;box-sizing:border-box!important;}}
+    {r} .st-key-zone_page .st-key-pied_page [data-testid='stExpander'] details{{background:transparent!important;}}
     /* PAGE PAR PAGE : chaque rubrique occupe au moins un écran sous la barre. */
     @media(min-width:1001px){{
-     {r} .st-key-zone_page [class*='st-key-sec_']:not(.st-key-sec_portail){{min-height:calc(100dvh - 71px)!important;}}
-     {r} .st-key-zone_page .st-key-sec_portail .st-key-photo_home_hero{{height:calc(100dvh - 71px)!important;min-height:calc(100dvh - 71px)!important;}}
+     {r} .st-key-zone_page [class*='st-key-sec_']:not(.st-key-sec_portail){{min-height:100dvh!important;}}
+     {r} .st-key-zone_page .st-key-sec_portail .st-key-photo_home_hero{{height:100dvh!important;min-height:100dvh!important;}}
     }}
     """
-    st.markdown("<style>" + css + "</style>", unsafe_allow_html=True)
+    st.markdown("<style>" + css.replace("__FOND__", _fond_b64()) + "</style>", unsafe_allow_html=True)
 
 
 def _script(libelles):
@@ -78,6 +114,9 @@ def _script(libelles):
     st.session_state["_apri_defil_n"] = nonce
     js = """
 const w=window.parent,d=w.document,ordre=__ORDRE__,cible=__CIBLE__;
+// Hauteur de ce qui couvre le haut de l'écran. La barre flottante (marge
+// négative) ne compte pas : les rubriques glissent dessous.
+function hautBarre(){let b=0;d.querySelectorAll('div[data-testid="stColumn"]:has(.st-key-zone_nav),.st-key-menu_mobile').forEach(h=>{const r=h.getBoundingClientRect();if(r.height>0&&r.top<5&&parseFloat(w.getComputedStyle(h).marginBottom)>=0)b=Math.max(b,r.bottom);});return b;}
 // Le menu suit la lecture : la rubrique qui occupe le haut de l'écran s'allume.
 const navs={};
 ordre.forEach(m=>{navs[m]=d.querySelector('.st-key-nav_'+m)||d.querySelector('.st-key-top_menu_'+m);});
@@ -101,7 +140,7 @@ if(cible){
   // d'une carte ou d'un schéma) : on le laisse faire.
   if(attendu!==null&&Math.abs(sc.scrollTop-attendu)>40)return;
   let bas=0;
-  d.querySelectorAll('div[data-testid="stColumn"]:has(.st-key-zone_nav),.st-key-menu_mobile').forEach(h=>{const r=h.getBoundingClientRect();if(r.height>0&&r.top<5)bas=Math.max(bas,r.bottom);});
+  bas=hautBarre();
   const dy=a.getBoundingClientRect().top-bas;
   if(Math.abs(dy)>2)sc.scrollTop=sc.scrollTop+dy;
   attendu=sc.scrollTop;
@@ -118,7 +157,7 @@ const sc=d.querySelector('[data-testid="stAppViewContainer"]');
 if(d.__apriSnapOff)d.__apriSnapOff();
 const large=()=>w.matchMedia('(min-width:1001px) and (pointer:fine)').matches;
 const reduit=()=>w.matchMedia('(prefers-reduced-motion:reduce)').matches;
-const haut=()=>{let b=0;d.querySelectorAll('div[data-testid="stColumn"]:has(.st-key-zone_nav),.st-key-menu_mobile').forEach(h=>{const r=h.getBoundingClientRect();if(r.height>0&&r.top<5)b=Math.max(b,r.bottom);});return b;};
+const haut=hautBarre;
 const rubriques=()=>ordre.map(m=>d.querySelector('.st-key-sec_'+m)).filter(Boolean);
 const courante=()=>{const hb=haut();let k=0;rubriques().forEach((s,i)=>{if(s.getBoundingClientRect().top<=hb+6)k=i;});return k;};
 let anim=false,calme=0,frame=null;
