@@ -625,6 +625,29 @@ __MEASURE_JS__
 __HD_JS__
 __TERRAIN_JS__
 L.control.scale({imperial:false, position:'bottomleft'}).addTo(carte);
+/* COUCHES, VUE ET MESURE SE REPLIENT : fermés, ils laissent la place à la
+   liste des couches. Un clic sur le titre les ouvre. */
+(function(){
+ const fr=L_.legend==='Légende';
+ const st=document.createElement('style');st.textContent='#panneau details.pli{border-bottom:1px solid #eef2f7}#panneau details.pli>summary{cursor:pointer;list-style:none;padding:10px 12px;font:600 12px/1.3 system-ui;letter-spacing:.6px;text-transform:uppercase;color:#34566e;display:flex;justify-content:space-between;align-items:center}#panneau details.pli>summary::-webkit-details-marker{display:none}#panneau details.pli>summary::after{content:"▾";font-size:12px;transition:transform .2s}#panneau details.pli[open]>summary::after{transform:rotate(180deg)}#panneau details.pli>.pli-corps{padding:0 12px 10px}#panneau .tete.plie{padding:0!important;border:0!important}';
+ document.head.append(st);
+ function plier(el,titre,garder){
+  if(!el||el.dataset.plie)return;el.dataset.plie='1';
+  const d=document.createElement('details');d.className='pli';
+  const s=document.createElement('summary');s.textContent=titre;d.append(s);
+  const c=document.createElement('div');c.className='pli-corps';d.append(c);
+  [...el.childNodes].forEach(n=>{if(n!==garder)c.append(n);});
+  el.append(d);el.classList.add('plie');
+ }
+ const tete=document.querySelector('#panneau .tete');
+ const titre=tete&&tete.querySelector('.titre');if(titre)titre.remove();
+ plier(tete,fr?'Couches et vue':'Layers and view');
+ const mesure=tete&&tete.nextElementSibling;
+ if(mesure&&/Mesurer|Measure/.test(mesure.textContent)){
+  const t=mesure.querySelector('strong');if(t)t.remove();
+  mesure.style.padding='0';plier(mesure,fr?'Mesurer sur la carte':'Measure on the map');
+ }
+})();
 </script>
 <style>.etq-ville{background:none;border:none;box-shadow:none;color:#101728;
  font-weight:700;font-size:11.5px;text-shadow:0 0 3px #fff,0 0 3px #fff,
@@ -679,7 +702,7 @@ def _groupes(d):
              "sym": {"type": "ligne", "c": COULEURS["rp"], "w": 3}},
         ]},
         {"titre": _locale_text("Fonds marins" if i18n.get_lang()=="fr" else "Seafloor"), "ferme": False, "lignes": [
-            {"cle": "bathy", "titre": _locale_text("Fonds marins · relief et profondeurs" if i18n.get_lang()=="fr" else "Seafloor · relief and depths"), "on": False, "sym": {"type": "tuile"}},
+            {"cle": "bathy", "titre": _locale_text("Fonds marins · relief et profondeurs" if i18n.get_lang()=="fr" else "Seafloor · relief and depths"), "on": True, "sym": {"type": "tuile"}},
         ]},
         {"titre": T("cl_g_relief"), "ferme": False, "lignes": [
             {"cle": "ombrage", "titre": T("cl_ombrage"), "on": True,
