@@ -38,7 +38,7 @@ def render(current, order, go):
     ''' + root + ''' [data-testid="stColumn"]:has(.st-key-zone_nav){position:sticky!important;top:0!important;z-index:999!important;}
     .st-key-wheel_previous,.st-key-wheel_next{display:none!important;}
     ''' + root + ''' .st-key-zone_nav>div:has(.apri-lockup){margin-right:auto!important;}
-    ''' + root + ''' .apri-lockup{display:flex;align-items:center;gap:12px;height:52px;}
+    ''' + root + ''' .apri-lockup{display:flex;align-items:center;gap:12px;height:52px;position:relative;top:-6px;}
     ''' + root + ''' .apri-lockup img{filter:none!important;background:transparent!important;object-fit:contain;}
     ''' + root + ''' .apri-lockup .apri-lockup-mark{height:38px!important;width:auto!important;}
     ''' + root + ''' .apri-lockup-txt{display:flex;flex-direction:column;justify-content:center;line-height:1;}
