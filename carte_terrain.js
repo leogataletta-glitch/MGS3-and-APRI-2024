@@ -58,6 +58,14 @@
  `;document.head.append(polish);
  let gl,ready=false,failed=false;
  function fallback(){if(failed)return;failed=true;window.apriTerrain=null;host.remove();if(gl)gl.remove();document.getElementById('carte').style.visibility='visible';document.getElementById('map-loading')?.remove();carte.invalidateSize();top.disabled=tilt.disabled=true;note.textContent=fr?'Relief indisponible : la carte 2D reste accessible.':'Terrain unavailable: the 2D map remains available.';}
+ // On the single scrolling page, the heavy 3D terrain waits until the map
+ // is about to be seen: the rest of the site loads without it.
+ await new Promise(res=>{try{const f=window.frameElement,P=window.parent;
+  if(!f||!P.document.querySelector('.st-key-sec_accueil'))return res();
+  const proche=()=>{const r=f.getBoundingClientRect();return r.top<P.innerHeight*0.8&&r.bottom>0;};
+  if(proche())return res();
+  const t=setInterval(()=>{if(proche()){clearInterval(t);res();}},350);
+ }catch(e){res();}});
  const timeout=setTimeout(()=>{if(!ready)fallback();},25000);
  try{
   const m=await import('https://unpkg.com/maplibre-gl@6.9.0/dist/maplibre-gl.mjs');

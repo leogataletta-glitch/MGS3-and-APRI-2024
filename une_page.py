@@ -105,6 +105,20 @@ def _styles():
     @media(min-width:1001px){{{r} .st-key-zone_page [class*='st-key-sec_']:not(.st-key-sec_portail){{padding-top:96px!important;}}}}
     {r} .st-key-zone_page .st-key-pied_page{{background:rgba(255,255,255,.93)!important;border-radius:16px!important;margin:0 56px 48px!important;padding:14px 22px!important;width:auto!important;box-sizing:border-box!important;}}
     {r} .st-key-zone_page .st-key-pied_page [data-testid='stExpander'] details{{background:transparent!important;}}
+    /* LA BARRE DU HAUT TIENT SUR UNE LIGNE, dans toutes les langues : les
+       libellés espagnols ou créoles, plus longs, la faisaient passer sur deux
+       lignes. Elle se resserre d'abord (voir le script), puis rapetisse. */
+    @media(min-width:1001px){{
+     {r} .st-key-zone_nav{{flex-wrap:nowrap!important;}}
+     {r} .st-key-zone_nav > *{{flex-shrink:0!important;}}
+     {r} .st-key-zone_nav [class*='st-key-navigation_language_desktop']{{width:auto!important;}}
+     {r} .st-key-zone_nav.apri-serre button{{padding-left:9px!important;padding-right:9px!important;}}
+     {r} .st-key-zone_nav.apri-serre .apri-lockup-sous{{display:none!important;}}
+     {r} .st-key-zone_nav.apri-serre{{gap:4px!important;}}
+     {r} .st-key-zone_nav.apri-tres-serre button p{{font-size:12px!important;}}
+     {r} .st-key-zone_nav.apri-tres-serre button{{padding-left:6px!important;padding-right:6px!important;}}
+     {r} .st-key-zone_nav.apri-tres-serre .apri-lockup-filet,{r} .st-key-zone_nav.apri-tres-serre .apri-lockup-unep{{display:none!important;}}
+    }}
     /* PAGE PAR PAGE : chaque rubrique occupe au moins un écran sous la barre. */
     @media(min-width:1001px){{
      {r} .st-key-zone_page [class*='st-key-sec_']:not(.st-key-sec_portail){{min-height:100dvh!important;}}
@@ -272,6 +286,14 @@ const placer=()=>{image=null;
 };
 const suivre=()=>{if(barre&&sc)barre.classList.toggle('apri-defile',sc.scrollTop>60);if(!anim)d.__apriPoints(courante());if(!image)image=w.requestAnimationFrame(placer);};
 w.setTimeout(placer,600);w.addEventListener('resize',suivre);
+// La barre se resserre si ses libellés ne tiennent pas sur une ligne.
+const nav=d.querySelector('.st-key-zone_nav');
+const ajuster=()=>{if(!nav)return;nav.classList.remove('apri-serre','apri-tres-serre');
+ const deborde=()=>nav.scrollWidth>nav.clientWidth+2;
+ if(deborde())nav.classList.add('apri-serre');
+ if(deborde())nav.classList.add('apri-tres-serre');};
+ajuster();w.setTimeout(ajuster,400);w.setTimeout(ajuster,1500);
+if(d.__apriAjuster)w.removeEventListener('resize',d.__apriAjuster);d.__apriAjuster=ajuster;w.addEventListener('resize',ajuster);
 sc&&sc.addEventListener('scroll',suivre,{passive:true});suivre();
 {const old=d.getElementById('apri-points-style');if(old)old.remove();const st=d.createElement('style');st.id='apri-points-style';st.textContent=`
 #apri-points{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:1001;display:flex;flex-direction:column;gap:12px;}
