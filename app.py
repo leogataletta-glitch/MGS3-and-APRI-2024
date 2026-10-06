@@ -2927,7 +2927,7 @@ with _c_contenu:
         st.subheader(publication_web.tr(publication_web.PAGES['cgu']))
         publication_web.terms()
     if une_page.actif(app_mode):
-        une_page.rendre(_rendre_section)
+        une_page.rendre(_rendre_section, {m: _locale_text(LIBELLE_MODE[m]) for m in une_page.ORDRE})
     else:
         _rendre_section(app_mode)
 
