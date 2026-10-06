@@ -108,6 +108,16 @@ def composition():
     root = '.stApp' * 32
     zone = root + ' .st-key-zone_page'
     page = st.session_state.get('app_mode', 'portail')
+    import une_page
+    if une_page.actif(page):
+        # SUR LA PAGE UNIQUE, la mise en page ne dépend plus de la rubrique
+        # visée : elle s'applique aux rubriques de texte, jamais à l'accueil
+        # ni à la carte, qui gardent leur toile pleine largeur.
+        zone = root + ' .st-key-zone_page :is(' + ','.join(
+            '.st-key-sec_' + m for m in une_page.ORDRE if m not in ('portail', 'accueil')) + ')'
+        st.markdown(COMPOSITION.replace('__ZONE__', zone), unsafe_allow_html=True)
+        st.markdown(CONTENT_LAYOUT.replace('__ZONE__', zone), unsafe_allow_html=True)
+        return
     if page in ('portail', 'accueil'):
         return
     st.markdown(COMPOSITION.replace('__ZONE__', zone), unsafe_allow_html=True)

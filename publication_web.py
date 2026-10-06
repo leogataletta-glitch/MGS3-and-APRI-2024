@@ -33,12 +33,17 @@ def initialise():
     if st.session_state.get('_public_url_seen') != signature:
         st.session_state['app_mode'] = resolve_page(values)
         st.session_state['_public_url_seen'] = signature
+        import une_page
+        if st.session_state['app_mode'] in une_page.ORDRE[1:]:
+            une_page.demander_defilement(st.session_state['app_mode'])
 
 def go(page):
     if page not in PAGES:
         raise ValueError('Unknown APRI page')
     st.session_state['app_mode'] = page
     st.query_params['page'] = page
+    import une_page
+    une_page.demander_defilement(page)
     st.session_state['_public_url_seen'] = (page,)
 
 def sync():

@@ -28,7 +28,8 @@ def apply():
     css += shared + " .st-key-zone_page button[kind='primary']{background:#397FA3!important;border-color:#397FA3!important;color:white!important;}"
     css += shared + " .st-key-zone_page [data-baseweb='select']>div{background:#E7F0F5!important;border-color:#c8dce7!important;}"
     css += shared + " .st-key-zone_page," + shared + " div[data-testid='stColumn']:has(.st-key-zone_page){background:#EDF4F9!important;}"
-    if st.session_state.get('app_mode') == 'accueil':
+    import une_page
+    if st.session_state.get('app_mode') == 'accueil' and not une_page.actif('accueil'):
         css += shared + " .st-key-zone_page{padding-top:0!important;gap:0!important;}"
         css += shared + " .st-key-zone_page [data-testid='stElementContainer']:has(> [data-testid='stMarkdown']):not(:has(img,button)){min-height:0!important;}"
     st.markdown('<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>' + css + '</style>', unsafe_allow_html=True)

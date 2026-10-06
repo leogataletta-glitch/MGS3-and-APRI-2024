@@ -549,7 +549,8 @@ def render():
     with st.container(key="photo_home_hero"):
         st.markdown('<h1 class="photo-home-title">'+title+'</h1><p class="photo-home-intro">'+intro+'</p>',unsafe_allow_html=True)
         if st.button(_locale_text(T("a2_cta")),key="photo_home_results"):
-            st.session_state["app_mode"]="dimensions"
+            import publication_web
+            publication_web.go("dimensions")
             st.rerun()
 
 

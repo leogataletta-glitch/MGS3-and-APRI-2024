@@ -2597,7 +2597,10 @@ with _zone_nav:
 
 
 import navigation_scroll
-navigation_scroll.render(st.session_state['app_mode'], [MODE_PORTAIL, MODE_ACCUEIL, MODE_METHODO, MODE_DIMENSIONS, MODE_BOUCLES, MODE_ACTIONS, MODE_DONNEES, MODE_APROPOS, MODE_CONTACT], _bascule)
+# Sur la page unique, la molette fait défiler la page : plus de saut de page
+# en page au bord de l'écran. On garde seulement l'identité et la barre.
+import une_page as _une_page
+navigation_scroll.render(None if _une_page.actif(st.session_state['app_mode']) else st.session_state['app_mode'], [MODE_PORTAIL, MODE_ACCUEIL, MODE_METHODO, MODE_DIMENSIONS, MODE_BOUCLES, MODE_ACTIONS, MODE_DONNEES, MODE_APROPOS, MODE_CONTACT], _bascule)
 
 # LA PAGE OCCUPE LA COLONNE DE DROITE. Le conteneur est ouvert ici, avant
 # l'aiguillage, pour que chaque page se dessine dedans sans avoir à savoir
@@ -2627,7 +2630,7 @@ st.markdown("""<style>
 # Le ruban est peint maintenant, dans le conteneur réservé plus haut : il a
 # besoin de la langue choisie et du résumé des filtres, tous deux fixés par
 # la colonne de gauche qu'on vient de rendre.
-_rendre_ruban(st.session_state["app_mode"] != MODE_PORTAIL)
+_rendre_ruban(st.session_state["app_mode"] != MODE_PORTAIL and not _une_page.actif(st.session_state["app_mode"]))
 
 app_mode = st.session_state["app_mode"]
 
@@ -2641,20 +2644,17 @@ with _c_contenu:
 # TOUT L'AIGUILLAGE SE DESSINE DANS LA COLONNE DE DROITE.
 # Chaque page reste écrite comme avant ; c'est le contexte qui change, en un
 # seul endroit, plutôt que quarante modules qui devraient savoir où ils sont.
-with _c_contenu:
-    import typographie
-    typographie.appliquer(app_mode)
-    import proposition_visuelle
-    proposition_visuelle.selector()
-    if app_mode == 'introuvable':
-        publication_web.not_found()
-    if app_mode == 'cgu':
-        st.subheader(publication_web.tr(publication_web.PAGES['cgu']))
-        publication_web.terms()
+# UNE SEULE PAGE QUI DÉFILE. Chaque rubrique se dessine par la même fonction,
+# l'une sous l'autre ; le menu du haut ne change plus de page, il fait défiler
+# jusqu'à la rubrique. Chaque rubrique est un fragment : un réglage dans l'une
+# ne recalcule qu'elle, pas les huit autres.
+def _rendre_section(app_mode):
     import design_commun
     if app_mode != MODE_PORTAIL:
         design_commun.appliquer()
-        if app_mode != MODE_ACCUEIL:
+        # Sur la page unique, la carte porte aussi son titre : c'est un repère
+        # quand on défile.
+        if app_mode != MODE_ACCUEIL or une_page.actif(app_mode):
             design_commun.entete(app_mode, i18n.get_lang() == "fr")
     if app_mode == MODE_PORTAIL:
         # L'ACCUEIL EST CELUI QUI A ÉTÉ RETENU. Les deux ont vécu côte à côte
@@ -2914,6 +2914,23 @@ with _c_contenu:
         a_propos_page.render_contact()
 
 
+
+with _c_contenu:
+    import typographie
+    import une_page
+    typographie.appliquer('une_page' if une_page.actif(app_mode) else app_mode)
+    import proposition_visuelle
+    proposition_visuelle.selector()
+    if app_mode == 'introuvable':
+        publication_web.not_found()
+    if app_mode == 'cgu':
+        st.subheader(publication_web.tr(publication_web.PAGES['cgu']))
+        publication_web.terms()
+    if une_page.actif(app_mode):
+        une_page.rendre(_rendre_section)
+    else:
+        _rendre_section(app_mode)
+
 # LE BANDEAU DU BAS A ÉTÉ RETIRÉ, ET SA DEVISE EST DESCENDUE DANS LA COLONNE.
 # Depuis que la colonne de gauche est verte et court du haut au bas de la
 # fenêtre, le bandeau du bas répétait le même vert sur toute la largeur : deux
@@ -2925,14 +2942,14 @@ with _c_contenu:
 
 # Download the visible result, without an extra result table.
 import result_export
-result_export.activer(enabled=app_mode not in (MODE_PORTAIL, 'cgu', 'introuvable'))
+result_export.activer(enabled=app_mode not in ('cgu', 'introuvable') and (une_page.actif(app_mode) or app_mode != MODE_PORTAIL))
 
 
 # Shared accessibility and factual data-use information.
 import qualite_web
 qualite_web.appliquer()
 with _c_contenu:
-    if app_mode == MODE_APROPOS:
+    if app_mode == MODE_APROPOS or une_page.actif(app_mode):
         qualite_web.informations()
         publication_web.footer()
     if app_mode != 'cgu':
