@@ -514,9 +514,16 @@ COUCHES.ombrage = L.tileLayer(
 
 // One optional group: colored seafloor relief and labelled depth contours.
 const bathyURL='https://tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/';
+// GEBCO also paints the land: only its sea pixels are kept, on a canvas.
+const MerGEBCO=L.GridLayer.extend({createTile(c,done){
+ const t=document.createElement('canvas');t.width=t.height=256;const im=new Image();im.crossOrigin='anonymous';
+ im.onload=()=>{try{const x=t.getContext('2d');x.drawImage(im,0,0,256,256);const d=x.getImageData(0,0,256,256),p=d.data;
+  for(let i=0;i<p.length;i+=4){const e=p[i+2]-p[i];p[i+3]=e>18?255:e<8?0:(e-8)*25;}x.putImageData(d,0,0);}catch(e){}done(null,t);};
+ im.onerror=()=>done(null,t);
+ im.src=bathyURL+'GEBCO_basemap_NCEI/MapServer/tile/'+c.z+'/'+c.y+'/'+c.x;return t;}});
 COUCHES.bathy=L.layerGroup([
- L.tileLayer(bathyURL+'GEBCO_basemap_NCEI/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:10,maxZoom:21,crossOrigin:true,attribution:'GEBCO 2024 / NOAA NCEI'}),
- L.tileLayer(bathyURL+'GEBCO_contours/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:10,maxZoom:21,crossOrigin:true,attribution:'GEBCO 2023 contours / NOAA NCEI'})
+ new MerGEBCO({maxNativeZoom:10,maxZoom:21,attribution:'GEBCO 2024 / NOAA NCEI'}),
+ L.tileLayer(bathyURL+'GEBCO_contours/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:10,maxZoom:12,crossOrigin:true,attribution:'GEBCO 2023 contours / NOAA NCEI'})
 ]);
 
 /* ---- le panneau ------------------------------------------------------- */

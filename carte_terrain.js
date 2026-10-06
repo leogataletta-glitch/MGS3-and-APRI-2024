@@ -66,11 +66,18 @@
   if(proche())return res();
   const t=setInterval(()=>{if(proche()){clearInterval(t);res();}},350);
  }catch(e){res();}});
- const timeout=setTimeout(()=>{if(!ready)fallback();},25000);
+ const timeout=setTimeout(()=>{if(!ready)fallback();},45000);
  try{
   const m=await import('https://unpkg.com/maplibre-gl@6.9.0/dist/maplibre-gl.mjs');
   if(failed)return;
   const installerHD=await preparerHaitiHD(m);
+  try{m.addProtocol('aprimer',async(request,controller)=>{
+   const r=await fetch('https://'+request.url.slice(10),{signal:controller.signal});if(!r.ok)throw new Error('GEBCO '+r.status);
+   const bmp=await createImageBitmap(await r.blob()),c=new OffscreenCanvas(bmp.width,bmp.height),x=c.getContext('2d');
+   x.drawImage(bmp,0,0);const d=x.getImageData(0,0,c.width,c.height),p=d.data;
+   for(let i=0;i<p.length;i+=4){const e=p[i+2]-p[i];p[i+3]=e>18?255:e<8?0:(e-8)*25;}
+   x.putImageData(d,0,0);return {data:await createImageBitmap(c)};
+  });}catch(e){}
   if(failed)return;
   const raster=(tiles,attribution,maxzoom=19)=>({type:'raster',tiles:[tiles],tileSize:256,attribution,maxzoom});
   gl=new m.Map({container:host,center:[-74.05,18.33],zoom:9,pitch:0,maxPitch:80,maxZoom:21,dragRotate:true,pitchWithRotate:true,canvasContextAttributes:{preserveDrawingBuffer:true},
@@ -97,9 +104,11 @@
    if(failed)return;
    add('terre',polygons(D.terre),'fill',{'fill-color':'#dce2df'});
    gl.addLayer({id:'ombrage-hillshade',type:'hillshade',source:'dem',paint:{'hillshade-exaggeration':.15}});ids.ombrage=['ombrage-hillshade'];
-   for(const [id,service] of [['bathy-relief','GEBCO_basemap_NCEI'],['bathy-contours','GEBCO_contours']]){
-    gl.addSource(id,raster('https://tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/'+service+'/MapServer/tile/{z}/{y}/{x}','GEBCO / NOAA NCEI',10));
-    gl.addLayer({id,type:'raster',source:id,layout:{visibility:'none'}});
+   // GEBCO also paints the land in beige: only its sea pixels are kept
+   // (aprimer://), so the satellite image stays visible on land.
+   for(const [id,service,proto,zmax] of [['bathy-relief','GEBCO_basemap_NCEI','aprimer://',24],['bathy-contours','GEBCO_contours','https://',12]]){
+    gl.addSource(id,raster(proto+'tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/'+service+'/MapServer/tile/{z}/{y}/{x}','GEBCO / NOAA NCEI',10));
+    gl.addLayer({id,type:'raster',source:id,maxzoom:zmax,paint:{'raster-fade-duration':0},layout:{visibility:'none'}});
    }
    ids.bathy=['bathy-relief','bathy-contours'];
    // D.terre contains local study contours, not a complete global coastline.
