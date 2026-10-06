@@ -318,8 +318,9 @@ const D = __DONNEES__;
 const C = __COULEURS__;
 const L_ = __LIBELLES__;
 
-const carte = L.map('carte', {zoomControl:true, preferCanvas:true,
+const carte = L.map('carte', {zoomControl:false, preferCanvas:true,
                               attributionControl:true});
+L.control.zoom({position:'topright'}).addTo(carte);
 const EMPRISE = [[17.98,-74.55],[18.68,-73.55]];
 function recadrer(){ carte.fitBounds(EMPRISE, {padding:[12,12]}); }
 recadrer();
@@ -523,7 +524,7 @@ const MerGEBCO=L.GridLayer.extend({createTile(c,done){
  im.src=bathyURL+'GEBCO_basemap_NCEI/MapServer/tile/'+c.z+'/'+c.y+'/'+c.x;return t;}});
 COUCHES.bathy=L.layerGroup([
  new MerGEBCO({maxNativeZoom:10,maxZoom:21,attribution:'GEBCO 2024 / NOAA NCEI'}),
- L.tileLayer(bathyURL+'GEBCO_contours/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:10,maxZoom:12,crossOrigin:true,attribution:'GEBCO 2023 contours / NOAA NCEI'})
+ L.tileLayer(bathyURL+'GEBCO_contours/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:10,maxZoom:11,crossOrigin:true,attribution:'GEBCO 2023 contours / NOAA NCEI'})
 ]);
 
 /* ---- le panneau ------------------------------------------------------- */

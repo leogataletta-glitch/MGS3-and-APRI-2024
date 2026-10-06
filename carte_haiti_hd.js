@@ -1,3 +1,6 @@
+/* Seafloor depths are exaggerated (x3) so the relief view dives into the sea;
+   land elevations stay true. Terrarium: h = R*256 + G + B/256 - 32768. */
+function apriFondMarin(p){for(let i=0;i<p.length;i+=4){const h=p[i]*256+p[i+1]+p[i+2]/256-32768;if(h<0){const v=Math.round((h*3+32768)*256);p[i]=(v>>>16)&255;p[i+1]=(v>>>8)&255;p[i+2]=v&255;}}}
 /* CNIGS / HaitiData / World Bank 2014–2016, DOI 10.5069/G9GX48R8.
    Read public tiled GeoTIFF ranges; reproject UTM 18N into display tiles.
    Original imagery: 25 cm. Bare-earth terrain: 1.5 m. Not current imagery. */
@@ -14,7 +17,7 @@ async function preparerHaitiHD(m){
   const lng=(x,z)=>x/2**z*360-180,lat=(y,z)=>Math.atan(Math.sinh(Math.PI*(1-2*y/2**z)))*180/Math.PI;
   const png=async canvas=>(await new Promise(r=>canvas.toBlob(r,'image/png'))).arrayBuffer();
   const transparent=()=>{const c=document.createElement('canvas');c.width=c.height=256;return c;};
-  async function fallback(z,x,y){const url='https://s3.amazonaws.com/elevation-tiles-prod/terrarium/'+z+'/'+x+'/'+y+'.png';const r=await fetch(url);if(!r.ok)throw Error('Terrain fallback unavailable');const bitmap=await createImageBitmap(await r.blob());const c=transparent();c.getContext('2d').drawImage(bitmap,0,0,256,256);bitmap.close();return c;}
+  async function fallback(z,x,y){const url='https://s3.amazonaws.com/elevation-tiles-prod/terrarium/'+z+'/'+x+'/'+y+'.png';const r=await fetch(url);if(!r.ok)throw Error('Terrain fallback unavailable');const bitmap=await createImageBitmap(await r.blob());const c=transparent(),g=c.getContext('2d',{willReadFrequently:true});g.drawImage(bitmap,0,0,256,256);bitmap.close();const d=g.getImageData(0,0,256,256);apriFondMarin(d.data);g.putImageData(d,0,0);return c;}
   let busy=0;const queue=[];let finished=0,readFailures=0;
   async function limited(task,signal){if(busy>=4)await new Promise(r=>queue.push(r));busy++;try{if(signal?.aborted)throw new DOMException('Aborted','AbortError');return await task();}finally{busy--;queue.pop()?.();}}
   const tiles=new Map();

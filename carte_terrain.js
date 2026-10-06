@@ -71,6 +71,12 @@
   const m=await import('https://unpkg.com/maplibre-gl@6.9.0/dist/maplibre-gl.mjs');
   if(failed)return;
   const installerHD=await preparerHaitiHD(m);
+  try{m.addProtocol('aprifond',async(request,controller)=>{
+   const r=await fetch('https://'+request.url.slice(11),{signal:controller.signal});if(!r.ok)throw new Error('DEM '+r.status);
+   const bmp=await createImageBitmap(await r.blob(),{colorSpaceConversion:'none'}),c=new OffscreenCanvas(bmp.width,bmp.height),x=c.getContext('2d');
+   x.drawImage(bmp,0,0);const d=x.getImageData(0,0,c.width,c.height);apriFondMarin(d.data);x.putImageData(d,0,0);
+   return {data:await createImageBitmap(c,{colorSpaceConversion:'none'})};
+  });}catch(e){}
   try{m.addProtocol('aprimer',async(request,controller)=>{
    const r=await fetch('https://'+request.url.slice(10),{signal:controller.signal});if(!r.ok)throw new Error('GEBCO '+r.status);
    const bmp=await createImageBitmap(await r.blob()),c=new OffscreenCanvas(bmp.width,bmp.height),x=c.getContext('2d');
@@ -85,10 +91,10 @@
     sat:raster('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}','Esri, Maxar, Earthstar Geographics',17),
     plan:raster('https://tile.openstreetmap.org/{z}/{x}/{y}.png','© OpenStreetMap'),
     relief:raster('https://a.tile.opentopomap.org/{z}/{x}/{y}.png','© OpenTopoMap, © OpenStreetMap',17),
-    dem:{type:'raster-dem',tiles:[installerHD?'aprihd://be/{z}/{x}/{y}':'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],encoding:'terrarium',tileSize:256,maxzoom:installerHD?17:15,attribution:'Terrain © Mapzen / AWS Open Data'}
+    dem:{type:'raster-dem',tiles:[installerHD?'aprihd://be/{z}/{x}/{y}':'aprifond://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],encoding:'terrarium',tileSize:256,maxzoom:installerHD?17:15,attribution:'Terrain © Mapzen / AWS Open Data'}
    },layers:[{id:'background',type:'background',paint:{'background-color':'#edf4f9'}},...['sat','plan','relief'].map(id=>({id,type:'raster',source:id,layout:{visibility:id==='sat'?'visible':'none'}}))],terrain:{source:'dem',exaggeration:1}}});
   gl.scrollZoom.disable();
-  gl.addControl(new m.NavigationControl({visualizePitch:true}),'top-left');gl.addControl(new m.ScaleControl({unit:'metric'}),'bottom-left');
+  gl.addControl(new m.NavigationControl({visualizePitch:true}),'top-right');gl.addControl(new m.ScaleControl({unit:'metric'}),'bottom-left');
   gl.getCanvas().addEventListener('webglcontextlost',fallback);
   const mapResize=new ResizeObserver(()=>{gl.resize();carte.invalidateSize();});mapResize.observe(host);
   window.addEventListener('pagehide',()=>mapResize.disconnect(),{once:true});
@@ -106,7 +112,7 @@
    gl.addLayer({id:'ombrage-hillshade',type:'hillshade',source:'dem',paint:{'hillshade-exaggeration':.15}});ids.ombrage=['ombrage-hillshade'];
    // GEBCO also paints the land in beige: only its sea pixels are kept
    // (aprimer://), so the satellite image stays visible on land.
-   for(const [id,service,proto,zmax] of [['bathy-relief','GEBCO_basemap_NCEI','aprimer://',24],['bathy-contours','GEBCO_contours','https://',12]]){
+   for(const [id,service,proto,zmax] of [['bathy-relief','GEBCO_basemap_NCEI','aprimer://',24],['bathy-contours','GEBCO_contours','https://',10.6]]){
     gl.addSource(id,raster(proto+'tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/'+service+'/MapServer/tile/{z}/{y}/{x}','GEBCO / NOAA NCEI',10));
     gl.addLayer({id,type:'raster',source:id,maxzoom:zmax,paint:{'raster-fade-duration':0},layout:{visibility:'none'}});
    }
