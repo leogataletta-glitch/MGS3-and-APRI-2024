@@ -66,6 +66,10 @@ def _styles():
     /* LA BARRE DU HAUT RESTE COLLÉE ET SOMBRE PARTOUT. */
     {r} div[data-testid='stColumn']:has(.st-key-zone_nav){{position:sticky!important;top:0!important;z-index:999!important;background:rgba(10,34,46,.28)!important;backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid rgba(255,255,255,.14)!important;}}
     {r} div[data-testid='stColumn']:has(.st-key-zone_nav) .st-key-zone_nav{{background:transparent!important;}}
+    /* Transparente sur la photo d'accueil, la barre se fonce un peu dès qu'on
+       descend, pour rester lisible au-dessus des cartes claires. */
+    {r} div[data-testid='stColumn']:has(.st-key-zone_nav).apri-defile{{background:rgba(10,34,46,.80)!important;}}
+    {r} div[data-testid='stColumn']:has(.st-key-zone_nav){{transition:background .35s ease;}}
     /* LA BARRE FLOTTE SUR LA PAGE : le contenu passe dessous, la photo aussi. */
     @media(min-width:1001px){{
      {r} div[data-testid='stColumn']:has(.st-key-zone_nav){{margin-bottom:-71px!important;}}
@@ -215,7 +219,8 @@ pts=d.createElement('nav');pts.id='apri-points';pts.setAttribute('aria-label','S
 ordre.forEach((m,i)=>{const b=d.createElement('button');b.type='button';b.dataset.i=i;b.setAttribute('aria-label',libelles[m]||m);b.innerHTML='<span>'+(libelles[m]||m)+'</span>';b.addEventListener('click',()=>allerA(i,false));pts.appendChild(b);});
 d.body.appendChild(pts);
 d.__apriPoints=k=>pts.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===k));
-const suivre=()=>{if(!anim)d.__apriPoints(courante());};
+const barre=d.querySelector('div[data-testid="stColumn"]:has(.st-key-zone_nav)');
+const suivre=()=>{if(barre&&sc)barre.classList.toggle('apri-defile',sc.scrollTop>60);if(!anim)d.__apriPoints(courante());};
 sc&&sc.addEventListener('scroll',suivre,{passive:true});suivre();
 if(!d.getElementById('apri-points-style')){const st=d.createElement('style');st.id='apri-points-style';st.textContent=`
 #apri-points{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:1001;display:flex;flex-direction:column;gap:12px;}

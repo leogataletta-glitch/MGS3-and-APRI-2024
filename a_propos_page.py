@@ -306,6 +306,27 @@ TEXTES = {
               "télécharger. Le fichier brut portant les identifiants directs "
               "n'est jamais publié : les demandes le concernant se traitent "
               "au cas par cas."},
+    # ---- LA PAGE RÉÉCRITE EN GRAND. Moins de mots, des phrases qui se lisent
+    # de loin, sur toute la largeur. Le détail reste dans les volets du bas.
+    "apx_lead": {
+        "fr": "APRI, l'Approche Paysages Résilients Intégrée, est une initiative du PNUE pour rendre les ménages et les territoires du Grand-Sud d'Haïti plus résilients, en traitant ensemble l'écologique, l'humain et le productif.",
+        "en": "APRI, the Integrated Resilient Landscape Approach, is a UNEP initiative to make households and territories in Haiti's Grand-Sud more resilient, by tackling the ecological, the human and the productive together."},
+    "apx_k1": {"fr": "Pourquoi", "en": "Why"},
+    "apx_x1": {
+        "fr": "Pauvreté, écosystèmes dégradés, gouvernance fragile et catastrophes répétées s'entretiennent les unes les autres. Les projets isolés n'en traitent qu'un morceau. APRI les prend ensemble, avec les acteurs humanitaires, de développement et locaux.",
+        "en": "Poverty, degraded ecosystems, fragile governance and repeated disasters feed one another. Isolated projects only tackle one piece. APRI takes them together, with humanitarian, development and local actors."},
+    "apx_k2": {"fr": "Où", "en": "Where"},
+    "apx_x2": {
+        "fr": "Deux paysages pilotes, prioritaires pour le relèvement de la péninsule sud : enclavés, très exposés aux aléas, et parmi les derniers refuges de biodiversité du pays.",
+        "en": "Two pilot landscapes, priorities for the recovery of the southern peninsula: isolated, highly exposed to hazards, and among the country's last biodiversity refuges."},
+    "apx_k3": {"fr": "Comment", "en": "How"},
+    "apx_x3": {
+        "fr": "La résilience y est mesurée sur sept dimensions, du physique au culturel, chacune avec ses indicateurs, ses barèmes et ses pondérations.",
+        "en": "Resilience is measured there across seven dimensions, from physical to cultural, each with its own indicators, scales and weights."},
+    "apx_k4": {"fr": "Déjà fait", "en": "Already done"},
+    "apx_j": {
+        "fr": "16|membres au comité de pilotage, dont 10 agences des Nations unies@@10|sections communales couvertes par l'étude de ligne de base@@1|matrice d'indicateurs pour le suivi APRI, en cours de validation@@4|partenaires pour un projet pilote de paiement pour services environnementaux",
+        "en": "16|steering committee members, including 10 UN agencies@@10|communal sections covered by the baseline study@@1|indicator matrix for APRI monitoring, being validated@@4|partners in a pilot payment for environmental services project"},
 }
 for _c, _v in TEXTES.items():
     i18n.DICO.setdefault(_c, _v)
@@ -431,34 +452,62 @@ def _paysages():
 
 
 def render():
-    """La page « À propos » : l'initiative, ses paysages, puis l'indice.
+    """« À propos » : quatre phrases fortes sur toute la largeur.
 
-    L'INITIATIVE PASSE DEVANT L'INSTRUMENT. La page ouvrait sur « ce qu'est
-    cet indice » : elle décrivait un outil de mesure à qui ne savait pas
-    encore ce qu'on mesurait, où, ni pour qui. APRI est d'abord un programme
-    du PNUE sur deux paysages du Grand-Sud ; l'indice vient après, et il en
-    est le bras de mesure.
+    LA PAGE A ÉTÉ RÉÉCRITE POUR ÊTRE LUE. Sept blocs de texte serré en deux
+    colonnes ne donnaient envie de rien lire. Il reste une phrase d'ouverture
+    en grand, trois réponses courtes (pourquoi, où, comment), les deux
+    paysages en chiffres et ce qui est déjà fait. Le détail, les définitions
+    et la feuille de route 2025 et 2026 restent disponibles, repliés.
     """
+    r = "#root " + ".stApp" * 110 + " .st-key-about_x"
+    st.markdown(f"""<style>
+    {r} .apx-lead{{font:300 30px/1.42 Inter,Arial,sans-serif!important;color:#123746!important;margin:8px 0 34px!important;max-width:none!important;}}
+    {r} .apx-bloc{{display:grid;grid-template-columns:170px 1fr;gap:28px;align-items:baseline;padding:26px 0;border-top:1px solid #dbe4ea;}}
+    {r} .apx-k{{font:700 13px/1.2 Inter,Arial,sans-serif!important;letter-spacing:2px;text-transform:uppercase;color:#397FA3!important;}}
+    {r} .apx-x{{font:400 22px/1.55 Inter,Arial,sans-serif!important;color:#1f3440!important;max-width:none!important;text-align:left!important;}}
+    {r} .apx-pay{{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:22px;}}
+    {r} .apx-pay>div{{background:#f2f6f8;border-radius:14px;padding:22px 26px;}}
+    {r} .apx-pay .n{{font:650 22px/1.3 Inter,Arial,sans-serif!important;color:#123746!important;}}
+    {r} .apx-pay .s{{font:300 44px/1.1 Inter,Arial,sans-serif!important;color:#397FA3!important;margin:6px 0 8px;}}
+    {r} .apx-pay .x{{font:400 15px/1.5 Inter,Arial,sans-serif!important;color:#4b5f6a!important;}}
+    {r} .apx-j{{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;}}
+    {r} .apx-j .v{{font:300 64px/1 Inter,Arial,sans-serif!important;color:#397FA3!important;}}
+    {r} .apx-j .l{{font:400 16px/1.45 Inter,Arial,sans-serif!important;color:#1f3440!important;margin-top:10px;}}
+    {r} :is(.apx-lead,.apx-x,.apx-pay .x,.apx-j .l){{text-align:left!important;hyphens:none!important;word-spacing:normal!important;}}
+    @media(max-width:900px){{
+     {r} .apx-lead{{font-size:22px!important;}}
+     {r} .apx-bloc{{grid-template-columns:1fr;gap:10px;}}
+     {r} .apx-x{{font-size:18px!important;}}
+     {r} .apx-pay,{r} .apx-j{{grid-template-columns:1fr 1fr;}}
+    }}
+    </style>""", unsafe_allow_html=True)
+    def bloc(k, contenu):
+        return (f'<div class="apx-bloc"><div class="apx-k">{_e(T(k))}</div>'
+                f'<div>{contenu}</div></div>')
+    pays = []
+    for cle in ("ap_y_ga", "ap_y_sud"):
+        nom, surface, detail = ((T(cle).split("|") + ["", "", ""])[:3])
+        pays.append(f'<div><div class="n">{_e(nom.strip())}</div>'
+                    f'<div class="s">{_e(surface.strip())}</div>'
+                    f'<div class="x">{_e(detail.strip())}</div></div>')
+    jalons = []
+    for item in [x for x in T("apx_j").split("@@") if x.strip()]:
+        v, l = (item.split("|") + [""])[:2]
+        jalons.append(f'<div><div class="v">{_e(v.strip())}</div><div class="l">{_e(l.strip())}</div></div>')
+    with st.container(key="about_x"):
+        st.markdown(
+            f'<div class="apx-lead">{_e(T("apx_lead"))}</div>'
+            + bloc("apx_k1", f'<div class="apx-x">{_e(T("apx_x1"))}</div>')
+            + bloc("apx_k2", f'<div class="apx-x">{_e(T("apx_x2"))}</div><div class="apx-pay">{"".join(pays)}</div>')
+            + bloc("apx_k3", f'<div class="apx-x">{_e(T("apx_x3"))}</div>')
+            + bloc("apx_k4", f'<div class="apx-j">{"".join(jalons)}</div>'),
+            unsafe_allow_html=True)
     st.markdown(_STYLE, unsafe_allow_html=True)
-    with st.container(key="about_intro"):
-        _section("ap_q_t", "ap_q_x")
-        _section("ap_k_t", "ap_k_x")
-    context, action = st.columns(2, gap="medium")
-    with context:
-        with st.container(key="about_context"):
-            _section("ap_p_t", "ap_p_x")
-            _section("ap_y_t", "ap_y_x")
-            st.markdown(_paysages(), unsafe_allow_html=True)
-    with action:
-        with st.container(key="about_action"):
-            _section("ap_pi_t", "ap_pi_x")
-            st.markdown(f'<div class="ap-todo">{_e(T("ap_pi_todo"))}</div>', unsafe_allow_html=True)
-            _section("ap_r_t", "ap_r_x")
-            st.markdown(_liste("ap_r_l"), unsafe_allow_html=True)
-    with st.expander(_locale_text(T("ap_d_t"))):
-        st.markdown(_definitions(), unsafe_allow_html=True)
     with st.expander(_locale_text(T("ap_o_t"))):
         st.markdown(_liste("ap_o_l"), unsafe_allow_html=True)
+    with st.expander(_locale_text(T("ap_d_t"))):
+        st.markdown(_definitions(), unsafe_allow_html=True)
 
 
 def render_contact():
