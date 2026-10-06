@@ -15,8 +15,8 @@ def identity(unep):
     """
     from apri_marque import MARQUE
     from publication_web import tr
-    sous = tr(("Observatoire de la résilience", "Resilience Observatory",
-               "Observatorio de la resiliencia", "Obsèvatwa rezilyans"))
+    sous = tr(("Système d'information (SI)", "Information System (IS)",
+               "Sistema de información (SI)", "Sistèm enfòmasyon (SE)"))
     return ('<div class="apri-lockup">'
             '<img class="apri-lockup-mark" alt="" src="data:image/png;base64,' + MARQUE + '">'
             '<span class="apri-lockup-txt"><span class="apri-lockup-nom">APRI</span>'
