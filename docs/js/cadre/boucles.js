@@ -1,6 +1,6 @@
 /* Cadre de résilience · Boucles de rétroaction (cadre_page._v_boucles:
    modele_parcours.render_feedback, the four-step causal loop walkthrough). */
-import {css, donnees, cadreHtml} from './_commun.js';
+import {css, donnees, cadreHtml} from './commun.js';
 export default async function render(el, apri){
  css();
  const d = await donnees(apri);

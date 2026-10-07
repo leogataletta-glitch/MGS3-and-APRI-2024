@@ -4,7 +4,7 @@
    that scroll the reader by 90 % of its height). Here the same reader is drawn with
    pdf.js (pages rendered lazily as they come into view); if pdf.js cannot load, the
    browser's own PDF viewer is used instead. */
-import {css} from './_commun.js';
+import {css} from './commun.js';
 
 const PDF = 'data/cadre/IRLA_UNEP_V4.pdf';
 const PDFJS = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/';

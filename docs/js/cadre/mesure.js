@@ -1,6 +1,6 @@
 /* Cadre de résilience · Modèle et sources (cadre_page.render, default view:
    modele_parcours.render, the three-step animated presentation). */
-import {css, donnees, cadreHtml} from './_commun.js';
+import {css, donnees, cadreHtml} from './commun.js';
 export default async function render(el, apri){
  css();
  const d = await donnees(apri);

@@ -2,7 +2,7 @@
    Port of cadre_page.render(vue="indicateurs"): the folded score_parcours walkthrough,
    then _v_indicateurs (view, dimension and indicator pickers; the scale ruler, the
    computation chain, the two normalisation logics) and _v_metadonnees (record view). */
-import {css, donnees, traducteur, fmt, teinte, encre, bandesCss, cadreHtml, barreExport} from './_commun.js';
+import {css, donnees, traducteur, fmt, teinte, encre, bandesCss, cadreHtml, barreExport} from './commun.js';
 
 // widget state, shared with "Tester le concept" (same Streamlit keys cad_i_vue, cad_i_dim, cad_i_ind)
 const etat = {vue:'bareme', dim:null, ind:null};

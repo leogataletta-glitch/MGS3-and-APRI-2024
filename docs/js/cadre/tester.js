@@ -5,7 +5,7 @@
        with components.html (exported per language in data/cadre/cadre.json, langs.*.reboiser);
      - "Calculer un score": _v_indicateurs, the same view as the "Calcul des scores" tab
        (without its folded walkthrough), sharing its widget state as in Streamlit. */
-import {css, donnees, cadreHtml} from './_commun.js';
+import {css, donnees, cadreHtml} from './commun.js';
 import {vueIndicateurs} from './indicateurs.js';
 
 // st.selectbox key cad_test_tool_forest_first: options ("boucles", "scores")
