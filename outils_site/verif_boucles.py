@@ -74,6 +74,43 @@ for v in scen:
     out['vagues'] = [x.tolist() for x in vg]; out['conv'] = conv; out['k'] = k
     out['parqui'] = {i: SX._par_qui(m, i, v) for i in m['ids'] if i not in v}
     ref['scen'].append(out)
+
+# ---- Monte Carlo reference (independent numpy implementation, own RNG):
+# strengths drawn uniformly within their class, stability target in [0.5, 0.8],
+# exact eigenvalues, exact inverse. The JS draws use another generator, so the
+# comparison is statistical (shares of draws), the class-centre model is exact.
+CLASSES = [(0.20, 0.125, 0.275), (0.35, 0.275, 0.425), (0.50, 0.425, 0.575), (0.65, 0.575, 0.725), (0.80, 0.725, 0.875)]
+def classe(f):
+    f = abs(f)
+    for c in CLASSES:
+        if f < c[2]: return c
+    return CLASSES[-1]
+g = M.charger()
+ids = [n['id'] for n in g['noeuds']]; idx = {v: i for i, v in enumerate(ids)}; N = len(ids)
+def matrice_forces(forces, cible):
+    A = np.zeros((N, N))
+    for e, fo in zip(g['aretes'], forces):
+        A[idx[e['vers']], idx[e['de']]] = e['signe'] * fo
+    r = float(max(abs(np.linalg.eigvals(A))))
+    if r > cible: A = A * (cible / r)
+    return A, r
+def portees(A):
+    T = np.linalg.inv(np.eye(N) - A)
+    return np.abs(T).sum(axis=0) - np.abs(np.diag(T))
+Ac, rc = matrice_forces([classe(e['force'])[0] for e in g['aretes']], 0.6)
+ref['centrales'] = {'A': Ac.tolist(), 'rayon': rc, 'portee': portees(Ac).tolist()}
+rng = np.random.default_rng(7)
+ND = 2000
+rangs = np.zeros((ND, N), dtype=int)
+for d in range(ND):
+    forces = [rng.uniform(classe(e['force'])[1], classe(e['force'])[2]) for e in g['aretes']]
+    A, _ = matrice_forces(forces, rng.uniform(0.5, 0.8))
+    p = portees(A)
+    ordre = np.argsort(-p, kind='stable')
+    rangs[d, ordre] = np.arange(1, N + 1)
+ref['mc'] = {'ids': ids, 'n': ND, 'p_top3': (rangs <= 3).mean(axis=0).tolist(),
+             'rang_med': np.median(rangs, axis=0).tolist()}
+
 with open(OUTP, 'w') as f:
     json.dump(ref, f, ensure_ascii=False)
 print('ok', OUTP)
