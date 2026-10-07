@@ -73,7 +73,7 @@ export const apri = {
  /** go to a section (and tab) */
  aller(section, onglet){
   const h = '#'+section+(onglet?'/'+onglet:'');
-  if(location.hash===h) appliquerHash(); else location.hash=h;
+  location.hash=h;
  },
  /** open tab of a section */
  onglet(section){ return etat[section]; },
@@ -113,6 +113,8 @@ export async function appliquerHash(){
  const [sec, ong] = decodeURIComponent(location.hash.slice(1)).split('/');
  if(!sec) return;
  const cible = document.getElementById(sec); if(!cible) return;
+ // the address stays clean: the hash is read, then removed from the bar
+ history.replaceState(null, '', location.pathname + location.search);
  if(SECTIONS.some(s=>s.id===sec)) await choisirOnglet(sec, ong);
  cible.scrollIntoView({behavior:'smooth'});
  // sections above may still be drawing and change height: settle on the target
