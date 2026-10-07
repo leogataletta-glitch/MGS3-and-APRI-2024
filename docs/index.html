@@ -9,74 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/fond.jpg">
-<style>
-:root{--nuit:#0a222e;--bleu:#397fa3;--bleu-clair:#5aa3c8;--texte:#1f3a4a;--barre:72px}
-*{box-sizing:border-box}
-html{scroll-snap-type:y mandatory;scroll-behavior:smooth;scroll-padding-top:0}
-body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#fff;background:var(--nuit)}
-/* fond photographique commun, fixe */
-body::before{content:"";position:fixed;inset:0;z-index:-2;background:url(img/fond.jpg) center/cover no-repeat}
-body::after{content:"";position:fixed;inset:0;z-index:-1;background:rgba(10,34,46,.62);transition:background .4s}
-body.defile::after{background:rgba(10,34,46,.72)}
-
-/* barre du haut */
-header{position:fixed;top:0;left:0;right:0;height:var(--barre);z-index:20;display:flex;align-items:center;gap:28px;padding:0 40px;
- background:rgba(10,34,46,.28);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:background .3s}
-body.defile header{background:rgba(10,34,46,.82)}
-.marque{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;white-space:nowrap}
-.marque img.sym{height:38px}
-.marque b{display:block;font-size:19px;letter-spacing:.14em;font-weight:700}
-.marque small{display:block;font-size:12px;opacity:.82;margin-top:1px}
-.marque .filet{width:1px;height:36px;background:rgba(255,255,255,.35);margin:0 6px}
-.marque img.unep{height:36px;opacity:.92}
-nav{display:flex;align-items:center;gap:4px;margin-left:auto;flex-wrap:nowrap}
-nav a{color:#fff;text-decoration:none;font-size:13.5px;font-weight:500;padding:10px 14px;border-radius:12px;white-space:nowrap;transition:background .2s}
-nav a:hover{background:rgba(255,255,255,.12)}
-nav a.actif{background:var(--bleu)}
-nav a.ext::after{content:" ↗";opacity:.6;font-size:11px}
-.langue{margin-left:18px;display:flex;gap:2px;background:rgba(255,255,255,.1);border-radius:10px;padding:3px}
-.langue button{background:none;border:0;color:#fff;font:600 12px Inter,sans-serif;padding:6px 10px;border-radius:8px;cursor:pointer;opacity:.7}
-.langue button[aria-pressed=true]{background:rgba(255,255,255,.2);opacity:1}
-.menu{display:none;margin-left:auto;background:none;border:0;color:#fff;font-size:26px;cursor:pointer}
-
-/* sections plein écran */
-section{min-height:100dvh;scroll-snap-align:start;position:relative}
-#accueil{display:grid;place-items:center;text-align:center;padding:var(--barre) 24px 0}
-#accueil h1{font-size:clamp(40px,6vw,76px);font-weight:700;letter-spacing:-.02em;margin:0 0 22px;text-shadow:0 2px 24px rgba(0,0,0,.35)}
-#accueil p{font-size:clamp(16px,1.6vw,20px);margin:0 0 30px;opacity:.95}
-.cta{display:inline-block;color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.8);border-radius:10px;padding:14px 24px;font-weight:500;transition:background .2s,color .2s}
-.cta:hover{background:#fff;color:var(--nuit)}
-.chiffres{display:flex;gap:56px;justify-content:center;margin-top:56px;flex-wrap:wrap}
-.chiffres div{font-size:13px;opacity:.85;max-width:170px}
-.chiffres strong{display:block;font-size:34px;font-weight:700;opacity:1;margin-bottom:4px}
-.fleche{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);color:#fff;opacity:.7;font-size:22px;text-decoration:none;animation:flotte 2.4s ease-in-out infinite}
-@keyframes flotte{50%{transform:translate(-50%,8px)}}
-
-#territoire{padding:calc(var(--barre) + 24px) 40px 24px;display:flex;flex-direction:column}
-.carte-cadre{flex:1;background:rgba(255,255,255,.94);border-radius:16px;padding:10px;box-shadow:0 20px 60px rgba(0,0,0,.25);display:flex;min-height:420px}
-.carte-cadre iframe{flex:1;border:0;border-radius:10px;width:100%;height:calc(100dvh - var(--barre) - 68px);min-height:400px;background:#edf4f9}
-
-footer{scroll-snap-align:end;padding:28px 40px;font-size:12.5px;color:rgba(255,255,255,.75);display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between;background:rgba(10,34,46,.6)}
-footer a{color:#fff}
-
-/* points de navigation */
-#points{position:fixed;right:18px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:15}
-#points a{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.55);transition:transform .2s,background .2s}
-#points a.actif{background:var(--bleu-clair);transform:scale(1.35)}
-
-@media(max-width:1100px){nav a.ext{display:none}}
-@media(max-width:760px){
- header{padding:0 16px;gap:10px}
- .marque small,.marque .filet,.marque img.unep{display:none}
- nav{display:none;position:absolute;top:var(--barre);left:0;right:0;flex-direction:column;align-items:stretch;background:rgba(10,34,46,.96);padding:10px 16px}
- nav.ouvert{display:flex}nav a.ext{display:block}
- .menu{display:block}.langue{margin-left:0}
- #territoire{padding:calc(var(--barre) + 12px) 12px 12px}
- .carte-cadre{padding:6px}.carte-cadre iframe{height:calc(100dvh - var(--barre) - 36px)}
- #points{display:none}
- html{scroll-snap-type:none}
-}
-</style>
+<link rel="stylesheet" href="css/commun.css">
 </head>
 <body>
 <header>
@@ -84,24 +17,16 @@ footer a{color:#fff}
   <img class="sym" src="img/apri.png" alt="">
   <span><b>APRI</b><small data-t="sous">Système d'information (SI)</small></span>
   <span class="filet"></span>
-  <img class="unep" src="img/unep.png" alt="Programme des Nations Unies pour l'environnement">
+  <img class="unep" src="img/unep.png" alt="UNEP">
  </a>
- <button class="menu" aria-label="Menu" onclick="document.querySelector('nav').classList.toggle('ouvert')">☰</button>
- <nav>
-  <a href="#accueil" data-t="n_accueil" class="actif">Accueil</a>
-  <a href="#territoire" data-t="n_terr">Le territoire</a>
-  <a class="ext" data-page="methodologie" data-t="n_cadre">Cadre de résilience</a>
-  <a class="ext" data-page="dimensions" data-t="n_res">Résultats</a>
-  <a class="ext" data-page="boucles" data-t="n_boucles">Boucles de rétroaction</a>
-  <a class="ext" data-page="actions" data-t="n_fiches">Fiches d'intervention</a>
-  <a class="ext" data-page="donnees" data-t="n_ress">Ressources</a>
- </nav>
+ <button class="menu" aria-label="Menu">☰</button>
+ <nav class="principal" aria-label="Navigation"></nav>
  <div class="langue" role="group" aria-label="Langue">
   <button data-l="fr" aria-pressed="true">FR</button><button data-l="en" aria-pressed="false">EN</button>
  </div>
 </header>
 
-<div id="points"><a href="#accueil" class="actif" aria-label="Accueil"></a><a href="#territoire" aria-label="Le territoire"></a></div>
+<div id="points"></div>
 
 <main>
 <section id="accueil">
@@ -115,59 +40,126 @@ footer a{color:#fff}
    <div><strong>2</strong><span data-t="k3">paysages, Sud et Grand'Anse</span></div>
   </div>
  </div>
- <a class="fleche" href="#territoire" aria-label="Descendre">⌄</a>
+ <a class="fleche" href="#territoire" aria-label="↓">⌄</a>
 </section>
-
-<section id="territoire" aria-label="Le territoire">
- <div class="carte-cadre">
-  <iframe id="carte" data-statique title="Carte du territoire" loading="lazy" src="carte_fr.html" allow="fullscreen"></iframe>
- </div>
-</section>
+<section id="territoire" class="page"><div class="carte-page" id="contenu-territoire"><div class="chargement" data-t="charge">Chargement…</div></div></section>
+<section id="cadre" class="page"><div class="carte-page" id="contenu-cadre"><div class="chargement" data-t="charge">Chargement…</div></div></section>
+<section id="resultats" class="page"><div class="carte-page" id="contenu-resultats"><div class="chargement" data-t="charge">Chargement…</div></div></section>
+<section id="boucles" class="page"><div class="carte-page" id="contenu-boucles"><div class="chargement" data-t="charge">Chargement…</div></div></section>
+<section id="fiches" class="page"><div class="carte-page" id="contenu-fiches"><div class="chargement" data-t="charge">Chargement…</div></div></section>
+<section id="ressources" class="page"><div class="carte-page" id="contenu-ressources"><div class="chargement" data-t="charge">Chargement…</div></div></section>
+<section id="apropos" class="page"><div class="carte-page" id="contenu-apropos"><div class="chargement" data-t="charge">Chargement…</div></div></section>
+<section id="contact" class="page"><div class="carte-page" id="contenu-contact"><div class="chargement" data-t="charge">Chargement…</div></div></section>
 </main>
 
 <footer>
- <span data-t="pied">© PNUE Haïti · APRI. Prototype de site statique : les autres rubriques ouvrent la version Streamlit actuelle.</span>
- <span><a href="https://enquete-menage-2024-4a9hs29btbw94pnrtxbe7a.streamlit.app/" target="_blank" rel="noopener" data-t="version">Version actuelle (Streamlit)</a></span>
+ <span data-t="pied">© PNUE Haïti · APRI, Approche intégrée des paysages résilients.</span>
+ <span><a href="#apropos" data-t="f_apropos">À propos</a> · <a href="#contact" data-t="f_contact">Contact</a></span>
 </footer>
 
-<script>
-const APP='https://enquete-menage-2024-4a9hs29btbw94pnrtxbe7a.streamlit.app/';
-const TXT={
- en:{sous:'Information System (IS)',n_accueil:'Home',n_terr:'The territory',n_cadre:'Resilience Framework',n_res:'Results',n_boucles:'Feedback Loops',n_fiches:'Intervention Profiles',n_ress:'Resources',
-  titre:'Resilience Observatory',accroche:'The APRI information system for landscape resilience.',cta:'Explore the territory',
-  k1:'households surveyed',k2:'communal sections',k3:"landscapes, Sud and Grand'Anse",
-  pied:'© UNEP Haiti · APRI. Static site prototype: the other sections open the current Streamlit version.',version:'Current version (Streamlit)'}
-};
-const FR={};document.querySelectorAll('[data-t]').forEach(e=>FR[e.dataset.t]=e.textContent);TXT.fr=FR;
+<script type="module">
+import {apri, SECTIONS, charger, changerLangue, appliquerHash, menus} from './js/apri.js';
+
+const TXT = {en:{sous:'Information System (IS)',titre:'Resilience Observatory',accroche:'The APRI information system for landscape resilience.',
+ cta:'Explore the territory',k1:'households surveyed',k2:'communal sections',k3:"landscapes, Sud and Grand'Anse",charge:'Loading…',
+ pied:'© UNEP Haiti · APRI, Integrated Resilient Landscape Approach.',f_apropos:'About',f_contact:'Contact',accueil:'Home'}};
+const FR = {accueil:'Accueil'}; document.querySelectorAll('[data-t]').forEach(e=>FR[e.dataset.t]=e.textContent); TXT.fr=FR;
+
+// navigation with sub-menus read from the section modules
+const nav = document.querySelector('nav.principal');
+const ONGLETS = await menus();
+function construireNav(){
+ const l = apri.lang;
+ const items = [{id:'accueil', fr:FR.accueil, en:TXT.en.accueil}, ...SECTIONS.filter(s=>!s.menu)];
+ nav.innerHTML = '';
+ for(const s of items){
+  const sous = [...(ONGLETS[s.id]||[]).map(o=>({href:'#'+s.id+'/'+o.id, t:apri.t(o.fr,o.en), d:apri.t(o.dfr,o.den)})),
+               ...SECTIONS.filter(x=>x.menu===s.id).map(x=>({href:'#'+x.id, t:apri.t(x.fr,x.en)}))];
+  const div = document.createElement('div'); div.className='item'+(sous.length?' a-sous':''); div.dataset.sec=s.id;
+  div.innerHTML = `<a href="#${s.id}">${apri.esc(apri.t(s.fr,s.en))}</a>`+
+   (sous.length?`<div class="sous">${sous.map(x=>`<a href="${x.href}">${apri.esc(x.t)}${x.d?`<small>${apri.esc(x.d)}</small>`:''}</a>`).join('')}</div>`:'');
+  nav.append(div);
+ }
+ nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('ouvert')));
+ marquer(courant);
+}
+document.querySelector('.menu').onclick=()=>nav.classList.toggle('ouvert');
+
+// dots on the right
+const points = document.getElementById('points');
+const ids = ['accueil', ...SECTIONS.map(s=>s.id)];
+points.innerHTML = ids.map(id=>`<a href="#${id}" data-sec="${id}" aria-label="${id}"></a>`).join('');
+
+// active section: tab in the bar (a sub-page lights its parent) and dot
+let courant = 'accueil';
+function marquer(id){
+ courant = id;
+ const parent = SECTIONS.find(s=>s.id===id)?.menu || id;
+ nav.querySelectorAll('.item').forEach(i=>i.classList.toggle('actif', i.dataset.sec===parent));
+ points.querySelectorAll('a').forEach(a=>a.classList.toggle('actif', a.dataset.sec===id));
+}
+// the section crossing the line at 45 % of the screen is the current one
+let rafSuivi;
+function suivre(){
+ cancelAnimationFrame(rafSuivi);
+ rafSuivi = requestAnimationFrame(()=>{
+  const y = innerHeight*0.45;
+  for(const id of ids){ const r = document.getElementById(id).getBoundingClientRect(); if(r.top<=y && r.bottom>y){ if(id!==courant) marquer(id); break; } }
+ });
+}
+addEventListener('scroll', suivre, {passive:true}); addEventListener('resize', suivre);
+new ResizeObserver(suivre).observe(document.querySelector('main'));
+
+// sections draw themselves when they come near the viewport
+const paresseux = new IntersectionObserver(es=>{
+ for(const e of es) if(e.isIntersecting){ paresseux.unobserve(e.target); charger(e.target.id); }
+},{rootMargin:'100% 0px'});
+// the 3D map is heavy: it starts only when its section is actually on screen
+// (and stays there half a second: a jump to a lower section only passes through it)
+let attente;
+const proche = new IntersectionObserver(es=>{
+ for(const e of es){
+  clearTimeout(attente);
+  if(e.isIntersecting) attente = setTimeout(()=>{ proche.unobserve(e.target); charger(e.target.id); }, 500);
+ }
+},{threshold:.15});
+SECTIONS.forEach(s=>(s.id==='territoire'?proche:paresseux).observe(document.getElementById(s.id)));
+
+// language
 function langue(l){
- try{localStorage.setItem('apri_lang',l)}catch(e){}
- document.documentElement.lang=l;
- document.querySelectorAll('[data-t]').forEach(e=>{const v=TXT[l][e.dataset.t];if(v)e.textContent=v;});
- document.querySelectorAll('.langue button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l));
- document.querySelectorAll('nav a.ext').forEach(a=>{a.href=APP+'?page='+a.dataset.page+'&lang='+l;a.target='_blank';a.rel='noopener';});
- const f=document.getElementById('carte'),src='carte_'+l+'.html';if(!f.src.endsWith(src))f.src=src;
+ document.querySelectorAll('[data-t]').forEach(e=>{const v=TXT[l][e.dataset.t]; if(v) e.textContent=v;});
+ document.querySelectorAll('.langue button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.l===l)));
+ changerLangue(l); construireNav(); ajuster();
 }
 document.querySelectorAll('.langue button').forEach(b=>b.onclick=()=>langue(b.dataset.l));
-let l0='fr';try{l0=localStorage.getItem('apri_lang')||(navigator.language||'fr').slice(0,2)}catch(e){}
+let l0 = 'fr'; try{ l0 = localStorage.getItem('apri_lang') || ((navigator.language||'fr').startsWith('en')?'en':'fr'); }catch(e){}
 langue(l0==='en'?'en':'fr');
 
-// onglet actif, points et barre assombrie
-const liens=[...document.querySelectorAll('nav a[href^="#"],#points a')];
-new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')===id));}}),{threshold:.55})
- .observe(document.getElementById('accueil'));
-new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){liens.forEach(a=>a.classList.toggle('actif',a.getAttribute('href')==='#territoire'));}}),{threshold:.55})
- .observe(document.getElementById('territoire'));
-addEventListener('scroll',()=>document.body.classList.toggle('defile',scrollY>40),{passive:true});
-document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>document.querySelector('nav').classList.remove('ouvert')));
+// the bar never wraps: tighten it when the labels would not fit
+function ajuster(){
+ const b = document.body, h = document.querySelector('header');
+ b.classList.remove('serre','tres-serre');
+ if(innerWidth<=1100) return;
+ // width the bar needs (the drop-down panels are left out on purpose)
+ const besoin = ()=>{
+  const cs = getComputedStyle(h), gap = parseFloat(cs.columnGap)||0;
+  const liens = [...nav.querySelectorAll('.item>a')].reduce((t,a)=>t+a.offsetWidth+2,0);
+  return parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight)+document.querySelector('.marque').offsetWidth
+   +liens+document.querySelector('.langue').offsetWidth+parseFloat(getComputedStyle(document.querySelector('.langue')).marginLeft)+2*gap+8;
+ };
+ if(besoin()>h.clientWidth) b.classList.add('serre');
+ if(besoin()>h.clientWidth) b.classList.add('tres-serre');
+}
+addEventListener('resize', ajuster);
+addEventListener('scroll',()=>document.body.classList.toggle('defile', scrollY>40),{passive:true});
 
-// la molette sur la carte fait défiler la page (zoom par les boutons + et -)
-let verrou=0;
-addEventListener('message',e=>{
- if(e.data?.type!=='apri-map-wheel')return;
- const t=Date.now();if(t-verrou<700||Math.abs(e.data.dy)<4)return;verrou=t;
- document.getElementById(e.data.dy>0?'territoire':'accueil').scrollIntoView({behavior:'smooth'});
- if(e.data.dy>0&&scrollY>=document.getElementById('territoire').offsetTop-5)document.querySelector('footer').scrollIntoView({behavior:'smooth'});
+// a map receives the wheel: it scrolls the page instead
+addEventListener('message', e=>{
+ if(e.data?.type==='apri-map-wheel') scrollBy({top: e.data.mode===1 ? e.data.dy*16 : e.data.dy});
 });
+
+addEventListener('hashchange', appliquerHash);
+if(location.hash) appliquerHash();
 </script>
 </body>
 </html>
